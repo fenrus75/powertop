@@ -1,6 +1,8 @@
 all: powertop
 
-OBJS := main.o cpu.o
+CFLAGS += -Wall -O2 -g
+CPPFLAGS += -Wall -O2 -g
+OBJS := main.o cpu.o cpu_linux.o
 HEADERS := cpu.h
 
 

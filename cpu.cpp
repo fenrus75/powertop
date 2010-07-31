@@ -93,10 +93,10 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 
 	if (core->children.size() <= number)
 		core->children.resize(number + 1);
-	if (!core->children[core_number])
-		core->children[core_number] = new_cpu(number, vendor, family, model);
+	if (!core->children[number])
+		core->children[number] = new_cpu(number, vendor, family, model);
 
-	cpu = core->children[core_number];	
+	cpu = core->children[number];	
 
 }
 

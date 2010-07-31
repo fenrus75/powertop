@@ -20,7 +20,7 @@ public:
 
 	void 	consolidate_children(void) { };
 
-	void	display(void) { }
+	virtual void	display(void) { cout << "FOO\n"; }
 };
 
 class cpu_linux: public abstract_cpu 
@@ -30,21 +30,22 @@ public:
 	void 	measurement_end(void);
 
 	void 	consolidate_children(void);
-	void	display(void);
+	virtual void	display(void);
 };
 
 class cpu_core: public abstract_cpu 
 {
 public:
-	void	display(void);
+	virtual void	display(void);
 };
 
 class cpu_package: public abstract_cpu 
 {
 public:
-	void	display(void);
+	virtual void	display(void);
 };
 
 #include "intel_cpus.h"
 
 extern void enumerate_cpus(void);
+extern void display_cpus(void);

@@ -3,5 +3,16 @@
 
 void cpu_core::display(void)
 {
+	unsigned int i;
+
 	cout << "\tCore number " << number << "\n";
+
+	i = 0;
+	while (i < this->children.size()) {
+		if (this->children[i])
+			this->children[i]->display();
+
+		i++;
+	}
+
 }

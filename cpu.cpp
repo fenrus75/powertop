@@ -43,7 +43,7 @@ static class abstract_cpu * new_cpu(int number, char * vendor, int family, int m
 {
 	class abstract_cpu * ret;
 
-	ret = new class abstract_cpu;
+	ret = new class cpu_linux;
 	ret->set_number(number);
 	
 	return ret;
@@ -159,5 +159,13 @@ void enumerate_cpus(void)
 	file.close();
 }
 
+void display_cpus(void)
+{
+	unsigned int i = 0;
+	while (i < all_packages.size()) {
+		if (all_packages[i])
+			all_packages[i]->display();
+		i++;
+	}
 
-
+}

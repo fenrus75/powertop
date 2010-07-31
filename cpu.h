@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <stdint.h>
 
 using namespace std;
 
@@ -25,6 +26,12 @@ public:
 
 class cpu_linux: public abstract_cpu 
 {
+protected:
+	uint64_t cstate_usage[16];
+	uint64_t cstate_duration[16];
+	uint64_t cstate_usage_after[16];
+	uint64_t cstate_duration_after[16];
+
 public:
 	void 	measurement_start(void);
 	void 	measurement_end(void);

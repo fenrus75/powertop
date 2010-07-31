@@ -171,3 +171,26 @@ void display_cpus(void)
 	}
 
 }
+
+void start_cpu_measurement(void)
+{
+	unsigned int i = 0;
+	while (i < all_packages.size()) {
+		if (all_packages[i])
+			all_packages[i]->measurement_start();
+		i++;
+	}
+}
+
+void end_cpu_measurement(void)
+{
+	unsigned int i = 0;
+	while (i < all_packages.size()) {
+		if (all_packages[i])
+			all_packages[i]->measurement_end();
+		i++;
+	}
+}
+
+
+

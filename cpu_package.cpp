@@ -14,3 +14,27 @@ void cpu_package::display(void)
 		i++;
 	}
 }
+
+void cpu_package::measurement_start(void)
+{
+	unsigned int i;
+	i = 0;
+	while (i < this->children.size()) {
+		if (this->children[i])
+			this->children[i]->measurement_start();
+
+		i++;
+	}
+}
+
+void cpu_package::measurement_end(void)
+{
+	unsigned int i;
+	i = 0;
+	while (i < this->children.size()) {
+		if (this->children[i])
+			this->children[i]->measurement_end();
+
+		i++;
+	}
+}

@@ -21,5 +21,10 @@ void cpu_linux::consolidate_children(void)
 
 void cpu_linux::display(void)
 {
+	int i;
 	cout << "\t\tCPU number " << number << "\n";
+
+	for (i = 0; i < 8; i++) {
+		cout << "\t\t\t C" << i << "  for " << (cstate_duration_after[i] - cstate_duration[i]) / 1000.0 << "s \n";
+	}
 }

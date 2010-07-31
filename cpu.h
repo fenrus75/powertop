@@ -14,12 +14,12 @@ protected:
 public:
 	vector<class abstract_cpu *> children;
 
-	void	set_number(int number) {this->number = number;};
+	void		set_number(int number) {this->number = number;};
 
-	void 	measurement_start(void) { };
-	void 	measurement_end(void) { };
+	virtual void 	measurement_start(void) { };
+	virtual void 	measurement_end(void) { };
 
-	void 	consolidate_children(void) { };
+	virtual void 	consolidate_children(void) { };
 
 	virtual void	display(void) { cout << "FOO\n"; }
 };
@@ -33,22 +33,26 @@ protected:
 	uint64_t cstate_duration_after[16];
 
 public:
-	void 	measurement_start(void);
-	void 	measurement_end(void);
+	virtual void 	measurement_start(void);
+	virtual void 	measurement_end(void);
 
-	void 	consolidate_children(void);
+	virtual void 	consolidate_children(void);
 	virtual void	display(void);
 };
 
 class cpu_core: public abstract_cpu 
 {
 public:
+	virtual void 	measurement_start(void);
+	virtual void 	measurement_end(void);
 	virtual void	display(void);
 };
 
 class cpu_package: public abstract_cpu 
 {
 public:
+	virtual void 	measurement_start(void);
+	virtual void 	measurement_end(void);
 	virtual void	display(void);
 };
 
@@ -56,3 +60,5 @@ public:
 
 extern void enumerate_cpus(void);
 extern void display_cpus(void);
+void start_cpu_measurement(void);
+void end_cpu_measurement(void);

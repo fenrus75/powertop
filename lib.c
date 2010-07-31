@@ -25,6 +25,8 @@ void read_cstate_data(int cpu, uint64_t * usage, uint64_t * duration, char **cna
 	memset(usage, 0, 64);
 	memset(duration, 0, 64);
 
+	printf("Got here for cpu %i\n", cpu);
+
 	len = sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpuidle", cpu);
 
 	dir = opendir(filename);

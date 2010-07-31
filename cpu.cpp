@@ -12,13 +12,14 @@ vector<class abstract_cpu *> all_packages;
 
 static class abstract_cpu * new_package(int package, char * vendor, int family, int model)
 {
-	class abstract_cpu *ret;
+	class abstract_cpu *ret = NULL;
 	if (strcmp(vendor, "GenuineIntel") == 0) {
 		if (family == 6 && model == 26)
 			ret = new class nhm_package;
 	}
 
-	ret = new class cpu_package;
+	if (!ret)
+		ret = new class cpu_package;
 
 	ret->set_number(package);
 	return ret;
@@ -26,14 +27,15 @@ static class abstract_cpu * new_package(int package, char * vendor, int family, 
 
 static class abstract_cpu * new_core(int core, char * vendor, int family, int model)
 {
-	class abstract_cpu *ret;
+	class abstract_cpu *ret = NULL;
 
 	if (strcmp(vendor, "GenuineIntel") == 0) {
 		if (family == 6 && model == 26)
 			ret = new class nhm_core;
 	}
 
-	ret = new class cpu_core;
+	if (!ret)
+		ret = new class cpu_core;
 	ret->set_number(core);
 
 	return ret;

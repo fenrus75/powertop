@@ -46,6 +46,8 @@ void nhm_core::measurement_end(void)
 {
 	unsigned int i;
 	uint64_t time_delta;
+	double ratio;
+
 	for (i = 0; i < children.size(); i++)
 		if (children[i])
 			children[i]->measurement_end();
@@ -59,14 +61,12 @@ void nhm_core::measurement_end(void)
 
 	gettimeofday(&stamp_after, NULL);
 
-	printf("c3 : %llu to %llu \n", c3_before, c3_after);
-	printf("c6 : %llu to %llu \n", c6_before, c6_after);
-
-
 	finalize_state("core c3", 0, c3_after, 1);
 	finalize_state("core c6", 0, c6_after, 1);
 
 	time_delta = 1000000 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
+
+	ratio = 1.0 * time_delta / (tsc_after - tsc_before);
 
 	for (i = 0; i < states.size(); i++) {
 		struct power_state *state = states[i];
@@ -81,8 +81,8 @@ void nhm_core::measurement_end(void)
 			continue;
 		}
 
-		state->usage_delta =    (state->usage_after    - state->usage_before)    / state->after_count;
-		state->duration_delta = (state->duration_after - state->duration_before) / state->after_count;
+		state->usage_delta =    ratio * (state->usage_after    - state->usage_before)    / state->after_count;
+		state->duration_delta = ratio * (state->duration_after - state->duration_before) / state->after_count;
 	}
 }
 
@@ -94,6 +94,8 @@ void nhm_package::measurement_start(void)
 	mperf_before = get_msr(number, MSR_MPERF);
 	c3_before    = get_msr(number, MSR_PKG_C3_RESIDENCY);
 	c6_before    = get_msr(number, MSR_PKG_C6_RESIDENCY);
+	tsc_before   = get_msr(first_cpu, MSR_TSC);
+	gettimeofday(&stamp_after, NULL);
 
 	insert_state("pkg c3", "C3", 0, c3_before, 1);
 	insert_state("pkg c6", "C6", 0, c6_before, 1);
@@ -101,6 +103,8 @@ void nhm_package::measurement_start(void)
 
 void nhm_package::measurement_end(void)
 {
+	uint64_t time_delta;
+	double ratio;
 	unsigned int i;
 	for (i = 0; i < children.size(); i++)
 		if (children[i])
@@ -111,14 +115,17 @@ void nhm_package::measurement_end(void)
 	mperf_after = get_msr(number, MSR_MPERF);
 	c3_after    = get_msr(number, MSR_PKG_C3_RESIDENCY);
 	c6_after    = get_msr(number, MSR_PKG_C6_RESIDENCY);
+	tsc_after   = get_msr(first_cpu, MSR_TSC);
 
-
-	printf("c3 : %llu to %llu \n", c3_before, c3_after);
-	printf("c6 : %llu to %llu \n", c6_before, c6_after);
+	gettimeofday(&stamp_after, NULL);
 
 
 	finalize_state("pkg c3", 0, c3_after, 1);
 	finalize_state("pkg c6", 0, c6_after, 1);
+
+	time_delta = 1000000 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
+
+	ratio = 1.0 * time_delta / (tsc_after - tsc_before);
 
 
 	for (i = 0; i < states.size(); i++) {
@@ -134,8 +141,8 @@ void nhm_package::measurement_end(void)
 			continue;
 		}
 
-		state->usage_delta =    (state->usage_after    - state->usage_before)    / state->after_count;
-		state->duration_delta = (state->duration_after - state->duration_before) / state->after_count;
+		state->usage_delta =    ratio * (state->usage_after    - state->usage_before)    / state->after_count;
+		state->duration_delta = ratio * (state->duration_after - state->duration_before) / state->after_count;
 	}
 }
 

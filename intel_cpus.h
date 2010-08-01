@@ -21,7 +21,7 @@ private:
 	uint64_t	c3_before, c3_after;
 	uint64_t	c6_before, c6_after;
 	uint64_t	tsc_before, tsc_after;
-	struct timeval	stamp_before, stamp_after, stamp_delta;
+	struct timeval	stamp_before, stamp_after;
 public:
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);

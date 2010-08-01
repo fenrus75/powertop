@@ -7,7 +7,7 @@
 #include "cpu.h"
 
 
-vector<class abstract_cpu *> all_packages;
+static class abstract_cpu system_level;
 
 
 static class abstract_cpu * new_package(int package, int cpu, char * vendor, int family, int model)
@@ -77,13 +77,13 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 	}
 
 
-	if (all_packages.size() <= package_number)
-		all_packages.resize(package_number + 1);
+	if (system_level.children.size() <= package_number)
+		system_level.children.resize(package_number + 1);
 
-	if (!all_packages[package_number])
-		all_packages[package_number] = new_package(package_number, number, vendor, family, model);
+	if (!system_level.children[package_number])
+		system_level.children[package_number] = new_package(package_number, number, vendor, family, model);
 
-	package = all_packages[package_number];
+	package = system_level.children[package_number];
 
 	if (package->children.size() <= core_number)
 		package->children.resize(core_number + 1);
@@ -163,33 +163,17 @@ void enumerate_cpus(void)
 
 void display_cpus(void)
 {
-	unsigned int i = 0;
-	while (i < all_packages.size()) {
-		if (all_packages[i])
-			all_packages[i]->display();
-		i++;
-	}
-
+	system_level.display();
 }
 
 void start_cpu_measurement(void)
 {
-	unsigned int i = 0;
-	while (i < all_packages.size()) {
-		if (all_packages[i])
-			all_packages[i]->measurement_start();
-		i++;
-	}
+	system_level.measurement_start();
 }
 
 void end_cpu_measurement(void)
 {
-	unsigned int i = 0;
-	while (i < all_packages.size()) {
-		if (all_packages[i])
-			all_packages[i]->measurement_end();
-		i++;
-	}
+	system_level.measurement_end();
 }
 
 

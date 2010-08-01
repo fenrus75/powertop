@@ -40,8 +40,9 @@ public:
 
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
+	virtual void	display(void);
 
-	virtual void	display(void) { cout << "FOO\n"; }
+	virtual const char *  level(void) { return "abstract";};
 };
 
 class cpu_linux: public abstract_cpu 
@@ -50,18 +51,24 @@ public:
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
 	virtual void	display(void);
+
+	virtual const char *  level(void) { return "linux";};
 };
 
 class cpu_core: public abstract_cpu 
 {
 public:
 	virtual void	display(void);
+
+	virtual const char *  level(void) { return "core";};
 };
 
 class cpu_package: public abstract_cpu 
 {
 public:
 	virtual void	display(void);
+
+	virtual const char *  level(void) { return "package";};
 };
 
 #include "intel_cpus.h"

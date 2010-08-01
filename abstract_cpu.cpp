@@ -10,9 +10,9 @@ void abstract_cpu::measurement_start(void)
 		delete states[i];
 	states.resize(0);
 
-	for (i = 0; i < this->children.size(); i++)
-		if (this->children[i])
-			this->children[i]->measurement_start();
+	for (i = 0; i < children.size(); i++)
+		if (children[i])
+			children[i]->measurement_start();
 
 }
 
@@ -45,7 +45,7 @@ void abstract_cpu::measurement_end(void)
 		}
 
 		if (state->after_count != state->before_count) {
-			cout << "count mismatch\n";
+			cout << "count mismatch " << state->after_count << " " << state->before_count << " on cpu " << number << level() << "\n";
 			continue;
 		}
 
@@ -80,7 +80,6 @@ void abstract_cpu::finalize_state(const char *linux_name, uint64_t usage, uint64
  	unsigned int i;
 	struct power_state *state = NULL;
 
-
 	for (i = 0; i < states.size(); i++) {
 		if (strcmp(linux_name, states[i]->linux_name) == 0) {
 			state = states[i];
@@ -111,7 +110,7 @@ void abstract_cpu::update_state(const char *linux_name, const char *human_name, 
 	}
 
 	if (!state) {
-		insert_state(linux_name, human_name, usage, duration, 1);
+		insert_state(linux_name, human_name, usage, duration, count);
 		return;
 	}
 
@@ -120,3 +119,18 @@ void abstract_cpu::update_state(const char *linux_name, const char *human_name, 
 	state->before_count += count;
 
 }
+
+void abstract_cpu::display(void)
+{
+	unsigned int i;
+
+	i = 0;
+	for (i = 0; i < children.size(); i++)
+		if (children[i])
+			children[i]->display();
+
+	for (i = 0; i < states.size(); i++) {
+		cout << states[i]->human_name << "  for " << states[i]->duration_delta / 1000000.0 << "s \n";
+	}
+}
+

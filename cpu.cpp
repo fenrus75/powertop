@@ -10,7 +10,7 @@
 vector<class abstract_cpu *> all_packages;
 
 
-static class abstract_cpu * new_package(int package, char * vendor, int family, int model)
+static class abstract_cpu * new_package(int package, int cpu, char * vendor, int family, int model)
 {
 	class abstract_cpu *ret = NULL;
 	if (strcmp(vendor, "GenuineIntel") == 0) {
@@ -21,11 +21,11 @@ static class abstract_cpu * new_package(int package, char * vendor, int family, 
 	if (!ret)
 		ret = new class cpu_package;
 
-	ret->set_number(package);
+	ret->set_number(package, cpu);
 	return ret;
 }
 
-static class abstract_cpu * new_core(int core, char * vendor, int family, int model)
+static class abstract_cpu * new_core(int core, int cpu, char * vendor, int family, int model)
 {
 	class abstract_cpu *ret = NULL;
 
@@ -36,7 +36,7 @@ static class abstract_cpu * new_core(int core, char * vendor, int family, int mo
 
 	if (!ret)
 		ret = new class cpu_core;
-	ret->set_number(core);
+	ret->set_number(core, cpu);
 
 	return ret;
 }
@@ -46,7 +46,7 @@ static class abstract_cpu * new_cpu(int number, char * vendor, int family, int m
 	class abstract_cpu * ret;
 
 	ret = new class cpu_linux;
-	ret->set_number(number);
+	ret->set_number(number, number);
 	
 	return ret;
 }
@@ -81,7 +81,7 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 		all_packages.resize(package_number + 1);
 
 	if (!all_packages[package_number])
-		all_packages[package_number] = new_package(package_number, vendor, family, model);
+		all_packages[package_number] = new_package(package_number, number, vendor, family, model);
 
 	package = all_packages[package_number];
 
@@ -89,7 +89,7 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 		package->children.resize(core_number + 1);
 
 	if (!package->children[core_number])
-		package->children[core_number] = new_core(core_number, vendor, family, model);
+		package->children[core_number] = new_core(core_number, number, vendor, family, model);
 
 	core = package->children[core_number];
 

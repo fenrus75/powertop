@@ -54,7 +54,7 @@ void abstract_cpu::measurement_end(void)
 	}
 }
 
-void abstract_cpu::insert_state(char *linux_name, char *human_name, uint64_t usage, uint64_t duration, int count)
+void abstract_cpu::insert_state(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count)
 {
 	struct power_state *state;
 
@@ -75,7 +75,7 @@ void abstract_cpu::insert_state(char *linux_name, char *human_name, uint64_t usa
 	state->before_count = count;
 }
 
-void abstract_cpu::finalize_state(char *linux_name, uint64_t usage, uint64_t duration, int count)
+void abstract_cpu::finalize_state(const char *linux_name, uint64_t usage, uint64_t duration, int count)
 {
  	unsigned int i;
 	struct power_state *state = NULL;
@@ -98,7 +98,7 @@ void abstract_cpu::finalize_state(char *linux_name, uint64_t usage, uint64_t dur
 	state->after_count += count;
 }
 
-void abstract_cpu::update_state(char *linux_name, char *human_name, uint64_t usage, uint64_t duration, int count)
+void abstract_cpu::update_state(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count)
 {
  	unsigned int i;
 	struct power_state *state = NULL;

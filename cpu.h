@@ -27,15 +27,16 @@ class abstract_cpu
 {
 protected:
 	int	number;
+	int	first_cpu;
 public:
 	vector<class abstract_cpu *> children;
 	vector<struct power_state *> states;
 
-	void		set_number(int number) {this->number = number;};
+	void		set_number(int number, int cpu) {this->number = number; this->first_cpu = cpu;};
 
-	void		insert_state(char *linux_name, char *human_name, uint64_t usage, uint64_t duration, int count);
-	void		update_state(char *linux_name, char *human_name, uint64_t usage, uint64_t duration, int count);
-	void		finalize_state(char *linux_name, uint64_t usage, uint64_t duration, int count);
+	void		insert_state(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count);
+	void		update_state(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count);
+	void		finalize_state(const char *linux_name, uint64_t usage, uint64_t duration, int count);
 
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);

@@ -15,32 +15,8 @@ void cpu_core::display(void)
 		i++;
 	}
 
-}
-
-void cpu_core::measurement_start(void)
-{
-	unsigned int i;
-	i = 0;
-
-	abstract_cpu::measurement_start();
-
-	while (i < this->children.size()) {
-		if (this->children[i])
-			this->children[i]->measurement_start();
-
-		i++;
+	for (i = 0; i < states.size(); i++) {
+		cout << "\t\t " << states[i]->human_name << "  for " << states[i]->duration_delta / 1000000.0 << "s \n";
 	}
 }
 
-void cpu_core::measurement_end(void)
-{
-	unsigned int i;
-	i = 0;
-	while (i < this->children.size()) {
-		if (this->children[i])
-			this->children[i]->measurement_end();
-
-		i++;
-	}
-	abstract_cpu::measurement_end();
-}

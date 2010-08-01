@@ -8,7 +8,6 @@ extern "C" {
 #define _(STRING)    gettext(STRING)
 
 
-extern void read_cstate_data(int cpu, uint64_t * usage, uint64_t * duration, char **cnames);
 
 
 #ifdef __cplusplus

@@ -69,7 +69,7 @@ void cpu_linux::measurement_start(void)
 		}
 
 
-		update_state(linux_name, human_name, usage, duration);		
+		update_state(linux_name, human_name, usage, duration, 1);		
 
 	}
 	closedir(dir);
@@ -123,7 +123,7 @@ void cpu_linux::measurement_end(void)
 		}
 
 
-		finalize_state(linux_name, usage, duration);		
+		finalize_state(linux_name, usage, duration, 1);		
 
 	}
 	closedir(dir);
@@ -132,11 +132,6 @@ void cpu_linux::measurement_end(void)
 	abstract_cpu::measurement_end();
 }
 
-
-void cpu_linux::consolidate_children(void)
-{
-	// lowest level, nothing to consolidate
-}
 
 void cpu_linux::display(void)
 {

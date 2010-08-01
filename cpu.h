@@ -33,14 +33,12 @@ public:
 
 	void		set_number(int number) {this->number = number;};
 
-	void		insert_state(char *linux_name, char *human_name, uint64_t usage, uint64_t duration);
-	void		update_state(char *linux_name, char *human_name, uint64_t usage, uint64_t duration);
-	void		finalize_state(char *linux_name, uint64_t usage, uint64_t duration);
+	void		insert_state(char *linux_name, char *human_name, uint64_t usage, uint64_t duration, int count);
+	void		update_state(char *linux_name, char *human_name, uint64_t usage, uint64_t duration, int count);
+	void		finalize_state(char *linux_name, uint64_t usage, uint64_t duration, int count);
 
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
-
-	virtual void 	consolidate_children(void) { };
 
 	virtual void	display(void) { cout << "FOO\n"; }
 };
@@ -50,24 +48,18 @@ class cpu_linux: public abstract_cpu
 public:
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
-
-	virtual void 	consolidate_children(void);
 	virtual void	display(void);
 };
 
 class cpu_core: public abstract_cpu 
 {
 public:
-	virtual void 	measurement_start(void);
-	virtual void 	measurement_end(void);
 	virtual void	display(void);
 };
 
 class cpu_package: public abstract_cpu 
 {
 public:
-	virtual void 	measurement_start(void);
-	virtual void 	measurement_end(void);
 	virtual void	display(void);
 };
 

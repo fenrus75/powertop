@@ -21,6 +21,9 @@ void cpu_core::measurement_start(void)
 {
 	unsigned int i;
 	i = 0;
+
+	abstract_cpu::measurement_start();
+
 	while (i < this->children.size()) {
 		if (this->children[i])
 			this->children[i]->measurement_start();
@@ -39,4 +42,5 @@ void cpu_core::measurement_end(void)
 
 		i++;
 	}
+	abstract_cpu::measurement_end();
 }

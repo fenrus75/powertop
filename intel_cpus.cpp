@@ -38,8 +38,8 @@ void nhm_core::measurement_start(void)
 
 	gettimeofday(&stamp_before, NULL);
 
-	insert_state("core c3", "C3", 0, c3_before, 1);
-	insert_state("core c6", "C6", 0, c6_before, 1);
+	insert_state("core c3", "Core C3", 0, c3_before, 1);
+	insert_state("core c6", "Core C6", 0, c6_before, 1);
 }
 
 void nhm_core::measurement_end(void)
@@ -97,8 +97,8 @@ void nhm_package::measurement_start(void)
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 	gettimeofday(&stamp_after, NULL);
 
-	insert_state("pkg c3", "C3", 0, c3_before, 1);
-	insert_state("pkg c6", "C6", 0, c6_before, 1);
+	insert_state("pkg c3", "PKG C3", 0, c3_before, 1);
+	insert_state("pkg c6", "PKG C6", 0, c6_before, 1);
 }
 
 void nhm_package::measurement_end(void)

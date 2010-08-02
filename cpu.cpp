@@ -195,6 +195,8 @@ void display_cpus2(void)
 
 	for (package = 0; package < system_level.children.size(); package++) {
 		_package = system_level.children[package];
+		if (!_package)
+			continue;
 		
 		for (line = LEVEL_HEADER; line < 10; line++) {
 			ctr = 0;

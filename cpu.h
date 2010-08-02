@@ -7,6 +7,9 @@ using namespace std;
 
 class abstract_cpu;
 
+#define LEVEL_C0 -1
+#define LEVEL_HEADER -2
+
 struct power_state {
 	char linux_name[16]; /* state0 etc.. cpuidle name */
 	char human_name[32];

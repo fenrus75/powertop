@@ -148,6 +148,9 @@ int abstract_cpu::has_state_level(int level)
 {
 	unsigned int i;
 
+	if (level == LEVEL_HEADER)
+		return 1;
+
 	for (i = 0; i < states.size(); i++)
 		if (states[i]->line_level == level)
 			return 1;

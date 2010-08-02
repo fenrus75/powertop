@@ -187,7 +187,8 @@ void display_cpus2(void)
 {
 	char buffer[128];
 	char linebuf[1024];
-	unsigned int package, core, cpu, line;
+	unsigned int package, core, cpu;
+	int line;
 	class abstract_cpu *_package, * _core, * _cpu;
 	int ctr = 0;
 
@@ -195,7 +196,7 @@ void display_cpus2(void)
 	for (package = 0; package < system_level.children.size(); package++) {
 		_package = system_level.children[package];
 		
-		for (line = 0; line < 10; line++) {
+		for (line = LEVEL_HEADER; line < 10; line++) {
 			ctr = 0;
 			linebuf[0] = 0;
 			if (!_package->has_state_level(line))

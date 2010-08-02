@@ -152,6 +152,11 @@ char * cpu_linux::fill_line(int line_nr, char *buffer)
 	unsigned int i;
 	buffer[0] = 0;
 
+	if (line_nr == LEVEL_HEADER) {
+		sprintf(buffer,"CPU %i", number);
+		return buffer;
+	}
+
 	for (i = 0; i < states.size(); i++) {
 		if (states[i]->line_level != line_nr)
 			continue;

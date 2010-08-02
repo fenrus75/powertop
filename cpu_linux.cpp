@@ -53,6 +53,9 @@ void cpu_linux::measurement_start(void)
 			file.close();
 		}
 
+		if (strcmp(human_name, "C0")==0)
+			strcpy(human_name, "C0 polling");
+
 		sprintf(filename + len, "/%s/usage", entry->d_name);
 		file.open(filename, ios::in); 
 		if (file) {

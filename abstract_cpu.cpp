@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "cpu.h"
 
 void abstract_cpu::measurement_start(void)
@@ -45,7 +46,7 @@ void abstract_cpu::measurement_end(void)
 		}
 
 		if (state->after_count != state->before_count) {
-			cout << "count mismatch " << state->after_count << " " << state->before_count << " on cpu " << number << level() << "\n";
+			cout << "count mismatch " << state->after_count << " " << state->before_count << " on cpu " << number << "\n";
 			continue;
 		}
 
@@ -57,6 +58,7 @@ void abstract_cpu::measurement_end(void)
 void abstract_cpu::insert_state(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count)
 {
 	struct power_state *state;
+	const char *c;
 
 	state = new struct power_state;
 
@@ -69,6 +71,15 @@ void abstract_cpu::insert_state(const char *linux_name, const char *human_name, 
 
 	strcpy(state->linux_name, linux_name);
 	strcpy(state->human_name, human_name);
+
+	c = human_name;
+	while (*c) {
+		if (*c >= '0' && *c <='9') {
+			state->line_level = strtoull(c, NULL, 10);
+			break;
+		}
+		c++;
+	}
 
 	state->usage_before = usage;
 	state->duration_before = duration;
@@ -124,7 +135,6 @@ void abstract_cpu::display(void)
 {
 	unsigned int i;
 
-	i = 0;
 	for (i = 0; i < children.size(); i++)
 		if (children[i])
 			children[i]->display();
@@ -132,5 +142,20 @@ void abstract_cpu::display(void)
 	for (i = 0; i < states.size(); i++) {
 		cout << states[i]->human_name << "  for " << states[i]->duration_delta / 1000000.0 << "s \n";
 	}
+}
+
+int abstract_cpu::has_state_level(void)
+{
+	unsigned int i;
+
+	for (i = 0; i < states.size(); i++)
+		if (states[i]->line_level)
+			return 1;
+
+	for (i = 0; i < children.size(); i++)
+		if (children[i]) 
+			if (children[i]->has_state_level())
+				return 1;
+	return  0;
 }
 

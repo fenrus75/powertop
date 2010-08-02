@@ -21,6 +21,8 @@ struct power_state {
 
 	int before_count;
 	int after_count;
+
+	int line_level;
 };
 
 class abstract_cpu 
@@ -38,11 +40,12 @@ public:
 	void		update_state(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count);
 	void		finalize_state(const char *linux_name, uint64_t usage, uint64_t duration, int count);
 
+	virtual int	has_state_level(void);
+
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
 	virtual void	display(void);
 
-	virtual const char *  level(void) { return "abstract";};
 };
 
 class cpu_linux: public abstract_cpu 
@@ -52,23 +55,18 @@ public:
 	virtual void 	measurement_end(void);
 	virtual void	display(void);
 
-	virtual const char *  level(void) { return "linux";};
 };
 
 class cpu_core: public abstract_cpu 
 {
 public:
 	virtual void	display(void);
-
-	virtual const char *  level(void) { return "core";};
 };
 
 class cpu_package: public abstract_cpu 
 {
 public:
 	virtual void	display(void);
-
-	virtual const char *  level(void) { return "package";};
 };
 
 #include "intel_cpus.h"

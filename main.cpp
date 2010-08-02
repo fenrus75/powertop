@@ -17,5 +17,7 @@ int main(int argc, char **argv)
 
 
 	display_cpus();
+	cout << "-----------\n\n";
+	display_cpus2();
 	return 0;
 }

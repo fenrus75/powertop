@@ -40,12 +40,13 @@ public:
 	void		update_state(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count);
 	void		finalize_state(const char *linux_name, uint64_t usage, uint64_t duration, int count);
 
-	virtual int	has_state_level(void);
+	virtual int	has_state_level(int level);
 
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
 	virtual void	display(void);
 
+	virtual char *  fill_line(int line_nr, char *buffer) { return buffer;};
 };
 
 class cpu_linux: public abstract_cpu 
@@ -55,23 +56,29 @@ public:
 	virtual void 	measurement_end(void);
 	virtual void	display(void);
 
+	virtual char *  fill_line(int line_nr, char *buffer);
+
 };
 
 class cpu_core: public abstract_cpu 
 {
 public:
 	virtual void	display(void);
+	virtual char *  fill_line(int line_nr, char *buffer);
 };
 
 class cpu_package: public abstract_cpu 
 {
 public:
 	virtual void	display(void);
+	virtual char *  fill_line(int line_nr, char *buffer);
 };
 
 #include "intel_cpus.h"
 
 extern void enumerate_cpus(void);
 extern void display_cpus(void);
+extern void display_cpus2(void);
+
 void start_cpu_measurement(void);
 void end_cpu_measurement(void);

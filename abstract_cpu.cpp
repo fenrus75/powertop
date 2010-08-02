@@ -144,17 +144,17 @@ void abstract_cpu::display(void)
 	}
 }
 
-int abstract_cpu::has_state_level(void)
+int abstract_cpu::has_state_level(int level)
 {
 	unsigned int i;
 
 	for (i = 0; i < states.size(); i++)
-		if (states[i]->line_level)
+		if (states[i]->line_level == level)
 			return 1;
 
 	for (i = 0; i < children.size(); i++)
 		if (children[i]) 
-			if (children[i]->has_state_level())
+			if (children[i]->has_state_level(level))
 				return 1;
 	return  0;
 }

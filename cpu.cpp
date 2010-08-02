@@ -94,7 +94,7 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 	core = package->children[core_number];
 
 	if (core->children.size() <= number)
-		core->children.resize(number + 1);
+		core->children.resize(number + 1, NULL);
 	if (!core->children[number])
 		core->children[number] = new_cpu(number, vendor, family, model);
 
@@ -176,5 +176,65 @@ void end_cpu_measurement(void)
 	system_level.measurement_end();
 }
 
+static void expand_string(char *string, unsigned int newlen)
+{
+	while (strlen(string) < newlen)
+		strcat(string, " ");
+}
+
+
+void display_cpus2(void)
+{
+	char buffer[128];
+	char linebuf[1024];
+	unsigned int package, core, cpu, line;
+	class abstract_cpu *_package, * _core, * _cpu;
+	int ctr = 0;
+
+
+	for (package = 0; package < system_level.children.size(); package++) {
+		_package = system_level.children[package];
+		
+		for (line = 0; line < 10; line++) {
+			ctr = 0;
+			linebuf[0] = 0;
+			if (!_package->has_state_level(line))
+				continue;
+
+			buffer[0] = 0;
+			strcat(linebuf, _package->fill_line(line, buffer));
+			expand_string(linebuf, 20);
+
+			strcat(linebuf, "| ");
+			for (core = 0; core < _package->children.size(); core++) {
+				_core = _package->children[core];
+				if (!_core)
+					continue;
+
+				buffer[0] = 0;
+				strcat(linebuf, _core->fill_line(line, buffer));
+				expand_string(linebuf, 22 + (++ctr) * 20);
+
+				for (cpu = 0; cpu < _core->children.size(); cpu++) {
+					_cpu = _core->children[cpu];
+					if (!_cpu)
+						continue;
+
+					buffer[0] = 0;
+					strcat(linebuf, _cpu->fill_line(line, buffer));
+					expand_string(linebuf, 22 + (++ctr) * 20);
+
+				}
+				strcat(linebuf, "| ");
+			}
+
+
+			printf("%s \n", linebuf);
+		}
+
+
+	}
+		
+}
 
 

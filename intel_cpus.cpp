@@ -48,9 +48,6 @@ void nhm_core::measurement_end(void)
 	uint64_t time_delta;
 	double ratio;
 
-	for (i = 0; i < children.size(); i++)
-		if (children[i])
-			children[i]->measurement_end();
 
 
 	aperf_after = get_msr(first_cpu, MSR_APERF);
@@ -63,6 +60,10 @@ void nhm_core::measurement_end(void)
 
 	finalize_state("core c3", 0, c3_after, 1);
 	finalize_state("core c6", 0, c6_after, 1);
+
+	for (i = 0; i < children.size(); i++)
+		if (children[i])
+			children[i]->measurement_end();
 
 	time_delta = 1000000 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
 
@@ -106,9 +107,6 @@ void nhm_package::measurement_end(void)
 	uint64_t time_delta;
 	double ratio;
 	unsigned int i;
-	for (i = 0; i < children.size(); i++)
-		if (children[i])
-			children[i]->measurement_end();
 
 
 	aperf_after = get_msr(number, MSR_APERF);
@@ -120,8 +118,13 @@ void nhm_package::measurement_end(void)
 	gettimeofday(&stamp_after, NULL);
 
 
+
 	finalize_state("pkg c3", 0, c3_after, 1);
 	finalize_state("pkg c6", 0, c6_after, 1);
+
+	for (i = 0; i < children.size(); i++)
+		if (children[i])
+			children[i]->measurement_end();
 
 	time_delta = 1000000 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
 

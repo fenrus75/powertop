@@ -16,8 +16,6 @@ int main(int argc, char **argv)
 	end_cpu_measurement();
 
 
-	display_cpus();
-	cout << "-----------\n\n";
 	display_cpus2();
 	return 0;
 }

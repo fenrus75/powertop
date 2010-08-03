@@ -96,7 +96,7 @@ void nhm_package::measurement_start(void)
 	c3_before    = get_msr(number, MSR_PKG_C3_RESIDENCY);
 	c6_before    = get_msr(number, MSR_PKG_C6_RESIDENCY);
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
-	gettimeofday(&stamp_after, NULL);
+	gettimeofday(&stamp_before, NULL);
 
 	insert_state("pkg c3", "C3 (pc3)", 0, c3_before, 1);
 	insert_state("pkg c6", "C6 (pc6)", 0, c6_before, 1);
@@ -143,6 +143,50 @@ void nhm_package::measurement_end(void)
 			cout << "count mismatch\n";
 			continue;
 		}
+
+		state->usage_delta =    ratio * (state->usage_after    - state->usage_before)    / state->after_count;
+		state->duration_delta = ratio * (state->duration_after - state->duration_before) / state->after_count;
+	}
+}
+
+
+void nhm_cpu::measurement_start(void)
+{
+	cpu_linux::measurement_start();
+
+	aperf_before = get_msr(number, MSR_APERF);
+	tsc_before   = get_msr(number, MSR_TSC);
+	gettimeofday(&stamp_before, NULL);
+
+	insert_state("active", "C0 active", 0, aperf_before, 1);
+}
+
+void nhm_cpu::measurement_end(void)
+{
+	uint64_t time_delta;
+	double ratio;
+	unsigned int i;
+
+
+	aperf_after = get_msr(number, MSR_APERF);
+	tsc_after   = get_msr(number, MSR_TSC);
+
+	gettimeofday(&stamp_after, NULL);
+
+
+	finalize_state("active", 0, aperf_after, 1);
+
+	time_delta = 1000000 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
+
+	ratio = 1.0 * time_delta / (tsc_after - tsc_before);
+
+
+	cpu_linux::measurement_end();
+
+	for (i = 0; i < states.size(); i++) {
+		struct power_state *state = states[i];
+		if (state->line_level != LEVEL_C0)
+			continue;
 
 		state->usage_delta =    ratio * (state->usage_after    - state->usage_before)    / state->after_count;
 		state->duration_delta = ratio * (state->duration_after - state->duration_before) / state->after_count;

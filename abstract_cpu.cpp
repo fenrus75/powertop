@@ -41,7 +41,7 @@ void abstract_cpu::measurement_end(void)
 		struct power_state *state = states[i];
 
 		if (state->after_count == 0) {
-			cout << "after count is 0\n";
+			cout << "after count is 0 " << state->linux_name << "\n";
 			continue;
 		}
 
@@ -74,6 +74,10 @@ void abstract_cpu::insert_state(const char *linux_name, const char *human_name, 
 
 	c = human_name;
 	while (*c) {
+		if (strcmp(linux_name, "active")==0) {
+			state->line_level = LEVEL_C0;
+			break;
+		}
 		if (*c >= '0' && *c <='9') {
 			state->line_level = strtoull(c, NULL, 10);
 			break;
@@ -99,7 +103,7 @@ void abstract_cpu::finalize_state(const char *linux_name, uint64_t usage, uint64
 	}
 
 	if (!state) {
-		cout << "Invalid C state update " << linux_name << " \n";
+		cout << "Invalid C state finalize " << linux_name << " \n";
 		return;
 	}
 

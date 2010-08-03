@@ -26,7 +26,6 @@ public:
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
 
-	void 	consolidate_children(void);
 };
 
 class nhm_core: public cpu_core 
@@ -42,7 +41,19 @@ public:
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
 
-	void 	consolidate_children(void);
+};
+
+class nhm_cpu: public cpu_linux
+{
+private:
+	uint64_t	aperf_before;
+	uint64_t	aperf_after;
+	uint64_t	tsc_before, tsc_after;
+	struct timeval	stamp_before, stamp_after;
+public:
+	virtual void 	measurement_start(void);
+	virtual void 	measurement_end(void);
+
 };
 
 class atom_package: public cpu_package 
@@ -51,7 +62,6 @@ public:
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
 
-	void 	consolidate_children(void);
 };
 
 class atom_core: public cpu_core
@@ -60,6 +70,5 @@ public:
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
 
-	void 	consolidate_children(void);
 };
 

@@ -45,7 +45,13 @@ static class abstract_cpu * new_cpu(int number, char * vendor, int family, int m
 {
 	class abstract_cpu * ret;
 
-	ret = new class cpu_linux;
+	if (strcmp(vendor, "GenuineIntel") == 0) {
+		if (family == 6 && model == 26)
+			ret = new class nhm_cpu;
+	}
+
+	if (!ret)
+		ret = new class cpu_linux;
 	ret->set_number(number, number);
 	
 	return ret;

@@ -26,7 +26,7 @@ char * cpu_core::fill_line(int line_nr, char *buffer)
 	buffer[0] = 0;
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,"Core %i", number);
+		sprintf(buffer,"Core");
 		return buffer;
 	}
 

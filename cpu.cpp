@@ -194,29 +194,35 @@ void display_cpus2(void)
 
 
 	for (package = 0; package < system_level.children.size(); package++) {
+		int first_pkg = 0;
 		_package = system_level.children[package];
 		if (!_package)
 			continue;
 		
-		for (line = LEVEL_HEADER; line < 10; line++) {
-			ctr = 0;
-			linebuf[0] = 0;
-			if (!_package->has_state_level(line))
+
+		for (core = 0; core < _package->children.size(); core++) {
+			_core = _package->children[core];
+			if (!_core)
 				continue;
 
-			buffer[0] = 0;
-			strcat(linebuf, _package->fill_line(line, buffer));
-			expand_string(linebuf, 20);
-
-			strcat(linebuf, "| ");
-			for (core = 0; core < _package->children.size(); core++) {
-				_core = _package->children[core];
-				if (!_core)
+			for (line = LEVEL_HEADER; line < 10; line++) {
+				ctr = 0;
+				linebuf[0] = 0;
+				if (!_package->has_state_level(line))
 					continue;
+	
+				buffer[0] = 0;
+				if (first_pkg == 0)
+					strcat(linebuf, _package->fill_line(line, buffer));
+				expand_string(linebuf, 20);
+	
+				strcat(linebuf, "| ");
+
 
 				buffer[0] = 0;
 				strcat(linebuf, _core->fill_line(line, buffer));
 				expand_string(linebuf, 22 + (++ctr) * 20);
+
 
 				for (cpu = 0; cpu < _core->children.size(); cpu++) {
 					_cpu = _core->children[cpu];
@@ -229,10 +235,11 @@ void display_cpus2(void)
 
 				}
 				strcat(linebuf, "| ");
+				printf("%s \n", linebuf);
 			}
 
-
-			printf("%s \n", linebuf);
+			printf("\n");
+			first_pkg++;
 		}
 
 

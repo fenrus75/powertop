@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <stdint.h>
+#include <sys/time.h>
 
 using namespace std;
 
@@ -33,6 +34,8 @@ class abstract_cpu
 protected:
 	int	number;
 	int	first_cpu;
+	struct timeval	stamp_before, stamp_after;
+	double  time_factor;
 public:
 	vector<class abstract_cpu *> children;
 	vector<struct power_state *> states;

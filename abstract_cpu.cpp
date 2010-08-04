@@ -15,11 +15,18 @@ void abstract_cpu::measurement_start(void)
 		if (children[i])
 			children[i]->measurement_start();
 
+	gettimeofday(&stamp_before, NULL);
 }
 
 void abstract_cpu::measurement_end(void)
 {
 	unsigned int i, j;
+
+	gettimeofday(&stamp_after, NULL);
+
+	time_factor = 1000000.0 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
+
+
 	for (i = 0; i < children.size(); i++)
 		if (children[i])
 			children[i]->measurement_end();

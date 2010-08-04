@@ -15,7 +15,7 @@ char * cpu_core::fill_line(int line_nr, char *buffer)
 	for (i = 0; i < states.size(); i++) {
 		if (states[i]->line_level != line_nr)
 			continue;
-		sprintf(buffer,"%4.1f%% %s", percentage(states[i]->duration_delta / time_factor), states[i]->human_name);
+		sprintf(buffer,"%5.1f%% %s", percentage(states[i]->duration_delta / time_factor), states[i]->human_name);
 	}
 
 	return buffer; 

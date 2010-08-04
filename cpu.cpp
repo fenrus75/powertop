@@ -167,11 +167,6 @@ void enumerate_cpus(void)
 	file.close();
 }
 
-void display_cpus(void)
-{
-	system_level.display();
-}
-
 void start_cpu_measurement(void)
 {
 	system_level.measurement_start();

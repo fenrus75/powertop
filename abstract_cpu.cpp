@@ -135,19 +135,6 @@ void abstract_cpu::update_state(const char *linux_name, const char *human_name, 
 
 }
 
-void abstract_cpu::display(void)
-{
-	unsigned int i;
-
-	for (i = 0; i < children.size(); i++)
-		if (children[i])
-			children[i]->display();
-
-	for (i = 0; i < states.size(); i++) {
-		cout << states[i]->human_name << "  for " << states[i]->duration_delta / 1000000.0 << "s \n";
-	}
-}
-
 int abstract_cpu::has_state_level(int level)
 {
 	unsigned int i;

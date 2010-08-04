@@ -136,17 +136,6 @@ void cpu_linux::measurement_end(void)
 }
 
 
-void cpu_linux::display(void)
-{
-	unsigned int i;
-	cout << "\t\tCPU number " << number << "\n";
-
-	for (i = 0; i < states.size(); i++) {
-		cout << "\t\t\t " << states[i]->human_name << "  for " << states[i]->duration_delta / 1000000.0 << "s \n";
-	}
-}
-
-
 char * cpu_linux::fill_line(int line_nr, char *buffer) 
 {
 	unsigned int i;

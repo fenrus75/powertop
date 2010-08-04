@@ -16,8 +16,6 @@
 class nhm_package: public cpu_package 
 {
 private:
-	uint64_t	aperf_before, mperf_before;
-	uint64_t	aperf_after, mperf_after;
 	uint64_t	c3_before, c3_after;
 	uint64_t	c6_before, c6_after;
 	uint64_t	tsc_before, tsc_after;
@@ -31,8 +29,6 @@ public:
 class nhm_core: public cpu_core 
 {
 private:
-	uint64_t	aperf_before, mperf_before;
-	uint64_t	aperf_after, mperf_after;
 	uint64_t	c3_before, c3_after;
 	uint64_t	c6_before, c6_after;
 	uint64_t	tsc_before, tsc_after;

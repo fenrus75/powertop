@@ -28,10 +28,9 @@ static uint64_t get_msr(int cpu, uint64_t offset)
 
 void nhm_core::measurement_start(void)
 {
+	/* the abstract function needs to be first since it clears all state */
 	abstract_cpu::measurement_start();
 
-	aperf_before = get_msr(first_cpu, MSR_APERF);
-	mperf_before = get_msr(first_cpu, MSR_MPERF);
 	c3_before    = get_msr(first_cpu, MSR_CORE_C3_RESIDENCY);
 	c6_before    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
@@ -50,8 +49,6 @@ void nhm_core::measurement_end(void)
 
 
 
-	aperf_after = get_msr(first_cpu, MSR_APERF);
-	mperf_after = get_msr(first_cpu, MSR_MPERF);
 	c3_after    = get_msr(first_cpu, MSR_CORE_C3_RESIDENCY);
 	c6_after    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
 	tsc_after   = get_msr(first_cpu, MSR_TSC);
@@ -91,8 +88,6 @@ void nhm_package::measurement_start(void)
 {
 	abstract_cpu::measurement_start();
 
-	aperf_before = get_msr(number, MSR_APERF);
-	mperf_before = get_msr(number, MSR_MPERF);
 	c3_before    = get_msr(number, MSR_PKG_C3_RESIDENCY);
 	c6_before    = get_msr(number, MSR_PKG_C6_RESIDENCY);
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
@@ -109,8 +104,6 @@ void nhm_package::measurement_end(void)
 	unsigned int i;
 
 
-	aperf_after = get_msr(number, MSR_APERF);
-	mperf_after = get_msr(number, MSR_MPERF);
 	c3_after    = get_msr(number, MSR_PKG_C3_RESIDENCY);
 	c6_after    = get_msr(number, MSR_PKG_C6_RESIDENCY);
 	tsc_after   = get_msr(first_cpu, MSR_TSC);

@@ -142,7 +142,7 @@ char * cpu_linux::fill_line(int line_nr, char *buffer)
 	buffer[0] = 0;
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,"CPU %i", number);
+		sprintf(buffer,"  CPU %i", number);
 		return buffer;
 	}
 
@@ -150,7 +150,22 @@ char * cpu_linux::fill_line(int line_nr, char *buffer)
 		if (states[i]->line_level != line_nr)
 			continue;
 
-		sprintf(buffer,"%5.1f%% %s", percentage(states[i]->duration_delta / time_factor), states[i]->human_name);
+		sprintf(buffer,"%5.1f%% %6.1f ms", percentage(states[i]->duration_delta / time_factor), 1.0 * states[i]->duration_delta / (1+states[i]->usage_delta) / 1000);
+	}
+
+	return buffer; 
+}
+
+char * cpu_linux::fill_state_name(int line_nr, char *buffer) 
+{
+	unsigned int i;
+	buffer[0] = 0;
+
+	for (i = 0; i < states.size(); i++) {
+		if (states[i]->line_level != line_nr)
+			continue;
+
+		sprintf(buffer,"%s", states[i]->human_name);
 	}
 
 	return buffer; 

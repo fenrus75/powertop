@@ -52,6 +52,7 @@ public:
 	virtual void 	measurement_end(void);
 
 	virtual char *  fill_line(int line_nr, char *buffer) { return buffer;};
+	virtual char *  fill_state_name(int line_nr, char *buffer) { return buffer;};
 };
 
 class cpu_linux: public abstract_cpu 
@@ -61,6 +62,7 @@ public:
 	virtual void 	measurement_end(void);
 
 	virtual char *  fill_line(int line_nr, char *buffer);
+	virtual char *  fill_state_name(int line_nr, char *buffer);
 
 };
 
@@ -68,12 +70,14 @@ class cpu_core: public abstract_cpu
 {
 public:
 	virtual char *  fill_line(int line_nr, char *buffer);
+	virtual char *  fill_state_name(int line_nr, char *buffer);
 };
 
 class cpu_package: public abstract_cpu 
 {
 public:
 	virtual char *  fill_line(int line_nr, char *buffer);
+	virtual char *  fill_state_name(int line_nr, char *buffer);
 };
 
 #include "intel_cpus.h"

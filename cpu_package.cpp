@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "cpu.h"
+#include "lib.h"
 
 char * cpu_package::fill_line(int line_nr, char *buffer) 
 {
@@ -15,7 +16,7 @@ char * cpu_package::fill_line(int line_nr, char *buffer)
 		if (states[i]->line_level != line_nr)
 			continue;
 
-		sprintf(buffer,"%4.1f%% %s", 100.0 * states[i]->duration_delta / time_factor, states[i]->human_name);
+		sprintf(buffer,"%4.1f%% %s", percentage(states[i]->duration_delta / time_factor), states[i]->human_name);
 	}
 
 	return buffer; 

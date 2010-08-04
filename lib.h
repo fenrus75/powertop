@@ -8,6 +8,8 @@ extern "C" {
 #define _(STRING)    gettext(STRING)
 
 
+extern double percentage(double F);
+
 
 
 #ifdef __cplusplus

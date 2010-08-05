@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "cpu.h"
-#include "lib.h"
+#include "../lib.h"
 
 char * cpu_core::fill_line(int line_nr, char *buffer) 
 {

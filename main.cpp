@@ -16,6 +16,6 @@ int main(int argc, char **argv)
 	end_cpu_measurement();
 
 
-	display_cpus2();
+	display_cpu_cstates();
 	return 0;
 }

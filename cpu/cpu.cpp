@@ -184,7 +184,7 @@ static void expand_string(char *string, unsigned int newlen)
 }
 
 
-void display_cpus2(void)
+void display_cpu_cstates(void)
 {
 	char buffer[128];
 	char linebuf[1024];

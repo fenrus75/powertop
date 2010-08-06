@@ -69,7 +69,7 @@ void nhm_core::measurement_end(void)
 	ratio = 1.0 * time_delta / (tsc_after - tsc_before);
 
 	for (i = 0; i < cstates.size(); i++) {
-		struct power_state *state = cstates[i];
+		struct idle_state *state = cstates[i];
 
 		if (state->after_count == 0) {
 			cout << "after count is 0\n";
@@ -127,7 +127,7 @@ void nhm_package::measurement_end(void)
 
 
 	for (i = 0; i < cstates.size(); i++) {
-		struct power_state *state = cstates[i];
+		struct idle_state *state = cstates[i];
 
 		if (state->after_count == 0) {
 			cout << "after count is 0\n";
@@ -178,7 +178,7 @@ void nhm_cpu::measurement_end(void)
 
 
 	for (i = 0; i < cstates.size(); i++) {
-		struct power_state *state = cstates[i];
+		struct idle_state *state = cstates[i];
 		if (state->line_level != LEVEL_C0)
 			continue;
 

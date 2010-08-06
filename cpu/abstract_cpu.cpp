@@ -34,7 +34,7 @@ void abstract_cpu::measurement_end(void)
 	for (i = 0; i < children.size(); i++)
 		if (children[i])
 			for (j = 0; j < children[i]->cstates.size(); j++) {
-				struct power_state *state;
+				struct idle_state *state;
 				state = children[i]->cstates[j];
 				if (!state)
 					continue;
@@ -45,7 +45,7 @@ void abstract_cpu::measurement_end(void)
 
 
 	for (i = 0; i < cstates.size(); i++) {
-		struct power_state *state = cstates[i];
+		struct idle_state *state = cstates[i];
 
 		if (state->after_count == 0) {
 			cout << "after count is 0 " << state->linux_name << "\n";
@@ -64,10 +64,10 @@ void abstract_cpu::measurement_end(void)
 
 void abstract_cpu::insert_cstate(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count)
 {
-	struct power_state *state;
+	struct idle_state *state;
 	const char *c;
 
-	state = new struct power_state;
+	state = new struct idle_state;
 
 	if (!state)
 		return;
@@ -100,7 +100,7 @@ void abstract_cpu::insert_cstate(const char *linux_name, const char *human_name,
 void abstract_cpu::finalize_cstate(const char *linux_name, uint64_t usage, uint64_t duration, int count)
 {
  	unsigned int i;
-	struct power_state *state = NULL;
+	struct idle_state *state = NULL;
 
 	for (i = 0; i < cstates.size(); i++) {
 		if (strcmp(linux_name, cstates[i]->linux_name) == 0) {
@@ -122,7 +122,7 @@ void abstract_cpu::finalize_cstate(const char *linux_name, uint64_t usage, uint6
 void abstract_cpu::update_cstate(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count)
 {
  	unsigned int i;
-	struct power_state *state = NULL;
+	struct idle_state *state = NULL;
 
 	for (i = 0; i < cstates.size(); i++) {
 		if (strcmp(linux_name, cstates[i]->linux_name) == 0) {

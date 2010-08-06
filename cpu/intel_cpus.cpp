@@ -35,8 +35,8 @@ void nhm_core::measurement_start(void)
 	c6_before    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
-	insert_state("core c3", "C3 (cc3)", 0, c3_before, 1);
-	insert_state("core c6", "C6 (cc6)", 0, c6_before, 1);
+	insert_cstate("core c3", "C3 (cc3)", 0, c3_before, 1);
+	insert_cstate("core c6", "C6 (cc6)", 0, c6_before, 1);
 }
 
 void nhm_core::measurement_end(void)
@@ -51,8 +51,8 @@ void nhm_core::measurement_end(void)
 	c6_after    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
 	tsc_after   = get_msr(first_cpu, MSR_TSC);
 
-	finalize_state("core c3", 0, c3_after, 1);
-	finalize_state("core c6", 0, c6_after, 1);
+	finalize_cstate("core c3", 0, c3_after, 1);
+	finalize_cstate("core c6", 0, c6_after, 1);
 
 	gettimeofday(&stamp_after, NULL);
 
@@ -68,8 +68,8 @@ void nhm_core::measurement_end(void)
 
 	ratio = 1.0 * time_delta / (tsc_after - tsc_before);
 
-	for (i = 0; i < states.size(); i++) {
-		struct power_state *state = states[i];
+	for (i = 0; i < cstates.size(); i++) {
+		struct power_state *state = cstates[i];
 
 		if (state->after_count == 0) {
 			cout << "after count is 0\n";
@@ -94,8 +94,8 @@ void nhm_package::measurement_start(void)
 	c6_before    = get_msr(number, MSR_PKG_C6_RESIDENCY);
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
-	insert_state("pkg c3", "C3 (pc3)", 0, c3_before, 1);
-	insert_state("pkg c6", "C6 (pc6)", 0, c6_before, 1);
+	insert_cstate("pkg c3", "C3 (pc3)", 0, c3_before, 1);
+	insert_cstate("pkg c6", "C6 (pc6)", 0, c6_before, 1);
 }
 
 void nhm_package::measurement_end(void)
@@ -114,8 +114,8 @@ void nhm_package::measurement_end(void)
 	time_factor = 1000000.0 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
 
 
-	finalize_state("pkg c3", 0, c3_after, 1);
-	finalize_state("pkg c6", 0, c6_after, 1);
+	finalize_cstate("pkg c3", 0, c3_after, 1);
+	finalize_cstate("pkg c6", 0, c6_after, 1);
 
 	for (i = 0; i < children.size(); i++)
 		if (children[i])
@@ -126,8 +126,8 @@ void nhm_package::measurement_end(void)
 	ratio = 1.0 * time_delta / (tsc_after - tsc_before);
 
 
-	for (i = 0; i < states.size(); i++) {
-		struct power_state *state = states[i];
+	for (i = 0; i < cstates.size(); i++) {
+		struct power_state *state = cstates[i];
 
 		if (state->after_count == 0) {
 			cout << "after count is 0\n";
@@ -152,7 +152,7 @@ void nhm_cpu::measurement_start(void)
 	aperf_before = get_msr(number, MSR_APERF);
 	tsc_before   = get_msr(number, MSR_TSC);
 
-	insert_state("active", "C0 active", 0, aperf_before, 1);
+	insert_cstate("active", "C0 active", 0, aperf_before, 1);
 }
 
 void nhm_cpu::measurement_end(void)
@@ -167,7 +167,7 @@ void nhm_cpu::measurement_end(void)
 
 
 
-	finalize_state("active", 0, aperf_after, 1);
+	finalize_cstate("active", 0, aperf_after, 1);
 
 
 	cpu_linux::measurement_end();
@@ -177,8 +177,8 @@ void nhm_cpu::measurement_end(void)
 	ratio = 1.0 * time_delta / (tsc_after - tsc_before);
 
 
-	for (i = 0; i < states.size(); i++) {
-		struct power_state *state = states[i];
+	for (i = 0; i < cstates.size(); i++) {
+		struct power_state *state = cstates[i];
 		if (state->line_level != LEVEL_C0)
 			continue;
 

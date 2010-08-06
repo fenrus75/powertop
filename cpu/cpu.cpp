@@ -210,14 +210,14 @@ void display_cpus2(void)
 				ctr = 22;
 				int first = 1;
 				linebuf[0] = 0;
-				if (!_package->has_state_level(line))
+				if (!_package->has_cstate_level(line))
 					continue;
 	
 				buffer[0] = 0;
 				if (first_pkg == 0) {
-					strcat(linebuf, _package->fill_state_name(line, buffer));
+					strcat(linebuf, _package->fill_cstate_name(line, buffer));
 					expand_string(linebuf, 10);
-					strcat(linebuf, _package->fill_line(line, buffer));
+					strcat(linebuf, _package->fill_cstate_line(line, buffer));
 				}
 				expand_string(linebuf, 20);
 	
@@ -225,9 +225,9 @@ void display_cpus2(void)
 
 
 				buffer[0] = 0;
-				strcat(linebuf, _core->fill_state_name(line, buffer));
+				strcat(linebuf, _core->fill_cstate_name(line, buffer));
 				expand_string(linebuf, ctr + 10);
-				strcat(linebuf, _core->fill_line(line, buffer));
+				strcat(linebuf, _core->fill_cstate_line(line, buffer));
 				ctr += 20;
 				expand_string(linebuf, ctr);
 
@@ -240,13 +240,13 @@ void display_cpus2(void)
 						continue;
 
 					if (first == 1) {
-						strcat(linebuf, _cpu->fill_state_name(line, buffer));
+						strcat(linebuf, _cpu->fill_cstate_name(line, buffer));
 						expand_string(linebuf, ctr + 10);
 						first = 0;
 						ctr += 12;
 					}
 					buffer[0] = 0;
-					strcat(linebuf, _cpu->fill_line(line, buffer));
+					strcat(linebuf, _cpu->fill_cstate_line(line, buffer));
 					ctr += 18;
 					expand_string(linebuf, ctr);
 

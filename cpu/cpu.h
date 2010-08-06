@@ -38,21 +38,21 @@ protected:
 	double  time_factor;
 public:
 	vector<class abstract_cpu *> children;
-	vector<struct power_state *> states;
+	vector<struct power_state *> cstates;
 
 	void		set_number(int number, int cpu) {this->number = number; this->first_cpu = cpu;};
 
-	void		insert_state(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count);
-	void		update_state(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count);
-	void		finalize_state(const char *linux_name, uint64_t usage, uint64_t duration, int count);
+	void		insert_cstate(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count);
+	void		update_cstate(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count);
+	void		finalize_cstate(const char *linux_name, uint64_t usage, uint64_t duration, int count);
 
-	virtual int	has_state_level(int level);
+	virtual int	has_cstate_level(int level);
 
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
 
-	virtual char *  fill_line(int line_nr, char *buffer) { return buffer;};
-	virtual char *  fill_state_name(int line_nr, char *buffer) { return buffer;};
+	virtual char *  fill_cstate_line(int line_nr, char *buffer) { return buffer;};
+	virtual char *  fill_cstate_name(int line_nr, char *buffer) { return buffer;};
 };
 
 class cpu_linux: public abstract_cpu 
@@ -61,23 +61,23 @@ public:
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
 
-	virtual char *  fill_line(int line_nr, char *buffer);
-	virtual char *  fill_state_name(int line_nr, char *buffer);
+	virtual char *  fill_cstate_line(int line_nr, char *buffer);
+	virtual char *  fill_cstate_name(int line_nr, char *buffer);
 
 };
 
 class cpu_core: public abstract_cpu 
 {
 public:
-	virtual char *  fill_line(int line_nr, char *buffer);
-	virtual char *  fill_state_name(int line_nr, char *buffer);
+	virtual char *  fill_cstate_line(int line_nr, char *buffer);
+	virtual char *  fill_cstate_name(int line_nr, char *buffer);
 };
 
 class cpu_package: public abstract_cpu 
 {
 public:
-	virtual char *  fill_line(int line_nr, char *buffer);
-	virtual char *  fill_state_name(int line_nr, char *buffer);
+	virtual char *  fill_cstate_line(int line_nr, char *buffer);
+	virtual char *  fill_cstate_name(int line_nr, char *buffer);
 };
 
 #include "intel_cpus.h"

@@ -2,7 +2,7 @@
 #include "cpu.h"
 #include "../lib.h"
 
-char * cpu_package::fill_line(int line_nr, char *buffer) 
+char * cpu_package::fill_cstate_line(int line_nr, char *buffer) 
 {
 	unsigned int i;
 	buffer[0] = 0;
@@ -12,27 +12,27 @@ char * cpu_package::fill_line(int line_nr, char *buffer)
 		return buffer;
 	}
 
-	for (i = 0; i < states.size(); i++) {
-		if (states[i]->line_level != line_nr)
+	for (i = 0; i < cstates.size(); i++) {
+		if (cstates[i]->line_level != line_nr)
 			continue;
 
-		sprintf(buffer,"%5.1f%%", percentage(states[i]->duration_delta / time_factor));
+		sprintf(buffer,"%5.1f%%", percentage(cstates[i]->duration_delta / time_factor));
 	}
 
 	return buffer; 
 }
 
 
-char * cpu_package::fill_state_name(int line_nr, char *buffer) 
+char * cpu_package::fill_cstate_name(int line_nr, char *buffer) 
 {
 	unsigned int i;
 	buffer[0] = 0;
 
-	for (i = 0; i < states.size(); i++) {
-		if (states[i]->line_level != line_nr)
+	for (i = 0; i < cstates.size(); i++) {
+		if (cstates[i]->line_level != line_nr)
 			continue;
 
-		sprintf(buffer,"%s", states[i]->human_name);
+		sprintf(buffer,"%s", cstates[i]->human_name);
 	}
 
 	return buffer; 

@@ -7,9 +7,9 @@ void abstract_cpu::measurement_start(void)
 {
 	unsigned int i;
 
-	for (i = 0; i < states.size(); i++)
-		delete states[i];
-	states.resize(0);
+	for (i = 0; i < cstates.size(); i++)
+		delete cstates[i];
+	cstates.resize(0);
 
 	for (i = 0; i < children.size(); i++)
 		if (children[i])
@@ -33,19 +33,19 @@ void abstract_cpu::measurement_end(void)
 
 	for (i = 0; i < children.size(); i++)
 		if (children[i])
-			for (j = 0; j < children[i]->states.size(); j++) {
+			for (j = 0; j < children[i]->cstates.size(); j++) {
 				struct power_state *state;
-				state = children[i]->states[j];
+				state = children[i]->cstates[j];
 				if (!state)
 					continue;
 
-				update_state( state->linux_name, state->human_name, state->usage_before, state->duration_before, state->before_count);
-				finalize_state(state->linux_name,                   state->usage_after,  state->duration_after,  state->after_count);
+				update_cstate( state->linux_name, state->human_name, state->usage_before, state->duration_before, state->before_count);
+				finalize_cstate(state->linux_name,                   state->usage_after,  state->duration_after,  state->after_count);
 			}
 
 
-	for (i = 0; i < states.size(); i++) {
-		struct power_state *state = states[i];
+	for (i = 0; i < cstates.size(); i++) {
+		struct power_state *state = cstates[i];
 
 		if (state->after_count == 0) {
 			cout << "after count is 0 " << state->linux_name << "\n";
@@ -62,7 +62,7 @@ void abstract_cpu::measurement_end(void)
 	}
 }
 
-void abstract_cpu::insert_state(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count)
+void abstract_cpu::insert_cstate(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count)
 {
 	struct power_state *state;
 	const char *c;
@@ -74,7 +74,7 @@ void abstract_cpu::insert_state(const char *linux_name, const char *human_name, 
 
 	memset(state, 0, sizeof(*state));
 
-	states.push_back(state);
+	cstates.push_back(state);
 
 	strcpy(state->linux_name, linux_name);
 	strcpy(state->human_name, human_name);
@@ -97,14 +97,14 @@ void abstract_cpu::insert_state(const char *linux_name, const char *human_name, 
 	state->before_count = count;
 }
 
-void abstract_cpu::finalize_state(const char *linux_name, uint64_t usage, uint64_t duration, int count)
+void abstract_cpu::finalize_cstate(const char *linux_name, uint64_t usage, uint64_t duration, int count)
 {
  	unsigned int i;
 	struct power_state *state = NULL;
 
-	for (i = 0; i < states.size(); i++) {
-		if (strcmp(linux_name, states[i]->linux_name) == 0) {
-			state = states[i];
+	for (i = 0; i < cstates.size(); i++) {
+		if (strcmp(linux_name, cstates[i]->linux_name) == 0) {
+			state = cstates[i];
 			break;
 		}
 	}
@@ -119,20 +119,20 @@ void abstract_cpu::finalize_state(const char *linux_name, uint64_t usage, uint64
 	state->after_count += count;
 }
 
-void abstract_cpu::update_state(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count)
+void abstract_cpu::update_cstate(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count)
 {
  	unsigned int i;
 	struct power_state *state = NULL;
 
-	for (i = 0; i < states.size(); i++) {
-		if (strcmp(linux_name, states[i]->linux_name) == 0) {
-			state = states[i];
+	for (i = 0; i < cstates.size(); i++) {
+		if (strcmp(linux_name, cstates[i]->linux_name) == 0) {
+			state = cstates[i];
 			break;
 		}
 	}
 
 	if (!state) {
-		insert_state(linux_name, human_name, usage, duration, count);
+		insert_cstate(linux_name, human_name, usage, duration, count);
 		return;
 	}
 
@@ -142,20 +142,20 @@ void abstract_cpu::update_state(const char *linux_name, const char *human_name, 
 
 }
 
-int abstract_cpu::has_state_level(int level)
+int abstract_cpu::has_cstate_level(int level)
 {
 	unsigned int i;
 
 	if (level == LEVEL_HEADER)
 		return 1;
 
-	for (i = 0; i < states.size(); i++)
-		if (states[i]->line_level == level)
+	for (i = 0; i < cstates.size(); i++)
+		if (cstates[i]->line_level == level)
 			return 1;
 
 	for (i = 0; i < children.size(); i++)
 		if (children[i]) 
-			if (children[i]->has_state_level(level))
+			if (children[i]->has_cstate_level(level))
 				return 1;
 	return  0;
 }

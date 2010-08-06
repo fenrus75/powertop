@@ -160,3 +160,64 @@ int abstract_cpu::has_cstate_level(int level)
 	return  0;
 }
 
+
+
+void abstract_cpu::insert_pstate(uint64_t freq, const char *human_name, uint64_t duration, int count)
+{
+	struct frequency *state;
+
+	state = new struct frequency;
+
+	if (!state)
+		return;
+
+	memset(state, 0, sizeof(*state));
+
+	pstates.push_back(state);
+
+	state->freq = freq;
+	strcpy(state->human_name, human_name);
+
+
+	state->time_before = duration;
+}
+
+void abstract_cpu::finalize_pstate(uint64_t freq, uint64_t duration, int count)
+{
+ 	unsigned int i;
+	struct frequency *state = NULL;
+
+	for (i = 0; i < pstates.size(); i++) {
+		if (freq == pstates[i]->freq) {
+			state = pstates[i];
+			break;
+		}
+	}
+
+	if (!state) {
+		cout << "Invalid P state finalize " << freq << " \n";
+		return;
+	}
+	state->time_before = duration;
+
+}
+
+void abstract_cpu::update_pstate(uint64_t freq, const char *human_name, uint64_t duration, int count)
+{
+ 	unsigned int i;
+	struct frequency *state = NULL;
+
+	for (i = 0; i < pstates.size(); i++) {
+		if (freq == pstates[i]->freq) {
+			state = pstates[i];
+			break;
+		}
+	}
+
+	if (!state) {
+		insert_pstate(freq, human_name, duration, count);
+		return;
+	}
+
+	state->time_before = duration;
+}

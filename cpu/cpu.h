@@ -29,6 +29,18 @@ struct idle_state {
 	int line_level;
 };
 
+struct frequency {
+	char human_name[32];
+	int line_level;
+
+	uint64_t freq;
+	
+	uint64_t time_before;
+	uint64_t time_after;
+
+	double   display_value;	
+};
+
 class abstract_cpu 
 {
 protected:
@@ -39,6 +51,7 @@ protected:
 public:
 	vector<class abstract_cpu *> children;
 	vector<struct idle_state *> cstates;
+	vector<struct frequency *> pstates;
 
 	void		set_number(int number, int cpu) {this->number = number; this->first_cpu = cpu;};
 
@@ -57,7 +70,16 @@ public:
 	virtual char *  fill_cstate_line(int line_nr, char *buffer) { return buffer;};
 	virtual char *  fill_cstate_name(int line_nr, char *buffer) { return buffer;};
 
+
 	/* P state related methods */
+	void		insert_pstate(uint64_t freq, const char *human_name, uint64_t duration, int count);
+	void		update_pstate(uint64_t freq, const char *human_name, uint64_t duration, int count);
+	void		finalize_pstate(uint64_t freq, uint64_t duration, int count);
+
+
+	virtual char *  fill_pstate_line(int line_nr, char *buffer) { return buffer;};
+	virtual char *  fill_pstate_name(int line_nr, char *buffer) { return buffer;};
+
 };
 
 class cpu_linux: public abstract_cpu 

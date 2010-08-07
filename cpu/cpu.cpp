@@ -328,7 +328,7 @@ void display_cpu_pstates(void)
 					}
 					buffer[0] = 0;
 					strcat(linebuf, _cpu->fill_pstate_line(line, buffer));
-					ctr += 18;
+					ctr += 8;
 					expand_string(linebuf, ctr);
 
 				}

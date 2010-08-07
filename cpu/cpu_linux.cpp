@@ -251,7 +251,7 @@ char * cpu_linux::fill_pstate_line(int line_nr, char *buffer)
 	buffer[0] = 0;
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,"  CPU %i", number);
+		sprintf(buffer," CPU %i", number);
 		return buffer;
 	}
 

@@ -41,7 +41,7 @@ void nhm_core::measurement_start(void)
 
 void nhm_core::measurement_end(void)
 {
-	unsigned int i;
+	unsigned int i, j;
 	uint64_t time_delta;
 	double ratio;
 
@@ -84,6 +84,20 @@ void nhm_core::measurement_end(void)
 		state->usage_delta =    ratio * (state->usage_after    - state->usage_before)    / state->after_count;
 		state->duration_delta = ratio * (state->duration_after - state->duration_before) / state->after_count;
 	}
+
+	for (i = 0; i < children.size(); i++)
+		if (children[i]) {
+			for (j = 0; j < children[i]->pstates.size(); j++) {
+				struct frequency *state;
+				state = children[i]->pstates[j];
+				if (!state)
+					continue;
+
+				update_pstate(  state->freq, state->human_name, state->time_before, state->before_count);
+				finalize_pstate(state->freq,                    state->time_after,  state->after_count);
+			}
+		}
+
 }
 
 void nhm_package::measurement_start(void)
@@ -102,7 +116,7 @@ void nhm_package::measurement_end(void)
 {
 	uint64_t time_delta;
 	double ratio;
-	unsigned int i;
+	unsigned int i, j;
 
 
 	c3_after    = get_msr(number, MSR_PKG_C3_RESIDENCY);
@@ -142,6 +156,18 @@ void nhm_package::measurement_end(void)
 		state->usage_delta =    ratio * (state->usage_after    - state->usage_before)    / state->after_count;
 		state->duration_delta = ratio * (state->duration_after - state->duration_before) / state->after_count;
 	}
+	for (i = 0; i < children.size(); i++)
+		if (children[i]) {
+			for (j = 0; j < children[i]->pstates.size(); j++) {
+				struct frequency *state;
+				state = children[i]->pstates[j];
+				if (!state)
+					continue;
+
+				update_pstate(  state->freq, state->human_name, state->time_before, state->before_count);
+				finalize_pstate(state->freq,                    state->time_after,  state->after_count);
+			}
+		}
 }
 
 

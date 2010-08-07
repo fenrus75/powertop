@@ -4,6 +4,8 @@
 #include "cpu.h"
 #include "../lib.h"
 
+#include <stdlib.h>
+
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
@@ -15,12 +17,14 @@
 
 void cpu_linux::measurement_start(void)
 {
-	abstract_cpu::measurement_start();
+	ifstream file; 
 
 	DIR *dir;
 	struct dirent *entry;
-	char filename[128];
+	char filename[256];
 	int len;
+
+	abstract_cpu::measurement_start();
 
 	len = sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpuidle", number);
 
@@ -31,7 +35,6 @@ void cpu_linux::measurement_start(void)
 	/* For each C-state, there is a stateX directory which
 	 * contains a 'usage' and a 'time' (duration) file */
 	while ((entry = readdir(dir))) {
-		ifstream file; 
 		char linux_name[64];
 		char human_name[64];
 		uint64_t usage = 0;
@@ -76,6 +79,37 @@ void cpu_linux::measurement_start(void)
 	}
 	closedir(dir);
 
+
+	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", number);
+
+	file.open(filename, ios::in);
+
+	if (file) {
+		char line[1024];
+
+		while (file) {
+			uint64_t f,count;
+			char *c;
+
+			memset(line, 0, 1024);
+
+			file.getline(line, 1024);
+
+			f = strtoull(line, &c, 10);
+			if (!c)
+				break;
+
+			count = strtoull(c, NULL, 10);
+
+			hz_to_human(f, line);
+
+			if (f > 0)
+				update_pstate(f, line, count, 1);
+
+		}
+		file.close();
+	}
+
 }
 
 
@@ -83,7 +117,8 @@ void cpu_linux::measurement_end(void)
 {
 	DIR *dir;
 	struct dirent *entry;
-	char filename[128];
+	char filename[256];
+	ifstream file; 
 	int len;
 
 	len = sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpuidle", number);
@@ -95,7 +130,6 @@ void cpu_linux::measurement_end(void)
 	/* For each C-state, there is a stateX directory which
 	 * contains a 'usage' and a 'time' (duration) file */
 	while ((entry = readdir(dir))) {
-		ifstream file; 
 		char linux_name[64];
 		char human_name[64];
 		uint64_t usage = 0;
@@ -129,6 +163,35 @@ void cpu_linux::measurement_end(void)
 
 	}
 	closedir(dir);
+
+	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", number);
+
+	file.open(filename, ios::in);
+
+	if (file) {
+		char line[1024];
+
+		while (file) {
+			uint64_t f,count;
+			char *c;
+
+			memset(line, 0, 1024);
+
+			file.getline(line, 1024);
+
+			f = strtoull(line, &c, 10);
+			if (!c)
+				break;
+
+			count = strtoull(c, NULL, 10);
+
+			if (f > 0)
+				finalize_pstate(f, count, 1);
+
+
+		}
+		file.close();
+	}
 
 
 	abstract_cpu::measurement_end();
@@ -167,6 +230,36 @@ char * cpu_linux::fill_cstate_name(int line_nr, char *buffer)
 		sprintf(buffer,"%s", cstates[i]->human_name);
 	}
 
+	return buffer; 
+}
+
+
+char * cpu_linux::fill_pstate_name(int line_nr, char *buffer) 
+{
+	buffer[0] = 0;
+
+	if (line_nr >= (int)pstates.size() || line_nr < 0)
+		return buffer;
+
+	sprintf(buffer,"%s", pstates[line_nr]->human_name);
+
+	return buffer; 
+}
+
+char * cpu_linux::fill_pstate_line(int line_nr, char *buffer) 
+{
+	buffer[0] = 0;
+
+	if (line_nr == LEVEL_HEADER) {
+		sprintf(buffer,"  CPU %i", number);
+		return buffer;
+	}
+
+	if (line_nr >= (int)pstates.size() || line_nr < 0)
+		return buffer;
+
+
+	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after - pstates[line_nr]->time_before) / time_factor * 10000));
 	return buffer; 
 }
 

@@ -38,6 +38,9 @@ struct frequency {
 	uint64_t time_before;
 	uint64_t time_after;
 
+	int before_count;
+	int after_count;
+
 	double   display_value;	
 };
 
@@ -91,6 +94,9 @@ public:
 	virtual char *  fill_cstate_line(int line_nr, char *buffer);
 	virtual char *  fill_cstate_name(int line_nr, char *buffer);
 
+	virtual char *  fill_pstate_line(int line_nr, char *buffer);
+	virtual char *  fill_pstate_name(int line_nr, char *buffer);
+
 };
 
 class cpu_core: public abstract_cpu 
@@ -98,6 +104,9 @@ class cpu_core: public abstract_cpu
 public:
 	virtual char *  fill_cstate_line(int line_nr, char *buffer);
 	virtual char *  fill_cstate_name(int line_nr, char *buffer);
+
+	virtual char *  fill_pstate_line(int line_nr, char *buffer);
+	virtual char *  fill_pstate_name(int line_nr, char *buffer);
 };
 
 class cpu_package: public abstract_cpu 
@@ -105,6 +114,9 @@ class cpu_package: public abstract_cpu
 public:
 	virtual char *  fill_cstate_line(int line_nr, char *buffer);
 	virtual char *  fill_cstate_name(int line_nr, char *buffer);
+
+	virtual char *  fill_pstate_line(int line_nr, char *buffer);
+	virtual char *  fill_pstate_name(int line_nr, char *buffer);
 };
 
 #include "intel_cpus.h"
@@ -112,6 +124,7 @@ public:
 extern void enumerate_cpus(void);
 
 extern void display_cpu_cstates(void);
+extern void display_cpu_pstates(void);
 
 void start_cpu_measurement(void);
 void end_cpu_measurement(void);

@@ -11,6 +11,10 @@ void abstract_cpu::measurement_start(void)
 		delete cstates[i];
 	cstates.resize(0);
 
+	for (i = 0; i < pstates.size(); i++)
+		delete pstates[i];
+	pstates.resize(0);
+
 	for (i = 0; i < children.size(); i++)
 		if (children[i])
 			children[i]->measurement_start();
@@ -32,7 +36,7 @@ void abstract_cpu::measurement_end(void)
 			children[i]->measurement_end();
 
 	for (i = 0; i < children.size(); i++)
-		if (children[i])
+		if (children[i]) {
 			for (j = 0; j < children[i]->cstates.size(); j++) {
 				struct idle_state *state;
 				state = children[i]->cstates[j];
@@ -42,6 +46,16 @@ void abstract_cpu::measurement_end(void)
 				update_cstate( state->linux_name, state->human_name, state->usage_before, state->duration_before, state->before_count);
 				finalize_cstate(state->linux_name,                   state->usage_after,  state->duration_after,  state->after_count);
 			}
+			for (j = 0; j < children[i]->pstates.size(); j++) {
+				struct frequency *state;
+				state = children[i]->pstates[j];
+				if (!state)
+					continue;
+
+				update_pstate(  state->freq, state->human_name, state->time_before, state->before_count);
+				finalize_pstate(state->freq,                    state->time_after,  state->after_count);
+			}
+		}
 
 
 	for (i = 0; i < cstates.size(); i++) {
@@ -180,6 +194,7 @@ void abstract_cpu::insert_pstate(uint64_t freq, const char *human_name, uint64_t
 
 
 	state->time_before = duration;
+	state->before_count = count;
 }
 
 void abstract_cpu::finalize_pstate(uint64_t freq, uint64_t duration, int count)
@@ -198,7 +213,8 @@ void abstract_cpu::finalize_pstate(uint64_t freq, uint64_t duration, int count)
 		cout << "Invalid P state finalize " << freq << " \n";
 		return;
 	}
-	state->time_before = duration;
+	state->time_after += duration;
+	state->after_count += count;
 
 }
 
@@ -219,5 +235,6 @@ void abstract_cpu::update_pstate(uint64_t freq, const char *human_name, uint64_t
 		return;
 	}
 
-	state->time_before = duration;
+	state->time_before += duration;
+	state->before_count += count;
 }

@@ -265,3 +265,84 @@ void display_cpu_cstates(void)
 }
 
 
+void display_cpu_pstates(void)
+{
+	char buffer[128];
+	char linebuf[1024];
+	unsigned int package, core, cpu;
+	int line;
+	class abstract_cpu *_package, * _core, * _cpu;
+	int ctr = 0;
+
+
+	for (package = 0; package < system_level.children.size(); package++) {
+		int first_pkg = 0;
+		_package = system_level.children[package];
+		if (!_package)
+			continue;
+		
+
+		for (core = 0; core < _package->children.size(); core++) {
+			_core = _package->children[core];
+			if (!_core)
+				continue;
+
+			for (line = LEVEL_HEADER; line < 10; line++) {
+				ctr = 22;
+				int first = 1;
+				linebuf[0] = 0;
+//				if (!_package->has_pstate_level(line))
+//					continue;
+	
+				buffer[0] = 0;
+				if (first_pkg == 0) {
+					strcat(linebuf, _package->fill_pstate_name(line, buffer));
+					expand_string(linebuf, 10);
+					strcat(linebuf, _package->fill_pstate_line(line, buffer));
+				}
+				expand_string(linebuf, 20);
+	
+				strcat(linebuf, "| ");
+
+
+				buffer[0] = 0;
+				strcat(linebuf, _core->fill_pstate_name(line, buffer));
+				expand_string(linebuf, ctr + 10);
+				strcat(linebuf, _core->fill_pstate_line(line, buffer));
+				ctr += 20;
+				expand_string(linebuf, ctr);
+
+				strcat(linebuf, "| ");
+				ctr += 2;
+
+				for (cpu = 0; cpu < _core->children.size(); cpu++) {
+					_cpu = _core->children[cpu];
+					if (!_cpu)
+						continue;
+
+					if (first == 1) {
+						strcat(linebuf, _cpu->fill_pstate_name(line, buffer));
+						expand_string(linebuf, ctr + 10);
+						first = 0;
+						ctr += 12;
+					}
+					buffer[0] = 0;
+					strcat(linebuf, _cpu->fill_pstate_line(line, buffer));
+					ctr += 18;
+					expand_string(linebuf, ctr);
+
+				}
+				strcat(linebuf, "| ");
+				printf("%s \n", linebuf);
+			}
+
+			printf("\n");
+			first_pkg++;
+		}
+
+
+	}
+		
+}
+
+

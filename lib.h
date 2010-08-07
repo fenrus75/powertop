@@ -9,6 +9,7 @@ extern "C" {
 
 
 extern double percentage(double F);
+extern char *hz_to_human(unsigned long hz, char *buffer);
 
 
 

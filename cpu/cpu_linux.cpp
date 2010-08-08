@@ -14,6 +14,15 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
+static int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo)
+{
+	if (freq != max)
+		return 0;
+	if (maxmo + 1000 != max)
+		return 0;
+	return 1;
+}
+
 
 void cpu_linux::measurement_start(void)
 {
@@ -102,6 +111,10 @@ void cpu_linux::measurement_start(void)
 			count = strtoull(c, NULL, 10);
 
 			hz_to_human(f, line);
+
+			if (is_turbo(f, max_frequency, max_minus_one_frequency)) {
+				sprintf(line, _("Turbo Mode"));
+			}
 
 			if (f > 0)
 				update_pstate(f, line, count, 1);

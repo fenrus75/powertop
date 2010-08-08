@@ -1,11 +1,16 @@
+#include <iostream>
+#include <fstream>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "cpu.h"
 
+
 void abstract_cpu::measurement_start(void)
 {
 	unsigned int i;
+	ifstream file;
+	char filename[4096];
 
 	for (i = 0; i < cstates.size(); i++)
 		delete cstates[i];
@@ -14,6 +19,15 @@ void abstract_cpu::measurement_start(void)
 	for (i = 0; i < pstates.size(); i++)
 		delete pstates[i];
 	pstates.resize(0);
+
+
+	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_available_frequencies", number);
+	file.open(filename, ios::in);
+	if (file) {
+		file >> max_frequency;
+		file >> max_minus_one_frequency;
+		file.close();
+	}
 
 	for (i = 0; i < children.size(); i++)
 		if (children[i])

@@ -51,6 +51,8 @@ protected:
 	int	first_cpu;
 	struct timeval	stamp_before, stamp_after;
 	double  time_factor;
+	uint64_t max_frequency;
+	uint64_t max_minus_one_frequency;
 public:
 	vector<class abstract_cpu *> children;
 	vector<struct idle_state *> cstates;

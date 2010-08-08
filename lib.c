@@ -42,9 +42,5 @@ char *hz_to_human(unsigned long hz, char *buffer)
 	if (Hz>1500000)
 		sprintf(buffer, _("%6.2f Ghz"), (Hz+5000.0)/1000000);
 
-//	if (is_turbo(hz))
-//		sprintf(buffer, "%s", _("Turbo Mode"));
-
-
 	return buffer;
 }

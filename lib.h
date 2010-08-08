@@ -1,6 +1,8 @@
 #ifndef INCLUDE_GUARD_LIB_H
 #define INCLUDE_GUARD_LIB_H
 
+#include <libintl.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

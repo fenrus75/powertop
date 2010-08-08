@@ -18,8 +18,8 @@
 double percentage(double F)
 {
 	F = F * 100.0;
-//	if (F > 100.0)
-//		F = 101.0;
+	if (F > 100.0)
+		F = 100.0;
 	if (F < 0.0)
 		F = 0.0;
 	return F;

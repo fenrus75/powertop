@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <sys/time.h>
 
+#include "../lib.h"
 
 static uint64_t get_msr(int cpu, uint64_t offset)
 {
@@ -176,6 +177,7 @@ void nhm_cpu::measurement_start(void)
 	cpu_linux::measurement_start();
 
 	aperf_before = get_msr(number, MSR_APERF);
+	mperf_before = get_msr(number, MSR_MPERF);
 	tsc_before   = get_msr(number, MSR_TSC);
 
 	insert_cstate("active", "C0 active", 0, aperf_before, 1);
@@ -189,6 +191,7 @@ void nhm_cpu::measurement_end(void)
 
 
 	aperf_after = get_msr(number, MSR_APERF);
+	mperf_after = get_msr(number, MSR_MPERF);
 	tsc_after   = get_msr(number, MSR_TSC);
 
 
@@ -213,3 +216,23 @@ void nhm_cpu::measurement_end(void)
 	}
 }
 
+
+char * nhm_cpu::fill_pstate_name(int line_nr, char *buffer)
+{
+	if (line_nr == LEVEL_C0) {
+		sprintf(buffer, "Effective");
+		return buffer;
+	}
+	return cpu_linux::fill_pstate_name(line_nr, buffer);
+}
+
+char * nhm_cpu::fill_pstate_line(int line_nr, char *buffer)
+{
+	if (line_nr == LEVEL_C0) {
+		double F;
+		F = 1.0 * (tsc_after - tsc_before) * (aperf_after - aperf_before) / (mperf_after - mperf_before) / time_factor * 1000;
+		sprintf(buffer, "%s", hz_to_human(F, buffer));
+		return buffer;
+	}
+	return cpu_linux::fill_pstate_line(line_nr, buffer);
+}

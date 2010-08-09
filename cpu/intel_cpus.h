@@ -44,11 +44,16 @@ class nhm_cpu: public cpu_linux
 private:
 	uint64_t	aperf_before;
 	uint64_t	aperf_after;
+	uint64_t	mperf_before;
+	uint64_t	mperf_after;
 	uint64_t	tsc_before, tsc_after;
 public:
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
 	virtual int     can_collapse(void) { return 0;};
+
+	virtual char *  fill_pstate_name(int line_nr, char *buffer);
+	virtual char *  fill_pstate_line(int line_nr, char *buffer);
 
 };
 

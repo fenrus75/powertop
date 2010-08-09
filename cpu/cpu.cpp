@@ -353,7 +353,7 @@ void display_cpu_pstates(const char *start, const char *end, const char *linesta
 					}
 					buffer[0] = 0;
 					strcat(linebuf, _cpu->fill_pstate_line(line, buffer));
-					ctr += 8;
+					ctr += 10;
 					expand_string(linebuf, ctr);
 
 				}

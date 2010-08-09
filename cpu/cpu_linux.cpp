@@ -225,7 +225,10 @@ char * cpu_linux::fill_cstate_line(int line_nr, char *buffer)
 		if (cstates[i]->line_level != line_nr)
 			continue;
 
-		sprintf(buffer,"%5.1f%% %6.1f ms", percentage(cstates[i]->duration_delta / time_factor), 1.0 * cstates[i]->duration_delta / (1+cstates[i]->usage_delta) / 1000);
+		if (line_nr == LEVEL_C0) 
+			sprintf(buffer,"%5.1f%%", percentage(cstates[i]->duration_delta / time_factor));
+		else
+			sprintf(buffer,"%5.1f%% %6.1f ms", percentage(cstates[i]->duration_delta / time_factor), 1.0 * cstates[i]->duration_delta / (1+cstates[i]->usage_delta) / 1000);
 	}
 
 	return buffer; 

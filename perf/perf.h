@@ -1,3 +1,7 @@
+#ifndef _INCLUDE_GUARD_PERF_H_
+#define _INCLUDE_GUARD_PERF_H_
+
+#include <iostream>
 
 using namespace std;
 
@@ -16,7 +20,10 @@ protected:
 	void create_perf_event(char *eventname);
 
 public:
+	perf_event(void);
 	perf_event(const char *event_name, int buffer_size = 128);
+
+
 	void set_event_name(const char *event_name);
 
 	void start(void);
@@ -27,3 +34,6 @@ public:
 
 	virtual void handle_event(struct perf_event_header *header) { };
 };
+
+
+#endif

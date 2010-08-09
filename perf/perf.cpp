@@ -53,9 +53,12 @@ static int get_trace_type(const char *eventname)
 
 	char filename[4096];
 	sprintf(filename, "/sys/kernel/debug/tracing/events/%s/id", eventname);
-	file.open("/sys/kernel/debug/tracing/events/%s/id", ios::in);
-	if (!file)
-		return 0;
+
+	file.open(filename, ios::in);
+	if (!file) {
+		cout << "Invalid trace type " << eventname << "\n";
+		return -1;
+	}
 
 	file >> this_trace;
 
@@ -154,10 +157,15 @@ void perf_event::set_event_name(const char *event_name)
 perf_event::perf_event(const char *event_name, int buffer_size)
 {
 	set_event_name(event_name);
+	perf_fd = -1;
 	bufsize = buffer_size;
 }
 
-
+perf_event::perf_event(void)
+{
+	perf_fd = -1;
+	bufsize = 128;
+}
 
 void perf_event::start(void)
 {
@@ -200,7 +208,8 @@ void perf_event::process(void)
 void perf_event::clear(void)
 {
 	munmap(perf_mmap, (bufsize+1)*getpagesize());
-	close(perf_fd);
+	if (perf_fd != -1)
+		close(perf_fd);
 	perf_fd = -1;
 }
 

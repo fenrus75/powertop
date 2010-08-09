@@ -22,6 +22,7 @@ private:
 public:
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
+	virtual int     can_collapse(void) { return 0;};
 
 };
 
@@ -34,6 +35,7 @@ private:
 public:
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
+	virtual int     can_collapse(void) { return 0;};
 
 };
 
@@ -46,6 +48,7 @@ private:
 public:
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
+	virtual int     can_collapse(void) { return 0;};
 
 };
 

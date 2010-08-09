@@ -86,23 +86,29 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 	if (system_level.children.size() <= package_number)
 		system_level.children.resize(package_number + 1);
 
-	if (!system_level.children[package_number])
+	if (!system_level.children[package_number]) {
 		system_level.children[package_number] = new_package(package_number, number, vendor, family, model);
+		system_level.childcount++;
+	}
 
 	package = system_level.children[package_number];
 
 	if (package->children.size() <= core_number)
 		package->children.resize(core_number + 1);
 
-	if (!package->children[core_number])
+	if (!package->children[core_number]) {
 		package->children[core_number] = new_core(core_number, number, vendor, family, model);
+		package->childcount++;
+	}
 
 	core = package->children[core_number];
 
 	if (core->children.size() <= number)
 		core->children.resize(number + 1, NULL);
-	if (!core->children[number])
+	if (!core->children[number]) {
 		core->children[number] = new_cpu(number, vendor, family, model);
+		core->childcount++;
+	}
 
 	cpu = core->children[number];	
 
@@ -223,16 +229,17 @@ void display_cpu_cstates(void)
 	
 				strcat(linebuf, "| ");
 
+				if (!_core->can_collapse()) {
+					buffer[0] = 0;
+					strcat(linebuf, _core->fill_cstate_name(line, buffer));
+					expand_string(linebuf, ctr + 10);
+					strcat(linebuf, _core->fill_cstate_line(line, buffer));
+					ctr += 20;
+					expand_string(linebuf, ctr);
 
-				buffer[0] = 0;
-				strcat(linebuf, _core->fill_cstate_name(line, buffer));
-				expand_string(linebuf, ctr + 10);
-				strcat(linebuf, _core->fill_cstate_line(line, buffer));
-				ctr += 20;
-				expand_string(linebuf, ctr);
-
-				strcat(linebuf, "| ");
-				ctr += 2;
+					strcat(linebuf, "| ");
+					ctr += 2;
+				}
 
 				for (cpu = 0; cpu < _core->children.size(); cpu++) {
 					_cpu = _core->children[cpu];
@@ -304,16 +311,17 @@ void display_cpu_pstates(void)
 	
 				strcat(linebuf, "| ");
 
+				if (!_core->can_collapse()) {
+					buffer[0] = 0;
+					strcat(linebuf, _core->fill_pstate_name(line, buffer));
+					expand_string(linebuf, ctr + 10);
+					strcat(linebuf, _core->fill_pstate_line(line, buffer));
+					ctr += 20;
+					expand_string(linebuf, ctr);
 
-				buffer[0] = 0;
-				strcat(linebuf, _core->fill_pstate_name(line, buffer));
-				expand_string(linebuf, ctr + 10);
-				strcat(linebuf, _core->fill_pstate_line(line, buffer));
-				ctr += 20;
-				expand_string(linebuf, ctr);
-
-				strcat(linebuf, "| ");
-				ctr += 2;
+					strcat(linebuf, "| ");
+					ctr += 2;
+				}
 
 				for (cpu = 0; cpu < _core->children.size(); cpu++) {
 					_cpu = _core->children[cpu];

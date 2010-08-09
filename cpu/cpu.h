@@ -54,6 +54,7 @@ protected:
 	uint64_t max_frequency;
 	uint64_t max_minus_one_frequency;
 public:
+	int	childcount;
 	vector<class abstract_cpu *> children;
 	vector<struct idle_state *> cstates;
 	vector<struct frequency *> pstates;
@@ -62,6 +63,8 @@ public:
 
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
+
+	virtual int     can_collapse(void) { return 0;};
 
 
 	/* C state related methods */
@@ -109,6 +112,8 @@ public:
 
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
 	virtual char *  fill_pstate_name(int line_nr, char *buffer);
+
+	virtual int     can_collapse(void) { return childcount == 1;};
 };
 
 class cpu_package: public abstract_cpu 
@@ -119,6 +124,7 @@ public:
 
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
 	virtual char *  fill_pstate_name(int line_nr, char *buffer);
+	virtual int     can_collapse(void) { return childcount == 1;};
 };
 
 #include "intel_cpus.h"

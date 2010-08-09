@@ -131,8 +131,17 @@ public:
 
 extern void enumerate_cpus(void);
 
-extern void display_cpu_cstates(void);
-extern void display_cpu_pstates(void);
+extern void display_cpu_pstates(const char *start= "", 
+				const char *end = "", 
+				const char *linestart = "", 
+				const char *separator = "| ", 
+				const char *lineend = "\n");
+
+extern void display_cpu_cstates(const char *start= "", 
+				const char *end = "", 
+				const char *linestart = "", 
+				const char *separator = "| ", 
+				const char *lineend = "\n");
 
 void start_cpu_measurement(void);
 void end_cpu_measurement(void);

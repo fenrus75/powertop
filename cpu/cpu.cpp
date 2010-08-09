@@ -190,7 +190,8 @@ static void expand_string(char *string, unsigned int newlen)
 }
 
 
-void display_cpu_cstates(void)
+void display_cpu_cstates(const char *start, const char *end, const char *linestart,
+                                const char *separator, const char *lineend)
 {
 	char buffer[128];
 	char linebuf[1024];
@@ -199,6 +200,7 @@ void display_cpu_cstates(void)
 	class abstract_cpu *_package, * _core, * _cpu;
 	int ctr = 0;
 
+	printf("%s", start);		
 
 	for (package = 0; package < system_level.children.size(); package++) {
 		int first_pkg = 0;
@@ -213,21 +215,27 @@ void display_cpu_cstates(void)
 				continue;
 
 			for (line = LEVEL_HEADER; line < 10; line++) {
-				ctr = 22;
 				int first = 1;
+				ctr = 0;
 				linebuf[0] = 0;
 				if (!_package->has_cstate_level(line))
 					continue;
+
+				strcat(linebuf, linestart);
+				ctr += strlen(linestart);
+				
 	
 				buffer[0] = 0;
 				if (first_pkg == 0) {
 					strcat(linebuf, _package->fill_cstate_name(line, buffer));
-					expand_string(linebuf, 10);
+					expand_string(linebuf, ctr+10);
 					strcat(linebuf, _package->fill_cstate_line(line, buffer));
 				}
-				expand_string(linebuf, 20);
+				ctr += 20;
+				expand_string(linebuf, ctr);
 	
-				strcat(linebuf, "| ");
+				strcat(linebuf, separator);
+				ctr += strlen(separator);
 
 				if (!_core->can_collapse()) {
 					buffer[0] = 0;
@@ -237,8 +245,8 @@ void display_cpu_cstates(void)
 					ctr += 20;
 					expand_string(linebuf, ctr);
 
-					strcat(linebuf, "| ");
-					ctr += 2;
+					strcat(linebuf, separator);
+					ctr += strlen(separator);
 				}
 
 				for (cpu = 0; cpu < _core->children.size(); cpu++) {
@@ -258,8 +266,8 @@ void display_cpu_cstates(void)
 					expand_string(linebuf, ctr);
 
 				}
-				strcat(linebuf, "| ");
-				printf("%s \n", linebuf);
+				strcat(linebuf, lineend);
+				printf("%s", linebuf);
 			}
 
 			printf("\n");
@@ -268,11 +276,12 @@ void display_cpu_cstates(void)
 
 
 	}
-		
+	printf("%s", end);		
 }
 
 
-void display_cpu_pstates(void)
+void display_cpu_pstates(const char *start, const char *end, const char *linestart,
+                                const char *separator, const char *lineend)
 {
 	char buffer[128];
 	char linebuf[1024];
@@ -281,6 +290,8 @@ void display_cpu_pstates(void)
 	class abstract_cpu *_package, * _core, * _cpu;
 	int ctr = 0;
 
+
+	printf("%s", start);
 
 	for (package = 0; package < system_level.children.size(); package++) {
 		int first_pkg = 0;
@@ -295,21 +306,27 @@ void display_cpu_pstates(void)
 				continue;
 
 			for (line = LEVEL_HEADER; line < 10; line++) {
-				ctr = 22;
 				int first = 1;
+				ctr = 0;
 				linebuf[0] = 0;
 //				if (!_package->has_pstate_level(line))
 //					continue;
-	
+
+
+				printf("%s", linestart);
+				ctr += strlen(linestart);
+					
 				buffer[0] = 0;
 				if (first_pkg == 0) {
 					strcat(linebuf, _package->fill_pstate_name(line, buffer));
-					expand_string(linebuf, 10);
+					expand_string(linebuf, ctr + 10);
 					strcat(linebuf, _package->fill_pstate_line(line, buffer));
 				}
-				expand_string(linebuf, 20);
+				ctr += 20;
+				expand_string(linebuf, ctr);
 	
-				strcat(linebuf, "| ");
+				strcat(linebuf, separator);
+				ctr += strlen(separator);
 
 				if (!_core->can_collapse()) {
 					buffer[0] = 0;
@@ -319,8 +336,8 @@ void display_cpu_pstates(void)
 					ctr += 20;
 					expand_string(linebuf, ctr);
 
-					strcat(linebuf, "| ");
-					ctr += 2;
+					strcat(linebuf, separator);
+					ctr += strlen(separator);
 				}
 
 				for (cpu = 0; cpu < _core->children.size(); cpu++) {
@@ -340,8 +357,8 @@ void display_cpu_pstates(void)
 					expand_string(linebuf, ctr);
 
 				}
-				strcat(linebuf, "| ");
-				printf("%s \n", linebuf);
+				strcat(linebuf, lineend);
+				printf("%s", linebuf);
 			}
 
 			printf("\n");
@@ -350,7 +367,8 @@ void display_cpu_pstates(void)
 
 
 	}
-		
+
+	printf("%s", end);		
 }
 
 

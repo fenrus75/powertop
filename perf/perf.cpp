@@ -84,6 +84,9 @@ void perf_event::create_perf_event(char *eventname)
 		__u64 id;
 	} read_data;
 
+	if (perf_fd != -1)
+		clear();
+
 	memset(&attr, 0, sizeof(attr));
 
 	attr.read_format	= PERF_FORMAT_TOTAL_TIME_ENABLED |
@@ -136,7 +139,7 @@ void perf_event::create_perf_event(char *eventname)
 
 }
 
-perf_event::perf_event(const char *event_name, int buffer_size)
+void perf_event::set_event_name(const char *event_name)
 {
 	name = strdup(event_name);
 	char *c;
@@ -146,12 +149,59 @@ perf_event::perf_event(const char *event_name, int buffer_size)
 		*c = '/';
 
 	trace_type = get_trace_type(name);
+}
+
+perf_event::perf_event(const char *event_name, int buffer_size)
+{
+	set_event_name(event_name);
 	bufsize = buffer_size;
 }
 
 
 
+void perf_event::start(void)
+{
+	create_perf_event(name);
+}
 
+void perf_event::stop(void)
+{
+	ioctl(perf_fd, PERF_EVENT_IOC_DISABLE);
+}
 
+void perf_event::process(void)
+{
+	struct perf_event_header *header;
+	int i = 0;
+
+	if (perf_fd < 0)
+		return;
+
+	while (pc->data_tail != pc->data_head && i++ < 5000) {
+		while (pc->data_tail >= (unsigned int)bufsize * getpagesize())
+			pc->data_tail -= bufsize * getpagesize();
+
+		header = (struct perf_event_header *)( (unsigned char *)data_mmap + pc->data_tail);
+
+		if (header->size == 0)
+			break;
+
+		pc->data_tail += header->size;
+
+		while (pc->data_tail >= (unsigned int)bufsize * getpagesize())
+			pc->data_tail -= bufsize * getpagesize();
+
+		if (header->type == PERF_RECORD_SAMPLE)
+			handle_event(header);
+	}
+	pc->data_tail = pc->data_head;
+}
+
+void perf_event::clear(void)
+{
+	munmap(perf_mmap, (bufsize+1)*getpagesize());
+	close(perf_fd);
+	perf_fd = -1;
+}
 
 

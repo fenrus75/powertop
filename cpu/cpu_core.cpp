@@ -56,7 +56,7 @@ char * cpu_core::fill_pstate_line(int line_nr, char *buffer)
 	buffer[0] = 0;
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,"  CORE");
+		sprintf(buffer,"  Core");
 		return buffer;
 	}
 

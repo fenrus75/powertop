@@ -231,7 +231,7 @@ char * nhm_cpu::fill_pstate_line(int line_nr, char *buffer)
 	if (line_nr == LEVEL_C0) {
 		double F;
 		F = 1.0 * (tsc_after - tsc_before) * (aperf_after - aperf_before) / (mperf_after - mperf_before) / time_factor * 1000;
-		sprintf(buffer, "%s", hz_to_human(F, buffer));
+		sprintf(buffer, "%s", hz_to_human(F, buffer, 1));
 		return buffer;
 	}
 	return cpu_linux::fill_pstate_line(line_nr, buffer);

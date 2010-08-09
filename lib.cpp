@@ -25,7 +25,7 @@ double percentage(double F)
 	return F;
 }
 
-char *hz_to_human(unsigned long hz, char *buffer)
+char *hz_to_human(unsigned long hz, char *buffer, int digits)
 {
 	unsigned long long Hz;
 
@@ -39,8 +39,12 @@ char *hz_to_human(unsigned long hz, char *buffer)
 	if (Hz>1000)
 		sprintf(buffer, _("%6lli Mhz"), (Hz+500)/1000);
 
-	if (Hz>1500000)
-		sprintf(buffer, _("%6.2f Ghz"), (Hz+5000.0)/1000000);
+	if (Hz>1500000) {
+		if (digits == 2)
+			sprintf(buffer, _("%6.2f Ghz"), (Hz+5000.0)/1000000);
+		else
+			sprintf(buffer, _("%6.1f Ghz"), (Hz+5000.0)/1000000);
+	}
 
 	return buffer;
 }

@@ -9,14 +9,15 @@ extern "C" {
 
 #define _(STRING)    gettext(STRING)
 
-
-extern double percentage(double F);
-extern char *hz_to_human(unsigned long hz, char *buffer);
-
-
-
 #ifdef __cplusplus
 }
 #endif
+
+
+extern double percentage(double F);
+extern char *hz_to_human(unsigned long hz, char *buffer, int digits = 2);
+
+
+
 
 #endif

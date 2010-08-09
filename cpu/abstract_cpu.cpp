@@ -188,6 +188,23 @@ int abstract_cpu::has_cstate_level(int level)
 	return  0;
 }
 
+int abstract_cpu::has_pstate_level(int level)
+{
+	unsigned int i;
+
+	if (level == LEVEL_HEADER)
+		return 1;
+
+	if (level >= 0 && level < (int)pstates.size())
+		return 1;
+
+	for (i = 0; i < children.size(); i++)
+		if (children[i]) 
+			if (children[i]->has_pstate_level(level))
+				return 1;
+	return  0;
+}
+
 
 
 void abstract_cpu::insert_pstate(uint64_t freq, const char *human_name, uint64_t duration, int count)

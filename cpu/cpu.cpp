@@ -309,8 +309,9 @@ void display_cpu_pstates(const char *start, const char *end, const char *linesta
 				int first = 1;
 				ctr = 0;
 				linebuf[0] = 0;
-//				if (!_package->has_pstate_level(line))
-//					continue;
+
+				if (!_package->has_pstate_level(line))
+					continue;
 
 
 				printf("%s", linestart);

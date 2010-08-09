@@ -87,6 +87,7 @@ public:
 
 	virtual char *  fill_pstate_line(int line_nr, char *buffer) { return buffer;};
 	virtual char *  fill_pstate_name(int line_nr, char *buffer) { return buffer;};
+	virtual int	has_pstate_level(int level);
 
 };
 

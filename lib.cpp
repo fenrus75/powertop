@@ -43,7 +43,7 @@ char *hz_to_human(unsigned long hz, char *buffer, int digits)
 		if (digits == 2)
 			sprintf(buffer, _("%6.2f Ghz"), (Hz+5000.0)/1000000);
 		else
-			sprintf(buffer, _("%6.1f Ghz"), (Hz+5000.0)/1000000);
+			sprintf(buffer, _("%4.1f Ghz"), (Hz+5000.0)/1000000);
 	}
 
 	return buffer;

@@ -236,3 +236,11 @@ char * nhm_cpu::fill_pstate_line(int line_nr, char *buffer)
 	}
 	return cpu_linux::fill_pstate_line(line_nr, buffer);
 }
+
+
+int nhm_cpu::has_pstate_level(int level)
+{
+	if (level == LEVEL_C0)
+		return 1;
+	return cpu_linux::has_pstate_level(level);
+}

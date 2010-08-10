@@ -3,18 +3,22 @@
 
 #include "cpu/cpu.h"
 #include "perf/perf.h"
+#include "perf/perf_bundle.h"
 
 
 int main(int argc, char **argv)
 {
 	int i;
-	class perf_event * event;
+	class perf_bundle * event;
 
 	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
 
 	enumerate_cpus();
 
-	event = new perf_event("vfs:dirty_inode");
+	event = new perf_bundle();
+
+	event->add_event("vfs:dirty_inode");
+	event->add_event("power:power_frequency");
 
 
 	for (i = 0; i < 1; i++) {
@@ -30,7 +34,7 @@ int main(int argc, char **argv)
 		event->stop();
 	}
 
-	event->process(NULL);
+	event->process();
 //	display_cpu_cstates();
 //	cout << "\n\n\n";
 //	display_cpu_pstates();

@@ -1,16 +1,20 @@
-#ifndef _INCLUDE_GUARD_PERF_H_
-#define _INCLUDE_GUARD_PERF_H_
+#ifndef _INCLUDE_GUARD_PERF_BUNDLE_H_
+#define _INCLUDE_GUARD_PERF_BUNDLE_H_
 
 #include <iostream>
 #include <vector>
 
+
 using namespace std;
+
+#include "perf.h"
+class perf_event;
 
 class  perf_bundle {
 protected:
 	vector<class perf_event *> events;
 public:
-	void add_event(char *event_name);
+	void add_event(const char *event_name);
 
 	void start(void);
 	void stop(void);

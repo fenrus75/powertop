@@ -30,9 +30,9 @@ public:
 	void stop(void);
 	void clear(void);
 
-	void process(void);
+	void process(void *cookie);
 
-	virtual void handle_event(struct perf_event_header *header) { };
+	virtual void handle_event(struct perf_event_header *header, void *cookie) { };
 };
 
 

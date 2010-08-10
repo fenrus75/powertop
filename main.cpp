@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 		event->stop();
 	}
 
-	event->process();
+	event->process(NULL);
 //	display_cpu_cstates();
 //	cout << "\n\n\n";
 //	display_cpu_pstates();

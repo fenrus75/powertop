@@ -14,6 +14,8 @@ class  perf_bundle {
 protected:
 	vector<class perf_event *> events;
 public:
+	vector<void *> records;
+
 	void add_event(const char *event_name);
 
 	void start(void);

@@ -177,7 +177,7 @@ void perf_event::stop(void)
 	ioctl(perf_fd, PERF_EVENT_IOC_DISABLE);
 }
 
-void perf_event::process(void)
+void perf_event::process(void *cookie)
 {
 	struct perf_event_header *header;
 	int i = 0;
@@ -200,7 +200,7 @@ void perf_event::process(void)
 			pc->data_tail -= bufsize * getpagesize();
 
 		if (header->type == PERF_RECORD_SAMPLE)
-			handle_event(header);
+			handle_event(header, cookie);
 	}
 	pc->data_tail = pc->data_head;
 }

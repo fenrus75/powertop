@@ -75,7 +75,7 @@ static inline int sys_perf_event_open(struct perf_event_attr *attr,
 			group_fd, flags);
 }
 
-void perf_event::create_perf_event(char *eventname)
+void perf_event::create_perf_event(char *eventname, int cpu)
 {
 	struct perf_event_attr attr;
 	int ret;
@@ -111,7 +111,7 @@ void perf_event::create_perf_event(char *eventname)
 	if (attr.config <= 0)
 		return;
 
-	perf_fd = sys_perf_event_open(&attr, -1, 0, -1, 0);
+	perf_fd = sys_perf_event_open(&attr, -1, cpu, -1, 0);
 
 	if (perf_fd < 0) {
 		fprintf(stderr, "Perf syscall failed: %i / %i (%s)\n", perf_fd, errno, strerror(errno));
@@ -154,11 +154,18 @@ void perf_event::set_event_name(const char *event_name)
 	trace_type = get_trace_type(name);
 }
 
-perf_event::perf_event(const char *event_name, int buffer_size)
+void perf_event::set_cpu(int _cpu)
+{
+	cpu = _cpu;
+}
+
+
+perf_event::perf_event(const char *event_name, int _cpu, int buffer_size)
 {
 	set_event_name(event_name);
 	perf_fd = -1;
 	bufsize = buffer_size;
+	cpu = _cpu;
 }
 
 perf_event::perf_event(void)
@@ -169,7 +176,7 @@ perf_event::perf_event(void)
 
 void perf_event::start(void)
 {
-	create_perf_event(name);
+	create_perf_event(name, cpu);
 }
 
 void perf_event::stop(void)

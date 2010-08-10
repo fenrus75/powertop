@@ -16,15 +16,17 @@ protected:
 
 	int bufsize;
 	char *name;
+	int cpu;
 	unsigned int trace_type;
-	void create_perf_event(char *eventname);
+	void create_perf_event(char *eventname, int cpu);
 
 public:
 	perf_event(void);
-	perf_event(const char *event_name, int buffer_size = 128);
+	perf_event(const char *event_name, int cpu = 0, int buffer_size = 128);
 
 
 	void set_event_name(const char *event_name);
+	void set_cpu(int cpu);
 
 	void start(void);
 	void stop(void);

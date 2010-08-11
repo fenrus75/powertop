@@ -78,6 +78,9 @@ void perf_bundle::clear(void)
 
 
 struct trace_entry {
+	uint64_t		time;
+	uint32_t		cpu;
+	uint32_t		res;
 	__u32			size;
 	unsigned short		type;
 	unsigned char		flags;
@@ -90,25 +93,30 @@ struct trace_entry {
 struct perf_sample {
 	struct perf_event_header        header;
 	struct trace_entry		trace;
+	unsigned char			data[0];
 };
 
 static uint64_t timestamp(perf_event_header *event)
 {
 	struct perf_sample *sample;
-	int i;
-	unsigned char *x;
 
 	if (event->type != PERF_RECORD_SAMPLE)
 		return 0;
 
 	sample = (struct perf_sample *)event;
 
+#if 0
+	int i;
+	unsigned char *x;
 
 	printf("header:\n");
 	printf("	type  is %x \n", sample->header.type);
 	printf("	misc  is %x \n", sample->header.misc);
 	printf("	size  is %i \n", sample->header.size);
 	printf("sample:\n");
+	printf("	time  is %llx \n", sample->trace.time);
+	printf("	cpu   is %i / %x \n", sample->trace.cpu, sample->trace.cpu);
+	printf("	res   is %i / %x \n", sample->trace.res, sample->trace.res);
 	printf("	size  is %i / %x \n", sample->trace.size, sample->trace.size);
 	printf("	type  is %i / %x \n", sample->trace.type, sample->trace.type);
 	printf("	flags is %i / %x \n", sample->trace.flags, sample->trace.flags);
@@ -120,8 +128,8 @@ static uint64_t timestamp(perf_event_header *event)
 	for (i = 0; i < sample->header.size; i++)
 		printf("%02x ", *(x+i));
 	printf("\n");
-
-	return 0; //sample->trace.time;
+#endif
+	return sample->trace.time;
 	
 }
 
@@ -150,7 +158,29 @@ void perf_bundle::process(void)
 
 	printf("We got %u records total \n", records.size());
 	for (i = 0; i < records.size(); i++) {
+		struct perf_sample *sample;
 		printf("Event %u has timestamp %llx \n", i, timestamp((struct perf_event_header*)records[i]));
+
+		sample = (struct perf_sample *)records[i];
+		if (!sample)
+			continue;
+
+		if (sample->header.type != PERF_RECORD_SAMPLE)
+			continue;
+
+
+		handle_trace_point(sample->trace.type, &sample->data);
+		
 	}
 }
 
+struct power_entry {
+	int64_t	type;
+	int64_t	value;
+};
+
+void perf_bundle::handle_trace_point(int type, void *trace)
+{
+	struct power_entry *pe = (struct power_entry *)trace;
+	printf("Got event type %i .. new frequency is %lli\n", type, pe->value);
+}

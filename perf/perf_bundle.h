@@ -24,6 +24,7 @@ public:
 
 	void process(void);
 
+	virtual void handle_trace_point(int type, void *trace);
 };
 
 

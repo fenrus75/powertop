@@ -98,7 +98,7 @@ void perf_event::create_perf_event(char *eventname, int cpu)
 
 	attr.sample_freq	= 0;
 	attr.sample_period	= 1;
-	attr.sample_type	|= PERF_SAMPLE_RAW;
+	attr.sample_type	|= PERF_SAMPLE_RAW | PERF_SAMPLE_CPU | PERF_SAMPLE_TIME;
 
 	attr.mmap		= 1;
 	attr.comm		= 1;

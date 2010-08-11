@@ -36,6 +36,10 @@ void perf_bundle::add_event(const char *event_name)
 	ev->set_event_name(event_name);
 	ev->set_cpu(5);
 
+	if (event_names.size() <= ev->trace_type)
+		event_names.resize(ev->trace_type + 1);
+	event_names[ev->trace_type] = strdup(event_name);
+
 	events.push_back(ev);
 }
 
@@ -159,7 +163,6 @@ void perf_bundle::process(void)
 	printf("We got %u records total \n", records.size());
 	for (i = 0; i < records.size(); i++) {
 		struct perf_sample *sample;
-		printf("Event %u has timestamp %llx \n", i, timestamp((struct perf_event_header*)records[i]));
 
 		sample = (struct perf_sample *)records[i];
 		if (!sample)
@@ -169,7 +172,7 @@ void perf_bundle::process(void)
 			continue;
 
 
-		handle_trace_point(sample->trace.type, &sample->data);
+		handle_trace_point(sample->trace.type, &sample->data, sample->trace.cpu);
 		
 	}
 }
@@ -179,8 +182,23 @@ struct power_entry {
 	int64_t	value;
 };
 
-void perf_bundle::handle_trace_point(int type, void *trace)
+void perf_bundle::handle_trace_point(int type, void *trace, int cpu)
 {
-	struct power_entry *pe = (struct power_entry *)trace;
-	printf("Got event type %i .. new frequency is %lli\n", type, pe->value);
+	const char *event_name;
+
+	if (type >= (int)event_names.size())
+		return;
+	event_name = event_names[type];
+
+	if (strcmp(event_name, "power:power_frequency")==0) {
+		struct power_entry *pe = (struct power_entry *)trace;
+		printf("CPU %i new frequency is %lli\n", cpu, pe->value);
+	}
+	if (strcmp(event_name, "power:power_start")==0) {
+		struct power_entry *pe = (struct power_entry *)trace;
+		printf("CPU %i new CSTATE is %lli\n", cpu, pe->value);
+	}
+	if (strcmp(event_name, "power:power_end")==0) {
+		printf("CPU %i is no longer idle\n", cpu);
+	}
 }

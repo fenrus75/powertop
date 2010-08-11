@@ -17,10 +17,11 @@ protected:
 	int bufsize;
 	char *name;
 	int cpu;
-	unsigned int trace_type;
 	void create_perf_event(char *eventname, int cpu);
 
 public:
+	unsigned int trace_type;
+
 	perf_event(void);
 	perf_event(const char *event_name, int cpu = 0, int buffer_size = 128);
 

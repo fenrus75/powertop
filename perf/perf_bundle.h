@@ -13,6 +13,7 @@ class perf_event;
 class  perf_bundle {
 protected:
 	vector<class perf_event *> events;
+	vector<const char *> event_names;
 public:
 	vector<void *> records;
 
@@ -24,7 +25,7 @@ public:
 
 	void process(void);
 
-	virtual void handle_trace_point(int type, void *trace);
+	virtual void handle_trace_point(int type, void *trace, int cpu = 0);
 };
 
 

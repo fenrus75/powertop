@@ -17,8 +17,9 @@ int main(int argc, char **argv)
 
 	event = new perf_bundle();
 
-	event->add_event("vfs:dirty_inode");
 	event->add_event("power:power_frequency");
+	event->add_event("power:power_start");
+	event->add_event("power:power_end");
 
 
 	for (i = 0; i < 1; i++) {

@@ -91,6 +91,8 @@ public:
 
 };
 
+extern vector<class abstract_cpu *> all_cpus;
+
 class cpu_linux: public abstract_cpu 
 {
 public:

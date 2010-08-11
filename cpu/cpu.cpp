@@ -9,6 +9,9 @@
 
 static class abstract_cpu system_level;
 
+vector<class abstract_cpu *> all_cpus;
+
+
 
 static class abstract_cpu * new_package(int package, int cpu, char * vendor, int family, int model)
 {
@@ -111,6 +114,10 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 	}
 
 	cpu = core->children[number];	
+
+	if (number >= all_cpus.size())
+		all_cpus.resize(number + 1, NULL);
+	all_cpus[number] = cpu;
 
 }
 

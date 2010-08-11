@@ -8,6 +8,8 @@
 #include "perf_event.h"
 #include "perf.h"
 
+#include "../cpu/cpu.h"
+
 class perf_bundle_event: public perf_event 
 {
 	virtual void handle_event(struct perf_event_header *header, void *cookie);
@@ -29,18 +31,25 @@ void perf_bundle_event::handle_event(struct perf_event_header *header, void *coo
 
 void perf_bundle::add_event(const char *event_name)
 {
+	unsigned int i;
 	class perf_event *ev;
 
-	ev = new class perf_bundle_event();
+	for (i = 0; i < all_cpus.size(); i++) {
 
-	ev->set_event_name(event_name);
-	ev->set_cpu(5);
+		if (!all_cpus[i])
+			continue;
 
-	if (event_names.size() <= ev->trace_type)
-		event_names.resize(ev->trace_type + 1);
-	event_names[ev->trace_type] = strdup(event_name);
+		ev = new class perf_bundle_event();
 
-	events.push_back(ev);
+		ev->set_event_name(event_name);
+		ev->set_cpu(i);
+
+		if (event_names.size() <= ev->trace_type)
+			event_names.resize(ev->trace_type + 1);
+		event_names[ev->trace_type] = strdup(event_name);
+
+		events.push_back(ev);
+	}
 }
 
 void perf_bundle::start(void)

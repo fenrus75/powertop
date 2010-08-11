@@ -25,9 +25,10 @@ int main(int argc, char **argv)
 		end_cpu_measurement();
 	}
 
+	cout << "doing math \n";
 //	display_cpu_cstates();
 //	cout << "\n\n\n";
-//	display_cpu_pstates();
+	display_cpu_pstates();
 
 	process_cpu_data();
 

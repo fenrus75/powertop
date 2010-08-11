@@ -55,9 +55,15 @@ protected:
 	uint64_t max_minus_one_frequency;
 public:
 	int	childcount;
+	bool	idle;
+	int	current_frequency;	
+
 	vector<class abstract_cpu *> children;
 	vector<struct idle_state *> cstates;
 	vector<struct frequency *> pstates;
+
+	class abstract_cpu *parent;
+
 
 	void		set_number(int number, int cpu) {this->number = number; this->first_cpu = cpu;};
 
@@ -88,6 +94,12 @@ public:
 	virtual char *  fill_pstate_line(int line_nr, char *buffer) { return buffer;};
 	virtual char *  fill_pstate_name(int line_nr, char *buffer) { return buffer;};
 	virtual int	has_pstate_level(int level);
+
+	/* Frequency micro accounting methods */
+	virtual void    calculate_freq(uint64_t time);
+	virtual void    go_idle(uint64_t time) { idle = true; if (parent) parent->calculate_freq(time);};
+	virtual void    go_unidle(uint64_t time) { idle = false; if (parent) parent->calculate_freq(time);};;
+	virtual void    change_freq(uint64_t time, int freq) { current_frequency = freq; if (parent) parent->calculate_freq(time);};
 
 };
 

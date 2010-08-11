@@ -269,3 +269,28 @@ void abstract_cpu::update_pstate(uint64_t freq, const char *human_name, uint64_t
 	state->time_before += duration;
 	state->before_count += count;
 }
+
+
+void abstract_cpu::calculate_freq(uint64_t time)
+{
+	uint64_t freq = 0;
+	bool is_idle = true;
+	unsigned int i;
+	
+	/* calculate the maximum frequency of all children */
+	for (i = 0; i < children.size(); i++)
+		if (children[i]) {
+			uint64_t f = 0;
+			if (!children[i]->idle) {
+				f = children[i]->current_frequency;
+				is_idle = false;
+			}
+			if (f > freq)
+				f = freq;
+		}
+
+	current_frequency = freq;
+	idle = is_idle;
+	if (parent)
+		parent->calculate_freq(time);
+}

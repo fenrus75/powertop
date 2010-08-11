@@ -18,7 +18,7 @@ static	class perf_bundle * perf_events;
 
 class perf_power_bundle: public perf_bundle
 {
-	virtual void handle_trace_point(int type, void *trace, int cpu);
+	virtual void handle_trace_point(int type, void *trace, int cpu, uint64_t time);
 };
 
 
@@ -104,6 +104,7 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 	}
 
 	package = system_level.children[package_number];
+	package->parent = &system_level;
 
 	if (package->children.size() <= core_number)
 		package->children.resize(core_number + 1);
@@ -114,6 +115,7 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 	}
 
 	core = package->children[core_number];
+	core->parent = package;
 
 	if (core->children.size() <= number)
 		core->children.resize(number + 1, NULL);
@@ -122,7 +124,8 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 		core->childcount++;
 	}
 
-	cpu = core->children[number];	
+	cpu = core->children[number];
+	cpu->parent = core;
 
 	if (number >= all_cpus.size())
 		all_cpus.resize(number + 1, NULL);
@@ -405,25 +408,30 @@ struct power_entry {
 };
 
 
-void perf_power_bundle::handle_trace_point(int type, void *trace, int cpu)
+void perf_power_bundle::handle_trace_point(int type, void *trace, int cpunr, uint64_t time)
 {
 	const char *event_name;
+	class abstract_cpu *cpu;
 
 	if (type >= (int)event_names.size())
 		return;
 	event_name = event_names[type];
 
+	if (cpunr >= (int)all_cpus.size()) {
+		cout << "INVALID cpu nr in handle_trace_point\n";
+		return;
+	}
+
+	cpu = all_cpus[cpunr];
+
 	if (strcmp(event_name, "power:power_frequency")==0) {
 		struct power_entry *pe = (struct power_entry *)trace;
-		printf("CPU %i new frequency is %lli\n", cpu, pe->value);
+		cpu->change_freq(time, pe->value);
 	}
-	if (strcmp(event_name, "power:power_start")==0) {
-		struct power_entry *pe = (struct power_entry *)trace;
-		printf("CPU %i new CSTATE is %lli\n", cpu, pe->value);
-	}
-	if (strcmp(event_name, "power:power_end")==0) {
-		printf("CPU %i is no longer idle\n", cpu);
-	}
+	if (strcmp(event_name, "power:power_start")==0)
+		cpu->go_idle(time);
+	if (strcmp(event_name, "power:power_end")==0)
+		cpu->go_unidle(time);
 }
 
 void process_cpu_data(void)

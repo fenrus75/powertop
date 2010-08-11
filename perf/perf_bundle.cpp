@@ -181,11 +181,11 @@ void perf_bundle::process(void)
 			continue;
 
 
-		handle_trace_point(sample->trace.type, &sample->data, sample->trace.cpu);
+		handle_trace_point(sample->trace.type, &sample->data, sample->trace.cpu, sample->trace.time);
 		
 	}
 }
 
-void perf_bundle::handle_trace_point(int type, void *trace, int cpu)
+void perf_bundle::handle_trace_point(int type, void *trace, int cpu, uint64_t time)
 {
 }

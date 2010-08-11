@@ -9,21 +9,12 @@
 int main(int argc, char **argv)
 {
 	int i;
-	class perf_bundle * event;
 
 	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
 
 	enumerate_cpus();
 
-	event = new perf_bundle();
-
-	event->add_event("power:power_frequency");
-	event->add_event("power:power_start");
-	event->add_event("power:power_end");
-
-
 	for (i = 0; i < 1; i++) {
-		event->start();
 		start_cpu_measurement();
 
 
@@ -32,18 +23,18 @@ int main(int argc, char **argv)
 
 
 		end_cpu_measurement();
-		event->stop();
 	}
 
-	event->process();
 //	display_cpu_cstates();
 //	cout << "\n\n\n";
 //	display_cpu_pstates();
 
+	process_cpu_data();
+
 //	display_cpu_cstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");
 //	display_cpu_pstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");
 
-	delete event;
 
+	
 	return 0;
 }

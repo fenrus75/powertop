@@ -6,11 +6,20 @@
 
 #include "cpu.h"
 
+#include "../perf/perf_bundle.h"
 
 static class abstract_cpu system_level;
 
 vector<class abstract_cpu *> all_cpus;
 
+static	class perf_bundle * perf_events;
+
+
+
+class perf_power_bundle: public perf_bundle
+{
+	virtual void handle_trace_point(int type, void *trace, int cpu);
+};
 
 
 static class abstract_cpu * new_package(int package, int cpu, char * vendor, int family, int model)
@@ -178,16 +187,25 @@ void enumerate_cpus(void)
 
 
 	file.close();
+
+	perf_events = new perf_power_bundle();
+
+	perf_events->add_event("power:power_frequency");
+	perf_events->add_event("power:power_start");
+	perf_events->add_event("power:power_end");
+
 }
 
 void start_cpu_measurement(void)
 {
+	perf_events->start();
 	system_level.measurement_start();
 }
 
 void end_cpu_measurement(void)
 {
 	system_level.measurement_end();
+	perf_events->stop();
 }
 
 static void expand_string(char *string, unsigned int newlen)
@@ -380,3 +398,35 @@ void display_cpu_pstates(const char *start, const char *end, const char *linesta
 }
 
 
+
+struct power_entry {
+	int64_t	type;
+	int64_t	value;
+};
+
+
+void perf_power_bundle::handle_trace_point(int type, void *trace, int cpu)
+{
+	const char *event_name;
+
+	if (type >= (int)event_names.size())
+		return;
+	event_name = event_names[type];
+
+	if (strcmp(event_name, "power:power_frequency")==0) {
+		struct power_entry *pe = (struct power_entry *)trace;
+		printf("CPU %i new frequency is %lli\n", cpu, pe->value);
+	}
+	if (strcmp(event_name, "power:power_start")==0) {
+		struct power_entry *pe = (struct power_entry *)trace;
+		printf("CPU %i new CSTATE is %lli\n", cpu, pe->value);
+	}
+	if (strcmp(event_name, "power:power_end")==0) {
+		printf("CPU %i is no longer idle\n", cpu);
+	}
+}
+
+void process_cpu_data(void)
+{
+	perf_events->process();
+}

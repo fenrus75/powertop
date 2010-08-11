@@ -186,28 +186,6 @@ void perf_bundle::process(void)
 	}
 }
 
-struct power_entry {
-	int64_t	type;
-	int64_t	value;
-};
-
 void perf_bundle::handle_trace_point(int type, void *trace, int cpu)
 {
-	const char *event_name;
-
-	if (type >= (int)event_names.size())
-		return;
-	event_name = event_names[type];
-
-	if (strcmp(event_name, "power:power_frequency")==0) {
-		struct power_entry *pe = (struct power_entry *)trace;
-		printf("CPU %i new frequency is %lli\n", cpu, pe->value);
-	}
-	if (strcmp(event_name, "power:power_start")==0) {
-		struct power_entry *pe = (struct power_entry *)trace;
-		printf("CPU %i new CSTATE is %lli\n", cpu, pe->value);
-	}
-	if (strcmp(event_name, "power:power_end")==0) {
-		printf("CPU %i is no longer idle\n", cpu);
-	}
 }

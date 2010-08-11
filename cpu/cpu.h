@@ -148,3 +148,5 @@ extern void display_cpu_cstates(const char *start= "",
 
 void start_cpu_measurement(void);
 void end_cpu_measurement(void);
+void process_cpu_data(void);
+

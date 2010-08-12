@@ -297,6 +297,19 @@ void abstract_cpu::calculate_freq(uint64_t time)
 		parent->calculate_freq(time);
 }
 
+void abstract_cpu::change_effective_frequency(uint64_t time, uint64_t frequency)
+{
+	unsigned int i;
+	
+	/* propagate to all children */
+	for (i = 0; i < children.size(); i++)
+		if (children[i]) {
+			children[i]->change_effective_frequency(time, frequency);
+		}
+
+	effective_frequency = frequency;
+}
+
 
 void abstract_cpu::wiggle(void)
 {

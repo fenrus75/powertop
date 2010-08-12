@@ -176,7 +176,6 @@ void nhm_core::calculate_freq(uint64_t time)
 	uint64_t freq = 0;
 	bool is_idle = true;
 	unsigned int i;
-	uint64_t time_delta, fr;
 	
 	/* calculate the maximum frequency of all children */
 	for (i = 0; i < children.size(); i++)
@@ -190,24 +189,33 @@ void nhm_core::calculate_freq(uint64_t time)
 				freq = f;
 		}
 
+	current_frequency = freq;
+	idle = is_idle;
+	if (parent)
+		parent->calculate_freq(time);
+}
+
+void nhm_core::change_effective_frequency(uint64_t time, uint64_t frequency)
+{
+	uint64_t freq = 0;
+	uint64_t time_delta, fr;
+	
+
 	if (last_stamp) 
 		time_delta = time - last_stamp;
 	else
 		time_delta = 1;
 
-	fr = current_frequency;
+	fr = effective_frequency;
 	if (idle)
 		fr = 0;
 
 	account_freq(fr, time_delta);
 	
-	current_frequency = freq;
-	idle = is_idle;
+	effective_frequency = freq;
 	last_stamp = time;
-	if (parent)
-		parent->calculate_freq(time);
+	abstract_cpu::change_effective_frequency(time, frequency);
 }
-
 
 char * nhm_core::fill_pstate_line(int line_nr, char *buffer) 
 {
@@ -373,7 +381,6 @@ void nhm_package::calculate_freq(uint64_t time)
 	uint64_t freq = 0;
 	bool is_idle = true;
 	unsigned int i;
-	uint64_t time_delta, fr;
 	
 	/* calculate the maximum frequency of all children */
 	for (i = 0; i < children.size(); i++)
@@ -387,22 +394,32 @@ void nhm_package::calculate_freq(uint64_t time)
 				freq = f;
 		}
 
+	current_frequency = freq;
+	idle = is_idle;
+	if (parent)
+		parent->calculate_freq(time);
+	change_effective_frequency(time, current_frequency);
+}
+
+void nhm_package::change_effective_frequency(uint64_t time, uint64_t frequency)
+{
+	uint64_t time_delta, fr;
+	
 	if (last_stamp) 
 		time_delta = time - last_stamp;
 	else
 		time_delta = 1;
 
-	fr = current_frequency;
+	fr = effective_frequency;
 	if (idle)
 		fr = 0;
 
 	account_freq(fr, time_delta);
 	
-	current_frequency = freq;
-	idle = is_idle;
+	effective_frequency = frequency;
 	last_stamp = time;
-	if (parent)
-		parent->calculate_freq(time);
+
+	abstract_cpu::change_effective_frequency(time, frequency);
 }
 
 
@@ -557,6 +574,14 @@ void nhm_cpu::account_freq(uint64_t freq, uint64_t duration)
 
 void nhm_cpu::change_freq(uint64_t time, int frequency)
 {
+	current_frequency = frequency;
+
+	if (parent)
+		parent->calculate_freq(time);
+}
+
+void nhm_cpu::change_effective_frequency(uint64_t time, uint64_t frequency)
+{
 	uint64_t time_delta, fr;
 	
 	if (last_stamp) 
@@ -564,16 +589,14 @@ void nhm_cpu::change_freq(uint64_t time, int frequency)
 	else
 		time_delta = 1;
 
-	fr = current_frequency;
+	fr = effective_frequency;
 	if (idle)
 		fr = 0;
 
 	account_freq(fr, time_delta);
 	
-	current_frequency = frequency;
+	effective_frequency = frequency;
 	last_stamp = time;
-	if (parent)
-		parent->calculate_freq(time);
 }
 
 void nhm_cpu::go_idle(uint64_t time)

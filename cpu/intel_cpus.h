@@ -33,6 +33,7 @@ public:
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
 
 	virtual void    calculate_freq(uint64_t time);
+	virtual void	change_effective_frequency(uint64_t time, uint64_t freq);
 
 };
 
@@ -55,6 +56,7 @@ public:
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
 
 	virtual void    calculate_freq(uint64_t time);
+	virtual void	change_effective_frequency(uint64_t time, uint64_t freq);
 
 };
 
@@ -81,6 +83,7 @@ public:
 	virtual int	has_pstate_level(int level);
 
 	virtual void    change_freq(uint64_t time, int freq);
+	virtual void	change_effective_frequency(uint64_t time, uint64_t freq);
 	virtual void    go_idle(uint64_t time);
 	virtual void    go_unidle(uint64_t time);
 

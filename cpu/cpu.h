@@ -56,7 +56,7 @@ protected:
 public:
 	int	childcount;
 	bool	idle;
-	int	current_frequency;	
+	uint64_t	current_frequency;	
 
 	vector<class abstract_cpu *> children;
 	vector<struct idle_state *> cstates;
@@ -101,6 +101,7 @@ public:
 	virtual void    go_unidle(uint64_t time) { idle = false; if (parent) parent->calculate_freq(time);};;
 	virtual void    change_freq(uint64_t time, int freq) { current_frequency = freq; if (parent) parent->calculate_freq(time);};
 
+	virtual void    wiggle(void);
 };
 
 extern vector<class abstract_cpu *> all_cpus;

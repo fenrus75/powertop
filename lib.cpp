@@ -18,8 +18,8 @@
 double percentage(double F)
 {
 	F = F * 100.0;
-	if (F > 100.0)
-		F = 100.0;
+//	if (F > 100.0)
+//		F = 100.0;
 	if (F < 0.0)
 		F = 0.0;
 	return F;
@@ -41,9 +41,9 @@ char *hz_to_human(unsigned long hz, char *buffer, int digits)
 
 	if (Hz>1500000) {
 		if (digits == 2)
-			sprintf(buffer, _("%6.2f Ghz"), (Hz+5000.0)/1000000);
+			sprintf(buffer, _("%4.2f Ghz"), (Hz+5000.0)/1000000);
 		else
-			sprintf(buffer, _("%4.1f Ghz"), (Hz+5000.0)/1000000);
+			sprintf(buffer, _("%3.1f Ghz"), (Hz+5000.0)/1000000);
 	}
 
 	return buffer;

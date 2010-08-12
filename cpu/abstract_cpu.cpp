@@ -20,6 +20,8 @@ void abstract_cpu::measurement_start(void)
 		delete pstates[i];
 	pstates.resize(0);
 
+	current_frequency = 0;
+
 
 	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_available_frequencies", number);
 	file.open(filename, ios::in);
@@ -293,4 +295,28 @@ void abstract_cpu::calculate_freq(uint64_t time)
 	idle = is_idle;
 	if (parent)
 		parent->calculate_freq(time);
+}
+
+
+void abstract_cpu::wiggle(void)
+{
+	char current[256];
+	char filename[4096];
+	ifstream ifile;
+	ofstream ofile;
+
+	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_governor", first_cpu);
+	ifile.open(filename, ios::in);
+	ifile.getline(current, 256);
+	ifile.close();
+	ofile.open(filename, ios::out);
+	ofile << "performance\n";
+	ofile.close();
+	ofile.open(filename, ios::out);
+	ofile << "powersave\n";
+	ofile.close();
+	ofile.open(filename, ios::out);
+	ofile << current;
+	ofile.close();
+
 }

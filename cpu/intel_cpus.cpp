@@ -1,10 +1,14 @@
 #include "cpu.h"
+#include <iostream>
+#include <fstream>
+#include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/time.h>
+#include <string.h>
 
 #include "../lib.h"
 
@@ -29,8 +33,18 @@ static uint64_t get_msr(int cpu, uint64_t offset)
 
 void nhm_core::measurement_start(void)
 {
+	unsigned int i;
+	ifstream file;
+	char filename[4096];
+
 	/* the abstract function needs to be first since it clears all state */
 	abstract_cpu::measurement_start();
+
+	last_stamp = 0;
+
+	for (i = 0; i < children.size(); i++)
+		if (children[i])
+			children[i]->wiggle();
 
 	c3_before    = get_msr(first_cpu, MSR_CORE_C3_RESIDENCY);
 	c6_before    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
@@ -38,11 +52,30 @@ void nhm_core::measurement_start(void)
 
 	insert_cstate("core c3", "C3 (cc3)", 0, c3_before, 1);
 	insert_cstate("core c6", "C6 (cc6)", 0, c6_before, 1);
+
+	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", first_cpu);
+
+	file.open(filename, ios::in);
+
+	if (file) {
+		char line[1024];
+
+		while (file) {
+			uint64_t f;
+			file.getline(line, 1024);
+			f = strtoull(line, NULL, 10);
+			account_freq(f, 1);
+		}
+		file.close();
+	}
+	account_freq(0, 1);
+
+	gettimeofday(&stamp_before, NULL);
 }
 
 void nhm_core::measurement_end(void)
 {
-	unsigned int i, j;
+	unsigned int i;
 	uint64_t time_delta;
 	double ratio;
 
@@ -62,8 +95,10 @@ void nhm_core::measurement_end(void)
 
 
 	for (i = 0; i < children.size(); i++)
-		if (children[i])
+		if (children[i]) {
 			children[i]->measurement_end();
+			children[i]->wiggle();
+		}
 
 	time_delta = 1000000 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
 
@@ -86,6 +121,7 @@ void nhm_core::measurement_end(void)
 		state->duration_delta = ratio * (state->duration_after - state->duration_before) / state->after_count;
 	}
 
+#if 0
 	for (i = 0; i < children.size(); i++)
 		if (children[i]) {
 			for (j = 0; j < children[i]->pstates.size(); j++) {
@@ -98,8 +134,110 @@ void nhm_core::measurement_end(void)
 				finalize_pstate(state->freq,                    state->time_after,  state->after_count);
 			}
 		}
+#endif
+	total_stamp = 0;
+}
+
+void nhm_core::account_freq(uint64_t freq, uint64_t duration)
+{
+	struct frequency *state = NULL;
+	unsigned int i;
+
+	for (i = 0; i < pstates.size(); i++) {
+		if (freq == pstates[i]->freq) {
+			state = pstates[i];
+			break;
+		}
+	}
+
+	if (!state) {
+		state = new struct frequency;
+
+		if (!state)
+			return;
+
+		memset(state, 0, sizeof(*state));
+
+		pstates.push_back(state);
+
+		state->freq = freq;
+		sprintf(state->human_name, "%s", hz_to_human(freq, state->human_name));
+		if (freq == 0)
+			strcpy(state->human_name, "Idle");
+		state->after_count = 1;
+	}
+
+
+	state->time_after += duration;
 
 }
+
+
+void nhm_core::calculate_freq(uint64_t time)
+{
+	uint64_t freq = 0;
+	bool is_idle = true;
+	unsigned int i;
+	uint64_t time_delta, fr;
+	
+	/* calculate the maximum frequency of all children */
+	for (i = 0; i < children.size(); i++)
+		if (children[i]) {
+			uint64_t f = 0;
+			if (!children[i]->idle) {
+				f = children[i]->current_frequency;
+				is_idle = false;
+			}
+			if (f > freq)
+				freq = f;
+		}
+
+	if (last_stamp) 
+		time_delta = time - last_stamp;
+	else
+		time_delta = 1;
+
+	fr = current_frequency;
+//	if (idle)
+//		fr = 0;
+
+	account_freq(fr, time_delta);
+	
+	current_frequency = freq;
+	idle = is_idle;
+	last_stamp = time;
+	if (parent)
+		parent->calculate_freq(time);
+}
+
+
+char * nhm_core::fill_pstate_line(int line_nr, char *buffer) 
+{
+	buffer[0] = 0;
+	unsigned int i;
+
+	if (total_stamp ==0) {
+		for (i = 0; i < pstates.size(); i++)
+			total_stamp += pstates[i]->time_after;
+		if (total_stamp == 0)
+			total_stamp = 1;
+	}
+
+
+	if (line_nr == LEVEL_HEADER) {
+		sprintf(buffer,"  Core");
+		return buffer;
+	}
+
+	if (line_nr >= (int)pstates.size() || line_nr < 0)
+		return buffer;
+
+
+	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
+	return buffer; 
+}
+
+
 
 void nhm_package::measurement_start(void)
 {
@@ -214,6 +352,7 @@ void nhm_cpu::measurement_end(void)
 		state->usage_delta =    ratio * (state->usage_after    - state->usage_before)    / state->after_count;
 		state->duration_delta = ratio * (state->duration_after - state->duration_before) / state->after_count;
 	}
+
 }
 
 

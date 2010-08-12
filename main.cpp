@@ -28,9 +28,10 @@ int main(int argc, char **argv)
 	cout << "doing math \n";
 //	display_cpu_cstates();
 //	cout << "\n\n\n";
-	display_cpu_pstates();
 
 	process_cpu_data();
+
+	display_cpu_pstates();
 
 //	display_cpu_cstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");
 //	display_cpu_pstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");

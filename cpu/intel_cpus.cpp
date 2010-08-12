@@ -193,6 +193,7 @@ void nhm_core::calculate_freq(uint64_t time)
 	idle = is_idle;
 	if (parent)
 		parent->calculate_freq(time);
+	old_idle = idle;
 }
 
 void nhm_core::change_effective_frequency(uint64_t time, uint64_t frequency)
@@ -207,7 +208,7 @@ void nhm_core::change_effective_frequency(uint64_t time, uint64_t frequency)
 		time_delta = 1;
 
 	fr = effective_frequency;
-	if (idle)
+	if (old_idle)
 		fr = 0;
 
 	account_freq(fr, time_delta);
@@ -399,6 +400,7 @@ void nhm_package::calculate_freq(uint64_t time)
 	if (parent)
 		parent->calculate_freq(time);
 	change_effective_frequency(time, current_frequency);
+	old_idle = idle;
 }
 
 void nhm_package::change_effective_frequency(uint64_t time, uint64_t frequency)
@@ -411,7 +413,7 @@ void nhm_package::change_effective_frequency(uint64_t time, uint64_t frequency)
 		time_delta = 1;
 
 	fr = effective_frequency;
-	if (idle)
+	if (old_idle)
 		fr = 0;
 
 	account_freq(fr, time_delta);
@@ -578,6 +580,7 @@ void nhm_cpu::change_freq(uint64_t time, int frequency)
 
 	if (parent)
 		parent->calculate_freq(time);
+	old_idle = idle;
 }
 
 void nhm_cpu::change_effective_frequency(uint64_t time, uint64_t frequency)
@@ -590,7 +593,7 @@ void nhm_cpu::change_effective_frequency(uint64_t time, uint64_t frequency)
 		time_delta = 1;
 
 	fr = effective_frequency;
-	if (idle)
+	if (old_idle)
 		fr = 0;
 
 	account_freq(fr, time_delta);
@@ -601,43 +604,20 @@ void nhm_cpu::change_effective_frequency(uint64_t time, uint64_t frequency)
 
 void nhm_cpu::go_idle(uint64_t time)
 {
-	uint64_t time_delta, fr;
-	
-	if (last_stamp) 
-		time_delta = time - last_stamp;
-	else
-		time_delta = 1;
-
-	fr = current_frequency;
-	if (idle)
-		fr = 0;
-
-	account_freq(fr, time_delta);
 	
 	idle = true;
-	last_stamp = time;
+
 	if (parent)
 		parent->calculate_freq(time);
+	old_idle = idle;
 }
 
 
 void nhm_cpu::go_unidle(uint64_t time)
 {
-	uint64_t time_delta, fr;
-	
-	if (last_stamp) 
-		time_delta = time - last_stamp;
-	else
-		time_delta = 1;
-
-	fr = current_frequency;
-	if (idle)
-		fr = 0;
-
-	account_freq(fr, time_delta);
-	
 	idle = false;
-	last_stamp = time;
+
 	if (parent)
 		parent->calculate_freq(time);
+	old_idle = idle;
 }

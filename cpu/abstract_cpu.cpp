@@ -295,6 +295,7 @@ void abstract_cpu::calculate_freq(uint64_t time)
 	idle = is_idle;
 	if (parent)
 		parent->calculate_freq(time);
+	old_idle = idle;
 }
 
 void abstract_cpu::change_effective_frequency(uint64_t time, uint64_t frequency)

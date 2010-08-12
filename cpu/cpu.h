@@ -55,7 +55,7 @@ protected:
 	uint64_t max_minus_one_frequency;
 public:
 	int	childcount;
-	bool	idle;
+	bool	idle, old_idle;
 	uint64_t	current_frequency;
 	uint64_t	effective_frequency;	
 

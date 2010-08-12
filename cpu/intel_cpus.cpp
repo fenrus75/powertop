@@ -70,7 +70,7 @@ void nhm_core::measurement_start(void)
 	}
 	account_freq(0, 1);
 
-	gettimeofday(&stamp_before, NULL);
+//	gettimeofday(&stamp_before, NULL);
 }
 
 void nhm_core::measurement_end(void)
@@ -198,8 +198,8 @@ void nhm_core::calculate_freq(uint64_t time)
 		time_delta = 1;
 
 	fr = current_frequency;
-//	if (idle)
-//		fr = 0;
+	if (idle)
+		fr = 0;
 
 	account_freq(fr, time_delta);
 	
@@ -312,13 +312,42 @@ void nhm_package::measurement_end(void)
 
 void nhm_cpu::measurement_start(void)
 {
+	unsigned int i;
+	ifstream file;
+	char filename[4096];
+
 	cpu_linux::measurement_start();
+
+	last_stamp = 0;
+
+	for (i = 0; i < children.size(); i++)
+		if (children[i])
+			children[i]->wiggle();
 
 	aperf_before = get_msr(number, MSR_APERF);
 	mperf_before = get_msr(number, MSR_MPERF);
 	tsc_before   = get_msr(number, MSR_TSC);
 
 	insert_cstate("active", "C0 active", 0, aperf_before, 1);
+
+	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", first_cpu);
+
+	file.open(filename, ios::in);
+
+	if (file) {
+		char line[1024];
+
+		while (file) {
+			uint64_t f;
+			file.getline(line, 1024);
+			f = strtoull(line, NULL, 10);
+			account_freq(f, 1);
+		}
+		file.close();
+	}
+	account_freq(0, 1);
+
+//	gettimeofday(&stamp_before, NULL);
 }
 
 void nhm_cpu::measurement_end(void)
@@ -367,13 +396,27 @@ char * nhm_cpu::fill_pstate_name(int line_nr, char *buffer)
 
 char * nhm_cpu::fill_pstate_line(int line_nr, char *buffer)
 {
+	if (total_stamp ==0) {
+		unsigned int i;
+		for (i = 0; i < pstates.size(); i++)
+			total_stamp += pstates[i]->time_after;
+		if (total_stamp == 0)
+			total_stamp = 1;
+	}
+
 	if (line_nr == LEVEL_C0) {
 		double F;
 		F = 1.0 * (tsc_after - tsc_before) * (aperf_after - aperf_before) / (mperf_after - mperf_before) / time_factor * 1000;
 		sprintf(buffer, "%s", hz_to_human(F, buffer, 1));
 		return buffer;
 	}
-	return cpu_linux::fill_pstate_line(line_nr, buffer);
+	if (line_nr >= (int)pstates.size() || line_nr < 0)
+		return buffer;
+
+
+	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
+	return buffer; 
+
 }
 
 
@@ -382,4 +425,102 @@ int nhm_cpu::has_pstate_level(int level)
 	if (level == LEVEL_C0)
 		return 1;
 	return cpu_linux::has_pstate_level(level);
+}
+
+void nhm_cpu::account_freq(uint64_t freq, uint64_t duration)
+{
+	struct frequency *state = NULL;
+	unsigned int i;
+
+	for (i = 0; i < pstates.size(); i++) {
+		if (freq == pstates[i]->freq) {
+			state = pstates[i];
+			break;
+		}
+	}
+
+	if (!state) {
+		state = new struct frequency;
+
+		if (!state)
+			return;
+
+		memset(state, 0, sizeof(*state));
+
+		pstates.push_back(state);
+
+		state->freq = freq;
+		sprintf(state->human_name, "%s", hz_to_human(freq, state->human_name));
+		if (freq == 0)
+			strcpy(state->human_name, "Idle");
+		state->after_count = 1;
+	}
+
+
+	state->time_after += duration;
+
+}
+
+void nhm_cpu::change_freq(uint64_t time, int frequency)
+{
+	uint64_t time_delta, fr;
+	
+	if (last_stamp) 
+		time_delta = time - last_stamp;
+	else
+		time_delta = 1;
+
+	fr = current_frequency;
+	if (idle)
+		fr = 0;
+
+	account_freq(fr, time_delta);
+	
+	current_frequency = frequency;
+	last_stamp = time;
+	if (parent)
+		parent->calculate_freq(time);
+}
+
+void nhm_cpu::go_idle(uint64_t time)
+{
+	uint64_t time_delta, fr;
+	
+	if (last_stamp) 
+		time_delta = time - last_stamp;
+	else
+		time_delta = 1;
+
+	fr = current_frequency;
+	if (idle)
+		fr = 0;
+
+	account_freq(fr, time_delta);
+	
+	idle = true;
+	last_stamp = time;
+	if (parent)
+		parent->calculate_freq(time);
+}
+
+
+void nhm_cpu::go_unidle(uint64_t time)
+{
+	uint64_t time_delta, fr;
+	
+	if (last_stamp) 
+		time_delta = time - last_stamp;
+	else
+		time_delta = 1;
+
+	fr = current_frequency;
+	if (idle)
+		fr = 0;
+
+	account_freq(fr, time_delta);
+	
+	idle = false;
+	last_stamp = time;
+	if (parent)
+		parent->calculate_freq(time);
 }

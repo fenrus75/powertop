@@ -19,17 +19,18 @@ int main(int argc, char **argv)
 
 
 		cout << "measuring\n";
-		sleep(3);
+		sleep(10);
 
 
 		end_cpu_measurement();
 	}
 
 	cout << "doing math \n";
-//	display_cpu_cstates();
-//	cout << "\n\n\n";
 
 	process_cpu_data();
+
+	display_cpu_cstates();
+	cout << "\n\n\n";
 
 	display_cpu_pstates();
 

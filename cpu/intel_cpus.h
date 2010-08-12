@@ -57,6 +57,11 @@ private:
 	uint64_t	mperf_before;
 	uint64_t	mperf_after;
 	uint64_t	tsc_before, tsc_after;
+
+	uint64_t	last_stamp;
+	uint64_t	total_stamp;
+
+	void		account_freq(uint64_t frequency, uint64_t duration);
 public:
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
@@ -65,6 +70,10 @@ public:
 	virtual char *  fill_pstate_name(int line_nr, char *buffer);
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
 	virtual int	has_pstate_level(int level);
+
+	virtual void    change_freq(uint64_t time, int freq);
+	virtual void    go_idle(uint64_t time);
+	virtual void    go_unidle(uint64_t time);
 
 };
 

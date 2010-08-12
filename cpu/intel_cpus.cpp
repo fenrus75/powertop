@@ -517,6 +517,11 @@ char * nhm_cpu::fill_pstate_line(int line_nr, char *buffer)
 			total_stamp = 1;
 	}
 
+	if (line_nr == LEVEL_HEADER) {
+		sprintf(buffer," CPU %i", number);
+		return buffer;
+	}
+
 	if (line_nr == LEVEL_C0) {
 		double F;
 		F = 1.0 * (tsc_after - tsc_before) * (aperf_after - aperf_before) / (mperf_after - mperf_before) / time_factor * 1000;

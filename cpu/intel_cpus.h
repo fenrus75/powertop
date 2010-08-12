@@ -20,10 +20,19 @@ private:
 	uint64_t	c6_before, c6_after;
 	uint64_t	tsc_before, tsc_after;
 
+	uint64_t	last_stamp;
+	uint64_t	total_stamp;
+
+	void		account_freq(uint64_t frequency, uint64_t duration);
+
 public:
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
 	virtual int     can_collapse(void) { return 0;};
+
+	virtual char *  fill_pstate_line(int line_nr, char *buffer);
+
+	virtual void    calculate_freq(uint64_t time);
 
 };
 

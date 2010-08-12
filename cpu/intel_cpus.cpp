@@ -69,8 +69,6 @@ void nhm_core::measurement_start(void)
 		file.close();
 	}
 	account_freq(0, 1);
-
-//	gettimeofday(&stamp_before, NULL);
 }
 
 void nhm_core::measurement_end(void)
@@ -237,6 +235,32 @@ char * nhm_core::fill_pstate_line(int line_nr, char *buffer)
 	return buffer; 
 }
 
+char * nhm_package::fill_pstate_line(int line_nr, char *buffer) 
+{
+	buffer[0] = 0;
+	unsigned int i;
+
+	if (total_stamp ==0) {
+		for (i = 0; i < pstates.size(); i++)
+			total_stamp += pstates[i]->time_after;
+		if (total_stamp == 0)
+			total_stamp = 1;
+	}
+
+
+	if (line_nr == LEVEL_HEADER) {
+		sprintf(buffer,"  Package");
+		return buffer;
+	}
+
+	if (line_nr >= (int)pstates.size() || line_nr < 0)
+		return buffer;
+
+
+	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
+	return buffer; 
+}
+
 
 
 void nhm_package::measurement_start(void)
@@ -309,6 +333,78 @@ void nhm_package::measurement_end(void)
 		}
 }
 
+void nhm_package::account_freq(uint64_t freq, uint64_t duration)
+{
+	struct frequency *state = NULL;
+	unsigned int i;
+
+	for (i = 0; i < pstates.size(); i++) {
+		if (freq == pstates[i]->freq) {
+			state = pstates[i];
+			break;
+		}
+	}
+
+	if (!state) {
+		state = new struct frequency;
+
+		if (!state)
+			return;
+
+		memset(state, 0, sizeof(*state));
+
+		pstates.push_back(state);
+
+		state->freq = freq;
+		sprintf(state->human_name, "%s", hz_to_human(freq, state->human_name));
+		if (freq == 0)
+			strcpy(state->human_name, "Idle");
+		state->after_count = 1;
+	}
+
+
+	state->time_after += duration;
+
+}
+
+
+void nhm_package::calculate_freq(uint64_t time)
+{
+	uint64_t freq = 0;
+	bool is_idle = true;
+	unsigned int i;
+	uint64_t time_delta, fr;
+	
+	/* calculate the maximum frequency of all children */
+	for (i = 0; i < children.size(); i++)
+		if (children[i]) {
+			uint64_t f = 0;
+			if (!children[i]->idle) {
+				f = children[i]->current_frequency;
+				is_idle = false;
+			}
+			if (f > freq)
+				freq = f;
+		}
+
+	if (last_stamp) 
+		time_delta = time - last_stamp;
+	else
+		time_delta = 1;
+
+	fr = current_frequency;
+	if (idle)
+		fr = 0;
+
+	account_freq(fr, time_delta);
+	
+	current_frequency = freq;
+	idle = is_idle;
+	last_stamp = time;
+	if (parent)
+		parent->calculate_freq(time);
+}
+
 
 void nhm_cpu::measurement_start(void)
 {
@@ -346,8 +442,6 @@ void nhm_cpu::measurement_start(void)
 		file.close();
 	}
 	account_freq(0, 1);
-
-//	gettimeofday(&stamp_before, NULL);
 }
 
 void nhm_cpu::measurement_end(void)

@@ -112,9 +112,8 @@ void cpu_linux::measurement_start(void)
 
 			hz_to_human(f, line);
 
-			if (is_turbo(f, max_frequency, max_minus_one_frequency)) {
+			if (is_turbo(f, max_frequency, max_minus_one_frequency))
 				sprintf(line, _("Turbo Mode"));
-			}
 
 			if (f > 0)
 				update_pstate(f, line, count, 1);

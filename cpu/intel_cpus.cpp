@@ -12,6 +12,17 @@
 
 #include "../lib.h"
 
+static int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo)
+{
+	if (freq != max)
+		return 0;
+	if (maxmo + 1000 != max)
+		return 0;
+	return 1;
+}
+
+
+
 static uint64_t get_msr(int cpu, uint64_t offset)
 {
 	ssize_t retval;
@@ -162,6 +173,9 @@ void nhm_core::account_freq(uint64_t freq, uint64_t duration)
 		sprintf(state->human_name, "%s", hz_to_human(freq, state->human_name));
 		if (freq == 0)
 			strcpy(state->human_name, "Idle");
+		if (is_turbo(freq, max_frequency, max_minus_one_frequency))
+			sprintf(state->human_name, _("Turbo Mode"));
+
 		state->after_count = 1;
 	}
 
@@ -368,6 +382,8 @@ void nhm_package::account_freq(uint64_t freq, uint64_t duration)
 		sprintf(state->human_name, "%s", hz_to_human(freq, state->human_name));
 		if (freq == 0)
 			strcpy(state->human_name, "Idle");
+		if (is_turbo(freq, max_frequency, max_minus_one_frequency))
+			sprintf(state->human_name, _("Turbo Mode"));
 		state->after_count = 1;
 	}
 

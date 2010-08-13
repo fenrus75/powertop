@@ -11,7 +11,16 @@ Need to collect
 class process {
 	char comm[16];
 
+	uint64_t accumulated_runtime;
+
 	public:
+
+	virtual void schedule_thread(uint64_t time, int thread_id, int from_idle = 0);
+	virtual void deschedule_thread(uint64_t time, int thread_id);
+
+	virtual void account_disk_dirty(void)
+	
+	
 };
 
 #endif

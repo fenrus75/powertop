@@ -373,8 +373,6 @@ void abstract_cpu::reset_pstate_data(void)
 
 	my_time = total_pstate_time();
 
-	printf("reset\n");
-
 	for (i = 0; i < pstates.size(); i++) {
 		pstates[i]->time_before = 0;
 		pstates[i]->time_after = 0;

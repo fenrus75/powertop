@@ -412,7 +412,6 @@ void perf_power_bundle::handle_trace_point(int type, void *trace, int cpunr, uin
 {
 	const char *event_name;
 	class abstract_cpu *cpu;
-	unsigned int i;
 
 	if (type >= (int)event_names.size())
 		return;
@@ -425,11 +424,12 @@ void perf_power_bundle::handle_trace_point(int type, void *trace, int cpunr, uin
 
 	cpu = all_cpus[cpunr];
 
+#if 0
 	printf("Time is %llu \n", time);
 	for (i = 0; i < system_level.children.size(); i++)
 		if (system_level.children[i])
 			system_level.children[i]->validate();
-
+#endif
 
 	if (strcmp(event_name, "power:power_frequency")==0) {
 		struct power_entry *pe = (struct power_entry *)trace;
@@ -440,15 +440,22 @@ void perf_power_bundle::handle_trace_point(int type, void *trace, int cpunr, uin
 	if (strcmp(event_name, "power:power_end")==0)
 		cpu->go_unidle(time);
 
+#if 0
+	unsigned int i;
 	for (i = 0; i < system_level.children.size(); i++)
 		if (system_level.children[i])
 			system_level.children[i]->validate();
-
+#endif
 }
 
 void process_cpu_data(void)
 {
+	unsigned int i;
 	system_level.reset_pstate_data();
 	
 	perf_events->process();
+
+	for (i = 0; i < system_level.children.size(); i++)
+		if (system_level.children[i])
+			system_level.children[i]->validate();
 }

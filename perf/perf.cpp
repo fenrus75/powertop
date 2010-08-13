@@ -210,7 +210,6 @@ void perf_event::process(void *cookie)
 			handle_event(header, cookie);
 	}
 	pc->data_tail = pc->data_head;
-	printf("Event %s got %i items \n", name, i);
 }
 
 void perf_event::clear(void)

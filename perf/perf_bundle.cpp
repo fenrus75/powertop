@@ -169,7 +169,6 @@ void perf_bundle::process(void)
 	}		
 	sort(records.begin(), records.end(), event_sort_function);
 
-	printf("We got %u records total \n", records.size());
 	for (i = 0; i < records.size(); i++) {
 		struct perf_sample *sample;
 

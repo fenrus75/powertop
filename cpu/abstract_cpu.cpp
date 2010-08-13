@@ -21,6 +21,8 @@ void abstract_cpu::measurement_start(void)
 	pstates.resize(0);
 
 	current_frequency = 0;
+	idle = true;
+	old_idle = true;
 
 
 	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_available_frequencies", number);
@@ -334,3 +336,52 @@ void abstract_cpu::wiggle(void)
 	ofile.close();
 
 }
+uint64_t abstract_cpu::total_pstate_time(void)
+{
+	unsigned int i;
+	uint64_t total_stamp = 0;
+
+	for (i = 0; i < pstates.size(); i++)
+		total_stamp += pstates[i]->time_after;
+
+	return total_stamp;
+}
+
+
+void abstract_cpu::validate(void)
+{
+	unsigned int i;
+	uint64_t my_time;
+
+	my_time = total_pstate_time();
+
+	for (i = 0; i < children.size(); i++) {
+
+		if (children[i]) {
+			if (my_time != children[i]->total_pstate_time())
+				printf("My (%i) time %llu is not the same as child (%i) time %llu\n",
+					first_cpu, my_time, children[i]->number, children[i]->total_pstate_time());
+			children[i]->validate();
+		}
+	}
+}
+
+void abstract_cpu::reset_pstate_data(void)
+{
+	unsigned int i;
+	uint64_t my_time;
+
+	my_time = total_pstate_time();
+
+	printf("reset\n");
+
+	for (i = 0; i < pstates.size(); i++) {
+		pstates[i]->time_before = 0;
+		pstates[i]->time_after = 0;
+	}
+
+	for (i = 0; i < children.size(); i++)
+		if (children[i])
+			children[i]->reset_pstate_data();
+}
+

@@ -96,7 +96,7 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 
 
 	if (system_level.children.size() <= package_number)
-		system_level.children.resize(package_number + 1);
+		system_level.children.resize(package_number + 1, NULL);
 
 	if (!system_level.children[package_number]) {
 		system_level.children[package_number] = new_package(package_number, number, vendor, family, model);
@@ -107,7 +107,7 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 	package->parent = &system_level;
 
 	if (package->children.size() <= core_number)
-		package->children.resize(core_number + 1);
+		package->children.resize(core_number + 1, NULL);
 
 	if (!package->children[core_number]) {
 		package->children[core_number] = new_core(core_number, number, vendor, family, model);
@@ -412,6 +412,7 @@ void perf_power_bundle::handle_trace_point(int type, void *trace, int cpunr, uin
 {
 	const char *event_name;
 	class abstract_cpu *cpu;
+	unsigned int i;
 
 	if (type >= (int)event_names.size())
 		return;
@@ -424,6 +425,12 @@ void perf_power_bundle::handle_trace_point(int type, void *trace, int cpunr, uin
 
 	cpu = all_cpus[cpunr];
 
+	printf("Time is %llu \n", time);
+	for (i = 0; i < system_level.children.size(); i++)
+		if (system_level.children[i])
+			system_level.children[i]->validate();
+
+
 	if (strcmp(event_name, "power:power_frequency")==0) {
 		struct power_entry *pe = (struct power_entry *)trace;
 		cpu->change_freq(time, pe->value);
@@ -432,9 +439,16 @@ void perf_power_bundle::handle_trace_point(int type, void *trace, int cpunr, uin
 		cpu->go_idle(time);
 	if (strcmp(event_name, "power:power_end")==0)
 		cpu->go_unidle(time);
+
+	for (i = 0; i < system_level.children.size(); i++)
+		if (system_level.children[i])
+			system_level.children[i]->validate();
+
 }
 
 void process_cpu_data(void)
 {
+	system_level.reset_pstate_data();
+	
 	perf_events->process();
 }

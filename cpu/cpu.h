@@ -35,8 +35,8 @@ struct frequency {
 
 	uint64_t freq;
 	
-	uint64_t time_before;
 	uint64_t time_after;
+	uint64_t time_before;
 
 	int before_count;
 	int after_count;
@@ -105,6 +105,11 @@ public:
 	virtual void	change_effective_frequency(uint64_t time, uint64_t freq);
 
 	virtual void    wiggle(void);
+
+	virtual uint64_t total_pstate_time(void);
+
+	virtual void validate(void);
+	virtual void reset_pstate_data(void);
 };
 
 extern vector<class abstract_cpu *> all_cpus;

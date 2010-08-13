@@ -75,11 +75,11 @@ void nhm_core::measurement_start(void)
 			uint64_t f;
 			file.getline(line, 1024);
 			f = strtoull(line, NULL, 10);
-			account_freq(f, 1);
+			account_freq(f, 0);
 		}
 		file.close();
 	}
-	account_freq(0, 1);
+	account_freq(0, 0);
 }
 
 void nhm_core::measurement_end(void)
@@ -159,6 +159,7 @@ void nhm_core::account_freq(uint64_t freq, uint64_t duration)
 		}
 	}
 
+
 	if (!state) {
 		state = new struct frequency;
 
@@ -170,7 +171,7 @@ void nhm_core::account_freq(uint64_t freq, uint64_t duration)
 		pstates.push_back(state);
 
 		state->freq = freq;
-		sprintf(state->human_name, "%s", hz_to_human(freq, state->human_name));
+		hz_to_human(freq, state->human_name);
 		if (freq == 0)
 			strcpy(state->human_name, "Idle");
 		if (is_turbo(freq, max_frequency, max_minus_one_frequency))
@@ -181,7 +182,6 @@ void nhm_core::account_freq(uint64_t freq, uint64_t duration)
 
 
 	state->time_after += duration;
-
 }
 
 
@@ -190,6 +190,7 @@ void nhm_core::calculate_freq(uint64_t time)
 	uint64_t freq = 0;
 	bool is_idle = true;
 	unsigned int i;
+
 	
 	/* calculate the maximum frequency of all children */
 	for (i = 0; i < children.size(); i++)
@@ -222,6 +223,7 @@ void nhm_core::change_effective_frequency(uint64_t time, uint64_t frequency)
 		time_delta = 1;
 
 	fr = effective_frequency;
+
 	if (old_idle)
 		fr = 0;
 
@@ -243,7 +245,6 @@ char * nhm_core::fill_pstate_line(int line_nr, char *buffer)
 		if (total_stamp == 0)
 			total_stamp = 1;
 	}
-
 
 	if (line_nr == LEVEL_HEADER) {
 		sprintf(buffer,"  Core");
@@ -289,6 +290,8 @@ char * nhm_package::fill_pstate_line(int line_nr, char *buffer)
 void nhm_package::measurement_start(void)
 {
 	abstract_cpu::measurement_start();
+
+	last_stamp = 0;
 
 	c3_before    = get_msr(number, MSR_PKG_C3_RESIDENCY);
 	c6_before    = get_msr(number, MSR_PKG_C6_RESIDENCY);
@@ -354,6 +357,7 @@ void nhm_package::measurement_end(void)
 				finalize_pstate(state->freq,                    state->time_after,  state->after_count);
 			}
 		}
+	total_stamp = 0;
 }
 
 void nhm_package::account_freq(uint64_t freq, uint64_t duration)
@@ -368,6 +372,7 @@ void nhm_package::account_freq(uint64_t freq, uint64_t duration)
 		}
 	}
 
+
 	if (!state) {
 		state = new struct frequency;
 
@@ -379,7 +384,7 @@ void nhm_package::account_freq(uint64_t freq, uint64_t duration)
 		pstates.push_back(state);
 
 		state->freq = freq;
-		sprintf(state->human_name, "%s", hz_to_human(freq, state->human_name));
+		hz_to_human(freq, state->human_name);
 		if (freq == 0)
 			strcpy(state->human_name, "Idle");
 		if (is_turbo(freq, max_frequency, max_minus_one_frequency))
@@ -472,11 +477,11 @@ void nhm_cpu::measurement_start(void)
 			uint64_t f;
 			file.getline(line, 1024);
 			f = strtoull(line, NULL, 10);
-			account_freq(f, 1);
+			account_freq(f, 0);
 		}
 		file.close();
 	}
-	account_freq(0, 1);
+	account_freq(0, 0);
 }
 
 void nhm_cpu::measurement_end(void)
@@ -511,6 +516,8 @@ void nhm_cpu::measurement_end(void)
 		state->duration_delta = ratio * (state->duration_after - state->duration_before) / state->after_count;
 	}
 
+	total_stamp = 0;
+
 }
 
 
@@ -541,7 +548,7 @@ char * nhm_cpu::fill_pstate_line(int line_nr, char *buffer)
 	if (line_nr == LEVEL_C0) {
 		double F;
 		F = 1.0 * (tsc_after - tsc_before) * (aperf_after - aperf_before) / (mperf_after - mperf_before) / time_factor * 1000;
-		sprintf(buffer, "%s", hz_to_human(F, buffer, 1));
+		hz_to_human(F, buffer, 1);
 		return buffer;
 	}
 	if (line_nr >= (int)pstates.size() || line_nr < 0)
@@ -566,6 +573,7 @@ void nhm_cpu::account_freq(uint64_t freq, uint64_t duration)
 	struct frequency *state = NULL;
 	unsigned int i;
 
+
 	for (i = 0; i < pstates.size(); i++) {
 		if (freq == pstates[i]->freq) {
 			state = pstates[i];
@@ -584,7 +592,7 @@ void nhm_cpu::account_freq(uint64_t freq, uint64_t duration)
 		pstates.push_back(state);
 
 		state->freq = freq;
-		sprintf(state->human_name, "%s", hz_to_human(freq, state->human_name));
+		hz_to_human(freq, state->human_name);
 		if (freq == 0)
 			strcpy(state->human_name, "Idle");
 		state->after_count = 1;
@@ -592,6 +600,7 @@ void nhm_cpu::account_freq(uint64_t freq, uint64_t duration)
 
 
 	state->time_after += duration;
+
 
 }
 
@@ -637,7 +646,6 @@ void nhm_cpu::go_idle(uint64_t time)
 void nhm_cpu::go_unidle(uint64_t time)
 {
 	idle = false;
-
 	if (parent)
 		parent->calculate_freq(time);
 	old_idle = idle;

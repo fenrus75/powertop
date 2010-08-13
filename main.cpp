@@ -14,6 +14,7 @@ int main(int argc, char **argv)
 
 	enumerate_cpus();
 
+
 	for (i = 0; i < 1; i++) {
 		start_cpu_measurement();
 

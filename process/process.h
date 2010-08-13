@@ -1,6 +1,7 @@
 #ifndef _INCLUDE_GUARD_PROCESS_H
 #define _INCLUDE_GUARD_PROCESS_H
 
+#include <stdint.h>
 
 /*
 Need to collect
@@ -18,7 +19,7 @@ class process {
 	virtual void schedule_thread(uint64_t time, int thread_id, int from_idle = 0);
 	virtual void deschedule_thread(uint64_t time, int thread_id);
 
-	virtual void account_disk_dirty(void)
+	virtual void account_disk_dirty(void);
 	
 	
 };

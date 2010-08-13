@@ -377,6 +377,12 @@ void abstract_cpu::reset_pstate_data(void)
 		pstates[i]->time_before = 0;
 		pstates[i]->time_after = 0;
 	}
+	for (i = 0; i < cstates.size(); i++) {
+		cstates[i]->duration_before = 0;
+		cstates[i]->duration_after = 0;
+		cstates[i]->before_count = 0;
+		cstates[i]->after_count = 0;
+	}
 
 	for (i = 0; i < children.size(); i++)
 		if (children[i])

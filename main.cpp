@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "cpu/cpu.h"
+#include "process/process.h"
 #include "perf/perf.h"
 #include "perf/perf_bundle.h"
 
@@ -16,6 +17,7 @@ int main(int argc, char **argv)
 
 
 	for (i = 0; i < 1; i++) {
+		start_process_measurement();
 		start_cpu_measurement();
 
 
@@ -24,11 +26,13 @@ int main(int argc, char **argv)
 
 
 		end_cpu_measurement();
+		end_process_measurement();
 	}
 
 	cout << "doing math \n";
 
 	process_cpu_data();
+	process_process_data();
 
 	display_cpu_cstates();
 	cout << "\n\n\n";

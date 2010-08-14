@@ -1,6 +1,7 @@
 #include "process.h"
 
-#include "stdio.h"
+#include <stdio.h>
+#include <string.h>
 
 #include "../perf/perf_bundle.h"
 
@@ -25,25 +26,51 @@ struct sched_switch {
 	int  next_prio;
 };
 
+struct irq_entry {
+	int irq;
+	int len;
+	char handler[16];
+};
+
+struct irq_exit {
+	int irq;
+	int ret;
+};
+
 void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uint64_t time)
 {
 	const char *event_name;
-	struct sched_switch *sw;
-
-	sw = (struct sched_switch *)trace;
 
 	if (type >= (int)event_names.size())
 		return;
 	event_name = event_names[type];
-	printf("%03i  %08llu	<---- %s \n", cpu, time, sw->prev_comm);
-	printf("%03i  %08llu	                  -----> %s \n", cpu, time, sw->next_comm);
+
+	if (strcmp(event_name, "sched:sched_switch")==0) {
+		struct sched_switch *sw;
+		sw = (struct sched_switch *)trace;
+		printf("%03i  %08llu	<---- %s \n", cpu, time, sw->prev_comm);
+		printf("%03i  %08llu	                  -----> %s \n", cpu, time, sw->next_comm);
+	}
+	if (strcmp(event_name, "irq:irq_handler_entry")==0) {
+		struct irq_entry *irqe;
+		irqe = (struct irq_entry *)trace;
+		printf("%03i  %08llu  IRQ %i  %s \n", cpu, time, irqe->irq, irqe->handler);
+	}
+
+	if (strcmp(event_name, "irq:irq_handler_exit")==0) {
+		struct irq_exit *irqe;
+		irqe = (struct irq_exit *)trace;
+		printf("%03i  %08llu  IRQ %i  returns %i \n", cpu, time, irqe->irq, irqe->ret);
+	}
 }
 
 void start_process_measurement(void)
 {
 	if (!perf_events) {
 		perf_events = new perf_process_bundle();
-		 perf_events->add_event("sched:sched_switch");
+		perf_events->add_event("sched:sched_switch");
+		perf_events->add_event("irq:irq_handler_entry");
+		perf_events->add_event("irq:irq_handler_exit");
 	}
 
 	perf_events->start();

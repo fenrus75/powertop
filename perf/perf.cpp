@@ -181,7 +181,10 @@ void perf_event::start(void)
 
 void perf_event::stop(void)
 {
-	ioctl(perf_fd, PERF_EVENT_IOC_DISABLE);
+	int ret;
+	ret = ioctl(perf_fd, PERF_EVENT_IOC_DISABLE);
+	if (ret)
+		cout << "stop failing\n";
 }
 
 void perf_event::process(void *cookie)

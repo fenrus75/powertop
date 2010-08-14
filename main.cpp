@@ -34,10 +34,10 @@ int main(int argc, char **argv)
 	process_cpu_data();
 	process_process_data();
 
-	display_cpu_cstates();
-	cout << "\n\n\n";
+//	display_cpu_cstates();
+//	cout << "\n\n\n";
 
-	display_cpu_pstates();
+//	display_cpu_pstates();
 
 //	display_cpu_cstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");
 //	display_cpu_pstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");

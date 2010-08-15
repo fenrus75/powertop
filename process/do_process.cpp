@@ -1,5 +1,7 @@
 #include "process.h"
 
+#include <vector>
+
 #include <stdio.h>
 #include <string.h>
 
@@ -7,6 +9,9 @@
 
 static  class perf_bundle * perf_events;
 
+
+vector <class process *> all_processes;
+vector <class process *> cpu_cache;
 
 class perf_process_bundle: public perf_bundle
 {
@@ -37,6 +42,22 @@ struct irq_exit {
 	int ret;
 };
 
+
+static class process * find_create_process(char *comm, int pid)
+{
+	unsigned int i;
+	class process *new_proc;
+
+	for (i = 0; i < all_processes.size(); i++) {
+		if (all_processes[i]->pid == pid && strcmp(comm, all_processes[i]->comm) == 0)
+			return all_processes[i];
+	}
+
+	new_proc = new class process(comm, pid);
+	all_processes.push_back(new_proc);
+	return new_proc;
+}
+
 void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uint64_t time)
 {
 	const char *event_name;
@@ -47,9 +68,37 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 
 	if (strcmp(event_name, "sched:sched_switch")==0) {
 		struct sched_switch *sw;
+		class process *old_proc = NULL;
+		class process *new_proc  = NULL;
 		sw = (struct sched_switch *)trace;
-		printf("%03i  %08llu	<---- %s \n", cpu, time, sw->prev_comm);
-		printf("%03i  %08llu	                  -----> %s \n", cpu, time, sw->next_comm);
+
+		/* retire old process, from cpu cache */
+		if ((int)cpu_cache.size() > cpu) 
+			old_proc = cpu_cache[cpu];
+
+		if (old_proc)
+			old_proc->deschedule_thread(time);
+
+		/* if new is idle -> early exit, just clear CPU cache */
+		if (sw->next_pid == 0) {
+			if ((int)cpu_cache.size() > cpu)
+				cpu_cache[cpu] = NULL;
+			return;
+		}
+
+		/* find new process pointer */
+		new_proc = find_create_process(sw->next_comm, sw->next_pid);
+
+		/* start new process */
+
+		new_proc->schedule_thread(time, sw->next_pid);
+
+		/* stick process in cpu cache, expand as needed */
+
+		if ((int)cpu_cache.size() <= cpu)
+			cpu_cache.resize(cpu + 1, NULL);
+		cpu_cache[cpu] = new_proc;
+
 	}
 	if (strcmp(event_name, "irq:irq_handler_entry")==0) {
 		struct irq_entry *irqe;

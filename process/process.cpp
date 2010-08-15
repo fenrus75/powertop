@@ -26,8 +26,6 @@ void process::deschedule_thread(uint64_t time, int thread_id)
 
 	delta = time - running_since;
 	accumulated_runtime += delta;
-
-	printf("I (%s) ran for %llu --> %llu\n", comm, delta, accumulated_runtime);
 }
 
 

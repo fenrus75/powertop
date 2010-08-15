@@ -1,6 +1,7 @@
 #include "process.h"
 
 #include <vector>
+#include <algorithm>
 
 #include <stdio.h>
 #include <string.h>
@@ -133,13 +134,51 @@ void end_process_measurement(void)
 	perf_events->stop();
 }
 
+static void merge_process(class process *one, class process *two)
+{
+	one->accumulated_runtime += two->accumulated_runtime;
+	one->wake_ups += two->wake_ups;
+	one->disk_hits += two->disk_hits;
+
+	two->accumulated_runtime = 0;
+	two->wake_ups = 0;
+	two->disk_hits = 0;
+}
+
+
+static bool process_cpu_sort(class process * i, class process * j)
+{
+        return (i->accumulated_runtime > j->accumulated_runtime);
+}
 
 void process_process_data(void)
 {
+	unsigned int i, j;
+	class process *one, *two;
 	if (!perf_events)
 		return;
 
+	/* clean out old data */
+
+	/* process data */
 	perf_events->process();
 
+	/* find dupes and add up */
+	for (i = 0; i < all_processes.size() - 1 ; i++) {
+		one = all_processes[i];
+		for (j = i + 1; j < all_processes.size(); j++) {
+			two = all_processes[j];
+			if (strcmp(one->comm, two->comm) == 0)
+				merge_process(one, two);
+		}
+	}
+
+	/* sort by cpu usage */
+
+	sort(all_processes.begin(), all_processes.end(), process_cpu_sort);
+
+	for (i = 0; i < all_processes.size() ; i++)
+		if (all_processes[i]->accumulated_runtime)
+			printf("Process %s ran for %4.1fms \n", all_processes[i]->comm, all_processes[i]->accumulated_runtime / 1000000.0);
 }
 

@@ -1,4 +1,5 @@
 #include "process.h"
+#include "interrupt.h"
 
 #include <vector>
 #include <algorithm>
@@ -13,6 +14,8 @@ static  class perf_bundle * perf_events;
 
 vector <class process *> all_processes;
 vector <class process *> cpu_cache;
+vector <class interrupt *> all_interrupts;
+vector <class interrupt *> interrupt_cache;
 
 class perf_process_bundle: public perf_bundle
 {
@@ -57,6 +60,27 @@ static class process * find_create_process(char *comm, int pid)
 	new_proc = new class process(comm, pid);
 	all_processes.push_back(new_proc);
 	return new_proc;
+}
+
+static class interrupt * find_create_interrupt(char *_handler, int nr, int cpu)
+{
+	char handler[64];
+	unsigned int i;
+	class interrupt *new_irq;
+
+	strcpy(handler, _handler);
+	if (strcmp(handler, "timer")==0)
+		sprintf(handler, "timer/%i", cpu);
+		
+
+	for (i = 0; i < all_interrupts.size(); i++) {
+		if (all_interrupts[i]->number == nr && strcmp(handler, all_interrupts[i]->handler) == 0)
+			return all_interrupts[i];
+	}
+
+	new_irq = new class interrupt(handler, nr);
+	all_interrupts.push_back(new_irq);
+	return new_irq;
 }
 
 void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uint64_t time)
@@ -111,14 +135,41 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 	}
 	if (strcmp(event_name, "irq:irq_handler_entry")==0) {
 		struct irq_entry *irqe;
+		class interrupt *irq;
+		int from_idle = 0;
 		irqe = (struct irq_entry *)trace;
-		printf("%03i  %08llu  IRQ %i  %s \n", cpu, time, irqe->irq, irqe->handler);
+		int Q;
+
+		irq = find_create_interrupt(irqe->handler, irqe->irq, cpu);
+
+		Q = (irqe->irq << 8) + cpu;
+		if (Q >= (int)interrupt_cache.size())
+			interrupt_cache.resize(Q + 1, NULL);
+		interrupt_cache[Q] = irq;
+
+		if ((int)cpu_cache.size() > cpu) {
+			if (!cpu_cache[cpu])
+				from_idle = 1;
+			else if (cpu_cache[cpu]->is_idle)
+				from_idle = 1;
+		}
+
+		irq->start_interrupt(time, from_idle);
 	}
 
 	if (strcmp(event_name, "irq:irq_handler_exit")==0) {
 		struct irq_exit *irqe;
+		class interrupt *irq;
 		irqe = (struct irq_exit *)trace;
-		printf("%03i  %08llu  IRQ %i  returns %i \n", cpu, time, irqe->irq, irqe->ret);
+		int Q;
+
+		Q = (irqe->irq << 8) + cpu;
+
+		if ((int)interrupt_cache.size() > Q) {
+			irq = interrupt_cache[Q];
+			if (irq)
+				irq->end_interrupt(time);
+		}
 	}
 }
 
@@ -159,6 +210,11 @@ static bool process_cpu_sort(class process * i, class process * j)
         return (i->accumulated_runtime > j->accumulated_runtime);
 }
 
+static bool interrupt_cpu_sort(class interrupt * i, class interrupt * j)
+{
+        return (i->accumulated_runtime > j->accumulated_runtime);
+}
+
 void process_process_data(void)
 {
 	unsigned int i, j;
@@ -189,5 +245,12 @@ void process_process_data(void)
 		if (all_processes[i]->accumulated_runtime)
 			printf("Process %s ran for %4.1fms, %i wakeups \n", all_processes[i]->comm, all_processes[i]->accumulated_runtime / 1000000.0,
 						all_processes[i]->wake_ups);
+
+	sort(all_interrupts.begin(), all_interrupts.end(), interrupt_cpu_sort);
+
+	for (i = 0; i < all_interrupts.size() ; i++)
+		if (all_interrupts[i]->accumulated_runtime)
+			printf("Interrupt %s ran for %4.1fms, %i wakeups \n", all_interrupts[i]->handler, all_interrupts[i]->accumulated_runtime / 1000000.0,
+						all_interrupts[i]->wake_ups);
 }
 

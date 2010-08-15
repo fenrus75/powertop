@@ -68,6 +68,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 	event_name = event_names[type];
 
 	if (strcmp(event_name, "sched:sched_switch")==0) {
+		int from_idle = 0;
 		struct sched_switch *sw;
 		class process *old_proc = NULL;
 		class process *new_proc  = NULL;
@@ -92,7 +93,11 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 
 		/* start new process */
 
-		new_proc->schedule_thread(time, sw->next_pid);
+		from_idle = 0;
+		if (!old_proc)
+			from_idle = 1;
+
+		new_proc->schedule_thread(time, sw->next_pid, from_idle);
 
 		/* stick process in cpu cache, expand as needed */
 
@@ -164,7 +169,8 @@ void process_process_data(void)
 	perf_events->process();
 
 	/* find dupes and add up */
-	for (i = 0; i < all_processes.size() - 1 ; i++) {
+	for (i = 0; i < all_processes.size() ; i++) {
+		printf("size si %i \n", all_processes.size());
 		one = all_processes[i];
 		for (j = i + 1; j < all_processes.size(); j++) {
 			two = all_processes[j];
@@ -179,6 +185,7 @@ void process_process_data(void)
 
 	for (i = 0; i < all_processes.size() ; i++)
 		if (all_processes[i]->accumulated_runtime)
-			printf("Process %s ran for %4.1fms \n", all_processes[i]->comm, all_processes[i]->accumulated_runtime / 1000000.0);
+			printf("Process %s ran for %4.1fms, %i wakeups \n", all_processes[i]->comm, all_processes[i]->accumulated_runtime / 1000000.0,
+						all_processes[i]->wake_ups);
 }
 

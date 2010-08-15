@@ -3,13 +3,15 @@
 
 #include <stdint.h>
 
+#include "powerconsumer.h"
+
 /*
 Need to collect
  * CPU time consumed by each application
  * Number of wakeups out of idle -- received and wakeups sent
  * Number of disk dirties (inode for now)
  */
-class process {
+class process : public power_consumer {
 	uint64_t	running_since;
 public:
 	char 		comm[16];
@@ -18,6 +20,8 @@ public:
 	uint64_t	accumulated_runtime;
 	int	 	disk_hits;
 	int		wake_ups;
+
+	int		is_idle;   /* count this as if the cpu was idle */
 
 	process(const char *_comm, int _pid);
 

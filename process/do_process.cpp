@@ -96,6 +96,9 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		from_idle = 0;
 		if (!old_proc)
 			from_idle = 1;
+		if (old_proc && old_proc->is_idle) {
+			from_idle = 1;
+		}
 
 		new_proc->schedule_thread(time, sw->next_pid, from_idle);
 
@@ -170,7 +173,6 @@ void process_process_data(void)
 
 	/* find dupes and add up */
 	for (i = 0; i < all_processes.size() ; i++) {
-		printf("size si %i \n", all_processes.size());
 		one = all_processes[i];
 		for (j = i + 1; j < all_processes.size(); j++) {
 			two = all_processes[j];

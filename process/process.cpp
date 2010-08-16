@@ -55,7 +55,7 @@ double process::Witts(void)
 
 const char * process::description(void)
 {
-	sprintf(desc, "Process %s      time  %5.1fms    wakeups %i",
+	sprintf(desc, "Process %22s      time  %5.1fms    wakeups %i",
 			comm, accumulated_runtime / 1000000.0, wake_ups);
 	return desc;
 }

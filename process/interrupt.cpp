@@ -12,6 +12,7 @@ interrupt::interrupt(const char *_handler, int _number)
 	number = _number;
 	strncpy(handler, _handler, 31);
 	wake_ups = 0;
+	disk_hits = 0;
 	accumulated_runtime = 0;
 }
 
@@ -29,4 +30,20 @@ void interrupt::end_interrupt(uint64_t time)
 
 	delta = time - running_since;
 	accumulated_runtime += delta;
+}
+
+double interrupt::Witts(void)
+{
+	double cost;
+
+	cost = 0.1 * wake_ups + (accumulated_runtime / 1000000.0);
+
+	return cost;
+}
+
+const char * interrupt::description(void)
+{
+	sprintf(desc, "Interrupt %s (%i)     time  %5.1fms    wakeups %i",
+			handler, number, accumulated_runtime / 1000000.0, wake_ups);
+	return desc;
 }

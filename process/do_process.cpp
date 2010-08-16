@@ -17,6 +17,8 @@ vector <class process *> cpu_cache;
 vector <class interrupt *> all_interrupts;
 vector <class interrupt *> interrupt_cache;
 
+vector <class power_consumer *> all_power;
+
 class perf_process_bundle: public perf_bundle
 {
         virtual void handle_trace_point(int type, void *trace, int cpu, uint64_t time);
@@ -205,14 +207,9 @@ static void merge_process(class process *one, class process *two)
 }
 
 
-static bool process_cpu_sort(class process * i, class process * j)
+static bool power_cpu_sort(class power_consumer * i, class power_consumer * j)
 {
-        return (i->accumulated_runtime > j->accumulated_runtime);
-}
-
-static bool interrupt_cpu_sort(class interrupt * i, class interrupt * j)
-{
-        return (i->accumulated_runtime > j->accumulated_runtime);
+        return (i->Witts() > j->Witts());
 }
 
 void process_process_data(void)
@@ -237,20 +234,17 @@ void process_process_data(void)
 		}
 	}
 
-	/* sort by cpu usage */
-
-	sort(all_processes.begin(), all_processes.end(), process_cpu_sort);
-
 	for (i = 0; i < all_processes.size() ; i++)
 		if (all_processes[i]->accumulated_runtime)
-			printf("Process %s ran for %4.1fms, %i wakeups \n", all_processes[i]->comm, all_processes[i]->accumulated_runtime / 1000000.0,
-						all_processes[i]->wake_ups);
-
-	sort(all_interrupts.begin(), all_interrupts.end(), interrupt_cpu_sort);
+			all_power.push_back(all_processes[i]);
 
 	for (i = 0; i < all_interrupts.size() ; i++)
 		if (all_interrupts[i]->accumulated_runtime)
-			printf("Interrupt %s ran for %4.1fms, %i wakeups \n", all_interrupts[i]->handler, all_interrupts[i]->accumulated_runtime / 1000000.0,
-						all_interrupts[i]->wake_ups);
+			all_power.push_back(all_interrupts[i]);
+
+	sort(all_power.begin(), all_power.end(), power_cpu_sort);
+	for (i = 0; i < all_power.size() ; i++)
+		printf("%s\n", all_power[i]->description());
+
 }
 

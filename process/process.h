@@ -13,13 +13,11 @@ Need to collect
  */
 class process : public power_consumer {
 	uint64_t	running_since;
+	char		desc[256];
 public:
 	char 		comm[16];
 	int 		pid;
 
-	uint64_t	accumulated_runtime;
-	int	 	disk_hits;
-	int		wake_ups;
 
 	int		is_idle;   /* count this as if the cpu was idle */
 
@@ -29,6 +27,10 @@ public:
 	virtual void deschedule_thread(uint64_t time, int thread_id = 0);
 
 	virtual void account_disk_dirty(void);
+
+	virtual double Witts(void);
+	virtual const char * description(void);
+
 };
 
 

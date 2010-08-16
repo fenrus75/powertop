@@ -41,3 +41,21 @@ process::process(const char *_comm, int _pid)
 	if (strncmp(_comm, "kondemand/", 10) == 0)
 		is_idle = 1;
 }
+
+double process::Witts(void)
+{
+	double cost;
+
+	cost = 0.1 * wake_ups + (accumulated_runtime / 1000000.0);
+
+	return cost;
+}
+
+
+
+const char * process::description(void)
+{
+	sprintf(desc, "Process %s      time  %5.1fms    wakeups %i",
+			comm, accumulated_runtime / 1000000.0, wake_ups);
+	return desc;
+}

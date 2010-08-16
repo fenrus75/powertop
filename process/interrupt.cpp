@@ -14,6 +14,7 @@ interrupt::interrupt(const char *_handler, int _number)
 	wake_ups = 0;
 	disk_hits = 0;
 	accumulated_runtime = 0;
+	waker = NULL;
 }
 
 

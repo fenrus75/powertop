@@ -261,7 +261,26 @@ void process_process_data(void)
 	if (!perf_events)
 		return;
 
+
+	printf("There are %i processes and %i interrupts \n",
+		all_processes.size(),  all_interrupts.size());
+
 	/* clean out old data */
+	for (i = 0; i < all_processes.size() ; i++)
+		delete all_processes[i];
+
+	all_processes.resize(0);
+	cpu_cache.resize(0);
+
+	for (i = 0; i < all_interrupts.size() ; i++)
+		delete all_interrupts[i];
+
+	all_interrupts.resize(0);
+	interrupt_cache.resize(0);
+	all_power.resize(0);
+
+
+
 
 	/* process data */
 	perf_events->process();

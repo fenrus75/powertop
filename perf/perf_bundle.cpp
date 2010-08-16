@@ -79,6 +79,7 @@ void perf_bundle::stop(void)
 void perf_bundle::clear(void)
 {
 	unsigned int i;
+
 	class perf_event *ev;
 
 	for (i = 0; i < events.size(); i++) {
@@ -87,6 +88,11 @@ void perf_bundle::clear(void)
 			continue;
 		ev->clear();
 	}		
+
+	for (i = 0; i < records.size(); i++) {
+		free(records[i]);
+	}
+	records.resize(0);
 }
 
 

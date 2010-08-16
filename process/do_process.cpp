@@ -120,10 +120,10 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		/* start new process */
 
 		from_idle = 0;
-		if (!old_proc)
+		if (!old_proc) {
 			from_idle = 1;
-		if (old_proc && old_proc->is_idle) {
-			from_idle = 1;
+			if (new_proc->is_idle)
+				return;
 		}
 
 		new_proc->schedule_thread(time, sw->next_pid, from_idle);

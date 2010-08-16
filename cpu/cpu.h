@@ -167,7 +167,7 @@ extern void display_cpu_cstates(const char *start= "",
 				const char *separator = "| ", 
 				const char *lineend = "\n");
 
-void start_cpu_measurement(void);
-void end_cpu_measurement(void);
-void process_cpu_data(void);
-
+extern void start_cpu_measurement(void);
+extern void end_cpu_measurement(void);
+extern void process_cpu_data(void);
+extern void end_cpu_data(void);

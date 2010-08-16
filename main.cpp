@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 	enumerate_cpus();
 
 
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < 1; i++) {
 		start_process_measurement();
 		start_cpu_measurement();
 
@@ -36,6 +36,7 @@ int main(int argc, char **argv)
 
 
 	end_process_data();
+	end_cpu_data();
 //	display_cpu_cstates();
 //	cout << "\n\n\n";
 

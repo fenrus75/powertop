@@ -459,3 +459,10 @@ void process_cpu_data(void)
 		if (system_level.children[i])
 			system_level.children[i]->validate();
 }
+
+void end_cpu_data(void)
+{
+	system_level.reset_pstate_data();
+	
+	perf_events->clear();
+}

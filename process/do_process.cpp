@@ -269,7 +269,7 @@ void process_process_data(void)
 	for (i = 0; i < all_processes.size() ; i++)
 		delete all_processes[i];
 
-	all_processes.resize(0);
+	all_processes.erase(all_processes.begin(), all_processes.end());;
 	cpu_cache.resize(0);
 
 	for (i = 0; i < all_interrupts.size() ; i++)
@@ -284,6 +284,7 @@ void process_process_data(void)
 
 	/* process data */
 	perf_events->process();
+	perf_events->clear();
 
 	/* find dupes and add up */
 	for (i = 0; i < all_processes.size() ; i++) {
@@ -309,3 +310,25 @@ void process_process_data(void)
 
 }
 
+
+
+void end_process_data(void)
+{
+	unsigned int i;
+	/* clean out old data */
+	for (i = 0; i < all_processes.size() ; i++)
+		delete all_processes[i];
+
+	all_processes.erase(all_processes.begin(), all_processes.end());;
+	cpu_cache.resize(0);
+
+	for (i = 0; i < all_interrupts.size() ; i++)
+		delete all_interrupts[i];
+
+	all_interrupts.resize(0);
+	interrupt_cache.resize(0);
+	all_power.resize(0);
+
+	perf_events->clear();
+
+}

@@ -40,7 +40,7 @@ public:
 extern void start_process_measurement(void);
 extern void end_process_measurement(void);
 extern void process_process_data(void);
-
+extern void end_process_data(void);
 
 
 #endif

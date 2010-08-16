@@ -17,6 +17,7 @@ void process::schedule_thread(uint64_t time, int thread_id, int from_idle)
 		wake_ups++;
 
 	running_since = time;
+	running = 1;
 }
 
 
@@ -26,6 +27,7 @@ void process::deschedule_thread(uint64_t time, int thread_id)
 
 	delta = time - running_since;
 	accumulated_runtime += delta;
+	running = 0;
 }
 
 
@@ -37,6 +39,7 @@ process::process(const char *_comm, int _pid)
 	wake_ups = 0;
 	disk_hits = 0;
 	is_idle = 0;
+	running = 0;
 
 	if (strncmp(_comm, "kondemand/", 10) == 0)
 		is_idle = 1;

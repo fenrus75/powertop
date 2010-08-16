@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include "../perf/perf_bundle.h"
+#include "../perf/perf_event.h"
 
 static  class perf_bundle * perf_events;
 
@@ -21,8 +22,9 @@ vector <class power_consumer *> all_power;
 
 class perf_process_bundle: public perf_bundle
 {
-        virtual void handle_trace_point(int type, void *trace, int cpu, uint64_t time);
+        virtual void handle_trace_point(int type, void *trace, int cpu, uint64_t time, unsigned char flags);
 };
+
 
 
 
@@ -42,6 +44,16 @@ struct irq_entry {
 	int len;
 	char handler[16];
 };
+
+
+
+struct wakeup_entry {
+	char comm[TASK_COMM_LEN];
+	int   pid;
+	int   prio;
+	int   success;
+};
+
 
 struct irq_exit {
 	int irq;
@@ -85,7 +97,7 @@ static class interrupt * find_create_interrupt(char *_handler, int nr, int cpu)
 	return new_irq;
 }
 
-void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uint64_t time)
+void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uint64_t time, unsigned char flags)
 {
 	const char *event_name;
 
@@ -93,7 +105,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		return;
 	event_name = event_names[type];
 
-	if (strcmp(event_name, "sched:sched_switch")==0) {
+	if (strcmp(event_name, "sched:sched_switch") == 0) {
 		int from_idle = 0;
 		struct sched_switch *sw;
 		class process *old_proc = NULL;
@@ -126,6 +138,12 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 				return;
 		}
 
+		/* if we got woken by someone else... account the wakeup to them, not to us */
+		if (from_idle && new_proc->waker != NULL) {
+			new_proc->waker->wake_ups ++;
+			from_idle = 0;
+		}
+
 		new_proc->schedule_thread(time, sw->next_pid, from_idle);
 
 		/* stick process in cpu cache, expand as needed */
@@ -133,9 +151,32 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		if ((int)cpu_cache.size() <= cpu)
 			cpu_cache.resize(cpu + 1, NULL);
 		cpu_cache[cpu] = new_proc;
+		new_proc->waker = NULL;
+
 
 	}
-	if (strcmp(event_name, "irq:irq_handler_entry")==0) {
+	if (strcmp(event_name, "sched:sched_wakeup") == 0) {
+		struct wakeup_entry *we;
+		class power_consumer *from = NULL;
+		class process *dest_proc;
+		
+		we = (struct wakeup_entry *)trace;
+
+		if ( (flags & TRACE_FLAG_HARDIRQ) || (flags & TRACE_FLAG_SOFTIRQ)) {
+			/* woken from interrupt */
+			/* TODO: find the current irq handler and set "from" to that */
+		} else {
+			if ((int)cpu_cache.size() > cpu)
+				from = cpu_cache[cpu];
+		}
+
+		dest_proc = find_create_process(we->comm, we->pid);
+		
+		if (!dest_proc->running && dest_proc->waker == NULL)
+			dest_proc->waker = from;
+
+	}
+	if (strcmp(event_name, "irq:irq_handler_entry") == 0) {
 		struct irq_entry *irqe;
 		class interrupt *irq;
 		int from_idle = 0;
@@ -159,7 +200,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		irq->start_interrupt(time, from_idle);
 	}
 
-	if (strcmp(event_name, "irq:irq_handler_exit")==0) {
+	if (strcmp(event_name, "irq:irq_handler_exit") == 0) {
 		struct irq_exit *irqe;
 		class interrupt *irq;
 		irqe = (struct irq_exit *)trace;
@@ -180,6 +221,7 @@ void start_process_measurement(void)
 	if (!perf_events) {
 		perf_events = new perf_process_bundle();
 		perf_events->add_event("sched:sched_switch");
+		perf_events->add_event("sched:sched_wakeup");
 		perf_events->add_event("irq:irq_handler_entry");
 		perf_events->add_event("irq:irq_handler_exit");
 	}

@@ -5,6 +5,7 @@
 
 #include "powerconsumer.h"
 
+
 /*
 Need to collect
  * CPU time consumed by each application
@@ -20,6 +21,7 @@ public:
 
 
 	int		is_idle;   /* count this as if the cpu was idle */
+	int 		running;
 
 	process(const char *_comm, int _pid);
 

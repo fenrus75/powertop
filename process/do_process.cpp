@@ -20,6 +20,8 @@ vector <class interrupt *> interrupt_cache;
 
 vector <class power_consumer *> all_power;
 
+static vector <class power_consumer *> cpu_timer_cache;
+
 class perf_process_bundle: public perf_bundle
 {
         virtual void handle_trace_point(int type, void *trace, int cpu, uint64_t time, unsigned char flags);
@@ -83,6 +85,27 @@ struct  softirq_entry {
 	uint32_t vec;
 };
 
+static void clear_timer_cache(unsigned int cpu)
+{
+	if (cpu_timer_cache.size()> cpu)
+		cpu_timer_cache[cpu] = NULL;
+}
+
+static void set_timer_cache(unsigned int cpu, class power_consumer *con)
+{
+	if (cpu_timer_cache.size() <= cpu)
+		cpu_timer_cache.resize(cpu + 1, NULL);
+	cpu_timer_cache[cpu] = con;
+}
+
+
+static  class power_consumer * get_timer_cache(unsigned int cpu)
+{
+	if (cpu_timer_cache.size()> cpu)
+		return cpu_timer_cache[cpu];
+	return NULL;
+}
+
 
 
 static class process * find_create_process(char *comm, int pid)
@@ -135,6 +158,8 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		class process *old_proc = NULL;
 		class process *new_proc  = NULL;
 		sw = (struct sched_switch *)trace;
+
+		clear_timer_cache(cpu);
 
 		/* retire old process, from cpu cache */
 		if ((int)cpu_cache.size() > cpu) 
@@ -207,6 +232,8 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		irqe = (struct irq_entry *)trace;
 		int Q;
 
+		clear_timer_cache(cpu);
+
 		irq = find_create_interrupt(irqe->handler, irqe->irq, cpu);
 
 		Q = (irqe->irq << 8) + cpu;
@@ -220,6 +247,9 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			else if (cpu_cache[cpu]->is_idle)
 				from_idle = 1;
 		}
+
+		if (from_idle && strcmp(irqe->handler, "timer")==0)
+			set_timer_cache(cpu, irq);
 
 		irq->start_interrupt(time, from_idle);
 	}
@@ -243,8 +273,10 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		int Q;
 		struct softirq_entry *irqe;
 		class interrupt *irq;
+		class power_consumer *con;
 		irqe = (struct softirq_entry *)trace;
 		const char *handler = NULL;
+		int from_idle = 0;
 
 		Q = (255 << 8) + cpu;
 
@@ -260,13 +292,22 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			interrupt_cache.resize(Q + 1, NULL);
 		interrupt_cache[Q] = irq;
 
-		irq->start_interrupt(time, 0);
+		con = get_timer_cache(cpu);
+		if (con) {
+			from_idle = 1;
+			con->wake_ups --;
+			clear_timer_cache(cpu);
+		}
+
+		irq->start_interrupt(time, from_idle);
 	}
 	if (strcmp(event_name, "irq:softirq_exit") == 0) {
 		struct softirq_entry *irqe;
 		irqe = (struct softirq_entry *)trace;
 		class interrupt *irq;
 		int Q;
+
+		clear_timer_cache(cpu);
 
 		Q = (255 << 8) + cpu;
 

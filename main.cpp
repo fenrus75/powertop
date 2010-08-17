@@ -1,17 +1,19 @@
 #include <iostream>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "cpu/cpu.h"
 #include "process/process.h"
 #include "perf/perf.h"
 #include "perf/perf_bundle.h"
-
+#include "lib.h"
 
 int main(int argc, char **argv)
 {
 	int i;
 
 	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
+
 
 	enumerate_cpus();
 

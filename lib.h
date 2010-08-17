@@ -2,6 +2,7 @@
 #define INCLUDE_GUARD_LIB_H
 
 #include <libintl.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,6 +18,8 @@ extern "C" {
 extern double percentage(double F);
 extern char *hz_to_human(unsigned long hz, char *buffer, int digits = 2);
 
+
+extern const char *kernel_function(uint64_t address);
 
 
 

@@ -12,6 +12,8 @@ public:
 	char 		handler[32];
 	int 		number;
 
+	int		raw_count;
+
 	interrupt(const char *_handler, int _number);
 
 	virtual void start_interrupt(uint64_t time, int from_idle = 0);

@@ -26,6 +26,20 @@ class perf_process_bundle: public perf_bundle
 };
 
 
+static const char* softirqs[] = {
+	"HI_SOFTIRQ",
+	"timer(softirq)",
+	"net tx(softirq)",
+	"net_rx(softirq)",
+	"block(softirq)",
+	"block_iopoll(softirq)",
+	"tasklet(softirq)",
+	"sched(softirq)",
+	"hrtimer(softirq)",
+	"RCU(softirq)",
+	NULL
+};
+
 
 
 #define TASK_COMM_LEN 16
@@ -60,6 +74,16 @@ struct irq_exit {
 	int ret;
 };
 
+struct  softirq_entry {
+	uint16_t common_type;
+	uint8_t flags;
+	uint8_t preempt_count;
+	uint32_t common_pid;
+	uint32_t lock_depth;
+	uint32_t vec;
+};
+
+
 
 static class process * find_create_process(char *comm, int pid)
 {
@@ -76,7 +100,7 @@ static class process * find_create_process(char *comm, int pid)
 	return new_proc;
 }
 
-static class interrupt * find_create_interrupt(char *_handler, int nr, int cpu)
+static class interrupt * find_create_interrupt(const char *_handler, int nr, int cpu)
 {
 	char handler[64];
 	unsigned int i;
@@ -214,6 +238,44 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 				irq->end_interrupt(time);
 		}
 	}
+
+	if (strcmp(event_name, "irq:softirq_entry") == 0) {
+		int Q;
+		struct softirq_entry *irqe;
+		class interrupt *irq;
+		irqe = (struct softirq_entry *)trace;
+		const char *handler = NULL;
+
+		Q = (255 << 8) + cpu;
+
+		if (irqe->common_type <= 9)
+			handler = softirqs[irqe->common_type];
+		
+		if (!handler)
+			return;
+
+		irq = find_create_interrupt(handler, irqe->common_type, cpu);
+
+		if (Q >= (int)interrupt_cache.size())
+			interrupt_cache.resize(Q + 1, NULL);
+		interrupt_cache[Q] = irq;
+
+		irq->start_interrupt(time, 0);
+	}
+	if (strcmp(event_name, "irq:softirq_exit") == 0) {
+		struct softirq_entry *irqe;
+		irqe = (struct softirq_entry *)trace;
+		class interrupt *irq;
+		int Q;
+
+		Q = (255 << 8) + cpu;
+
+		if ((int)interrupt_cache.size() > Q) {
+			irq = interrupt_cache[Q];
+			if (irq)
+				irq->end_interrupt(time);
+		}
+	}
 }
 
 void start_process_measurement(void)
@@ -224,6 +286,8 @@ void start_process_measurement(void)
 		perf_events->add_event("sched:sched_wakeup");
 		perf_events->add_event("irq:irq_handler_entry");
 		perf_events->add_event("irq:irq_handler_exit");
+		perf_events->add_event("irq:softirq_entry");
+		perf_events->add_event("irq:softirq_exit");
 	}
 
 	perf_events->start();

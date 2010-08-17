@@ -15,6 +15,7 @@ interrupt::interrupt(const char *_handler, int _number)
 	disk_hits = 0;
 	accumulated_runtime = 0;
 	waker = NULL;
+	raw_count = 0;
 }
 
 
@@ -23,6 +24,7 @@ void interrupt::start_interrupt(uint64_t time, int from_idle)
 	running_since = time;
 	if (from_idle)
 		wake_ups++;
+	raw_count ++;
 }
 
 void interrupt::end_interrupt(uint64_t time)
@@ -44,7 +46,7 @@ double interrupt::Witts(void)
 
 const char * interrupt::description(void)
 {
-	sprintf(desc, "Interrupt (%2i) %15s      time  %5.1fms    wakeups %i", number,
-			handler,  accumulated_runtime / 1000000.0, wake_ups);
+	sprintf(desc, "Interrupt (%2i) %15s      time  %5.1fms    wakeups %3i  (total: %i)", number,
+			handler,  accumulated_runtime / 1000000.0, wake_ups, raw_count);
 	return desc;
 }

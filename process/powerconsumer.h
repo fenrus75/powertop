@@ -1,6 +1,11 @@
 #ifndef __INCLUDE_GUARD_POWER_CONSUMER_
 #define __INCLUDE_GUARD_POWER_CONSUMER_
 
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
 
 class power_consumer;
 
@@ -15,5 +20,8 @@ public:
 	virtual double Witts(void) { return 0.0;};
 	virtual const char * description(void) { return ""; };
 };
+
+extern vector <class power_consumer *> all_power;
+
 
 #endif

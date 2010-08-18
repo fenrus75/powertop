@@ -1,5 +1,7 @@
 #include "process.h"
 #include "interrupt.h"
+#include "timer.h"
+#include "../lib.h"
 
 #include <vector>
 #include <algorithm>
@@ -77,13 +79,24 @@ struct irq_exit {
 };
 
 struct  softirq_entry {
-	uint16_t common_type;
-	uint8_t flags;
-	uint8_t preempt_count;
-	uint32_t common_pid;
-	uint32_t lock_depth;
 	uint32_t vec;
 };
+
+struct timer_start {
+	void		*timer;
+	void		*function;
+};
+
+struct timer_cancel {
+	void		*timer;
+};
+
+struct timer_expire {
+	void		*timer;
+	unsigned long	now;
+	void		*function;
+};
+
 
 static void clear_timer_cache(unsigned int cpu)
 {
@@ -280,13 +293,13 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 
 		Q = (255 << 8) + cpu;
 
-		if (irqe->common_type <= 9)
-			handler = softirqs[irqe->common_type];
+		if (irqe->vec <= 9)
+			handler = softirqs[irqe->vec];
 		
 		if (!handler)
 			return;
 
-		irq = find_create_interrupt(handler, irqe->common_type, cpu);
+		irq = find_create_interrupt(handler, irqe->vec, cpu);
 
 		if (Q >= (int)interrupt_cache.size())
 			interrupt_cache.resize(Q + 1, NULL);
@@ -317,6 +330,28 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 				irq->end_interrupt(time);
 		}
 	}
+	if (strcmp(event_name, "timer:timer_start") == 0) {
+		struct timer_start *tmr;
+		tmr = (struct timer_start *)trace;
+		timer_arm( (uint64_t)tmr->timer, (uint64_t)tmr->function);
+	}
+	if (strcmp(event_name, "timer:timer_cancel") == 0) {
+		struct timer_cancel *tmr;
+		tmr = (struct timer_cancel *)trace;
+		timer_cancel( (uint64_t)tmr->timer);
+	}
+	if (strcmp(event_name, "timer:timer_expire_entry") == 0) {
+		struct timer_expire *tmr;
+		tmr = (struct timer_expire *)trace;
+
+
+		timer_fire( (uint64_t)tmr->timer, (uint64_t)tmr->function, time);
+	}
+	if (strcmp(event_name, "timer:timer_expire_exit") == 0) {
+		struct timer_cancel *tmr;
+		tmr = (struct timer_cancel *)trace;
+		timer_done( (uint64_t)tmr->timer, time);
+	}
 }
 
 void start_process_measurement(void)
@@ -329,6 +364,10 @@ void start_process_measurement(void)
 		perf_events->add_event("irq:irq_handler_exit");
 		perf_events->add_event("irq:softirq_entry");
 		perf_events->add_event("irq:softirq_exit");
+		perf_events->add_event("timer:timer_start");
+		perf_events->add_event("timer:timer_expire_entry");
+		perf_events->add_event("timer:timer_expire_exit");
+		perf_events->add_event("timer:timer_cancel");
 	}
 
 	perf_events->start();
@@ -408,6 +447,8 @@ void process_process_data(void)
 	for (i = 0; i < all_interrupts.size() ; i++)
 		if (all_interrupts[i]->accumulated_runtime)
 			all_power.push_back(all_interrupts[i]);
+
+	all_timers_to_all_power();
 
 	sort(all_power.begin(), all_power.end(), power_cpu_sort);
 	for (i = 0; i < all_power.size() ; i++)

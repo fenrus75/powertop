@@ -83,6 +83,9 @@ static void read_kallsyms(void)
 		if (*c2) c2++;
 
 		address = strtoull(line, NULL, 16);
+		c = strchr(c2, '\t');
+		if (c) 
+			*c = 0;
 		kallsyms[address] = strdup(c2);
 	}	
 	file.close();
@@ -90,8 +93,12 @@ static void read_kallsyms(void)
 
 const char *kernel_function(uint64_t address)
 {
+	const char *c;
 	if (!kallsyms_read)
 		read_kallsyms();
 
-	return kallsyms[address];
+	c = kallsyms[address];
+	if (!c)
+		return "";
+	return c;
 }

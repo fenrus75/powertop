@@ -16,7 +16,7 @@ public:
 
 	interrupt(const char *_handler, int _number);
 
-	virtual void start_interrupt(uint64_t time, int from_idle = 0);
+	virtual void start_interrupt(uint64_t time);
 	virtual void end_interrupt(uint64_t time);
 
 	virtual double Witts(void);

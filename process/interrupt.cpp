@@ -19,11 +19,9 @@ interrupt::interrupt(const char *_handler, int _number)
 }
 
 
-void interrupt::start_interrupt(uint64_t time, int from_idle)
+void interrupt::start_interrupt(uint64_t time)
 {
 	running_since = time;
-	if (from_idle)
-		wake_ups++;
 	raw_count ++;
 }
 

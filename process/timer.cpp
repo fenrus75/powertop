@@ -45,7 +45,7 @@ void timer_arm(uint64_t timer_address, uint64_t timer_func)
 	all_timer_list[timer_address] = timer;
 }
 
-void timer_fire(uint64_t timer_address, uint64_t timer_func, uint64_t time, int from_idle)
+class timer * timer_fire(uint64_t timer_address, uint64_t timer_func, uint64_t time)
 {
 	class timer_list *timer_list;
 	class timer *timer;
@@ -63,7 +63,8 @@ void timer_fire(uint64_t timer_address, uint64_t timer_func, uint64_t time, int 
 		timer = new class timer(timer_list->timer_func);
 		all_timers[timer_list->timer_func] = timer;
 	}
-	timer->fire(time, from_idle);
+	timer->fire(time);
+	return timer;
 }
 
 void timer_done(uint64_t timer_address, uint64_t time)
@@ -91,11 +92,8 @@ void timer_cancel(uint64_t timer_address)
 }
 
 
-void timer::fire(uint64_t time, int from_idle)
+void timer::fire(uint64_t time)
 {
-	if (from_idle)
-		wake_ups++;
-
 	running_since = time;
 }
 
@@ -105,6 +103,7 @@ void timer::done(uint64_t time)
 
 	delta = time - running_since;
 	accumulated_runtime += delta;
+	raw_count++;
 }
 
 

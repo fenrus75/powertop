@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <stack>
 
 #include <stdio.h>
 #include <string.h>
@@ -23,6 +24,70 @@ vector <class interrupt *> interrupt_cache;
 vector <class power_consumer *> all_power;
 
 static vector <class power_consumer *> cpu_timer_cache;
+
+vector< stack<class power_consumer *> > cpu_stack;
+
+vector<int> cpu_level;
+vector<class power_consumer *> cpu_blame;
+
+#define LEVEL_HARDIRQ	1
+#define LEVEL_SOFTIRQ	2
+#define LEVEL_TIMER	3
+#define LEVEL_WAKEUP	4
+#define LEVEL_PROCESS	5
+
+static void push_consumer(unsigned int cpu, class power_consumer *consumer)
+{
+	if (cpu_stack.size() <= cpu) {
+		cpu_stack.resize(cpu + 1);
+	}
+
+	cpu_stack[cpu].push(consumer);
+}
+
+static void pop_consumer(unsigned int cpu)
+{
+	if (cpu_stack.size() > cpu) 
+		cpu_stack[cpu].pop();
+}
+
+static class power_consumer *current_consumer(unsigned int cpu)
+{
+	if (cpu_stack.size() <= cpu)
+		return NULL;
+	return cpu_stack[cpu].top();
+	
+}
+
+
+static void change_blame(unsigned int cpu, class power_consumer *consumer, int level)
+{
+	if (cpu_level.size() <= cpu) {
+		cpu_level.resize(cpu + 1);
+	}
+	if (cpu_blame.size() <= cpu) {
+		cpu_blame.resize(cpu + 1);
+	}
+
+	if (cpu_level[cpu] >= level)
+		return;
+	cpu_blame[cpu] = consumer;
+	cpu_level[cpu] = level;
+}
+
+static void consume_blame(unsigned int cpu)
+{
+	if (cpu_level.size() <= cpu)
+		return;
+	if (cpu_blame.size() <= cpu)
+		return;
+	if (!cpu_blame[cpu])
+		return;
+
+	cpu_blame[cpu]->wake_ups++;
+	cpu_blame[cpu] = NULL;
+	cpu_level[cpu] = 0;
+}
 
 class perf_process_bundle: public perf_bundle
 {
@@ -166,7 +231,6 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 	event_name = event_names[type];
 
 	if (strcmp(event_name, "sched:sched_switch") == 0) {
-		int from_idle = 0;
 		struct sched_switch *sw;
 		class process *old_proc = NULL;
 		class process *new_proc  = NULL;
@@ -193,20 +257,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 
 		/* start new process */
 
-		from_idle = 0;
-		if (!old_proc) {
-			from_idle = 1;
-			if (new_proc->is_idle)
-				return;
-		}
-
-		/* if we got woken by someone else... account the wakeup to them, not to us */
-		if (from_idle && new_proc->waker != NULL) {
-			new_proc->waker->wake_ups ++;
-			from_idle = 0;
-		}
-
-		new_proc->schedule_thread(time, sw->next_pid, from_idle);
+		new_proc->schedule_thread(time, sw->next_pid);
 
 		/* stick process in cpu cache, expand as needed */
 
@@ -241,7 +292,6 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 	if (strcmp(event_name, "irq:irq_handler_entry") == 0) {
 		struct irq_entry *irqe;
 		class interrupt *irq;
-		int from_idle = 0;
 		irqe = (struct irq_entry *)trace;
 		int Q;
 
@@ -254,17 +304,12 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			interrupt_cache.resize(Q + 1, NULL);
 		interrupt_cache[Q] = irq;
 
-		if ((int)cpu_cache.size() > cpu) {
-			if (!cpu_cache[cpu])
-				from_idle = 1;
-			else if (cpu_cache[cpu]->is_idle)
-				from_idle = 1;
-		}
-
-		if (from_idle && strcmp(irqe->handler, "timer")==0)
+		if (strcmp(irqe->handler, "timer")==0)
 			set_timer_cache(cpu, irq);
 
-		irq->start_interrupt(time, from_idle);
+		irq->start_interrupt(time);
+		push_consumer(cpu, irq);		
+		change_blame(cpu, irq, LEVEL_HARDIRQ);
 	}
 
 	if (strcmp(event_name, "irq:irq_handler_exit") == 0) {
@@ -280,6 +325,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			if (irq)
 				irq->end_interrupt(time);
 		}
+		pop_consumer(cpu);
 	}
 
 	if (strcmp(event_name, "irq:softirq_entry") == 0) {
@@ -289,7 +335,6 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		class power_consumer *con;
 		irqe = (struct softirq_entry *)trace;
 		const char *handler = NULL;
-		int from_idle = 0;
 
 		Q = (255 << 8) + cpu;
 
@@ -307,12 +352,13 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 
 		con = get_timer_cache(cpu);
 		if (con) {
-			from_idle = 1;
 			con->wake_ups --;
 			clear_timer_cache(cpu);
+			change_blame(cpu, irq, LEVEL_SOFTIRQ);
 		}
 
-		irq->start_interrupt(time, from_idle);
+		irq->start_interrupt(time);
+		push_consumer(cpu, irq);
 	}
 	if (strcmp(event_name, "irq:softirq_exit") == 0) {
 		struct softirq_entry *irqe;
@@ -329,6 +375,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			if (irq)
 				irq->end_interrupt(time);
 		}
+		pop_consumer(cpu);
 	}
 	if (strcmp(event_name, "timer:timer_start") == 0) {
 		struct timer_start *tmr;
@@ -341,16 +388,19 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		timer_cancel( (uint64_t)tmr->timer);
 	}
 	if (strcmp(event_name, "timer:timer_expire_entry") == 0) {
+		class timer *timer;
 		struct timer_expire *tmr;
 		tmr = (struct timer_expire *)trace;
 
-
-		timer_fire( (uint64_t)tmr->timer, (uint64_t)tmr->function, time);
+		timer = timer_fire( (uint64_t)tmr->timer, (uint64_t)tmr->function, time);
+		push_consumer(cpu, timer);
+		change_blame(cpu, timer, LEVEL_TIMER);
 	}
 	if (strcmp(event_name, "timer:timer_expire_exit") == 0) {
 		struct timer_cancel *tmr;
 		tmr = (struct timer_cancel *)trace;
 		timer_done( (uint64_t)tmr->timer, time);
+		pop_consumer(cpu);
 	}
 }
 

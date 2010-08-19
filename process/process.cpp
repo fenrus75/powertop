@@ -10,12 +10,8 @@ void process::account_disk_dirty(void)
 	disk_hits++;
 }
 
-void process::schedule_thread(uint64_t time, int thread_id, int from_idle)
+void process::schedule_thread(uint64_t time, int thread_id)
 {
-
-	if (from_idle && !is_idle)
-		wake_ups++;
-
 	running_since = time;
 	running = 1;
 }

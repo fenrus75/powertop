@@ -102,3 +102,15 @@ const char *kernel_function(uint64_t address)
 		return "";
 	return c;
 }
+
+static int _max_cpu;
+int get_max_cpu(void)
+{
+	return _max_cpu;
+}
+
+void set_max_cpu(int cpu)
+{
+	if (cpu > _max_cpu)
+		_max_cpu = cpu;
+}

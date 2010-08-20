@@ -14,6 +14,8 @@ extern "C" {
 }
 #endif
 
+extern int get_max_cpu(void);
+extern void set_max_cpu(int cpu);
 
 extern double percentage(double F);
 extern char *hz_to_human(unsigned long hz, char *buffer, int digits = 2);

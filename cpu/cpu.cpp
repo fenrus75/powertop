@@ -7,6 +7,7 @@
 #include "cpu.h"
 
 #include "../perf/perf_bundle.h"
+#include "../lib.h"
 
 static class abstract_cpu system_level;
 
@@ -55,7 +56,7 @@ static class abstract_cpu * new_core(int core, int cpu, char * vendor, int famil
 
 static class abstract_cpu * new_cpu(int number, char * vendor, int family, int model)
 {
-	class abstract_cpu * ret;
+	class abstract_cpu * ret = NULL;
 
 	if (strcmp(vendor, "GenuineIntel") == 0) {
 		if (family == 6 && model == 26)
@@ -185,6 +186,7 @@ void enumerate_cpus(void)
 				model = strtoull(c, NULL, 10);
 			}
 			handle_one_cpu(number, vendor, family, model);
+			set_max_cpu(number);
 		}
 	}
 

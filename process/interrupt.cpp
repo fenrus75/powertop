@@ -78,7 +78,7 @@ class interrupt * find_create_interrupt(const char *_handler, int nr, int cpu)
 		
 
 	for (i = 0; i < all_interrupts.size(); i++) {
-		if (all_interrupts[i]->number == nr && strcmp(handler, all_interrupts[i]->handler) == 0)
+		if (all_interrupts[i] && all_interrupts[i]->number == nr && strcmp(handler, all_interrupts[i]->handler) == 0)
 			return all_interrupts[i];
 	}
 

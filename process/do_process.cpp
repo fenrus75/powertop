@@ -163,8 +163,10 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 
 		/* retire the old process */
 
-		if (old_proc)
+		if (old_proc) {
 			old_proc->deschedule_thread(time, sw->prev_pid);
+			old_proc->waker = NULL;
+		}
 
 		if (consumer_depth(cpu))
 			pop_consumer(cpu);
@@ -178,11 +180,18 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		new_proc->schedule_thread(time, sw->next_pid);
 
 		if (strncmp(sw->next_comm,"migration/", 10)) {
-			if (sw->next_pid)
-				change_blame(cpu, new_proc, LEVEL_PROCESS);
+			if (sw->next_pid) {
+				/* If someone woke us up.. blame him instead */
+				if (new_proc->waker) {
+					change_blame(cpu, new_proc->waker, LEVEL_PROCESS);
+				} else {
+					change_blame(cpu, new_proc, LEVEL_PROCESS);
+				}
+			}
 
 			consume_blame(cpu);
 		}
+		new_proc->waker = NULL;
 	}
 	if (strcmp(event_name, "sched:sched_wakeup") == 0) {
 		struct wakeup_entry *we;
@@ -192,15 +201,21 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		we = (struct wakeup_entry *)trace;
 
 		if ( (flags & TRACE_FLAG_HARDIRQ) || (flags & TRACE_FLAG_SOFTIRQ)) {
+			class timer *timer;
+			timer = (class timer *) current_consumer(cpu);
+			if (timer && strcmp(timer->name(), "timer")==0) {
+				if (strcmp(timer->handler, "delayed_work_timer_fn"))
+					from = timer;
+			}
 			/* woken from interrupt */
 			/* TODO: find the current irq handler and set "from" to that */
 		} else {
-
+			from = current_consumer(cpu);
 		}
 
 		dest_proc = find_create_process(we->comm, we->pid);
 		
-		if (!dest_proc->running && dest_proc->waker == NULL)
+		if (!dest_proc->running && dest_proc->waker == NULL && we->pid != 0)
 			dest_proc->waker = from;
 
 	}
@@ -214,6 +229,9 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		push_consumer(cpu, irq);
 
 		irq->start_interrupt(time);
+
+		if (strstr(irq->handler, "timer") ==NULL)
+			change_blame(cpu, irq, LEVEL_HARDIRQ);
 
 	}
 
@@ -254,6 +272,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		push_consumer(cpu, irq);
 
 		irq->start_interrupt(time);
+		change_blame(cpu, irq, LEVEL_SOFTIRQ);
 	}
 	if (strcmp(event_name, "irq:softirq_exit") == 0) {
 		struct softirq_entry *irqe;
@@ -290,7 +309,6 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 
 		timer = (class timer *) current_consumer(cpu);
 		if (timer && strcmp(timer->name(), "timer")) {
-			printf("not a timer\n");
 			return;
 		}
 		pop_consumer(cpu);

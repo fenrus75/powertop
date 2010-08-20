@@ -40,7 +40,9 @@ static void pop_consumer(unsigned int cpu)
 {
 	if (cpu_stack.size() <= cpu)
 		cpu_stack.resize(cpu + 1);
-	cpu_stack[cpu].resize(cpu_stack[cpu].size()-1);
+
+	if (cpu_stack[cpu].size())
+		cpu_stack[cpu].resize(cpu_stack[cpu].size()-1);
 }
 
 static int consumer_depth(unsigned int cpu)
@@ -150,7 +152,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		/* find the old process pointer */
 
 		while  (consumer_depth(cpu) > 1) {
-			printf("TOO DEEP %i\n", consumer_depth(cpu));
+			printf("TOO DEEP %i (%s)\n", consumer_depth(cpu), cpu_stack[cpu][consumer_depth(cpu)]->description());
 			pop_consumer(cpu);
 		}
 

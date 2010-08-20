@@ -23,7 +23,13 @@ uint64_t process::deschedule_thread(uint64_t time, int thread_id)
 {
 	uint64_t delta;
 
+	if (!running_since)
+		return 0;
+
 	delta = time - running_since;
+
+	if (time < running_since)
+		printf("%llu time    %llu since \n", time, running_since);
 
 	if (thread_id == 0) /* idle thread */
 		delta = 0;
@@ -53,6 +59,8 @@ process::process(const char *_comm, int _pid)
 double process::Witts(void)
 {
 	double cost;
+	if (child_runtime > accumulated_runtime)
+		child_runtime = 0;
 
 	cost = 0.1 * wake_ups + ((accumulated_runtime - child_runtime) / 1000000.0);
 
@@ -63,6 +71,9 @@ double process::Witts(void)
 
 const char * process::description(void)
 {
+
+	if (child_runtime > accumulated_runtime)
+		child_runtime = 0;
 	sprintf(desc, "Process %22s      time  %5.1fms    wakeups %3i  (child %5.1fms)",
 			comm, (accumulated_runtime - child_runtime) / 1000000.0, wake_ups,
 				child_runtime / 1000000.0);

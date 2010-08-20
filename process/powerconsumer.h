@@ -13,6 +13,7 @@ class power_consumer {
 
 public:
 	uint64_t	accumulated_runtime;
+	uint64_t	child_runtime;
 	int	 	disk_hits;
 	int		wake_ups;
 	class power_consumer *waker;

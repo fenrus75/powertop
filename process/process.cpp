@@ -19,13 +19,15 @@ void process::schedule_thread(uint64_t time, int thread_id)
 }
 
 
-void process::deschedule_thread(uint64_t time, int thread_id)
+uint64_t process::deschedule_thread(uint64_t time, int thread_id)
 {
 	uint64_t delta;
 
 	delta = time - running_since;
 	accumulated_runtime += delta;
 	running = 0;
+
+	return delta;
 }
 
 
@@ -34,6 +36,7 @@ process::process(const char *_comm, int _pid)
 	strcpy(comm, _comm);
 	pid = _pid;
 	accumulated_runtime = 0;
+	child_runtime = 0;
 	wake_ups = 0;
 	disk_hits = 0;
 	is_idle = 0;
@@ -48,7 +51,7 @@ double process::Witts(void)
 {
 	double cost;
 
-	cost = 0.1 * wake_ups + (accumulated_runtime / 1000000.0);
+	cost = 0.1 * wake_ups + ((accumulated_runtime - child_runtime) / 1000000.0);
 
 	return cost;
 }
@@ -57,8 +60,9 @@ double process::Witts(void)
 
 const char * process::description(void)
 {
-	sprintf(desc, "Process %22s      time  %5.1fms    wakeups %3i",
-			comm, accumulated_runtime / 1000000.0, wake_ups);
+	sprintf(desc, "Process %22s      time  %5.1fms    wakeups %3i  (child %5.1fms)",
+			comm, (accumulated_runtime - child_runtime) / 1000000.0, wake_ups,
+				child_runtime / 1000000.0);
 	return desc;
 }
 
@@ -82,10 +86,12 @@ class process * find_create_process(char *comm, int pid)
 static void merge_process(class process *one, class process *two)
 {
 	one->accumulated_runtime += two->accumulated_runtime;
+	one->child_runtime += two->child_runtime;
 	one->wake_ups += two->wake_ups;
 	one->disk_hits += two->disk_hits;
 
 	two->accumulated_runtime = 0;
+	two->child_runtime = 0;
 	two->wake_ups = 0;
 	two->disk_hits = 0;
 }

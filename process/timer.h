@@ -15,7 +15,7 @@ public:
 	timer(unsigned long timer_func);
 
 	void fire(uint64_t time);
-	void done(uint64_t time);
+	uint64_t done(uint64_t time);
 
 	virtual double Witts(void);
 	virtual const char * description(void);
@@ -28,11 +28,6 @@ public:
 	uint64_t	timer_func;
 };
 
-
-extern void timer_arm(uint64_t timer_address, uint64_t timer_func);
-extern class timer * timer_fire(uint64_t timer_address, uint64_t handler, uint64_t time);
-extern void timer_done(uint64_t timer_address, uint64_t time);
-extern void timer_cancel(uint64_t timer_address);
 
 extern void all_timers_to_all_power(void);
 

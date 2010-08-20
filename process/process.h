@@ -26,7 +26,7 @@ public:
 	process(const char *_comm, int _pid);
 
 	virtual void schedule_thread(uint64_t time, int thread_id);
-	virtual void deschedule_thread(uint64_t time, int thread_id = 0);
+	virtual uint64_t deschedule_thread(uint64_t time, int thread_id = 0);
 
 	virtual void account_disk_dirty(void);
 

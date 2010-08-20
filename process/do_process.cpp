@@ -17,7 +17,7 @@ static  class perf_bundle * perf_events;
 
 vector <class power_consumer *> all_power;
 
-vector< stack<class power_consumer *> > cpu_stack;
+vector< vector<class power_consumer *> > cpu_stack;
 
 vector<int> cpu_level;
 vector<int> cpu_credit;
@@ -33,14 +33,14 @@ static void push_consumer(unsigned int cpu, class power_consumer *consumer)
 {
 	if (cpu_stack.size() <= cpu)
 		cpu_stack.resize(cpu + 1);
-	cpu_stack[cpu].push(consumer);
+	cpu_stack[cpu].push_back(consumer);
 }
 
 static void pop_consumer(unsigned int cpu)
 {
 	if (cpu_stack.size() <= cpu)
 		cpu_stack.resize(cpu + 1);
-	cpu_stack[cpu].pop();
+	cpu_stack[cpu].resize(cpu_stack[cpu].size()-1);
 }
 
 static int consumer_depth(unsigned int cpu)
@@ -55,9 +55,19 @@ static class power_consumer *current_consumer(unsigned int cpu)
 	if (cpu_stack.size() <= cpu)
 		cpu_stack.resize(cpu + 1);
 	if (cpu_stack[cpu].size())
-		return cpu_stack[cpu].top();
-	else
-		return NULL;
+
+		return cpu_stack[cpu][cpu_stack[cpu].size()-1];
+
+	return NULL;
+}
+
+static void consumer_child_time(unsigned int cpu, uint64_t time)
+{
+	unsigned int i;
+	if (cpu_stack.size() <= cpu)
+		cpu_stack.resize(cpu + 1);
+	for (i = 0; i < cpu_stack[cpu].size(); i++) 
+		cpu_stack[cpu][i]->child_runtime += time;
 }
 
 
@@ -176,6 +186,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 	if (strcmp(event_name, "irq:irq_handler_exit") == 0) {
 		struct irq_exit *irqe;
 		class interrupt *irq;
+		uint64_t t;
 
 		irqe = (struct irq_exit *)trace;
 
@@ -184,7 +195,8 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		irq = (class interrupt *)current_consumer(cpu);
 		pop_consumer(cpu);
 		/* retire interrupt */
-		irq->end_interrupt(time);
+		t = irq->end_interrupt(time);
+		consumer_child_time(cpu, t);
 	}
 
 	if (strcmp(event_name, "irq:softirq_entry") == 0) {
@@ -211,11 +223,13 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		struct softirq_entry *irqe;
 		irqe = (struct softirq_entry *)trace;
 		class interrupt *irq;
+		uint64_t t;
 
 		irq = (class interrupt *) current_consumer(cpu);
 		pop_consumer(cpu);
 		/* pop irq */
-		irq->end_interrupt(time);
+		t = irq->end_interrupt(time);
+		consumer_child_time(cpu, t);
 	}
 	if (strcmp(event_name, "timer:timer_expire_entry") == 0) {
 		struct timer_expire *tmr;

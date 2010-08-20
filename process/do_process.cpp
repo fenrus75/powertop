@@ -264,6 +264,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		class timer *timer;
 		tmr = (struct timer_expire *)trace;
 
+
 	}
 	if (strcmp(event_name, "timer:timer_expire_exit") == 0) {
 		struct timer_cancel *tmr;

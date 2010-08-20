@@ -71,3 +71,10 @@ const char * timer::description(void)
 			handler,  (accumulated_runtime - child_runtime) / 1000000.0, wake_ups, raw_count);
 	return desc;
 }
+
+
+class timer * find_create_timer(uint64_t func)
+{
+	/* FIXME: need to do start/stop on a per cpu basis! */
+	
+}

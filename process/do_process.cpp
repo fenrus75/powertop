@@ -277,9 +277,39 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		timer->fire(time, (uint64_t)tmr->timer);
 
 
-		change_blame(cpu, timer, LEVEL_TIMER);
+		if (strcmp(timer->handler, "delayed_work_timer_fn"))
+			change_blame(cpu, timer, LEVEL_TIMER);
 	}
 	if (strcmp(event_name, "timer:timer_expire_exit") == 0) {
+		class timer *timer;
+		struct timer_cancel *tmr;
+		uint64_t t;
+		tmr = (struct timer_cancel *)trace;
+
+		timer = (class timer *) current_consumer(cpu);
+		if (timer && strcmp(timer->name(), "timer")) {
+			printf("not a timer\n");
+			return;
+		}
+		pop_consumer(cpu);
+		t = timer->done(time, (uint64_t)tmr->timer);
+		consumer_child_time(cpu, t);
+	}
+	if (strcmp(event_name, "timer:hrtimer_expire_entry") == 0) {
+		struct hrtimer_expire *tmr;
+		class timer *timer;
+		tmr = (struct hrtimer_expire *)trace;
+
+		timer = find_create_timer((uint64_t)tmr->function);
+
+		push_consumer(cpu, timer);
+		timer->fire(time, (uint64_t)tmr->timer);
+
+
+		if (strcmp(timer->handler, "delayed_work_timer_fn"))
+			change_blame(cpu, timer, LEVEL_TIMER);
+	}
+	if (strcmp(event_name, "timer:hrtimer_expire_exit") == 0) {
 		class timer *timer;
 		struct timer_cancel *tmr;
 		uint64_t t;
@@ -314,6 +344,8 @@ void start_process_measurement(void)
 		perf_events->add_event("irq:softirq_exit");
 		perf_events->add_event("timer:timer_expire_entry");
 		perf_events->add_event("timer:timer_expire_exit");
+		perf_events->add_event("timer:hrtimer_expire_entry");
+		perf_events->add_event("timer:hrtimer_expire_exit");
 		perf_events->add_event("power:power_start");
 		perf_events->add_event("power:power_end");
 	}

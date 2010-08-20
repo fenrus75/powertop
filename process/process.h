@@ -103,6 +103,11 @@ struct timer_expire {
 	unsigned long	now;
 	void		*function;
 };
+struct hrtimer_expire {
+	void		*timer;
+	int64_t		now;
+	void		*function;
+};
 
 
 #endif

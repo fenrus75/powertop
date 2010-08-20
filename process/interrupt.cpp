@@ -55,6 +55,9 @@ double interrupt::Witts(void)
 {
 	double cost;
 
+	if (child_runtime > accumulated_runtime)
+		child_runtime = 0;
+
 	cost = 0.1 * wake_ups + ( (accumulated_runtime - child_runtime) / 1000000.0);
 
 	return cost;
@@ -62,6 +65,8 @@ double interrupt::Witts(void)
 
 const char * interrupt::description(void)
 {
+	if (child_runtime > accumulated_runtime)
+		child_runtime = 0;
 	sprintf(desc, "Interrupt (%2i) %15s      time  %5.2fms    wakeups %3i  (child %5.1fms) (total: %i) ", number,
 			handler,  (accumulated_runtime - child_runtime) / 1000000.0, wake_ups, 
 				child_runtime / 1000000.0, raw_count);

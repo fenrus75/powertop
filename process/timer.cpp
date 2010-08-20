@@ -33,13 +33,16 @@ void timer::fire(uint64_t time, uint64_t timer_struct)
 
 uint64_t timer::done(uint64_t time, uint64_t timer_struct)
 {
-	uint64_t delta;
+	int64_t delta;
 
-	if (!running_since[timer_struct])
+	if (running_since[timer_struct] > time)
 		return 0;
 
 	delta = time - running_since[timer_struct];
+	if (delta < 0)
+		printf("GOT HERE %llin", delta);
 	accumulated_runtime += delta;
+
 	raw_count++;
 
 	return delta;
@@ -75,6 +78,7 @@ const char * timer::description(void)
 {
 	if (child_runtime > accumulated_runtime)
 		child_runtime = 0;
+
 	sprintf(desc, "Timer  %23s      time  %5.2fms    wakeups %3i  (total: %i)",
 			handler,  (accumulated_runtime - child_runtime) / 1000000.0, wake_ups, raw_count);
 	return desc;

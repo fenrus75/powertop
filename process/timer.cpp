@@ -35,12 +35,8 @@ uint64_t timer::done(uint64_t time, uint64_t timer_struct)
 {
 	uint64_t delta;
 
-
-	printf("GOT HERE\n");
 	if (!running_since[timer_struct])
 		return 0;
-
-	printf("GOT HERE2\n");
 
 	delta = time - running_since[timer_struct];
 	accumulated_runtime += delta;

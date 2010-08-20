@@ -20,6 +20,8 @@ public:
 
 	virtual double Witts(void) { return 0.0;};
 	virtual const char * description(void) { return ""; };
+
+	virtual const char * name(void) { return "abstract"; };
 };
 
 extern vector <class power_consumer *> all_power;

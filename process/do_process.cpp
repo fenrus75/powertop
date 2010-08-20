@@ -159,6 +159,9 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		if (consumer_depth(cpu) == 1)
 			old_proc = (class process *)current_consumer(cpu);		
 
+		if (old_proc && strcmp(old_proc->name(), "process"))
+			old_proc = NULL;
+
 		/* retire the old process */
 
 		if (old_proc)
@@ -223,6 +226,8 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 
 		/* find interrupt (top of stack) */
 		irq = (class interrupt *)current_consumer(cpu);
+		if (irq && strcmp(irq->name(), "interrupt"))
+			return;
 		pop_consumer(cpu);
 		/* retire interrupt */
 		t = irq->end_interrupt(time);
@@ -256,6 +261,8 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		uint64_t t;
 
 		irq = (class interrupt *) current_consumer(cpu);
+		if (irq && strcmp(irq->name(), "interrupt"))
+			return;
 		pop_consumer(cpu);
 		/* pop irq */
 		t = irq->end_interrupt(time);

@@ -19,6 +19,7 @@ public:
 
 	virtual double Witts(void);
 	virtual const char * description(void);
+	virtual const char * name(void) { return "timer"; };
 
 };
 

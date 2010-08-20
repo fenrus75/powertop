@@ -62,7 +62,7 @@ double interrupt::Witts(void)
 
 const char * interrupt::description(void)
 {
-	sprintf(desc, "Interrupt (%2i) %15s      time  %5.1fms    wakeups %3i  (child %5.1fms) (total: %i) ", number,
+	sprintf(desc, "Interrupt (%2i) %15s      time  %5.2fms    wakeups %3i  (child %5.1fms) (total: %i) ", number,
 			handler,  (accumulated_runtime - child_runtime) / 1000000.0, wake_ups, 
 				child_runtime / 1000000.0, raw_count);
 	return desc;

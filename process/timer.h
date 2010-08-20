@@ -6,7 +6,6 @@
 #include "powerconsumer.h"
 
 class timer : public power_consumer {
-	uint64_t	running_since;
 	char desc[256];
 public:
 	char 		handler[32];
@@ -14,8 +13,8 @@ public:
 
 	timer(unsigned long timer_func);
 
-	void fire(uint64_t time);
-	uint64_t done(uint64_t time);
+	void fire(uint64_t time, uint64_t timer_struct);
+	uint64_t done(uint64_t time, uint64_t timer_struct);
 
 	virtual double Witts(void);
 	virtual const char * description(void);
@@ -31,5 +30,6 @@ public:
 
 
 extern void all_timers_to_all_power(void);
+extern class timer * find_create_timer(uint64_t func);
 
 #endif

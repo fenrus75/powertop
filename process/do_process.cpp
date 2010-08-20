@@ -152,7 +152,6 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		/* find the old process pointer */
 
 		while  (consumer_depth(cpu) > 1) {
-			printf("TOO DEEP %i (%s)\n", consumer_depth(cpu), cpu_stack[cpu][consumer_depth(cpu)]->description());
 			pop_consumer(cpu);
 		}
 
@@ -273,12 +272,27 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		class timer *timer;
 		tmr = (struct timer_expire *)trace;
 
+		timer = find_create_timer((uint64_t)tmr->function);
+		push_consumer(cpu, timer);
+		timer->fire(time, (uint64_t)tmr->timer);
 
+
+		change_blame(cpu, timer, LEVEL_TIMER);
 	}
 	if (strcmp(event_name, "timer:timer_expire_exit") == 0) {
+		class timer *timer;
 		struct timer_cancel *tmr;
+		uint64_t t;
 		tmr = (struct timer_cancel *)trace;
 
+		timer = (class timer *) current_consumer(cpu);
+		if (timer && strcmp(timer->name(), "timer")) {
+			printf("not a timer\n");
+			return;
+		}
+		pop_consumer(cpu);
+		t = timer->done(time, (uint64_t)tmr->timer);
+		consumer_child_time(cpu, t);
 	}
 	if (strcmp(event_name, "power:power_start") == 0) {
 		set_wakeup_pending(cpu);

@@ -16,14 +16,10 @@
 static  class perf_bundle * perf_events;
 
 
-vector <class process *> all_processes;
 vector <class process *> cpu_cache;
-vector <class interrupt *> all_interrupts;
 vector <class interrupt *> interrupt_cache;
 
 vector <class power_consumer *> all_power;
-
-static vector <class power_consumer *> cpu_timer_cache;
 
 vector< stack<class power_consumer *> > cpu_stack;
 
@@ -95,132 +91,8 @@ class perf_process_bundle: public perf_bundle
 };
 
 
-static const char* softirqs[] = {
-	"HI_SOFTIRQ",
-	"timer(softirq)",
-	"net tx(softirq)",
-	"net_rx(softirq)",
-	"block(softirq)",
-	"block_iopoll(softirq)",
-	"tasklet(softirq)",
-	"sched(softirq)",
-	"hrtimer(softirq)",
-	"RCU(softirq)",
-	NULL
-};
 
 
-
-#define TASK_COMM_LEN 16
-struct sched_switch {
-	char prev_comm[TASK_COMM_LEN];
-	int  prev_pid;
-	int  prev_prio;
-	long prev_state; /* Arjan weeps. */
-	char next_comm[TASK_COMM_LEN];
-	int  next_pid;
-	int  next_prio;
-};
-
-struct irq_entry {
-	int irq;
-	int len;
-	char handler[16];
-};
-
-
-
-struct wakeup_entry {
-	char comm[TASK_COMM_LEN];
-	int   pid;
-	int   prio;
-	int   success;
-};
-
-
-struct irq_exit {
-	int irq;
-	int ret;
-};
-
-struct  softirq_entry {
-	uint32_t vec;
-};
-
-struct timer_start {
-	void		*timer;
-	void		*function;
-};
-
-struct timer_cancel {
-	void		*timer;
-};
-
-struct timer_expire {
-	void		*timer;
-	unsigned long	now;
-	void		*function;
-};
-
-
-static void clear_timer_cache(unsigned int cpu)
-{
-	if (cpu_timer_cache.size()> cpu)
-		cpu_timer_cache[cpu] = NULL;
-}
-
-static void set_timer_cache(unsigned int cpu, class power_consumer *con)
-{
-	if (cpu_timer_cache.size() <= cpu)
-		cpu_timer_cache.resize(cpu + 1, NULL);
-	cpu_timer_cache[cpu] = con;
-}
-
-
-static  class power_consumer * get_timer_cache(unsigned int cpu)
-{
-	if (cpu_timer_cache.size()> cpu)
-		return cpu_timer_cache[cpu];
-	return NULL;
-}
-
-
-
-static class process * find_create_process(char *comm, int pid)
-{
-	unsigned int i;
-	class process *new_proc;
-
-	for (i = 0; i < all_processes.size(); i++) {
-		if (all_processes[i]->pid == pid && strcmp(comm, all_processes[i]->comm) == 0)
-			return all_processes[i];
-	}
-
-	new_proc = new class process(comm, pid);
-	all_processes.push_back(new_proc);
-	return new_proc;
-}
-
-static class interrupt * find_create_interrupt(const char *_handler, int nr, int cpu)
-{
-	char handler[64];
-	unsigned int i;
-	class interrupt *new_irq;
-
-	strcpy(handler, _handler);
-	if (strcmp(handler, "timer")==0)
-		sprintf(handler, "timer/%i", cpu);
-		
-
-	for (i = 0; i < all_interrupts.size(); i++) {
-		if (all_interrupts[i]->number == nr && strcmp(handler, all_interrupts[i]->handler) == 0)
-			return all_interrupts[i];
-	}
-
-	new_irq = new class interrupt(handler, nr);
-	all_interrupts.push_back(new_irq);
-	return new_irq;
-}
 
 void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uint64_t time, unsigned char flags)
 {
@@ -235,8 +107,6 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		class process *old_proc = NULL;
 		class process *new_proc  = NULL;
 		sw = (struct sched_switch *)trace;
-
-		clear_timer_cache(cpu);
 
 		/* retire old process, from cpu cache */
 		if ((int)cpu_cache.size() > cpu) 
@@ -295,17 +165,12 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		irqe = (struct irq_entry *)trace;
 		int Q;
 
-		clear_timer_cache(cpu);
-
 		irq = find_create_interrupt(irqe->handler, irqe->irq, cpu);
 
 		Q = (irqe->irq << 8) + cpu;
 		if (Q >= (int)interrupt_cache.size())
 			interrupt_cache.resize(Q + 1, NULL);
 		interrupt_cache[Q] = irq;
-
-		if (strcmp(irqe->handler, "timer")==0)
-			set_timer_cache(cpu, irq);
 
 		irq->start_interrupt(time);
 		push_consumer(cpu, irq);		
@@ -332,7 +197,6 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		int Q;
 		struct softirq_entry *irqe;
 		class interrupt *irq;
-		class power_consumer *con;
 		irqe = (struct softirq_entry *)trace;
 		const char *handler = NULL;
 
@@ -350,13 +214,6 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			interrupt_cache.resize(Q + 1, NULL);
 		interrupt_cache[Q] = irq;
 
-		con = get_timer_cache(cpu);
-		if (con) {
-			con->wake_ups --;
-			clear_timer_cache(cpu);
-			change_blame(cpu, irq, LEVEL_SOFTIRQ);
-		}
-
 		irq->start_interrupt(time);
 		push_consumer(cpu, irq);
 	}
@@ -365,8 +222,6 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		irqe = (struct softirq_entry *)trace;
 		class interrupt *irq;
 		int Q;
-
-		clear_timer_cache(cpu);
 
 		Q = (255 << 8) + cpu;
 
@@ -431,17 +286,6 @@ void end_process_measurement(void)
 	perf_events->stop();
 }
 
-static void merge_process(class process *one, class process *two)
-{
-	one->accumulated_runtime += two->accumulated_runtime;
-	one->wake_ups += two->wake_ups;
-	one->disk_hits += two->disk_hits;
-
-	two->accumulated_runtime = 0;
-	two->wake_ups = 0;
-	two->disk_hits = 0;
-}
-
 
 static bool power_cpu_sort(class power_consumer * i, class power_consumer * j)
 {
@@ -450,8 +294,7 @@ static bool power_cpu_sort(class power_consumer * i, class power_consumer * j)
 
 void process_process_data(void)
 {
-	unsigned int i, j;
-	class process *one, *two;
+	unsigned int i;
 	if (!perf_events)
 		return;
 
@@ -480,24 +323,10 @@ void process_process_data(void)
 	perf_events->process();
 	perf_events->clear();
 
-	/* find dupes and add up */
-	for (i = 0; i < all_processes.size() ; i++) {
-		one = all_processes[i];
-		for (j = i + 1; j < all_processes.size(); j++) {
-			two = all_processes[j];
-			if (strcmp(one->comm, two->comm) == 0)
-				merge_process(one, two);
-		}
-	}
+	merge_processes();
 
-	for (i = 0; i < all_processes.size() ; i++)
-		if (all_processes[i]->accumulated_runtime)
-			all_power.push_back(all_processes[i]);
-
-	for (i = 0; i < all_interrupts.size() ; i++)
-		if (all_interrupts[i]->accumulated_runtime)
-			all_power.push_back(all_interrupts[i]);
-
+	all_processes_to_all_power();
+	all_interrupts_to_all_power();
 	all_timers_to_all_power();
 
 	sort(all_power.begin(), all_power.end(), power_cpu_sort);

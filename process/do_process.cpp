@@ -70,6 +70,28 @@ static void consumer_child_time(unsigned int cpu, uint64_t time)
 		cpu_stack[cpu][i]->child_runtime += time;
 }
 
+static void set_wakeup_pending(unsigned int cpu)
+{
+	if (cpu_credit.size() <= cpu)
+		cpu_credit.resize(cpu + 1);
+
+	cpu_credit[cpu] = 1;
+}
+
+static void clear_wakeup_pending(unsigned int cpu)
+{
+	if (cpu_credit.size() <= cpu)
+		cpu_credit.resize(cpu + 1);
+
+	cpu_credit[cpu] = 0;
+}
+
+static int get_wakeup_pending(unsigned int cpu)
+{
+	if (cpu_credit.size() <= cpu)
+		cpu_credit.resize(cpu + 1);
+	return cpu_credit[cpu];
+}
 
 static void change_blame(unsigned int cpu, class power_consumer *consumer, int level)
 {
@@ -81,6 +103,8 @@ static void change_blame(unsigned int cpu, class power_consumer *consumer, int l
 
 static void consume_blame(unsigned int cpu)
 {
+	if (!get_wakeup_pending(cpu))
+		return;
 	if (cpu_level.size() <= cpu)
 		return;
 	if (cpu_blame.size() <= cpu)
@@ -91,7 +115,9 @@ static void consume_blame(unsigned int cpu)
 	cpu_blame[cpu]->wake_ups++;
 	cpu_blame[cpu] = NULL;
 	cpu_level[cpu] = 0;
+	clear_wakeup_pending(cpu);
 }
+
 
 class perf_process_bundle: public perf_bundle
 {

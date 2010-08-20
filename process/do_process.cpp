@@ -172,7 +172,9 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 
 		/* start new process */
 		new_proc->schedule_thread(time, sw->next_pid);
-		change_blame(cpu, new_proc, LEVEL_PROCESS);
+
+		if (sw->next_pid)
+			change_blame(cpu, new_proc, LEVEL_PROCESS);
 
 		consume_blame(cpu);
 	}
@@ -268,6 +270,12 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		tmr = (struct timer_cancel *)trace;
 
 	}
+	if (strcmp(event_name, "power:power_start") == 0) {
+		set_wakeup_pending(cpu);
+	}
+	if (strcmp(event_name, "power:power_end") == 0) {
+		consume_blame(cpu);
+	}
 }
 
 void start_process_measurement(void)
@@ -282,6 +290,8 @@ void start_process_measurement(void)
 		perf_events->add_event("irq:softirq_exit");
 		perf_events->add_event("timer:timer_expire_entry");
 		perf_events->add_event("timer:timer_expire_exit");
+		perf_events->add_event("power:power_start");
+		perf_events->add_event("power:power_end");
 	}
 
 	perf_events->start();

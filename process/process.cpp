@@ -24,6 +24,9 @@ uint64_t process::deschedule_thread(uint64_t time, int thread_id)
 	uint64_t delta;
 
 	delta = time - running_since;
+
+	if (thread_id == 0)
+		delta = 0;
 	accumulated_runtime += delta;
 	running = 0;
 

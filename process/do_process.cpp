@@ -177,10 +177,12 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		/* start new process */
 		new_proc->schedule_thread(time, sw->next_pid);
 
-		if (sw->next_pid)
-			change_blame(cpu, new_proc, LEVEL_PROCESS);
+		if (strncmp(sw->next_comm,"migration/", 10)) {
+			if (sw->next_pid)
+				change_blame(cpu, new_proc, LEVEL_PROCESS);
 
-		consume_blame(cpu);
+			consume_blame(cpu);
+		}
 	}
 	if (strcmp(event_name, "sched:sched_wakeup") == 0) {
 		struct wakeup_entry *we;

@@ -8,6 +8,7 @@ class acpi_power_meter: public power_meter {
 
 	double capacity;
 	double rate;
+	double voltage;
 	void measure(void);
 public:
 	acpi_power_meter(const char *_battery_name);

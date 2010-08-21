@@ -10,6 +10,7 @@
 
 #include "devices/device.h"
 #include "devices/backlight.h"
+#include "measurement/measurement.h"
 
 int main(int argc, char **argv)
 {
@@ -20,10 +21,12 @@ int main(int argc, char **argv)
 
 	enumerate_cpus();
 	create_all_backlights();
+	detect_power_meters();
 
 
 
 	for (i = 0; i < 1; i++) {
+		start_power_measurement();
 		devices_start_measurement();
 		start_process_measurement();
 		start_cpu_measurement();
@@ -36,6 +39,7 @@ int main(int argc, char **argv)
 		end_cpu_measurement();
 		end_process_measurement();
 		devices_end_measurement();
+		end_power_measurement();
 
 		cout << "doing math \n";
 
@@ -56,6 +60,8 @@ int main(int argc, char **argv)
 
 
 	report_devices();
+
+	printf("\n\nPower estimated: %5.1f\n", global_joules_consumed());
 	
 	return 0;
 }

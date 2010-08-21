@@ -8,6 +8,7 @@ OBJS += cpu/cpu.o cpu/abstract_cpu.o cpu/cpu_linux.o cpu/cpu_core.o cpu/cpu_pack
 OBJS += perf/perf.o perf/perf_bundle.o
 OBJS += process/process.o process/do_process.o process/interrupt.o process/timer.o process/work.o
 OBJS += devices/device.o devices/backlight.o
+OBJS += measurement/measurement.o measurement/acpi.o
 
 HEADERS := cpu/cpu.h
 

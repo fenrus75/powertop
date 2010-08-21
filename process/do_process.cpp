@@ -1,6 +1,7 @@
 #include "process.h"
 #include "interrupt.h"
 #include "timer.h"
+#include "work.h"
 #include "../lib.h"
 
 #include <vector>
@@ -28,6 +29,7 @@ vector<class power_consumer *> cpu_blame;
 #define LEVEL_TIMER	3
 #define LEVEL_WAKEUP	4
 #define LEVEL_PROCESS	5
+#define LEVEL_WORK	6
 
 static void push_consumer(unsigned int cpu, class power_consumer *consumer)
 {
@@ -179,7 +181,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		/* start new process */
 		new_proc->schedule_thread(time, sw->next_pid);
 
-		if (strncmp(sw->next_comm,"migration/", 10)) {
+		if (strncmp(sw->next_comm,"migration/", 10) && strncmp(sw->next_comm,"kworker/", 8) ) {
 			if (sw->next_pid) {
 				/* If someone woke us up.. blame him instead */
 				if (new_proc->waker) {
@@ -345,6 +347,34 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		t = timer->done(time, (uint64_t)tmr->timer);
 		consumer_child_time(cpu, t);
 	}
+	if (strcmp(event_name, "workqueue:workqueue_execute_start") == 0) {
+		struct workqueue_start *wq;
+		class work *work;
+		wq = (struct workqueue_start *)trace;
+
+		work = find_create_work((uint64_t)wq->function);
+
+		push_consumer(cpu, work);
+		work->fire(time, (uint64_t)wq->work);
+
+
+		change_blame(cpu, work, LEVEL_WORK);
+	}
+	if (strcmp(event_name, "workqueue:workqueue_execute_end") == 0) {
+		class work *work;
+		struct workqueue_end *wq;
+		uint64_t t;
+		wq = (struct workqueue_end *)trace;
+
+		work = (class work *) current_consumer(cpu);
+		if (work && strcmp(work->name(), "work")) {
+			printf("not a work struct\n");
+			return;
+		}
+		pop_consumer(cpu);
+		t = work->done(time, (uint64_t)wq->work);
+		consumer_child_time(cpu, t);
+	}
 	if (strcmp(event_name, "power:power_start") == 0) {
 		set_wakeup_pending(cpu);
 	}
@@ -369,6 +399,8 @@ void start_process_measurement(void)
 		perf_events->add_event("timer:hrtimer_expire_exit");
 		perf_events->add_event("power:power_start");
 		perf_events->add_event("power:power_end");
+		perf_events->add_event("workqueue:workqueue_execute_start");
+		perf_events->add_event("workqueue:workqueue_execute_end");
 	}
 
 	perf_events->start();
@@ -423,6 +455,7 @@ void process_process_data(void)
 	all_processes_to_all_power();
 	all_interrupts_to_all_power();
 	all_timers_to_all_power();
+	all_work_to_all_power();
 
 	sort(all_power.begin(), all_power.end(), power_cpu_sort);
 	for (i = 0; i < all_power.size() ; i++)

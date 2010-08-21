@@ -108,6 +108,13 @@ struct hrtimer_expire {
 	int64_t		now;
 	void		*function;
 };
+struct workqueue_start {
+	void		*work;
+	void		*function;
+};
+struct workqueue_end {
+	void		*work;
+};
 
 
 #endif

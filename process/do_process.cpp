@@ -65,6 +65,13 @@ static class power_consumer *current_consumer(unsigned int cpu)
 	return NULL;
 }
 
+static void clear_consumers(void)
+{
+	unsigned int i;
+	for (i = 0; i < cpu_stack.size(); i++)
+		cpu_stack[i].resize(0);
+}
+
 static void consumer_child_time(unsigned int cpu, uint64_t time)
 {
 	unsigned int i;
@@ -438,6 +445,7 @@ void process_process_data(void)
 
 	all_interrupts.resize(0);
 	all_power.resize(0);
+	clear_consumers();
 
 
 	cpu_credit.resize(get_max_cpu()+1, 0);
@@ -458,8 +466,8 @@ void process_process_data(void)
 	all_work_to_all_power();
 
 	sort(all_power.begin(), all_power.end(), power_cpu_sort);
-	for (i = 0; i < all_power.size() ; i++)
-		printf("%s\n", all_power[i]->description());
+//	for (i = 0; i < all_power.size() ; i++)
+//		printf("%s\n", all_power[i]->description());
 
 }
 
@@ -479,6 +487,7 @@ void end_process_data(void)
 
 	all_interrupts.resize(0);
 	all_power.resize(0);
+	clear_consumers();
 
 	perf_events->clear();
 

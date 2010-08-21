@@ -13,7 +13,6 @@ acpi_power_meter::acpi_power_meter(const char *acpi_name)
 	capacity = 0.0;
 	voltage = 0.0;
 	strncpy(battery_name, acpi_name, sizeof(battery_name));
-	printf("Adding battery %s\n", acpi_name);
 }
 
 /*
@@ -49,18 +48,14 @@ void acpi_power_meter::measure(void)
 	if (!file)
 		return;
 
-	printf("GOT HERE -%s-\n", filename);
-
 	while (file) {
 		char *c;
 		file.getline(line, 4096);
 
 		if (strstr(line, "present:") && (strstr(line, "yes") == NULL)) {
-			printf("Not present\n");
-			return; /* non present battery */
+			return;
 		}
 		if (strstr(line, "charging state:") && (strstr(line, "discharging") == NULL)) {
-			printf("Discharging\n");
 			return; /* not discharging */
 		}
 		if (strstr(line, "present rate:")) {
@@ -121,8 +116,6 @@ void acpi_power_meter::measure(void)
 		voltage = _voltage;
 	else
 		voltage = 0.0;
-
-	printf("Rate is %5.1f   capacity is %5.1f   voltage is %5.1f\n", rate, capacity, voltage);
 }
 
 

@@ -48,8 +48,6 @@ int main(int argc, char **argv)
 	}
 
 
-	end_process_data();
-	end_cpu_data();
 //	display_cpu_cstates();
 //	cout << "\n\n\n";
 
@@ -58,10 +56,34 @@ int main(int argc, char **argv)
 //	display_cpu_cstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");
 //	display_cpu_pstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");
 
+	while (1) {
+		start_power_measurement();
+		devices_start_measurement();
+		start_process_measurement();
+		start_cpu_measurement();
 
-	report_devices();
 
-	printf("\n\nPower estimated: %5.1f\n", global_joules_consumed());
+		cout << "measuring\n";
+		sleep(15);
+
+
+		end_cpu_measurement();
+		end_process_measurement();
+		devices_end_measurement();
+		end_power_measurement();
+
+		cout << "doing math \n";
+
+		process_cpu_data();
+		process_process_data();
+		
+
+		report_devices();
+		printf("\n\nPower estimated: %5.1f\n", global_joules_consumed());
+	}
+
+	end_process_data();
+	end_cpu_data();
 	
 	return 0;
 }

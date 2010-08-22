@@ -1,5 +1,6 @@
 #include "measurement.h"
 #include "acpi.h"
+#include "../parameters/parameters.h"
 
 
 #include <sys/types.h>
@@ -42,6 +43,9 @@ double global_joules_consumed(void)
 	unsigned int i;
 	for (i = 0; i < power_meters.size(); i++)
 		total += power_meters[i]->joules_consumed();
+
+
+	all_results.power = total;	
 	return total;
 }
 

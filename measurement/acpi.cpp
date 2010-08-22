@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 using namespace std;
 
 acpi_power_meter::acpi_power_meter(const char *acpi_name)

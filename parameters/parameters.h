@@ -36,6 +36,8 @@ extern map<const char *, class device *> devices;
 
 extern void register_result_device(const char *name, class device *device);
 
+extern void report_utilization(const char *name, double value, struct result_bundle *bundle = &all_results);
+
 
 extern void compute_bundle(struct parameter_bundle *parameters, struct result_bundle *results);
 

@@ -21,6 +21,11 @@ void register_result_device(const char *name, class device *device)
 	devices[name] = device;
 }
 
+void report_utilization(const char *name, double value, struct result_bundle *bundle)
+{
+	bundle->utilization[name] = value;
+}
+
 
 
 void compute_bundle(struct parameter_bundle *parameters, struct result_bundle *results)

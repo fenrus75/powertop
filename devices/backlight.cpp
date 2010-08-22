@@ -67,6 +67,8 @@ double backlight::utilization(void)
 	double p;
 
 	p = 100.0 * (end_level + start_level) / 2 / max_level;
+
+	report_utilization(name, p);
 	return p;
 }
 

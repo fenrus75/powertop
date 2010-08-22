@@ -116,3 +116,11 @@ void set_max_cpu(int cpu)
 	if (cpu > _max_cpu)
 		_max_cpu = cpu;
 }
+
+
+bool stringless::operator()(const char * const & lhs, const char * const & rhs) const  
+{  
+	if (strcmp(lhs, rhs) < 0)
+		return true;
+	return false;
+}  

@@ -9,7 +9,7 @@ struct result_bundle all_results;
 vector <struct result_bundle *> past_results;
 
 
-map<const char *, class device *> devices;
+map<const char *, class device *, stringless> devices;
 
 void register_parameter(const char *name, double default_value)
 {
@@ -138,3 +138,5 @@ void store_results(void)
 {
 	past_results.push_back(clone_results(&all_results));	
 }
+
+

@@ -21,6 +21,7 @@ public:
 	virtual const char * class_name(void) { return "backlight";};
 
 	virtual const char * device_name(void);
+	virtual double power_usage(double utilization, struct parameter_bundle *bundle);
 };
 
 extern void create_all_backlights(void);

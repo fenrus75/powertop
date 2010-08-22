@@ -101,3 +101,12 @@ void create_all_backlights(void)
 }
 
 
+
+double backlight::power_usage(double utilization, struct parameter_bundle *bundle)
+{
+	double factor;
+
+	factor = get_parameter_value("backlight", bundle);
+
+	return utilization * factor;
+}

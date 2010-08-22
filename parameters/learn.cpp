@@ -24,10 +24,13 @@ void learn_parameters(void)
         map<const char *, double>::iterator it;
 	int retry = 50;
 
+	double delta = 0.20;
+
 	best_so_far = clone_parameters(&all_parameters);
 
 	calculate_params(best_so_far);
 	printf("Starting score %5.1f\n", best_so_far->score);
+	best_score = best_so_far->score;
 	dump_parameter_bundle(best_so_far);
 
 
@@ -41,7 +44,7 @@ void learn_parameters(void)
 			if (value == 0.0)
 				value = 0.1;
 			else
-				value = value * 1.05;
+				value = value * (1 + delta);
 
 			printf("Trying %s %5.1f -> %5.1f\n", it->first, clone->parameters[it->first], value);
 			clone->parameters[it->first] = value;
@@ -64,7 +67,7 @@ void learn_parameters(void)
 			if (value == 0.0)
 				value = 0.0;
 			else
-				value = value *0.95;
+				value = value * 1 / (1 + delta);
 
 			printf("Trying %s %5.1f -> %5.1f\n", it->first, clone->parameters[it->first], value);
 			clone->parameters[it->first] = value;
@@ -78,6 +81,7 @@ void learn_parameters(void)
 				break;
 			}
 		}
+		delta = delta / 2;
        	 }
 
 	

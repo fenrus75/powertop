@@ -524,7 +524,7 @@ void nhm_cpu::measurement_end(void)
 char * nhm_cpu::fill_pstate_name(int line_nr, char *buffer)
 {
 	if (line_nr == LEVEL_C0) {
-		sprintf(buffer, "Effective");
+		sprintf(buffer, "Actual");
 		return buffer;
 	}
 	return cpu_linux::fill_pstate_name(line_nr, buffer);

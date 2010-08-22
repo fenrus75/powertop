@@ -450,6 +450,7 @@ void process_process_data(void)
 
 	cpu_credit.resize(get_max_cpu()+1, 0);
 	cpu_level.resize(get_max_cpu()+1, 0);
+	cpu_blame.resize(0, NULL);
 	cpu_blame.resize(get_max_cpu()+1, NULL);
 
 

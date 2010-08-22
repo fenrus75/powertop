@@ -44,11 +44,16 @@ void perf_bundle::add_event(const char *event_name)
 		ev->set_event_name(event_name);
 		ev->set_cpu(i);
 
-		if (event_names.size() <= ev->trace_type)
-			event_names.resize(ev->trace_type + 1, NULL);
-		event_names[ev->trace_type] = strdup(event_name);
 
-		events.push_back(ev);
+		if ((int)ev->trace_type >= 0) {
+			if (event_names.size() <= ev->trace_type)
+				event_names.resize(ev->trace_type + 1, NULL);
+			event_names[ev->trace_type] = strdup(event_name);
+
+			events.push_back(ev);
+		} else {
+			delete ev;
+		}
 	}
 }
 

@@ -49,7 +49,7 @@ void compute_bundle(struct parameter_bundle *parameters, struct result_bundle *r
 
 	parameters->actual_power = results->power;
 	parameters->guessed_power = power;
-	parameters->score = (power - results->power) * (power - results->power);
+	parameters->score += (power - results->power) * (power - results->power);
 }
 
 
@@ -91,14 +91,6 @@ void dump_result_bundle(struct result_bundle *res)
 	printf("----------------------------------\n");
 }
 
-/*
-struct result_bundle
-{
-        double power;
-        map <const char *, double> utilization; 
-};
-*/
-
 struct result_bundle * clone_results(struct result_bundle *bundle)
 {
 	struct result_bundle *b2;
@@ -113,6 +105,28 @@ struct result_bundle * clone_results(struct result_bundle *bundle)
 
 	for (it = bundle->utilization.begin(); it != bundle->utilization.end(); it++) {
 		b2->utilization[it->first] = it->second;
+	}
+
+	return b2;
+}
+
+
+struct parameter_bundle * clone_parameters(struct parameter_bundle *bundle)
+{
+	struct parameter_bundle *b2;
+	map<const char *, double>::iterator it;
+
+	b2 = new struct parameter_bundle;
+
+	if (!b2)
+		return NULL;
+
+	b2->score = 0;
+	b2->guessed_power = 0;
+	b2->actual_power = bundle->actual_power;
+
+	for (it = bundle->parameters.begin(); it != bundle->parameters.end(); it++) {
+		b2->parameters[it->first] = it->second;
 	}
 
 	return b2;

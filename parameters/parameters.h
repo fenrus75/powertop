@@ -3,6 +3,8 @@
 
 
 #include <map>
+#include <vector>
+
 #include "../devices/device.h"
 
 using namespace std;
@@ -30,6 +32,8 @@ struct result_bundle
 };
 
 extern struct result_bundle all_results;
+extern vector <struct result_bundle *> past_results;
+
 
 extern map<const char *, class device *> devices;
 
@@ -45,7 +49,10 @@ void dump_parameter_bundle(struct parameter_bundle *patameters = &all_parameters
 void dump_result_bundle(struct result_bundle *res = &all_results);
 
 extern struct result_bundle * clone_results(struct result_bundle *bundle);
+extern struct parameter_bundle * clone_parameters(struct parameter_bundle *bundle);
 
 extern void store_results(void);
+extern void learn_parameters(void);
+
 
 #endif

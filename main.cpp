@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
 
 
-	register_parameter("base power", 20);
+	register_parameter("base power", 6);
 	enumerate_cpus();
 	create_all_backlights();
 	detect_power_meters();
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 //	display_cpu_pstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");
 
 	i = 0;
-	while (i++ < 2) {
+	while (i++ < 10) {
 		start_power_measurement();
 		devices_start_measurement();
 		start_process_measurement();
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 
 
 		cout << "measuring\n";
-		sleep(2);
+		sleep(4);
 
 
 		end_cpu_measurement();
@@ -90,8 +90,7 @@ int main(int argc, char **argv)
 	end_process_data();
 	end_cpu_data();
 
-	compute_bundle();
-	dump_parameter_bundle();	
-	dump_result_bundle();
+	learn_parameters();
+
 	return 0;
 }

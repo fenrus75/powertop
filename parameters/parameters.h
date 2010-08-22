@@ -13,7 +13,6 @@ struct parameter_bundle
 	double guessed_power;
 	double actual_power;
 
-	double power_offset;
 	map<const char *, double> parameters;  /* parameter name, parameter value */
 };
 
@@ -39,6 +38,8 @@ extern void register_result_device(const char *name, class device *device);
 extern void report_utilization(const char *name, double value, struct result_bundle *bundle = &all_results);
 
 
-extern void compute_bundle(struct parameter_bundle *parameters, struct result_bundle *results);
+extern void compute_bundle(struct parameter_bundle *parameters = &all_parameters, struct result_bundle *results = &all_results);
 
+
+void dump_parameter_bundle(struct parameter_bundle *patameters = &all_parameters);
 #endif

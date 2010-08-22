@@ -11,6 +11,7 @@
 #include "devices/device.h"
 #include "devices/backlight.h"
 #include "measurement/measurement.h"
+#include "parameters/parameters.h"
 
 int main(int argc, char **argv)
 {
@@ -19,6 +20,7 @@ int main(int argc, char **argv)
 	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
 
 
+	register_parameter("base power", 20);
 	enumerate_cpus();
 	create_all_backlights();
 	detect_power_meters();
@@ -85,6 +87,8 @@ int main(int argc, char **argv)
 
 	end_process_data();
 	end_cpu_data();
-	
+
+	compute_bundle();
+	dump_parameter_bundle();	
 	return 0;
 }

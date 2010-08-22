@@ -110,5 +110,5 @@ double backlight::power_usage(double utilization, struct parameter_bundle *bundl
 
 	factor = get_parameter_value("backlight", bundle);
 
-	return utilization * factor;
+	return utilization * factor / 100.0;
 }

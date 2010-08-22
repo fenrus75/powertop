@@ -1,8 +1,12 @@
 #include "parameters.h"
 #include <stdio.h>
+#include <vector>
 
 struct parameter_bundle all_parameters;
 struct result_bundle all_results;
+
+vector <struct result_bundle *> past_results;
+
 
 map<const char *, class device *> devices;
 
@@ -67,4 +71,55 @@ void dump_parameter_bundle(struct parameter_bundle *para)
 	printf("Actual: %5.1f\n", para->actual_power);
 
 	printf("----------------------------------\n");
+}
+
+void dump_result_bundle(struct result_bundle *res)
+{
+	map<const char *, double>::iterator it;
+
+	printf("\n\n");
+	printf("Utilisation state \n");
+	printf("----------------------------------\n");
+	printf("Value\t\tName\n");
+	for (it = res->utilization.begin(); it != res->utilization.end(); it++) {
+		printf("%5.2f%%\t\t%s\n", it->second, it->first);
+	}
+
+	printf("\n");
+	printf("Power: %5.1f\n", res->power);
+
+	printf("----------------------------------\n");
+}
+
+/*
+struct result_bundle
+{
+        double power;
+        map <const char *, double> utilization; 
+};
+*/
+
+struct result_bundle * clone_results(struct result_bundle *bundle)
+{
+	struct result_bundle *b2;
+	map<const char *, double>::iterator it;
+
+	b2 = new struct result_bundle;
+
+	if (!b2)
+		return NULL;
+
+	b2->power = bundle->power;
+
+	for (it = bundle->utilization.begin(); it != bundle->utilization.end(); it++) {
+		b2->utilization[it->first] = it->second;
+	}
+
+	return b2;
+}
+
+
+void store_results(void)
+{
+	past_results.push_back(clone_results(&all_results));	
 }

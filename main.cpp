@@ -47,6 +47,7 @@ int main(int argc, char **argv)
 
 		process_cpu_data();
 		process_process_data();
+		store_results();
 	}
 
 
@@ -82,6 +83,7 @@ int main(int argc, char **argv)
 		
 
 		report_devices();
+		store_results();
 		printf("\n\nPower estimated: %5.1f\n", global_joules_consumed());
 	}
 
@@ -90,5 +92,6 @@ int main(int argc, char **argv)
 
 	compute_bundle();
 	dump_parameter_bundle();	
+	dump_result_bundle();
 	return 0;
 }

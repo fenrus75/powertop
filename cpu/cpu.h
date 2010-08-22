@@ -149,6 +149,8 @@ public:
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
 	virtual char *  fill_pstate_name(int line_nr, char *buffer);
 	virtual int     can_collapse(void) { return childcount == 1;};
+
+	virtual void    measurement_end(void);
 };
 
 #include "intel_cpus.h"

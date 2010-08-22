@@ -23,8 +23,9 @@ void learn_parameters(void)
 	double best_score = 10000000000000000;
         map<const char *, double>::iterator it;
 	int retry = 50;
+	int skip = 0;
 
-	double delta = 0.20;
+	double delta = 0.50;
 
 	best_so_far = clone_parameters(&all_parameters);
 
@@ -35,9 +36,16 @@ void learn_parameters(void)
 
 
 	while (retry--) {
+		int into = 0;
 	        for (it = best_so_far->parameters.begin(); it != best_so_far->parameters.end(); it++) {
 			struct parameter_bundle *clone;
 			double value;
+			into ++;
+
+			if (skip) {
+				skip--;
+				continue;
+			}
 
 			clone = clone_parameters(best_so_far);
 			value = clone->parameters[it->first];
@@ -55,12 +63,19 @@ void learn_parameters(void)
 				printf("Better score %5.1f\n", best_so_far->score);
 				dump_parameter_bundle(best_so_far);
 				best_so_far = clone;
+				skip = into;
 				break;
 			}
 		}
 	        for (it = best_so_far->parameters.begin(); it != best_so_far->parameters.end(); it++) {
 			struct parameter_bundle *clone;
 			double value;
+
+			into++;
+			if (skip) {
+				skip--;
+				continue;
+			}
 
 			clone = clone_parameters(best_so_far);
 			value = clone->parameters[it->first];
@@ -78,6 +93,7 @@ void learn_parameters(void)
 				printf("Better score %5.1f\n", best_so_far->score);
 				dump_parameter_bundle(best_so_far);
 				best_so_far = clone;
+				skip = into;
 				break;
 			}
 		}

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "cpu.h"
 #include "../lib.h"
+#include "../parameters/parameters.h"
 
 char * cpu_package::fill_cstate_line(int line_nr, char *buffer) 
 {
@@ -69,3 +70,18 @@ char * cpu_package::fill_pstate_line(int line_nr, char *buffer)
 	return buffer; 
 }
 
+
+void cpu_package::measurement_end(void)
+{
+	unsigned int i;
+	char buffer[256];
+
+	abstract_cpu::measurement_end();
+
+	for (i = 0; i < pstates.size(); i ++) {
+		sprintf(buffer,"cpu-freq-%s", pstates[i]->human_name);
+		printf("registering %s \n", buffer);
+		register_parameter(buffer, 1);
+	}
+
+}

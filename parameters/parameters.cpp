@@ -1,5 +1,6 @@
 #include "parameters.h"
 #include <stdio.h>
+#include <string.h>
 #include <vector>
 
 struct parameter_bundle all_parameters;
@@ -12,7 +13,7 @@ map<const char *, class device *> devices;
 
 void register_parameter(const char *name, double default_value)
 {
-	all_parameters.parameters[name] = default_value;
+	all_parameters.parameters[strdup(name)] = default_value;
 }
 
 double get_parameter_value(const char *name, struct parameter_bundle *the_bundle)

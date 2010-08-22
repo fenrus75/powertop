@@ -10,17 +10,22 @@ using namespace std;
 
 #include "device.h"
 #include "backlight.h"
+#include "../parameters/parameters.h"
 
 #include <string.h>
 
 
 backlight::backlight(char *_name, char *path)
 {
+	char devname[128];
 	min_level = 0;
 	max_level = 0;
 	start_level = 0;
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
-	strncpy(name, _name, sizeof(name));
+	sprintf(devname, "backlight:%s", _name);
+	strncpy(name, devname, sizeof(name));
+	register_result_device(name, this);
+
 }
 
 void backlight::start_measurement(void)
@@ -89,6 +94,7 @@ void create_all_backlights(void)
 		sprintf(filename, "/sys/class/backlight/%s", entry->d_name);
 		bl = new class backlight(entry->d_name, filename);
 		all_devices.push_back(bl);
+		register_parameter("backlight", 5);
 	}
 	closedir(dir);
 

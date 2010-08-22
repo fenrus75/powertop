@@ -2,9 +2,35 @@
 #define __INCLUDE_GUARD_PARAMETERS_H_
 
 
+#include <map>
+#include "../devices/device.h"
 
-void register_parameter(char *name, double default_value = 0.0);
-double get_parameter_value(char *name);
+using namespace std;
+
+struct parameter_bundle
+{
+	double score;
+	map<const char *, double> parameters;  /* parameter name, parameter value */
+};
+
+extern struct parameter_bundle all_parameters;
+
+
+extern void register_parameter(const char *name, double default_value = 0.0);
+extern double get_parameter_value(const char *name, struct parameter_bundle &bundle = all_parameters);
+
+
+struct result_bundle
+{
+	double power;
+	map <const char *, double> utilization; /* device name, device utilization %age */
+};
+
+extern struct result_bundle all_results;
+
+extern map<const char *, class device *> devices;
+
+extern void register_result_device(const char *name, class device *device);
 
 
 #endif

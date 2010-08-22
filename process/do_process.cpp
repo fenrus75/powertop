@@ -291,7 +291,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		uint64_t t;
 
 		irq = (class interrupt *) current_consumer(cpu);
-		if (irq && strcmp(irq->name(), "interrupt"))
+		if (!irq  || strcmp(irq->name(), "interrupt"))
 			return;
 		pop_consumer(cpu);
 		/* pop irq */
@@ -318,7 +318,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		tmr = (struct timer_cancel *)trace;
 
 		timer = (class timer *) current_consumer(cpu);
-		if (timer && strcmp(timer->name(), "timer")) {
+		if (!timer || strcmp(timer->name(), "timer")) {
 			return;
 		}
 		pop_consumer(cpu);
@@ -346,7 +346,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		tmr = (struct timer_cancel *)trace;
 
 		timer = (class timer *) current_consumer(cpu);
-		if (timer && strcmp(timer->name(), "timer")) {
+		if (!timer || strcmp(timer->name(), "timer")) {
 			printf("not a timer\n");
 			return;
 		}
@@ -374,7 +374,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		wq = (struct workqueue_end *)trace;
 
 		work = (class work *) current_consumer(cpu);
-		if (work && strcmp(work->name(), "work")) {
+		if (!work || strcmp(work->name(), "work")) {
 			printf("not a work struct\n");
 			return;
 		}

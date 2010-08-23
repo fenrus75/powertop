@@ -23,11 +23,10 @@ void learn_parameters(void)
 	double best_score = 10000000000000000.0;
         map<string, double>::iterator it;
 	int retry = 50;
-	int skip = 0;
 
 	double delta = 0.50;
 
-	best_so_far = clone_parameters(&all_parameters);
+	best_so_far = &all_parameters;
 
 	calculate_params(best_so_far);
 	printf("Starting score %5.1f\n", best_so_far->score);
@@ -36,69 +35,44 @@ void learn_parameters(void)
 
 
 	while (retry--) {
-		int into = 0;
 	        for (it = best_so_far->parameters.begin(); it != best_so_far->parameters.end(); it++) {
-			struct parameter_bundle *clone;
-			double value;
-			into ++;
+			double value, orgvalue;
 
-			if (skip) {
-				skip--;
-				continue;
-			}
-
-			clone = clone_parameters(best_so_far);
-			value = clone->parameters[it->first];
+			orgvalue = value = best_so_far->parameters[it->first];
 			if (value == 0.0)
 				value = 0.1;
 			else
 				value = value * (1 + delta);
 
-			printf("Trying %s %5.1f -> %5.1f\n", it->first.c_str(), clone->parameters[it->first], value);
-			clone->parameters[it->first] = value;
+			printf("Trying %s %5.1f -> %5.1f\n", it->first.c_str(), best_so_far->parameters[it->first], value);
+			best_so_far->parameters[it->first] = value;
 
-			calculate_params(clone);
-			if (clone->score < best_score) {
-				best_score = clone->score;
+			calculate_params(best_so_far);
+			if (best_so_far->score < best_score) {
+				best_score = best_so_far->score;
+				orgvalue = value;
 				printf("Better score %5.1f\n", best_so_far->score);
 				dump_parameter_bundle(best_so_far);
-				best_so_far = clone;
-				skip = into;
-				break;
-			}
-		}
-	        for (it = best_so_far->parameters.begin(); it != best_so_far->parameters.end(); it++) {
-			struct parameter_bundle *clone;
-			double value;
-
-			into++;
-			if (skip) {
-				skip--;
-				continue;
 			}
 
-			clone = clone_parameters(best_so_far);
-			value = clone->parameters[it->first];
-			if (value == 0.0)
-				value = 0.0;
-			else
-				value = value * 1 / (1 + delta);
+			value = orgvalue * 1 / (1 + delta);
 
-			printf("Trying %s %5.1f -> %5.1f\n", it->first.c_str(), clone->parameters[it->first], value);
-			clone->parameters[it->first] = value;
 
-			calculate_params(clone);
-			if (clone->score < best_score) {
-				best_score = clone->score;
+			printf("Trying %s %5.1f -> %5.1f\n", it->first.c_str(), best_so_far->parameters[it->first], value);
+			best_so_far->parameters[it->first] = value;
+
+			calculate_params(best_so_far);
+			if (best_so_far->score < best_score) {
+				best_score = best_so_far->score;
 				printf("Better score %5.1f\n", best_so_far->score);
 				dump_parameter_bundle(best_so_far);
-				best_so_far = clone;
-				skip = into;
-				break;
+			} else {
+				best_so_far->parameters[it->first] = orgvalue;
 			}
+
 		}
 		delta = delta / 2;
-       	 }
+	}
 
 	
 

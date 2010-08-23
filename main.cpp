@@ -8,6 +8,7 @@
 #include "perf/perf_bundle.h"
 #include "lib.h"
 
+#include "devices/device.h"
 #include "devices/backlight.h"
 
 int main(int argc, char **argv)
@@ -23,6 +24,7 @@ int main(int argc, char **argv)
 
 
 	for (i = 0; i < 1; i++) {
+		devices_start_measurement();
 		start_process_measurement();
 		start_cpu_measurement();
 
@@ -33,6 +35,7 @@ int main(int argc, char **argv)
 
 		end_cpu_measurement();
 		end_process_measurement();
+		devices_end_measurement();
 
 		cout << "doing math \n";
 

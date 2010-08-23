@@ -20,3 +20,18 @@ double	device::utilization(void)
 
 
 vector<class device *> all_devices;
+
+
+void devices_start_measurement(void)
+{
+	unsigned int i;
+	for (i = 0; i < all_devices.size(); i++)
+		all_devices[i]->start_measurement();
+}
+
+void devices_end_measurement(void)
+{
+	unsigned int i;
+	for (i = 0; i < all_devices.size(); i++)
+		all_devices[i]->end_measurement();
+}

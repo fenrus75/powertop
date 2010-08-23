@@ -20,4 +20,8 @@ public:
 using namespace std;
 
 extern vector<class device *> all_devices;
+
+extern void devices_start_measurement(void);
+extern void devices_end_measurement(void);
+
 #endif

@@ -21,5 +21,7 @@ public:
 
 };
 
+extern void create_all_backlights(void);
+
 
 #endif

@@ -2,6 +2,8 @@
 #define _INCLUDE_GUARD_DEVICE_H
 
 
+#include <vector>
+
 class device {
 
 public:
@@ -15,5 +17,7 @@ public:
 
 };
 
+using namespace std;
 
+extern vector<class device *> all_devices;
 #endif

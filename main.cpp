@@ -8,6 +8,8 @@
 #include "perf/perf_bundle.h"
 #include "lib.h"
 
+#include "devices/backlight.h"
+
 int main(int argc, char **argv)
 {
 	int i;
@@ -16,6 +18,8 @@ int main(int argc, char **argv)
 
 
 	enumerate_cpus();
+	create_all_backlights();
+
 
 
 	for (i = 0; i < 1; i++) {

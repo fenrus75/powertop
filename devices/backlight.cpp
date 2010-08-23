@@ -14,12 +14,13 @@ using namespace std;
 #include <string.h>
 
 
-backlight::backlight(char *path)
+backlight::backlight(char *_name, char *path)
 {
 	min_level = 0;
 	max_level = 0;
 	start_level = 0;
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
+	strncpy(name, _name, sizeof(name));
 }
 
 void backlight::start_measurement(void)
@@ -64,6 +65,11 @@ double backlight::utilization(void)
 	return p;
 }
 
+const char * backlight::device_name(void)
+{
+	return name;
+}
+
 void create_all_backlights(void)
 {
 	struct dirent *entry;
@@ -81,9 +87,11 @@ void create_all_backlights(void)
 		if (entry->d_name[0] == '.')
 			continue;
 		sprintf(filename, "/sys/class/backlight/%s", entry->d_name);
-		bl = new class backlight(filename);
+		bl = new class backlight(entry->d_name, filename);
 		all_devices.push_back(bl);
 	}
 	closedir(dir);
 
 }
+
+

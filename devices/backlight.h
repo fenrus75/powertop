@@ -8,9 +8,10 @@ class backlight: public device {
 	int min_level, max_level;
 	int start_level, end_level;
 	char sysfs_path[4096];
+	char name[4096];
 public:
 
-	backlight(char *path);
+	backlight(char *_name, char *path);
 
 	virtual void start_measurement(void);
 	virtual void end_measurement(void);
@@ -19,6 +20,7 @@ public:
 
 	virtual const char * class_name(void) { return "backlight";};
 
+	virtual const char * device_name(void);
 };
 
 extern void create_all_backlights(void);

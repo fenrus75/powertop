@@ -14,6 +14,7 @@ public:
 	virtual double	utilization(void); /* percentage */
 
 	virtual const char * class_name(void) { return "abstract device";};
+	virtual const char * device_name(void) { return "abstract device";};
 
 };
 
@@ -23,5 +24,6 @@ extern vector<class device *> all_devices;
 
 extern void devices_start_measurement(void);
 extern void devices_end_measurement(void);
+extern void report_devices(void);
 
 #endif

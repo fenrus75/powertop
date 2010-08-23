@@ -55,6 +55,7 @@ int main(int argc, char **argv)
 //	display_cpu_pstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");
 
 
+	report_devices();
 	
 	return 0;
 }

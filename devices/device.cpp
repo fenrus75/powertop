@@ -1,6 +1,7 @@
 
 #include "device.h"
 #include <vector>
+#include <stdio.h>
 using namespace std;
 
 
@@ -34,4 +35,17 @@ void devices_end_measurement(void)
 	unsigned int i;
 	for (i = 0; i < all_devices.size(); i++)
 		all_devices[i]->end_measurement();
+}
+
+void report_devices(void)
+{
+	unsigned int i;
+
+	printf("\n\nDevice statistics\n");
+	for (i = 0; i < all_devices.size(); i++) {
+		printf("%5.1f%%   %s (%s) \n", 
+			all_devices[i]->utilization(),
+			all_devices[i]->class_name(),
+			all_devices[i]->device_name());
+	}
 }

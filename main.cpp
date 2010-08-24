@@ -20,7 +20,6 @@ int main(int argc, char **argv)
 	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
 
 
-	register_parameter("base power", 8.4);
 	enumerate_cpus();
 	create_all_backlights();
 	detect_power_meters();
@@ -89,6 +88,8 @@ int main(int argc, char **argv)
 
 	end_process_data();
 	end_cpu_data();
+
+	register_parameter("base power", 8.4);
 
 	learn_parameters();
 

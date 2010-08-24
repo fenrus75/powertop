@@ -122,16 +122,12 @@ void acpi_power_meter::measure(void)
 
 void acpi_power_meter::end_measurement(void)
 {
-	double old_rate = rate;
 	measure();
-
-	/* For now, just take the average rate based on start and finish rates */
-	rate = (rate + old_rate) / 2;
 }
 
 void acpi_power_meter::start_measurement(void)
 {
-	measure();
+	/* ACPI battery state is a lagging indication, lets only measure at the end */
 }
 
 

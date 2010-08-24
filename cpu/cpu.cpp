@@ -5,6 +5,8 @@
 #include <stdlib.h>
 
 #include "cpu.h"
+#include "cpudevice.h"
+#include "../parameters/parameters.h"
 
 #include "../perf/perf_bundle.h"
 #include "../lib.h"
@@ -26,6 +28,8 @@ class perf_power_bundle: public perf_bundle
 static class abstract_cpu * new_package(int package, int cpu, char * vendor, int family, int model)
 {
 	class abstract_cpu *ret = NULL;
+	class cpudevice *cpudev;
+	char packagename[128];
 	if (strcmp(vendor, "GenuineIntel") == 0) {
 		if (family == 6 && model == 26)
 			ret = new class nhm_package;
@@ -35,6 +39,10 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 		ret = new class cpu_package;
 
 	ret->set_number(package, cpu);
+
+	sprintf(packagename, "cpu package %i", cpu);
+	cpudev = new class cpudevice("cpu package", packagename, ret);
+	register_result_device(packagename, cpudev);
 	return ret;
 }
 

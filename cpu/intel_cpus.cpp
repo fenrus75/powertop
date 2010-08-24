@@ -363,7 +363,7 @@ void nhm_package::measurement_end(void)
 	char buffer[256];
 
 	for (i = 0; i < pstates.size(); i ++) {
-		sprintf(buffer,"cpu-freq-%s", pstates[i]->human_name);
+		sprintf(buffer,"package-freq-%s", pstates[i]->human_name);
 		printf("registering %s \n", buffer);
 		register_parameter(buffer, 1);
 	}

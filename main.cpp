@@ -82,6 +82,8 @@ int main(int argc, char **argv)
 		
 
 		report_devices();
+
+		dump_result_bundle();
 		store_results();
 		printf("\n\nPower estimated: %5.1f\n", global_joules_consumed());
 	}

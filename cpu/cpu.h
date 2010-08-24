@@ -1,3 +1,7 @@
+
+#ifndef __INCLUDE_GUARD_CPUDEV_H
+#define __INCLUDE_GUARD_CPUDEV_H
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -47,13 +51,13 @@ struct frequency {
 class abstract_cpu 
 {
 protected:
-	int	number;
 	int	first_cpu;
 	struct timeval	stamp_before, stamp_after;
 	double  time_factor;
 	uint64_t max_frequency;
 	uint64_t max_minus_one_frequency;
 public:
+	int	number;
 	int	childcount;
 	bool	idle, old_idle;
 	uint64_t	current_frequency;
@@ -173,3 +177,5 @@ extern void start_cpu_measurement(void);
 extern void end_cpu_measurement(void);
 extern void process_cpu_data(void);
 extern void end_cpu_data(void);
+
+#endif

@@ -42,14 +42,14 @@ void report_utilization(const char *name, double value, struct result_bundle *bu
 void compute_bundle(struct parameter_bundle *parameters, struct result_bundle *results)
 {
 	double power = 0;
-	map<string, double>::iterator it;
+	map<string, class device *>::iterator it;
 	
 	power = parameters->parameters["base power"];
 
 	/* FIXME, need to iterate a separate list of devices */
-	for (it = results->utilization.begin(); it != results->utilization.end(); it++) {
+	for (it = devices.begin(); it != devices.end(); it++) {
 		class device *device;
-		device = devices[it->first];
+		device = it->second;
 
 		power += device->power_usage(results, parameters);
 	}

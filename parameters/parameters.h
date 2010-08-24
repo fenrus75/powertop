@@ -39,6 +39,8 @@ struct result_bundle
 extern struct result_bundle all_results;
 extern vector <struct result_bundle *> past_results;
 
+extern double get_result_value(const char *name, struct result_bundle *bundle = &all_results);
+
 
 extern map<string, class device *> devices;
 

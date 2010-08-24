@@ -21,6 +21,11 @@ double get_parameter_value(const char *name, struct parameter_bundle *the_bundle
 	return the_bundle->parameters[name];
 }
 
+double get_result_value(const char *name, struct result_bundle *the_bundle)
+{
+	return the_bundle->utilization[name];
+}
+
 
 void register_result_device(const char *name, class device *device)
 {
@@ -41,11 +46,12 @@ void compute_bundle(struct parameter_bundle *parameters, struct result_bundle *r
 	
 	power = parameters->parameters["base power"];
 
+	/* FIXME, need to iterate a separate list of devices */
 	for (it = results->utilization.begin(); it != results->utilization.end(); it++) {
 		class device *device;
 		device = devices[it->first];
 
-		power += device->power_usage(it->second, parameters);
+		power += device->power_usage(results, parameters);
 	}
 
 	parameters->actual_power = results->power;

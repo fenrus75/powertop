@@ -5,6 +5,7 @@
 #include <vector>
 
 struct parameter_bundle;
+struct result_bundle;
 
 class device {
 
@@ -18,7 +19,7 @@ public:
 	virtual const char * class_name(void) { return "abstract device";};
 	virtual const char * device_name(void) { return "abstract device";};
 
-	virtual double power_usage(double utilization, struct parameter_bundle *bundle) { return 0.0; };
+	virtual double power_usage(struct result_bundle *results, struct parameter_bundle *bundle) { return 0.0; };
 };
 
 using namespace std;

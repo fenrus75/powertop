@@ -52,6 +52,7 @@ void backlight::end_measurement(void)
 {
 	char filename[4096];
 	ifstream file;
+	double p;
 
 	sprintf(filename, "%s/actual_brightness", sysfs_path);
 	file.open(filename, ios::in);
@@ -59,6 +60,10 @@ void backlight::end_measurement(void)
 		file >> end_level;
 	}
 	file.close();
+
+	p = 100.0 * (end_level + start_level) / 2 / max_level;
+
+	report_utilization(name, p);
 }
 
 
@@ -67,8 +72,6 @@ double backlight::utilization(void)
 	double p;
 
 	p = 100.0 * (end_level + start_level) / 2 / max_level;
-
-	report_utilization(name, p);
 	return p;
 }
 
@@ -104,11 +107,13 @@ void create_all_backlights(void)
 
 
 
-double backlight::power_usage(double utilization, struct parameter_bundle *bundle)
+double backlight::power_usage(struct result_bundle *result, struct parameter_bundle *bundle)
 {
 	double factor;
+	double utilization;
 
 	factor = get_parameter_value("backlight", bundle);
+	utilization = get_result_value(name, result);
 
 	return utilization * factor / 100.0;
 }

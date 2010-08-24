@@ -6,4 +6,5 @@
 void register_parameter(char *name, double default_value = 0.0);
 double get_parameter_value(char *name);
 
+
 #endif

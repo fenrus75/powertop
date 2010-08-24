@@ -144,6 +144,8 @@ void perf_event::create_perf_event(char *eventname, int cpu)
 
 void perf_event::set_event_name(const char *event_name)
 {
+	if (name)
+		free(name);
 	name = strdup(event_name);
 	char *c;
 
@@ -152,6 +154,12 @@ void perf_event::set_event_name(const char *event_name)
 		*c = '/';
 
 	trace_type = get_trace_type(name);
+}
+
+perf_event::~perf_event(void)
+{
+	if (name)
+		free(name);
 }
 
 void perf_event::set_cpu(int _cpu)

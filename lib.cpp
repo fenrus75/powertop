@@ -71,8 +71,9 @@ static void read_kallsyms(void)
 	file.open("/proc/kallsyms", ios::in);
 
 	while (file) {
-		char *c, *c2;
-		unsigned long address;
+		char *c = NULL, *c2 = NULL;
+		unsigned long address = 0;
+		memset(line, 0, 1024);
 		file.getline(line, 1024);
 		c = strchr(line, ' ');
 		if (!c)
@@ -86,7 +87,8 @@ static void read_kallsyms(void)
 		c = strchr(c2, '\t');
 		if (c) 
 			*c = 0;
-		kallsyms[address] = strdup(c2);
+		if (!kallsyms[address] && address != 0)
+			kallsyms[address] = strdup(c2);
 	}	
 	file.close();
 }

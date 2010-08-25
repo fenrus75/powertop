@@ -9,11 +9,11 @@ struct result_bundle all_results;
 vector <struct result_bundle *> past_results;
 
 
-map<const char *, class device *, stringless> devices;
+map<string, class device *> devices;
 
 void register_parameter(const char *name, double default_value)
 {
-	all_parameters.parameters[strdup(name)] = default_value;
+	all_parameters.parameters[name] = default_value;
 }
 
 double get_parameter_value(const char *name, struct parameter_bundle *the_bundle)
@@ -37,7 +37,7 @@ void report_utilization(const char *name, double value, struct result_bundle *bu
 void compute_bundle(struct parameter_bundle *parameters, struct result_bundle *results)
 {
 	double power = 0;
-	map<const char *, double>::iterator it;
+	map<string, double>::iterator it;
 	
 	power = parameters->parameters["base power"];
 
@@ -56,14 +56,14 @@ void compute_bundle(struct parameter_bundle *parameters, struct result_bundle *r
 
 void dump_parameter_bundle(struct parameter_bundle *para)
 {
-	map<const char *, double>::iterator it;
+	map<string, double>::iterator it;
 
 	printf("\n\n");
 	printf("Parameter state \n");
 	printf("----------------------------------\n");
 	printf("Value\t\tName\n");
 	for (it = para->parameters.begin(); it != para->parameters.end(); it++) {
-		printf("%5.2f\t\t%s\n", it->second, it->first);
+		printf("%5.2f\t\t%s\n", it->second, it->first.c_str());
 	}
 
 	printf("\n");
@@ -76,14 +76,14 @@ void dump_parameter_bundle(struct parameter_bundle *para)
 
 void dump_result_bundle(struct result_bundle *res)
 {
-	map<const char *, double>::iterator it;
+	map<string, double>::iterator it;
 
 	printf("\n\n");
 	printf("Utilisation state \n");
 	printf("----------------------------------\n");
 	printf("Value\t\tName\n");
 	for (it = res->utilization.begin(); it != res->utilization.end(); it++) {
-		printf("%5.2f%%\t\t%s\n", it->second, it->first);
+		printf("%5.2f%%\t\t%s\n", it->second, it->first.c_str());
 	}
 
 	printf("\n");
@@ -95,7 +95,7 @@ void dump_result_bundle(struct result_bundle *res)
 struct result_bundle * clone_results(struct result_bundle *bundle)
 {
 	struct result_bundle *b2;
-	map<const char *, double>::iterator it;
+	map<string, double>::iterator it;
 
 	b2 = new struct result_bundle;
 
@@ -115,7 +115,7 @@ struct result_bundle * clone_results(struct result_bundle *bundle)
 struct parameter_bundle * clone_parameters(struct parameter_bundle *bundle)
 {
 	struct parameter_bundle *b2;
-	map<const char *, double>::iterator it;
+	map<string, double>::iterator it;
 
 	b2 = new struct parameter_bundle;
 

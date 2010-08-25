@@ -4,6 +4,7 @@
 
 #include <map>
 #include <vector>
+#include <string>
 
 #include "string.h"
 #include "../devices/device.h"
@@ -19,7 +20,7 @@ struct parameter_bundle
 	double guessed_power;
 	double actual_power;
 
-	map<const char *, double, stringless> parameters;  /* parameter name, parameter value */
+	map<string, double> parameters;  /* parameter name, parameter value */
 };
 
 extern struct parameter_bundle all_parameters;
@@ -32,14 +33,14 @@ extern double get_parameter_value(const char *name, struct parameter_bundle *bun
 struct result_bundle
 {
 	double power;
-	map <const char *, double, stringless> utilization; /* device name, device utilization %age */
+	map <string, double> utilization; /* device name, device utilization %age */
 };
 
 extern struct result_bundle all_results;
 extern vector <struct result_bundle *> past_results;
 
 
-extern map<const char *, class device *, stringless> devices;
+extern map<string, class device *> devices;
 
 extern void register_result_device(const char *name, class device *device);
 

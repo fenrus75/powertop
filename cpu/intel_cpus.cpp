@@ -11,6 +11,7 @@
 #include <string.h>
 
 #include "../lib.h"
+#include "../parameters/parameters.h"
 
 static int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo)
 {
@@ -358,6 +359,15 @@ void nhm_package::measurement_end(void)
 			}
 		}
 	total_stamp = 0;
+
+	char buffer[256];
+
+	for (i = 0; i < pstates.size(); i ++) {
+		sprintf(buffer,"cpu-freq-%s", pstates[i]->human_name);
+		printf("registering %s \n", buffer);
+		register_parameter(buffer, 1);
+	}
+
 }
 
 void nhm_package::account_freq(uint64_t freq, uint64_t duration)

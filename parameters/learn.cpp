@@ -20,8 +20,8 @@ double calculate_params(struct parameter_bundle *params)
 void learn_parameters(void)
 {
 	struct parameter_bundle *best_so_far;
-	double best_score = 10000000000000000;
-        map<const char *, double>::iterator it;
+	double best_score = 10000000000000000.0;
+        map<string, double>::iterator it;
 	int retry = 50;
 	int skip = 0;
 
@@ -54,7 +54,7 @@ void learn_parameters(void)
 			else
 				value = value * (1 + delta);
 
-			printf("Trying %s %5.1f -> %5.1f\n", it->first, clone->parameters[it->first], value);
+			printf("Trying %s %5.1f -> %5.1f\n", it->first.c_str(), clone->parameters[it->first], value);
 			clone->parameters[it->first] = value;
 
 			calculate_params(clone);
@@ -84,7 +84,7 @@ void learn_parameters(void)
 			else
 				value = value * 1 / (1 + delta);
 
-			printf("Trying %s %5.1f -> %5.1f\n", it->first, clone->parameters[it->first], value);
+			printf("Trying %s %5.1f -> %5.1f\n", it->first.c_str(), clone->parameters[it->first], value);
 			clone->parameters[it->first] = value;
 
 			calculate_params(clone);

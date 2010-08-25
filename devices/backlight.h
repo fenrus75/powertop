@@ -7,6 +7,7 @@
 class backlight: public device {
 	int min_level, max_level;
 	int start_level, end_level;
+	int start_power, end_power;
 	char sysfs_path[4096];
 	char name[4096];
 public:

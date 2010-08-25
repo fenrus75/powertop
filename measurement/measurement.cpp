@@ -6,6 +6,8 @@
 #include <sys/types.h>
 #include <dirent.h>
 
+double min_power = 50000.0;
+
 void power_meter::start_measurement(void)
 {
 }
@@ -44,8 +46,9 @@ double global_joules_consumed(void)
 	for (i = 0; i < power_meters.size(); i++)
 		total += power_meters[i]->joules_consumed();
 
-
 	all_results.power = total;	
+	if (total < min_power)
+		min_power = total;
 	return total;
 }
 

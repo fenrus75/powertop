@@ -78,13 +78,16 @@ void cpu_package::measurement_end(void)
 
 	abstract_cpu::measurement_end();
 
-	for (i = 0; i < pstates.size(); i ++) {
+	if (pstates.size() < 2)
+		return;
+
+	for (i = 0; i < pstates.size() - 1; i ++) {
 		sprintf(buffer,"package-freq-%s", pstates[i]->human_name);
 		printf("registering %s \n", buffer);
 		register_parameter(buffer, 1);
 	}
 
-	for (i = 0; i < pstates.size(); i ++) {
+	for (i = 0; i < pstates.size() - 1; i ++) {
 		sprintf(buffer,"package-%i-freq-%s", number, pstates[i]->human_name);
 		report_utilization(buffer, percentage(1.0* (pstates[i]->time_after - pstates[i]->time_before) / time_factor * 10000 / pstates[i]->after_count));
 	}

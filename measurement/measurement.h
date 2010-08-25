@@ -21,4 +21,6 @@ extern void end_power_measurement(void);
 extern double global_joules_consumed(void);
 extern void detect_power_meters(void);
 
+extern double min_power;
+
 #endif

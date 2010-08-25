@@ -1,4 +1,5 @@
 #include "parameters.h"
+#include "../measurement/measurement.h"
 #include <stdio.h>
 #include <string.h>
 #include <vector>
@@ -142,6 +143,7 @@ struct parameter_bundle * clone_parameters(struct parameter_bundle *bundle)
 
 void store_results(void)
 {
+	global_joules_consumed();
 	past_results.push_back(clone_results(&all_results));	
 }
 

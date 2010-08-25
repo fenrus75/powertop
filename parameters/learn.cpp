@@ -1,4 +1,5 @@
 #include "parameters.h"
+#include "../measurement/measurement.h"
 
 #include <stdio.h>
 
@@ -35,6 +36,7 @@ void learn_parameters(void)
 
 
 	while (retry--) {
+		int changed  = 0;
 	        for (it = best_so_far->parameters.begin(); it != best_so_far->parameters.end(); it++) {
 			double value, orgvalue;
 
@@ -43,6 +45,9 @@ void learn_parameters(void)
 				value = 0.1;
 			else
 				value = value * (1 + delta);
+
+			if (it->first == "base power" && value > min_power)
+				value = min_power;
 
 			printf("Trying %s %5.1f -> %5.1f\n", it->first.c_str(), best_so_far->parameters[it->first], value);
 			best_so_far->parameters[it->first] = value;
@@ -53,6 +58,7 @@ void learn_parameters(void)
 				orgvalue = value;
 				printf("Better score %5.1f\n", best_so_far->score);
 				dump_parameter_bundle(best_so_far);
+				changed++;
 			}
 
 			value = orgvalue * 1 / (1 + delta);
@@ -66,12 +72,14 @@ void learn_parameters(void)
 				best_score = best_so_far->score;
 				printf("Better score %5.1f\n", best_so_far->score);
 				dump_parameter_bundle(best_so_far);
+				changed++;
 			} else {
 				best_so_far->parameters[it->first] = orgvalue;
 			}
 
 		}
-		delta = delta / 2;
+		if (!changed)
+			delta = delta * 0.8;
 	}
 
 	

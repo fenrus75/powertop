@@ -43,13 +43,15 @@ void backlight::start_measurement(void)
 	sprintf(filename, "%s/actual_brightness", sysfs_path);
 	file.open(filename, ios::in);
 	if (file) {
-		file >> start_level;
+		file >> start_level;		
+		file.close();
 	}
+
 	sprintf(filename, "%s/bl_power", sysfs_path);
 	file.open(filename, ios::in);
 	if (file) {
 		file >> start_power;
-	}
+	} 
 	file.close();
 	if (start_power)
 		start_level ++;

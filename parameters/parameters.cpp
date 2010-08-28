@@ -14,7 +14,8 @@ map<string, class device *> devices;
 
 void register_parameter(const char *name, double default_value)
 {
-	all_parameters.parameters[name] = default_value;
+	if (all_parameters.parameters[name] <= 0.0001) 
+		all_parameters.parameters[name] = default_value;
 }
 
 double get_parameter_value(const char *name, struct parameter_bundle *the_bundle)

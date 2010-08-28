@@ -56,7 +56,6 @@ void load_results(const char *filename)
 			file.getline(line, 4096);
 			if (strlen(line)>0) {
 				sscanf(line, "%lf", &bundle->power);
-				printf("power is %f on line -%s- min_power is %f\n", bundle->power, line, min_power);
 				if (bundle->power < min_power)
 					min_power = bundle->power;
 			}

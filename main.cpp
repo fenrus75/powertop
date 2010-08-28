@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 
 
 		cout << "measuring\n";
-		sleep(4);
+		sleep(20);
 
 
 		end_cpu_measurement();

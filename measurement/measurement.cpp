@@ -47,7 +47,7 @@ double global_joules_consumed(void)
 		total += power_meters[i]->joules_consumed();
 
 	all_results.power = total;	
-	if (total < min_power)
+	if (total < min_power && total >= 0.01)
 		min_power = total;
 	return total;
 }

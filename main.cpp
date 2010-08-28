@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 
 
 		cout << "measuring\n";
-		sleep(20);
+		sleep(2);
 
 
 		end_cpu_measurement();
@@ -52,6 +52,8 @@ int main(int argc, char **argv)
 		end_process_data();
 		end_cpu_data();
 	}
+
+        learn_parameters();
 
 
 //	display_cpu_cstates();

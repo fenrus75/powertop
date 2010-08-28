@@ -3,6 +3,7 @@
 #include <iomanip>
 
 #include "parameters.h"
+#include "../measurement/measurement.h"
 
 using namespace std;
 
@@ -53,7 +54,12 @@ void load_results(const char *filename)
 		double d;
 		if (first) {
 			file.getline(line, 4096);
-			sscanf(line, "%lf", &bundle->power);
+			if (strlen(line)>0) {
+				sscanf(line, "%lf", &bundle->power);
+				printf("power is %f on line -%s- min_power is %f\n", bundle->power, line, min_power);
+				if (bundle->power < min_power)
+					min_power = bundle->power;
+			}
 			first = 0;
 			continue;
 		}

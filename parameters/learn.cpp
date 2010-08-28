@@ -23,7 +23,7 @@ void learn_parameters(void)
 	struct parameter_bundle *best_so_far;
 	double best_score = 10000000000000000.0;
         map<string, double>::iterator it;
-	int retry = 50;
+	int retry = 100;
 
 	double delta = 0.50;
 
@@ -64,7 +64,7 @@ void learn_parameters(void)
 			value = orgvalue * 1 / (1 + delta);
 
 
-			printf("Trying %s %5.1f -> %5.1f\n", it->first.c_str(), best_so_far->parameters[it->first], value);
+			printf("Trying %s %5.1f -> %5.1f\n", it->first.c_str(), orgvalue, value);
 			best_so_far->parameters[it->first] = value;
 
 			calculate_params(best_so_far);

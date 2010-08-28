@@ -63,7 +63,7 @@ int main(int argc, char **argv)
 //	display_cpu_pstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");
 
 	i = 0;
-	while (i++ < 2) {
+	while (i++ < 20) {
 		start_power_measurement();
 		devices_start_measurement();
 		start_process_measurement();
@@ -71,7 +71,7 @@ int main(int argc, char **argv)
 
 
 		cout << "measuring\n";
-		sleep(15);
+		sleep(20);
 
 
 		end_cpu_measurement();

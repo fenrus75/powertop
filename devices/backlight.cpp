@@ -46,15 +46,6 @@ void backlight::start_measurement(void)
 		file >> start_level;		
 		file.close();
 	}
-
-	sprintf(filename, "%s/bl_power", sysfs_path);
-	file.open(filename, ios::in);
-	if (file) {
-		file >> start_power;
-	} 
-	file.close();
-	if (start_power)
-		start_level ++;
 }
 
 void backlight::end_measurement(void)
@@ -70,29 +61,10 @@ void backlight::end_measurement(void)
 	}
 	file.close();
 
-	sprintf(filename, "%s/bl_power", sysfs_path);
-	file.open(filename, ios::in);
-	if (file) {
-		file >> end_power;
-	}
-	file.close();
-
-	if (end_power)
-		end_level++;
-
-	if (start_power && end_power)
-		p = 100.0 * (end_level + start_level) / 2 / max_level;
-	else
-		p = 0;
+	p = 100.0 * (end_level + start_level) / 2 / max_level;
 
 
 	report_utilization(name, p);
-	sprintf(filename, "%s-power", name);
-	if (end_power && start_power) 
-		p = 1;
-	else
-		p = 0;
-	report_utilization(filename, p);
 }
 
 
@@ -129,7 +101,6 @@ void create_all_backlights(void)
 		bl = new class backlight(entry->d_name, filename);
 		all_devices.push_back(bl);
 		register_parameter("backlight", 5.5);
-		register_parameter("backlight-power", 1);
 	}
 	closedir(dir);
 
@@ -142,19 +113,11 @@ double backlight::power_usage(struct result_bundle *result, struct parameter_bun
 	double power;
 	double factor;
 	double utilization;
-	char powername[1024];
 
 	power = 0;
 	factor = get_parameter_value("backlight", bundle);
 	utilization = get_result_value(name, result);
 
 	power += utilization * factor / 100.0;
-
-	sprintf(powername, "%s-power", name);
-	factor = get_parameter_value("backlight-power", bundle);
-	utilization = get_result_value(powername, result);
-	
-	power += utilization * factor;
-
 	return power;
 }

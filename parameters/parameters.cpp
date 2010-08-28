@@ -143,7 +143,8 @@ struct parameter_bundle * clone_parameters(struct parameter_bundle *bundle)
 void store_results(void)
 {
 	global_joules_consumed();
-	past_results.push_back(clone_results(&all_results));	
+	if (all_results.power > 0.01)
+		past_results.push_back(clone_results(&all_results));	
 }
 
 

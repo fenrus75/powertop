@@ -78,7 +78,7 @@ void learn_parameters(int iterations)
 			if (best_so_far->score < best_score || random_disturb(retry)) {
 				best_score = best_so_far->score;
 				orgvalue = value;
-				printf("Better score %5.1f\n", best_so_far->score);
+//				printf("Better score %5.1f\n", best_so_far->score);
 //				dump_parameter_bundle(best_so_far);
 				changed++;
 			}
@@ -92,7 +92,7 @@ void learn_parameters(int iterations)
 			calculate_params(best_so_far);
 			if (best_so_far->score < best_score || random_disturb(retry)) {
 				best_score = best_so_far->score;
-				printf("Better score %5.1f\n", best_so_far->score);
+//				printf("Better score %5.1f\n", best_so_far->score);
 //				dump_parameter_bundle(best_so_far);
 				changed++;
 			} else {
@@ -108,6 +108,6 @@ void learn_parameters(int iterations)
 
 	calculate_params(best_so_far);
 	printf("Final score %5.1f (%i points)\n", best_so_far->score, past_results.size());
-	dump_parameter_bundle(best_so_far);
+//	dump_parameter_bundle(best_so_far);
 	dump_past_results();
 }

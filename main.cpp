@@ -26,6 +26,8 @@ int main(int argc, char **argv)
 	create_all_devices();
 	detect_power_meters();
 
+	register_parameter("base power", 8.4);
+
 
 
 	for (i = 0; i < 1; i++) {
@@ -56,8 +58,8 @@ int main(int argc, char **argv)
         learn_parameters();
 
 
-//	display_cpu_cstates();
-//	cout << "\n\n\n";
+	display_cpu_cstates();
+	cout << "\n\n\n";
 
 	display_cpu_pstates();
 
@@ -65,14 +67,14 @@ int main(int argc, char **argv)
 //	display_cpu_pstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");
 
 	i = 0;
-	while (i++ < 20) {
+	while (i++ < 10) {
 		start_power_measurement();
 		devices_start_measurement();
 		start_process_measurement();
 		start_cpu_measurement();
 
 
-		cout << "measuring\n";
+		cout << "measuring " << i << "\n";
 		sleep(20);
 
 
@@ -103,7 +105,6 @@ int main(int argc, char **argv)
 	end_process_data();
 	end_cpu_data();
 
-	register_parameter("base power", 8.4);
 
 
 	save_all_results("saved_results.powertop");

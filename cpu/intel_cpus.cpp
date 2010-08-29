@@ -366,7 +366,6 @@ void nhm_package::measurement_end(void)
 		if (strstr(pstates[i]->human_name,"Idle"))
 			continue;
 		sprintf(buffer,"package-freq-%s", pstates[i]->human_name);
-		printf("registering %s \n", buffer);
 		register_parameter(buffer, 1);
 	}
 

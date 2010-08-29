@@ -30,4 +30,7 @@ extern void devices_start_measurement(void);
 extern void devices_end_measurement(void);
 extern void report_devices(void);
 
+
+extern void create_all_devices(void);
+
 #endif

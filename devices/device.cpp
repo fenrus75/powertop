@@ -4,6 +4,8 @@
 #include <stdio.h>
 using namespace std;
 
+#include "backlight.h"
+#include "usb.h"
 
 void device::start_measurement(void)
 {
@@ -48,4 +50,11 @@ void report_devices(void)
 			all_devices[i]->class_name(),
 			all_devices[i]->device_name());
 	}
+}
+
+
+void create_all_devices(void)
+{
+	create_all_backlights();
+	create_all_usb_devices();
 }

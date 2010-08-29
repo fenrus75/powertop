@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 	load_results("saved_results.powertop");
 
 	enumerate_cpus();
-	create_all_backlights();
+	create_all_devices();
 	detect_power_meters();
 
 

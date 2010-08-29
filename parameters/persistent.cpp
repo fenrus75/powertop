@@ -25,9 +25,55 @@ void save_all_results(const char *filename)
 		for (it = bundle->utilization.begin(); it != bundle->utilization.end(); it++) {
 			file << it->first << "\t" << setprecision(5) << it->second << "\n";
 		}	
-		file << "\n";
+		file << ":\n";
 	}
 
 	file.close();
 
+}
+
+void load_results(const char *filename)
+{
+	ifstream file;
+	char line[4096];
+	char *c1;
+	struct result_bundle *bundle;
+	int first = 1;
+	unsigned int count = 0;
+
+	file.open(filename, ios::in);
+	if (!file) {
+		cout << "Cannot load from file " << filename << "\n";
+		return;
+	}
+
+	bundle = new struct result_bundle;
+
+	while (file) {
+		double d;
+		if (first) {
+			file.getline(line, 4096);
+			sscanf(line, "%lf", &bundle->power);
+			first = 0;
+			continue;
+		}
+		file.getline(line, 4096);
+		if (strlen(line) < 3) {
+			past_results.push_back(bundle);
+			bundle = new struct result_bundle;
+			first = 1;
+			count++;
+			continue;
+		}
+		c1 = strchr(line, '\t');
+		if (!c1)
+			continue;
+		*c1 = 0;
+		c1++;
+		sscanf(c1, "%lf", &d);
+		bundle->utilization[line] =d;
+	}
+
+	file.close();
+	printf("Loaded %i prior measurements\n", count);
 }

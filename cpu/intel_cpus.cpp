@@ -363,6 +363,8 @@ void nhm_package::measurement_end(void)
 	char buffer[256];
 
 	for (i = 0; i < pstates.size(); i ++) {
+		if (strstr(pstates[i]->human_name,"Idle"))
+			continue;
 		sprintf(buffer,"package-freq-%s", pstates[i]->human_name);
 		printf("registering %s \n", buffer);
 		register_parameter(buffer, 1);
@@ -382,8 +384,8 @@ void nhm_package::report_out(void)
 	}
 
 	for (i = 0; i < pstates.size(); i ++) {
-//		if (strstr(pstates[i]->human_name,"Idle"))
-//			continue;
+		if (strstr(pstates[i]->human_name,"Idle"))
+			continue;
 		sprintf(buffer,"package-%i-freq-%s", number, pstates[i]->human_name);
 		report_utilization(buffer, percentage(1.0* (pstates[i]->time_after) / total_stamp));
 	}

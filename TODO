@@ -1,0 +1,1 @@
+on NHM, cpu P state stats accumulate and don't reset at measurment time

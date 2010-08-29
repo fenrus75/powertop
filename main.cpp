@@ -20,6 +20,8 @@ int main(int argc, char **argv)
 	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
 
 
+	load_results("saved_results.powertop");
+
 	enumerate_cpus();
 	create_all_backlights();
 	detect_power_meters();

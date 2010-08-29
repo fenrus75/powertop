@@ -4,6 +4,7 @@
 #include <utility>
 #include <iostream>
 #include <fstream>
+#include <string>
 
 
 #include <stdio.h>
@@ -60,7 +61,7 @@ char *hz_to_human(unsigned long hz, char *buffer, int digits)
 
 using namespace std;
 
-map<unsigned long, const char *> kallsyms;
+map<unsigned long, string> kallsyms;
 
 static void read_kallsyms(void)
 {
@@ -87,8 +88,8 @@ static void read_kallsyms(void)
 		c = strchr(c2, '\t');
 		if (c) 
 			*c = 0;
-		if (!kallsyms[address] && address != 0)
-			kallsyms[address] = strdup(c2);
+		if (address != 0)
+			kallsyms[address] = c2;
 	}	
 	file.close();
 }
@@ -99,7 +100,7 @@ const char *kernel_function(uint64_t address)
 	if (!kallsyms_read)
 		read_kallsyms();
 
-	c = kallsyms[address];
+	c = kallsyms[address].c_str();
 	if (!c)
 		return "";
 	return c;

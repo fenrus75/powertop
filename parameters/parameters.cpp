@@ -47,7 +47,6 @@ void compute_bundle(struct parameter_bundle *parameters, struct result_bundle *r
 	
 	power = parameters->parameters["base power"];
 
-	/* FIXME, need to iterate a separate list of devices */
 	for (it = devices.begin(); it != devices.end(); it++) {
 		class device *device;
 		device = it->second;

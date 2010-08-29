@@ -191,7 +191,6 @@ void perf_bundle::process(void)
 		if (sample->header.type != PERF_RECORD_SAMPLE)
 			continue;
 
-
 		handle_trace_point(sample->trace.type, &sample->data, sample->trace.cpu, sample->trace.time, sample->trace.flags);
 		
 	}
@@ -199,4 +198,5 @@ void perf_bundle::process(void)
 
 void perf_bundle::handle_trace_point(int type, void *trace, int cpu, uint64_t time, unsigned char flags)
 {
+	printf("UH OH... abstract handle_trace_point called\n");
 }

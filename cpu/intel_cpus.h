@@ -35,6 +35,8 @@ public:
 	virtual void    calculate_freq(uint64_t time);
 	virtual void	change_effective_frequency(uint64_t time, uint64_t freq);
 
+	virtual void    report_out(void);
+
 };
 
 class nhm_core: public cpu_core 

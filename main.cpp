@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 
 
 		cout << "measuring\n";
-		sleep(2);
+		sleep(4);
 
 
 		end_cpu_measurement();
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 //	display_cpu_cstates();
 //	cout << "\n\n\n";
 
-//	display_cpu_pstates();
+	display_cpu_pstates();
 
 //	display_cpu_cstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");
 //	display_cpu_pstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");
@@ -81,6 +81,8 @@ int main(int argc, char **argv)
 		process_process_data();
 		
 
+	display_cpu_pstates();
+
 		report_devices();
 
 		dump_result_bundle();
@@ -94,6 +96,8 @@ int main(int argc, char **argv)
 	register_parameter("base power", 8.4);
 
 	learn_parameters();
+
+	save_all_results("saved_results.powertop");
 
 	return 0;
 }

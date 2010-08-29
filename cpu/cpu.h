@@ -113,6 +113,7 @@ public:
 	virtual uint64_t total_pstate_time(void);
 
 	virtual void validate(void);
+	virtual void report_out(void);
 	virtual void reset_pstate_data(void);
 };
 

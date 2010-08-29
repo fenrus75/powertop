@@ -60,6 +60,7 @@ extern struct parameter_bundle * clone_parameters(struct parameter_bundle *bundl
 
 extern void store_results(void);
 extern void learn_parameters(void);
+extern void save_all_results(const char *filename);
 
 
 #endif

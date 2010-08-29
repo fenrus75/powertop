@@ -21,7 +21,7 @@ void abstract_cpu::measurement_start(void)
 	pstates.resize(0);
 
 	current_frequency = 0;
-	idle = true;
+	idle = false;
 	old_idle = true;
 
 
@@ -316,23 +316,35 @@ void abstract_cpu::change_effective_frequency(uint64_t time, uint64_t frequency)
 
 void abstract_cpu::wiggle(void)
 {
-	char current[256];
 	char filename[4096];
 	ifstream ifile;
 	ofstream ofile;
+	uint64_t minf,maxf;
 
-	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_governor", first_cpu);
+	/* wiggle a CPU so that we have a record of it at the start and end of the perf trace */
+
+	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_max_freq", first_cpu);
 	ifile.open(filename, ios::in);
-	ifile.getline(current, 256);
+	ifile >> maxf;
 	ifile.close();
+
+	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_min_freq", first_cpu);
+	ifile.open(filename, ios::in);
+	ifile >> minf;
+	ifile.close();
+
 	ofile.open(filename, ios::out);
-	ofile << "performance\n";
+	ofile << maxf;
 	ofile.close();
 	ofile.open(filename, ios::out);
-	ofile << "powersave\n";
+	ofile << minf;
+	ofile.close();
+	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_max_freq", first_cpu);
+	ofile.open(filename, ios::out);
+	ofile << minf;
 	ofile.close();
 	ofile.open(filename, ios::out);
-	ofile << current;
+	ofile << maxf;
 	ofile.close();
 
 }
@@ -363,6 +375,16 @@ void abstract_cpu::validate(void)
 					first_cpu, my_time, children[i]->number, children[i]->total_pstate_time());
 			children[i]->validate();
 		}
+	}
+}
+
+void abstract_cpu::report_out(void)
+{
+	unsigned int i;
+
+	for (i = 0; i < children.size(); i++) {
+		if (children[i])
+			children[i]->report_out();
 	}
 }
 

@@ -370,6 +370,27 @@ void nhm_package::measurement_end(void)
 
 }
 
+void nhm_package::report_out(void)
+{
+	unsigned int i;
+	char buffer[256];
+	if (total_stamp ==0) {
+		for (i = 0; i < pstates.size(); i++)
+			total_stamp += pstates[i]->time_after;
+		if (total_stamp == 0)
+			total_stamp = 1;
+	}
+
+	for (i = 0; i < pstates.size(); i ++) {
+//		if (strstr(pstates[i]->human_name,"Idle"))
+//			continue;
+		sprintf(buffer,"package-%i-freq-%s", number, pstates[i]->human_name);
+		report_utilization(buffer, percentage(1.0* (pstates[i]->time_after) / total_stamp));
+	}
+	abstract_cpu::report_out();
+}
+
+
 void nhm_package::account_freq(uint64_t freq, uint64_t duration)
 {
 	struct frequency *state = NULL;
@@ -402,7 +423,6 @@ void nhm_package::account_freq(uint64_t freq, uint64_t duration)
 		state->after_count = 1;
 	}
 
-
 	state->time_after += duration;
 
 }
@@ -413,7 +433,7 @@ void nhm_package::calculate_freq(uint64_t time)
 	uint64_t freq = 0;
 	bool is_idle = true;
 	unsigned int i;
-	
+
 	/* calculate the maximum frequency of all children */
 	for (i = 0; i < children.size(); i++)
 		if (children[i]) {

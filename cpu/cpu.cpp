@@ -21,7 +21,8 @@ static	class perf_bundle * perf_events;
 
 class perf_power_bundle: public perf_bundle
 {
-	virtual void handle_trace_point(int type, void *trace, int cpu, uint64_t time);
+	virtual void handle_trace_point(int type, void *trace, int cpu, uint64_t time, unsigned char flags);
+
 };
 
 
@@ -418,7 +419,7 @@ struct power_entry {
 };
 
 
-void perf_power_bundle::handle_trace_point(int type, void *trace, int cpunr, uint64_t time)
+void perf_power_bundle::handle_trace_point(int type, void *trace, int cpunr, uint64_t time, unsigned char flags)
 {
 	const char *event_name;
 	class abstract_cpu *cpu;
@@ -435,6 +436,7 @@ void perf_power_bundle::handle_trace_point(int type, void *trace, int cpunr, uin
 	cpu = all_cpus[cpunr];
 
 #if 0
+	unsigned int i;
 	printf("Time is %llu \n", time);
 	for (i = 0; i < system_level.children.size(); i++)
 		if (system_level.children[i])
@@ -462,12 +464,16 @@ void process_cpu_data(void)
 {
 	unsigned int i;
 	system_level.reset_pstate_data();
-	
+
 	perf_events->process();
 
 	for (i = 0; i < system_level.children.size(); i++)
 		if (system_level.children[i])
 			system_level.children[i]->validate();
+
+	for (i = 0; i < system_level.children.size(); i++)
+		if (system_level.children[i])
+			system_level.children[i]->report_out();
 }
 
 void end_cpu_data(void)

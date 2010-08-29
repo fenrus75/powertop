@@ -41,7 +41,7 @@ void report_utilization(const char *name, double value, struct result_bundle *bu
 
 
 
-void compute_bundle(struct parameter_bundle *parameters, struct result_bundle *results)
+double compute_bundle(struct parameter_bundle *parameters, struct result_bundle *results)
 {
 	double power = 0;
 	map<string, class device *>::iterator it;
@@ -58,6 +58,25 @@ void compute_bundle(struct parameter_bundle *parameters, struct result_bundle *r
 	parameters->actual_power = results->power;
 	parameters->guessed_power = power;
 	parameters->score += (power - results->power) * (power - results->power);
+
+	return power;
+}
+
+double bundle_power(struct parameter_bundle *parameters, struct result_bundle *results)
+{
+	double power = 0;
+	map<string, class device *>::iterator it;
+	
+	power = parameters->parameters["base power"];
+
+	for (it = devices.begin(); it != devices.end(); it++) {
+		class device *device;
+		device = it->second;
+
+		power += device->power_usage(results, parameters);
+	}
+
+	return power;
 }
 
 
@@ -74,7 +93,7 @@ void dump_parameter_bundle(struct parameter_bundle *para)
 	}
 
 	printf("\n");
-	printf("Score:  %5.1f\n", para->score);
+	printf("Score:  %5.1f\n", para->score / (0.001 + past_results.size()));
 	printf("Guess:  %5.1f\n", para->guessed_power);
 	printf("Actual: %5.1f\n", para->actual_power);
 
@@ -149,3 +168,25 @@ void store_results(void)
 }
 
 
+
+void dump_past_results(void)
+{
+	unsigned int j;
+	unsigned int i;
+	struct result_bundle *result;
+
+	for (j = 0; j < past_results.size(); j+=10) {
+		printf("Est    ");
+		for (i = j; i < past_results.size() && i < j + 10; i++) {
+			result = past_results[i];
+			printf("%6.2f  ", bundle_power(&all_parameters, result));
+		}
+		printf("\n");
+		printf("Actual ");
+		for (i = j; i < past_results.size() && i < j + 10; i++) {
+			result = past_results[i];
+			printf("%6.2f  ", result->power);
+		}
+		printf("\n\n");
+	}
+}

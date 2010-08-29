@@ -107,6 +107,7 @@ void learn_parameters(int iterations)
 	
 
 	calculate_params(best_so_far);
-	printf("Final score %5.1f\n", best_so_far->score);
+	printf("Final score %5.1f (%i points)\n", best_so_far->score, past_results.size());
 	dump_parameter_bundle(best_so_far);
+	dump_past_results();
 }

@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 
 
 		cout << "measuring\n";
-		sleep(2);
+		sleep(20);
 
 
 		end_cpu_measurement();
@@ -97,7 +97,7 @@ int main(int argc, char **argv)
 		end_process_data();
 		end_cpu_data();
 		printf("\n\nPower estimated: %5.1f\n", global_joules_consumed());
-		learn_parameters(35);
+		learn_parameters(70);
 	}
 
 	end_process_data();

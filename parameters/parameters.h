@@ -49,7 +49,7 @@ extern void register_result_device(const char *name, class device *device);
 extern void report_utilization(const char *name, double value, struct result_bundle *bundle = &all_results);
 
 
-extern void compute_bundle(struct parameter_bundle *parameters = &all_parameters, struct result_bundle *results = &all_results);
+extern double compute_bundle(struct parameter_bundle *parameters = &all_parameters, struct result_bundle *results = &all_results);
 
 
 void dump_parameter_bundle(struct parameter_bundle *patameters = &all_parameters);
@@ -62,5 +62,7 @@ extern void store_results(void);
 extern void learn_parameters(int iterations = 100);
 extern void save_all_results(const char *filename);
 extern void load_results(const char *filename);
+extern void dump_past_results(void);
+extern double bundle_power(struct parameter_bundle *parameters, struct result_bundle *results);
 
 #endif

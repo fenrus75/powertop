@@ -9,9 +9,10 @@ class usbdevice: public device {
 	int connected_before, connected_after;
 	char sysfs_path[4096];
 	char name[4096];
+	char devname[4096];
 public:
 
-	usbdevice(char *_name, char *path);
+	usbdevice(const char *_name, const char *path, const char *devid);
 
 	virtual void start_measurement(void);
 	virtual void end_measurement(void);

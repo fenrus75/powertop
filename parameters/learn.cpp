@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 
 double calculate_params(struct parameter_bundle *params)
@@ -33,12 +34,12 @@ static int random_disturb(int retry_left)
 }
 
 /* leaks like a sieve */
-void learn_parameters(void)
+void learn_parameters(int iterations)
 {
 	struct parameter_bundle *best_so_far;
 	double best_score = 10000000000000000.0;
         map<string, double>::iterator it;
-	int retry = 100;
+	int retry = iterations;
 
 	double delta = 0.50;
 
@@ -48,11 +49,13 @@ void learn_parameters(void)
 	best_score = best_so_far->score;
 	dump_parameter_bundle(best_so_far);
 
-	if ((best_score / (past_results.size()+1)) > 100) {
-		delta = 0.50;
-	} else {
-		delta = 0.10;
-	}
+
+	delta = 0.001 / pow(0.8, iterations / 2.0);
+
+	if (delta > 0.5)
+		delta = 0.5;
+
+	printf("Delta starts at %5.3f\n", delta);
 
 	while (retry--) {
 		int changed  = 0;

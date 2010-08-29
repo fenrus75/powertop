@@ -97,6 +97,7 @@ int main(int argc, char **argv)
 		end_process_data();
 		end_cpu_data();
 		printf("\n\nPower estimated: %5.1f\n", global_joules_consumed());
+		learn_parameters(35);
 	}
 
 	end_process_data();
@@ -104,7 +105,6 @@ int main(int argc, char **argv)
 
 	register_parameter("base power", 8.4);
 
-	learn_parameters();
 
 	save_all_results("saved_results.powertop");
 

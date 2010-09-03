@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 		store_results();
 	}
 
-//        learn_parameters();
+        learn_parameters();
 
 
 	display_cpu_cstates();
@@ -61,8 +61,8 @@ int main(int argc, char **argv)
 
 	display_cpu_pstates();
 
-		end_process_data();
-		end_cpu_data();
+	end_process_data();
+	end_cpu_data();
 
 //	display_cpu_cstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");
 //	display_cpu_pstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");

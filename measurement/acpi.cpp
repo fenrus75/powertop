@@ -102,6 +102,17 @@ void acpi_power_meter::measure(void)
 		strcpy(rate_units, "W");
 	}
 
+	if (strcmp(rate_units, "mA") == 0) {
+		_rate = _rate / 1000.0;
+		strcpy(rate_units, "A");
+	}
+
+
+	if (strcmp(rate_units, "A") == 0 && strcmp(voltage_units, "V")==0 ) {
+		_rate = _rate * _voltage;
+		strcpy(rate_units, "W");
+	}
+
 
 	if (strcmp(capacity_units, "C") == 0)
 		capacity = _capacity;

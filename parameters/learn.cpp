@@ -71,6 +71,9 @@ void learn_parameters(int iterations)
 			if (it->first == "base power" && value > min_power)
 				value = min_power;
 
+			if (value > 5000)
+				value = 50000;
+
 //			printf("Trying %s %5.1f -> %5.1f\n", it->first.c_str(), best_so_far->parameters[it->first], value);
 			best_so_far->parameters[it->first] = value;
 
@@ -84,6 +87,10 @@ void learn_parameters(int iterations)
 			}
 
 			value = orgvalue * 1 / (1 + delta);
+
+
+			if (value > 5000)
+				value = 50000;
 
 
 //			printf("Trying %s %5.1f -> %5.1f\n", it->first.c_str(), orgvalue, value);

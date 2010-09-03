@@ -154,11 +154,6 @@ void nhm_core::measurement_end(void)
 			printf("registering %s \n", buffer);
 			register_parameter(buffer, 1);
 		}
-
-		for (i = 0; i < cstates.size() - 1; i ++) {
-			sprintf(buffer,"core-%i-idle-%s", number, cstates[i]->human_name);
-			report_utilization(buffer, percentage(cstates[i]->duration_delta / time_factor));
-		}
 	}
 
 	for (i = 0; i < pstates.size(); i ++) {
@@ -390,10 +385,6 @@ void nhm_package::measurement_end(void)
 			register_parameter(buffer, 1);
 		}
 
-		for (i = 0; i < cstates.size() - 1; i ++) {
-			sprintf(buffer,"core-%i-idle-%s", number, cstates[i]->human_name);
-			report_utilization(buffer, percentage(cstates[i]->duration_delta / time_factor));
-		}
 	}
 
 	for (i = 0; i < pstates.size(); i ++) {
@@ -428,8 +419,6 @@ void nhm_package::report_out(void)
 			if (!cstates[i])
 				continue;
 			sprintf(buffer,"package-idle-%s", cstates[i]->human_name);
-			printf("i is %i, human name is %s\n", i, cstates[i]->human_name);
-			printf("registering %s \n", buffer);
 			register_parameter(buffer, 1);
 		}
 
@@ -437,6 +426,42 @@ void nhm_package::report_out(void)
 			if (!cstates[i])
 				continue;
 			sprintf(buffer,"package-%i-idle-%s", number, cstates[i]->human_name);
+			report_utilization(buffer, percentage(cstates[i]->duration_delta / time_factor));
+		}
+	}
+	abstract_cpu::report_out();
+}
+
+void nhm_core::report_out(void)
+{
+	unsigned int i;
+	char buffer[256];
+	if (total_stamp ==0) {
+		for (i = 0; i < pstates.size(); i++)
+			total_stamp += pstates[i]->time_after;
+		if (total_stamp == 0)
+			total_stamp = 1;
+	}
+
+	for (i = 0; i < pstates.size(); i ++) {
+		if (strstr(pstates[i]->human_name,"Idle"))
+			continue;
+		sprintf(buffer,"core-%i-freq-%s", number, pstates[i]->human_name);
+		report_utilization(buffer, percentage(1.0* (pstates[i]->time_after) / total_stamp));
+	}
+
+	if (cstates.size() > 1) {
+		for (i = 0; i < cstates.size() - 1; i ++) {
+			if (!cstates[i])
+				continue;
+			sprintf(buffer,"core-idle-%s", cstates[i]->human_name);
+			register_parameter(buffer, 1);
+		}
+
+		for (i = 0; i < cstates.size() - 1; i ++) {
+			if (!cstates[i])
+				continue;
+			sprintf(buffer,"core-%i-idle-%s", number, cstates[i]->human_name);
 			report_utilization(buffer, percentage(cstates[i]->duration_delta / time_factor));
 		}
 	}

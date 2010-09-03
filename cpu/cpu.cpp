@@ -34,6 +34,8 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 	if (strcmp(vendor, "GenuineIntel") == 0) {
 		if (family == 6 && model == 26)
 			ret = new class nhm_package;
+		if (family == 6 && model == 37)
+			ret = new class nhm_package;
 	}
 
 	if (!ret)
@@ -54,6 +56,8 @@ static class abstract_cpu * new_core(int core, int cpu, char * vendor, int famil
 	if (strcmp(vendor, "GenuineIntel") == 0) {
 		if (family == 6 && model == 26)
 			ret = new class nhm_core;
+		if (family == 6 && model == 37)
+			ret = new class nhm_core;
 	}
 
 	if (!ret)
@@ -69,6 +73,8 @@ static class abstract_cpu * new_cpu(int number, char * vendor, int family, int m
 
 	if (strcmp(vendor, "GenuineIntel") == 0) {
 		if (family == 6 && model == 26)
+			ret = new class nhm_cpu;
+		if (family == 6 && model == 37)
 			ret = new class nhm_cpu;
 	}
 

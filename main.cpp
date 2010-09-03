@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 		end_process_data();
 		end_cpu_data();
 		printf("\n\nPower estimated: %5.1f\n", global_joules_consumed());
-		learn_parameters(10);
+		learn_parameters(20);
 	display_cpu_cstates();
 	}
 

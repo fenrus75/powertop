@@ -51,6 +51,8 @@ void learn_parameters(int iterations)
 
 
 	delta = 0.001 / pow(0.8, iterations / 2.0);
+	if (iterations < 25)
+		delta = 0.001 / pow(0.5, iterations / 2.0);
 
 	if (delta > 0.2)
 		delta = 0.2;
@@ -75,7 +77,7 @@ void learn_parameters(int iterations)
 				orgvalue = min_power;
 
 			if (value > 5000)
-				value = 50000;
+				value = 5000;
 
 //			printf("Trying %s %5.1f -> %5.1f\n", it->first.c_str(), best_so_far->parameters[it->first], value);
 			best_so_far->parameters[it->first] = value;
@@ -93,7 +95,7 @@ void learn_parameters(int iterations)
 
 
 			if (value > 5000)
-				value = 50000;
+				value = 5000;
 
 
 //			printf("Trying %s %5.1f -> %5.1f\n", it->first.c_str(), orgvalue, value);
@@ -110,8 +112,13 @@ void learn_parameters(int iterations)
 			}
 
 		}
-		if (!changed)
-			delta = delta * 0.8;
+		if (!changed) {
+			double mult;
+			mult = 0.8;
+			if (iterations < 25)
+				mult = 0.5;
+			delta = delta * mult;
+		}
 
 		if (delta < 0.001)
 			break;
@@ -120,7 +127,7 @@ void learn_parameters(int iterations)
 	
 
 	calculate_params(best_so_far);
-	printf("Final score %5.1f (%i points)\n", best_so_far->score, past_results.size());
+	printf("Final score %5.1f (%i points)\n", best_so_far->score / past_results.size(), past_results.size());
 //	dump_parameter_bundle(best_so_far);
 	dump_past_results();
 }

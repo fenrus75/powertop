@@ -52,8 +52,8 @@ void learn_parameters(int iterations)
 
 	delta = 0.001 / pow(0.8, iterations / 2.0);
 
-	if (delta > 0.5)
-		delta = 0.5;
+	if (delta > 0.2)
+		delta = 0.2;
 
 	printf("Delta starts at %5.3f\n", delta);
 
@@ -70,6 +70,9 @@ void learn_parameters(int iterations)
 
 			if (it->first == "base power" && value > min_power)
 				value = min_power;
+
+			if (it->first == "base power" && orgvalue > min_power)
+				orgvalue = min_power;
 
 			if (value > 5000)
 				value = 50000;
@@ -109,6 +112,9 @@ void learn_parameters(int iterations)
 		}
 		if (!changed)
 			delta = delta * 0.8;
+
+		if (delta < 0.001)
+			break;
 	}
 
 	

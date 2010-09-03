@@ -425,12 +425,17 @@ void nhm_package::report_out(void)
 
 	if (cstates.size() > 1) {
 		for (i = 0; i < cstates.size() - 1; i ++) {
+			if (!cstates[i])
+				continue;
 			sprintf(buffer,"package-idle-%s", cstates[i]->human_name);
+			printf("i is %i, human name is %s\n", i, cstates[i]->human_name);
 			printf("registering %s \n", buffer);
 			register_parameter(buffer, 1);
 		}
 
 		for (i = 0; i < cstates.size() - 1; i ++) {
+			if (!cstates[i])
+				continue;
 			sprintf(buffer,"package-%i-idle-%s", number, cstates[i]->human_name);
 			report_utilization(buffer, percentage(cstates[i]->duration_delta / time_factor));
 		}

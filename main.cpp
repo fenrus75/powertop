@@ -56,7 +56,6 @@ int main(int argc, char **argv)
         learn_parameters();
 
 
-	display_cpu_cstates();
 	cout << "\n\n\n";
 
 	display_cpu_pstates();
@@ -100,7 +99,8 @@ int main(int argc, char **argv)
 		end_process_data();
 		end_cpu_data();
 		printf("\n\nPower estimated: %5.1f\n", global_joules_consumed());
-		learn_parameters(70);
+		learn_parameters(10);
+	display_cpu_cstates();
 	}
 
 	end_process_data();

@@ -467,8 +467,8 @@ void process_process_data(void)
 	all_work_to_all_power();
 
 	sort(all_power.begin(), all_power.end(), power_cpu_sort);
-//	for (i = 0; i < all_power.size() ; i++)
-//		printf("%s\n", all_power[i]->description());
+	for (i = 0; i < all_power.size() ; i++)
+		printf("%s\n", all_power[i]->description());
 
 }
 

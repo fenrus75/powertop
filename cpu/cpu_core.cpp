@@ -72,36 +72,3 @@ char * cpu_core::fill_pstate_line(int line_nr, char *buffer)
 
 
 
-void cpu_core::measurement_end(void)
-{
-	unsigned int i;
-	char buffer[256];
-
-	abstract_cpu::measurement_end();
-
-	if (pstates.size() > 1) {
-		for (i = 0; i < pstates.size() - 1; i ++) {
-			sprintf(buffer,"core-freq-%s", pstates[i]->human_name);
-			printf("registering %s \n", buffer);
-			register_parameter(buffer, 1);
-		}
-
-		for (i = 0; i < pstates.size() - 1; i ++) {
-			sprintf(buffer,"core-%i-freq-%s", number, pstates[i]->human_name);
-			report_utilization(buffer, percentage(1.0* (pstates[i]->time_after - pstates[i]->time_before) / time_factor * 10000 / pstates[i]->after_count));
-		}
-	}
-
-	if (cstates.size() > 1) {
-		for (i = 0; i < cstates.size() - 1; i ++) {
-			sprintf(buffer,"core-idle-%s", cstates[i]->human_name);
-			printf("registering %s \n", buffer);
-			register_parameter(buffer, 1);
-		}
-
-		for (i = 0; i < cstates.size() - 1; i ++) {
-			sprintf(buffer,"core-%i-idle-%s", number, cstates[i]->human_name);
-			report_utilization(buffer, percentage(cstates[i]->duration_delta / time_factor));
-		}
-	}
-}

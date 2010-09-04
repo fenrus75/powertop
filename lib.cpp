@@ -46,8 +46,12 @@ char *hz_to_human(unsigned long hz, char *buffer, int digits)
 	/* default: just put the Number in */
 	sprintf(buffer,_("%9lli"), Hz);
 
-	if (Hz>1000)
-		sprintf(buffer, _("%6lli Mhz"), (Hz+500)/1000);
+	if (Hz>1000) {
+		if (digits == 2)
+			sprintf(buffer, _("%4lli Mhz"), (Hz+500)/1000);
+		else
+			sprintf(buffer, _("%6lli Mhz"), (Hz+500)/1000);
+	}
 
 	if (Hz>1500000) {
 		if (digits == 2)

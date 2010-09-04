@@ -477,9 +477,6 @@ void process_cpu_data(void)
 		if (system_level.children[i])
 			system_level.children[i]->validate();
 
-	for (i = 0; i < system_level.children.size(); i++)
-		if (system_level.children[i])
-			system_level.children[i]->report_out();
 }
 
 void end_cpu_data(void)

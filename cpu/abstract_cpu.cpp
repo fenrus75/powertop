@@ -378,16 +378,6 @@ void abstract_cpu::validate(void)
 	}
 }
 
-void abstract_cpu::report_out(void)
-{
-	unsigned int i;
-
-	for (i = 0; i < children.size(); i++) {
-		if (children[i])
-			children[i]->report_out();
-	}
-}
-
 void abstract_cpu::reset_pstate_data(void)
 {
 	unsigned int i;

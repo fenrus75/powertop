@@ -113,7 +113,6 @@ public:
 	virtual uint64_t total_pstate_time(void);
 
 	virtual void validate(void);
-	virtual void report_out(void);
 	virtual void reset_pstate_data(void);
 };
 
@@ -143,7 +142,6 @@ public:
 	virtual char *  fill_pstate_name(int line_nr, char *buffer);
 
 	virtual int     can_collapse(void) { return childcount == 1;};
-	virtual void    measurement_end(void);
 };
 
 class cpu_package: public abstract_cpu 
@@ -156,7 +154,6 @@ public:
 	virtual char *  fill_pstate_name(int line_nr, char *buffer);
 	virtual int     can_collapse(void) { return childcount == 1;};
 
-	virtual void    measurement_end(void);
 };
 
 #include "intel_cpus.h"

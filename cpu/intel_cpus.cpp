@@ -89,8 +89,6 @@ void nhm_core::measurement_end(void)
 	unsigned int i;
 	uint64_t time_delta;
 	double ratio;
-	char buffer[4096];
-
 
 	c3_after    = get_msr(first_cpu, MSR_CORE_C3_RESIDENCY);
 	c6_after    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
@@ -147,21 +145,6 @@ void nhm_core::measurement_end(void)
 		}
 #endif
 	total_stamp = 0;
-
-	if (cstates.size() > 1) {
-		for (i = 0; i < cstates.size() - 1; i ++) {
-			sprintf(buffer,"core-idle-%s", cstates[i]->human_name);
-			printf("registering %s \n", buffer);
-			register_parameter(buffer, 1);
-		}
-	}
-
-	for (i = 0; i < pstates.size(); i ++) {
-		if (strstr(pstates[i]->human_name,"Idle"))
-			continue;
-		sprintf(buffer,"core-freq-%s", pstates[i]->human_name);
-		register_parameter(buffer, 1);
-	}
 }
 
 void nhm_core::account_freq(uint64_t freq, uint64_t duration)
@@ -376,98 +359,7 @@ void nhm_package::measurement_end(void)
 		}
 	total_stamp = 0;
 
-	char buffer[256];
-
-	if (cstates.size() > 1) {
-		for (i = 0; i < cstates.size() - 1; i ++) {
-			sprintf(buffer,"core-idle-%s", cstates[i]->human_name);
-			printf("registering %s \n", buffer);
-			register_parameter(buffer, 1);
-		}
-
-	}
-
-	for (i = 0; i < pstates.size(); i ++) {
-		if (strstr(pstates[i]->human_name,"Idle"))
-			continue;
-		sprintf(buffer,"package-freq-%s", pstates[i]->human_name);
-		register_parameter(buffer, 1);
-	}
-
 }
-
-void nhm_package::report_out(void)
-{
-	unsigned int i;
-	char buffer[256];
-	if (total_stamp ==0) {
-		for (i = 0; i < pstates.size(); i++)
-			total_stamp += pstates[i]->time_after;
-		if (total_stamp == 0)
-			total_stamp = 1;
-	}
-
-	for (i = 0; i < pstates.size(); i ++) {
-		if (strstr(pstates[i]->human_name,"Idle"))
-			continue;
-		sprintf(buffer,"package-%i-freq-%s", number, pstates[i]->human_name);
-		report_utilization(buffer, percentage(1.0* (pstates[i]->time_after) / total_stamp));
-	}
-
-	if (cstates.size() > 1) {
-		for (i = 0; i < cstates.size() - 1; i ++) {
-			if (!cstates[i])
-				continue;
-			sprintf(buffer,"package-idle-%s", cstates[i]->human_name);
-			register_parameter(buffer, 1);
-		}
-
-		for (i = 0; i < cstates.size() - 1; i ++) {
-			if (!cstates[i])
-				continue;
-			sprintf(buffer,"package-%i-idle-%s", number, cstates[i]->human_name);
-			report_utilization(buffer, percentage(cstates[i]->duration_delta / time_factor));
-		}
-	}
-	abstract_cpu::report_out();
-}
-
-void nhm_core::report_out(void)
-{
-	unsigned int i;
-	char buffer[256];
-	if (total_stamp ==0) {
-		for (i = 0; i < pstates.size(); i++)
-			total_stamp += pstates[i]->time_after;
-		if (total_stamp == 0)
-			total_stamp = 1;
-	}
-
-	for (i = 0; i < pstates.size(); i ++) {
-		if (strstr(pstates[i]->human_name,"Idle"))
-			continue;
-		sprintf(buffer,"core-%i-freq-%s", number, pstates[i]->human_name);
-		report_utilization(buffer, percentage(1.0* (pstates[i]->time_after) / total_stamp));
-	}
-
-	if (cstates.size() > 1) {
-		for (i = 0; i < cstates.size() - 1; i ++) {
-			if (!cstates[i])
-				continue;
-			sprintf(buffer,"core-idle-%s", cstates[i]->human_name);
-			register_parameter(buffer, 1);
-		}
-
-		for (i = 0; i < cstates.size() - 1; i ++) {
-			if (!cstates[i])
-				continue;
-			sprintf(buffer,"core-%i-idle-%s", number, cstates[i]->human_name);
-			report_utilization(buffer, percentage(cstates[i]->duration_delta / time_factor));
-		}
-	}
-	abstract_cpu::report_out();
-}
-
 
 void nhm_package::account_freq(uint64_t freq, uint64_t duration)
 {
@@ -597,7 +489,6 @@ void nhm_cpu::measurement_end(void)
 	uint64_t time_delta;
 	double ratio;
 	unsigned int i;
-	char buffer[4096];
 
 	aperf_after = get_msr(number, MSR_APERF);
 	mperf_after = get_msr(number, MSR_MPERF);
@@ -625,19 +516,6 @@ void nhm_cpu::measurement_end(void)
 	}
 
 	total_stamp = 0;
-
-	if (cstates.size() > 1) {
-		for (i = 0; i < cstates.size() - 1; i ++) {
-			sprintf(buffer,"cpu-idle-%s", cstates[i]->human_name);
-			printf("registering %s \n", buffer);
-			register_parameter(buffer, 1);
-		}
-
-		for (i = 0; i < cstates.size() - 1; i ++) {
-			sprintf(buffer,"cpu-%i-idle-%s", number, cstates[i]->human_name);
-			report_utilization(buffer, percentage(cstates[i]->duration_delta / time_factor));
-		}
-	}
 
 }
 

@@ -99,7 +99,6 @@ int main(int argc, char **argv)
 		end_process_data();
 		end_cpu_data();
 		learn_parameters(100);
-		dump_result_bundle();
 	}
 
 	end_process_data();

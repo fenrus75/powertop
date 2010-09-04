@@ -96,3 +96,8 @@ class timer * find_create_timer(uint64_t func)
 	return timer;
 	
 }
+
+void clear_timers(void)
+{
+	all_timers.erase(all_timers.begin(), all_timers.end());	
+}

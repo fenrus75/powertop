@@ -174,12 +174,14 @@ perf_event::perf_event(const char *event_name, int _cpu, int buffer_size)
 	perf_fd = -1;
 	bufsize = buffer_size;
 	cpu = _cpu;
+	perf_mmap = NULL;
 }
 
 perf_event::perf_event(void)
 {
 	perf_fd = -1;
 	bufsize = 128;
+	perf_mmap = NULL;
 }
 
 void perf_event::start(void)
@@ -225,7 +227,11 @@ void perf_event::process(void *cookie)
 
 void perf_event::clear(void)
 {
-	munmap(perf_mmap, (bufsize+1)*getpagesize());
+	if (perf_mmap) {
+//		memset(perf_mmap, 0, (bufsize)*getpagesize());
+		munmap(perf_mmap, (bufsize+1)*getpagesize());
+		perf_mmap = NULL;
+	}
 	if (perf_fd != -1)
 		close(perf_fd);
 	perf_fd = -1;

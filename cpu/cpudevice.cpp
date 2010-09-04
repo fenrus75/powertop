@@ -15,8 +15,23 @@ cpudevice::cpudevice(const char *classname, const char *device_name, class abstr
 
 double cpudevice::power_usage(struct result_bundle *result, struct parameter_bundle *bundle)
 {
-	double power = 0;
 	unsigned int i, j;
+
+	double power;
+	double factor;
+	double utilization;
+
+	power = 0;
+	factor = get_parameter_value("cpu-wakeups", bundle);
+	utilization = get_result_value("cpu-wakeups", result);
+
+        power += utilization * factor / 1000.0;
+
+        factor = get_parameter_value("cpu-consumption", bundle);
+        utilization = get_result_value("cpu-consumption", result);
+
+        power += utilization * factor / 100.0;
+
 
 	return power;	
 }

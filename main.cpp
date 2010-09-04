@@ -27,6 +27,8 @@ int main(int argc, char **argv)
 	detect_power_meters();
 
 	register_parameter("base power", 8.4);
+	register_parameter("cpu-wakeups", 1.0);
+	register_parameter("cpu-consumption", 1.0);
 
 
 
@@ -96,7 +98,8 @@ int main(int argc, char **argv)
 		store_results();
 		end_process_data();
 		end_cpu_data();
-		learn_parameters(20);
+		learn_parameters(100);
+		dump_result_bundle();
 	}
 
 	end_process_data();
@@ -106,5 +109,11 @@ int main(int argc, char **argv)
 
 	save_all_results("saved_results.powertop");
 
+
+	learn_parameters(500);
+	printf("Final estimate:\n");
+	dump_parameter_bundle();
 	return 0;
+
+	
 }

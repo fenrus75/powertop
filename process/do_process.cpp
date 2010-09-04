@@ -13,6 +13,7 @@
 
 #include "../perf/perf_bundle.h"
 #include "../perf/perf_event.h"
+#include "../parameters/parameters.h"
 
 static  class perf_bundle * perf_events;
 
@@ -30,6 +31,8 @@ vector<class power_consumer *> cpu_blame;
 #define LEVEL_WAKEUP	4
 #define LEVEL_PROCESS	5
 #define LEVEL_WORK	6
+
+static uint64_t first_stamp, last_stamp;
 
 static void push_consumer(unsigned int cpu, class power_consumer *consumer)
 {
@@ -146,6 +149,12 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 	if (type >= (int)event_names.size())
 		return;
 	event_name = event_names[type];
+
+	if (time < first_stamp)
+		first_stamp = time;
+
+	if (time > last_stamp)
+		last_stamp = time;
 
 	if (strcmp(event_name, "sched:sched_switch") == 0) {
 		struct sched_switch *sw;
@@ -410,6 +419,8 @@ void start_process_measurement(void)
 		perf_events->add_event("workqueue:workqueue_execute_end");
 	}
 
+	first_stamp = ~0ULL;
+	last_stamp = 0;
 	perf_events->start();
 }
 
@@ -472,12 +483,52 @@ void process_process_data(void)
 
 }
 
+int total_wakeups(void)
+{
+	double total = 0;
+	unsigned int i;
+	for (i = 0; i < all_power.size() ; i++)
+		total += all_power[i]->wake_ups;
+
+	printf(" %5.1f wakeups \n", total);
+	printf(" %5.1f seconds \n",  (0.0001 + last_stamp - first_stamp) / 1000000000 );
+
+	total = total / ((0.0001 + last_stamp - first_stamp) / 1000000000);
+
+
+	return total;
+}
+
+double total_cpu_time(void)
+{
+	unsigned int i;
+	double total = 0.0;
+	for (i = 0; i < all_power.size() ; i++)
+		total += all_power[i]->accumulated_runtime - all_power[i]->child_runtime;
+
+	
+	total =  (total / (0.0001 + last_stamp - first_stamp)) * 100;
+
+	return total;
+}
+
 
 
 void end_process_data(void)
 {
 	unsigned int i;
+
+	report_utilization("cpu-consumption", total_cpu_time());
+	report_utilization("cpu-wakeups", total_wakeups());
+
 	/* clean out old data */
+	for (i = 0; i < all_processes.size() ; i++)
+		all_processes[i]->wake_ups = 0;
+	for (i = 0; i < all_processes.size() ; i++)
+		all_processes[i]->accumulated_runtime = 0;
+	for (i = 0; i < all_processes.size() ; i++)
+		all_processes[i]->child_runtime = 0;
+
 	for (i = 0; i < all_processes.size() ; i++)
 		delete all_processes[i];
 
@@ -488,6 +539,8 @@ void end_process_data(void)
 
 	all_interrupts.resize(0);
 	all_power.resize(0);
+	clear_timers();
+
 	clear_consumers();
 
 	perf_events->clear();

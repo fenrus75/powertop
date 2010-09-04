@@ -7,6 +7,7 @@ using namespace std;
 #include "backlight.h"
 #include "usb.h"
 #include "ahci.h"
+#include "alsa.h"
 
 void device::start_measurement(void)
 {
@@ -59,4 +60,5 @@ void create_all_devices(void)
 	create_all_backlights();
 	create_all_usb_devices();
 	create_all_ahcis();
+	create_all_alsa();
 }

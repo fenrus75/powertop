@@ -82,3 +82,50 @@ void load_results(const char *filename)
 	file.close();
 	printf("Loaded %i prior measurements\n", count);
 }
+
+void save_parameters(const char *filename)
+{
+	ofstream file;
+
+	file.open(filename, ios::out);
+	if (!file) {
+		cout << "Cannot save to file " << filename << "\n";
+		return;
+	}
+	
+	map<string, double>::iterator it;
+
+	for (it = all_parameters.parameters.begin(); it != all_parameters.parameters.end(); it++) {
+		file << it->first << "\t" << setprecision(5) << it->second << "\n";
+	}	
+	file.close();
+}
+
+void load_parameters(const char *filename)
+{
+	ifstream file;
+	char line[4096];
+	char *c1;
+
+	file.open(filename, ios::in);
+	if (!file) {
+		cout << "Cannot load from file " << filename << "\n";
+		return;
+	}
+
+	while (file) {
+		double d;
+		file.getline(line, 4096);
+
+		c1 = strchr(line, '\t');
+		if (!c1)
+			continue;
+		*c1 = 0;
+		c1++;
+		sscanf(c1, "%lf", &d);
+		
+		all_parameters.parameters[line] =d;
+	}
+
+	file.close();
+}

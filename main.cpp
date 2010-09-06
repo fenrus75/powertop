@@ -21,6 +21,7 @@ int main(int argc, char **argv)
 
 
 	load_results("saved_results.powertop");
+	load_parameters("saved_parameters.powertop");
 
 	enumerate_cpus();
 	create_all_devices();
@@ -110,6 +111,7 @@ int main(int argc, char **argv)
 
 
 	learn_parameters(500);
+	save_parameters("saved_parameters.powertop");
 	printf("Final estimate:\n");
 	dump_parameter_bundle();
 	return 0;

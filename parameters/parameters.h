@@ -62,6 +62,9 @@ extern void store_results(void);
 extern void learn_parameters(int iterations = 100);
 extern void save_all_results(const char *filename);
 extern void load_results(const char *filename);
+extern void save_parameters(const char *filename);
+extern void load_parameters(const char *filename);
+
 extern void dump_past_results(void);
 extern double bundle_power(struct parameter_bundle *parameters, struct result_bundle *results);
 

@@ -33,6 +33,8 @@ int main(int argc, char **argv)
 	register_parameter("cpu-consumption", 1.0);
 
         learn_parameters();
+	dump_parameter_bundle();
+	save_parameters("saved_parameters.powertop");
 
 
 	for (i = 0; i < 1; i++) {

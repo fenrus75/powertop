@@ -8,6 +8,7 @@ using namespace std;
 #include "usb.h"
 #include "ahci.h"
 #include "alsa.h"
+#include "rfkill.h"
 
 #include "../parameters/parameters.h"
 
@@ -65,4 +66,5 @@ void create_all_devices(void)
 	create_all_usb_devices();
 	create_all_ahcis();
 	create_all_alsa();
+	create_all_rfkills();
 }

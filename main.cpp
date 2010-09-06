@@ -41,7 +41,6 @@ void one_measurement(int seconds)
 	store_results();
 	end_process_data();
 	end_cpu_data();
-	learn_parameters(10);
 }
 
 int main(int argc, char **argv)
@@ -75,6 +74,7 @@ int main(int argc, char **argv)
 
 	for (i = 0; i < 20; i++) {
 		one_measurement(20);
+		learn_parameters(10);
 	}
 
 

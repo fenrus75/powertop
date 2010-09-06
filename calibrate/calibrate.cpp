@@ -1,3 +1,6 @@
+#include <iostream>
+#include <fstream>
+#include <algorithm>
 
 #include "calibrate.h"
 #include <stdlib.h>
@@ -5,11 +8,98 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <math.h>
+#include <sys/types.h>
+#include <dirent.h>
+
 #include "../parameters/parameters.h"
 
+#include <map>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+
+static vector<string> usb_devices;
+
+static map<string, string> saved_sysfs;
 
 
 static volatile int stop_measurement;
+
+
+static void save_sysfs(char *filename)
+{
+	char line[4096];
+	ifstream file;
+
+	file.open(filename, ios::in);
+	if (!file)
+		return;
+	file.getline(line, 4096);
+	file.close();
+
+	saved_sysfs[filename] = line;
+}
+
+static void write_sysfs(string filename, string value)
+{
+	ofstream file;
+
+	file.open(filename.c_str(), ios::out);
+	if (!file)
+		return;
+	file << value;
+	file.close();
+}
+
+static void restore_all_sysfs(void)
+{
+	map<string, string>::iterator it;
+
+	for (it = saved_sysfs.begin(); it != saved_sysfs.end(); it++)
+		write_sysfs(it->first, it->second);
+}
+
+static void find_all_usb(void)
+{
+	struct dirent *entry;
+	DIR *dir;
+	char filename[4096];
+	
+	dir = opendir("/sys/bus/usb/devices/");
+	if (!dir)
+		return;
+	while (1) {
+		ifstream file;
+
+		entry = readdir(dir);
+
+		if (!entry)
+			break;
+		if (entry->d_name[0] == '.')
+			continue;
+
+		sprintf(filename, "/sys/bus/usb/devices/%s/power/active_duration", entry->d_name);
+		if (access(filename, R_OK)!=0)
+			continue;
+
+		sprintf(filename, "/sys/bus/usb/devices/%s/power/control", entry->d_name);
+
+		save_sysfs(filename);
+
+		usb_devices.push_back(filename);
+	}
+	closedir(dir);
+}
+
+static void suspend_all_usb_devices(void)
+{
+	unsigned int i;
+
+	for (i = 0; i < usb_devices.size(); i++)
+		write_sysfs(usb_devices[i], "auto\n");
+}
 
 
 static void *burn_cpu(void *dummy)
@@ -28,7 +118,7 @@ static void cpu_calibration(int threads)
 	int i;
 	pthread_t thr;
 
-	printf( "Calibrating: CPU usage on %i threads\n", threads);
+	printf("Calibrating: CPU usage on %i threads\n", threads);
 
 	stop_measurement = 0;
 	for (i = 0; i < threads; i++)
@@ -39,17 +129,41 @@ static void cpu_calibration(int threads)
 	sleep(1);
 }
 
+static void usb_calibration(void)
+{
+	unsigned int i;
+
+	printf("Calibrating USB devices\n");
+	for (i = 0; i < usb_devices.size(); i++) {
+		printf(".... device %s \n", usb_devices[i].c_str());
+		suspend_all_usb_devices();
+		write_sysfs(usb_devices[i], "on\n");
+		one_measurement(15);
+		suspend_all_usb_devices();
+		sleep(3);		
+	}
+}
+
 
 
 void calibrate(void)
 {
+	find_all_usb();
+
+	cout << "Starting PowerTOP power estimate calibration \n";
+	suspend_all_usb_devices();
+
 	cpu_calibration(1);
 	cpu_calibration(4);
+	usb_calibration();
 
+	cout << "Finishing PowerTOP power estimate calibration \n";
 
+	restore_all_sysfs();
         learn_parameters(400);
 	printf("Parameters after calibration:\n");
 	dump_parameter_bundle();
 	save_parameters("saved_parameters.powertop");
         save_all_results("saved_results.powertop");
+
 }

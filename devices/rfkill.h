@@ -18,7 +18,7 @@ public:
 
 	virtual double	utilization(void); /* percentage */
 
-	virtual const char * class_name(void) { return "rfkill";};
+	virtual const char * class_name(void) { return "radio";};
 
 	virtual const char * device_name(void);
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);

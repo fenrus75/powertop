@@ -23,7 +23,7 @@ rfkill::rfkill(char *_name, char *path)
 	end_soft = 0;
 	end_hard = 0;
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
-	sprintf(devname, "rfkill:%s", _name);
+	sprintf(devname, "radio:%s", _name);
 	strncpy(name, devname, sizeof(name));
 }
 
@@ -55,7 +55,6 @@ void rfkill::start_measurement(void)
 void rfkill::end_measurement(void)
 {
 	char filename[4096];
-	char powername[4096];
 	ifstream file;
 
 	sprintf(filename, "%s/hard", sysfs_path);
@@ -71,9 +70,7 @@ void rfkill::end_measurement(void)
 	}
 	file.close();
 
-	sprintf(powername, "radio-%s", name);
-
-	report_utilization(powername, utilization());
+	report_utilization(name, utilization());
 }
 
 
@@ -125,7 +122,6 @@ void create_all_rfkills(void)
 		sprintf(filename, "/sys/class/rfkill/%s", entry->d_name);
 		bl = new class rfkill(name, filename);
 		all_devices.push_back(bl);
-		sprintf(filename, "radio-%s", name);
 		register_parameter(name, 1.0);
 	}
 	closedir(dir);
@@ -139,12 +135,10 @@ double rfkill::power_usage(struct result_bundle *result, struct parameter_bundle
 	double power;
 	double factor;
 	double utilization;
-	char powername[4096];
 
 	power = 0;
-	sprintf(powername, "radio-%s", name);
-	factor = get_parameter_value(powername, bundle);
-	utilization = get_result_value(powername, result);
+	factor = get_parameter_value(name, bundle);
+	utilization = get_result_value(name, result);
 
 	power += utilization * factor / 100.0;
 

@@ -14,6 +14,36 @@
 #include "measurement/measurement.h"
 #include "parameters/parameters.h"
 
+void one_measurement(int seconds)
+{
+	create_all_usb_devices();
+	start_power_measurement();
+	devices_start_measurement();
+	start_process_measurement();
+	start_cpu_measurement();
+
+	cout << "measuring \n";
+	sleep(20);
+
+	end_cpu_measurement();
+	end_process_measurement();
+	devices_end_measurement();
+	end_power_measurement();
+
+	process_cpu_data();
+	process_process_data();
+		
+
+	global_joules_consumed();
+	compute_bundle();
+
+	report_devices();
+	store_results();
+	end_process_data();
+	end_cpu_data();
+	learn_parameters(10);
+}
+
 int main(int argc, char **argv)
 {
 	int i;
@@ -31,91 +61,23 @@ int main(int argc, char **argv)
 	register_parameter("base power", 8.4);
 	register_parameter("cpu-wakeups", 1.0);
 	register_parameter("cpu-consumption", 1.0);
-
         learn_parameters();
 	dump_parameter_bundle();
 	save_parameters("saved_parameters.powertop");
 
+	/* first one is short to not let the user wait too long */
+	one_measurement(5);
 
-	for (i = 0; i < 1; i++) {
-		start_power_measurement();
-		devices_start_measurement();
-		start_process_measurement();
-		start_cpu_measurement();
-
-
-		cout << "measuring\n";
-		sleep(4);
-
-
-		end_cpu_measurement();
-		end_process_measurement();
-		devices_end_measurement();
-		end_power_measurement();
-
-		cout << "doing math \n";
-
-		process_cpu_data();
-		process_process_data();
-		store_results();
+	for (i = 0; i < 20; i++) {
+		one_measurement(20);
 	}
 
-        learn_parameters();
-		report_devices();
 
-
-//	cout << "\n\n\n";
-
-//	display_cpu_pstates();
 
 	end_process_data();
 	end_cpu_data();
-
-//	display_cpu_cstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");
-//	display_cpu_pstates("<table>\n", "</table>\n", "<tr><td>","</td><td>", "</td></tr>\n");
-
-	i = 0;
-	while (i++ < 10) {
-		create_all_usb_devices();
-		start_power_measurement();
-		devices_start_measurement();
-		start_process_measurement();
-		start_cpu_measurement();
-
-
-		cout << "measuring " << i << "\n";
-		sleep(20);
-
-
-		end_cpu_measurement();
-		end_process_measurement();
-		devices_end_measurement();
-		end_power_measurement();
-
-		cout << "doing math \n";
-
-		process_cpu_data();
-		process_process_data();
-		
-
-		global_joules_consumed();
-		compute_bundle();
-
-		report_devices();
-		store_results();
-		end_process_data();
-		end_cpu_data();
-		learn_parameters(100);
-	}
-
-	end_process_data();
-	end_cpu_data();
-
-
 
 	save_all_results("saved_results.powertop");
-
-
 	learn_parameters(500);
 	save_parameters("saved_parameters.powertop");
 	printf("Final estimate:\n");

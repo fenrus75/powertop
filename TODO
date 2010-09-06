@@ -1,4 +1,3 @@
-* rescan for USB devices each measurement
 * display device power in power top 20
 * debug why wakeups sometimes go to all 0's
 
@@ -7,3 +6,4 @@
 done
 ----
 * on NHM, cpu P state stats accumulate and don't reset at measurment time
+* rescan for USB devices each measurement

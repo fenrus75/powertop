@@ -42,9 +42,6 @@ extern vector <struct result_bundle *> past_results;
 extern double get_result_value(const char *name, struct result_bundle *bundle = &all_results);
 
 
-extern map<string, class device *> devices;
-
-extern void register_result_device(const char *name, class device *device);
 extern int result_device_exists(const char *name);
 
 extern void report_utilization(const char *name, double value, struct result_bundle *bundle = &all_results);

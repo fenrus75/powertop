@@ -27,8 +27,6 @@ ahci::ahci(char *_name, char *path)
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
 	sprintf(devname, "ahci:%s", _name);
 	strncpy(name, devname, sizeof(name));
-	register_result_device(name, this);
-
 }
 
 void ahci::start_measurement(void)

@@ -24,8 +24,6 @@ backlight::backlight(char *_name, char *path)
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
 	sprintf(devname, "backlight:%s", _name);
 	strncpy(name, devname, sizeof(name));
-	register_result_device(name, this);
-
 }
 
 void backlight::start_measurement(void)

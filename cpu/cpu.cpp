@@ -45,7 +45,7 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 
 	sprintf(packagename, "cpu package %i", cpu);
 	cpudev = new class cpudevice("cpu package", packagename, ret);
-	register_result_device(packagename, cpudev);
+	all_devices.push_back(cpudev);
 	return ret;
 }
 

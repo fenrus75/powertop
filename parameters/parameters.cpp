@@ -10,8 +10,6 @@ struct result_bundle all_results;
 vector <struct result_bundle *> past_results;
 
 
-map<string, class device *> devices;
-
 void register_parameter(const char *name, double default_value)
 {
 	if (all_parameters.parameters[name] <= 0.0001) 
@@ -29,16 +27,14 @@ double get_result_value(const char *name, struct result_bundle *the_bundle)
 }
 
 
-void register_result_device(const char *name, class device *device)
-{
-	devices[name] = device;
-}
-
 int result_device_exists(const char *name)
 {
-	if (devices.find(name) == devices.end())
-		return 0;
-	return 1;	
+	unsigned int i;
+	for (i = 0; i < all_devices.size(); i++) {
+		if (strcmp(all_devices[i]->device_name(), name) == 0)
+			return 1;
+	}
+	return 0;
 }
 
 void report_utilization(const char *name, double value, struct result_bundle *bundle)
@@ -51,15 +47,13 @@ void report_utilization(const char *name, double value, struct result_bundle *bu
 double compute_bundle(struct parameter_bundle *parameters, struct result_bundle *results)
 {
 	double power = 0;
-	map<string, class device *>::iterator it;
+	unsigned int i;
 	
 	power = parameters->parameters["base power"];
 
-	for (it = devices.begin(); it != devices.end(); it++) {
-		class device *device;
-		device = it->second;
+	for (i = 0; i < all_devices.size(); i++) {
 
-		power += device->power_usage(results, parameters);
+		power += all_devices[i]->power_usage(results, parameters);
 	}
 
 	parameters->actual_power = results->power;
@@ -72,15 +66,13 @@ double compute_bundle(struct parameter_bundle *parameters, struct result_bundle 
 double bundle_power(struct parameter_bundle *parameters, struct result_bundle *results)
 {
 	double power = 0;
-	map<string, class device *>::iterator it;
+	unsigned int i;
 	
 	power = parameters->parameters["base power"];
 
-	for (it = devices.begin(); it != devices.end(); it++) {
-		class device *device;
-		device = it->second;
+	for (i = 0; i < all_devices.size(); i++) {
 
-		power += device->power_usage(results, parameters);
+		power += all_devices[i]->power_usage(results, parameters);
 	}
 
 	return power;

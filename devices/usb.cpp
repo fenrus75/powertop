@@ -21,7 +21,6 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 	active_after = 0;
 	connected_before = 0;
 	connected_after = 0;
-	register_result_device(name, this);
 }
 
 

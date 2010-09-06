@@ -9,6 +9,8 @@ using namespace std;
 #include "ahci.h"
 #include "alsa.h"
 
+#include "../parameters/parameters.h"
+
 void device::start_measurement(void)
 {
 }
@@ -47,10 +49,12 @@ void report_devices(void)
 
 	printf("\n\nDevice statistics\n");
 	for (i = 0; i < all_devices.size(); i++) {
-		printf("%5.1f%%   %s (%s) \n", 
+		printf("%5.1f%% %6.2fW  %s (%s) \n", 
 			all_devices[i]->utilization(),
+			all_devices[i]->power_usage(&all_results, &all_parameters),
 			all_devices[i]->class_name(),
-			all_devices[i]->device_name());
+			all_devices[i]->device_name()
+			);
 	}
 }
 

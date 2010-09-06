@@ -62,7 +62,10 @@ void learn_parameters(int iterations)
 	if (delta > 0.2)
 		delta = 0.2;
 
-//	printf("Delta starts at %5.3f\n", delta);
+	if (1.0 * best_score / past_results.size() < 4 && delta > 0.05)
+		delta = 0.05;
+
+	printf("Delta starts at %5.3f\n", delta);
 
 	while (retry--) {
 		int changed  = 0;

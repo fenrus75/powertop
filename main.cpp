@@ -96,6 +96,7 @@ int main(int argc, char **argv)
 		global_joules_consumed();
 		compute_bundle();
 
+		dump_result_bundle();
 		store_results();
 		end_process_data();
 		end_cpu_data();

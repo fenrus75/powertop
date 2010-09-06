@@ -114,6 +114,11 @@ void create_all_alsa(void)
 			break;
 		if (entry->d_name[0] == '.')
 			continue;
+		sprintf(filename, "/sys/class/sound/card0/%s/power_on_acct", entry->d_name);
+
+		if (access(filename, R_OK) != 0)
+			continue;
+
 		sprintf(filename, "/sys/class/sound/card0/%s", entry->d_name);
 
 		bl = new class alsa(entry->d_name, filename);

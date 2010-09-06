@@ -7,6 +7,7 @@
 
 #include "work.h"
 #include "../lib.h"
+#include "process.h"
 
 using namespace std;
 
@@ -67,8 +68,9 @@ const char * work::description(void)
 	if (child_runtime > accumulated_runtime)
 		child_runtime = 0;
 
-	sprintf(desc, "Work  %24s      time  %5.2fms    wakeups %3i  (total: %i)",
-			handler,  (accumulated_runtime - child_runtime) / 1000000.0, wake_ups, raw_count);
+	sprintf(desc, "Work  %24s      time  %5.2fms    wakeups %4.1f  (total: %i)",
+			handler,  (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time, 
+			wake_ups / measurement_time, raw_count);
 	return desc;
 }
 

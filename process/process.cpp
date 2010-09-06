@@ -61,8 +61,8 @@ const char * process::description(void)
 
 	if (child_runtime > accumulated_runtime)
 		child_runtime = 0;
-	sprintf(desc, "Process %22s      time  %5.2fms    wakeups %3i  (child %5.1fms)",
-			comm, (accumulated_runtime - child_runtime) / 1000000.0, wake_ups,
+	sprintf(desc, "Process %22s      time  %5.2fms    wakeups %4.1f  (child %5.1fms)",
+			comm, (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time, wake_ups / measurement_time,
 				child_runtime / 1000000.0);
 	return desc;
 }

@@ -10,6 +10,7 @@
 
 #include "devices/device.h"
 #include "devices/backlight.h"
+#include "devices/usb.h"
 #include "measurement/measurement.h"
 #include "parameters/parameters.h"
 
@@ -72,6 +73,7 @@ int main(int argc, char **argv)
 
 	i = 0;
 	while (i++ < 10) {
+		create_all_usb_devices();
 		start_power_measurement();
 		devices_start_measurement();
 		start_process_measurement();
@@ -96,7 +98,7 @@ int main(int argc, char **argv)
 		global_joules_consumed();
 		compute_bundle();
 
-		dump_result_bundle();
+		report_devices();
 		store_results();
 		end_process_data();
 		end_cpu_data();

@@ -21,6 +21,7 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 	active_after = 0;
 	connected_before = 0;
 	connected_after = 0;
+	register_result_device(name, this);
 }
 
 
@@ -149,6 +150,10 @@ void create_all_usb_devices(void)
 		sprintf(devid_name, "usb-device-%s-%s", vendorid, devid);
 
 		sprintf(device_name, "usb-device-%s-%s-%s", entry->d_name, vendorid, devid);
+
+		if (result_device_exists(device_name))
+			continue;
+
 		usb = new class usbdevice(device_name, filename, devid_name);
 		all_devices.push_back(usb);
 

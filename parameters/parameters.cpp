@@ -34,6 +34,13 @@ void register_result_device(const char *name, class device *device)
 	devices[name] = device;
 }
 
+int result_device_exists(const char *name)
+{
+	if (devices.find(name) == devices.end())
+		return 0;
+	return 1;	
+}
+
 void report_utilization(const char *name, double value, struct result_bundle *bundle)
 {
 	bundle->utilization[name] = value;

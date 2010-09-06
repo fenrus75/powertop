@@ -33,6 +33,8 @@ static int random_disturb(int retry_left)
 	return 0;
 }
 
+static unsigned int previous_measurements;
+
 /* leaks like a sieve */
 void learn_parameters(int iterations)
 {
@@ -41,14 +43,17 @@ void learn_parameters(int iterations)
         map<string, double>::iterator it;
 	int retry = iterations;
 
+	if (past_results.size() == previous_measurements)
+		return;
+
+	previous_measurements = past_results.size();
+
 	double delta = 0.50;
 
 	best_so_far = &all_parameters;
 
 	calculate_params(best_so_far);
 	best_score = best_so_far->score;
-	dump_parameter_bundle(best_so_far);
-
 
 	delta = 0.001 / pow(0.8, iterations / 2.0);
 	if (iterations < 25)
@@ -57,7 +62,7 @@ void learn_parameters(int iterations)
 	if (delta > 0.2)
 		delta = 0.2;
 
-	printf("Delta starts at %5.3f\n", delta);
+//	printf("Delta starts at %5.3f\n", delta);
 
 	while (retry--) {
 		int changed  = 0;
@@ -129,5 +134,5 @@ void learn_parameters(int iterations)
 	calculate_params(best_so_far);
 	printf("Final score %5.1f (%i points)\n", best_so_far->score / past_results.size(), past_results.size());
 //	dump_parameter_bundle(best_so_far);
-	dump_past_results();
+//	dump_past_results();
 }

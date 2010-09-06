@@ -1,6 +1,7 @@
 #ifndef __INCLUDE_GUARD_POWER_CONSUMER_
 #define __INCLUDE_GUARD_POWER_CONSUMER_
 
+#include <stdint.h>
 #include <vector>
 #include <algorithm>
 
@@ -18,7 +19,7 @@ public:
 	int		wake_ups;
 	class power_consumer *waker;
 
-	virtual double Witts(void) { return 0.0;};
+	virtual double Witts(void);
 	virtual const char * description(void) { return ""; };
 
 	virtual const char * name(void) { return "abstract"; };

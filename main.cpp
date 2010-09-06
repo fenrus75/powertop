@@ -30,6 +30,7 @@ int main(int argc, char **argv)
 	register_parameter("cpu-wakeups", 1.0);
 	register_parameter("cpu-consumption", 1.0);
 
+        learn_parameters();
 
 
 	for (i = 0; i < 1; i++) {
@@ -58,9 +59,9 @@ int main(int argc, char **argv)
         learn_parameters();
 
 
-	cout << "\n\n\n";
+//	cout << "\n\n\n";
 
-	display_cpu_pstates();
+//	display_cpu_pstates();
 
 	end_process_data();
 	end_cpu_data();
@@ -91,7 +92,6 @@ int main(int argc, char **argv)
 		process_process_data();
 		
 
-		report_devices();
 		global_joules_consumed();
 		compute_bundle();
 

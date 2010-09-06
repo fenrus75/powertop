@@ -30,7 +30,6 @@ public:
 
 	virtual void account_disk_dirty(void);
 
-	virtual double Witts(void);
 	virtual const char * description(void);
 	virtual const char * name(void) { return "process"; };
 
@@ -38,6 +37,7 @@ public:
 
 extern vector <class process *> all_processes;
 
+extern double measurement_time;
 
 
 extern void start_process_measurement(void);

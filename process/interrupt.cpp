@@ -51,18 +51,6 @@ uint64_t interrupt::end_interrupt(uint64_t time)
 	return delta;
 }
 
-double interrupt::Witts(void)
-{
-	double cost;
-
-	if (child_runtime > accumulated_runtime)
-		child_runtime = 0;
-
-	cost = 0.1 * wake_ups + ( (accumulated_runtime - child_runtime) / 1000000.0);
-
-	return cost;
-}
-
 const char * interrupt::description(void)
 {
 	if (child_runtime > accumulated_runtime)

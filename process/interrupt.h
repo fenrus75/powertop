@@ -19,7 +19,6 @@ public:
 	virtual void start_interrupt(uint64_t time);
 	virtual uint64_t end_interrupt(uint64_t time);
 
-	virtual double Witts(void);
 	virtual const char * description(void);
 
 	virtual const char * name(void) { return "interrupt"; };

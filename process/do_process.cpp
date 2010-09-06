@@ -34,6 +34,8 @@ vector<class power_consumer *> cpu_blame;
 
 static uint64_t first_stamp, last_stamp;
 
+double measurement_time;
+
 static void push_consumer(unsigned int cpu, class power_consumer *consumer)
 {
 	if (cpu_stack.size() <= cpu)
@@ -153,8 +155,10 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 	if (time < first_stamp)
 		first_stamp = time;
 
-	if (time > last_stamp)
+	if (time > last_stamp) {
 		last_stamp = time;
+		measurement_time = (0.0001 + last_stamp - first_stamp) / 1000000000 ;
+	}
 
 	if (strcmp(event_name, "sched:sched_switch") == 0) {
 		struct sched_switch *sw;
@@ -190,9 +194,6 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			pop_consumer(cpu);
 
 		push_consumer(cpu, new_proc);
-
-//		printf("Switch from %s to %s\n", sw->prev_comm, sw->next_comm);
-
 
 		/* start new process */
 		new_proc->schedule_thread(time, sw->next_pid);
@@ -356,7 +357,6 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 
 		timer = (class timer *) current_consumer(cpu);
 		if (!timer || strcmp(timer->name(), "timer")) {
-			printf("not a timer\n");
 			return;
 		}
 		pop_consumer(cpu);
@@ -384,7 +384,6 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 
 		work = (class work *) current_consumer(cpu);
 		if (!work || strcmp(work->name(), "work")) {
-			printf("not a work struct\n");
 			return;
 		}
 		pop_consumer(cpu);
@@ -478,8 +477,8 @@ void process_process_data(void)
 	all_work_to_all_power();
 
 	sort(all_power.begin(), all_power.end(), power_cpu_sort);
-	for (i = 0; i < all_power.size() ; i++)
-		printf("%s\n", all_power[i]->description());
+	for (i = 0; i < all_power.size() && i < 20; i++)
+		printf("%5.1fmW %s\n", all_power[i]->Witts()*1000, all_power[i]->description());
 
 }
 
@@ -490,10 +489,7 @@ int total_wakeups(void)
 	for (i = 0; i < all_power.size() ; i++)
 		total += all_power[i]->wake_ups;
 
-	printf(" %5.1f wakeups \n", total);
-	printf(" %5.1f seconds \n",  (0.0001 + last_stamp - first_stamp) / 1000000000 );
-
-	total = total / ((0.0001 + last_stamp - first_stamp) / 1000000000);
+	total = total / measurement_time;
 
 
 	return total;

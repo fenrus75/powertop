@@ -16,7 +16,6 @@ public:
 	void fire(uint64_t time, uint64_t timer_struct);
 	uint64_t done(uint64_t time, uint64_t timer_struct);
 
-	virtual double Witts(void);
 	virtual const char * description(void);
 	virtual const char * name(void) { return "timer"; };
 

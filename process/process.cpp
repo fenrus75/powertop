@@ -56,19 +56,6 @@ process::process(const char *_comm, int _pid)
 		is_idle = 1;
 }
 
-double process::Witts(void)
-{
-	double cost;
-	if (child_runtime > accumulated_runtime)
-		child_runtime = 0;
-
-	cost = 0.1 * wake_ups + ((accumulated_runtime - child_runtime) / 1000000.0);
-
-	return cost;
-}
-
-
-
 const char * process::description(void)
 {
 

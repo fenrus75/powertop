@@ -25,6 +25,7 @@ rfkill::rfkill(char *_name, char *path)
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
 	sprintf(devname, "radio:%s", _name);
 	strncpy(name, devname, sizeof(name));
+	register_parameter(devname, 1.0);
 }
 
 void rfkill::start_measurement(void)
@@ -122,7 +123,6 @@ void create_all_rfkills(void)
 		sprintf(filename, "/sys/class/rfkill/%s", entry->d_name);
 		bl = new class rfkill(name, filename);
 		all_devices.push_back(bl);
-		register_parameter(name, 1.0);
 	}
 	closedir(dir);
 

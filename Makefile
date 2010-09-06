@@ -10,6 +10,9 @@ OBJS += process/process.o process/do_process.o process/interrupt.o process/timer
 OBJS += devices/device.o devices/backlight.o devices/usb.o devices/ahci.o devices/alsa.o devices/rfkill.o
 OBJS += measurement/measurement.o measurement/acpi.o
 OBJS += parameters/parameters.o parameters/learn.o parameters/persistent.o
+OBJS += calibrate/calibrate.o
+
+LIBS += -lpthread
 
 HEADERS := cpu/cpu.h
 
@@ -18,4 +21,4 @@ clean:
 	rm -f *.o *~ powertop DEADJOE core.* */*.o */*~
 	
 powertop: $(OBJS) $(HEADERS)
-	g++ $(OBJS) -o powertop
+	g++ $(OBJS) $(LIBS) -o powertop

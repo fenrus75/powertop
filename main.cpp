@@ -9,10 +9,10 @@
 #include "lib.h"
 
 #include "devices/device.h"
-#include "devices/backlight.h"
 #include "devices/usb.h"
 #include "measurement/measurement.h"
 #include "parameters/parameters.h"
+#include "calibrate/calibrate.h"
 
 void one_measurement(int seconds)
 {
@@ -22,7 +22,7 @@ void one_measurement(int seconds)
 	start_process_measurement();
 	start_cpu_measurement();
 
-	cout << "measuring \n";
+	cout << "measuring for " << seconds << " seconds\n";
 	sleep(20);
 
 	end_cpu_measurement();
@@ -61,9 +61,14 @@ int main(int argc, char **argv)
 	register_parameter("base power", 8.4);
 	register_parameter("cpu-wakeups", 1.0);
 	register_parameter("cpu-consumption", 1.0);
-        learn_parameters();
+        learn_parameters(40);
 	dump_parameter_bundle();
 	save_parameters("saved_parameters.powertop");
+
+	if (argc > 1) {
+		if (strcmp(argv[1], "--calibrate") == 0)
+			calibrate();
+	}
 
 	/* first one is short to not let the user wait too long */
 	one_measurement(5);

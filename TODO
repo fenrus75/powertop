@@ -1,7 +1,7 @@
-* disk calibration
 * display device power in power top 20
 * debug why wakeups sometimes go to all 0's
-
+* audio calibration? Need appropriate sample
+* fix memory leaks
 
 
 done
@@ -11,3 +11,4 @@ done
 * brightness calibration
 * rfkill calibration
 * wakeup calibration
+* disk calibration

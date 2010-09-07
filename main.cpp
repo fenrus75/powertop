@@ -32,6 +32,7 @@ void one_measurement(int seconds)
 
 	process_cpu_data();
 	process_process_data();
+	end_process_data();
 		
 
 	global_joules_consumed();
@@ -39,7 +40,6 @@ void one_measurement(int seconds)
 
 	report_devices();
 	store_results();
-	end_process_data();
 	end_cpu_data();
 }
 

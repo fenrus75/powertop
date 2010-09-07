@@ -1,3 +1,5 @@
+* brightness calibration
+* rfkill calibration
 * display device power in power top 20
 * debug why wakeups sometimes go to all 0's
 

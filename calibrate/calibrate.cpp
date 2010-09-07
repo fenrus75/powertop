@@ -21,6 +21,7 @@ using namespace std;
 
 
 static vector<string> usb_devices;
+static vector<string> rfkill_devices;
 
 static map<string, string> saved_sysfs;
 
@@ -102,6 +103,45 @@ static void suspend_all_usb_devices(void)
 }
 
 
+static void find_all_rfkill(void)
+{
+	struct dirent *entry;
+	DIR *dir;
+	char filename[4096];
+	
+	dir = opendir("/sys/class/rfkill/");
+	if (!dir)
+		return;
+	while (1) {
+		ifstream file;
+
+		entry = readdir(dir);
+
+		if (!entry)
+			break;
+		if (entry->d_name[0] == '.')
+			continue;
+
+		sprintf(filename, "/sys/class/rfkill/%s/soft", entry->d_name);
+		if (access(filename, R_OK)!=0)
+			continue;
+
+		save_sysfs(filename);
+
+		rfkill_devices.push_back(filename);
+	}
+	closedir(dir);
+}
+
+static void rfkill_all_radios(void)
+{
+	unsigned int i;
+
+	for (i = 0; i < rfkill_devices.size(); i++)
+		write_sysfs(rfkill_devices[i], "1\n");
+}
+
+
 static void *burn_cpu(void *dummy)
 {
 	volatile double d = 1.1;
@@ -144,18 +184,36 @@ static void usb_calibration(void)
 	}
 }
 
+static void rfkill_calibration(void)
+{
+	unsigned int i;
+
+	printf("Calibrating radio devices\n");
+	for (i = 0; i < rfkill_devices.size(); i++) {
+		printf(".... device %s \n", rfkill_devices[i].c_str());
+		rfkill_all_radios();
+		write_sysfs(rfkill_devices[i], "0\n");
+		one_measurement(15);
+		rfkill_all_radios();
+		sleep(3);		
+	}
+}
+
 
 
 void calibrate(void)
 {
 	find_all_usb();
+	find_all_rfkill();
 
 	cout << "Starting PowerTOP power estimate calibration \n";
 	suspend_all_usb_devices();
+	rfkill_all_radios();
 
 	cpu_calibration(1);
 	cpu_calibration(4);
 	usb_calibration();
+	rfkill_calibration();
 
 	cout << "Finishing PowerTOP power estimate calibration \n";
 

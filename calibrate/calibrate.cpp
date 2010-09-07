@@ -22,6 +22,8 @@ using namespace std;
 
 static vector<string> usb_devices;
 static vector<string> rfkill_devices;
+static vector<string> backlight_devices;
+static int blmax;
 
 static map<string, string> saved_sysfs;
 
@@ -52,6 +54,19 @@ static void write_sysfs(string filename, string value)
 		return;
 	file << value;
 	file.close();
+}
+
+static int read_sysfs(string filename)
+{
+	ifstream file;
+	int i;
+
+	file.open(filename.c_str(), ios::in);
+	if (!file)
+		return 0;
+	file >> i;
+	file.close();
+	return i;
 }
 
 static void restore_all_sysfs(void)
@@ -141,6 +156,47 @@ static void rfkill_all_radios(void)
 		write_sysfs(rfkill_devices[i], "1\n");
 }
 
+static void find_backlight(void)
+{
+	struct dirent *entry;
+	DIR *dir;
+	char filename[4096];
+	
+	dir = opendir("/sys/class/backlight/");
+	if (!dir)
+		return;
+	while (1) {
+		ifstream file;
+
+		entry = readdir(dir);
+
+		if (!entry)
+			break;
+		if (entry->d_name[0] == '.')
+			continue;
+
+		sprintf(filename, "/sys/class/backlight/%s/brightness", entry->d_name);
+		if (access(filename, R_OK)!=0)
+			continue;
+
+		save_sysfs(filename);
+
+		backlight_devices.push_back(filename);
+
+		sprintf(filename, "/sys/class/backlight/%s/max_brightness", entry->d_name);
+		blmax = read_sysfs(filename);
+	}
+	closedir(dir);
+}
+
+static void lower_backlight(void)
+{
+	unsigned int i;
+
+	for (i = 0; i < backlight_devices.size(); i++)
+		write_sysfs(backlight_devices[i], "0\n");
+}
+
 
 static void *burn_cpu(void *dummy)
 {
@@ -199,17 +255,42 @@ static void rfkill_calibration(void)
 	}
 }
 
+static void backlight_calibration(void)
+{
+	unsigned int i;
+
+	printf("Calibrating backlight\n");
+	for (i = 0; i < backlight_devices.size(); i++) {
+		char str[4096];
+		printf(".... device %s \n", backlight_devices[i].c_str());
+		lower_backlight();
+		one_measurement(15);
+		sprintf(str, "%i\n", blmax / 2);
+		write_sysfs(backlight_devices[i], str);
+		one_measurement(15);
+		sprintf(str, "%i\n", blmax);
+		write_sysfs(backlight_devices[i], str);
+		one_measurement(15);
+		lower_backlight();
+		sleep(1);		
+	}
+}
+
 
 
 void calibrate(void)
 {
 	find_all_usb();
 	find_all_rfkill();
+	find_backlight();
 
 	cout << "Starting PowerTOP power estimate calibration \n";
 	suspend_all_usb_devices();
 	rfkill_all_radios();
+	lower_backlight();
+	
 
+	backlight_calibration();
 	cpu_calibration(1);
 	cpu_calibration(4);
 	usb_calibration();

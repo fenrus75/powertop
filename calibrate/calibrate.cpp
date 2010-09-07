@@ -227,6 +227,29 @@ static void *burn_cpu_wakeups(void *dummy)
 	return NULL;
 }
 
+static void *burn_disk(void *dummy)
+{
+	int fd;
+	char buffer[64*1024];
+	char filename[256];
+
+	strcpy(filename ,"/tmp/powertop.XXXXXX");
+	fd = mkstemp(filename);
+
+	if (fd < 0) {
+		printf("Cannot create temp file\n");
+		return NULL;
+	}
+
+	while (!stop_measurement) {
+		lseek(fd, 0, SEEK_SET);
+		write(fd, buffer, 64*1024);
+		fdatasync(fd);
+	}
+	close(fd);
+	return NULL;
+}
+
 
 static void cpu_calibration(int threads)
 {	
@@ -323,6 +346,20 @@ static void backlight_calibration(void)
 }
 
 
+static void disk_calibration(void)
+{	
+	pthread_t thr;
+
+	printf("Calibrating: disk usage \n");
+
+	stop_measurement = 0;
+	pthread_create(&thr, NULL, burn_disk, NULL);
+
+	one_measurement(20);
+	stop_measurement = 1;
+	sleep(1);
+}
+
 
 void calibrate(void)
 {
@@ -344,10 +381,13 @@ void calibrate(void)
 	wakeup_calibration(1000000);
 	usb_calibration();
 	rfkill_calibration();
+	disk_calibration();
 
 	cout << "Finishing PowerTOP power estimate calibration \n";
 
 	restore_all_sysfs();
+        learn_parameters(60);
+        learn_parameters(100);
         learn_parameters(400);
 	printf("Parameters after calibration:\n");
 	dump_parameter_bundle();

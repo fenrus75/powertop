@@ -155,6 +155,13 @@ static void rfkill_all_radios(void)
 	for (i = 0; i < rfkill_devices.size(); i++)
 		write_sysfs(rfkill_devices[i], "1\n");
 }
+static void unrfkill_all_radios(void)
+{
+	unsigned int i;
+
+	for (i = 0; i < rfkill_devices.size(); i++)
+		write_sysfs(rfkill_devices[i], "0\n");
+}
 
 static void find_backlight(void)
 {
@@ -208,6 +215,18 @@ static void *burn_cpu(void *dummy)
 	return NULL;
 }
 
+static void *burn_cpu_wakeups(void *dummy)
+{
+	struct timespec tm;
+
+	while (!stop_measurement) {
+		tm.tv_sec = 0;
+		tm.tv_nsec = (unsigned long)dummy;
+		nanosleep(&tm, NULL);
+	}
+	return NULL;
+}
+
 
 static void cpu_calibration(int threads)
 {	
@@ -221,6 +240,21 @@ static void cpu_calibration(int threads)
 		pthread_create(&thr, NULL, burn_cpu, NULL);
 
 	one_measurement(30);
+	stop_measurement = 1;
+	sleep(1);
+}
+
+static void wakeup_calibration(unsigned long interval)
+{	
+	pthread_t thr;
+
+	printf("Calibrating: CPU wakeup power consumption\n");
+
+	stop_measurement = 0;
+	
+	pthread_create(&thr, NULL, burn_cpu_wakeups, (void *)interval);
+
+	one_measurement(20);
 	stop_measurement = 1;
 	sleep(1);
 }
@@ -253,6 +287,15 @@ static void rfkill_calibration(void)
 		rfkill_all_radios();
 		sleep(3);		
 	}
+	for (i = 0; i < rfkill_devices.size(); i++) {
+		printf(".... device %s \n", rfkill_devices[i].c_str());
+		unrfkill_all_radios();
+		write_sysfs(rfkill_devices[i], "1\n");
+		one_measurement(15);
+		unrfkill_all_radios();
+		sleep(3);		
+	}
+	rfkill_all_radios();
 }
 
 static void backlight_calibration(void)
@@ -274,6 +317,9 @@ static void backlight_calibration(void)
 		lower_backlight();
 		sleep(1);		
 	}
+	system("DISPLAY=:0 /usr/bin/xset dpms force off");	
+	one_measurement(15);
+	system("DISPLAY=:0 /usr/bin/xset dpms force on");	
 }
 
 
@@ -293,6 +339,9 @@ void calibrate(void)
 	backlight_calibration();
 	cpu_calibration(1);
 	cpu_calibration(4);
+	wakeup_calibration(10000);
+	wakeup_calibration(100000);
+	wakeup_calibration(1000000);
 	usb_calibration();
 	rfkill_calibration();
 

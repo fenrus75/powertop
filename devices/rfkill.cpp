@@ -25,7 +25,7 @@ rfkill::rfkill(char *_name, char *path)
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
 	sprintf(devname, "radio:%s", _name);
 	strncpy(name, devname, sizeof(name));
-	register_parameter(devname, 1.0);
+	register_parameter(devname);
 }
 
 void rfkill::start_measurement(void)

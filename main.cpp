@@ -57,10 +57,10 @@ int main(int argc, char **argv)
 	create_all_devices();
 	detect_power_meters();
 
-	register_parameter("base power", 8.4);
-	register_parameter("cpu-wakeups", 1.0);
-	register_parameter("cpu-consumption", 1.0);
-        learn_parameters(40);
+	register_parameter("base power", 100);
+	register_parameter("cpu-wakeups");
+	register_parameter("cpu-consumption");
+        learn_parameters();
 	dump_parameter_bundle();
 	save_parameters("saved_parameters.powertop");
 

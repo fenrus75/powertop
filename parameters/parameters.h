@@ -26,7 +26,7 @@ struct parameter_bundle
 extern struct parameter_bundle all_parameters;
 
 
-extern void register_parameter(const char *name, double default_value = 0.0);
+extern void register_parameter(const char *name, double default_value = 0.00);
 extern double get_parameter_value(const char *name, struct parameter_bundle *bundle = &all_parameters);
 
 
@@ -57,7 +57,7 @@ extern struct result_bundle * clone_results(struct result_bundle *bundle);
 extern struct parameter_bundle * clone_parameters(struct parameter_bundle *bundle);
 
 extern void store_results(void);
-extern void learn_parameters(int iterations = 100);
+extern void learn_parameters(int iterations = 100, const char *pattern = NULL, int last_only = 0);
 extern void save_all_results(const char *filename);
 extern void load_results(const char *filename);
 extern void save_parameters(const char *filename);

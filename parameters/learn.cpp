@@ -6,13 +6,20 @@
 #include <math.h>
 
 
-double calculate_params(struct parameter_bundle *params)
+double calculate_params(struct parameter_bundle *params, int last_only)
 {
 	unsigned int i;
+	int from;
 
 	params->score = 0;
 
-	for (i = 0; i < past_results.size(); i++) 
+	from = 0;
+	if (last_only) {
+		compute_bundle(params, past_results[0]);
+		from = past_results.size() - last_only;
+	}
+
+	for (i = from; i < past_results.size(); i++) 
 		compute_bundle(params, past_results[i]);
 
 	return params->score;
@@ -36,7 +43,7 @@ static int random_disturb(int retry_left)
 static unsigned int previous_measurements;
 
 /* leaks like a sieve */
-void learn_parameters(int iterations)
+void learn_parameters(int iterations, const char *pattern, int last_only)
 {
 	struct parameter_bundle *best_so_far;
 	double best_score = 10000000000000000.0;
@@ -52,7 +59,7 @@ void learn_parameters(int iterations)
 
 	best_so_far = &all_parameters;
 
-	calculate_params(best_so_far);
+	calculate_params(best_so_far, 0);
 	best_score = best_so_far->score;
 
 	delta = 0.001 / pow(0.8, iterations / 2.0);
@@ -67,15 +74,28 @@ void learn_parameters(int iterations)
 
 	printf("Delta starts at %5.3f\n", delta);
 
+	if (best_so_far->parameters["base power"] > min_power)
+		best_so_far->parameters["base power"] = min_power;
+
 	while (retry--) {
 		int changed  = 0;
+
+		
 	        for (it = best_so_far->parameters.begin(); it != best_so_far->parameters.end(); it++) {
 			double value, orgvalue;
 
+			if (pattern) {
+				if (strstr(it->first.c_str(), pattern) == NULL && it->first != "base power")
+					continue;
+				printf("matching %s to %s \n", it->first.c_str(), pattern);
+			}
+
 			orgvalue = value = best_so_far->parameters[it->first];
-			if (value == 0.0)
+			if (value <= 0.001) {
 				value = 0.1;
-			else
+				if (pattern)
+					value = 1.0;
+			} else
 				value = value * (1 + delta);
 
 			if (it->first == "base power" && value > min_power)
@@ -90,7 +110,7 @@ void learn_parameters(int iterations)
 //			printf("Trying %s %5.1f -> %5.1f\n", it->first.c_str(), best_so_far->parameters[it->first], value);
 			best_so_far->parameters[it->first] = value;
 
-			calculate_params(best_so_far);
+			calculate_params(best_so_far, last_only);
 			if (best_so_far->score < best_score || random_disturb(retry)) {
 				best_score = best_so_far->score;
 				orgvalue = value;
@@ -109,7 +129,7 @@ void learn_parameters(int iterations)
 //			printf("Trying %s %5.1f -> %5.1f\n", it->first.c_str(), orgvalue, value);
 			best_so_far->parameters[it->first] = value;
 
-			calculate_params(best_so_far);
+			calculate_params(best_so_far, last_only);
 			if (best_so_far->score < best_score || random_disturb(retry)) {
 				best_score = best_so_far->score;
 //				printf("Better score %5.1f\n", best_so_far->score);
@@ -134,8 +154,9 @@ void learn_parameters(int iterations)
 
 	
 
-	calculate_params(best_so_far);
+	calculate_params(best_so_far, 0);
 	printf("Final score %5.1f (%i points)\n", best_so_far->score / past_results.size(), past_results.size());
-//	dump_parameter_bundle(best_so_far);
+	if (pattern)
+		dump_parameter_bundle(best_so_far);
 //	dump_past_results();
 }

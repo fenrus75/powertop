@@ -145,8 +145,8 @@ void create_all_backlights(void)
 		sprintf(filename, "/sys/class/backlight/%s", entry->d_name);
 		bl = new class backlight(entry->d_name, filename);
 		all_devices.push_back(bl);
-		register_parameter("backlight", 2.8);
-		register_parameter("backlight-power", 2.8);
+		register_parameter("backlight");
+		register_parameter("backlight-power");
 	}
 	closedir(dir);
 

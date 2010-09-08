@@ -139,8 +139,8 @@ void create_all_ahcis(void)
 
 		bl = new class ahci(entry->d_name, filename);
 		all_devices.push_back(bl);
-		register_parameter("ahci-link-power-active", 1.0);
-		register_parameter("ahci-link-power-partial", 0.5);
+		register_parameter("ahci-link-power-active");
+		register_parameter("ahci-link-power-partial");
 	}
 	closedir(dir);
 

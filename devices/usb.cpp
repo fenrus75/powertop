@@ -123,7 +123,7 @@ void create_all_usb_devices(void)
 		char vendorid[64], devid[64];
 		char devid_name[4096];
 		entry = readdir(dir);
-		double score;
+
 		if (!entry)
 			break;
 		if (entry->d_name[0] == '.')
@@ -156,10 +156,7 @@ void create_all_usb_devices(void)
 		usb = new class usbdevice(device_name, filename, devid_name);
 		all_devices.push_back(usb);
 
-		score = 1.0;
-		if (strcmp(vendorid, "1d6b") == 0)
-			score = 0.0;
-		register_parameter(devid_name, score);
+		register_parameter(devid_name);
 	}
 	closedir(dir);
 }

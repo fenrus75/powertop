@@ -89,10 +89,14 @@ void ahci::end_measurement(void)
 	}
 
 	p = (end_active - start_active) / (0.001 + end_active + end_partial + end_slumber - start_active - start_partial - start_slumber) * 100.0;
+	if (p < 0)
+		 p = 0;
 	sprintf(powername, "%s-active", name);
 	report_utilization(powername, p);
 
 	p = (end_partial - start_partial) / (0.001 + end_active + end_partial + end_slumber - start_active - start_partial - start_slumber) * 100.0;
+	if (p < 0)
+		 p = 0;
 	sprintf(powername, "%s-partial", name);
 	report_utilization(powername, p);
 }
@@ -103,6 +107,9 @@ double ahci::utilization(void)
 	double p;
 
 	p = (end_partial - start_partial + end_active - start_active) / (0.001 + end_active + end_partial + end_slumber - start_active - start_partial - start_slumber) * 100.0;
+
+	if (p < 0)
+		p = 0;
 
 	return p;
 }

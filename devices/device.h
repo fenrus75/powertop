@@ -20,6 +20,8 @@ public:
 	virtual const char * device_name(void) { return "abstract device";};
 
 	virtual double power_usage(struct result_bundle *results, struct parameter_bundle *bundle) { return 0.0; };
+
+	virtual bool show_in_list(void) {return true;};
 };
 
 using namespace std;

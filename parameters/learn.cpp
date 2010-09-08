@@ -35,7 +35,7 @@ static int random_disturb(int retry_left)
 	if (retry_left < 10)
 		return 0;
 	
-	if ( (rand() % 100) == 7)
+	if ( (rand() % 500) == 7)
 		return 1;
 	return 0;
 }
@@ -77,7 +77,10 @@ void learn_parameters(int iterations, const char *pattern, int last_only)
 	if (best_so_far->parameters["base power"] > min_power)
 		best_so_far->parameters["base power"] = min_power;
 
-	best_so_far->parameters["base power"] = best_so_far->parameters["base power"] * 0.99;
+	/* We want to give up a little of base power, to give other parameters room to change;
+	   base power is the end post for everything after all 
+         */
+	best_so_far->parameters["base power"] = best_so_far->parameters["base power"] * 0.95;
 
 	while (retry--) {
 		int changed  = 0;
@@ -96,7 +99,6 @@ void learn_parameters(int iterations, const char *pattern, int last_only)
 			if (pattern) {
 				if (strstr(it->first.c_str(), pattern) == NULL && it->first != "base power")
 					continue;
-				printf("matching %s to %s \n", it->first.c_str(), pattern);
 			}
 
 			orgvalue = value = best_so_far->parameters[it->first];
@@ -154,9 +156,9 @@ void learn_parameters(int iterations, const char *pattern, int last_only)
 				mult = 0.5;
 			delta = delta * mult;
 		} else {
-			printf("Best parameter is %s \n", bestparam.c_str());
-			printf("Changing score from %4.2f to %4.2f\n", best_so_far->score, best_score); 
-			printf("Changing value from %4.2f to %4.2f\n", best_so_far->parameters[bestparam], newvalue);
+//			printf("Best parameter is %s \n", bestparam.c_str());
+//			printf("Changing score from %4.3f to %4.3f\n", best_so_far->score, best_score); 
+//			printf("Changing value from %4.3f to %4.3f\n", best_so_far->parameters[bestparam], newvalue);
 			best_so_far->parameters[bestparam] = newvalue;
 		}
 
@@ -168,7 +170,6 @@ void learn_parameters(int iterations, const char *pattern, int last_only)
 
 	calculate_params(best_so_far, 0);
 	printf("Final score %4.2f (%i points)\n", best_so_far->score / past_results.size(), past_results.size());
-	if (pattern)
-		dump_parameter_bundle(best_so_far);
+//	dump_parameter_bundle(best_so_far);
 //	dump_past_results();
 }

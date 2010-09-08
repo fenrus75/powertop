@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 	register_parameter("base power", 100);
 	register_parameter("cpu-wakeups");
 	register_parameter("cpu-consumption");
-        learn_parameters();
+        learn_parameters(600);
 	dump_parameter_bundle();
 	save_parameters("saved_parameters.powertop");
 
@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 	/* first one is short to not let the user wait too long */
 	one_measurement(5);
 
-	for (i = 0; i < 20; i++) {
+	for (i = 0; i < 5; i++) {
 		one_measurement(20);
 		learn_parameters(10);
 	}

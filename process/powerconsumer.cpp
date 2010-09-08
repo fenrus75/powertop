@@ -15,7 +15,8 @@ double power_consumer::Witts(void)
 	timecost = get_parameter_value("cpu-consumption");
 	wakeupcost = get_parameter_value("cpu-wakeups");
 
-	cost = wakeupcost * wake_ups / 10000.0 + ( (accumulated_runtime - child_runtime) / 1000000000.0 * timecost);
+	cost = wakeupcost * wake_ups / 10000.0;
+	cost += ( (accumulated_runtime - child_runtime) / 1000000000.0 * timecost);
 
 	cost = cost / measurement_time;
 

@@ -23,6 +23,7 @@ public:
 	virtual const char * device_name(void) {return _cpuname;};
 
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
+	virtual bool show_in_list(void) {return false;};
 };
 
 

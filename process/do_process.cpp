@@ -2,6 +2,7 @@
 #include "interrupt.h"
 #include "timer.h"
 #include "work.h"
+#include "device.h"
 #include "../lib.h"
 
 #include <vector>
@@ -475,6 +476,7 @@ void process_process_data(void)
 	all_interrupts_to_all_power();
 	all_timers_to_all_power();
 	all_work_to_all_power();
+	all_devices_to_all_power();
 
 	sort(all_power.begin(), all_power.end(), power_cpu_sort);
 	for (i = 0; i < all_power.size() && i < 20; i++)
@@ -499,8 +501,11 @@ double total_cpu_time(void)
 {
 	unsigned int i;
 	double total = 0.0;
-	for (i = 0; i < all_power.size() ; i++)
+	for (i = 0; i < all_power.size() ; i++) {
+		if (all_power[i]->child_runtime > all_power[i]->accumulated_runtime)
+			all_power[i]->child_runtime = 0;
 		total += all_power[i]->accumulated_runtime - all_power[i]->child_runtime;
+	}
 
 	
 	total =  (total / (0.0001 + last_stamp - first_stamp)) * 100;

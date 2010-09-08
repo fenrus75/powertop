@@ -2,7 +2,7 @@
 * debug why wakeups sometimes go to all 0's
 * audio calibration? Need appropriate sample
 * fix memory leaks
-
+* find out why CPU power and sum of components doesn't add up
 
 done
 ----
@@ -12,3 +12,6 @@ done
 * rfkill calibration
 * wakeup calibration
 * disk calibration
+* in learning, find the biggest delta and only adjust that parameter, not 
+  all of them as they go
+* in learning, try slightly lower base power

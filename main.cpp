@@ -14,6 +14,10 @@
 #include "parameters/parameters.h"
 #include "calibrate/calibrate.h"
 
+
+int debug_learning;
+
+
 void one_measurement(int seconds)
 {
 	create_all_usb_devices();
@@ -67,6 +71,16 @@ int main(int argc, char **argv)
 	if (argc > 1) {
 		if (strcmp(argv[1], "--calibrate") == 0)
 			calibrate();
+	}
+
+	if (argc > 1) {
+		if (strcmp(argv[1], "--debug") == 0)
+			debug_learning = 1;
+	}
+
+	if (argc > 2) {
+		if (strcmp(argv[2], "--debug") == 0)
+			debug_learning = 1;
 	}
 
 	/* first one is short to not let the user wait too long */

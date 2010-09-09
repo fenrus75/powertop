@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 
+extern int debug_learning;
 
 double calculate_params(struct parameter_bundle *params)
 {
@@ -66,7 +67,8 @@ void learn_parameters(int iterations, const char *pattern)
 	if (1.0 * best_score / past_results.size() < 4 && delta > 0.05)
 		delta = 0.05;
 
-	printf("Delta starts at %5.3f\n", delta);
+	if (debug_learning)
+		printf("Delta starts at %5.3f\n", delta);
 
 	if (best_so_far->parameters["base power"] > min_power)
 		best_so_far->parameters["base power"] = min_power;
@@ -134,7 +136,7 @@ void learn_parameters(int iterations, const char *pattern)
 			best_so_far->parameters[it->first] = value;
 
 			calculate_params(best_so_far);
-			if (best_so_far->score < best_score || random_disturb(retry)) {
+			if (best_so_far->score + 0.00001 < best_score || random_disturb(retry)) {
 				best_score = best_so_far->score;
 				newvalue = value;
 				bestparam = it->first;
@@ -150,9 +152,13 @@ void learn_parameters(int iterations, const char *pattern)
 				mult = 0.5;
 			delta = delta * mult;
 		} else {
-//			printf("Best parameter is %s \n", bestparam.c_str());
-//			printf("Changing score from %4.3f to %4.3f\n", best_so_far->score, best_score); 
-//			printf("Changing value from %4.3f to %4.3f\n", best_so_far->parameters[bestparam], newvalue);
+			if (debug_learning) {
+				printf("Retry is %i \n", retry);
+					printf("delta is %5.4f\n", delta);
+				printf("Best parameter is %s \n", bestparam.c_str());
+				printf("Changing score from %4.3f to %4.3f\n", best_so_far->score, best_score); 
+				printf("Changing value from %4.3f to %4.3f\n", best_so_far->parameters[bestparam], newvalue);
+			}
 			best_so_far->parameters[bestparam] = newvalue;
 		}
 
@@ -160,10 +166,31 @@ void learn_parameters(int iterations, const char *pattern)
 			break;
 	}
 
-	
 
+	/* now we weed out all parameters that don't have value */
+
+	best_score = best_so_far->score;
+
+		
+	for (it = best_so_far->parameters.begin(); it != best_so_far->parameters.end(); it++) {
+		double orgvalue;
+
+		orgvalue = best_so_far->parameters[it->first];
+
+
+		best_so_far->parameters[it->first] = 0.0;
+
+		calculate_params(best_so_far);
+		if (best_so_far->score > best_score) {
+				best_so_far->parameters[it->first] = orgvalue;
+		} else {
+			best_score = best_so_far->score;
+		}
+
+	}
 	calculate_params(best_so_far);
-	printf("Final score %4.2f (%i points)\n", best_so_far->score / past_results.size(), past_results.size());
+	if (debug_learning)
+		printf("Final score %4.2f (%i points)\n", best_so_far->score / past_results.size(), past_results.size());
 //	dump_parameter_bundle(best_so_far);
 //	dump_past_results();
 }

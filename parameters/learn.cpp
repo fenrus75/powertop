@@ -6,20 +6,14 @@
 #include <math.h>
 
 
-double calculate_params(struct parameter_bundle *params, int last_only)
+double calculate_params(struct parameter_bundle *params)
 {
 	unsigned int i;
-	int from;
 
 	params->score = 0;
 
-	from = 0;
-	if (last_only) {
-		compute_bundle(params, past_results[0]);
-		from = past_results.size() - last_only;
-	}
 
-	for (i = from; i < past_results.size(); i++) 
+	for (i = 0; i < past_results.size(); i++) 
 		compute_bundle(params, past_results[i]);
 
 	return params->score;
@@ -43,7 +37,7 @@ static int random_disturb(int retry_left)
 static unsigned int previous_measurements;
 
 /* leaks like a sieve */
-void learn_parameters(int iterations, const char *pattern, int last_only)
+void learn_parameters(int iterations, const char *pattern)
 {
 	struct parameter_bundle *best_so_far;
 	double best_score = 10000000000000000.0;
@@ -59,7 +53,7 @@ void learn_parameters(int iterations, const char *pattern, int last_only)
 
 	best_so_far = &all_parameters;
 
-	calculate_params(best_so_far, 0);
+	calculate_params(best_so_far);
 	best_score = best_so_far->score;
 
 	delta = 0.001 / pow(0.8, iterations / 2.0);
@@ -89,7 +83,7 @@ void learn_parameters(int iterations, const char *pattern, int last_only)
 
 		bestparam = "";
 
-		calculate_params(best_so_far, last_only);
+		calculate_params(best_so_far);
 		best_score = best_so_far->score;
 
 		
@@ -121,7 +115,7 @@ void learn_parameters(int iterations, const char *pattern, int last_only)
 //			printf("Trying %s %4.2f -> %4.2f\n", it->first.c_str(), best_so_far->parameters[it->first], value);
 			best_so_far->parameters[it->first] = value;
 
-			calculate_params(best_so_far, last_only);
+			calculate_params(best_so_far);
 			if (best_so_far->score < best_score || random_disturb(retry)) {
 				best_score = best_so_far->score;
 				newvalue = value;
@@ -139,7 +133,7 @@ void learn_parameters(int iterations, const char *pattern, int last_only)
 //			printf("Trying %s %4.2f -> %4.2f\n", it->first.c_str(), orgvalue, value);
 			best_so_far->parameters[it->first] = value;
 
-			calculate_params(best_so_far, last_only);
+			calculate_params(best_so_far);
 			if (best_so_far->score < best_score || random_disturb(retry)) {
 				best_score = best_so_far->score;
 				newvalue = value;
@@ -168,7 +162,7 @@ void learn_parameters(int iterations, const char *pattern, int last_only)
 
 	
 
-	calculate_params(best_so_far, 0);
+	calculate_params(best_so_far);
 	printf("Final score %4.2f (%i points)\n", best_so_far->score / past_results.size(), past_results.size());
 //	dump_parameter_bundle(best_so_far);
 //	dump_past_results();

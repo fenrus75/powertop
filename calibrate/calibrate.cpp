@@ -23,6 +23,7 @@ using namespace std;
 static vector<string> usb_devices;
 static vector<string> rfkill_devices;
 static vector<string> backlight_devices;
+static vector<string> scsi_link_devices;
 static int blmax;
 
 static map<string, string> saved_sysfs;
@@ -205,6 +206,46 @@ static void lower_backlight(void)
 }
 
 
+static void find_scsi_link(void)
+{
+	struct dirent *entry;
+	DIR *dir;
+	char filename[4096];
+	
+	dir = opendir("/sys/class/scsi_host/");
+	if (!dir)
+		return;
+	while (1) {
+		ifstream file;
+
+		entry = readdir(dir);
+
+		if (!entry)
+			break;
+		if (entry->d_name[0] == '.')
+			continue;
+
+		sprintf(filename, "/sys/class/scsi_host/%s/link_power_management_policy", entry->d_name);
+		if (access(filename, R_OK)!=0)
+			continue;
+
+		save_sysfs(filename);
+
+		scsi_link_devices.push_back(filename);
+
+	}
+	closedir(dir);
+}
+
+static void set_scsi_link(const char *state)
+{
+	unsigned int i;
+
+	for (i = 0; i < scsi_link_devices.size(); i++)
+		write_sysfs(scsi_link_devices[i], state);
+}
+
+
 static void *burn_cpu(void *dummy)
 {
 	volatile double d = 1.1;
@@ -262,10 +303,10 @@ static void cpu_calibration(int threads)
 	for (i = 0; i < threads; i++)
 		pthread_create(&thr, NULL, burn_cpu, NULL);
 
-	one_measurement(15);one_measurement(15);
+	one_measurement(15);
 	stop_measurement = 1;
 	sleep(1);
-	learn_parameters(50, "cpu-consumption", 1);
+	learn_parameters(50, "cpu-consumption");
 }
 
 static void wakeup_calibration(unsigned long interval)
@@ -278,26 +319,29 @@ static void wakeup_calibration(unsigned long interval)
 	
 	pthread_create(&thr, NULL, burn_cpu_wakeups, (void *)interval);
 
-	one_measurement(15);one_measurement(15);
+	one_measurement(15);
 	stop_measurement = 1;
 	sleep(1);
-	learn_parameters(50, "cpu-wakeups", 1);
+	learn_parameters(50, "cpu-wakeups");
 }
 
 static void usb_calibration(void)
 {
 	unsigned int i;
 
+	/* chances are one of the USB devices is bluetooth; unrfkill first */
+	unrfkill_all_radios();
 	printf("Calibrating USB devices\n");
 	for (i = 0; i < usb_devices.size(); i++) {
 		printf(".... device %s \n", usb_devices[i].c_str());
 		suspend_all_usb_devices();
 		write_sysfs(usb_devices[i], "on\n");
-		one_measurement(15);one_measurement(15);
+		one_measurement(15);
 		suspend_all_usb_devices();
 		sleep(3);		
 	}
-	learn_parameters(50, "usb-device", usb_devices.size());
+	rfkill_all_radios();
+	learn_parameters(50, "usb-device");
 	sleep(4);
 }
 
@@ -310,7 +354,7 @@ static void rfkill_calibration(void)
 		printf(".... device %s \n", rfkill_devices[i].c_str());
 		rfkill_all_radios();
 		write_sysfs(rfkill_devices[i], "0\n");
-		one_measurement(15);one_measurement(15);
+		one_measurement(15);
 		rfkill_all_radios();
 		sleep(3);		
 	}
@@ -318,12 +362,12 @@ static void rfkill_calibration(void)
 		printf(".... device %s \n", rfkill_devices[i].c_str());
 		unrfkill_all_radios();
 		write_sysfs(rfkill_devices[i], "1\n");
-		one_measurement(15);one_measurement(15);
+		one_measurement(15);
 		unrfkill_all_radios();
 		sleep(3);		
 	}
 	rfkill_all_radios();
-	learn_parameters(50, "radio", rfkill_devices.size() * 2);
+	learn_parameters(50, "radio");
 }
 
 static void backlight_calibration(void)
@@ -335,37 +379,37 @@ static void backlight_calibration(void)
 		char str[4096];
 		printf(".... device %s \n", backlight_devices[i].c_str());
 		lower_backlight();
-		one_measurement(15);one_measurement(15);
+		one_measurement(15);
 		sprintf(str, "%i\n", blmax / 4);
 		write_sysfs(backlight_devices[i], str);
-		one_measurement(15);one_measurement(15);
+		one_measurement(15);
 
 		sprintf(str, "%i\n", blmax / 2);
 		write_sysfs(backlight_devices[i], str);
-		one_measurement(15);one_measurement(15);
+		one_measurement(15);
 
 		sprintf(str, "%i\n", 3 * blmax / 4 );
 		write_sysfs(backlight_devices[i], str);
-		one_measurement(15);one_measurement(15);
+		one_measurement(15);
 
 		sprintf(str, "%i\n", blmax);
 		write_sysfs(backlight_devices[i], str);
-		one_measurement(15);one_measurement(15);
+		one_measurement(15);
 		lower_backlight();
 		sleep(1);		
 	}
 	printf("Calibrating idle\n");
 	system("DISPLAY=:0 /usr/bin/xset dpms force off");	
-	one_measurement(15);one_measurement(15);
+	one_measurement(15);
 	system("DISPLAY=:0 /usr/bin/xset dpms force on");	
-	learn_parameters(50, "backlight", 6);
+	learn_parameters(50, "backlight");
 }
 
 static void idle_calibration(void)
 {
 	printf("Calibrating idle\n");
 	system("DISPLAY=:0 /usr/bin/xset dpms force off");	
-	one_measurement(15);one_measurement(15);
+	one_measurement(15);
 	system("DISPLAY=:0 /usr/bin/xset dpms force on");	
 }
 
@@ -376,14 +420,34 @@ static void disk_calibration(void)
 
 	printf("Calibrating: disk usage \n");
 
+	set_scsi_link("min_power");
+
 	stop_measurement = 0;
 	pthread_create(&thr, NULL, burn_disk, NULL);
 
-	one_measurement(15);one_measurement(15);
+	one_measurement(15);
 	stop_measurement = 1;
 	sleep(1);
-	learn_parameters(50, "ahci", 1);
 
+	set_scsi_link("medium_power");
+
+	stop_measurement = 0;
+	pthread_create(&thr, NULL, burn_disk, NULL);
+
+	one_measurement(15);
+	stop_measurement = 1;
+	sleep(1);
+
+	set_scsi_link("medium_power");
+
+	stop_measurement = 0;
+	one_measurement(15);
+	stop_measurement = 1;
+	sleep(1);
+
+	learn_parameters(50, "ahci");
+
+	set_scsi_link("min_power");
 }
 
 
@@ -392,6 +456,7 @@ void calibrate(void)
 	find_all_usb();
 	find_all_rfkill();
 	find_backlight();
+	find_scsi_link();
 
 	cout << "Starting PowerTOP power estimate calibration \n";
 	suspend_all_usb_devices();

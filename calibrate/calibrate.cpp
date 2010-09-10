@@ -101,6 +101,15 @@ static void find_all_usb(void)
 		if (access(filename, R_OK)!=0)
 			continue;
 
+		sprintf(filename, "/sys/bus/usb/devices/%s/power/idVendor", entry->d_name);
+		file.open(filename, ios::in);
+		if (file) {
+			file.getline(filename, 4096);
+			file.close();
+			if (strcmp(filename, "1d6b")==0)
+				continue;
+		}
+
 		sprintf(filename, "/sys/bus/usb/devices/%s/power/control", entry->d_name);
 
 		save_sysfs(filename);

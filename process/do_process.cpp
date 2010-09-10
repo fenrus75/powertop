@@ -397,6 +397,13 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 	if (strcmp(event_name, "power:power_end") == 0) {
 		consume_blame(cpu);
 	}
+	if (strcmp(event_name, "i915:i915_gem_request_submit") == 0) {
+		class power_consumer *consumer;
+		consumer = current_consumer(cpu);
+		if (consumer) {
+			consumer->gpu_ops++;
+		}
+	}
 }
 
 void start_process_measurement(void)
@@ -417,6 +424,7 @@ void start_process_measurement(void)
 		perf_events->add_event("power:power_end");
 		perf_events->add_event("workqueue:workqueue_execute_start");
 		perf_events->add_event("workqueue:workqueue_execute_end");
+		perf_events->add_event("i915:i915_gem_request_submit");
 	}
 
 	first_stamp = ~0ULL;
@@ -484,12 +492,26 @@ void process_process_data(void)
 
 }
 
-int total_wakeups(void)
+double total_wakeups(void)
 {
 	double total = 0;
 	unsigned int i;
 	for (i = 0; i < all_power.size() ; i++)
 		total += all_power[i]->wake_ups;
+
+	total = total / measurement_time;
+
+
+	return total;
+}
+
+double total_gpu_ops(void)
+{
+	double total = 0;
+	unsigned int i;
+	for (i = 0; i < all_power.size() ; i++)
+		total += all_power[i]->gpu_ops;
+
 
 	total = total / measurement_time;
 
@@ -521,6 +543,7 @@ void end_process_data(void)
 
 	report_utilization("cpu-consumption", total_cpu_time());
 	report_utilization("cpu-wakeups", total_wakeups());
+	report_utilization("gpu-operations", total_gpu_ops());
 
 	/* clean out old data */
 	for (i = 0; i < all_processes.size() ; i++)

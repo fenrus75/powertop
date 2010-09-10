@@ -9,6 +9,7 @@ using namespace std;
 #include "ahci.h"
 #include "alsa.h"
 #include "rfkill.h"
+#include "i915-gpu.h"
 
 #include "../parameters/parameters.h"
 
@@ -67,4 +68,6 @@ void create_all_devices(void)
 	create_all_ahcis();
 	create_all_alsa();
 	create_all_rfkills();
+	create_i915_gpu();
+
 }

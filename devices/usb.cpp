@@ -76,6 +76,8 @@ double usbdevice::utilization(void) /* percentage */
 {
 	double d;
 	d = 100.0 * (active_after - active_before) / (0.01 + connected_after - connected_before);
+	if (d < 0.0)
+		d = 0.0;
 	return d;
 }
 

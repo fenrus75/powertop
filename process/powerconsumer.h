@@ -30,8 +30,9 @@ public:
 
 extern vector <class power_consumer *> all_power;
 
-extern int total_wakeups(void);
+extern double total_wakeups(void);
 extern double total_cpu_time(void);
+extern double total_gpu_ops(void);
 
 
 

@@ -456,6 +456,8 @@ static void disk_calibration(void)
 
 	learn_parameters(50, "ahci");
 
+	/* work around a bug in the ahci driver where medium->min transitions don't work */
+	set_scsi_link("max_performance");
 	set_scsi_link("min_power");
 }
 

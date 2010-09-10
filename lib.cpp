@@ -7,6 +7,8 @@
 #include <string>
 
 
+#include "lib.h"
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -20,7 +22,6 @@
 #include <libintl.h>
 
 
-#include "lib.h"
 
 
 static int kallsyms_read = 0;
@@ -129,3 +130,27 @@ bool stringless::operator()(const char * const & lhs, const char * const & rhs) 
 		return true;
 	return false;
 }  
+
+void write_sysfs(string filename, string value)
+{
+	ofstream file;
+
+	file.open(filename.c_str(), ios::out);
+	if (!file)
+		return;
+	file << value;
+	file.close();
+}
+
+int read_sysfs(string filename)
+{
+	ifstream file;
+	int i;
+
+	file.open(filename.c_str(), ios::in);
+	if (!file)
+		return 0;
+	file >> i;
+	file.close();
+	return i;
+}

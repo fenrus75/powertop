@@ -46,30 +46,6 @@ static void save_sysfs(char *filename)
 	saved_sysfs[filename] = line;
 }
 
-static void write_sysfs(string filename, string value)
-{
-	ofstream file;
-
-	file.open(filename.c_str(), ios::out);
-	if (!file)
-		return;
-	file << value;
-	file.close();
-}
-
-static int read_sysfs(string filename)
-{
-	ifstream file;
-	int i;
-
-	file.open(filename.c_str(), ios::in);
-	if (!file)
-		return 0;
-	file >> i;
-	file.close();
-	return i;
-}
-
 static void restore_all_sysfs(void)
 {
 	map<string, string>::iterator it;
@@ -458,6 +434,7 @@ static void disk_calibration(void)
 
 	/* work around a bug in the ahci driver where medium->min transitions don't work */
 	set_scsi_link("max_performance");
+	sleep(1);
 	set_scsi_link("min_power");
 }
 

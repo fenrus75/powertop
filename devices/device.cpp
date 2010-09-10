@@ -10,6 +10,7 @@ using namespace std;
 #include "alsa.h"
 #include "rfkill.h"
 #include "i915-gpu.h"
+#include "thinkpad-fan.h"
 
 #include "../parameters/parameters.h"
 
@@ -69,5 +70,5 @@ void create_all_devices(void)
 	create_all_alsa();
 	create_all_rfkills();
 	create_i915_gpu();
-
+	create_thinkpad_fan();
 }

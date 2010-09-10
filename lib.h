@@ -4,15 +4,9 @@
 #include <libintl.h>
 #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #define _(STRING)    gettext(STRING)
 
-#ifdef __cplusplus
-}
-#endif
 
 extern int get_max_cpu(void);
 extern void set_max_cpu(int cpu);
@@ -29,6 +23,14 @@ public:
 	bool operator()(const char * const & lhs, const char * const & rhs) const ;
 };  
 
+
+
+
+#include <string>
+using namespace std;
+
+extern void write_sysfs(string filename, string value);
+extern int read_sysfs(string filename);
 
 
 #endif

@@ -4,11 +4,6 @@
 
 device_consumer::device_consumer(class device *dev)
 {
-	wake_ups = 0;
-	disk_hits = 0;
-	accumulated_runtime = 0;
-	child_runtime = 0;
-	waker = NULL;
 	device = dev;
 	power = device->power_usage(&all_results, &all_parameters);
 }

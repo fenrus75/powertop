@@ -17,7 +17,10 @@ public:
 	uint64_t	child_runtime;
 	int	 	disk_hits;
 	int		wake_ups;
+	int		gpu_ops;
 	class power_consumer *waker;
+
+	power_consumer(void);
 
 	virtual double Witts(void);
 	virtual const char * description(void) { return ""; };

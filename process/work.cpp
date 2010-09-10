@@ -15,11 +15,6 @@ using namespace std;
 work::work(unsigned long address)
 {
 	strncpy(handler, kernel_function(address), 31);
-	wake_ups = 0;
-	disk_hits = 0;
-	accumulated_runtime = 0;
-	child_runtime = 0;
-	waker = NULL;
 	raw_count = 0;
 }
 

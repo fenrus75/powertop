@@ -22,3 +22,13 @@ double power_consumer::Witts(void)
 
 	return cost;
 }
+
+power_consumer::power_consumer(void)
+{
+	accumulated_runtime = 0;
+	child_runtime = 0;
+	disk_hits = 0;
+	wake_ups = 0;
+	gpu_ops = 0;
+	waker = NULL;
+}

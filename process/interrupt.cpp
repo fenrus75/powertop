@@ -25,11 +25,6 @@ interrupt::interrupt(const char *_handler, int _number)
 	running_since = 0;
 	number = _number;
 	strncpy(handler, _handler, 31);
-	wake_ups = 0;
-	disk_hits = 0;
-	accumulated_runtime = 0;
-	child_runtime = 0;
-	waker = NULL;
 	raw_count = 0;
 }
 

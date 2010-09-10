@@ -100,8 +100,6 @@ void learn_parameters(int iterations, const char *pattern)
 			orgvalue = value = best_so_far->parameters[it->first];
 			if (value <= 0.001) {
 				value = 0.1;
-				if (pattern)
-					value = 1.0;
 			} else
 				value = value * (1 + delta);
 

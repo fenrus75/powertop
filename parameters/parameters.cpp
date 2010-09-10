@@ -2,6 +2,7 @@
 #include "../measurement/measurement.h"
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include <vector>
 
 struct parameter_bundle all_parameters;
@@ -58,7 +59,8 @@ double compute_bundle(struct parameter_bundle *parameters, struct result_bundle 
 
 	parameters->actual_power = results->power;
 	parameters->guessed_power = power;
-	parameters->score += (power - results->power) * (power - results->power);
+	/* scale the squared error by the actual power so that non-idle data points weigh heavier */
+	parameters->score += power * (power - results->power) * (power - results->power);
 
 	return power;
 }
@@ -92,7 +94,7 @@ void dump_parameter_bundle(struct parameter_bundle *para)
 	}
 
 	printf("\n");
-	printf("Score:  %5.1f\n", para->score / (0.001 + past_results.size()));
+	printf("Score:  %5.1f\n", sqrt(para->score / (0.001 + past_results.size()) / average_power()));
 	printf("Guess:  %5.1f\n", para->guessed_power);
 	printf("Actual: %5.1f\n", para->actual_power);
 
@@ -188,4 +190,18 @@ void dump_past_results(void)
 		}
 		printf("\n\n");
 	}
+}
+
+double average_power(void)
+{
+	double sum = 0.0;
+	unsigned int i;
+	for (i = 0; i < past_results.size(); i++)
+		sum += past_results[i]->power;
+
+	if (past_results.size()) 
+		sum = sum / past_results.size() + 0.0001;
+	else
+		sum = 0.0001;
+	return sum;
 }

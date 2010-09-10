@@ -64,9 +64,6 @@ int main(int argc, char **argv)
 	register_parameter("base power", 100);
 	register_parameter("cpu-wakeups");
 	register_parameter("cpu-consumption");
-        learn_parameters(600);
-	dump_parameter_bundle();
-	save_parameters("saved_parameters.powertop");
 
 	if (argc > 1) {
 		if (strcmp(argv[1], "--calibrate") == 0)
@@ -82,6 +79,15 @@ int main(int argc, char **argv)
 		if (strcmp(argv[2], "--debug") == 0)
 			debug_learning = 1;
 	}
+
+	if (debug_learning)
+		printf("Learning debugging enabled\n");
+
+
+
+        learn_parameters(600);
+	dump_parameter_bundle();
+	save_parameters("saved_parameters.powertop");
 
 	/* first one is short to not let the user wait too long */
 	one_measurement(5);

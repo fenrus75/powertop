@@ -66,4 +66,6 @@ extern void load_parameters(const char *filename);
 extern void dump_past_results(void);
 extern double bundle_power(struct parameter_bundle *parameters, struct result_bundle *results);
 
+extern double average_power(void);
+
 #endif

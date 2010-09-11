@@ -24,6 +24,7 @@ thinkpad_fan::thinkpad_fan()
 
 void thinkpad_fan::start_measurement(void)
 {
+	/* read the rpms of the fan */
 	start_rate = read_sysfs("/sys/devices/platform/thinkpad_hwmon/fan1_input");
 }
 
@@ -68,7 +69,7 @@ double thinkpad_fan::power_usage(struct result_bundle *result, struct parameter_
 	factor = get_parameter_value("thinkpad-fan", bundle);
 	utilization = get_result_value("thinkpad-fan", result);
 
-	utilization = utilization - 60;
+	utilization = utilization - 50;
 	if (utilization < 0)
 		utilization = 0;
 

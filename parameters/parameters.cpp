@@ -56,11 +56,11 @@ double compute_bundle(struct parameter_bundle *parameters, struct result_bundle 
 
 		power += all_devices[i]->power_usage(results, parameters);
 	}
-
+//	printf("result power is %6.2f  guessed is %6.2f\n", results->power, power);
 	parameters->actual_power = results->power;
 	parameters->guessed_power = power;
 	/* scale the squared error by the actual power so that non-idle data points weigh heavier */
-	parameters->score += power * (power - results->power) * (power - results->power);
+	parameters->score += results->power * (power - results->power) * (power - results->power);
 
 	return power;
 }

@@ -45,8 +45,8 @@ void learn_parameters(int iterations, const char *pattern)
         map<string, double>::iterator it;
 	int retry = iterations;
 
-	if (past_results.size() == previous_measurements)
-		return;
+//	if (past_results.size() == previous_measurements)
+//		return;
 
 	previous_measurements = past_results.size();
 
@@ -76,7 +76,7 @@ void learn_parameters(int iterations, const char *pattern)
 	/* We want to give up a little of base power, to give other parameters room to change;
 	   base power is the end post for everything after all 
          */
-	best_so_far->parameters["base power"] = best_so_far->parameters["base power"] * 0.95;
+	best_so_far->parameters["base power"] = best_so_far->parameters["base power"] * 0.99;
 
 	while (retry--) {
 		int changed  = 0;
@@ -93,8 +93,9 @@ void learn_parameters(int iterations, const char *pattern)
 			double value, orgvalue;
 
 			if (pattern) {
-				if (strstr(it->first.c_str(), pattern) == NULL && it->first != "base power")
+				if (strstr(it->first.c_str(), pattern) != NULL) {
 					continue;
+				}
 			}
 
 			orgvalue = value = best_so_far->parameters[it->first];
@@ -124,6 +125,9 @@ void learn_parameters(int iterations, const char *pattern)
 			}
 
 			value = orgvalue * 1 / (1 + delta);
+
+			if (value < 0.0001)
+				value = 0.0;
 
 
 			if (value > 5000)

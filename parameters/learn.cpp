@@ -35,6 +35,17 @@ static int random_disturb(int retry_left)
 	return 0;
 }
 
+static int try_zero(double value)
+{
+	if (value > 0.01)
+	if ( (rand() % 100) == 1)
+		return 1;
+
+	if ( (rand() % 5) == 1)
+		return 1;
+	return 0;
+}
+
 static unsigned int previous_measurements;
 
 /* leaks like a sieve */
@@ -44,6 +55,8 @@ void learn_parameters(int iterations, const char *pattern)
 	double best_score = 10000000000000000.0;
         map<string, double>::iterator it;
 	int retry = iterations;
+	string prevparam = "";
+	int locked = 0;
 
 //	if (past_results.size() == previous_measurements)
 //		return;
@@ -81,46 +94,56 @@ void learn_parameters(int iterations, const char *pattern)
 	while (retry--) {
 		int changed  = 0;
 		string bestparam;
-		double newvalue;
+		double newvalue = 0;
+		double orgscore;
 
 		bestparam = "";
 
 		calculate_params(best_so_far);
-		best_score = best_so_far->score;
+		orgscore = best_score = best_so_far->score;
 
 		
 	        for (it = best_so_far->parameters.begin(); it != best_so_far->parameters.end(); it++) {
 			double value, orgvalue;
+			string param;
+
+			param = it->first;
 
 			if (pattern) {
-				if (strstr(it->first.c_str(), pattern) != NULL) {
+				if (strstr(param.c_str(), pattern) != NULL) {
 					continue;
 				}
 			}
 
-			orgvalue = value = best_so_far->parameters[it->first];
+//			if (locked) {
+//				param = prevparam;
+//				if (it != best_so_far->parameters.begin())
+//					break;
+//			}
+
+			orgvalue = value = best_so_far->parameters[param];
 			if (value <= 0.001) {
 				value = 0.1;
 			} else
 				value = value * (1 + delta);
 
-			if (it->first == "base power" && value > min_power)
+			if (param == "base power" && value > min_power)
 				value = min_power;
 
-			if (it->first == "base power" && orgvalue > min_power)
+			if (param == "base power" && orgvalue > min_power)
 				orgvalue = min_power;
 
 			if (value > 5000)
 				value = 5000;
 
-//			printf("Trying %s %4.2f -> %4.2f\n", it->first.c_str(), best_so_far->parameters[it->first], value);
-			best_so_far->parameters[it->first] = value;
+//			printf("Trying %s %4.2f -> %4.2f\n", param.c_str(), best_so_far->parameters[param], value);
+			best_so_far->parameters[param] = value;
 
 			calculate_params(best_so_far);
 			if (best_so_far->score < best_score || random_disturb(retry)) {
 				best_score = best_so_far->score;
 				newvalue = value;
-				bestparam = it->first;
+				bestparam = param;
 				changed++;
 			}
 
@@ -129,42 +152,58 @@ void learn_parameters(int iterations, const char *pattern)
 			if (value < 0.0001)
 				value = 0.0;
 
+			if (try_zero(value))
+				value = 0.0;
+
 
 			if (value > 5000)
 				value = 5000;
 
 
-//			printf("Trying %s %4.2f -> %4.2f\n", it->first.c_str(), orgvalue, value);
-			best_so_far->parameters[it->first] = value;
+//			printf("Trying %s %4.2f -> %4.2f\n", param.c_str(), orgvalue, value);
 
-			calculate_params(best_so_far);
-			if (best_so_far->score + 0.00001 < best_score || random_disturb(retry)) {
-				best_score = best_so_far->score;
-				newvalue = value;
-				bestparam = it->first;
-				changed++;
+			if (orgvalue != value) {
+				best_so_far->parameters[param] = value;
+
+				calculate_params(best_so_far);
+			
+				if (best_so_far->score + 0.00001 < best_score || (random_disturb(retry) && value > 0.0)) {
+					best_score = best_so_far->score;
+					newvalue = value;
+					bestparam = param;
+					changed++;
+				}
 			}
-			best_so_far->parameters[it->first] = orgvalue;
+			best_so_far->parameters[param] = orgvalue;
 
 		}
 		if (!changed) {
 			double mult;
-			mult = 0.8;
-			if (iterations < 25)
-				mult = 0.5;
-			delta = delta * mult;
+
+			if (!locked) {
+				mult = 0.8;
+				if (iterations < 25)
+					mult = 0.5;
+				delta = delta * mult;
+			} 
+			locked = 0;
+			prevparam = "";
 		} else {
 			if (debug_learning) {
 				printf("Retry is %i \n", retry);
 					printf("delta is %5.4f\n", delta);
 				printf("Best parameter is %s \n", bestparam.c_str());
-				printf("Changing score from %4.3f to %4.3f\n", best_so_far->score, best_score); 
+				printf("Changing score from %4.3f to %4.3f\n", orgscore, best_score); 
 				printf("Changing value from %4.3f to %4.3f\n", best_so_far->parameters[bestparam], newvalue);
 			}
 			best_so_far->parameters[bestparam] = newvalue;
+			if (prevparam == bestparam)
+				delta = delta * 1.1;
+			prevparam = bestparam;
+			locked = 1;
 		}
 
-		if (delta < 0.001)
+		if (delta < 0.001 && !locked)
 			break;
 	}
 

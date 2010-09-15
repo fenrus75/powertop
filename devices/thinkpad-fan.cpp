@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include <math.h>
 
 #include "../lib.h"
 
@@ -66,13 +67,21 @@ double thinkpad_fan::power_usage(struct result_bundle *result, struct parameter_
 	double utilization;
 
 	power = 0;
-	factor = get_parameter_value("thinkpad-fan", bundle);
 	utilization = get_result_value("thinkpad-fan", result);
 
 	utilization = utilization - 50;
 	if (utilization < 0)
 		utilization = 0;
 
-	power += utilization * factor / 100.0;
+
+	factor = get_parameter_value("thinkpad-fan-sqr", bundle);
+	power += factor * pow(utilization / 100.0, 2);
+
+	factor = get_parameter_value("thinkpad-fan", bundle);
+	power -= utilization * factor / 100.0;
+
+	if (power <= 0.0)
+		power = 0.0;
+
 	return power;
 }

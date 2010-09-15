@@ -42,7 +42,7 @@ void one_measurement(int seconds)
 	global_joules_consumed();
 	compute_bundle();
 
-	report_devices();
+//	report_devices();
 	store_results();
 	end_cpu_data();
 }
@@ -85,16 +85,16 @@ int main(int argc, char **argv)
 
 
 
-        learn_parameters(600);
+        learn_parameters(50);
 	dump_parameter_bundle();
 	save_parameters("saved_parameters.powertop");
 
 	/* first one is short to not let the user wait too long */
 	one_measurement(5);
 
-	for (i = 0; i < 5; i++) {
+	for (i = 0; i < 25; i++) {
 		one_measurement(20);
-		learn_parameters(10);
+		learn_parameters(15);
 	}
 
 
@@ -103,6 +103,7 @@ int main(int argc, char **argv)
 	end_cpu_data();
 
 	save_all_results("saved_results.powertop");
+	save_parameters("saved_parameters.powertop");
 	learn_parameters(500);
 	save_parameters("saved_parameters.powertop");
 	printf("Final estimate:\n");

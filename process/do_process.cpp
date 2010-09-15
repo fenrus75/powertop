@@ -199,7 +199,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		/* start new process */
 		new_proc->schedule_thread(time, sw->next_pid);
 
-		if (strncmp(sw->next_comm,"migration/", 10) && strncmp(sw->next_comm,"kworker/", 8) ) {
+		if (strncmp(sw->next_comm,"migration/", 10) && strncmp(sw->next_comm,"kworker/", 8) && strncmp(sw->next_comm, "kondemand/",10)) {
 			if (sw->next_pid) {
 				/* If someone woke us up.. blame him instead */
 				if (new_proc->waker) {

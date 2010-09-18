@@ -10,16 +10,51 @@ struct result_bundle all_results;
 
 vector <struct result_bundle *> past_results;
 
+map <string, int> param_index;
+static int maxindex = 0;
+
 
 void register_parameter(const char *name, double default_value)
 {
-	if (all_parameters.parameters[name] <= 0.0001) 
-		all_parameters.parameters[name] = default_value;
+	int index;
+
+	index = param_index[name];
+	if (index == 0) {
+		index = param_index[name] = ++maxindex;
+	}
+
+	if (index >= (int)all_parameters.parameters.size())
+		all_parameters.parameters.resize(index+1);
+
+	if (all_parameters.parameters[index] <= 0.0001) 
+		all_parameters.parameters[index] = default_value;
+}
+
+void set_parameter_value(const char *name, double value, struct parameter_bundle *bundle)
+{
+	int index;
+
+	index = param_index[name];
+	if (index == 0) {
+		index = param_index[name] = ++maxindex;
+	}
+
+	if (index >= (int)bundle->parameters.size())
+		bundle->parameters.resize(index+1);
+
+	bundle->parameters[index] = value;
 }
 
 double get_parameter_value(const char *name, struct parameter_bundle *the_bundle)
 {
-	return the_bundle->parameters[name];
+	int index;
+
+	index = param_index[name];
+	if (index == 0) {
+		index = param_index[name] = ++maxindex;
+	}
+
+	return the_bundle->parameters[index];
 }
 
 double get_result_value(const char *name, struct result_bundle *the_bundle)
@@ -49,8 +84,13 @@ double compute_bundle(struct parameter_bundle *parameters, struct result_bundle 
 {
 	double power = 0;
 	unsigned int i;
+
+	static int bpi = 0;
+
+	if (!bpi)
+		bpi = param_index["base power"];
 	
-	power = parameters->parameters["base power"];
+	power = parameters->parameters[bpi];
 
 	for (i = 0; i < all_devices.size(); i++) {
 
@@ -69,8 +109,13 @@ double bundle_power(struct parameter_bundle *parameters, struct result_bundle *r
 {
 	double power = 0;
 	unsigned int i;
+	static int bpi = 0;
+
+	if (!bpi)
+		bpi = param_index["base power"];
+
 	
-	power = parameters->parameters["base power"];
+	power = parameters->parameters[bpi];
 
 	for (i = 0; i < all_devices.size(); i++) {
 
@@ -83,14 +128,16 @@ double bundle_power(struct parameter_bundle *parameters, struct result_bundle *r
 
 void dump_parameter_bundle(struct parameter_bundle *para)
 {
-	map<string, double>::iterator it;
+	map<string, int>::iterator it;
+	int index;
 
 	printf("\n\n");
 	printf("Parameter state \n");
 	printf("----------------------------------\n");
 	printf("Value\t\tName\n");
-	for (it = para->parameters.begin(); it != para->parameters.end(); it++) {
-		printf("%5.2f\t\t%s\n", it->second, it->first.c_str());
+	for (it = param_index.begin(); it != param_index.end(); it++) {
+		index = it->second;
+		printf("%5.2f\t\t%s\n", para->parameters[index], it->first.c_str());
 	}
 
 	printf("\n");
@@ -142,7 +189,7 @@ struct result_bundle * clone_results(struct result_bundle *bundle)
 struct parameter_bundle * clone_parameters(struct parameter_bundle *bundle)
 {
 	struct parameter_bundle *b2;
-	map<string, double>::iterator it;
+	unsigned int i;
 
 	b2 = new struct parameter_bundle;
 
@@ -152,9 +199,9 @@ struct parameter_bundle * clone_parameters(struct parameter_bundle *bundle)
 	b2->score = 0;
 	b2->guessed_power = 0;
 	b2->actual_power = bundle->actual_power;
-
-	for (it = bundle->parameters.begin(); it != bundle->parameters.end(); it++) {
-		b2->parameters[it->first] = it->second;
+	b2->parameters.resize(bundle->parameters.size());
+	for (i = 0; i < bundle->parameters.size(); i++) {
+		b2->parameters[i] = bundle->parameters[i];
 	}
 
 	return b2;

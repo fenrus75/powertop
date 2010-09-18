@@ -1,4 +1,4 @@
-all: powertop graphparameters
+all: powertop 
 
 CFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
 CPPFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
@@ -25,8 +25,4 @@ powertop: $(OBJS) $(HEADERS)
 	g++ $(OBJS) $(LIBS) -o powertop
 
 
-GOBJS += tools/graphparameter.o parameters/persistent.o  parameters/parameters.o parameters/learn.o $(DEVS) lib.o
 
-graphparameters:  $(GOBJS)
-	g++ $(GOBJS) $(LIBS) -o graphparameters
-	

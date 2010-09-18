@@ -291,7 +291,7 @@ static void cpu_calibration(int threads)
 	one_measurement(15);
 	stop_measurement = 1;
 	sleep(1);
-	learn_parameters(50, "cpu-consumption");
+	learn_parameters(50);
 }
 
 static void wakeup_calibration(unsigned long interval)
@@ -307,7 +307,7 @@ static void wakeup_calibration(unsigned long interval)
 	one_measurement(15);
 	stop_measurement = 1;
 	sleep(1);
-	learn_parameters(50, "cpu-wakeups");
+	learn_parameters(50);
 }
 
 static void usb_calibration(void)
@@ -326,7 +326,7 @@ static void usb_calibration(void)
 		sleep(3);		
 	}
 	rfkill_all_radios();
-	learn_parameters(50, "usb-device");
+	learn_parameters(50);
 	sleep(4);
 }
 
@@ -352,7 +352,7 @@ static void rfkill_calibration(void)
 		sleep(3);		
 	}
 	rfkill_all_radios();
-	learn_parameters(50, "radio");
+	learn_parameters(50);
 }
 
 static void backlight_calibration(void)
@@ -387,7 +387,7 @@ static void backlight_calibration(void)
 	system("DISPLAY=:0 /usr/bin/xset dpms force off");	
 	one_measurement(15);
 	system("DISPLAY=:0 /usr/bin/xset dpms force on");	
-	learn_parameters(50, "backlight");
+	learn_parameters(50);
 }
 
 static void idle_calibration(void)
@@ -430,7 +430,7 @@ static void disk_calibration(void)
 	stop_measurement = 1;
 	sleep(1);
 
-	learn_parameters(50, "ahci");
+	learn_parameters(50);
 
 	/* work around a bug in the ahci driver where medium->min transitions don't work */
 	set_scsi_link("max_performance");

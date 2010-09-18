@@ -93,10 +93,12 @@ void save_parameters(const char *filename)
 		return;
 	}
 	
-	map<string, double>::iterator it;
+	map<string, int>::iterator it;
 
-	for (it = all_parameters.parameters.begin(); it != all_parameters.parameters.end(); it++) {
-		file << it->first << "\t" << setprecision(5) << it->second << "\n";
+	for (it = param_index.begin(); it != param_index.end(); it++) {
+		int index;
+		index = it->second;
+		file << it->first << "\t" << setprecision(5) << all_parameters.parameters[index] << "\n";
 	}	
 	file.close();
 }
@@ -124,7 +126,8 @@ void load_parameters(const char *filename)
 		c1++;
 		sscanf(c1, "%lf", &d);
 		
-		all_parameters.parameters[line] =d;
+
+		set_parameter_value(line, d);		
 	}
 
 	file.close();

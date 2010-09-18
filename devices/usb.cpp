@@ -21,7 +21,8 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 	active_after = 0;
 	connected_before = 0;
 	connected_after = 0;
-	index = 0;
+	
+	index = get_param_index(devname);
 	r_index = get_result_index(name);
 	rootport = 0;
 	/* root ports should count as 0 .. their activity is derived */
@@ -105,8 +106,6 @@ double usbdevice::power_usage(struct result_bundle *result, struct parameter_bun
 	if (rootport)
 		return 0.0;
 
-	if (index == 0)
-		index = get_param_index(devname);
 
 	power = 0;
 	factor = get_parameter_value(index, bundle);

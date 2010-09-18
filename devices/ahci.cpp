@@ -17,6 +17,7 @@ using namespace std;
 
 ahci::ahci(char *_name, char *path)
 {
+	char buffer[4096];
 	char devname[128];
 	end_active = 0;
 	end_slumber = 0;
@@ -27,6 +28,14 @@ ahci::ahci(char *_name, char *path)
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
 	sprintf(devname, "ahci:%s", _name);
 	strncpy(name, devname, sizeof(name));
+	active_index = get_param_index("ahci-link-power-active");
+	partial_index = get_param_index("ahci-link-power-partial");
+
+	sprintf(buffer, "%s-active", name);
+	active_rindex = get_result_index(buffer);
+
+	sprintf(buffer, "%s-partial", name);
+	partial_rindex = get_result_index(buffer);
 }
 
 void ahci::start_measurement(void)
@@ -160,40 +169,16 @@ double ahci::power_usage(struct result_bundle *result, struct parameter_bundle *
 	double power;
 	double factor;
 	double utilization;
-	char buffer[4096];
-
-	static int active_index = 0;
-	static int partial_index = 0;
-
-	if (!active_index)
-		active_index = get_param_index("ahci-link-power-active");
-
-	if (!partial_index)
-		partial_index = get_param_index("ahci-link-power-partial");
-
 
 	power = 0;
+
 	factor = get_parameter_value(active_index, bundle);
-
-	if (!active_rindex) {
-		sprintf(buffer, "%s-active", name);
-		active_rindex = get_result_index(buffer);
-	}
-
-
 	utilization = get_result_value(active_rindex, result);
-
 	power += utilization * factor / 100.0;
 
 
-	if (!partial_rindex) {
-		sprintf(buffer, "%s-partial", name);
-		partial_rindex = get_result_index(buffer);
-	}
-
 	factor = get_parameter_value(partial_index, bundle);
 	utilization = get_result_value(partial_rindex, result);
-
 	power += utilization * factor / 100.0;
 
 	return power;

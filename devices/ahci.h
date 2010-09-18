@@ -13,6 +13,8 @@ class ahci: public device {
 	char name[4096];
 	int partial_rindex;
 	int active_rindex;
+	int partial_index;
+	int active_index;
 public:
 
 	ahci(char *_name, char *path);

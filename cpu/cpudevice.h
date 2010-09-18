@@ -15,6 +15,10 @@ class cpudevice: public device {
 
 	vector<string> params;
 	class abstract_cpu *cpu;
+	int wake_index;
+	int consumption_index;
+	int r_wake_index;
+	int r_consumption_index;
 
 public:
 	cpudevice(const char *classname = "cpu", const char *device_name = "cpu0", class abstract_cpu *_cpu = NULL);

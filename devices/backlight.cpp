@@ -24,6 +24,8 @@ backlight::backlight(char *_name, char *path)
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
 	sprintf(devname, "backlight:%s", _name);
 	strncpy(name, devname, sizeof(name));
+	r_index = get_result_index(name);
+	r_index_power = 0;
 }
 
 void backlight::start_measurement(void)
@@ -165,17 +167,21 @@ double backlight::power_usage(struct result_bundle *result, struct parameter_bun
 	if (!bl_index)
 		bl_index = get_param_index("backlight");
 	if (!blp_index)
-		bl_index = get_param_index("backlight-power");
+		blp_index = get_param_index("backlight-power");
 
 	power = 0;
 	factor = get_parameter_value(bl_index, bundle);
-	utilization = get_result_value(name, result);
+	utilization = get_result_value(r_index, result);
 
 	power += utilization * factor / 100.0;
 
 	factor = get_parameter_value(blp_index, bundle);
-	sprintf(powername, "%s-power", name);
-	utilization = get_result_value(powername, result);
+
+	if (!r_index_power) {
+		sprintf(powername, "%s-power", name);
+		r_index_power = get_result_index(powername);
+	}
+	utilization = get_result_value(r_index_power, result);
 
 	power += utilization * factor / 100.0;
 

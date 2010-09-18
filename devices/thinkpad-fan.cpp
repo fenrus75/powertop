@@ -67,14 +67,17 @@ double thinkpad_fan::power_usage(struct result_bundle *result, struct parameter_
 	double utilization;
 
 	static int fan_index = 0, fansqr_index = 0;
+	static int r_index = 0;
 
 	if (!fan_index)
 		fan_index = get_param_index("thinkpad-fan");
 	if (!fansqr_index)
 		fansqr_index = get_param_index("thinkpad-fan-sqr");
+	if (!r_index)
+		r_index = get_result_index("thinkpad-fan");
 
 	power = 0;
-	utilization = get_result_value("thinkpad-fan", result);
+	utilization = get_result_value(r_index, result);
 
 	utilization = utilization - 50;
 	if (utilization < 0)

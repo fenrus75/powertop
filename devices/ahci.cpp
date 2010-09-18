@@ -169,19 +169,30 @@ double ahci::power_usage(struct result_bundle *result, struct parameter_bundle *
 		active_index = get_param_index("ahci-link-power-active");
 
 	if (!partial_index)
-		active_index = get_param_index("ahci-link-power-partial");
+		partial_index = get_param_index("ahci-link-power-partial");
+
 
 	power = 0;
 	factor = get_parameter_value(active_index, bundle);
 
-	sprintf(buffer, "%s-active", name);
-	utilization = get_result_value(buffer, result);
+	if (!active_rindex) {
+		sprintf(buffer, "%s-active", name);
+		active_rindex = get_result_index(buffer);
+	}
+
+
+	utilization = get_result_value(active_rindex, result);
 
 	power += utilization * factor / 100.0;
 
-	sprintf(buffer, "%s-partial", name);
+
+	if (!partial_rindex) {
+		sprintf(buffer, "%s-partial", name);
+		partial_rindex = get_result_index(buffer);
+	}
+
 	factor = get_parameter_value(partial_index, bundle);
-	utilization = get_result_value(buffer, result);
+	utilization = get_result_value(partial_rindex, result);
 
 	power += utilization * factor / 100.0;
 

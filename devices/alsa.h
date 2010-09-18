@@ -10,6 +10,7 @@ class alsa: public device {
 	uint64_t start_inactive, end_inactive;
 	char sysfs_path[4096];
 	char name[4096];
+	int rindex;
 public:
 
 	alsa(char *_name, char *path);

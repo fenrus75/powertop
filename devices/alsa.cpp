@@ -25,6 +25,7 @@ alsa::alsa(char *_name, char *path)
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
 	sprintf(devname, "alsa:%s", _name);
 	strncpy(name, devname, sizeof(name));
+	rindex = get_result_index(name);
 }
 
 void alsa::start_measurement(void)
@@ -141,7 +142,7 @@ double alsa::power_usage(struct result_bundle *result, struct parameter_bundle *
 		index = get_param_index("alsa-codec-power");
 	factor = get_parameter_value(index, bundle);
 
-	utilization = get_result_value(name, result);
+	utilization = get_result_value(rindex, result);
 
 	power += utilization * factor / 100.0;
 

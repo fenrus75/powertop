@@ -9,6 +9,8 @@ class rfkill: public device {
 	int start_hard, end_hard;
 	char sysfs_path[4096];
 	char name[4096];
+	int index;
+	int rindex;
 public:
 
 	rfkill(char *_name, char *path);

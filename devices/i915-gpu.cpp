@@ -58,13 +58,16 @@ double i915gpu::power_usage(struct result_bundle *result, struct parameter_bundl
 	double factor;
 	double utilization;
 	static int index = 0;
+	static int rindex = 0;
 
 	if (!index)
 		index = get_param_index("gpu-operations");
+	if (!rindex)
+		rindex = get_result_index("gpu-operations");
 
 	power = 0;
 	factor = get_parameter_value(index, bundle);
-	utilization = get_result_value("gpu-operations", result);
+	utilization = get_result_value(rindex, result);
 
 	power += utilization * factor / 100.0;
 	return power;

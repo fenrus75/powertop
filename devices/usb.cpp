@@ -21,6 +21,15 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 	active_after = 0;
 	connected_before = 0;
 	connected_after = 0;
+	index = 0;
+	r_index = get_result_index(name);
+	rootport = 0;
+	/* root ports should count as 0 .. their activity is derived */
+	if (strcmp(devname, "usb-device-1d6b-0001") == 0)
+		rootport = 1;
+	if (strcmp(devname, "usb-device-1d6b-0002") == 0)
+		rootport = 1;
+
 }
 
 
@@ -93,15 +102,15 @@ double usbdevice::power_usage(struct result_bundle *result, struct parameter_bun
 	double factor;
 	double utilization;
 
-	/* root ports should count as 0 .. their activity is derived */
-	if (strcmp(devname, "usb-device-1d6b-0001") == 0)
-		return 0.0;
-	if (strcmp(devname, "usb-device-1d6b-0002") == 0)
+	if (rootport)
 		return 0.0;
 
+	if (index == 0)
+		index = get_param_index(devname);
+
 	power = 0;
-	factor = get_parameter_value(devname, bundle);
-	utilization = get_result_value(name, result);
+	factor = get_parameter_value(index, bundle);
+	utilization = get_result_value(r_index, result);
 
 	power += utilization * factor / 100.0;
 

@@ -10,6 +10,10 @@ cpudevice::cpudevice(const char *classname, const char *device_name, class abstr
 	strcpy(_class, classname);
 	strcpy(_cpuname, device_name);
 	cpu = _cpu;
+	wake_index = get_param_index("cpu-wakeups");;
+	consumption_index = get_param_index("cpu-consumption");;
+	r_wake_index = get_result_index("cpu-wakeups");;
+	r_consumption_index = get_result_index("cpu-consumption");;
 }
 
 
@@ -22,13 +26,13 @@ double cpudevice::power_usage(struct result_bundle *result, struct parameter_bun
 	double utilization;
 
 	power = 0;
-	factor = get_parameter_value("cpu-wakeups", bundle);
-	utilization = get_result_value("cpu-wakeups", result);
+	factor = get_parameter_value(wake_index, bundle);
+	utilization = get_result_value(r_wake_index, result);
 
         power += utilization * factor / 1000.0;
 
-        factor = get_parameter_value("cpu-consumption", bundle);
-        utilization = get_result_value("cpu-consumption", result);
+        factor = get_parameter_value(consumption_index, bundle);
+        utilization = get_result_value(r_consumption_index, result);
 
         power += utilization * factor / 100.0;
 

@@ -26,6 +26,8 @@ rfkill::rfkill(char *_name, char *path)
 	sprintf(devname, "radio:%s", _name);
 	strncpy(name, devname, sizeof(name));
 	register_parameter(devname);
+	index = get_param_index(devname);
+	rindex = get_result_index(name);
 }
 
 void rfkill::start_measurement(void)
@@ -137,8 +139,8 @@ double rfkill::power_usage(struct result_bundle *result, struct parameter_bundle
 	double utilization;
 
 	power = 0;
-	factor = get_parameter_value(name, bundle);
-	utilization = get_result_value(name, result);
+	factor = get_parameter_value(index, bundle);
+	utilization = get_result_value(rindex, result);
 
 	power += utilization * factor / 100.0;
 

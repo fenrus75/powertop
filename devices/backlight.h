@@ -9,6 +9,8 @@ class backlight: public device {
 	int start_level, end_level;
 	char sysfs_path[4096];
 	char name[4096];
+	int r_index;
+	int r_index_power;
 public:
 
 	backlight(char *_name, char *path);

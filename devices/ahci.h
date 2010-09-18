@@ -11,6 +11,8 @@ class ahci: public device {
 	uint64_t start_slumber, end_slumber;
 	char sysfs_path[4096];
 	char name[4096];
+	int partial_rindex;
+	int active_rindex;
 public:
 
 	ahci(char *_name, char *path);

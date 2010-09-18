@@ -20,11 +20,11 @@ void save_all_results(const char *filename)
 	}
 	for (i = 0; i < past_results.size(); i++) {	
 		bundle = past_results[i];
-		map<string, double>::iterator it;
+		map<string, int>::iterator it;
 		file << setiosflags(ios::fixed) <<  setprecision(5) << bundle->power << "\n";
 
-		for (it = bundle->utilization.begin(); it != bundle->utilization.end(); it++) {
-			file << it->first << "\t" << setprecision(5) << it->second << "\n";
+		for (it = result_index.begin(); it != result_index.end(); it++) {
+			file << it->first << "\t" << setprecision(5) << get_result_value(it->second, bundle) << "\n";
 		}	
 		file << ":\n";
 	}
@@ -76,7 +76,7 @@ void load_results(const char *filename)
 		*c1 = 0;
 		c1++;
 		sscanf(c1, "%lf", &d);
-		bundle->utilization[line] =d;
+		set_result_value(line, d, bundle);
 	}
 
 	file.close();

@@ -12,6 +12,8 @@ vector <struct result_bundle *> past_results;
 
 map <string, int> param_index;
 static int maxindex = 1;
+map <string, int> result_index;
+static int maxresindex = 1;
 
 int get_param_index(const char *name)
 {
@@ -23,6 +25,17 @@ int get_param_index(const char *name)
 
 	if (index == 0)
 		printf("OH BLA\n");
+	return index;
+}
+
+int get_result_index(const char *name)
+{
+	int index;
+	index = result_index[name];
+	if (index == 0) {
+		index = result_index[name] = ++maxresindex;
+	}
+
 	return index;
 }
 
@@ -68,7 +81,22 @@ double get_parameter_value(int index, struct parameter_bundle *the_bundle)
 
 double get_result_value(const char *name, struct result_bundle *the_bundle)
 {
-	return the_bundle->utilization[name];
+	return get_result_value(get_result_index(name), the_bundle);
+}
+
+void set_result_value(const char *name, double value, struct result_bundle *the_bundle)
+{
+	unsigned int index = get_result_index(name);
+	if (index >= the_bundle->utilization.size())
+		the_bundle->utilization.resize(index+1);
+	the_bundle->utilization[index] = value;
+}
+
+double get_result_value(int index, struct result_bundle *the_bundle)
+{
+	if (index >= (int) the_bundle->utilization.size())
+		return 0;
+	return the_bundle->utilization[index];
 }
 
 
@@ -84,7 +112,7 @@ int result_device_exists(const char *name)
 
 void report_utilization(const char *name, double value, struct result_bundle *bundle)
 {
-	bundle->utilization[name] = value;
+	set_result_value(name, value, bundle);
 }
 
 
@@ -159,14 +187,16 @@ void dump_parameter_bundle(struct parameter_bundle *para)
 
 void dump_result_bundle(struct result_bundle *res)
 {
-	map<string, double>::iterator it;
+	map<string, int>::iterator it;
+	unsigned int index;
 
 	printf("\n\n");
 	printf("Utilisation state \n");
 	printf("----------------------------------\n");
 	printf("Value\t\tName\n");
-	for (it = res->utilization.begin(); it != res->utilization.end(); it++) {
-		printf("%5.2f%%\t\t%s\n", it->second, it->first.c_str());
+	for (it = result_index.begin(); it != result_index.end(); it++) {
+		index = get_result_index(it->first.c_str());
+		printf("%5.2f%%\t\t%s(%i)\n", res->utilization[index], it->first.c_str(), index);
 	}
 
 	printf("\n");
@@ -179,6 +209,7 @@ struct result_bundle * clone_results(struct result_bundle *bundle)
 {
 	struct result_bundle *b2;
 	map<string, double>::iterator it;
+	unsigned int i;
 
 	b2 = new struct result_bundle;
 
@@ -186,9 +217,10 @@ struct result_bundle * clone_results(struct result_bundle *bundle)
 		return NULL;
 
 	b2->power = bundle->power;
+	b2->utilization.resize(bundle->utilization.size());
 
-	for (it = bundle->utilization.begin(); it != bundle->utilization.end(); it++) {
-		b2->utilization[it->first] = it->second;
+	for (i = 0; i < bundle->utilization.size(); i++) {
+		b2->utilization[i] = bundle->utilization[i];
 	}
 
 	return b2;

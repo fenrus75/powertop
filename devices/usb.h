@@ -10,6 +10,9 @@ class usbdevice: public device {
 	char sysfs_path[4096];
 	char name[4096];
 	char devname[4096];
+	int index;
+	int r_index;
+	int rootport;
 public:
 
 	usbdevice(const char *_name, const char *path, const char *devid);

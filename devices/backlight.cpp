@@ -163,9 +163,9 @@ double backlight::power_usage(struct result_bundle *result, struct parameter_bun
 	static int bl_index = 0, blp_index = 0;
 
 	if (!bl_index)
-		bl_index = param_index["backlight"];
+		bl_index = get_param_index("backlight");
 	if (!blp_index)
-		bl_index = param_index["backlight-power"];
+		bl_index = get_param_index("backlight-power");
 
 	power = 0;
 	factor = get_parameter_value(bl_index, bundle);

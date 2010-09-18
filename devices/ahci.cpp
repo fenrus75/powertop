@@ -166,10 +166,10 @@ double ahci::power_usage(struct result_bundle *result, struct parameter_bundle *
 	static int partial_index = 0;
 
 	if (!active_index)
-		active_index = param_index["ahci-link-power-active"];
+		active_index = get_param_index("ahci-link-power-active");
 
 	if (!partial_index)
-		active_index = param_index["ahci-link-power-partial"];
+		active_index = get_param_index("ahci-link-power-partial");
 
 	power = 0;
 	factor = get_parameter_value(active_index, bundle);

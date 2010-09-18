@@ -69,7 +69,7 @@ void learn_parameters(int iterations)
 	best_so_far = &all_parameters;
 
 	if (!bpi)
-		bpi = param_index["base power"];
+		bpi = get_param_index("base power");
 
 	calculate_params(best_so_far);
 	best_score = best_so_far->score;
@@ -107,7 +107,7 @@ void learn_parameters(int iterations)
 		orgscore = best_score = best_so_far->score;
 
 		
-	        for (i = 0; i < best_so_far->parameters.size(); i++) {
+	        for (i = 1; i < best_so_far->parameters.size(); i++) {
 			double value, orgvalue;
 
 			orgvalue = value = best_so_far->parameters[i];

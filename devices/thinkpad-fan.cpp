@@ -69,9 +69,9 @@ double thinkpad_fan::power_usage(struct result_bundle *result, struct parameter_
 	static int fan_index = 0, fansqr_index = 0;
 
 	if (!fan_index)
-		fan_index = param_index["thinkpad-fan"];
+		fan_index = get_param_index("thinkpad-fan");
 	if (!fansqr_index)
-		fansqr_index = param_index["thinkpad-fan-sqr"];
+		fansqr_index = get_param_index("thinkpad-fan-sqr");
 
 	power = 0;
 	utilization = get_result_value("thinkpad-fan", result);

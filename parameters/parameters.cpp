@@ -11,17 +11,27 @@ struct result_bundle all_results;
 vector <struct result_bundle *> past_results;
 
 map <string, int> param_index;
-static int maxindex = 0;
+static int maxindex = 1;
+
+int get_param_index(const char *name)
+{
+	int index;
+	index = param_index[name];
+	if (index == 0) {
+		index = param_index[name] = ++maxindex;
+	}
+
+	if (index == 0)
+		printf("OH BLA\n");
+	return index;
+}
 
 
 void register_parameter(const char *name, double default_value)
 {
 	int index;
 
-	index = param_index[name];
-	if (index == 0) {
-		index = param_index[name] = ++maxindex;
-	}
+	index = get_param_index(name);
 
 	if (index >= (int)all_parameters.parameters.size())
 		all_parameters.parameters.resize(index+1);
@@ -34,10 +44,7 @@ void set_parameter_value(const char *name, double value, struct parameter_bundle
 {
 	int index;
 
-	index = param_index[name];
-	if (index == 0) {
-		index = param_index[name] = ++maxindex;
-	}
+	index = get_param_index(name);
 
 	if (index >= (int)bundle->parameters.size())
 		bundle->parameters.resize(index+1);
@@ -49,10 +56,7 @@ double get_parameter_value(const char *name, struct parameter_bundle *the_bundle
 {
 	int index;
 
-	index = param_index[name];
-	if (index == 0) {
-		index = param_index[name] = ++maxindex;
-	}
+	index = get_param_index(name);
 
 	return the_bundle->parameters[index];
 }
@@ -93,7 +97,7 @@ double compute_bundle(struct parameter_bundle *parameters, struct result_bundle 
 	static int bpi = 0;
 
 	if (!bpi)
-		bpi = param_index["base power"];
+		bpi = get_param_index("base power");
 	
 	power = parameters->parameters[bpi];
 
@@ -117,7 +121,7 @@ double bundle_power(struct parameter_bundle *parameters, struct result_bundle *r
 	static int bpi = 0;
 
 	if (!bpi)
-		bpi = param_index["base power"];
+		bpi = get_param_index("base power");
 
 	
 	power = parameters->parameters[bpi];
@@ -142,7 +146,7 @@ void dump_parameter_bundle(struct parameter_bundle *para)
 	printf("Value\t\tName\n");
 	for (it = param_index.begin(); it != param_index.end(); it++) {
 		index = it->second;
-		printf("%5.2f\t\t%s\n", para->parameters[index], it->first.c_str());
+		printf("%5.2f\t\t%s (%i)\n", para->parameters[index], it->first.c_str(), index);
 	}
 
 	printf("\n");

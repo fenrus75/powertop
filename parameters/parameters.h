@@ -23,9 +23,10 @@ struct parameter_bundle
 	vector<double> parameters; 
 };
 
+extern struct parameter_bundle all_parameters;
 extern map <string, int> param_index;
 
-extern struct parameter_bundle all_parameters;
+extern int get_param_index(const char *param);
 
 
 extern void register_parameter(const char *name, double default_value = 0.00);

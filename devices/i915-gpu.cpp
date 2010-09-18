@@ -60,7 +60,7 @@ double i915gpu::power_usage(struct result_bundle *result, struct parameter_bundl
 	static int index = 0;
 
 	if (!index)
-		index = param_index["gpu-operations"];
+		index = get_param_index("gpu-operations");
 
 	power = 0;
 	factor = get_parameter_value(index, bundle);

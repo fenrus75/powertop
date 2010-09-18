@@ -138,7 +138,7 @@ double alsa::power_usage(struct result_bundle *result, struct parameter_bundle *
 
 	power = 0;
 	if (!index)
-		index = param_index["alsa-codec-power"];
+		index = get_param_index("alsa-codec-power");
 	factor = get_parameter_value(index, bundle);
 
 	utilization = get_result_value(name, result);

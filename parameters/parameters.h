@@ -30,6 +30,7 @@ extern struct parameter_bundle all_parameters;
 
 extern void register_parameter(const char *name, double default_value = 0.00);
 extern double get_parameter_value(const char *name, struct parameter_bundle *bundle = &all_parameters);
+extern double get_parameter_value(int index, struct parameter_bundle *bundle = &all_parameters);
 extern void set_parameter_value(const char *name, double value, struct parameter_bundle *bundle = &all_parameters);
 
 

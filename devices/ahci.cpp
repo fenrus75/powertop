@@ -162,8 +162,17 @@ double ahci::power_usage(struct result_bundle *result, struct parameter_bundle *
 	double utilization;
 	char buffer[4096];
 
+	static int active_index = 0;
+	static int partial_index = 0;
+
+	if (!active_index)
+		active_index = param_index["ahci-link-power-active"];
+
+	if (!partial_index)
+		active_index = param_index["ahci-link-power-partial"];
+
 	power = 0;
-	factor = get_parameter_value("ahci-link-power-active", bundle);
+	factor = get_parameter_value(active_index, bundle);
 
 	sprintf(buffer, "%s-active", name);
 	utilization = get_result_value(buffer, result);
@@ -171,7 +180,7 @@ double ahci::power_usage(struct result_bundle *result, struct parameter_bundle *
 	power += utilization * factor / 100.0;
 
 	sprintf(buffer, "%s-partial", name);
-	factor = get_parameter_value("ahci-link-power-partial", bundle);
+	factor = get_parameter_value(partial_index, bundle);
 	utilization = get_result_value(buffer, result);
 
 	power += utilization * factor / 100.0;

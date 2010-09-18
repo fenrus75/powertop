@@ -57,6 +57,11 @@ double get_parameter_value(const char *name, struct parameter_bundle *the_bundle
 	return the_bundle->parameters[index];
 }
 
+double get_parameter_value(int index, struct parameter_bundle *the_bundle)
+{
+	return the_bundle->parameters[index];
+}
+
 double get_result_value(const char *name, struct result_bundle *the_bundle)
 {
 	return the_bundle->utilization[name];

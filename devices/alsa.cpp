@@ -134,9 +134,12 @@ double alsa::power_usage(struct result_bundle *result, struct parameter_bundle *
 	double power;
 	double factor;
 	double utilization;
+	static int index = 0;
 
 	power = 0;
-	factor = get_parameter_value("alsa-codec-power", bundle);
+	if (!index)
+		index = param_index["alsa-codec-power"];
+	factor = get_parameter_value(index, bundle);
 
 	utilization = get_result_value(name, result);
 

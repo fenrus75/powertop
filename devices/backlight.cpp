@@ -160,14 +160,20 @@ double backlight::power_usage(struct result_bundle *result, struct parameter_bun
 	double factor;
 	double utilization;
 	char powername[4096];
+	static int bl_index = 0, blp_index = 0;
+
+	if (!bl_index)
+		bl_index = param_index["backlight"];
+	if (!blp_index)
+		bl_index = param_index["backlight-power"];
 
 	power = 0;
-	factor = get_parameter_value("backlight", bundle);
+	factor = get_parameter_value(bl_index, bundle);
 	utilization = get_result_value(name, result);
 
 	power += utilization * factor / 100.0;
 
-	factor = get_parameter_value("backlight-power", bundle);
+	factor = get_parameter_value(blp_index, bundle);
 	sprintf(powername, "%s-power", name);
 	utilization = get_result_value(powername, result);
 

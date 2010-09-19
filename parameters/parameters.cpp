@@ -178,7 +178,7 @@ void dump_parameter_bundle(struct parameter_bundle *para)
 	}
 
 	printf("\n");
-	printf("Score:  %5.1f\n", sqrt(para->score / (0.001 + past_results.size()) / average_power()));
+	printf("Score:  %5.1f  (%5.1f)\n", sqrt(para->score / (0.001 + past_results.size()) / average_power()), para->score);
 	printf("Guess:  %5.1f\n", para->guessed_power);
 	printf("Actual: %5.1f\n", para->actual_power);
 

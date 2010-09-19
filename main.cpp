@@ -86,8 +86,9 @@ int main(int argc, char **argv)
 
 
 
-        learn_parameters(500);
+        learn_parameters(100);
 	dump_parameter_bundle();
+	exit(0);
 	save_parameters("saved_parameters.powertop");
 
 	/* first one is short to not let the user wait too long */

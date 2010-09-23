@@ -3,7 +3,7 @@ all: powertop
 CFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
 CPPFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
 CXXFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
-OBJS := lib.o main.o 
+OBJS := lib.o main.o display.o
 OBJS += cpu/cpu.o cpu/abstract_cpu.o cpu/cpu_linux.o cpu/cpu_core.o cpu/cpu_package.o cpu/intel_cpus.o  cpu/cpudevice.cpp
 OBJS += perf/perf.o perf/perf_bundle.o
 OBJS += process/process.o process/do_process.o process/interrupt.o process/timer.o process/work.o process/powerconsumer.o process/device.o
@@ -13,7 +13,7 @@ OBJS += $(DEVS)
 OBJS += parameters/parameters.o parameters/learn.o parameters/persistent.o
 OBJS += calibrate/calibrate.o
 
-LIBS += -lpthread
+LIBS += -lpthread -lncurses
 
 HEADERS := cpu/cpu.h
 

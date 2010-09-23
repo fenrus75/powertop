@@ -15,6 +15,8 @@
 #include "calibrate/calibrate.h"
 
 
+#include "display.h"
+
 int debug_learning;
 
 
@@ -88,8 +90,12 @@ int main(int argc, char **argv)
 
         learn_parameters(100);
 	dump_parameter_bundle();
-	exit(0);
 	save_parameters("saved_parameters.powertop");
+
+	init_display();
+
+	show_tab(0);
+
 
 	/* first one is short to not let the user wait too long */
 	one_measurement(5);

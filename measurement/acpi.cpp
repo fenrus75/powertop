@@ -65,8 +65,13 @@ void acpi_power_meter::measure(void)
 			while (*c == ' ') c++;
 			_rate = strtoull(c, NULL, 10);
 			c = strchr(c, ' ');
-			c++;
-			strcpy(rate_units, c);
+			if (c) {
+				c++;
+				strcpy(rate_units, c);
+			} else {
+				_rate = 0;
+				strcpy(rate_units, "Unknown");
+			}
 
 		}
 		if (strstr(line, "remaining capacity:")) {

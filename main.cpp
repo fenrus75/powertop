@@ -28,9 +28,8 @@ void one_measurement(int seconds)
 	start_process_measurement();
 	start_cpu_measurement();
 
-	cout << "measuring for " << seconds << " seconds\n";
-	sleep(20);
-	printf("%c[2J%c[0;0H\n\n",27, 27);
+	sleep(seconds);
+
 
 	end_cpu_measurement();
 	end_process_measurement();
@@ -39,6 +38,7 @@ void one_measurement(int seconds)
 
 	process_cpu_data();
 	process_process_data();
+	process_update_display();
 	end_process_data();
 		
 
@@ -92,16 +92,20 @@ int main(int argc, char **argv)
 	dump_parameter_bundle();
 	save_parameters("saved_parameters.powertop");
 
+
+
+	/* first one is short to not let the user wait too long */
 	init_display();
+	show_tab(0);
+
+	one_measurement(1);
 
 	show_tab(0);
 
 
-	/* first one is short to not let the user wait too long */
-	one_measurement(5);
-
 	for (i = 0; i < 25; i++) {
 		one_measurement(20);
+		show_tab(0);
 		learn_parameters(15);
 	}
 

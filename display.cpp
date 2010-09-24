@@ -4,12 +4,19 @@
 
 
 #include <vector>
+#include <map>
 #include <string>
 
 using namespace std;
 
 vector<string> tab_names;
+map<string, WINDOW *> tab_windows;
 
+static void create_tab(string name)
+{
+	tab_names.push_back(name);
+	tab_windows[name] = newpad(1000,1000);
+}
 
 
 void init_display(void)
@@ -23,12 +30,12 @@ void init_display(void)
 
 	use_default_colors();
 
-	tab_names.push_back("Overview");
-	tab_names.push_back("Idle stats");
-	tab_names.push_back("Frequency stats");
-	tab_names.push_back("Device stats");
-	tab_names.push_back("Checklist");
-	tab_names.push_back("Actions");
+	create_tab("Overview");
+	create_tab("Idle stats");
+	create_tab("Frequency stats");
+	create_tab("Device stats");
+	create_tab("Checklist");
+	create_tab("Actions");
 
 }
 
@@ -36,6 +43,7 @@ WINDOW *tab_bar = NULL;
 
 void show_tab(unsigned int tab)
 {
+	WINDOW *win;
 	unsigned int i;
 	if (tab_bar) {
 		delwin(tab_bar);
@@ -59,6 +67,11 @@ void show_tab(unsigned int tab)
 			mvwprintw(tab_bar, 0, (i + 1) * 18, " %s ", tab_names[i].c_str());
 	}
 	
-
 	wrefresh(tab_bar);
+
+	win = tab_windows[tab_names[tab]];
+	if (!win)
+		return;
+
+	prefresh(win, 0, 0, 1, 0, LINES - 3, COLS - 1);
 }

@@ -11,10 +11,12 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <ncurses.h>
 
 #include "../perf/perf_bundle.h"
 #include "../perf/perf_event.h"
 #include "../parameters/parameters.h"
+#include "../display.h"
 
 static  class perf_bundle * perf_events;
 
@@ -446,6 +448,23 @@ static bool power_cpu_sort(class power_consumer * i, class power_consumer * j)
         return (i->Witts() > j->Witts());
 }
 
+void process_update_display(void)
+{
+	unsigned int i;
+	WINDOW *win;
+
+	win = tab_windows["Overview"];
+	if (!win)
+		exit(0);
+
+	wclear(win);
+
+	wmove(win, 2,0);
+
+	for (i = 0; i < all_power.size(); i++)
+		wprintw(win, "%5.1fmW %s\n", all_power[i]->Witts()*1000, all_power[i]->description());
+}
+
 void process_process_data(void)
 {
 	unsigned int i;
@@ -487,8 +506,6 @@ void process_process_data(void)
 	all_devices_to_all_power();
 
 	sort(all_power.begin(), all_power.end(), power_cpu_sort);
-	for (i = 0; i < all_power.size() && i < 20; i++)
-		printf("%5.1fmW %s\n", all_power[i]->Witts()*1000, all_power[i]->description());
 
 }
 

@@ -39,6 +39,9 @@ void one_measurement(int seconds)
 	process_cpu_data();
 	process_process_data();
 	process_update_display();
+	w_display_cpu_cstates();
+	w_display_cpu_pstates();
+
 	end_process_data();
 		
 
@@ -105,7 +108,7 @@ int main(int argc, char **argv)
 
 	for (i = 0; i < 25; i++) {
 		one_measurement(20);
-		show_tab(0);
+		show_next_tab();
 		learn_parameters(15);
 	}
 

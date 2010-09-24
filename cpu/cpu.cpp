@@ -3,6 +3,7 @@
 #include <vector>
 #include <string.h>
 #include <stdlib.h>
+#include <ncurses.h>
 
 #include "cpu.h"
 #include "cpudevice.h"
@@ -10,6 +11,7 @@
 
 #include "../perf/perf_bundle.h"
 #include "../lib.h"
+#include "../display.h"
 
 static class abstract_cpu system_level;
 
@@ -324,6 +326,96 @@ void display_cpu_cstates(const char *start, const char *end, const char *linesta
 	printf("%s", end);		
 }
 
+void w_display_cpu_cstates(void)
+{
+	WINDOW *win;
+	char buffer[128];
+	char linebuf[1024];
+	unsigned int package, core, cpu;
+	int line;
+	class abstract_cpu *_package, * _core, * _cpu;
+	int ctr = 0;
+
+	win = tab_windows["Idle stats"];
+	if (!win)
+		return;
+
+	wclear(win);
+        wmove(win, 2,0);
+
+	for (package = 0; package < system_level.children.size(); package++) {
+		int first_pkg = 0;
+		_package = system_level.children[package];
+		if (!_package)
+			continue;
+		
+
+		for (core = 0; core < _package->children.size(); core++) {
+			_core = _package->children[core];
+			if (!_core)
+				continue;
+
+			for (line = LEVEL_HEADER; line < 10; line++) {
+				int first = 1;
+				ctr = 0;
+				linebuf[0] = 0;
+				if (!_package->has_cstate_level(line))
+					continue;
+
+	
+				buffer[0] = 0;
+				if (first_pkg == 0) {
+					strcat(linebuf, _package->fill_cstate_name(line, buffer));
+					expand_string(linebuf, ctr+10);
+					strcat(linebuf, _package->fill_cstate_line(line, buffer));
+				}
+				ctr += 20;
+				expand_string(linebuf, ctr);
+	
+				strcat(linebuf, "| ");
+				ctr += strlen("| ");
+
+				if (!_core->can_collapse()) {
+					buffer[0] = 0;
+					strcat(linebuf, _core->fill_cstate_name(line, buffer));
+					expand_string(linebuf, ctr + 10);
+					strcat(linebuf, _core->fill_cstate_line(line, buffer));
+					ctr += 20;
+					expand_string(linebuf, ctr);
+
+					strcat(linebuf, "| ");
+					ctr += strlen("| ");
+				}
+
+				for (cpu = 0; cpu < _core->children.size(); cpu++) {
+					_cpu = _core->children[cpu];
+					if (!_cpu)
+						continue;
+
+					if (first == 1) {
+						strcat(linebuf, _cpu->fill_cstate_name(line, buffer));
+						expand_string(linebuf, ctr + 10);
+						first = 0;
+						ctr += 12;
+					}
+					buffer[0] = 0;
+					strcat(linebuf, _cpu->fill_cstate_line(line, buffer));
+					ctr += 18;
+					expand_string(linebuf, ctr);
+
+				}
+				strcat(linebuf, "\n");
+				wprintw(win, "%s", linebuf);
+			}
+
+			wprintw(win, "\n");
+			first_pkg++;
+		}
+
+
+	}
+}
+
 
 void display_cpu_pstates(const char *start, const char *end, const char *linestart,
                                 const char *separator, const char *lineend)
@@ -415,6 +507,99 @@ void display_cpu_pstates(const char *start, const char *end, const char *linesta
 	}
 
 	printf("%s", end);		
+}
+
+void w_display_cpu_pstates(void)
+{
+	WINDOW *win;
+	char buffer[128];
+	char linebuf[1024];
+	unsigned int package, core, cpu;
+	int line;
+	class abstract_cpu *_package, * _core, * _cpu;
+	int ctr = 0;
+
+	win = tab_windows["Frequency stats"];
+	if (!win)
+		return;
+
+	wclear(win);
+        wmove(win, 2,0);
+
+
+	for (package = 0; package < system_level.children.size(); package++) {
+		int first_pkg = 0;
+		_package = system_level.children[package];
+		if (!_package)
+			continue;
+		
+
+		for (core = 0; core < _package->children.size(); core++) {
+			_core = _package->children[core];
+			if (!_core)
+				continue;
+
+			for (line = LEVEL_HEADER; line < 10; line++) {
+				int first = 1;
+				ctr = 0;
+				linebuf[0] = 0;
+
+				if (!_package->has_pstate_level(line))
+					continue;
+
+
+				buffer[0] = 0;
+				if (first_pkg == 0) {
+					strcat(linebuf, _package->fill_pstate_name(line, buffer));
+					expand_string(linebuf, ctr + 10);
+					strcat(linebuf, _package->fill_pstate_line(line, buffer));
+				}
+				ctr += 20;
+				expand_string(linebuf, ctr);
+	
+				strcat(linebuf, "| ");
+				ctr += strlen("| ");
+
+				if (!_core->can_collapse()) {
+					buffer[0] = 0;
+					strcat(linebuf, _core->fill_pstate_name(line, buffer));
+					expand_string(linebuf, ctr + 10);
+					strcat(linebuf, _core->fill_pstate_line(line, buffer));
+					ctr += 20;
+					expand_string(linebuf, ctr);
+
+					strcat(linebuf, "| ");
+					ctr += strlen("| ");
+				}
+
+				for (cpu = 0; cpu < _core->children.size(); cpu++) {
+					_cpu = _core->children[cpu];
+					if (!_cpu)
+						continue;
+
+					if (first == 1) {
+						strcat(linebuf, _cpu->fill_pstate_name(line, buffer));
+						expand_string(linebuf, ctr + 10);
+						first = 0;
+						ctr += 12;
+					}
+					buffer[0] = 0;
+					strcat(linebuf, _cpu->fill_pstate_line(line, buffer));
+					ctr += 10;
+					expand_string(linebuf, ctr);
+
+				}
+				strcat(linebuf, "\n");
+				wprintw(win, "%s", linebuf);
+			}
+
+			wprintw(win, "\n");
+			first_pkg++;
+		}
+
+
+	}
+
 }
 
 

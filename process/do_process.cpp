@@ -462,7 +462,7 @@ void process_update_display(void)
 	wmove(win, 2,0);
 
 	for (i = 0; i < all_power.size(); i++)
-		wprintw(win, "%5.1fmW %s\n", all_power[i]->Witts()*1000, all_power[i]->description());
+		wprintw(win, "%6.1fmW %s\n", all_power[i]->Witts()*1000, all_power[i]->description());
 }
 
 void process_process_data(void)

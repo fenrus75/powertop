@@ -11,6 +11,7 @@ using namespace std;
 extern void init_display(void);
 
 extern void show_tab(unsigned int tab);
+extern void show_next_tab(void);
 
 extern map<string, WINDOW *> tab_windows;
 

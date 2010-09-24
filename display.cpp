@@ -41,6 +41,8 @@ void init_display(void)
 
 WINDOW *tab_bar = NULL;
 
+static unsigned int current_tab;
+
 void show_tab(unsigned int tab)
 {
 	WINDOW *win;
@@ -58,6 +60,7 @@ void show_tab(unsigned int tab)
 	mvwprintw(tab_bar, 0,0, "PowerTOP 1.99");
 
 
+	current_tab = tab;
 
 	for (i = 0; i < tab_names.size() - 1; i++) {
 			if (i == tab)
@@ -74,4 +77,12 @@ void show_tab(unsigned int tab)
 		return;
 
 	prefresh(win, 0, 0, 1, 0, LINES - 3, COLS - 1);
+}
+
+void show_next_tab(void)
+{
+	current_tab ++;
+	if (current_tab >= tab_names.size())
+		current_tab = 0;
+	show_tab(current_tab);
 }

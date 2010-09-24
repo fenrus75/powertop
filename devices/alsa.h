@@ -10,6 +10,7 @@ class alsa: public device {
 	uint64_t start_inactive, end_inactive;
 	char sysfs_path[4096];
 	char name[4096];
+	char humanname[4096];
 	int rindex;
 public:
 
@@ -23,6 +24,7 @@ public:
 	virtual const char * class_name(void) { return "alsa";};
 
 	virtual const char * device_name(void);
+	virtual const char * human_name(void) { return humanname; };
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
 };
 

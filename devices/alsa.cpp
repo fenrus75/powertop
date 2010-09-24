@@ -17,15 +17,41 @@ using namespace std;
 
 alsa::alsa(char *_name, char *path)
 {
-	char devname[128];
+	ifstream file;
+
+	char devname[4096];
+	char model[4096];
+	char vendor[4096];
 	end_active = 0;
 	start_active = 0;
 	end_inactive = 0;
 	start_inactive = 0;
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
 	sprintf(devname, "alsa:%s", _name);
+	sprintf(humanname, "alsa:%s", _name);
 	strncpy(name, devname, sizeof(name));
 	rindex = get_result_index(name);
+
+	model[0] = 0;
+	vendor[0] = 0;
+	sprintf(devname, "%s/modelname", path);
+	file.open(devname);
+	if (file) {
+		file.getline(model, 4096);
+		file.close();
+	}	
+	sprintf(devname, "%s/vendor_name", path);
+	file.open(devname);
+	if (file) {
+		file.getline(vendor, 4096);
+		file.close();
+	}
+	if (strlen(model) && strlen(vendor))
+		sprintf(humanname, "Audio codec %s: %s (%s)", name, model, vendor);
+	else if (strlen(model))
+		sprintf(humanname, "Audio codec %s: %s", _name, model);
+	else if (strlen(vendor))
+		sprintf(humanname, "Audio codec %s: %s", _name, vendor);
 }
 
 void alsa::start_measurement(void)

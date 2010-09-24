@@ -11,7 +11,7 @@ device_consumer::device_consumer(class device *dev)
 
 const char * device_consumer::description(void)
 {
-	sprintf(str, "Device  (%s)  %s", device->class_name(), device->device_name());
+	sprintf(str, "Device  (%s)  %s", device->class_name(), device->human_name());
 	return str;
 }
 

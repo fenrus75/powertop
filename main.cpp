@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 #include "cpu/cpu.h"
 #include "process/process.h"
@@ -19,6 +20,41 @@
 
 int debug_learning;
 
+int leave_powertop = 0;
+
+static void do_sleep(int seconds)
+{
+	time_t target;
+	int delta;
+
+	target = time(NULL) + seconds;
+	delta = seconds;
+	do {
+		int c;
+		halfdelay(delta * 10);
+
+		c = getch();
+
+		switch (c) {
+		case KEY_NPAGE:
+			show_next_tab();
+			break;
+		case KEY_PPAGE:
+			show_prev_tab();
+			break;
+		case KEY_EXIT:
+		case 'q':
+			leave_powertop = 1;
+			return;
+		}
+
+		delta = target - time(NULL);
+		if (delta <= 0)
+			break;
+			
+	} while (1);
+}
+
 
 void one_measurement(int seconds)
 {
@@ -28,7 +64,7 @@ void one_measurement(int seconds)
 	start_process_measurement();
 	start_cpu_measurement();
 
-	sleep(seconds);
+	do_sleep(seconds);
 
 
 	end_cpu_measurement();
@@ -58,8 +94,6 @@ void one_measurement(int seconds)
 
 int main(int argc, char **argv)
 {
-	int i;
-
 	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
 
 
@@ -107,12 +141,13 @@ int main(int argc, char **argv)
 	show_tab(0);
 
 
-	for (i = 0; i < 25; i++) {
+	while (!leave_powertop) {
 		one_measurement(20);
-		show_next_tab();
+		show_cur_tab();
 		learn_parameters(15);
 	}
 
+	endwin();
 
 
 	end_process_data();

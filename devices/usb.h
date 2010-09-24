@@ -10,6 +10,7 @@ class usbdevice: public device {
 	char sysfs_path[4096];
 	char name[4096];
 	char devname[4096];
+	char humanname[4096];
 	int index;
 	int r_index;
 	int rootport;
@@ -25,6 +26,7 @@ public:
 	virtual const char * class_name(void) { return "usb";};
 
 	virtual const char * device_name(void);
+	virtual const char * human_name(void);
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
 };
 

@@ -14,9 +14,14 @@
 
 usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 {
+	ifstream file;
+	char filename[4096];
+	char vendor[4096];
+
 	strcpy(sysfs_path, path);
 	strcpy(name, _name);
 	strcpy(devname, devid);
+	strcpy(humanname, devid);
 	active_before = 0;
 	active_after = 0;
 	connected_before = 0;
@@ -31,6 +36,25 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 	if (strcmp(devname, "usb-device-1d6b-0002") == 0)
 		rootport = 1;
 
+
+	vendor[0] = 0;
+	sprintf(filename, "%s/manufacturer", path);
+	file.open(filename, ios::in);
+	if (file) {
+		file.getline(vendor, 2047);
+		file.close();
+	};	
+	sprintf(filename, "%s/product", path);
+	file.open(filename, ios::in);
+	if (file) {
+		file.getline(humanname, 2040);
+		file.close();
+		if (strlen(vendor)) {
+			strcat(humanname, " (");
+			strcat(humanname, vendor);
+			strcat(humanname, ")");
+		}
+	};	
 }
 
 
@@ -94,6 +118,11 @@ double usbdevice::utilization(void) /* percentage */
 const char * usbdevice::device_name(void)
 {
 	return name;
+}
+
+const char * usbdevice::human_name(void)
+{
+	return humanname;
 }
 
 

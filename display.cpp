@@ -41,7 +41,7 @@ void init_display(void)
 
 WINDOW *tab_bar = NULL;
 
-static unsigned int current_tab;
+static int current_tab;
 
 void show_tab(unsigned int tab)
 {
@@ -82,7 +82,20 @@ void show_tab(unsigned int tab)
 void show_next_tab(void)
 {
 	current_tab ++;
-	if (current_tab >= tab_names.size())
+	if (current_tab >= (int)tab_names.size())
 		current_tab = 0;
+	show_tab(current_tab);
+}
+
+void show_prev_tab(void)
+{
+	current_tab --;
+	if (current_tab < 0)
+		current_tab = tab_names.size() - 1;
+	show_tab(current_tab);
+}
+
+void show_cur_tab(void)
+{
 	show_tab(current_tab);
 }

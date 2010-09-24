@@ -74,7 +74,7 @@ void report_devices(void)
 			all_devices[i]->utilization(),
 			all_devices[i]->power_usage(&all_results, &all_parameters),
 			all_devices[i]->class_name(),
-			all_devices[i]->device_name()
+			all_devices[i]->human_name()
 			);
 	}
 }

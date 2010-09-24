@@ -1,6 +1,7 @@
 
 #include "device.h"
 #include <vector>
+#include <algorithm>
 #include <stdio.h>
 using namespace std;
 
@@ -13,6 +14,7 @@ using namespace std;
 #include "thinkpad-fan.h"
 
 #include "../parameters/parameters.h"
+#include "../display.h"
 
 void device::start_measurement(void)
 {
@@ -46,13 +48,29 @@ void devices_end_measurement(void)
 		all_devices[i]->end_measurement();
 }
 
+static bool power_device_sort(class device * i, class device * j)
+{
+        return (i->power_usage(&all_results, &all_parameters)) > j->power_usage(&all_results, &all_parameters);
+}
+
+
 void report_devices(void)
 {
+	WINDOW *win;
 	unsigned int i;
 
-	printf("\n\nDevice statistics\n");
+	win = tab_windows["Device stats"];
+        if (!win)
+                return;
+
+        wclear(win);
+        wmove(win, 2,0);
+
+	sort(all_devices.begin(), all_devices.end(), power_device_sort);
+
+	wprintw(win, "Device statistics\n");
 	for (i = 0; i < all_devices.size(); i++) {
-		printf("%5.1f%% %6.2fW  %s (%s) \n", 
+		wprintw(win, "%5.1f%% %6.2fW  %s (%s) \n", 
 			all_devices[i]->utilization(),
 			all_devices[i]->power_usage(&all_results, &all_parameters),
 			all_devices[i]->class_name(),

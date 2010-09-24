@@ -34,8 +34,8 @@ void init_display(void)
 	create_tab("Idle stats");
 	create_tab("Frequency stats");
 	create_tab("Device stats");
-	create_tab("Checklist");
-	create_tab("Actions");
+//	create_tab("Checklist");
+//	create_tab("Actions");
 
 }
 
@@ -62,7 +62,7 @@ void show_tab(unsigned int tab)
 
 	current_tab = tab;
 
-	for (i = 0; i < tab_names.size() - 1; i++) {
+	for (i = 0; i < tab_names.size(); i++) {
 			if (i == tab)
 				wattrset(tab_bar, A_NORMAL);
 			else

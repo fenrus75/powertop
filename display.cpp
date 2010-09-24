@@ -30,14 +30,11 @@ void init_display(void)
 	tab_names.push_back("Checklist");
 	tab_names.push_back("Actions");
 
-        init_pair(PT_COLOR_HEADER_BAR, COLOR_WHITE, COLOR_BLACK);
-        init_pair(PT_COLOR_HEADER_LIGHT, COLOR_BLACK, COLOR_WHITE);
-
 }
 
 WINDOW *tab_bar = NULL;
 
-void show_tab(int tab)
+void show_tab(unsigned int tab)
 {
 	unsigned int i;
 	if (tab_bar) {
@@ -48,18 +45,17 @@ void show_tab(int tab)
 	tab_bar = newwin(1, 0, 0, 0);
 
 
-        wbkgd(tab_bar, COLOR_PAIR(PT_COLOR_HEADER_BAR));
-        werase(tab_bar);
-	wattrset(tab_bar, A_NORMAL);
+	wattrset(tab_bar, A_REVERSE);
+	mvwprintw(tab_bar, 0,0, "%120s", "");
 	mvwprintw(tab_bar, 0,0, "PowerTOP 1.99");
 
 
 
 	for (i = 0; i < tab_names.size() - 1; i++) {
 			if (i == tab)
-				wattrset(tab_bar, COLOR_PAIR(PT_COLOR_HEADER_LIGHT));
+				wattrset(tab_bar, A_NORMAL);
 			else
-				wattrset(tab_bar, COLOR_PAIR(PT_COLOR_HEADER_BAR));
+				wattrset(tab_bar, A_REVERSE);
 			mvwprintw(tab_bar, 0, (i + 1) * 18, " %s ", tab_names[i].c_str());
 	}
 	

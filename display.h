@@ -3,7 +3,7 @@
 
 extern void init_display(void);
 
-extern void show_tab(int tab);
+extern void show_tab(unsigned int tab);
 
 #define PT_COLOR_HEADER_BAR 1
 #define PT_COLOR_HEADER_LIGHT 2

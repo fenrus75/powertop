@@ -455,7 +455,7 @@ void process_update_display(void)
 
 	win = tab_windows["Overview"];
 	if (!win)
-		exit(0);
+		return;
 
 	wclear(win);
 

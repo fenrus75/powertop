@@ -24,7 +24,8 @@ public:
 	cpudevice(const char *classname = "cpu", const char *device_name = "cpu0", class abstract_cpu *_cpu = NULL);
 	virtual const char * class_name(void) { return _class;};
 
-	virtual const char * device_name(void) {return _cpuname;};
+	virtual const char * device_name(void) {return "CPU use";};
+	virtual const char * util_units(void) { return NULL; };
 
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
 	virtual bool show_in_list(void) {return false;};

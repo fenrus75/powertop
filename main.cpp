@@ -128,10 +128,14 @@ int main(int argc, char **argv)
 
 
 
-        learn_parameters(100);
+        learn_parameters(500);
 	save_parameters("saved_parameters.powertop");
 
 
+	if (debug_learning) {
+		dump_parameter_bundle();
+		exit(0);
+	}
 
 	/* first one is short to not let the user wait too long */
 	init_display();
@@ -157,6 +161,7 @@ int main(int argc, char **argv)
 	save_parameters("saved_parameters.powertop");
 	learn_parameters(500);
 	save_parameters("saved_parameters.powertop");
+	dump_parameter_bundle();
 	return 0;
 
 	

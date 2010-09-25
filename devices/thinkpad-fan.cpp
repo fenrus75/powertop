@@ -21,6 +21,9 @@ thinkpad_fan::thinkpad_fan()
 {
 	start_rate = 0;
 	end_rate = 0;
+	fan_index = get_param_index("thinkpad-fan");
+	fansqr_index = get_param_index("thinkpad-fan-sqr");
+	r_index = get_result_index("thinkpad-fan");
 }
 
 void thinkpad_fan::start_measurement(void)
@@ -39,7 +42,7 @@ void thinkpad_fan::end_measurement(void)
 
 double thinkpad_fan::utilization(void)
 {
-	return (start_rate+end_rate) / 100.0;
+	return (start_rate+end_rate) / 2;
 }
 
 void create_thinkpad_fan(void)
@@ -66,29 +69,20 @@ double thinkpad_fan::power_usage(struct result_bundle *result, struct parameter_
 	double factor;
 	double utilization;
 
-	static int fan_index = 0, fansqr_index = 0;
-	static int r_index = 0;
-
-	if (!fan_index)
-		fan_index = get_param_index("thinkpad-fan");
-	if (!fansqr_index)
-		fansqr_index = get_param_index("thinkpad-fan-sqr");
-	if (!r_index)
-		r_index = get_result_index("thinkpad-fan");
 
 	power = 0;
 	utilization = get_result_value(r_index, result);
 
-	utilization = utilization - 50;
+	utilization = utilization - 2400;
 	if (utilization < 0)
 		utilization = 0;
 
 
 	factor = get_parameter_value(fansqr_index, bundle);
-	power += factor * pow(utilization / 100.0, 2);
+	power += factor * pow(utilization / 3000.0, 2);
 
 	factor = get_parameter_value(fan_index, bundle);
-	power -= utilization * factor / 100.0;
+	power -= utilization / 5000.0 * factor;
 
 	if (power <= 0.0)
 		power = 0.0;

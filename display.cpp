@@ -9,6 +9,8 @@
 
 using namespace std;
 
+static int display = 0;
+
 vector<string> tab_names;
 map<string, WINDOW *> tab_windows;
 
@@ -37,6 +39,7 @@ void init_display(void)
 //	create_tab("Checklist");
 //	create_tab("Actions");
 
+	display = 1;
 }
 
 WINDOW *tab_bar = NULL;
@@ -47,6 +50,10 @@ void show_tab(unsigned int tab)
 {
 	WINDOW *win;
 	unsigned int i;
+
+	if (!display)
+		return;
+
 	if (tab_bar) {
 		delwin(tab_bar);
 		tab_bar = NULL;
@@ -81,6 +88,8 @@ void show_tab(unsigned int tab)
 
 void show_next_tab(void)
 {
+	if (!display)
+		return;
 	current_tab ++;
 	if (current_tab >= (int)tab_names.size())
 		current_tab = 0;
@@ -89,6 +98,8 @@ void show_next_tab(void)
 
 void show_prev_tab(void)
 {
+	if (!display)
+		return;
 	current_tab --;
 	if (current_tab < 0)
 		current_tab = tab_names.size() - 1;
@@ -97,5 +108,7 @@ void show_prev_tab(void)
 
 void show_cur_tab(void)
 {
+	if (!display)
+		return;
 	show_tab(current_tab);
 }

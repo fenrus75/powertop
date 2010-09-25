@@ -85,26 +85,34 @@ void report_devices(void)
 
 	sort(all_devices.begin(), all_devices.end(), power_device_sort);
 
-	wprintw(win, "Device statistics\n");
+	wprintw(win, "Power est.  Usage     Device\n");
 	for (i = 0; i < all_devices.size(); i++) {
 		double P;
-		sprintf(util, "%5.1f%s",  all_devices[i]->utilization(),  all_devices[i]->util_units());
+
+		util[0] = 0;
+
+		if (all_devices[i]->util_units()) {
+			if (all_devices[i]->utilization() < 1000)
+				sprintf(util, "%5.1f%s",  all_devices[i]->utilization(),  all_devices[i]->util_units());
+			else
+				sprintf(util, "%5i%s",  (int)all_devices[i]->utilization(),  all_devices[i]->util_units());
+		}
 		while (strlen(util) < 9) strcat(util, " ");
 
 		P = all_devices[i]->power_usage(&all_results, &all_parameters);
 
 		if (P > 1.5) 
-			sprintf(power, "%7.2fW ", P);
+			sprintf(power, "%7.2fW   ", P);
 		else
-			sprintf(power, "%7.2fmW", P*1000);
+			sprintf(power, "%6.1f mW  ", P*1000);
 
 		if (!all_devices[i]->power_valid())
-			strcpy(power, "         ");
+			strcpy(power, "           ");
 
 
 		wprintw(win, "%s %s %s\n", 
-			util,
 			power,
+			util,
 			all_devices[i]->human_name()
 			);
 	}

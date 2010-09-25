@@ -36,11 +36,11 @@ rfkill::rfkill(char *_name, char *path)
 	memset(line, 0, 4096);
 	sprintf(filename, "%s/device/driver", path);
 	if (readlink(filename, line, 4096) > 0) {
-		sprintf(humanname, "Radio device %s", basename(line));
+		sprintf(humanname, "Radio device: %s", basename(line));
 	};
 	sprintf(filename, "%s/device/device/driver", path);
 	if (readlink(filename, line, 4096) > 0) {
-		sprintf(humanname, "Radio device %s", basename(line));
+		sprintf(humanname, "Radio device: %s", basename(line));
 	}}
 
 void rfkill::start_measurement(void)

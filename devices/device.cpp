@@ -77,10 +77,9 @@ void report_devices(void)
 
 	wprintw(win, "Device statistics\n");
 	for (i = 0; i < all_devices.size(); i++) {
-		wprintw(win, "%5.1f%% %6.2fW  %s (%s) \n", 
+		wprintw(win, "%5.1f%% %6.2fW  %s \n", 
 			all_devices[i]->utilization(),
 			all_devices[i]->power_usage(&all_results, &all_parameters),
-			all_devices[i]->class_name(),
 			all_devices[i]->human_name()
 			);
 	}

@@ -129,7 +129,6 @@ int main(int argc, char **argv)
 
 
         learn_parameters(100);
-	dump_parameter_bundle();
 	save_parameters("saved_parameters.powertop");
 
 
@@ -148,6 +147,7 @@ int main(int argc, char **argv)
 	}
 
 	endwin();
+	printf("Leaving PowerTOP\n");
 
 
 	end_process_data();

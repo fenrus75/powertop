@@ -16,7 +16,7 @@ class ahci: public device {
 	int active_rindex;
 	int partial_index;
 	int active_index;
-	string humanname;
+	char humanname[4096];
 public:
 
 	ahci(char *_name, char *path);
@@ -29,7 +29,7 @@ public:
 	virtual const char * class_name(void) { return "ahci";};
 
 	virtual const char * device_name(void);
-	virtual const char * human_name(void) { return humanname.c_str();};
+	virtual const char * human_name(void) { return humanname;};
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
 };
 

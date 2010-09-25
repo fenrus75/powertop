@@ -17,6 +17,7 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 	ifstream file;
 	char filename[4096];
 	char vendor[4096];
+	char product[4096];
 
 	strcpy(sysfs_path, path);
 	strcpy(name, _name);
@@ -38,6 +39,7 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 
 
 	vendor[0] = 0;
+	product[0] = 0;
 	sprintf(filename, "%s/manufacturer", path);
 	file.open(filename, ios::in);
 	if (file) {
@@ -49,14 +51,15 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 	sprintf(filename, "%s/product", path);
 	file.open(filename, ios::in);
 	if (file) {
-		file.getline(humanname, 2040);
+		file.getline(product, 2040);
 		file.close();
-		if (strlen(vendor)) {
-			strcat(humanname, " (");
-			strcat(humanname, vendor);
-			strcat(humanname, ")");
-		}
 	};	
+	if (strlen(vendor) && strlen(product))
+		sprintf(humanname, "USB device: %s (%s)", product, vendor);
+	else if (strlen(product))
+		sprintf(humanname, "USB device: %s", product);
+	else if (strlen(vendor))
+		sprintf(humanname, "USB device: %s", vendor);
 }
 
 

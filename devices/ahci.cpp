@@ -21,7 +21,7 @@ static string disk_name(char *path, char *target, char *shortname)
 	DIR *dir;
 	struct dirent *dirent;
 	char pathname[PATH_MAX];
-	string diskname = shortname;
+	string diskname = "";
 
 	sprintf(pathname, "%s/%s", path, target);
 	dir = opendir(pathname);
@@ -80,13 +80,15 @@ static string model_name(char *path, char *shortname)
 	}
 	closedir(dir);
 
-	return shortname;
+	return "";
 }
 
 ahci::ahci(char *_name, char *path)
 {
 	char buffer[4096];
 	char devname[128];
+	string diskname;
+
 	end_active = 0;
 	end_slumber = 0;
 	end_partial = 0;
@@ -105,7 +107,12 @@ ahci::ahci(char *_name, char *path)
 	sprintf(buffer, "%s-partial", name);
 	partial_rindex = get_result_index(buffer);
 
-	humanname = model_name(path, _name);
+	diskname = model_name(path, _name);
+
+	if (strlen(diskname.c_str()) == 0)
+		sprintf(humanname, "SATA link: %s", _name);
+	else
+		sprintf(humanname, "SATA disk: %s", diskname.c_str());
 	
 }
 

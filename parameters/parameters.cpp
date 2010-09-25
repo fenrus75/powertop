@@ -94,6 +94,8 @@ void set_result_value(const char *name, double value, struct result_bundle *the_
 
 double get_result_value(int index, struct result_bundle *the_bundle)
 {
+	if (!the_bundle)
+		return 0;
 	if (index >= (int) the_bundle->utilization.size())
 		return 0;
 	return the_bundle->utilization[index];
@@ -292,4 +294,44 @@ double average_power(void)
 	else
 		sum = 0.0001;
 	return sum;
+}
+
+int utilization_power_valid(const char *u)
+{
+	unsigned int i;
+	unsigned int index;
+	double first_value;
+
+	index = get_result_index(u);
+	if (index <= 0)
+		return 0;
+
+	first_value = past_results[0]->utilization[index];
+	for (i = 1; i < past_results.size(); i++) {
+		if (get_result_value(index, past_results[i]) < first_value - 0.0001)
+			return 1;
+		if (get_result_value(index, past_results[i]) > first_value + 0.0001)
+			return 1;	
+	}
+
+	return 0;
+}
+
+int utilization_power_valid(int index)
+{
+	unsigned int i;
+	double first_value;
+
+	if (index <= 0)
+		return 0;
+
+	first_value = past_results[0]->utilization[index];
+	for (i = 1; i < past_results.size(); i++) {
+		if (get_result_value(index, past_results[i]) < first_value - 0.0001)
+			return 1;
+		if (get_result_value(index, past_results[i]) > first_value + 0.0001)
+			return 1;	
+	}
+
+	return 0;
 }

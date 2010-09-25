@@ -78,4 +78,7 @@ extern double bundle_power(struct parameter_bundle *parameters, struct result_bu
 
 extern double average_power(void);
 
+extern int utilization_power_valid(const char *u);
+extern int utilization_power_valid(int index);
+
 #endif

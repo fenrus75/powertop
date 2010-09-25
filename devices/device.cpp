@@ -55,6 +55,13 @@ static bool power_device_sort(class device * i, class device * j)
 	pJ = j->power_usage(&all_results, &all_parameters);
 
 	if (pI == pJ) {
+		int vI, vJ;
+		vI = i->power_valid();
+		vJ = j->power_valid();
+
+		if (vI != vJ)
+			return vI > vJ;
+
 		return i->utilization() > j->utilization();
 	}
         return pI > pJ;
@@ -65,6 +72,9 @@ void report_devices(void)
 {
 	WINDOW *win;
 	unsigned int i;
+
+	char util[128];
+	char power[128];
 
 	win = tab_windows["Device stats"];
         if (!win)
@@ -77,9 +87,24 @@ void report_devices(void)
 
 	wprintw(win, "Device statistics\n");
 	for (i = 0; i < all_devices.size(); i++) {
-		wprintw(win, "%5.1f%% %6.2fW  %s \n", 
-			all_devices[i]->utilization(),
-			all_devices[i]->power_usage(&all_results, &all_parameters),
+		double P;
+		sprintf(util, "%5.1f%s",  all_devices[i]->utilization(),  all_devices[i]->util_units());
+		while (strlen(util) < 9) strcat(util, " ");
+
+		P = all_devices[i]->power_usage(&all_results, &all_parameters);
+
+		if (P > 1.5) 
+			sprintf(power, "%7.2fW ", P);
+		else
+			sprintf(power, "%7.2fmW", P*1000);
+
+		if (!all_devices[i]->power_valid())
+			strcpy(power, "         ");
+
+
+		wprintw(win, "%s %s %s\n", 
+			util,
+			power,
 			all_devices[i]->human_name()
 			);
 	}

@@ -4,17 +4,19 @@
 
 #include <vector>
 
+
 struct parameter_bundle;
 struct result_bundle;
 
 class device {
-
 public:
 
 	virtual void start_measurement(void);
 	virtual void end_measurement(void);
 
 	virtual double	utilization(void); /* percentage */
+
+	virtual const char * util_units(void) { return "%"; };
 
 	virtual const char * class_name(void) { return "abstract device";};
 	virtual const char * device_name(void) { return "abstract device";};
@@ -24,6 +26,8 @@ public:
 	virtual double power_usage(struct result_bundle *results, struct parameter_bundle *bundle) { return 0.0; };
 
 	virtual bool show_in_list(void) {return true;};
+
+	virtual int power_valid(void) { return 1;};
 };
 
 using namespace std;

@@ -42,6 +42,8 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 	file.open(filename, ios::in);
 	if (file) {
 		file.getline(vendor, 2047);
+		if (strstr(vendor, "Linux "))
+			vendor[0] = 0;
 		file.close();
 	};	
 	sprintf(filename, "%s/product", path);

@@ -50,7 +50,14 @@ void devices_end_measurement(void)
 
 static bool power_device_sort(class device * i, class device * j)
 {
-        return (i->power_usage(&all_results, &all_parameters)) > j->power_usage(&all_results, &all_parameters);
+	double pI, pJ;
+	pI = i->power_usage(&all_results, &all_parameters);
+	pJ = j->power_usage(&all_results, &all_parameters);
+
+	if (pI == pJ) {
+		return i->utilization() > j->utilization();
+	}
+        return pI > pJ;
 }
 
 

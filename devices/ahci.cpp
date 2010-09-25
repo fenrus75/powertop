@@ -15,6 +15,74 @@ using namespace std;
 #include <string.h>
 
 
+static string disk_name(char *path, char *target, char *shortname)
+{
+
+	DIR *dir;
+	struct dirent *dirent;
+	char pathname[PATH_MAX];
+	string diskname = shortname;
+
+	sprintf(pathname, "%s/%s", path, target);
+	dir = opendir(pathname);
+	if (!dir)
+		return diskname;
+
+	while ((dirent = readdir(dir))) {
+		char line[4096], *c;
+		FILE *file;
+		if (dirent->d_name[0]=='.')
+			continue;
+
+		if (!strchr(dirent->d_name, ':'))
+			continue;
+
+		sprintf(line, "%s/%s/model", pathname, dirent->d_name);
+		file = fopen(line, "r");
+		if (file) {
+			if (fgets(line, 4096, file) == NULL)
+				break;
+			fclose(file);
+			c = strchr(line, '\n');
+			if (c)
+				*c = 0;
+			diskname = line;
+			break;
+		}
+	}
+	closedir(dir);
+
+	return diskname;
+}
+
+static string model_name(char *path, char *shortname)
+{
+
+	DIR *dir;
+	struct dirent *dirent;
+	char pathname[PATH_MAX];
+
+	sprintf(pathname, "%s/device", path);
+
+	dir = opendir(pathname);
+	if (!dir)
+		return strdup(shortname);
+
+	while ((dirent = readdir(dir))) {
+		if (dirent->d_name[0]=='.')
+			continue;
+
+		if (!strchr(dirent->d_name, ':'))
+			continue;
+		if (!strstr(dirent->d_name, "target"))
+			continue;
+		return disk_name(pathname, dirent->d_name, shortname);
+	}
+	closedir(dir);
+
+	return shortname;
+}
+
 ahci::ahci(char *_name, char *path)
 {
 	char buffer[4096];
@@ -36,6 +104,9 @@ ahci::ahci(char *_name, char *path)
 
 	sprintf(buffer, "%s-partial", name);
 	partial_rindex = get_result_index(buffer);
+
+	humanname = model_name(path, _name);
+	
 }
 
 void ahci::start_measurement(void)

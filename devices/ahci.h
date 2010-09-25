@@ -2,6 +2,7 @@
 #define _INCLUDE_GUARD_AHCI_H
 
 
+#include <string>
 #include "device.h"
 #include <stdint.h>
 
@@ -15,6 +16,7 @@ class ahci: public device {
 	int active_rindex;
 	int partial_index;
 	int active_index;
+	string humanname;
 public:
 
 	ahci(char *_name, char *path);
@@ -27,6 +29,7 @@ public:
 	virtual const char * class_name(void) { return "ahci";};
 
 	virtual const char * device_name(void);
+	virtual const char * human_name(void) { return humanname.c_str();};
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
 };
 

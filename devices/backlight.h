@@ -23,6 +23,7 @@ public:
 	virtual const char * class_name(void) { return "backlight";};
 
 	virtual const char * device_name(void);
+	virtual const char * human_name(void) { return "Display backlight";};
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
 };
 

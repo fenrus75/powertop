@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include <libgen.h>
 
 
 using namespace std;
@@ -17,6 +18,8 @@ using namespace std;
 
 rfkill::rfkill(char *_name, char *path)
 {
+	char line[4096];
+	char filename[4096];
 	char devname[128];
 	start_soft = 0;
 	start_hard = 0;
@@ -24,11 +27,21 @@ rfkill::rfkill(char *_name, char *path)
 	end_hard = 0;
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
 	sprintf(devname, "radio:%s", _name);
+	sprintf(humanname, "radio:%s", _name);
 	strncpy(name, devname, sizeof(name));
 	register_parameter(devname);
 	index = get_param_index(devname);
 	rindex = get_result_index(name);
-}
+
+	memset(line, 0, 4096);
+	sprintf(filename, "%s/device/driver", path);
+	if (readlink(filename, line, 4096) > 0) {
+		sprintf(humanname, "Radio device %s", basename(line));
+	};
+	sprintf(filename, "%s/device/device/driver", path);
+	if (readlink(filename, line, 4096) > 0) {
+		sprintf(humanname, "Radio device %s", basename(line));
+	}}
 
 void rfkill::start_measurement(void)
 {

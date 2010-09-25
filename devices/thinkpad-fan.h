@@ -18,6 +18,7 @@ public:
 	virtual const char * class_name(void) { return "fan";};
 
 	virtual const char * device_name(void) { return "Fan-1";};
+	virtual const char * human_name(void) { return "Laptop fan";};
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
 };
 

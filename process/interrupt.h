@@ -22,6 +22,7 @@ public:
 	virtual const char * description(void);
 
 	virtual const char * name(void) { return "interrupt"; };
+	virtual const char * type(void) { return "Interrupt"; };
 
 };
 

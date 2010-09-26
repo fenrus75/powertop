@@ -56,9 +56,7 @@ const char * process::description(void)
 
 	if (child_runtime > accumulated_runtime)
 		child_runtime = 0;
-	sprintf(desc, "Process %22s      time  %5.2fms    wakeups %4.1f  gpu ops %4.1f  (child %5.1fms)",
-			comm, (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time, wake_ups / measurement_time,
-				gpu_ops / measurement_time, child_runtime / 1000000.0);
+	sprintf(desc, "%s", comm);
 	return desc;
 }
 

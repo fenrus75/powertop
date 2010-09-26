@@ -18,6 +18,7 @@ public:
 
 	virtual const char * description(void);
 	virtual const char * name(void) { return "work"; };
+	virtual const char * type(void) { return "kWork"; };
 
 };
 

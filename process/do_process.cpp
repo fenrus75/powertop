@@ -453,6 +453,8 @@ void process_update_display(void)
 	unsigned int i;
 	WINDOW *win;
 
+	sort(all_power.begin(), all_power.end(), power_cpu_sort);
+
 	win = tab_windows["Overview"];
 	if (!win)
 		return;
@@ -461,8 +463,23 @@ void process_update_display(void)
 
 	wmove(win, 2,0);
 
-	for (i = 0; i < all_power.size(); i++)
-		wprintw(win, "%6.1fmW %s\n", all_power[i]->Witts()*1000, all_power[i]->description());
+	wprintw(win, "Power est.   Usage/s   Events/s    Category       Description\n");
+
+	for (i = 0; i < all_power.size(); i++) {
+		char power[16];
+		char name[20];
+		char usage[20];
+		char events[20];
+		format_watts(all_power[i]->Witts(), power, 10);
+		sprintf(name, all_power[i]->type());
+		while (strlen(name) < 14) strcat(name, " ");
+
+		sprintf(usage, "%5.1f%s", all_power[i]->usage(), all_power[i]->usage_units());
+		while (strlen(usage) < 10) strcat(usage, " ");
+		sprintf(events, "%5.1f", all_power[i]->events());
+		while (strlen(events) < 12) strcat(events, " ");
+		wprintw(win, "%s %s %s %s %s\n", power, usage, events, name, all_power[i]->description());
+	}
 }
 
 void process_process_data(void)

@@ -50,9 +50,7 @@ const char * interrupt::description(void)
 {
 	if (child_runtime > accumulated_runtime)
 		child_runtime = 0;
-	sprintf(desc, "Interrupt (%2i) %15s      time  %5.2fms    wakeups %4.1f  (child %5.1fms) (total: %i) ", number,
-			handler,  (accumulated_runtime - child_runtime) / 1000000.0  / measurement_time / measurement_time, wake_ups / measurement_time, 
-				child_runtime / 1000000.0, raw_count);
+	sprintf(desc, "[%i] %s", number, handler);
 	return desc;
 }
 

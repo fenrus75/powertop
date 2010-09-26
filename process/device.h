@@ -15,6 +15,7 @@ public:
 
 	virtual const char * description(void);
 	virtual const char * name(void) { return "device"; };
+	virtual const char * type(void) { return "Device"; };
 	virtual double Witts(void);
 
 };

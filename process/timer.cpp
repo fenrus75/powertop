@@ -63,9 +63,7 @@ const char * timer::description(void)
 	if (child_runtime > accumulated_runtime)
 		child_runtime = 0;
 
-	sprintf(desc, "Timer  %23s      time  %5.2fms    wakeups %4.1f  (total: %i)",
-			handler,  (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time, 
-			wake_ups / measurement_time, raw_count);
+	sprintf(desc, "%s", handler);
 	return desc;
 }
 

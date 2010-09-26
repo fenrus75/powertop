@@ -7,6 +7,7 @@
 
 using namespace std;
 
+extern double measurement_time;
 
 class power_consumer;
 
@@ -26,6 +27,11 @@ public:
 	virtual const char * description(void) { return ""; };
 
 	virtual const char * name(void) { return "abstract"; };
+	virtual const char * type(void) { return "abstract"; };
+
+	virtual double usage(void) { return (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time;};
+	virtual const char * usage_units(void) {return "msec";};
+	virtual double events(void) { return  (wake_ups + gpu_ops) / measurement_time;};
 };
 
 extern vector <class power_consumer *> all_power;

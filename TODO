@@ -5,6 +5,9 @@
 * add device runtime PM stats for pci, spi and i2c
 * deal with debugfs not being in /sys/kernel/debug
 
+* GPU ops in interrupt context -> do not account special ?
+
+
 
 done
 ----

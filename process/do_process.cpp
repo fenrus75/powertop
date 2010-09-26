@@ -503,7 +503,9 @@ void process_process_data(void)
 	clear_consumers();
 
 
+	cpu_credit.resize(0, 0);
 	cpu_credit.resize(get_max_cpu()+1, 0);
+	cpu_level.resize(0, 0);
 	cpu_level.resize(get_max_cpu()+1, 0);
 	cpu_blame.resize(0, NULL);
 	cpu_blame.resize(get_max_cpu()+1, NULL);
@@ -564,7 +566,7 @@ double total_cpu_time(void)
 	}
 
 	
-	total =  (total / (0.0001 + last_stamp - first_stamp)) * 100;
+	total =  (total / (0.0001 + last_stamp - first_stamp));
 
 	return total;
 }

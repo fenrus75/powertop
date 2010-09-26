@@ -18,6 +18,8 @@ using namespace std;
 
 i915gpu::i915gpu()
 {
+	index = get_param_index("gpu-operations");
+	rindex = get_result_index("gpu-operations");
 }
 
 void i915gpu::start_measurement(void)
@@ -31,7 +33,8 @@ void i915gpu::end_measurement(void)
 
 double i915gpu::utilization(void)
 {
-	return 0;
+	return  get_result_value(rindex);
+
 }
 
 void create_i915_gpu(void)
@@ -57,13 +60,6 @@ double i915gpu::power_usage(struct result_bundle *result, struct parameter_bundl
 	double power;
 	double factor;
 	double utilization;
-	static int index = 0;
-	static int rindex = 0;
-
-	if (!index)
-		index = get_param_index("gpu-operations");
-	if (!rindex)
-		rindex = get_result_index("gpu-operations");
 
 	power = 0;
 	factor = get_parameter_value(index, bundle);

@@ -169,9 +169,9 @@ void format_watts(double W, char *buffer, unsigned int len)
 	else if (W > 0.001)
 		sprintf(buffer, "%7.2f mW", W*1000);
 	else if (W > 0.0001)
-		sprintf(buffer, "%7.3fmW", W*1000);
+		sprintf(buffer, "%8.3fmW", W*1000);
 	else
-		sprintf(buffer, "   0.0   mW");
+		sprintf(buffer, "   0.0  mW");
 		
 	while (strlen(buffer) < len)
 		strcat(buffer, " ");	

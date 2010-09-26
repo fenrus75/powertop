@@ -32,5 +32,7 @@ using namespace std;
 extern void write_sysfs(string filename, string value);
 extern int read_sysfs(string filename);
 
+extern void format_watts(double W, char *buffer, unsigned int len);
+
 
 #endif

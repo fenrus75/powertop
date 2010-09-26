@@ -15,6 +15,7 @@ using namespace std;
 
 #include "../parameters/parameters.h"
 #include "../display.h"
+#include "../lib.h"
 
 void device::start_measurement(void)
 {
@@ -101,10 +102,7 @@ void report_devices(void)
 
 		P = all_devices[i]->power_usage(&all_results, &all_parameters);
 
-		if (P > 1.5) 
-			sprintf(power, "%7.2fW   ", P);
-		else
-			sprintf(power, "%6.1f mW  ", P*1000);
+		format_watts(P, power, 11);
 
 		if (!all_devices[i]->power_valid())
 			strcpy(power, "           ");

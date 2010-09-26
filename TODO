@@ -1,8 +1,9 @@
 * debug why wakeups sometimes go to all 0's
 * audio calibration? Need appropriate sample
 * fix memory leaks
-* find out why CPU power and sum of components doesn't add upe
+* find out why CPU power and sum of components doesn't add up
 * add device runtime PM stats for pci, spi and i2c
+* deal with debugfs not being in /sys/kernel/debug
 
 
 done

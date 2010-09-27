@@ -147,7 +147,7 @@ int main(int argc, char **argv)
 	while (!leave_powertop) {
 		one_measurement(20);
 		show_cur_tab();
-		learn_parameters(15);
+		learn_parameters(35);
 	}
 
 	endwin();

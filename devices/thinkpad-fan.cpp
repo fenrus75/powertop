@@ -79,7 +79,7 @@ double thinkpad_fan::power_usage(struct result_bundle *result, struct parameter_
 
 
 	factor = get_parameter_value(fansqr_index, bundle);
-	power += factor * pow(utilization / 3000.0, 2);
+	power += factor * pow(utilization / 3000.0, 1.5);
 
 	factor = get_parameter_value(fan_index, bundle);
 	power -= utilization / 5000.0 * factor;

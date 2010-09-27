@@ -463,6 +463,10 @@ void process_update_display(void)
 
 	wmove(win, 2,0);
 
+	wprintw(win, "Estimated power: %5.1f    Measured power: %5.1f\n\n",
+				all_parameters.guessed_power, all_parameters.actual_power);
+
+
 	wprintw(win, "Power est.   Usage/s   Events/s    Category       Description\n");
 
 	for (i = 0; i < all_power.size(); i++) {

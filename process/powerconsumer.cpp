@@ -17,8 +17,10 @@ double power_consumer::Witts(void)
 	wakeupcost = get_parameter_value("cpu-wakeups");
 	gpucost = get_parameter_value("gpu-operations");
 
-	cost = wakeupcost * wake_ups / 10000.0;
-	cost += ( (accumulated_runtime - child_runtime) / 1000000000.0 * timecost);
+	cost = 0;
+
+	cost += wakeupcost * wake_ups / 10000.0;
+	cost += ( (accumulated_runtime - child_runtime) / 1000000000.0) * timecost;
 	cost += gpucost * gpu_ops / 100.0;
 
 	cost = cost / measurement_time;

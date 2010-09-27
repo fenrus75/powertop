@@ -1,10 +1,10 @@
 * debug why wakeups sometimes go to all 0's
 * audio calibration? Need appropriate sample
 * fix memory leaks
-* find out why CPU power and sum of components doesn't add up
+* find out why CPU %age and C state C0 %age don't mesh sometimes
 * add device runtime PM stats for pci, spi and i2c
 * deal with debugfs not being in /sys/kernel/debug
-
+* exclude xorg/etc from wakeup blame backcounting
 * GPU ops in interrupt context -> do not account special ?
 
 
@@ -21,3 +21,4 @@ done
   all of them as they go
 * in learning, try slightly lower base power
 * display device power in power top 20
+* find out why CPU power and sum of components doesn't add up

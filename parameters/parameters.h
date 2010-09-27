@@ -80,5 +80,6 @@ extern double average_power(void);
 
 extern int utilization_power_valid(const char *u);
 extern int utilization_power_valid(int index);
+extern double calculate_params(struct parameter_bundle *params = &all_parameters);
 
 #endif

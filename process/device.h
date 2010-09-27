@@ -17,6 +17,8 @@ public:
 	virtual const char * name(void) { return "device"; };
 	virtual const char * type(void) { return "Device"; };
 	virtual double Witts(void);
+	virtual double usage(void) { return device->utilization();};
+	virtual const char * usage_units(void) {return device->util_units();};
 
 };
 

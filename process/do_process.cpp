@@ -17,6 +17,7 @@
 #include "../perf/perf_event.h"
 #include "../parameters/parameters.h"
 #include "../display.h"
+#include "../measurement/measurement.h"
 
 static  class perf_bundle * perf_events;
 
@@ -144,6 +145,16 @@ class perf_process_bundle: public perf_bundle
 };
 
 
+/* some processes shouldn't be blamed for the wakeup if they wake a process up... for now this is a hardcoded list */
+int dont_blame_me(char *comm)
+{
+	if (strcmp(comm, "Xorg"))
+		return 1;
+	if (strcmp(comm, "dbus-daemon"))
+		return 1;
+
+	return 0;
+}
 
 
 
@@ -238,7 +249,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 
 		dest_proc = find_create_process(we->comm, we->pid);
 		
-		if (!dest_proc->running && dest_proc->waker == NULL && we->pid != 0)
+		if (!dest_proc->running && dest_proc->waker == NULL && we->pid != 0 && !dont_blame_me(we->comm))
 			dest_proc->waker = from;
 
 	}
@@ -402,6 +413,11 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 	if (strcmp(event_name, "i915:i915_gem_request_submit") == 0) {
 		class power_consumer *consumer;
 		consumer = current_consumer(cpu);
+		/* currently we don't count graphic requests submitted from irq contect */
+		if ( (flags & TRACE_FLAG_HARDIRQ) || (flags & TRACE_FLAG_SOFTIRQ)) {
+			consumer = NULL;
+		}
+
 		if (consumer) {
 			consumer->gpu_ops++;
 		}
@@ -463,8 +479,9 @@ void process_update_display(void)
 
 	wmove(win, 2,0);
 
+	calculate_params();
 	wprintw(win, "Estimated power: %5.1f    Measured power: %5.1f\n\n",
-				all_parameters.guessed_power, all_parameters.actual_power);
+				all_parameters.guessed_power, global_joules_consumed());
 
 
 	wprintw(win, "Power est.   Usage/s   Events/s    Category       Description\n");
@@ -478,7 +495,13 @@ void process_update_display(void)
 		sprintf(name, all_power[i]->type());
 		while (strlen(name) < 14) strcat(name, " ");
 
-		sprintf(usage, "%5.1f%s", all_power[i]->usage(), all_power[i]->usage_units());
+		usage[0] = 0;
+		if (all_power[i]->usage_units()) {
+			if (all_power[i]->usage() < 1000) 
+				sprintf(usage, "%5.1f%s", all_power[i]->usage(), all_power[i]->usage_units());
+			else
+				sprintf(usage, "%5i%s", (int)all_power[i]->usage(), all_power[i]->usage_units());
+		}
 		while (strlen(usage) < 10) strcat(usage, " ");
 		sprintf(events, "%5.1f", all_power[i]->events());
 		while (strlen(events) < 12) strcat(events, " ");

@@ -20,6 +20,7 @@ public:
 	int		wake_ups;
 	int		gpu_ops;
 	class power_consumer *waker;
+	class power_consumer *last_waker;
 
 	power_consumer(void);
 

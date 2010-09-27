@@ -251,6 +251,8 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		
 		if (!dest_proc->running && dest_proc->waker == NULL && we->pid != 0 && !dont_blame_me(we->comm))
 			dest_proc->waker = from;
+		if (from)
+			dest_proc->last_waker = from;
 
 	}
 	if (strcmp(event_name, "irq:irq_handler_entry") == 0) {
@@ -417,6 +419,18 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		if ( (flags & TRACE_FLAG_HARDIRQ) || (flags & TRACE_FLAG_SOFTIRQ)) {
 			consumer = NULL;
 		}
+
+
+		/* if we are X, and someone just woke us, account the GPU op to the guy waking us */
+		if (consumer && strcmp(consumer->name(), "process")==0) {
+			class process *proc;
+			proc = (class process *) consumer;
+			if (strcmp(proc->comm, "Xorg")==0 && proc->last_waker) {
+				consumer = proc->last_waker;
+			}
+		}
+			
+			
 
 		if (consumer) {
 			consumer->gpu_ops++;

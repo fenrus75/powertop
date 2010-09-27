@@ -1,13 +1,22 @@
 * debug why wakeups sometimes go to all 0's
+  -looks like I fixed it, keep an eye on it
 * audio calibration? Need appropriate sample
 * fix memory leaks
 * find out why CPU %age and C state C0 %age don't mesh sometimes
 * add device runtime PM stats for pci, spi and i2c
 * deal with debugfs not being in /sys/kernel/debug
-* exclude xorg/etc from wakeup blame backcounting
-* GPU ops in interrupt context -> do not account special ?
+* network interfaces as device
+* device events/sec into the process view
+* USB urbs as events/sec counter
+* try to see if we can account graphics ops done by X to the guy who woke up
+  X
+* identify kernel threads in the process list for visual differentiation
+* investigate tick_sched_timer and why it wakes up
+* find if we can do more detailed reporting about tasklet(softirq)
+* don't save measurements < 5 seconds
+* auto save every 10 or so measurements
 
-
+* check various tunables (see powertop 1.x) into a tunable checklist
 
 done
 ----
@@ -22,3 +31,5 @@ done
 * in learning, try slightly lower base power
 * display device power in power top 20
 * find out why CPU power and sum of components doesn't add up
+* exclude xorg/etc from wakeup blame backcounting
+* GPU ops in interrupt context -> do not account special ?

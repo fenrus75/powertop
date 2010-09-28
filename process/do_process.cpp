@@ -248,6 +248,11 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		}
 
 		dest_proc = find_create_process(we->comm, we->pid);
+
+		if (from && strcmp(from->name(), "process")!=0){
+			/* not a process doing the wakeup */
+			from = NULL;
+		}
 		
 		if (!dest_proc->running && dest_proc->waker == NULL && we->pid != 0 && !dont_blame_me(we->comm))
 			dest_proc->waker = from;

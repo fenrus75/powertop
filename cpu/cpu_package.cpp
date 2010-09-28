@@ -9,7 +9,7 @@ char * cpu_package::fill_cstate_line(int line_nr, char *buffer)
 	buffer[0] = 0;
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,"Package %i", number);
+		sprintf(buffer,"Package");
 		return buffer;
 	}
 

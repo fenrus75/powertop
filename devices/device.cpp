@@ -89,7 +89,7 @@ void report_devices(void)
 	format_watts(get_parameter_value("base power"), power, 11);
 	wprintw(win, "Platform base power is estimated at %s\n\n", power);
 
-	wprintw(win, "Power est.    Usage     Device\n");
+	wprintw(win, "Power est.    Usage     Device name\n");
 	for (i = 0; i < all_devices.size(); i++) {
 		double P;
 

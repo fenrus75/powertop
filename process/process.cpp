@@ -46,6 +46,8 @@ process::process(const char *_comm, int _pid)
 	pid = _pid;
 	is_idle = 0;
 	running = 0;
+	last_waker = NULL;
+	waker = NULL;
 
 	if (strncmp(_comm, "kondemand/", 10) == 0)
 		is_idle = 1;

@@ -55,6 +55,7 @@ extern void set_result_value(const char *name, double value, struct result_bundl
 extern int result_device_exists(const char *name);
 
 extern void report_utilization(const char *name, double value, struct result_bundle *bundle = &all_results);
+extern void report_utilization(int index, double value, struct result_bundle *bundle = &all_results);
 
 
 extern double compute_bundle(struct parameter_bundle *parameters = &all_parameters, struct result_bundle *results = &all_results);

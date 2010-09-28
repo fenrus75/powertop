@@ -33,6 +33,7 @@ public:
 	virtual double usage(void) { return (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time;};
 	virtual const char * usage_units(void) {return "msec";};
 	virtual double events(void) { return  (wake_ups + gpu_ops) / measurement_time;};
+	virtual int show_events(void) { return 1; };
 };
 
 extern vector <class power_consumer *> all_power;

@@ -19,7 +19,7 @@ public:
 	virtual double Witts(void);
 	virtual double usage(void) { return device->utilization();};
 	virtual const char * usage_units(void) {return device->util_units();};
-
+	virtual int show_events(void) { return 0; };
 };
 
 extern void all_devices_to_all_power(void);

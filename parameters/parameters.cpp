@@ -256,8 +256,12 @@ void store_results(double duration)
 	if (duration < 5)
 		return;
 	global_joules_consumed();
-	if (all_results.power > 0.01)
+	if (all_results.power > 0.01) {
 		past_results.push_back(clone_results(&all_results));	
+		if ((past_results.size() % 10) == 0)
+			save_all_results();
+	}
+
 }
 
 

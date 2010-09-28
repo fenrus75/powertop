@@ -68,7 +68,7 @@ extern struct parameter_bundle * clone_parameters(struct parameter_bundle *bundl
 
 extern void store_results(double duration);
 extern void learn_parameters(int iterations = 100);
-extern void save_all_results(const char *filename);
+extern void save_all_results(const char *filename = "saved_results.powertop");
 extern void load_results(const char *filename);
 extern void save_parameters(const char *filename);
 extern void load_parameters(const char *filename);

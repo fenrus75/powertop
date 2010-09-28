@@ -12,7 +12,6 @@
 * investigate tick_sched_timer and why it wakes up
 * find if we can do more detailed reporting about tasklet(softirq)
 	* deal with tasklets -- needs kernel patch
-* auto save every 10 or so measurements
 * between 500 - 1000 measurements, start replacing (at random) existing ones
   with a hard cap at 1000
 
@@ -36,3 +35,4 @@ done
 * try to see if we can account graphics ops done by X to the guy who woke up
   X
 * don't save measurements < 5 seconds
+* auto save every 10 or so measurements

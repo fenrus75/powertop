@@ -66,7 +66,7 @@ void dump_result_bundle(struct result_bundle *res = &all_results);
 extern struct result_bundle * clone_results(struct result_bundle *bundle);
 extern struct parameter_bundle * clone_parameters(struct parameter_bundle *bundle);
 
-extern void store_results(void);
+extern void store_results(double duration);
 extern void learn_parameters(int iterations = 100);
 extern void save_all_results(const char *filename);
 extern void load_results(const char *filename);

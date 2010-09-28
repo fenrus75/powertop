@@ -8,13 +8,13 @@
 * network interfaces as device
 * device events/sec into the process view
 * USB urbs as events/sec counter
-* try to see if we can account graphics ops done by X to the guy who woke up
-  X
 * identify kernel threads in the process list for visual differentiation
 * investigate tick_sched_timer and why it wakes up
 * find if we can do more detailed reporting about tasklet(softirq)
-* don't save measurements < 5 seconds
+	* deal with tasklets -- needs kernel patch
 * auto save every 10 or so measurements
+* between 500 - 1000 measurements, start replacing (at random) existing ones
+  with a hard cap at 1000
 
 * check various tunables (see powertop 1.x) into a tunable checklist
 
@@ -33,3 +33,6 @@ done
 * find out why CPU power and sum of components doesn't add up
 * exclude xorg/etc from wakeup blame backcounting
 * GPU ops in interrupt context -> do not account special ?
+* try to see if we can account graphics ops done by X to the guy who woke up
+  X
+* don't save measurements < 5 seconds

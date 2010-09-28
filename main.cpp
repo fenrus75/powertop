@@ -88,7 +88,7 @@ void one_measurement(int seconds)
 
 	report_devices();
 
-	store_results();
+	store_results(measurement_time);
 	end_cpu_data();
 }
 

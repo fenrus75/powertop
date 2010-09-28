@@ -251,8 +251,10 @@ struct parameter_bundle * clone_parameters(struct parameter_bundle *bundle)
 }
 
 
-void store_results(void)
+void store_results(double duration)
 {
+	if (duration < 5)
+		return;
 	global_joules_consumed();
 	if (all_results.power > 0.01)
 		past_results.push_back(clone_results(&all_results));	

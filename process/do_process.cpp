@@ -498,7 +498,7 @@ void process_update_display(void)
 				all_parameters.guessed_power, global_joules_consumed());
 
 
-	wprintw(win, "Power est.   Usage/s   Events/s    Category       Description\n");
+	wprintw(win, "Power est.    Usage/s   Events/s    Category       Description\n");
 
 	for (i = 0; i < all_power.size(); i++) {
 		char power[16];
@@ -521,7 +521,7 @@ void process_update_display(void)
 		if (!all_power[i]->show_events())
 			events[0] = 0;
 		while (strlen(events) < 12) strcat(events, " ");
-		wprintw(win, "%s %s %s %s %s\n", power, usage, events, name, all_power[i]->description());
+		wprintw(win, "%s  %s %s %s %s\n", power, usage, events, name, all_power[i]->description());
 	}
 }
 

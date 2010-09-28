@@ -12,9 +12,6 @@
 * investigate tick_sched_timer and why it wakes up
 * find if we can do more detailed reporting about tasklet(softirq)
 	* deal with tasklets -- needs kernel patch
-* between 500 - 1000 measurements, start replacing (at random) existing ones
-  with a hard cap at 1000
-
 * check various tunables (see powertop 1.x) into a tunable checklist
 
 done
@@ -36,3 +33,5 @@ done
   X
 * don't save measurements < 5 seconds
 * auto save every 10 or so measurements
+* between 500 - 1000 measurements, start replacing (at random) existing ones
+  with a hard cap at 1000

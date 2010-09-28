@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <stdlib.h>
 
 #include "parameters.h"
 #include "../measurement/measurement.h"
@@ -64,7 +65,15 @@ void load_results(const char *filename)
 		}
 		file.getline(line, 4096);
 		if (strlen(line) < 3) {
-			past_results.push_back(bundle);
+			int overflow_index;
+
+			overflow_index = 50 + (rand() % 450);
+			if (past_results.size() >= 500) {
+			/* memory leak, must free old one first */
+				past_results[overflow_index] = bundle;
+			} else {
+				past_results.push_back(bundle);
+			}
 			bundle = new struct result_bundle;
 			first = 1;
 			count++;

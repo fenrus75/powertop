@@ -2,6 +2,7 @@
 #include "../measurement/measurement.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <math.h>
 #include <vector>
 
@@ -257,7 +258,14 @@ void store_results(double duration)
 		return;
 	global_joules_consumed();
 	if (all_results.power > 0.01) {
-		past_results.push_back(clone_results(&all_results));	
+		unsigned int overflow_index;
+		overflow_index = 50 + (rand() % 450);
+		if (past_results.size() >= 500) {
+			/* memory leak, must free old one first */
+			past_results[overflow_index] = clone_results(&all_results);
+		} else {
+			past_results.push_back(clone_results(&all_results));	
+		}
 		if ((past_results.size() % 10) == 0)
 			save_all_results();
 	}

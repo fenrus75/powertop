@@ -86,10 +86,12 @@ void network::start_measurement(void)
 	end_up = 1;
 	end_link = 1;
 
-	sprintf(filename, "%s/link_mode", sysfs_path);
+	sprintf(filename, "%s/operstate", sysfs_path);
 	file.open(filename, ios::in);
 	if (file) {
-		file >> start_link;
+		file.getline(filename, 4096);
+		if (strcmp(filename, "up")==0)
+			start_link = 1;
 	}
 	file.close();
 
@@ -102,10 +104,12 @@ void network::end_measurement(void)
 	char filename[4096];
 	ifstream file;
 
-	sprintf(filename, "%s/link_mode", sysfs_path);
+	sprintf(filename, "%s/operstate", sysfs_path);
 	file.open(filename, ios::in);
 	if (file) {
-		file >> end_link;
+		file.getline(filename, 4096);
+		if (strcmp(filename, "up")==0)
+			end_link = 1;
 	}
 	file.close();
 

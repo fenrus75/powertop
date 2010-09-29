@@ -1,3 +1,4 @@
+* network interfaces -- packet counters as events
 * debug why wakeups sometimes go to all 0's
   -looks like I fixed it, keep an eye on it
 * audio calibration? Need appropriate sample
@@ -5,7 +6,6 @@
 * find out why CPU %age and C state C0 %age don't mesh sometimes
 * add device runtime PM stats for pci, spi and i2c
 * deal with debugfs not being in /sys/kernel/debug
-* network interfaces as device
 * device events/sec into the process view
 * USB urbs as events/sec counter
 * identify kernel threads in the process list for visual differentiation
@@ -35,3 +35,4 @@ done
 * auto save every 10 or so measurements
 * between 500 - 1000 measurements, start replacing (at random) existing ones
   with a hard cap at 1000
+* network interfaces as device

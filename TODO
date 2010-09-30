@@ -1,4 +1,6 @@
 * network interfaces -- packet counters as events
+  from /proc/net/dev
+
 * debug why wakeups sometimes go to all 0's
   -looks like I fixed it, keep an eye on it
 * audio calibration? Need appropriate sample

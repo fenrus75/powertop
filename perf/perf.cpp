@@ -1,9 +1,7 @@
 /*
- * Copyright 2009, Intel Corporation
+ * Copyright 2010, Intel Corporation
  *
  * This file is part of PowerTOP
- *
- * Portions borrowed from the "perf" tool (C) Ingo Molnar and others
  *
  * This program file is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -16,9 +14,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program in a file named COPYING; if not, write to the
- * Free Software Foundation, Inc.,
+ * Free Software Foundation, Inc,
  * 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301 USA
+ * or just google for it.
  *
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>

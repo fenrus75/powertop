@@ -25,6 +25,7 @@
 #ifndef _INCLUDE_GUARD_NETWORK_H
 #define _INCLUDE_GUARD_NETWORK_H
 
+#include <sys/time.h>
 
 #include "device.h"
 #include "../parameters/parameters.h"
@@ -33,6 +34,7 @@ class network: public device {
 	int start_link, end_link;
 	int start_up, end_up;
 	uint64_t start_pkts, end_pkts;
+	struct timeval before, after;
 	
 	char sysfs_path[4096];
 	char name[4096];

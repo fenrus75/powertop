@@ -191,6 +191,8 @@ void network::start_measurement(void)
 
 	do_proc_net_dev();
 	start_pkts = pkts;
+
+	gettimeofday(&before, NULL);
 }
 
 
@@ -198,6 +200,9 @@ void network::end_measurement(void)
 {
 	char filename[4096];
 	ifstream file;
+	double duration;
+
+	gettimeofday(&after, NULL);
 
 	sprintf(filename, "%s/operstate", sysfs_path);
 	file.open(filename, ios::in);
@@ -212,9 +217,11 @@ void network::end_measurement(void)
 	do_proc_net_dev();
 	end_pkts = pkts;
 
+	duration = (after.tv_sec - before.tv_sec) + (after.tv_usec - before.tv_usec) / 1000000.0;
+
 	report_utilization(rindex_link, (start_link+end_link) / 2.0);
 	report_utilization(rindex_up, (start_up+end_up) / 2.0);
-	report_utilization(rindex_pkts, (end_pkts - start_pkts)/(measurement_time + 0.001));
+	report_utilization(rindex_pkts, (end_pkts - start_pkts)/(duration + 0.001));
 }
 
 

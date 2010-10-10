@@ -102,8 +102,9 @@ double thinkpad_fan::power_usage(struct result_bundle *result, struct parameter_
 		utilization = 0;
 
 
+	/* physics dictact that fan power goes cubic with the rpms, but there's also a linear component */
 	factor = get_parameter_value(fansqr_index, bundle);
-	power += factor * pow(utilization / 3000.0, 3);
+	power += factor * pow(utilization / 3600.0, 3);
 
 	factor = get_parameter_value(fan_index, bundle);
 	power -= utilization / 5000.0 * factor;

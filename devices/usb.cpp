@@ -55,12 +55,19 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 	index = get_param_index(devname);
 	r_index = get_result_index(name);
 	rootport = 0;
-	/* root ports should count as 0 .. their activity is derived */
-	if (strcmp(devname, "usb-device-1d6b-0001") == 0)
-		rootport = 1;
-	if (strcmp(devname, "usb-device-1d6b-0002") == 0)
-		rootport = 1;
 
+
+	/* root ports and hubs should count as 0 power ... their activity is derived */
+	sprintf(filename, "%s/bDeviceClass", path);
+	file.open(filename, ios::in);
+	if (file) {
+		int dclass;
+
+		file >> dclass;
+		file.close();
+		if (dclass == 9)
+			rootport = 1;
+	};	
 
 	vendor[0] = 0;
 	product[0] = 0;

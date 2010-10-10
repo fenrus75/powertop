@@ -1,9 +1,4 @@
-* network interfaces -- packet counters as events
-  from /proc/net/dev
-
-* debug why wakeups sometimes go to all 0's
-  -looks like I fixed it, keep an eye on it
-* audio calibration? Need appropriate sample
+* have a "show me my process" page
 * fix memory leaks
 * find out why CPU %age and C state C0 %age don't mesh sometimes
 * add device runtime PM stats for pci, spi and i2c
@@ -15,6 +10,11 @@
 * find if we can do more detailed reporting about tasklet(softirq)
 	* deal with tasklets -- needs kernel patch
 * check various tunables (see powertop 1.x) into a tunable checklist
+
+* debug why wakeups sometimes go to all 0's
+  -looks like I fixed it, keep an eye on it
+* audio calibration? Need appropriate sample
+
 
 done
 ----
@@ -38,3 +38,5 @@ done
 * between 500 - 1000 measurements, start replacing (at random) existing ones
   with a hard cap at 1000
 * network interfaces as device
+* network interfaces -- packet counters as events
+  from /proc/net/dev

@@ -511,6 +511,7 @@ void process_update_display(void)
 {
 	unsigned int i;
 	WINDOW *win;
+	double sum;
 
 	sort(all_power.begin(), all_power.end(), power_cpu_sort);
 
@@ -523,8 +524,14 @@ void process_update_display(void)
 	wmove(win, 2,0);
 
 	calculate_params();
-	wprintw(win, "Estimated power: %5.1f    Measured power: %5.1f\n\n",
-				all_parameters.guessed_power, global_joules_consumed());
+	sum = 0.0;
+	sum += get_parameter_value("base power");	
+	for (i = 0; i < all_power.size(); i++) {
+		sum += all_power[i]->Witts();
+	}
+
+	wprintw(win, "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n\n",
+				all_parameters.guessed_power, global_joules_consumed(), sum);
 
 
 	wprintw(win, "Power est.    Usage/s   Events/s    Category       Description\n");
@@ -537,6 +544,10 @@ void process_update_display(void)
 		format_watts(all_power[i]->Witts(), power, 10);
 		sprintf(name, all_power[i]->type());
 		while (strlen(name) < 14) strcat(name, " ");
+
+
+		if (all_power[i]->events() == 0 && all_power[i]->usage() == 0 && all_power[i]->Witts() == 0)
+			break;
 
 		usage[0] = 0;
 		if (all_power[i]->usage_units()) {

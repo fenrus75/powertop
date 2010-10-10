@@ -214,7 +214,7 @@ void network::end_measurement(void)
 
 	report_utilization(rindex_link, (start_link+end_link) / 2.0);
 	report_utilization(rindex_up, (start_up+end_up) / 2.0);
-	report_utilization(rindex_pkts, (end_pkts - start_pkts)/measurement_time);
+	report_utilization(rindex_pkts, (end_pkts - start_pkts)/(measurement_time + 0.001));
 }
 
 

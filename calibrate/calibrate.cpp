@@ -438,28 +438,8 @@ static void disk_calibration(void)
 	stop_measurement = 1;
 	sleep(1);
 
-	set_scsi_link("medium_power");
-
-	stop_measurement = 0;
-	pthread_create(&thr, NULL, burn_disk, NULL);
-
-	one_measurement(15);
-	stop_measurement = 1;
-	sleep(1);
-
-	set_scsi_link("medium_power");
-
-	stop_measurement = 0;
-	one_measurement(15);
-	stop_measurement = 1;
-	sleep(1);
-
 	learn_parameters(50);
 
-	/* work around a bug in the ahci driver where medium->min transitions don't work */
-	set_scsi_link("max_performance");
-	sleep(1);
-	set_scsi_link("min_power");
 }
 
 

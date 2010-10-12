@@ -34,6 +34,7 @@
 #include <libgen.h>
 #include <stdlib.h>
 
+#include <linux/ethtool.h>
 
 using namespace std;
 
@@ -110,8 +111,8 @@ network::network(char *_name, char *path)
 	char devname[128];
 	start_up = 0;
 	end_up = 0;
-	start_link = 0;
-	end_link = 0;
+	start_speed = 0;
+	end_speed = 0;
 	start_pkts = 0;
 	end_pkts = 0;
 	pkts = 0;
@@ -124,9 +125,17 @@ network::network(char *_name, char *path)
 	index_up = get_param_index(devname);
 	rindex_up = get_result_index(devname);
 
-	sprintf(devname, "%s-link", _name);
-	index_link = get_param_index(devname);
-	rindex_link = get_result_index(devname);
+	sprintf(devname, "%s-link-100", _name);
+	index_link_100 = get_param_index(devname);
+	rindex_link_100 = get_result_index(devname);
+
+	sprintf(devname, "%s-link-1000", _name);
+	index_link_1000 = get_param_index(devname);
+	rindex_link_1000 = get_result_index(devname);
+
+	sprintf(devname, "%s-link-high", _name);
+	index_link_high = get_param_index(devname);
+	rindex_link_high = get_result_index(devname);
 
 	sprintf(devname, "%s-packets", _name);
 	index_pkts = get_param_index(devname);
@@ -168,24 +177,49 @@ static int net_iface_up(const char *iface)
 	return 0;
 }
 
+static int iface_speed(const char *name)
+{
+	int sock;
+	struct ifreq ifr;
+	struct ethtool_cmd cmd;
+	int speed;
+
+	memset(&ifr, 0, sizeof(struct ifreq));
+
+	sock = socket(AF_INET, SOCK_DGRAM, 0);
+	if (sock<0)
+		return 0;
+
+	strcpy(ifr.ifr_name, name);
+
+	memset(&cmd, 0, sizeof(cmd));
+
+	cmd.cmd = ETHTOOL_GSET;
+	ifr.ifr_data = (caddr_t)&cmd;
+        ioctl(sock, SIOCETHTOOL, &ifr);
+	close(sock);
+
+	speed = ethtool_cmd_speed(&cmd);
+
+	if (speed == 65535)
+		speed = 0; /* no link */
+
+	if (speed > 0 && speed <= 100)
+		speed = 100;
+	if (speed > 100 && speed <= 1000)
+		speed = 1000;
+
+	return speed;
+}
+
 void network::start_measurement(void)
 {
-	char filename[4096];
-	ifstream file;
-
 	start_up = 1;
-	start_link = 1;
+	start_speed = 0;
 	end_up = 1;
-	end_link = 1;
+	end_speed = 0;
 
-	sprintf(filename, "%s/operstate", sysfs_path);
-	file.open(filename, ios::in);
-	if (file) {
-		file.getline(filename, 4096);
-		if (strcmp(filename, "up")==0)
-			start_link = 1;
-	}
-	file.close();
+	start_speed = iface_speed(name);
 
 	start_up = net_iface_up(name);
 
@@ -198,28 +232,39 @@ void network::start_measurement(void)
 
 void network::end_measurement(void)
 {
-	char filename[4096];
-	ifstream file;
 	double duration;
+
+	int u_100, u_1000, u_high;
 
 	gettimeofday(&after, NULL);
 
-	sprintf(filename, "%s/operstate", sysfs_path);
-	file.open(filename, ios::in);
-	if (file) {
-		file.getline(filename, 4096);
-		if (strcmp(filename, "up")==0)
-			end_link = 1;
-	}
-	file.close();
-
+	end_speed = iface_speed(name);
 	end_up = net_iface_up(name);
 	do_proc_net_dev();
 	end_pkts = pkts;
 
 	duration = (after.tv_sec - before.tv_sec) + (after.tv_usec - before.tv_usec) / 1000000.0;
 
-	report_utilization(rindex_link, (start_link+end_link) / 2.0);
+	u_100 = 0;
+	u_1000 = 0;
+	u_high = 0;
+
+	if (start_speed == 100)
+		u_100 += 50;
+	if (start_speed == 1000)
+		u_1000 += 50;
+	if (start_speed > 1000)
+		u_high += 50;
+	if (end_speed == 100)
+		u_100 += 50;
+	if (end_speed == 1000)
+		u_1000 += 50;
+	if (end_speed > 1000)
+		u_high += 50;
+
+	report_utilization(rindex_link_100, u_100);
+	report_utilization(rindex_link_1000, u_1000);
+	report_utilization(rindex_link_high, u_high);
 	report_utilization(rindex_up, (start_up+end_up) / 2.0);
 	report_utilization(rindex_pkts, (end_pkts - start_pkts)/(duration + 0.001));
 }
@@ -277,10 +322,18 @@ double network::power_usage(struct result_bundle *result, struct parameter_bundl
 
 	power += utilization * factor;
 
-	factor = get_parameter_value(index_link, bundle);
-	utilization = get_result_value(rindex_link, result);
+	factor = get_parameter_value(index_link_100, bundle);
+	utilization = get_result_value(rindex_link_100, result);
+	power += utilization * factor / 100;
 
-	power += utilization * factor;
+
+	factor = get_parameter_value(index_link_1000, bundle);
+	utilization = get_result_value(rindex_link_1000, result);
+	power += utilization * factor / 100;
+
+	factor = get_parameter_value(index_link_high, bundle);
+	utilization = get_result_value(rindex_link_high, result);
+	power += utilization * factor / 100;
 
 	factor = get_parameter_value(index_pkts, bundle);
 	utilization = get_result_value(rindex_pkts, result);

@@ -31,18 +31,24 @@
 #include "../parameters/parameters.h"
 
 class network: public device {
-	int start_link, end_link;
 	int start_up, end_up;
 	uint64_t start_pkts, end_pkts;
 	struct timeval before, after;
+
+	int start_speed; /* 0 is "no link" */
+	int end_speed; /* 0 is "no link" */
 	
 	char sysfs_path[4096];
 	char name[4096];
 	char humanname[4096];
 	int index_up;
 	int rindex_up;
-	int index_link;
-	int rindex_link;
+	int index_link_100;
+	int rindex_link_100;
+	int index_link_1000;
+	int rindex_link_1000;
+	int index_link_high;
+	int rindex_link_high;
 	int index_pkts;
 	int rindex_pkts;
 public:
@@ -61,7 +67,7 @@ public:
 	virtual const char * device_name(void);
 	virtual const char * human_name(void) { return humanname; };
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
-	virtual int power_valid(void) { return utilization_power_valid(rindex_up) + utilization_power_valid(rindex_link);};
+	virtual int power_valid(void) { return utilization_power_valid(rindex_up) + utilization_power_valid(rindex_link_100) + utilization_power_valid(rindex_link_1000)  + utilization_power_valid(rindex_link_high);};
 };
 
 extern void create_all_nics(void);

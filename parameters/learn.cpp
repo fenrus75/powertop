@@ -86,6 +86,9 @@ void learn_parameters(int iterations)
 //	if (past_results.size() == previous_measurements)
 //		return;
 
+	precompute_valid();
+
+
 	previous_measurements = past_results.size();
 
 	double delta = 0.50;

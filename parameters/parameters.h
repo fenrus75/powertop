@@ -82,6 +82,8 @@ extern void report_utilization(const char *name, double value, struct result_bun
 extern void report_utilization(int index, double value, struct result_bundle *bundle = &all_results);
 
 
+extern void precompute_valid(void);
+
 extern double compute_bundle(struct parameter_bundle *parameters = &all_parameters, struct result_bundle *results = &all_results);
 
 

@@ -34,6 +34,7 @@ struct result_bundle;
 
 class device {
 public:
+	int cached_valid;
 
 	virtual void start_measurement(void);
 	virtual void end_measurement(void);

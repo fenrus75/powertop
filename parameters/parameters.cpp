@@ -180,6 +180,18 @@ double compute_bundle(struct parameter_bundle *parameters, struct result_bundle 
 	return power;
 }
 
+static int precomputed_valid = 0;
+void precompute_valid(void)
+{
+	unsigned int i;
+
+	
+	for (i = 0; i < all_devices.size(); i++) {
+		all_devices[i]->cached_valid = all_devices[i]->power_valid();
+	}
+	precomputed_valid = 1;
+}
+
 double bundle_power(struct parameter_bundle *parameters, struct result_bundle *results)
 {
 	double power = 0;
@@ -189,12 +201,16 @@ double bundle_power(struct parameter_bundle *parameters, struct result_bundle *r
 	if (!bpi)
 		bpi = get_param_index("base power");
 
+	if (!precomputed_valid)
+		precompute_valid();
+
 	
 	power = parameters->parameters[bpi];
 
 	for (i = 0; i < all_devices.size(); i++) {
 
-		power += all_devices[i]->power_usage(results, parameters);
+		if (all_devices[i]->cached_valid)
+			power += all_devices[i]->power_usage(results, parameters);
 	}
 
 	return power;

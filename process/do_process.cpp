@@ -510,9 +510,14 @@ static bool power_cpu_sort(class power_consumer * i, class power_consumer * j)
 	jW = j->Witts();
 
 	if (iW == jW) {
-		if (i->accumulated_runtime == j->accumulated_runtime)
+		double iR, jR;
+
+		iR = i->accumulated_runtime - i->child_runtime;
+		jR = j->accumulated_runtime - j->child_runtime;
+ 
+		if (iR == jR)
 			return i->wake_ups > j->wake_ups;
-		return (i->accumulated_runtime > j->accumulated_runtime);
+		return (iR > jR);
 	}
 	
         return (iW > jW);

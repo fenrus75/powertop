@@ -504,7 +504,18 @@ void end_process_measurement(void)
 
 static bool power_cpu_sort(class power_consumer * i, class power_consumer * j)
 {
-        return (i->Witts() > j->Witts());
+	double iW, jW;
+
+	iW = i->Witts();
+	jW = j->Witts();
+
+	if (iW == jW) {
+		if (i->accumulated_runtime == j->accumulated_runtime)
+			return i->wake_ups > j->wake_ups;
+		return (i->accumulated_runtime > j->accumulated_runtime);
+	}
+	
+        return (iW > jW);
 }
 
 void process_update_display(void)

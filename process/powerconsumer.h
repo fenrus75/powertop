@@ -54,8 +54,8 @@ public:
 	virtual const char * name(void) { return "abstract"; };
 	virtual const char * type(void) { return "abstract"; };
 
-	virtual double usage(void) { return (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time;};
-	virtual const char * usage_units(void) {return "msec";};
+	virtual double usage(void);
+	virtual const char * usage_units(void);
 	virtual double events(void) { return  (wake_ups + gpu_ops) / measurement_time;};
 	virtual int show_events(void) { return 1; };
 };

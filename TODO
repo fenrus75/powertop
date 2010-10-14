@@ -1,5 +1,6 @@
 * deal with the "no measurements" case better with default values
 * move the 2 data files somewhere sane
+* looks like events/sec keep adding up for processes
 
 * have a "show me my process" page
 * fix memory leaks

@@ -61,3 +61,21 @@ power_consumer::power_consumer(void)
 	gpu_ops = 0;
 	waker = NULL;
 }
+
+double power_consumer::usage(void) 
+{ 
+	double t;
+	t = (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time;
+	if (t < 0.1)
+		t = t * 1000;
+	return t; 
+}
+
+const char * power_consumer::usage_units(void)
+{
+	double t;
+	t = (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time;
+	if (t < 0.1)
+		return "usec";
+	return "msec";
+}

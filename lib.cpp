@@ -46,8 +46,6 @@
 #include <libintl.h>
 
 
-
-
 static int kallsyms_read = 0;
 
 double percentage(double F)

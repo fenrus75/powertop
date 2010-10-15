@@ -83,11 +83,6 @@ void runtime_pmdevice::end_measurement(void)
 	char filename[4096];
 	ifstream file;
 
-	before_suspended_time = 0;
-	before_active_time = 0;
-        after_suspended_time = 0;
-	after_active_time = 0;
-
 	sprintf(filename, "%s/power/runtime_suspended_time", sysfs_path);
 	file.open(filename, ios::in);
 	if (!file)
@@ -105,7 +100,7 @@ void runtime_pmdevice::end_measurement(void)
 
 double runtime_pmdevice::utilization(void) /* percentage */
 {
-	return (after_active_time - before_active_time) / (0.0001 + after_active_time - before_active_time + after_suspended_time - before_suspended_time);
+	return 100 * (after_active_time - before_active_time) / (0.0001 + after_active_time - before_active_time + after_suspended_time - before_suspended_time);
 }
 
 const char * runtime_pmdevice::device_name(void)

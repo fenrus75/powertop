@@ -37,6 +37,7 @@ using namespace std;
 #include "i915-gpu.h"
 #include "thinkpad-fan.h"
 #include "network.h"
+#include "runtime_pm.h"
 
 #include "../parameters/parameters.h"
 #include "../display.h"
@@ -164,4 +165,5 @@ void create_all_devices(void)
 	create_i915_gpu();
 	create_thinkpad_fan();
 	create_all_nics();
+	create_all_runtime_pm_devices();
 }

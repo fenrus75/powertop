@@ -1,6 +1,7 @@
 * deal with the "no measurements" case better with default values
 * move the 2 data files somewhere sane
 * looks like events/sec keep adding up for processes
+* pretty print estimates to only show 2 significant places cleanly
 
 * have a "show me my process" page
 * fix memory leaks
@@ -17,6 +18,11 @@
 * debug why wakeups sometimes go to all 0's
   -looks like I fixed it, keep an eye on it
 * audio calibration? Need appropriate sample
+
+* "report" mode
+* CSV-output mode
+
+* delta mode (Tony)
 
 
 done

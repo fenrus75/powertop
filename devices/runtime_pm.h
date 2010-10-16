@@ -30,16 +30,16 @@
 #include "../parameters/parameters.h"
 
 class runtime_pmdevice: public device {
-	int active_before, active_after;
+	uint64_t before_suspended_time, before_active_time;
+	uint64_t after_suspended_time, after_active_time;
 	char sysfs_path[4096];
 	char name[4096];
-	char devname[4096];
 	char humanname[4096];
 	int index;
 	int r_index;
 public:
 
-	runtime_pmdevice(const char *_name, const char *path, const char *devid);
+	runtime_pmdevice(const char *_name, const char *path);
 
 	virtual void start_measurement(void);
 	virtual void end_measurement(void);

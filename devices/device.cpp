@@ -98,6 +98,7 @@ void report_devices(void)
 {
 	WINDOW *win;
 	unsigned int i;
+	int show_power;
 
 	char util[128];
 	char power[128];
@@ -106,15 +107,23 @@ void report_devices(void)
         if (!win)
                 return;
 
+	show_power = global_power_valid();
+
         wclear(win);
         wmove(win, 2,0);
 
 	sort(all_devices.begin(), all_devices.end(), power_device_sort);
 
 	format_watts(get_parameter_value("base power"), power, 11);
-	wprintw(win, "Platform base power is estimated at %s\n\n", power);
 
-	wprintw(win, "Power est.    Usage     Device name\n");
+	if (show_power)
+		wprintw(win, "Platform base power is estimated at %s\n\n", power);
+
+	if (show_power)
+		wprintw(win, "Power est.    Usage     Device name\n");
+	else
+		wprintw(win, "              Usage     Device name\n");
+
 	for (i = 0; i < all_devices.size(); i++) {
 		double P;
 
@@ -126,13 +135,13 @@ void report_devices(void)
 			else
 				sprintf(util, "%5i%s",  (int)all_devices[i]->utilization(),  all_devices[i]->util_units());
 		}
-		while (strlen(util) < 11) strcat(util, " ");
+		while (strlen(util) < 13) strcat(util, " ");
 
 		P = all_devices[i]->power_usage(&all_results, &all_parameters);
 
 		format_watts(P, power, 11);
 
-		if (!all_devices[i]->power_valid())
+		if (!show_power || !all_devices[i]->power_valid())
 			strcpy(power, "           ");
 
 

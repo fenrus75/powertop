@@ -46,6 +46,7 @@ public:
 
 	int		is_idle;   /* count this as if the cpu was idle */
 	int 		running;
+	int		is_kernel; /* kernel thread */
 
 	process(const char *_comm, int _pid);
 

@@ -405,3 +405,17 @@ int utilization_power_valid(int index)
 
 	return 0;
 }
+
+
+/* 
+ * only report power numbers once we have 3* more measurements than 
+ * we have parameters; anything less and our model fit is highly suspect
+ */
+int global_power_valid(void)
+{
+	if (past_results.size() > 3 * all_parameters.parameters.size())
+		return 1;
+
+
+	return 0;
+}

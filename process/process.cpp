@@ -28,6 +28,12 @@
 #include "process.h"
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
+
+#include <iostream>
+#include <fstream>
+
 
 vector <class process *> all_processes;
 
@@ -66,15 +72,28 @@ uint64_t process::deschedule_thread(uint64_t time, int thread_id)
 
 process::process(const char *_comm, int _pid)
 {
+	char line[4096];
+	ifstream file;
+
 	strcpy(comm, _comm);
 	pid = _pid;
 	is_idle = 0;
 	running = 0;
 	last_waker = NULL;
 	waker = NULL;
+	is_kernel = 0;
 
 	if (strncmp(_comm, "kondemand/", 10) == 0)
 		is_idle = 1;
+
+	sprintf(line, "/proc/%i/cmdline", _pid);
+	file.open(line, ios::in);
+	if (file) {
+		file.getline(line, 4096);
+		file.close();
+		if (strlen(line) < 1)
+			is_kernel = 1;
+	}
 }
 
 const char * process::description(void)
@@ -83,6 +102,9 @@ const char * process::description(void)
 	if (child_runtime > accumulated_runtime)
 		child_runtime = 0;
 	sprintf(desc, "%s", comm);
+	if (is_kernel)
+		sprintf(desc, "[%s]", comm);
+
 	return desc;
 }
 

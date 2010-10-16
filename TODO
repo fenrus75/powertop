@@ -1,3 +1,7 @@
+* deal with the "no measurements" case better with default values
+* move the 2 data files somewhere sane
+* looks like events/sec keep adding up for processes
+
 * have a "show me my process" page
 * fix memory leaks
 * find out why CPU %age and C state C0 %age don't mesh sometimes
@@ -5,7 +9,6 @@
 * deal with debugfs not being in /sys/kernel/debug
 * device events/sec into the process view
 * USB urbs as events/sec counter
-* identify kernel threads in the process list for visual differentiation
 * investigate tick_sched_timer and why it wakes up
 * find if we can do more detailed reporting about tasklet(softirq)
 	* deal with tasklets -- needs kernel patch
@@ -40,3 +43,4 @@ done
 * network interfaces as device
 * network interfaces -- packet counters as events
   from /proc/net/dev
+* identify kernel threads in the process list for visual differentiation

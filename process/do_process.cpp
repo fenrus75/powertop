@@ -555,9 +555,9 @@ void process_update_display(void)
 
 
 	if (show_power)
-		wprintw(win, "Power est.    Usage/s   Events/s    Category       Description\n");
+		wprintw(win, "Power est.      Usage/s     Events/s    Category       Description\n");
 	else
-		wprintw(win, "              Usage/s   Events/s    Category       Description\n");
+		wprintw(win, "                Usage/s     Events/s    Category       Description\n");
 
 	for (i = 0; i < all_power.size(); i++) {
 		char power[16];
@@ -582,7 +582,7 @@ void process_update_display(void)
 			else
 				sprintf(usage, "%5i%s", (int)all_power[i]->usage(), all_power[i]->usage_units());
 		}
-		while (strlen(usage) < 10) strcat(usage, " ");
+		while (strlen(usage) < 14) strcat(usage, " ");
 		sprintf(events, "%5.1f", all_power[i]->events());
 		if (!all_power[i]->show_events())
 			events[0] = 0;

@@ -83,6 +83,13 @@ void learn_parameters(int iterations)
 	static unsigned int bpi = 0;
 	unsigned int i;
 
+
+	/* don't start fitting anything until we have at least 1 more measurement than we have parameters */
+	if (past_results.size() <= all_parameters.parameters.size())
+		return;
+
+
+
 //	if (past_results.size() == previous_measurements)
 //		return;
 

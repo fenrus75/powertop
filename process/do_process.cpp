@@ -701,6 +701,9 @@ void end_process_data(void)
 	for (i = 0; i < all_processes.size() ; i++)
 		delete all_processes[i];
 
+	for (i = 0; i < all_proc_devices.size() ; i++)
+		delete all_proc_devices[i];
+
 	all_processes.erase(all_processes.begin(), all_processes.end());;
 
 	for (i = 0; i < all_interrupts.size() ; i++)
@@ -708,6 +711,7 @@ void end_process_data(void)
 
 	all_interrupts.resize(0);
 	all_power.resize(0);
+	all_proc_devices.resize(0);
 	clear_timers();
 
 	clear_consumers();

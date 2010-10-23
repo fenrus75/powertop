@@ -61,7 +61,7 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 	sprintf(filename, "%s/bDeviceClass", path);
 	file.open(filename, ios::in);
 	if (file) {
-		int dclass;
+		int dclass = 0;
 
 		file >> dclass;
 		file.close();

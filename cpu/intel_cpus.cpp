@@ -114,12 +114,20 @@ void nhm_core::measurement_end(void)
 	c6_after    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
 	tsc_after   = get_msr(first_cpu, MSR_TSC);
 
+
+
 	finalize_cstate("core c3", 0, c3_after, 1);
 	finalize_cstate("core c6", 0, c6_after, 1);
 
 	gettimeofday(&stamp_after, NULL);
 
 	time_factor = 1000000.0 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
+
+	for (i = 0; i < children.size(); i++)
+		if (children[i]) {
+			children[i]->measurement_end();
+			children[i]->wiggle();
+		}
 
 	time_delta = 1000000 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
 

@@ -319,6 +319,10 @@ void nhm_package::measurement_end(void)
 	double ratio;
 	unsigned int i, j;
 
+	for (i = 0; i < children.size(); i++)
+		if (children[i])
+			children[i]->wiggle();
+
 
 	c3_after    = get_msr(number, MSR_PKG_C3_RESIDENCY);
 	c6_after    = get_msr(number, MSR_PKG_C6_RESIDENCY);
@@ -467,10 +471,6 @@ void nhm_cpu::measurement_start(void)
 	cpu_linux::measurement_start();
 
 	last_stamp = 0;
-
-	for (i = 0; i < children.size(); i++)
-		if (children[i])
-			children[i]->wiggle();
 
 	aperf_before = get_msr(number, MSR_APERF);
 	mperf_before = get_msr(number, MSR_MPERF);

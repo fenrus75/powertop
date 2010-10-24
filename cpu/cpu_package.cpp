@@ -27,6 +27,16 @@
 #include "../lib.h"
 #include "../parameters/parameters.h"
 
+static int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo)
+{
+	if (freq != max)
+		return 0;
+	if (maxmo + 1000 != max)
+		return 0;
+	return 1;
+}
+
+
 char * cpu_package::fill_cstate_line(int line_nr, char *buffer) 
 {
 	unsigned int i;
@@ -80,9 +90,18 @@ char * cpu_package::fill_pstate_name(int line_nr, char *buffer)
 char * cpu_package::fill_pstate_line(int line_nr, char *buffer) 
 {
 	buffer[0] = 0;
+	unsigned int i;
+
+	if (total_stamp ==0) {
+		for (i = 0; i < pstates.size(); i++)
+			total_stamp += pstates[i]->time_after;
+		if (total_stamp == 0)
+			total_stamp = 1;
+	}
+
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,"Package");
+		sprintf(buffer,"  Package");
 		return buffer;
 	}
 
@@ -90,7 +109,94 @@ char * cpu_package::fill_pstate_line(int line_nr, char *buffer)
 		return buffer;
 
 
-	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after - pstates[line_nr]->time_before) / time_factor * 10000 / pstates[line_nr]->after_count));
+	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
 	return buffer; 
+}
+
+
+
+
+void cpu_package::account_freq(uint64_t freq, uint64_t duration)
+{
+	struct frequency *state = NULL;
+	unsigned int i;
+
+	for (i = 0; i < pstates.size(); i++) {
+		if (freq == pstates[i]->freq) {
+			state = pstates[i];
+			break;
+		}
+	}
+
+
+	if (!state) {
+		state = new struct frequency;
+
+		if (!state)
+			return;
+
+		memset(state, 0, sizeof(*state));
+
+		pstates.push_back(state);
+
+		state->freq = freq;
+		hz_to_human(freq, state->human_name);
+		if (freq == 0)
+			strcpy(state->human_name, "Idle");
+		if (is_turbo(freq, max_frequency, max_minus_one_frequency))
+			sprintf(state->human_name, _("Turbo Mode"));
+		state->after_count = 1;
+	}
+
+	state->time_after += duration;
+
+}
+
+
+void cpu_package::calculate_freq(uint64_t time)
+{
+	uint64_t freq = 0;
+	bool is_idle = true;
+	unsigned int i;
+
+	/* calculate the maximum frequency of all children */
+	for (i = 0; i < children.size(); i++)
+		if (children[i]) {
+			uint64_t f = 0;
+			if (!children[i]->idle) {
+				f = children[i]->current_frequency;
+				is_idle = false;
+			}
+			if (f > freq)
+				freq = f;
+		}
+
+	current_frequency = freq;
+	idle = is_idle;
+	if (parent)
+		parent->calculate_freq(time);
+	change_effective_frequency(time, current_frequency);
+	old_idle = idle;
+}
+
+void cpu_package::change_effective_frequency(uint64_t time, uint64_t frequency)
+{
+	uint64_t time_delta, fr;
+	
+	if (last_stamp) 
+		time_delta = time - last_stamp;
+	else
+		time_delta = 1;
+
+	fr = effective_frequency;
+	if (old_idle)
+		fr = 0;
+
+	account_freq(fr, time_delta);
+	
+	effective_frequency = frequency;
+	last_stamp = time;
+
+	abstract_cpu::change_effective_frequency(time, frequency);
 }
 

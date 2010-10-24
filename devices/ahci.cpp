@@ -199,11 +199,17 @@ void ahci::end_measurement(void)
 	} catch (std::ios_base::failure c) {
 	}
 
+	if (end_active < start_active)
+		end_active = start_active;
+
 	p = (end_active - start_active) / (0.001 + end_active + end_partial + end_slumber - start_active - start_partial - start_slumber) * 100.0;
 	if (p < 0)
 		 p = 0;
 	sprintf(powername, "%s-active", name);
 	report_utilization(powername, p);
+
+	if (end_partial < start_partial)
+		end_partial = start_partial;
 
 	p = (end_partial - start_partial) / (0.001 + end_active + end_partial + end_slumber - start_active - start_partial - start_slumber) * 100.0;
 	if (p < 0)

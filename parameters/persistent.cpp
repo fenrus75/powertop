@@ -120,6 +120,9 @@ void save_parameters(const char *filename)
 {
 	ofstream file;
 
+	if (!global_power_valid())
+		return;
+
 	file.open(filename, ios::out);
 	if (!file) {
 		cout << "Cannot save to file " << filename << "\n";

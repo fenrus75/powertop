@@ -129,8 +129,9 @@ int main(int argc, char **argv)
 	detect_power_meters();
 
 	register_parameter("base power", 100);
-	register_parameter("cpu-wakeups");
-	register_parameter("cpu-consumption");
+	register_parameter("cpu-wakeups", 39.5);
+	register_parameter("cpu-consumption", 1.56);
+	register_parameter("gpu-operations", 0.5576);
 
 	if (argc > 1) {
 		if (strcmp(argv[1], "--calibrate") == 0)

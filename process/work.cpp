@@ -83,6 +83,7 @@ void all_work_to_all_power(void)
 
 void delete_all_work(void)
 {
+	/* TODO: does this call the destructors/delete ? */
 	all_work.erase(all_work.begin(), all_work.end());
 }
 

@@ -713,6 +713,7 @@ void end_process_data(void)
 	all_power.resize(0);
 	all_proc_devices.resize(0);
 	clear_timers();
+	delete_all_work();
 
 	clear_consumers();
 

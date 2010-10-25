@@ -69,7 +69,6 @@ static uint64_t get_msr(int cpu, uint64_t offset)
 
 void nhm_core::measurement_start(void)
 {
-	unsigned int i;
 	ifstream file;
 	char filename[4096];
 
@@ -472,7 +471,6 @@ void nhm_package::change_effective_frequency(uint64_t time, uint64_t frequency)
 
 void nhm_cpu::measurement_start(void)
 {
-	unsigned int i;
 	ifstream file;
 	char filename[4096];
 

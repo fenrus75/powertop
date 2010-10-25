@@ -172,7 +172,7 @@ void create_all_alsa(void)
 
 		bl = new class alsa(entry->d_name, filename);
 		all_devices.push_back(bl);
-		register_parameter("alsa-codec-power");
+		register_parameter("alsa-codec-power", 0.5); 
 	}
 	closedir(dir);
 

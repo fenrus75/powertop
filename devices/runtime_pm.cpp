@@ -213,8 +213,11 @@ static void do_bus(const char *bus)
 				file.close();
 			}
 
-			if (vendor && device)
-				dev->set_human_name(pci_id_to_name(vendor, device, filename, 4095));
+			if (vendor && device) {
+				char devname[4096];
+				sprintf(devname, "PCI Device: %s", pci_id_to_name(vendor, device, filename, 4095));
+				dev->set_human_name(devname);
+			}
 		}
 		all_devices.push_back(dev);
 	}

@@ -198,7 +198,6 @@ static void do_bus(const char *bus)
 
 			sprintf(filename, "/sys/bus/%s/devices/%s/vendor", bus, entry->d_name);
 
-			fprintf(stderr, "%s \n", filename);
 			file.open(filename, ios::in);
 			if (file) {
 				file >> hex >> vendor;

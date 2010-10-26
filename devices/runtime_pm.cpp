@@ -157,7 +157,8 @@ static int device_has_runtime_pm(const char *sysfs_path)
 	return 0;
 }
 
-void create_all_runtime_pm_devices(void)
+
+static void do_bus(const char *bus)
 {
 	/* /sys/bus/pci/devices/0000\:00\:1f.0/power/runtime_suspended_time */
 
@@ -165,7 +166,8 @@ void create_all_runtime_pm_devices(void)
 	DIR *dir;
 	char filename[4096];
 	
-	dir = opendir("/sys/bus/pci/devices/");
+	sprintf(filename, "/sys/bus/%s/devices/", bus);
+	dir = opendir(filename);
 	if (!dir)
 		return;
 	while (1) {
@@ -178,7 +180,7 @@ void create_all_runtime_pm_devices(void)
 		if (entry->d_name[0] == '.')
 			continue;
 
-		sprintf(filename, "/sys/bus/pci/devices/%s", entry->d_name);
+		sprintf(filename, "/sys/bus/%s/devices/%s", bus, entry->d_name);
 
 		if (!device_has_runtime_pm(filename))
 			continue;
@@ -189,3 +191,9 @@ void create_all_runtime_pm_devices(void)
 	closedir(dir);
 }
 
+void create_all_runtime_pm_devices(void)
+{
+	do_bus("pci");
+	do_bus("spi");
+	do_bus("i2c");
+}

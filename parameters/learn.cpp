@@ -73,7 +73,7 @@ static int try_zero(double value)
 static unsigned int previous_measurements;
 
 /* leaks like a sieve */
-void learn_parameters(int iterations)
+void learn_parameters(int iterations, int do_base_power)
 {
 	struct parameter_bundle *best_so_far;
 	double best_score = 10000000000000000.0;
@@ -127,7 +127,8 @@ void learn_parameters(int iterations)
 	/* We want to give up a little of base power, to give other parameters room to change;
 	   base power is the end post for everything after all 
          */
-	best_so_far->parameters[bpi] = best_so_far->parameters[bpi] * 0.99;
+	if (do_base_power)
+		best_so_far->parameters[bpi] = best_so_far->parameters[bpi] * 0.995;
 
 	while (retry--) {
 		int changed  = 0;

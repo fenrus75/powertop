@@ -154,7 +154,7 @@ int main(int argc, char **argv)
 
 
 
-        learn_parameters(500);
+        learn_parameters(500, 0);
 	save_parameters("saved_parameters.powertop");
 
 
@@ -185,7 +185,7 @@ int main(int argc, char **argv)
 
 	save_all_results("saved_results.powertop");
 	save_parameters("saved_parameters.powertop");
-	learn_parameters(500);
+	learn_parameters(500, 0);
 	save_parameters("saved_parameters.powertop");
 	dump_parameter_bundle();
 	return 0;

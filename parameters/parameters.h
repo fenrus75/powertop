@@ -94,7 +94,7 @@ extern struct result_bundle * clone_results(struct result_bundle *bundle);
 extern struct parameter_bundle * clone_parameters(struct parameter_bundle *bundle);
 
 extern void store_results(double duration);
-extern void learn_parameters(int iterations = 100);
+extern void learn_parameters(int iterations = 100, int do_base_power = 1);
 extern void save_all_results(const char *filename = "saved_results.powertop");
 extern void load_results(const char *filename);
 extern void save_parameters(const char *filename);

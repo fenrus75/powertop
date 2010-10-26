@@ -197,21 +197,24 @@ static void do_bus(const char *bus)
 			uint16_t vendor = 0, device = 0;
 
 			sprintf(filename, "/sys/bus/%s/devices/%s/vendor", bus, entry->d_name);
-			file.open(filename);
+
+			fprintf(stderr, "%s \n", filename);
+			file.open(filename, ios::in);
 			if (file) {
-				file >> vendor;
+				file >> hex >> vendor;
 				file.close();
 			}
 
 
 			sprintf(filename, "/sys/bus/%s/devices/%s/device", bus, entry->d_name);
-			file.open(filename);
+			file.open(filename, ios::in);
 			if (file) {
-				file >> device;
+				file >> hex >> device;
 				file.close();
 			}
 
-			dev->set_human_name(pci_id_to_name(vendor, device, filename, 4095));
+			if (vendor && device)
+				dev->set_human_name(pci_id_to_name(vendor, device, filename, 4095));
 		}
 		all_devices.push_back(dev);
 	}

@@ -18,7 +18,7 @@ OBJS += calibrate/calibrate.o
 # ncurses-devel and pciutils-devel 
 #
 
-LIBS += -lpthread -lncurses /usr/lib/libpci.a -lz -lresolv
+LIBS += -lpthread -lncurses -lpci -lz -lresolv
 
 HEADERS := cpu/cpu.h
 

@@ -58,5 +58,7 @@ extern int read_sysfs(string filename);
 
 extern void format_watts(double W, char *buffer, unsigned int len);
 
+extern char *pci_id_to_name(uint16_t vendor, uint16_t device, char *buffer, int len);
+
 
 #endif

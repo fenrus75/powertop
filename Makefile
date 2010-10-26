@@ -14,7 +14,11 @@ OBJS += $(DEVS)
 OBJS += parameters/parameters.o parameters/learn.o parameters/persistent.o
 OBJS += calibrate/calibrate.o
 
-LIBS += -lpthread -lncurses
+#
+# ncurses-devel and pciutils-devel 
+#
+
+LIBS += -lpthread -lncurses /usr/lib/libpci.a -lz -lresolv
 
 HEADERS := cpu/cpu.h
 

@@ -129,6 +129,11 @@ double runtime_pmdevice::power_usage(struct result_bundle *result, struct parame
 	return power;
 }
 
+void runtime_pmdevice::set_human_name(char *name)
+{
+	strcpy(humanname, name);
+}
+
 
 static int device_has_runtime_pm(const char *sysfs_path)
 {
@@ -165,6 +170,7 @@ static void do_bus(const char *bus)
 	struct dirent *entry;
 	DIR *dir;
 	char filename[4096];
+	ifstream file;
 	
 	sprintf(filename, "/sys/bus/%s/devices/", bus);
 	dir = opendir(filename);
@@ -186,6 +192,27 @@ static void do_bus(const char *bus)
 			continue;
 
 		dev = new class runtime_pmdevice(entry->d_name, filename);
+
+		if (strcmp(bus, "pci") == 0) {
+			uint16_t vendor = 0, device = 0;
+
+			sprintf(filename, "/sys/bus/%s/devices/%s/vendor", bus, entry->d_name);
+			file.open(filename);
+			if (file) {
+				file >> vendor;
+				file.close();
+			}
+
+
+			sprintf(filename, "/sys/bus/%s/devices/%s/device", bus, entry->d_name);
+			file.open(filename);
+			if (file) {
+				file >> device;
+				file.close();
+			}
+
+			dev->set_human_name(pci_id_to_name(vendor, device, filename, 4095));
+		}
 		all_devices.push_back(dev);
 	}
 	closedir(dir);

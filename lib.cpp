@@ -30,6 +30,9 @@
 #include <fstream>
 #include <string>
 
+extern "C" {
+#include <pci/pci.h>
+}
 
 #include "lib.h"
 
@@ -197,4 +200,23 @@ void format_watts(double W, char *buffer, unsigned int len)
 		
 	while (strlen(buffer) < len)
 		strcat(buffer, " ");	
+}
+
+
+static struct pci_access *pci_access;
+
+char *pci_id_to_name(uint16_t vendor, uint16_t device, char *buffer, int len)
+{
+	char *ret;
+
+	buffer[0] = 0;
+
+	if (!pci_access) {
+		pci_access = pci_alloc();
+		pci_init(pci_access);
+	}
+
+	ret = pci_lookup_name(pci_access, buffer, len, PCI_LOOKUP_VENDOR | PCI_LOOKUP_DEVICE, vendor, device);
+
+	return ret;
 }

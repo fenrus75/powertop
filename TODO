@@ -1,12 +1,10 @@
 * Readable PCI names for runtime PM pci devices
 * move the 2 data files somewhere sane
-* looks like events/sec keep adding up for processes
 * pretty print estimates to only show 2 significant places cleanly
 
 * have a "show me my process" page
 * fix memory leaks
 * find out why CPU %age and C state C0 %age don't mesh sometimes
-* add device runtime PM stats for pci, spi and i2c
 * deal with debugfs not being in /sys/kernel/debug
 * device events/sec into the process view
 * USB urbs as events/sec counter
@@ -51,3 +49,5 @@ done
   from /proc/net/dev
 * identify kernel threads in the process list for visual differentiation
 * deal with the "no measurements" case better with default values
+* add device runtime PM stats for pci, spi and i2c
+* looks like events/sec keep adding up for processes

@@ -120,6 +120,9 @@ void save_parameters(const char *filename)
 {
 	ofstream file;
 
+	if (!global_power_valid())
+		return;
+
 	file.open(filename, ios::out);
 	if (!file) {
 		cout << "Cannot save to file " << filename << "\n";
@@ -150,7 +153,8 @@ void load_parameters(const char *filename)
 
 	while (file) {
 		double d;
-		file.getline(line, 4096);
+		memset(line, 0, 4096);
+		file.getline(line, 4095);
 
 		c1 = strchr(line, '\t');
 		if (!c1)

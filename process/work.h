@@ -50,4 +50,6 @@ public:
 extern void all_work_to_all_power(void);
 extern class work * find_create_work(uint64_t func);
 
+extern void delete_all_work(void);
+
 #endif

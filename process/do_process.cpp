@@ -419,7 +419,8 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		work->fire(time, (uint64_t)wq->work);
 
 
-		change_blame(cpu, work, LEVEL_WORK);
+		if (strcmp(work->handler, "do_dbs_timer") != 0) 
+			change_blame(cpu, work, LEVEL_WORK);
 	}
 	if (strcmp(event_name, "workqueue:workqueue_execute_end") == 0) {
 		class work *work;
@@ -701,6 +702,9 @@ void end_process_data(void)
 	for (i = 0; i < all_processes.size() ; i++)
 		delete all_processes[i];
 
+	for (i = 0; i < all_proc_devices.size() ; i++)
+		delete all_proc_devices[i];
+
 	all_processes.erase(all_processes.begin(), all_processes.end());;
 
 	for (i = 0; i < all_interrupts.size() ; i++)
@@ -708,7 +712,9 @@ void end_process_data(void)
 
 	all_interrupts.resize(0);
 	all_power.resize(0);
+	all_proc_devices.resize(0);
 	clear_timers();
+	delete_all_work();
 
 	clear_consumers();
 

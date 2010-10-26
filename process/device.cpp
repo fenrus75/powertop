@@ -26,6 +26,9 @@
 #include "../parameters/parameters.h"
 #include <stdio.h>
 
+vector<class device_consumer *> all_proc_devices;
+
+
 device_consumer::device_consumer(class device *dev)
 {
 	device = dev;
@@ -53,6 +56,7 @@ static void add_device(class device *device)
 
 	dev = new class device_consumer(device);
 	all_power.push_back(dev);
+	all_proc_devices.push_back(dev);
 }
 
 void all_devices_to_all_power(void)

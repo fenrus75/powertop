@@ -262,6 +262,9 @@ void network::end_measurement(void)
 	if (end_speed > 1000)
 		u_high += 50;
 
+	if (start_pkts > end_pkts)
+		end_pkts = start_pkts;
+
 	report_utilization(rindex_link_100, u_100);
 	report_utilization(rindex_link_1000, u_1000);
 	report_utilization(rindex_link_high, u_high);

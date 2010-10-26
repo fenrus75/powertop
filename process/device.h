@@ -47,6 +47,7 @@ public:
 };
 
 extern void all_devices_to_all_power(void);
+extern vector<class device_consumer *> all_proc_devices;
 
 
 #endif

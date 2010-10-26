@@ -68,6 +68,7 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 		ret = new class cpu_package;
 
 	ret->set_number(package, cpu);
+	ret->childcount = 0;
 
 	sprintf(packagename, "cpu package %i", cpu);
 	cpudev = new class cpudevice("cpu package", packagename, ret);
@@ -89,6 +90,7 @@ static class abstract_cpu * new_core(int core, int cpu, char * vendor, int famil
 	if (!ret)
 		ret = new class cpu_core;
 	ret->set_number(core, cpu);
+	ret->childcount = 0;
 
 	return ret;
 }
@@ -107,6 +109,7 @@ static class abstract_cpu * new_cpu(int number, char * vendor, int family, int m
 	if (!ret)
 		ret = new class cpu_linux;
 	ret->set_number(number, number);
+	ret->childcount = 0;
 	
 	return ret;
 }
@@ -172,7 +175,6 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 	if (number >= all_cpus.size())
 		all_cpus.resize(number + 1, NULL);
 	all_cpus[number] = cpu;
-
 }
 
 void enumerate_cpus(void)

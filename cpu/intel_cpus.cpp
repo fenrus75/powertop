@@ -78,10 +78,6 @@ void nhm_core::measurement_start(void)
 
 	last_stamp = 0;
 
-	for (i = 0; i < children.size(); i++)
-		if (children[i])
-			children[i]->wiggle();
-
 	c3_before    = get_msr(first_cpu, MSR_CORE_C3_RESIDENCY);
 	c6_before    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
@@ -118,14 +114,14 @@ void nhm_core::measurement_end(void)
 	c6_after    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
 	tsc_after   = get_msr(first_cpu, MSR_TSC);
 
+
+
 	finalize_cstate("core c3", 0, c3_after, 1);
 	finalize_cstate("core c6", 0, c6_after, 1);
 
 	gettimeofday(&stamp_after, NULL);
 
 	time_factor = 1000000.0 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
-
-
 
 	for (i = 0; i < children.size(); i++)
 		if (children[i]) {
@@ -331,6 +327,10 @@ void nhm_package::measurement_end(void)
 	double ratio;
 	unsigned int i, j;
 
+	for (i = 0; i < children.size(); i++)
+		if (children[i])
+			children[i]->wiggle();
+
 
 	c3_after    = get_msr(number, MSR_PKG_C3_RESIDENCY);
 	c6_after    = get_msr(number, MSR_PKG_C6_RESIDENCY);
@@ -479,10 +479,6 @@ void nhm_cpu::measurement_start(void)
 	cpu_linux::measurement_start();
 
 	last_stamp = 0;
-
-	for (i = 0; i < children.size(); i++)
-		if (children[i])
-			children[i]->wiggle();
 
 	aperf_before = get_msr(number, MSR_APERF);
 	mperf_before = get_msr(number, MSR_MPERF);

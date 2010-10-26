@@ -36,6 +36,8 @@ void abstract_cpu::measurement_start(void)
 	ifstream file;
 	char filename[4096];
 
+	last_stamp = 0;
+
 	for (i = 0; i < cstates.size(); i++)
 		delete cstates[i];
 	cstates.resize(0);
@@ -62,13 +64,24 @@ void abstract_cpu::measurement_start(void)
 			children[i]->measurement_start();
 
 	gettimeofday(&stamp_before, NULL);
+
+	last_stamp = 0;
+
+	for (i = 0; i < children.size(); i++)
+		if (children[i])
+			children[i]->wiggle();
+
 }
 
 void abstract_cpu::measurement_end(void)
 {
 	unsigned int i, j;
 
+	total_stamp = 0;
 	gettimeofday(&stamp_after, NULL);
+	for (i = 0; i < children.size(); i++)
+		if (children[i])
+			children[i]->wiggle();
 
 	time_factor = 1000000.0 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
 
@@ -98,7 +111,6 @@ void abstract_cpu::measurement_end(void)
 				finalize_pstate(state->freq,                    state->time_after,  state->after_count);
 			}
 		}
-
 
 	for (i = 0; i < cstates.size(); i++) {
 		struct idle_state *state = cstates[i];

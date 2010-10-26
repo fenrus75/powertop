@@ -53,6 +53,7 @@ class network: public device {
 	int rindex_pkts;
 public:
 	uint64_t pkts;
+	double duration;
 
 	network(char *_name, char *path);
 

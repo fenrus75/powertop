@@ -231,7 +231,7 @@ void create_all_usb_devices(void)
 		usb = new class usbdevice(device_name, filename, devid_name);
 		all_devices.push_back(usb);
 
-		register_parameter(devid_name);
+		register_parameter(devid_name, 0.1);
 	}
 	closedir(dir);
 }

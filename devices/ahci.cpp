@@ -263,7 +263,7 @@ void create_all_ahcis(void)
 
 		bl = new class ahci(entry->d_name, filename);
 		all_devices.push_back(bl);
-		register_parameter("ahci-link-power-active");
+		register_parameter("ahci-link-power-active", 0.6);  /* active sata link takes about 0.6 W */
 		register_parameter("ahci-link-power-partial");
 	}
 	closedir(dir);

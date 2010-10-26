@@ -119,6 +119,7 @@ void one_measurement(int seconds)
 int main(int argc, char **argv)
 {
 	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
+	system("/bin/mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
 
 
 	load_results("saved_results.powertop");

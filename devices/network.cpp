@@ -232,8 +232,6 @@ void network::start_measurement(void)
 
 void network::end_measurement(void)
 {
-	double duration;
-
 	int u_100, u_1000, u_high;
 
 	gettimeofday(&after, NULL);
@@ -275,7 +273,7 @@ void network::end_measurement(void)
 
 double network::utilization(void)
 {
-	return (end_pkts - start_pkts) / measurement_time;
+	return (end_pkts - start_pkts) / (duration + 0.001);
 }
 
 const char * network::device_name(void)

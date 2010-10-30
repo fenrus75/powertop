@@ -38,6 +38,15 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
+static int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo)
+{
+	if (freq != max)
+		return 0;
+	if (maxmo + 1000 != max)
+		return 0;
+	return 1;
+}
+
 void cpu_linux::measurement_start(void)
 {
 	ifstream file; 
@@ -318,6 +327,9 @@ void cpu_linux::account_freq(uint64_t freq, uint64_t duration)
 		hz_to_human(freq, state->human_name);
 		if (freq == 0)
 			strcpy(state->human_name, "Idle");
+		if (is_turbo(freq, max_frequency, max_minus_one_frequency))
+			sprintf(state->human_name, _("Turbo Mode"));
+
 		state->after_count = 1;
 	}
 

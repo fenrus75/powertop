@@ -2,8 +2,8 @@
 * check various tunables (see powertop 1.x) into a tunable checklist
 * pretty print estimate to only do 2 decimal places instead of 3
 
-
-* health report (reporting mode only) needs to include devices that don't support runtime PM
+* inode dirty trace point
+* health report (reporting mode, not interactive) needs to include devices that don't support runtime PM
 * status bar at the bottom
 * have a "show me my process" page
 * fix memory leaks

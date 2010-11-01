@@ -135,6 +135,7 @@ void learn_parameters(int iterations, int do_base_power)
 		int bestparam;
 		double newvalue = 0;
 		double orgscore;
+		double weight;
 
 		bestparam = -1;
 
@@ -145,11 +146,13 @@ void learn_parameters(int iterations, int do_base_power)
 	        for (i = 1; i < best_so_far->parameters.size(); i++) {
 			double value, orgvalue;
 
+			weight = delta * best_so_far->weights[i];
+
 			orgvalue = value = best_so_far->parameters[i];
 			if (value <= 0.001) {
 				value = 0.1;
 			} else
-				value = value * (1 + delta);
+				value = value * (1 + weight);
 
 			if (i == bpi && value > min_power)
 				value = min_power;
@@ -171,7 +174,7 @@ void learn_parameters(int iterations, int do_base_power)
 				changed++;
 			}
 
-			value = orgvalue * 1 / (1 + delta);
+			value = orgvalue * 1 / (1 + weight);
 
 			if (value < 0.0001)
 				value = 0.0;

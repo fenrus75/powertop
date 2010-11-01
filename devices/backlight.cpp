@@ -173,8 +173,8 @@ void create_all_backlights(void)
 		all_devices.push_back(bl);
 		register_parameter("backlight");
 		register_parameter("backlight-power");
-		register_parameter("backlight-boost-40");
-		register_parameter("backlight-boost-80");
+		register_parameter("backlight-boost-40", 0, 0.5);
+		register_parameter("backlight-boost-80", 0, 0.5);
 	}
 	closedir(dir);
 

@@ -128,7 +128,7 @@ void learn_parameters(int iterations, int do_base_power)
 	   base power is the end post for everything after all 
          */
 	if (do_base_power)
-		best_so_far->parameters[bpi] = best_so_far->parameters[bpi] * 0.995;
+		best_so_far->parameters[bpi] = best_so_far->parameters[bpi] * 0.998;
 
 	while (retry--) {
 		int changed  = 0;

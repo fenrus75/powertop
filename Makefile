@@ -1,8 +1,8 @@
 all: powertop 
 
-CFLAGS += -Wall -O0 -g -fno-omit-frame-pointer
-CPPFLAGS += -Wall -O0 -g -fno-omit-frame-pointer
-CXXFLAGS += -Wall -O0 -g -fno-omit-frame-pointer
+CFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
+CPPFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
+CXXFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
 OBJS := lib.o main.o display.o
 OBJS += cpu/cpu.o cpu/abstract_cpu.o cpu/cpu_linux.o cpu/cpu_core.o cpu/cpu_package.o cpu/intel_cpus.o  cpu/cpudevice.cpp
 OBJS += perf/perf.o perf/perf_bundle.o
@@ -18,7 +18,7 @@ OBJS += calibrate/calibrate.o
 # ncurses-devel and pciutils-devel 
 #
 
-LIBS += -lpthread -lncurses -lpci -lz -lresolv
+LIBS += -lpthread -lncursesw -lpci -lz -lresolv
 
 HEADERS := cpu/cpu.h
 

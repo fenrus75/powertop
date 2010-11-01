@@ -1,6 +1,5 @@
-* Readable PCI names for runtime PM pci devices
 * move the 2 data files somewhere sane
-* pretty print estimates to only show 2 significant places cleanly
+* pretty print estimate to only do 2 decimal places instead of 3
 
 * have a "show me my process" page
 * fix memory leaks
@@ -13,8 +12,6 @@
 	* deal with tasklets -- needs kernel patch
 * check various tunables (see powertop 1.x) into a tunable checklist
 
-* debug why wakeups sometimes go to all 0's
-  -looks like I fixed it, keep an eye on it
 * audio calibration? Need appropriate sample
 
 * "report" mode
@@ -51,3 +48,7 @@ done
 * deal with the "no measurements" case better with default values
 * add device runtime PM stats for pci, spi and i2c
 * looks like events/sec keep adding up for processes
+* Readable PCI names for runtime PM pci devices
+* debug why wakeups sometimes go to all 0's
+  -looks like I fixed it, keep an eye on it
+* pretty print estimates to only show 2 significant places cleanly

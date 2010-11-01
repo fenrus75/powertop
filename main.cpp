@@ -154,7 +154,7 @@ int main(int argc, char **argv)
 
 
 
-        learn_parameters(500, 0);
+        learn_parameters(250, 0);
 	save_parameters("saved_parameters.powertop");
 
 
@@ -173,7 +173,7 @@ int main(int argc, char **argv)
 	while (!leave_powertop) {
 		one_measurement(20);
 		show_cur_tab();
-		learn_parameters(35);
+		learn_parameters(35, 0);
 	}
 
 	endwin();
@@ -185,7 +185,9 @@ int main(int argc, char **argv)
 
 	save_all_results("saved_results.powertop");
 	save_parameters("saved_parameters.powertop");
-	learn_parameters(500, 0);
+	learn_parameters(100, 1);
+	save_parameters("saved_parameters.powertop");
+	learn_parameters(400, 0);
 	save_parameters("saved_parameters.powertop");
 	dump_parameter_bundle();
 	return 0;

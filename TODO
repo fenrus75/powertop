@@ -1,16 +1,19 @@
 * move the 2 data files somewhere sane
+* check various tunables (see powertop 1.x) into a tunable checklist
 * pretty print estimate to only do 2 decimal places instead of 3
 
+
+* health report (reporting mode only) needs to include devices that don't support runtime PM
+* status bar at the bottom
 * have a "show me my process" page
 * fix memory leaks
 * find out why CPU %age and C state C0 %age don't mesh sometimes
-* deal with debugfs not being in /sys/kernel/debug
 * device events/sec into the process view
 * USB urbs as events/sec counter
+
 * investigate tick_sched_timer and why it wakes up
 * find if we can do more detailed reporting about tasklet(softirq)
 	* deal with tasklets -- needs kernel patch
-* check various tunables (see powertop 1.x) into a tunable checklist
 
 * audio calibration? Need appropriate sample
 
@@ -53,4 +56,4 @@ done
   -looks like I fixed it, keep an eye on it
 * pretty print estimates to only show 2 significant places cleanly
 * pretty print various kernel pieces
-
+* deal with debugfs not being in /sys/kernel/debug

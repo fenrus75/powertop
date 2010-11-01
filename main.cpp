@@ -55,15 +55,18 @@ static void do_sleep(int seconds)
 	delta = seconds;
 	do {
 		int c;
+		usleep(6000);
 		halfdelay(delta * 10);
 
 		c = getch();
 
 		switch (c) {
 		case KEY_NPAGE:
+		case KEY_RIGHT:
 			show_next_tab();
 			break;
 		case KEY_PPAGE:
+		case KEY_LEFT:
 			show_prev_tab();
 			break;
 		case KEY_EXIT:
@@ -120,6 +123,8 @@ int main(int argc, char **argv)
 {
 	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
 	system("/bin/mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
+
+	srand(time(NULL));
 
 
 	load_results("saved_results.powertop");

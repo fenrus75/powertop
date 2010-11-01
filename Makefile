@@ -14,7 +14,7 @@ OBJS += $(DEVS)
 OBJS += parameters/parameters.o parameters/learn.o parameters/persistent.o
 OBJS += calibrate/calibrate.o
 
-OBJS += tuning/tuning.o
+OBJS += tuning/tuning.o tuning/tunable.o
 
 #
 # ncurses-devel and pciutils-devel 

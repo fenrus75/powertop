@@ -22,8 +22,15 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_TUNING_H
-#define _INCLUDE_GUARD_TUNING_H
+
+#include "tuning.h"
+#include "tunable.h"
+#include <string.h>
 
 
-#endif
+tunable::tunable(const char *str, bool _value, double _score)
+{
+	value = _value;
+	score = _score;
+	strcpy(desc, str);
+}

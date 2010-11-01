@@ -60,6 +60,7 @@ void init_display(void)
 	create_tab("Idle stats");
 	create_tab("Frequency stats");
 	create_tab("Device stats");
+	create_tab("Tunables");
 //	create_tab("Checklist");
 //	create_tab("Actions");
 
@@ -74,6 +75,7 @@ void show_tab(unsigned int tab)
 {
 	WINDOW *win;
 	unsigned int i;
+	int tab_pos = 17;
 
 	if (!display)
 		return;
@@ -98,7 +100,9 @@ void show_tab(unsigned int tab)
 				wattrset(tab_bar, A_NORMAL);
 			else
 				wattrset(tab_bar, A_REVERSE);
-			mvwprintw(tab_bar, 0, (i + 1) * 18, " %s ", tab_names[i].c_str());
+			mvwprintw(tab_bar, 0, tab_pos, " %s ", tab_names[i].c_str());
+
+			tab_pos += 3 + tab_names[i].length();
 	}
 	
 	wrefresh(tab_bar);

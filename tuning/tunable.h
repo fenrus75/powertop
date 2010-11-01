@@ -22,8 +22,25 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_TUNING_H
-#define _INCLUDE_GUARD_TUNING_H
+#ifndef _INCLUDE_GUARD_TUNABLE_H
+#define _INCLUDE_GUARD_TUNABLE_H
 
+#include <vector>
+
+using namespace std;
+
+class tunable {
+	double score;
+	bool value;
+	char desc[4096];
+
+	void *toggle_data;
+public:
+	tunable(const char *str, bool _value, double _score);
+
+	const char *description(void);
+};
+
+vector<class tunable *> all_tunables;
 
 #endif

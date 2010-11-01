@@ -1,4 +1,3 @@
-* if you plug in the AC during a run, the battery code is not detecting that
 * move the 2 data files somewhere sane
 * check various tunables (see powertop 1.x) into a tunable checklist
 * pretty print estimate to only do 2 decimal places instead of 3
@@ -58,3 +57,4 @@ done
 * pretty print estimates to only show 2 significant places cleanly
 * pretty print various kernel pieces
 * deal with debugfs not being in /sys/kernel/debug
+* if you plug in the AC during a run, the battery code is not detecting that

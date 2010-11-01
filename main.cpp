@@ -134,7 +134,7 @@ int main(int argc, char **argv)
 	create_all_devices();
 	detect_power_meters();
 
-	register_parameter("base power", 100);
+	register_parameter("base power", 100, 0.5);
 	register_parameter("cpu-wakeups", 39.5);
 	register_parameter("cpu-consumption", 1.56);
 	register_parameter("gpu-operations", 0.5576);

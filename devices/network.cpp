@@ -338,6 +338,8 @@ double network::power_usage(struct result_bundle *result, struct parameter_bundl
 
 	factor = get_parameter_value(index_pkts, bundle);
 	utilization = get_result_value(rindex_pkts, result);
+	if (utilization > 5000)
+		utilization = 5000;
 
 	power += utilization * factor / 100;
 

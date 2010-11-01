@@ -52,3 +52,5 @@ done
 * debug why wakeups sometimes go to all 0's
   -looks like I fixed it, keep an eye on it
 * pretty print estimates to only show 2 significant places cleanly
+* pretty print various kernel pieces
+

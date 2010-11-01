@@ -299,3 +299,30 @@ char *fmt_prefix(double n, char *buf)
 	return buf;
 }
 
+static map<string, string> pretty_prints;
+static int pretty_print_init = 0;
+
+static void init_pretty_print(void)
+{
+	pretty_prints["[12] i8042"] = "PS/2 Touchpad / Keyboard / Mouse";
+}
+
+
+char *pretty_print(const char *str, char *buf, int len)
+{
+	const char *p;
+
+	if (!pretty_print_init)
+		init_pretty_print();
+
+	p = pretty_prints[str].c_str();
+
+	if (strlen(p) == 0)
+		p = str;
+
+	snprintf(buf, len,  "%s", p);
+
+	if (len)
+		buf[len - 1] = 0;
+	return buf;
+}

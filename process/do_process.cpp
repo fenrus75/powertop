@@ -578,6 +578,7 @@ void process_update_display(void)
 		char name[20];
 		char usage[20];
 		char events[20];
+		char descr[40];
 		format_watts(all_power[i]->Witts(), power, 10);
 
 		if (!show_power)
@@ -601,7 +602,7 @@ void process_update_display(void)
 		if (!all_power[i]->show_events())
 			events[0] = 0;
 		while (strlen(events) < 12) strcat(events, " ");
-		wprintw(win, "%s  %s %s %s %s\n", power, usage, events, name, all_power[i]->description());
+		wprintw(win, "%s  %s %s %s %s\n", power, usage, events, name, pretty_print(all_power[i]->description(), descr, 40));
 	}
 }
 

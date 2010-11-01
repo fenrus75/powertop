@@ -42,6 +42,7 @@ using namespace std;
 #include "../parameters/parameters.h"
 #include "../display.h"
 #include "../lib.h"
+#include "../measurement/measurement.h"
 
 void device::start_measurement(void)
 {
@@ -100,6 +101,7 @@ void report_devices(void)
 	WINDOW *win;
 	unsigned int i;
 	int show_power;
+	double pw;
 
 	char util[128];
 	char power[128];
@@ -115,11 +117,23 @@ void report_devices(void)
 
 	sort(all_devices.begin(), all_devices.end(), power_device_sort);
 
-	format_watts(get_parameter_value("base power"), power, 11);
 
-	if (show_power)
-		wprintw(win, "Platform base power is estimated at %s\n\n", power);
 
+	pw = global_joules_consumed();
+	if (pw > 0.0001) {
+		char buf[32];
+		wprintw(win, "The battery reports a discharge rate of %sW\n",
+				fmt_prefix(pw, buf));
+	}
+
+	if (show_power) {
+		char buf[32];
+		wprintw(win, "System baseline power is estimated at %sW\n",
+				fmt_prefix(get_parameter_value("base power"), buf));
+	}
+
+	if (pw > 0.0001 || show_power)
+		wprintw(win, "\n");
 	if (show_power)
 		wprintw(win, "Power est.    Usage     Device name\n");
 	else

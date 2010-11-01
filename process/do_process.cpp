@@ -528,7 +528,7 @@ void process_update_display(void)
 {
 	unsigned int i;
 	WINDOW *win;
-	double sum;
+	double pw;
 
 	int show_power;
 
@@ -544,6 +544,8 @@ void process_update_display(void)
 
 	wmove(win, 2,0);
 
+#if 0
+	double sum;
 	calculate_params();
 	sum = 0.0;
 	sum += get_parameter_value("base power");	
@@ -551,8 +553,19 @@ void process_update_display(void)
 		sum += all_power[i]->Witts();
 	}
 
-//	wprintw(win, "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n\n",
-//				all_parameters.guessed_power, global_joules_consumed(), sum);
+	wprintw(win, "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n\n",
+				all_parameters.guessed_power, global_joules_consumed(), sum);
+#endif
+
+	pw = global_joules_consumed();
+	if (pw > 0.0001) {
+		char buf[32];
+		wprintw(win, "The battery reports a discharge rate of %sW\n",
+				fmt_prefix(pw, buf));
+		wprintw(win, "\n");
+	}
+
+	
 
 
 	if (show_power)

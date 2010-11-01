@@ -261,8 +261,8 @@ char *fmt_prefix(double n, char *buf)
 	if (n < 0.0) {
 		*p = '-';
 		n = -n;
+		p++;
 	}
-	p++;
 
 	snprintf(tmpbuf, sizeof tmpbuf, "%.2e", n);
 	omag = atoi(strchr(tmpbuf, 'e') + 1);

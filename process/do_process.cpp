@@ -262,7 +262,8 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			timer = (class timer *) current_consumer(cpu);
 			if (timer && strcmp(timer->name(), "timer")==0) {
 				if (strcmp(timer->handler, "delayed_work_timer_fn") && 
-				    strcmp(timer->handler, "hrtimer_wakeup"))
+				    strcmp(timer->handler, "hrtimer_wakeup") && 
+				    strcmp(timer->handler, "it_real_fn"))
 					from = timer;
 			}
 			/* woken from interrupt */

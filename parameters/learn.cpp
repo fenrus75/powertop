@@ -240,7 +240,7 @@ void learn_parameters(int iterations, int do_base_power)
 	best_score = best_so_far->score;
 
 		
-	for (i = 0; i < best_so_far->parameters.size(); i++) {
+	for (i = 0; i < best_so_far->parameters.size() && iterations > 50; i++) {
 		double orgvalue;
 
 		orgvalue = best_so_far->parameters[i];

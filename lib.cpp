@@ -235,7 +235,7 @@ char *pci_id_to_name(uint16_t vendor, uint16_t device, char *buffer, int len)
 	return ret;
 }
 
-static int utf_ok = -1;
+static int utf_ok = 0;
 
 
 

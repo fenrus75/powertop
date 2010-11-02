@@ -164,6 +164,7 @@ int main(int argc, char **argv)
 
 
 	if (debug_learning) {
+	        learn_parameters(1000, 1);
 		dump_parameter_bundle();
 		exit(0);
 	}

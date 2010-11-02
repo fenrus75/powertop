@@ -72,6 +72,34 @@ static int try_zero(double value)
 
 static unsigned int previous_measurements;
 
+static void weed_empties(struct parameter_bundle *best_so_far)
+{
+	double best_score;
+	unsigned int i;
+
+	best_score = best_so_far->score;
+
+		
+	for (i = 0; i < best_so_far->parameters.size(); i++) {
+		double orgvalue;
+
+		orgvalue = best_so_far->parameters[i];
+
+
+		best_so_far->parameters[i] = 0.0;
+
+		calculate_params(best_so_far);
+		if (best_so_far->score > best_score) {
+				best_so_far->parameters[i] = orgvalue;
+		} else {
+			best_score = best_so_far->score;
+		}
+
+	}
+	calculate_params(best_so_far);
+
+}
+
 /* leaks like a sieve */
 void learn_parameters(int iterations, int do_base_power)
 {
@@ -232,31 +260,16 @@ void learn_parameters(int iterations, int do_base_power)
 
 		if (delta < 0.001 && !locked)
 			break;
+
+		if (retry % 50 == 49)
+			weed_empties(best_so_far);
 	}
 
 
 	/* now we weed out all parameters that don't have value */
+	if (iterations > 50)
+		weed_empties(best_so_far);
 
-	best_score = best_so_far->score;
-
-		
-	for (i = 0; i < best_so_far->parameters.size() && iterations > 50; i++) {
-		double orgvalue;
-
-		orgvalue = best_so_far->parameters[i];
-
-
-		best_so_far->parameters[i] = 0.0;
-
-		calculate_params(best_so_far);
-		if (best_so_far->score > best_score) {
-				best_so_far->parameters[i] = orgvalue;
-		} else {
-			best_score = best_so_far->score;
-		}
-
-	}
-	calculate_params(best_so_far);
 	if (debug_learning)
 		printf("Final score %4.2f (%i points)\n", best_so_far->score / past_results.size(), past_results.size());
 //	dump_parameter_bundle(best_so_far);

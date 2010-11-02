@@ -120,6 +120,8 @@ void save_parameters(const char *filename)
 {
 	ofstream file;
 
+	printf("result size is %i, #parameters is %i \n", past_results.size(), all_parameters.parameters.size());
+
 	if (!global_power_valid())
 		return;
 

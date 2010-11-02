@@ -175,6 +175,7 @@ void create_all_backlights(void)
 		register_parameter("backlight-power");
 		register_parameter("backlight-boost-40", 0, 0.5);
 		register_parameter("backlight-boost-80", 0, 0.5);
+		register_parameter("backlight-boost-100", 0, 0.5);
 	}
 	closedir(dir);
 
@@ -188,7 +189,7 @@ double backlight::power_usage(struct result_bundle *result, struct parameter_bun
 	double factor;
 	double utilization;
 	char powername[4096];
-	static int bl_index = 0, blp_index = 0, bl_boost_index40 = 0, bl_boost_index80;
+	static int bl_index = 0, blp_index = 0, bl_boost_index40 = 0, bl_boost_index80, bl_boost_index100;
 
 	if (!bl_index)
 		bl_index = get_param_index("backlight");
@@ -198,6 +199,8 @@ double backlight::power_usage(struct result_bundle *result, struct parameter_bun
 		bl_boost_index40 = get_param_index("backlight-boost-40");
 	if (!bl_boost_index80)
 		bl_boost_index80 = get_param_index("backlight-boost-80");
+	if (!bl_boost_index100)
+		bl_boost_index100 = get_param_index("backlight-boost-100");
 
 	power = 0;
 	factor = get_parameter_value(bl_index, bundle);
@@ -210,7 +213,9 @@ double backlight::power_usage(struct result_bundle *result, struct parameter_bun
 	 * once the brightness hits 40% and 80%
 	 */
 
-	if (utilization >=80)
+	if (utilization >=99)
+		power += get_parameter_value(bl_boost_index100, bundle);
+	else if (utilization >=80)
 		power += get_parameter_value(bl_boost_index80, bundle);
 	else if (utilization >=40)
 		power += get_parameter_value(bl_boost_index40, bundle);

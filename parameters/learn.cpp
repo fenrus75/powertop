@@ -155,7 +155,7 @@ void learn_parameters(int iterations, int do_base_power)
 	/* We want to give up a little of base power, to give other parameters room to change;
 	   base power is the end post for everything after all 
          */
-	if (do_base_power)
+	if (do_base_power && !debug_learning)
 		best_so_far->parameters[bpi] = best_so_far->parameters[bpi] * 0.998;
 
 	while (retry--) {
@@ -258,7 +258,7 @@ void learn_parameters(int iterations, int do_base_power)
 			locked = 1;
 		}
 
-		if (delta < 0.001 && !locked)
+		if (delta < 0.001 && !locked && !debug_learning)
 			break;
 
 		if (retry % 50 == 49)

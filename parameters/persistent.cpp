@@ -136,7 +136,7 @@ void save_parameters(const char *filename)
 	for (it = param_index.begin(); it != param_index.end(); it++) {
 		int index;
 		index = it->second;
-		file << it->first << "\t" << setprecision(5) << all_parameters.parameters[index] << "\n";
+		file << it->first << "\t" << setprecision(9) << all_parameters.parameters[index] << "\n";
 	}	
 	file.close();
 }

@@ -30,6 +30,7 @@
 #include <math.h>
 #include <vector>
 
+
 struct parameter_bundle all_parameters;
 struct result_bundle all_results;
 
@@ -321,8 +322,8 @@ void store_results(double duration)
 	global_joules_consumed();
 	if (all_results.power > 0.01) {
 		unsigned int overflow_index;
-		overflow_index = 50 + (rand() % 450);
-		if (past_results.size() >= 500) {
+		overflow_index = 50 + (rand() % MAX_KEEP);
+		if (past_results.size() >= MAX_PARAM) {
 			/* memory leak, must free old one first */
 			past_results[overflow_index] = clone_results(&all_results);
 		} else {

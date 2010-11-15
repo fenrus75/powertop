@@ -31,7 +31,7 @@
 
 class thinkpad_fan: public device {
 	double start_rate, end_rate;
-	int fan_index, fansqr_index;
+	int fan_index, fansqr_index, fancub_index;
 	int r_index;
 public:
 

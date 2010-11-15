@@ -36,6 +36,8 @@
 
 using namespace std;
 
+#define MAX_KEEP 700
+#define MAX_PARAM 750
 
 
 struct parameter_bundle
@@ -110,6 +112,7 @@ extern int utilization_power_valid(const char *u);
 extern int utilization_power_valid(int index);
 extern double calculate_params(struct parameter_bundle *params = &all_parameters);
 int global_power_valid(void);
+
 
 
 #endif

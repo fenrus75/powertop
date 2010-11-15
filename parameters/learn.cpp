@@ -110,6 +110,7 @@ void learn_parameters(int iterations, int do_base_power)
 	int locked = 0;
 	static unsigned int bpi = 0;
 	unsigned int i;
+	time_t start;
 
 
 	/* don't start fitting anything until we have at least 1 more measurement than we have parameters */
@@ -158,6 +159,8 @@ void learn_parameters(int iterations, int do_base_power)
 	if (do_base_power && !debug_learning)
 		best_so_far->parameters[bpi] = best_so_far->parameters[bpi] * 0.998;
 
+	start = time(NULL);
+
 	while (retry--) {
 		int changed  = 0;
 		int bestparam;
@@ -166,6 +169,9 @@ void learn_parameters(int iterations, int do_base_power)
 		double weight;
 
 		bestparam = -1;
+
+		if (time(NULL) - start > 1 && !debug_learning)
+			retry = 0;
 
 		calculate_params(best_so_far);
 		orgscore = best_score = best_so_far->score;
@@ -258,7 +264,7 @@ void learn_parameters(int iterations, int do_base_power)
 			locked = 1;
 		}
 
-		if (delta < 0.001 && !locked && !debug_learning)
+		if (delta < 0.001 && !locked)
 			break;
 
 		if (retry % 50 == 49)

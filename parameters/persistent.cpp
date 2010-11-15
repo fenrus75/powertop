@@ -91,8 +91,8 @@ void load_results(const char *filename)
 		if (strlen(line) < 3) {
 			int overflow_index;
 
-			overflow_index = 50 + (rand() % 450);
-			if (past_results.size() >= 500) {
+			overflow_index = 50 + (rand() % MAX_KEEP);
+			if (past_results.size() >= MAX_PARAM) {
 			/* memory leak, must free old one first */
 				past_results[overflow_index] = bundle;
 			} else {

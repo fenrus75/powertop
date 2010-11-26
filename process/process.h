@@ -29,6 +29,9 @@
 
 #include "powerconsumer.h"
 
+#ifdef __x86_64__
+#define BIT64 1 
+#endif
 
 /*
 Need to collect
@@ -88,7 +91,7 @@ struct sched_switch {
 	char prev_comm[TASK_COMM_LEN];
 	int  prev_pid;
 	int  prev_prio;
-	long prev_state; /* Arjan weeps. */
+	uint64_t prev_state; /* Arjan weeps. */
 	char next_comm[TASK_COMM_LEN];
 	int  next_pid;
 	int  next_prio;
@@ -120,31 +123,49 @@ struct  softirq_entry {
 };
 
 struct timer_start {
+#ifdef BIT64
+	int padding;
+#endif
 	void		*timer;
 	void		*function;
-};
+} __attribute__((packed));;
 
 struct timer_cancel {
+#ifdef BIT64
+	int padding;
+#endif
 	void		*timer;
-};
+} __attribute__((packed));;
 
 struct timer_expire {
+#ifdef BIT64
+	int padding;
+#endif
 	void		*timer;
 	unsigned long	now;
 	void		*function;
-};
+} __attribute__((packed));;
 struct hrtimer_expire {
+#ifdef BIT64
+	int padding;
+#endif
 	void		*timer;
 	int64_t		now;
 	void		*function;
-};
+} __attribute__((packed));;
 struct workqueue_start {
+#ifdef BIT64
+	int padding;
+#endif
 	void		*work;
 	void		*function;
-};
+} __attribute__((packed));;
 struct workqueue_end {
+#ifdef BIT64
+	int padding;
+#endif
 	void		*work;
-};
+} __attribute__((packed));
 
 
 #endif

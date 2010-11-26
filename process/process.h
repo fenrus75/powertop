@@ -170,5 +170,10 @@ struct workqueue_end {
 	void		*work;
 } __attribute__((packed));
 
+struct  dirty_inode {
+	uint32_t major;
+	uint32_t minor;
+};
+
 
 #endif

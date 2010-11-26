@@ -33,6 +33,8 @@ double power_consumer::Witts(void)
 	double timecost;
 	double wakeupcost;
 	double gpucost;
+	double disk_cost;
+	double hard_disk_cost;
 
 	if (child_runtime > accumulated_runtime)
 		child_runtime = 0;
@@ -40,12 +42,16 @@ double power_consumer::Witts(void)
 	timecost = get_parameter_value("cpu-consumption");
 	wakeupcost = get_parameter_value("cpu-wakeups");
 	gpucost = get_parameter_value("gpu-operations");
+	disk_cost = get_parameter_value("disk-operations");
+	hard_disk_cost = get_parameter_value("disk-operations-hard");
 
 	cost = 0;
 
 	cost += wakeupcost * wake_ups / 10000.0;
 	cost += ( (accumulated_runtime - child_runtime) / 1000000000.0) * timecost;
 	cost += gpucost * gpu_ops / 100.0;
+	cost += hard_disk_cost * hard_disk_hits / 100.0;
+	cost += disk_cost * disk_hits / 100.0;
 
 	cost = cost / measurement_time;
 
@@ -59,6 +65,7 @@ power_consumer::power_consumer(void)
 	disk_hits = 0;
 	wake_ups = 0;
 	gpu_ops = 0;
+	hard_disk_hits = 0;
 	waker = NULL;
 }
 

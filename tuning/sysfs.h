@@ -31,9 +31,17 @@
 
 using namespace std;
 
-class sysfs_tunable : tunable {
+class sysfs_tunable : public tunable {
+	char sysfs_path[4096];
+	char target_value[4096];
 public:
 	sysfs_tunable(const char *str, const char *sysfs_path, const char *target_content);
+
+	virtual int good_bad(void);
+
 };
+
+extern void add_sysfs_tunable(const char *str, const char *_sysfs_path, const char *_target_content);
+
 
 #endif

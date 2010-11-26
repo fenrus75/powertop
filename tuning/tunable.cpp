@@ -27,6 +27,8 @@
 #include "tunable.h"
 #include <string.h>
 
+vector<class tunable *> all_tunables;
+
 
 tunable::tunable(const char *str, double _score, const char *good, const char *bad, const char *neutral)
 {
@@ -46,3 +48,4 @@ tunable::tunable(void)
 	strcpy(bad_string, "Bad");
 	strcpy(neutral_string, "Unknown");
 }
+

@@ -25,24 +25,11 @@
 
 #include "tuning.h"
 #include "tunable.h"
+#include "sysfs.h"
 #include <string.h>
 
 
-tunable::tunable(const char *str, double _score, const char *good, const char *bad, const char *neutral)
+sysfs_tunable::sysfs_tunable(const char *str, const char *sysfs_path, const char *target_content)
 {
-	score = _score;
-	strcpy(desc, str);
-	strcpy(good_string, good);
-	strcpy(bad_string, bad);
-	strcpy(neutral_string, neutral);
-}
-
-
-tunable::tunable(void)
-{
-	score = 0;
-	desc[0] = 0;
-	strcpy(good_string, "Good");
-	strcpy(bad_string, "Bad");
-	strcpy(neutral_string, "Unknown");
+	tunable::tunable(str, 1.0, "Good", "Bad", "Unknown");
 }

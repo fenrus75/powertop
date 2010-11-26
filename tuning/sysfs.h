@@ -22,27 +22,18 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
+#ifndef _INCLUDE_GUARD_SYSFS_TUNE_H
+#define _INCLUDE_GUARD_SYSFS_TUNE_H
 
-#include "tuning.h"
+#include <vector>
+
 #include "tunable.h"
-#include <string.h>
 
+using namespace std;
 
-tunable::tunable(const char *str, double _score, const char *good, const char *bad, const char *neutral)
-{
-	score = _score;
-	strcpy(desc, str);
-	strcpy(good_string, good);
-	strcpy(bad_string, bad);
-	strcpy(neutral_string, neutral);
-}
+class sysfs_tunable : tunable {
+public:
+	sysfs_tunable(const char *str, const char *sysfs_path, const char *target_content);
+};
 
-
-tunable::tunable(void)
-{
-	score = 0;
-	desc[0] = 0;
-	strcpy(good_string, "Good");
-	strcpy(bad_string, "Bad");
-	strcpy(neutral_string, "Unknown");
-}
+#endif

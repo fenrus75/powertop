@@ -29,18 +29,42 @@
 
 using namespace std;
 
+#define TUNE_GOOD    1
+#define TUNE_BAD     -1
+#define TUNE_UNKNOWN 0
+#define TUNE_NEUTRAL 0
+
 class tunable {
-	double score;
-	bool value;
 	char desc[4096];
 
-	void *toggle_data;
+	char good_string[128];
+	char bad_string[128];
+	char neutral_string[128];
 public:
-	tunable(const char *str, bool _value, double _score);
+	double score;
 
-	const char *description(void);
+	tunable(void);
+	tunable(const char *str, double _score, const char *good = "", const char *bad = "", const char *neutral ="");
+
+	virtual int good_bad(void) { return TUNE_NEUTRAL; }
+
+	virtual char *result_string(void) 
+	{
+		switch (good_bad()) {
+		case TUNE_GOOD:
+			return good_string;
+		case TUNE_BAD:
+			return bad_string;
+		}
+		return neutral_string;
+	}
+	
+
+	virtual const char *description(void) { return desc; };
+
+	virtual void toggle(void) { };
 };
 
-vector<class tunable *> all_tunables;
+extern vector<class tunable *> all_tunables;
 
 #endif

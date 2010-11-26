@@ -56,7 +56,7 @@ static map<string, string> saved_sysfs;
 static volatile int stop_measurement;
 
 
-static void save_sysfs(char *filename)
+static void save_sysfs(const char *filename)
 {
 	char line[4096];
 	ifstream file;
@@ -443,6 +443,8 @@ void calibrate(void)
 	find_all_rfkill();
 	find_backlight();
 	find_scsi_link();
+	
+        save_sysfs("/sys/modules/snd_hda_intel/parameters/power_save");
 
 	cout << "Starting PowerTOP power estimate calibration \n";
 	suspend_all_usb_devices();
@@ -455,6 +457,8 @@ void calibrate(void)
 	idle_calibration();
 	disk_calibration();
 	backlight_calibration();
+	
+	write_sysfs("/sys/modules/snd_hda_intel/parameters/power_save", "1\n");
 	cpu_calibration(1);
 	cpu_calibration(4);
 	wakeup_calibration(10000);

@@ -204,8 +204,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		class process *new_proc  = NULL;
 
 		sw = (struct sched_switch *)trace;
-
-
+		
 		/* find new process pointer */
 		new_proc = find_create_process(sw->next_comm, sw->next_pid);
 

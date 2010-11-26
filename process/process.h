@@ -91,11 +91,14 @@ struct sched_switch {
 	char prev_comm[TASK_COMM_LEN];
 	int  prev_pid;
 	int  prev_prio;
-	uint64_t prev_state; /* Arjan weeps. */
+	long prev_state; /* Arjan weeps. */
+#ifdef BIT64
+	int dummy;
+#endif
 	char next_comm[TASK_COMM_LEN];
 	int  next_pid;
 	int  next_prio;
-};
+} __attribute__((packed));
 
 struct irq_entry {
 	int irq;

@@ -40,6 +40,8 @@
 #include "calibrate/calibrate.h"
 
 
+#include "tuning/tuning.h"
+
 #include "display.h"
 
 int debug_learning;
@@ -169,6 +171,8 @@ int main(int argc, char **argv)
 		dump_parameter_bundle();
 		exit(0);
 	}
+
+	initialize_tuning();
 
 	/* first one is short to not let the user wait too long */
 	init_display();

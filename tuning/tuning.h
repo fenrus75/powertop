@@ -25,5 +25,7 @@
 #ifndef _INCLUDE_GUARD_TUNING_H
 #define _INCLUDE_GUARD_TUNING_H
 
+void initialize_tuning(void);
+
 
 #endif

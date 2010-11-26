@@ -24,3 +24,10 @@
  */
 
 #include "tuning.h"
+
+#include "sysfs.h"
+
+void initialize_tuning(void)
+{
+	add_sysfs_tunable("Enable Audio codec power management", "/sys/modules/snd_hda_intel/parameters/power_save", "1");
+}

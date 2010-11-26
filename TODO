@@ -1,4 +1,3 @@
-* Readable PCI names for runtime PM pci devices
 * move the 2 data files somewhere sane
 * pretty print estimates to only show 2 significant places cleanly
 
@@ -51,3 +50,5 @@ done
 * deal with the "no measurements" case better with default values
 * add device runtime PM stats for pci, spi and i2c
 * looks like events/sec keep adding up for processes
+* Readable PCI names for runtime PM pci devices
+

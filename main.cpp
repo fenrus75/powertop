@@ -68,6 +68,7 @@ static void do_sleep(int seconds)
 			break;
 		case KEY_EXIT:
 		case 'q':
+		case 27:
 			leave_powertop = 1;
 			return;
 		}
@@ -185,7 +186,15 @@ int main(int argc, char **argv)
 
 	save_all_results("saved_results.powertop");
 	save_parameters("saved_parameters.powertop");
-	learn_parameters(500, 0);
+	learn_parameters(100, 0);
+	save_parameters("saved_parameters.powertop");
+	learn_parameters(100, 0);
+	save_parameters("saved_parameters.powertop");
+	learn_parameters(100, 0);
+	save_parameters("saved_parameters.powertop");
+	learn_parameters(100, 0);
+	save_parameters("saved_parameters.powertop");
+	learn_parameters(100, 0);
 	save_parameters("saved_parameters.powertop");
 	dump_parameter_bundle();
 	return 0;

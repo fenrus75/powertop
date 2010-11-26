@@ -67,6 +67,7 @@ void init_display(void)
 }
 
 WINDOW *tab_bar = NULL;
+WINDOW *bottom_line = NULL;
 
 static int current_tab;
 
@@ -83,12 +84,21 @@ void show_tab(unsigned int tab)
 		tab_bar = NULL;
 	}	
 
-	tab_bar = newwin(1, 0, 0, 0);
+	if (bottom_line) {
+		delwin(bottom_line);
+		bottom_line = NULL;
+	}	
 
+	tab_bar = newwin(1, 0, 0, 0);
 
 	wattrset(tab_bar, A_REVERSE);
 	mvwprintw(tab_bar, 0,0, "%120s", "");
 	mvwprintw(tab_bar, 0,0, "PowerTOP 1.99");
+
+	bottom_line = newwin(1, 0, LINES-1, 0);
+	wattrset(bottom_line, A_REVERSE);
+	mvwprintw(bottom_line, 0,0, "%120s", "");
+	mvwprintw(bottom_line, 0,0, " <ESC> Exit | ");
 
 
 	current_tab = tab;
@@ -102,6 +112,7 @@ void show_tab(unsigned int tab)
 	}
 	
 	wrefresh(tab_bar);
+	wrefresh(bottom_line);
 
 	win = tab_windows[tab_names[tab]];
 	if (!win)

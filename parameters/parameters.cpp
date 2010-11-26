@@ -30,6 +30,7 @@
 #include <math.h>
 #include <vector>
 
+
 struct parameter_bundle all_parameters;
 struct result_bundle all_results;
 
@@ -65,17 +66,21 @@ int get_result_index(const char *name)
 }
 
 
-void register_parameter(const char *name, double default_value)
+void register_parameter(const char *name, double default_value, double weight)
 {
 	int index;
 
 	index = get_param_index(name);
 
-	if (index >= (int)all_parameters.parameters.size())
+	if (index >= (int)all_parameters.parameters.size()) {
 		all_parameters.parameters.resize(index+1);
+		all_parameters.weights.resize(index+1, 1.0);
+	}
 
 	if (all_parameters.parameters[index] <= 0.0001) 
 		all_parameters.parameters[index] = default_value;
+
+	all_parameters.weights[index] = weight;
 }
 
 void set_parameter_value(const char *name, double value, struct parameter_bundle *bundle)
@@ -84,8 +89,10 @@ void set_parameter_value(const char *name, double value, struct parameter_bundle
 
 	index = get_param_index(name);
 
-	if (index >= (int)bundle->parameters.size())
+	if (index >= (int)bundle->parameters.size()) {
 		bundle->parameters.resize(index+1);
+		bundle->weights.resize(index+1, 1.0);
+	}
 
 	bundle->parameters[index] = value;
 }
@@ -102,6 +109,11 @@ double get_parameter_value(const char *name, struct parameter_bundle *the_bundle
 double get_parameter_value(int index, struct parameter_bundle *the_bundle)
 {
 	return the_bundle->parameters[index];
+}
+
+double get_parameter_weight(int index, struct parameter_bundle *the_bundle)
+{
+	return the_bundle->weights[index];
 }
 
 double get_result_value(const char *name, struct result_bundle *the_bundle)
@@ -310,8 +322,8 @@ void store_results(double duration)
 	global_joules_consumed();
 	if (all_results.power > 0.01) {
 		unsigned int overflow_index;
-		overflow_index = 50 + (rand() % 450);
-		if (past_results.size() >= 500) {
+		overflow_index = 50 + (rand() % MAX_KEEP);
+		if (past_results.size() >= MAX_PARAM) {
 			/* memory leak, must free old one first */
 			past_results[overflow_index] = clone_results(&all_results);
 		} else {

@@ -631,9 +631,12 @@ void w_display_cpu_pstates(void)
 
 
 struct power_entry {
+#ifdef __x86_64__
+	int dummy;
+#endif
 	int64_t	type;
 	int64_t	value;
-};
+} __attribute__((packed));
 
 
 void perf_power_bundle::handle_trace_point(int type, void *trace, int cpunr, uint64_t time, unsigned char flags)

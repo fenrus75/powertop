@@ -135,15 +135,15 @@ struct trace_entry {
 	unsigned char		flags;
 	unsigned char		preempt_count;
 	int			pid;
-	int			tgid;
-};
+	int			lock_depth;
+} __attribute__((packed));;
 
 
 struct perf_sample {
 	struct perf_event_header        header;
 	struct trace_entry		trace;
 	unsigned char			data[0];
-};
+} __attribute__((packed));
 
 static uint64_t timestamp(perf_event_header *event)
 {
@@ -171,7 +171,7 @@ static uint64_t timestamp(perf_event_header *event)
 	printf("	flags is %i / %x \n", sample->trace.flags, sample->trace.flags);
 	printf("	p/c   is %i / %x \n", sample->trace.preempt_count, sample->trace.preempt_count);
 	printf("	pid   is %i / %x \n", sample->trace.pid, sample->trace.pid);
-	printf("	tgid  is %i / %x \n", sample->trace.tgid, sample->trace.tgid);
+	printf("	lock dept  is %i / %x \n", sample->trace.lock_depth, sample->trace.lock_depth);
 
 	x = (unsigned char *)sample;
 	for (i = 0; i < sample->header.size; i++)

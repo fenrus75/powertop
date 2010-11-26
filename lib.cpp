@@ -21,6 +21,7 @@
  *
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
+ *	Peter Anvin
  */
 #include <map>
 #include <string.h>
@@ -29,6 +30,11 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <ctype.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <math.h>
+#include <stdlib.h>
 
 extern "C" {
 #include <pci/pci.h>
@@ -184,7 +190,9 @@ int read_sysfs(string filename)
 void format_watts(double W, char *buffer, unsigned int len)
 {
 	buffer[0] = 0;
+	char buf[32];
 
+#if 0
 	if (W > 1.5) 
 		sprintf(buffer, "%6.1f   W", W);
 	else if (W > 0.5)
@@ -197,7 +205,13 @@ void format_watts(double W, char *buffer, unsigned int len)
 		sprintf(buffer, "%8.3fmW", W*1000);
 	else
 		sprintf(buffer, "   0.0  mW");
+#endif
+	sprintf(buffer, "%7sW", fmt_prefix(W, buf));
+
+	if (W < 0.0001)
+		sprintf(buffer, "    0 mW");
 		
+			
 	while (strlen(buffer) < len)
 		strcat(buffer, " ");	
 }
@@ -219,4 +233,98 @@ char *pci_id_to_name(uint16_t vendor, uint16_t device, char *buffer, int len)
 	ret = pci_lookup_name(pci_access, buffer, len, PCI_LOOKUP_VENDOR | PCI_LOOKUP_DEVICE, vendor, device);
 
 	return ret;
+}
+
+static int utf_ok = 0;
+
+
+
+/* pretty print numbers while limiting the precision */
+char *fmt_prefix(double n, char *buf)
+{
+	static const char prefixes[] = "yzafpnum kMGTPEZY";
+	char tmpbuf[16];
+	int omag, npfx;
+	char *p, *q, pfx;
+	int i;
+
+	if (utf_ok == -1) {
+		if (strstr(getenv("LANG"), "UTF-8"))
+			utf_ok = 1;
+		else
+			utf_ok = 0; 
+	}
+
+	p = buf;
+
+	*p = ' ';
+	if (n < 0.0) {
+		*p = '-';
+		n = -n;
+		p++;
+	}
+
+	snprintf(tmpbuf, sizeof tmpbuf, "%.2e", n);
+	omag = atoi(strchr(tmpbuf, 'e') + 1);
+
+	npfx = ((omag + 27) / 3) - (27/3);
+	omag = (omag + 27) % 3;
+
+	q = tmpbuf;
+	if (omag == 2)
+		omag = -1;
+
+	for (i = 0; i < 3; i++) {
+		while (!isdigit(*q))
+			q++;
+		*p++ = *q++;
+		if (i == omag)
+			*p++ = '.';
+	}
+	*p++ = ' ';
+
+	pfx = prefixes[npfx + 8];
+
+	if (pfx == ' ') {
+		/* do nothing */
+	} else if (pfx == 'u' && utf_ok > 0) {
+		strcpy(p, "µ");		/* Mu is a multibyte sequence */
+		while (*p)
+			p++;
+	} else {
+		*p++ = pfx;
+	}
+	*p = '\0';
+
+	return buf;
+}
+
+static map<string, string> pretty_prints;
+static int pretty_print_init = 0;
+
+static void init_pretty_print(void)
+{
+	pretty_prints["[12] i8042"] = "PS/2 Touchpad / Keyboard / Mouse";
+	pretty_prints["ahci"] = "SATA controller";
+	pretty_prints["usb-device-8087-0020"] = "Intel built in USB hub";
+}
+
+
+char *pretty_print(const char *str, char *buf, int len)
+{
+	const char *p;
+
+	if (!pretty_print_init)
+		init_pretty_print();
+
+	p = pretty_prints[str].c_str();
+
+	if (strlen(p) == 0)
+		p = str;
+
+	snprintf(buf, len,  "%s", p);
+
+	if (len)
+		buf[len - 1] = 0;
+	return buf;
 }

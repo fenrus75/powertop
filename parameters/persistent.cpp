@@ -91,8 +91,8 @@ void load_results(const char *filename)
 		if (strlen(line) < 3) {
 			int overflow_index;
 
-			overflow_index = 50 + (rand() % 450);
-			if (past_results.size() >= 500) {
+			overflow_index = 50 + (rand() % MAX_KEEP);
+			if (past_results.size() >= MAX_PARAM) {
 			/* memory leak, must free old one first */
 				past_results[overflow_index] = bundle;
 			} else {
@@ -120,6 +120,8 @@ void save_parameters(const char *filename)
 {
 	ofstream file;
 
+	printf("result size is %i, #parameters is %i \n", past_results.size(), all_parameters.parameters.size());
+
 	if (!global_power_valid())
 		return;
 
@@ -134,7 +136,7 @@ void save_parameters(const char *filename)
 	for (it = param_index.begin(); it != param_index.end(); it++) {
 		int index;
 		index = it->second;
-		file << it->first << "\t" << setprecision(5) << all_parameters.parameters[index] << "\n";
+		file << it->first << "\t" << setprecision(9) << all_parameters.parameters[index] << "\n";
 	}	
 	file.close();
 }

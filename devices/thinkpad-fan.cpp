@@ -47,6 +47,7 @@ thinkpad_fan::thinkpad_fan()
 	end_rate = 0;
 	fan_index = get_param_index("thinkpad-fan");
 	fansqr_index = get_param_index("thinkpad-fan-sqr");
+	fancub_index = get_param_index("thinkpad-fan-cub");
 	r_index = get_result_index("thinkpad-fan");
 }
 
@@ -79,7 +80,9 @@ void create_thinkpad_fan(void)
 	if (access(filename, R_OK) !=0)
 		return;
 
-	register_parameter("thinkpad-fan");
+	register_parameter("thinkpad-fan", 7);
+	register_parameter("thinkpad-fan-sqr", 7);
+	register_parameter("thinkpad-fan-cub", 7);
 
 	fan = new class thinkpad_fan();
 	all_devices.push_back(fan);
@@ -97,17 +100,19 @@ double thinkpad_fan::power_usage(struct result_bundle *result, struct parameter_
 	power = 0;
 	utilization = get_result_value(r_index, result);
 
-//	utilization = utilization - 2400;
 	if (utilization < 0)
 		utilization = 0;
 
 
-	/* physics dictact that fan power goes cubic with the rpms, but there's also a linear component */
-	factor = get_parameter_value(fansqr_index, bundle);
+	/* physics dictact that fan power goes cubic with the rpms, but there's also a linear component for friction*/
+	factor = get_parameter_value(fancub_index, bundle);
 	power += factor * pow(utilization / 3600.0, 3);
 
-	factor = get_parameter_value(fan_index, bundle);
-	power -= utilization / 5000.0 * factor;
+	factor = get_parameter_value(fansqr_index, bundle) - 4.0;
+	power += factor * pow(utilization / 3600.0, 2);
+
+	factor = get_parameter_value(fan_index, bundle) - 10.0;
+	power += utilization / 5000.0 * factor;
 
 	if (power <= 0.0)
 		power = 0.0;

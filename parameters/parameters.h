@@ -36,6 +36,8 @@
 
 using namespace std;
 
+#define MAX_KEEP 700
+#define MAX_PARAM 750
 
 
 struct parameter_bundle
@@ -44,7 +46,8 @@ struct parameter_bundle
 	double guessed_power;
 	double actual_power;
 
-	vector<double> parameters; 
+	vector<double> parameters;
+	vector<double> weights;
 };
 
 extern struct parameter_bundle all_parameters;
@@ -55,7 +58,7 @@ extern int get_param_index(const char *param);
 extern int get_result_index(const char *param);
 
 
-extern void register_parameter(const char *name, double default_value = 0.00);
+extern void register_parameter(const char *name, double default_value = 0.00, double weight = 1.0);
 extern double get_parameter_value(const char *name, struct parameter_bundle *bundle = &all_parameters);
 extern double get_parameter_value(int index, struct parameter_bundle *bundle = &all_parameters);
 extern void set_parameter_value(const char *name, double value, struct parameter_bundle *bundle = &all_parameters);
@@ -94,7 +97,7 @@ extern struct result_bundle * clone_results(struct result_bundle *bundle);
 extern struct parameter_bundle * clone_parameters(struct parameter_bundle *bundle);
 
 extern void store_results(double duration);
-extern void learn_parameters(int iterations = 100, int do_base_power = 1);
+extern void learn_parameters(int iterations, int do_base_power);
 extern void save_all_results(const char *filename = "saved_results.powertop");
 extern void load_results(const char *filename);
 extern void save_parameters(const char *filename);
@@ -109,6 +112,7 @@ extern int utilization_power_valid(const char *u);
 extern int utilization_power_valid(int index);
 extern double calculate_params(struct parameter_bundle *params = &all_parameters);
 int global_power_valid(void);
+
 
 
 #endif

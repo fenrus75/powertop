@@ -67,6 +67,10 @@ void acpi_power_meter::measure(void)
 	capacity_units[0] = 0;
 	voltage_units[0] = 0;
 
+	rate = 0;
+	voltage = 0;
+	capacity = 0;
+
 	sprintf(filename, "/proc/acpi/battery/%s/state", battery_name);
 
 	file.open(filename, ios::in);

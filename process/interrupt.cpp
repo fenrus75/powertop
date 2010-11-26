@@ -27,7 +27,7 @@
 #include <stdio.h>
 #include "process.h"
 #include "interrupt.h"
-
+#include "../lib.h"
 
 const char* softirqs[] = {
 	"HI_SOFTIRQ",
@@ -72,9 +72,10 @@ uint64_t interrupt::end_interrupt(uint64_t time)
 
 const char * interrupt::description(void)
 {
+	char buf[128];
 	if (child_runtime > accumulated_runtime)
 		child_runtime = 0;
-	sprintf(desc, "[%i] %s", number, handler);
+	sprintf(desc, "[%i] %s", number, pretty_print(handler, buf, 128));
 	return desc;
 }
 

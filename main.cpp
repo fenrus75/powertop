@@ -55,15 +55,18 @@ static void do_sleep(int seconds)
 	delta = seconds;
 	do {
 		int c;
+		usleep(6000);
 		halfdelay(delta * 10);
 
 		c = getch();
 
 		switch (c) {
 		case KEY_NPAGE:
+		case KEY_RIGHT:
 			show_next_tab();
 			break;
 		case KEY_PPAGE:
+		case KEY_LEFT:
 			show_prev_tab();
 			break;
 		case KEY_EXIT:
@@ -122,6 +125,8 @@ int main(int argc, char **argv)
 	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
 	system("/bin/mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
 
+	srand(time(NULL));
+
 
 	load_results("saved_results.powertop");
 	load_parameters("saved_parameters.powertop");
@@ -130,7 +135,7 @@ int main(int argc, char **argv)
 	create_all_devices();
 	detect_power_meters();
 
-	register_parameter("base power", 100);
+	register_parameter("base power", 100, 0.5);
 	register_parameter("cpu-wakeups", 39.5);
 	register_parameter("cpu-consumption", 1.56);
 	register_parameter("gpu-operations", 0.5576);
@@ -155,11 +160,12 @@ int main(int argc, char **argv)
 
 
 
-        learn_parameters(500, 0);
+        learn_parameters(250, 0);
 	save_parameters("saved_parameters.powertop");
 
 
 	if (debug_learning) {
+	        learn_parameters(1000, 1);
 		dump_parameter_bundle();
 		exit(0);
 	}
@@ -174,7 +180,7 @@ int main(int argc, char **argv)
 	while (!leave_powertop) {
 		one_measurement(20);
 		show_cur_tab();
-		learn_parameters(35);
+		learn_parameters(35, 0);
 	}
 
 	endwin();

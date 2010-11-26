@@ -204,8 +204,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		class process *new_proc  = NULL;
 
 		sw = (struct sched_switch *)trace;
-
-
+		
 		/* find new process pointer */
 		new_proc = find_create_process(sw->next_comm, sw->next_pid);
 
@@ -262,7 +261,8 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			timer = (class timer *) current_consumer(cpu);
 			if (timer && strcmp(timer->name(), "timer")==0) {
 				if (strcmp(timer->handler, "delayed_work_timer_fn") && 
-				    strcmp(timer->handler, "hrtimer_wakeup"))
+				    strcmp(timer->handler, "hrtimer_wakeup") && 
+				    strcmp(timer->handler, "it_real_fn"))
 					from = timer;
 			}
 			/* woken from interrupt */
@@ -528,7 +528,7 @@ void process_update_display(void)
 {
 	unsigned int i;
 	WINDOW *win;
-	double sum;
+	double pw;
 
 	int show_power;
 
@@ -544,6 +544,8 @@ void process_update_display(void)
 
 	wmove(win, 2,0);
 
+#if 0
+	double sum;
 	calculate_params();
 	sum = 0.0;
 	sum += get_parameter_value("base power");	
@@ -551,8 +553,19 @@ void process_update_display(void)
 		sum += all_power[i]->Witts();
 	}
 
-//	wprintw(win, "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n\n",
-//				all_parameters.guessed_power, global_joules_consumed(), sum);
+	wprintw(win, "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n\n",
+				all_parameters.guessed_power, global_joules_consumed(), sum);
+#endif
+
+	pw = global_joules_consumed();
+	if (pw > 0.0001) {
+		char buf[32];
+		wprintw(win, "The battery reports a discharge rate of %sW\n",
+				fmt_prefix(pw, buf));
+		wprintw(win, "\n");
+	}
+
+	
 
 
 	if (show_power)
@@ -565,6 +578,7 @@ void process_update_display(void)
 		char name[20];
 		char usage[20];
 		char events[20];
+		char descr[128];
 		format_watts(all_power[i]->Witts(), power, 10);
 
 		if (!show_power)
@@ -588,7 +602,7 @@ void process_update_display(void)
 		if (!all_power[i]->show_events())
 			events[0] = 0;
 		while (strlen(events) < 12) strcat(events, " ");
-		wprintw(win, "%s  %s %s %s %s\n", power, usage, events, name, all_power[i]->description());
+		wprintw(win, "%s  %s %s %s %s\n", power, usage, events, name, pretty_print(all_power[i]->description(), descr, 128));
 	}
 }
 

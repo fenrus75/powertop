@@ -132,8 +132,9 @@ void perf_event::create_perf_event(char *eventname, int cpu)
 
 	ret = ioctl(perf_fd, PERF_EVENT_IOC_ENABLE);
 
-	if (ret < 0)
+	if (ret < 0) {
 		fprintf(stderr, "failed to enable perf \n");
+	}
 
 	pc = (perf_event_mmap_page *)perf_mmap;
 	data_mmap = (unsigned char *)perf_mmap + getpagesize();

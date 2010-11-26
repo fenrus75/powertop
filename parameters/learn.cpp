@@ -72,6 +72,34 @@ static int try_zero(double value)
 
 static unsigned int previous_measurements;
 
+static void weed_empties(struct parameter_bundle *best_so_far)
+{
+	double best_score;
+	unsigned int i;
+
+	best_score = best_so_far->score;
+
+		
+	for (i = 0; i < best_so_far->parameters.size(); i++) {
+		double orgvalue;
+
+		orgvalue = best_so_far->parameters[i];
+
+
+		best_so_far->parameters[i] = 0.0;
+
+		calculate_params(best_so_far);
+		if (best_so_far->score > best_score) {
+				best_so_far->parameters[i] = orgvalue;
+		} else {
+			best_score = best_so_far->score;
+		}
+
+	}
+	calculate_params(best_so_far);
+
+}
+
 /* leaks like a sieve */
 void learn_parameters(int iterations, int do_base_power)
 {
@@ -82,6 +110,7 @@ void learn_parameters(int iterations, int do_base_power)
 	int locked = 0;
 	static unsigned int bpi = 0;
 	unsigned int i;
+	time_t start;
 
 
 	/* don't start fitting anything until we have at least 1 more measurement than we have parameters */
@@ -127,16 +156,22 @@ void learn_parameters(int iterations, int do_base_power)
 	/* We want to give up a little of base power, to give other parameters room to change;
 	   base power is the end post for everything after all 
          */
-	if (do_base_power)
-		best_so_far->parameters[bpi] = best_so_far->parameters[bpi] * 0.995;
+	if (do_base_power && !debug_learning)
+		best_so_far->parameters[bpi] = best_so_far->parameters[bpi] * 0.998;
+
+	start = time(NULL);
 
 	while (retry--) {
 		int changed  = 0;
 		int bestparam;
 		double newvalue = 0;
 		double orgscore;
+		double weight;
 
 		bestparam = -1;
+
+		if (time(NULL) - start > 1 && !debug_learning)
+			retry = 0;
 
 		calculate_params(best_so_far);
 		orgscore = best_score = best_so_far->score;
@@ -145,11 +180,13 @@ void learn_parameters(int iterations, int do_base_power)
 	        for (i = 1; i < best_so_far->parameters.size(); i++) {
 			double value, orgvalue;
 
+			weight = delta * best_so_far->weights[i];
+
 			orgvalue = value = best_so_far->parameters[i];
 			if (value <= 0.001) {
 				value = 0.1;
 			} else
-				value = value * (1 + delta);
+				value = value * (1 + weight);
 
 			if (i == bpi && value > min_power)
 				value = min_power;
@@ -171,7 +208,7 @@ void learn_parameters(int iterations, int do_base_power)
 				changed++;
 			}
 
-			value = orgvalue * 1 / (1 + delta);
+			value = orgvalue * 1 / (1 + weight);
 
 			if (value < 0.0001)
 				value = 0.0;
@@ -229,31 +266,16 @@ void learn_parameters(int iterations, int do_base_power)
 
 		if (delta < 0.001 && !locked)
 			break;
+
+		if (retry % 50 == 49)
+			weed_empties(best_so_far);
 	}
 
 
 	/* now we weed out all parameters that don't have value */
+	if (iterations > 50)
+		weed_empties(best_so_far);
 
-	best_score = best_so_far->score;
-
-		
-	for (i = 0; i < best_so_far->parameters.size(); i++) {
-		double orgvalue;
-
-		orgvalue = best_so_far->parameters[i];
-
-
-		best_so_far->parameters[i] = 0.0;
-
-		calculate_params(best_so_far);
-		if (best_so_far->score > best_score) {
-				best_so_far->parameters[i] = orgvalue;
-		} else {
-			best_score = best_so_far->score;
-		}
-
-	}
-	calculate_params(best_so_far);
 	if (debug_learning)
 		printf("Final score %4.2f (%i points)\n", best_so_far->score / past_results.size(), past_results.size());
 //	dump_parameter_bundle(best_so_far);

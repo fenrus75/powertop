@@ -227,5 +227,6 @@ void create_all_runtime_pm_devices(void)
 {
 	do_bus("pci");
 	do_bus("spi");
+	do_bus("platform");
 	do_bus("i2c");
 }

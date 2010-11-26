@@ -116,6 +116,10 @@ network::network(char *_name, char *path)
 	start_pkts = 0;
 	end_pkts = 0;
 	pkts = 0;
+	valid_100 = -1;
+	valid_1000 = -1;
+	valid_high = -1;
+
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
 	sprintf(devname, "%s", _name);
 	sprintf(humanname, "nic:%s", _name);
@@ -323,18 +327,31 @@ double network::power_usage(struct result_bundle *result, struct parameter_bundl
 
 	power += utilization * factor;
 
-	factor = get_parameter_value(index_link_100, bundle);
-	utilization = get_result_value(rindex_link_100, result);
-	power += utilization * factor / 100;
+
+	if (valid_100 == -1) {
+		valid_100 = utilization_power_valid(rindex_link_100);
+		valid_1000 = utilization_power_valid(rindex_link_1000);
+		valid_high = utilization_power_valid(rindex_link_high);
+	}
+	
+	if (valid_100 > 0) {
+		factor = get_parameter_value(index_link_100, bundle);
+		utilization = get_result_value(rindex_link_100, result);
+		power += utilization * factor / 100;
+	}
 
 
-	factor = get_parameter_value(index_link_1000, bundle);
-	utilization = get_result_value(rindex_link_1000, result);
-	power += utilization * factor / 100;
-
-	factor = get_parameter_value(index_link_high, bundle);
-	utilization = get_result_value(rindex_link_high, result);
-	power += utilization * factor / 100;
+	if (valid_1000 > 0) {
+		factor = get_parameter_value(index_link_1000, bundle);
+		utilization = get_result_value(rindex_link_1000, result);
+		power += utilization * factor / 100;
+	}
+	
+	if (valid_high > 0) {
+		factor = get_parameter_value(index_link_high, bundle);
+		utilization = get_result_value(rindex_link_high, result);
+		power += utilization * factor / 100;
+	}
 
 	factor = get_parameter_value(index_pkts, bundle);
 	utilization = get_result_value(rindex_pkts, result);

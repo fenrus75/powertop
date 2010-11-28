@@ -23,6 +23,7 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 
+#include <algorithm>
 
 #include <stdio.h>
 #include <string.h>
@@ -34,10 +35,14 @@
 #include "usb.h"
 #include "../display.h"
 
+static void sort_tunables(void);
+
+
 class tuning_window: public tab_window {
 public:
 	virtual void repaint(void);
 	virtual void cursor_enter(void);
+	virtual void expose(void);
 };
 
 void initialize_tuning(void)
@@ -50,6 +55,8 @@ void initialize_tuning(void)
 	add_sysfs_tunable("Enable SATA link power management for /dev/sda", "/sys/class/scsi_host/host0/link_power_management_policy", "min_power");
 
 	add_usb_tunables();
+
+	sort_tunables();
 
 	w->cursor_max = all_tunables.size() - 1;
 }
@@ -115,4 +122,40 @@ void tuning_window::cursor_enter(void)
 	if (!tun)
 		return;
 	tun->toggle();
+}
+
+
+static bool tunables_sort(class tunable * i, class tunable * j)
+{
+	int i_g, j_g;
+	double d;
+
+	i_g = i->good_bad();
+	j_g = j->good_bad();
+
+	if (i_g != j_g)
+		return i_g < j_g;
+
+	d = i->score - j->score;
+	if (d < 0.0)
+		d = -d;
+	if (d > 0.0001)
+		return i->score > j->score;
+
+	if (strcasecmp(i->description(), j->description()) == -1)
+		return true;
+	
+	return false;
+}
+
+
+static void sort_tunables(void)
+{
+	sort(all_tunables.begin(), all_tunables.end(), tunables_sort);
+}
+
+void tuning_window::expose(void)
+{
+	sort_tunables();
+	repaint();	
 }

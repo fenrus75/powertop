@@ -37,7 +37,7 @@
 
 #include "../lib.h"
 
-usb_tunable::usb_tunable(const char *path, const char *name) : tunable("", 1.0, "Good", "Bad", "Unknown")
+usb_tunable::usb_tunable(const char *path, const char *name) : tunable("", 0.9, "Good", "Bad", "Unknown")
 {
 	ifstream file;
 	char filename[4096];

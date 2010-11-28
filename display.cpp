@@ -165,21 +165,44 @@ WINDOW *get_ncurses_win(string name)
 
 void show_next_tab(void)
 {
+ 	class tab_window *w;
+
 	if (!display)
 		return;
+
+	w = tab_windows[tab_names[current_tab]];
+	if (w)
+		w->hide();
+
 	current_tab ++;
 	if (current_tab >= (int)tab_names.size())
 		current_tab = 0;
+
+	w = tab_windows[tab_names[current_tab]];
+	if (w)
+		w->expose();
+
 	show_tab(current_tab);
 }
 
 void show_prev_tab(void)
 {
+ 	class tab_window *w;
+
 	if (!display)
 		return;
+	w = tab_windows[tab_names[current_tab]];
+	if (w)
+		w->hide();
+
 	current_tab --;
 	if (current_tab < 0)
 		current_tab = tab_names.size() - 1;
+
+	w = tab_windows[tab_names[current_tab]];
+	if (w)
+		w->expose();
+
 	show_tab(current_tab);
 }
 

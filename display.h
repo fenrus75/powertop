@@ -54,6 +54,8 @@ public:
 	virtual void cursor_enter(void) { };
 
 	virtual void repaint(void) { };
+	virtual void expose(void) { };
+	virtual void hide(void) { };
 };
 
 extern map<string, class tab_window *> tab_windows;

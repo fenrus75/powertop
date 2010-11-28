@@ -171,7 +171,7 @@ double usbdevice::power_usage(struct result_bundle *result, struct parameter_bun
 	double factor;
 	double utilization;
 
-	if (rootport)
+	if (rootport || !cached_valid)
 		return 0.0;
 
 

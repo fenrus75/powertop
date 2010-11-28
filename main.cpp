@@ -151,6 +151,7 @@ int main(int argc, char **argv)
 	register_parameter("cpu-wakeups", 39.5);
 	register_parameter("cpu-consumption", 1.56);
 	register_parameter("gpu-operations", 0.5576);
+	register_parameter("disk-operations-hard", 0.2);
 
 	if (argc > 1) {
 		if (strcmp(argv[1], "--calibrate") == 0)

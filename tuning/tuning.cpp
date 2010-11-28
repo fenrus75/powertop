@@ -31,6 +31,7 @@
 
 #include "tuning.h"
 #include "sysfs.h"
+#include "usb.h"
 #include "../display.h"
 
 class tuning_window: public tab_window {
@@ -48,6 +49,7 @@ void initialize_tuning(void)
 	add_sysfs_tunable("Enable Audio codec power management", "/sys/module/snd_hda_intel/parameters/power_save", "1");
 	add_sysfs_tunable("Enable SATA link power management for /dev/sda", "/sys/class/scsi_host/host0/link_power_management_policy", "min_power");
 
+	add_usb_tunables();
 
 	w->cursor_max = all_tunables.size() - 1;
 }

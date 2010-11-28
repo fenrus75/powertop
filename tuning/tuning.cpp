@@ -158,6 +158,7 @@ static void sort_tunables(void)
 
 void tuning_window::expose(void)
 {
+	cursor_pos = 0;
 	sort_tunables();
-	repaint();	
+	repaint();
 }

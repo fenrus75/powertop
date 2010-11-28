@@ -54,7 +54,7 @@ public:
 	virtual void cursor_enter(void) { };
 
 	virtual void repaint(void) { };
-	virtual void expose(void) { };
+	virtual void expose(void) { cursor_pos = 0; repaint();};
 	virtual void hide(void) { };
 };
 

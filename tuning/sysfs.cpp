@@ -33,9 +33,8 @@
 #include <fstream>
 
 
-sysfs_tunable::sysfs_tunable(const char *str, const char *_sysfs_path, const char *_target_content)
+sysfs_tunable::sysfs_tunable(const char *str, const char *_sysfs_path, const char *_target_content) : tunable(str, 1.0, "Good", "Bad", "Unknown")
 {
-	tunable::tunable(str, 1.0, "Good", "Bad", "Unknown");
 	strcpy(sysfs_path, _sysfs_path);
 	strcpy(target_value, _target_content);
 }
@@ -65,6 +64,7 @@ int sysfs_tunable::good_bad(void)
 void add_sysfs_tunable(const char *str, const char *_sysfs_path, const char *_target_content)
 {
 	class sysfs_tunable *tunable;
+
 	if (access(_sysfs_path, R_OK) != 0)
 		return;
 

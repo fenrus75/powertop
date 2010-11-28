@@ -44,7 +44,7 @@ const char* softirqs[] = {
 };
 
 
-interrupt::interrupt(const char *_handler, int _number)
+interrupt::interrupt(const char *_handler, int _number) : power_consumer()
 {
 	running_since = 0;
 	number = _number;

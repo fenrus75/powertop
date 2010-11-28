@@ -36,7 +36,7 @@
 using namespace std;
 
 
-timer::timer(unsigned long address)
+timer::timer(unsigned long address) : power_consumer()
 {
 	strncpy(handler, kernel_function(address), 31);
 	raw_count = 0;

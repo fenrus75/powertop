@@ -109,6 +109,7 @@ void one_measurement(int seconds)
 	process_update_display();
 	w_display_cpu_cstates();
 	w_display_cpu_pstates();
+	tuning_update_display();
 
 	end_process_data();
 		

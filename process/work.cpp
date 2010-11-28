@@ -36,7 +36,7 @@
 using namespace std;
 
 
-work::work(unsigned long address)
+work::work(unsigned long address) : power_consumer()
 {
 	strncpy(handler, kernel_function(address), 31);
 	raw_count = 0;

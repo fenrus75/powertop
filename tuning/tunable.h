@@ -35,12 +35,12 @@ using namespace std;
 #define TUNE_NEUTRAL 0
 
 class tunable {
-	char desc[4096];
 
 	char good_string[128];
 	char bad_string[128];
 	char neutral_string[128];
 public:
+	char desc[4096];
 	double score;
 
 	tunable(void);

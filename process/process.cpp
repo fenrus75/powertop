@@ -70,7 +70,7 @@ uint64_t process::deschedule_thread(uint64_t time, int thread_id)
 }
 
 
-process::process(const char *_comm, int _pid)
+process::process(const char *_comm, int _pid) : power_consumer()
 {
 	char line[4096];
 	ifstream file;

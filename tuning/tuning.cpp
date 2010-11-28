@@ -23,11 +23,43 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 
-#include "tuning.h"
 
+#include <stdio.h>
+#include <string.h>
+#include <ncurses.h>
+
+
+#include "tuning.h"
 #include "sysfs.h"
+#include "../display.h"
 
 void initialize_tuning(void)
 {
-	add_sysfs_tunable("Enable Audio codec power management", "/sys/modules/snd_hda_intel/parameters/power_save", "1");
+	add_sysfs_tunable("Enable Audio codec power management", "/sys/module/snd_hda_intel/parameters/power_save", "1");
+}
+
+
+
+void tuning_update_display(void)
+{
+	WINDOW *win;
+	unsigned int i;
+
+
+	win = tab_windows["Tunables"];
+
+	if (!win)
+		return;
+
+	wclear(win);
+
+	wmove(win, 2,0);
+
+	for (i = 0; i < all_tunables.size(); i++) {
+		char res[128];
+		strcpy(res, all_tunables[i]->result_string());
+		while (strlen(res) < 12)
+			strcat(res, " ");
+		wprintw(win, "%s  %s\n", res, all_tunables[i]->description());
+	}
 }

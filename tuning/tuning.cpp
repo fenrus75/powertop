@@ -36,6 +36,7 @@
 class tuning_window: public tab_window {
 public:
 	virtual void repaint(void);
+	virtual void cursor_enter(void);
 };
 
 void initialize_tuning(void)
@@ -102,4 +103,14 @@ void tuning_update_display(void)
 void tuning_window::repaint(void)
 {
 	__tuning_update_display(cursor_pos);
+}
+
+void tuning_window::cursor_enter(void)
+{
+	class tunable *tun;
+
+	tun = all_tunables[cursor_pos];
+	if (!tun)
+		return;
+	tun->toggle();
 }

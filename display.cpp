@@ -197,6 +197,7 @@ void cursor_down(void)
 	w = tab_windows[tab_names[current_tab]];
 	if (w)
 		w->cursor_down();
+
 	show_cur_tab();
 }
 
@@ -208,5 +209,16 @@ void cursor_up(void)
 
 	if (w)
 		w->cursor_up();
+
+	show_cur_tab();
+}
+void cursor_enter(void)
+{
+	class tab_window *w;
+
+	w = tab_windows[tab_names[current_tab]];
+
+	if (w)
+		w->cursor_enter();
 	show_cur_tab();
 }

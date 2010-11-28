@@ -77,6 +77,9 @@ static void do_sleep(int seconds)
 		case KEY_UP:
 			cursor_up();
 			break;
+		case 10:
+			cursor_enter();
+			break;
 		case KEY_EXIT:
 		case 'q':
 		case 27:

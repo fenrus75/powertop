@@ -32,11 +32,13 @@
 #include <iostream>
 #include <fstream>
 
+#include "../lib.h"
 
 sysfs_tunable::sysfs_tunable(const char *str, const char *_sysfs_path, const char *_target_content) : tunable(str, 1.0, "Good", "Bad", "Unknown")
 {
 	strcpy(sysfs_path, _sysfs_path);
 	strcpy(target_value, _target_content);
+	bad_value[0] = 0;
 }
 
 int sysfs_tunable::good_bad(void)
@@ -57,7 +59,22 @@ int sysfs_tunable::good_bad(void)
 	if (strcmp(current_value, target_value) == 0)
 		return TUNE_GOOD;
 
+	strcpy(bad_value, current_value);
 	return TUNE_BAD;
+}
+
+void sysfs_tunable::toggle(void)
+{
+	int good;
+	good = good_bad();
+
+	if (good == TUNE_GOOD) {
+		if (strlen(bad_value) > 0)
+			write_sysfs(sysfs_path, bad_value);
+		return;
+	}
+
+	write_sysfs(sysfs_path, target_value);
 }
 
 

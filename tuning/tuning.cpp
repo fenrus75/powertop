@@ -46,7 +46,7 @@ void initialize_tuning(void)
 	w = new tuning_window();
 	create_tab("Tunables", w);
 	add_sysfs_tunable("Enable Audio codec power management", "/sys/module/snd_hda_intel/parameters/power_save", "1");
-	add_sysfs_tunable("Enable SATA link power management for /dev/sda", "/sys/class/scsi_host/host0/link_power_management_policy", "min_performance");
+	add_sysfs_tunable("Enable SATA link power management for /dev/sda", "/sys/class/scsi_host/host0/link_power_management_policy", "min_power");
 
 
 	w->cursor_max = all_tunables.size() - 1;

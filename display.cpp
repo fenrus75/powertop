@@ -218,7 +218,9 @@ void cursor_enter(void)
 
 	w = tab_windows[tab_names[current_tab]];
 
-	if (w)
+	if (w) {
 		w->cursor_enter();
+		w->repaint();
+	}
 	show_cur_tab();
 }

@@ -71,6 +71,12 @@ static void do_sleep(int seconds)
 		case KEY_LEFT:
 			show_prev_tab();
 			break;
+		case KEY_DOWN:
+			cursor_down();
+			break;
+		case KEY_UP:
+			cursor_up();
+			break;
 		case KEY_EXIT:
 		case 'q':
 		case 27:
@@ -173,13 +179,15 @@ int main(int argc, char **argv)
 		exit(0);
 	}
 
-	initialize_tuning();
 
 	/* first one is short to not let the user wait too long */
 	init_display();
 	show_tab(0);
 	one_measurement(1);
+	initialize_tuning();
+	tuning_update_display();
 	show_tab(0);
+
 
 
 	while (!leave_powertop) {

@@ -33,14 +33,27 @@
 #include "sysfs.h"
 #include "../display.h"
 
+class tuning_window: public tab_window {
+public:
+	virtual void repaint(void);
+};
+
 void initialize_tuning(void)
 {
+	class tuning_window *w;
+
+	w = new tuning_window();
+	create_tab("Tunables", w);
 	add_sysfs_tunable("Enable Audio codec power management", "/sys/module/snd_hda_intel/parameters/power_save", "1");
+	add_sysfs_tunable("Enable SATA link power management for /dev/sda", "/sys/class/scsi_host/host0/link_power_management_policy", "min_performance");
+
+
+	w->cursor_max = all_tunables.size() - 1;
 }
 
 
 
-void tuning_update_display(void)
+static void __tuning_update_display(int cursor_pos)
 {
 	WINDOW *win;
 	unsigned int i;
@@ -57,9 +70,36 @@ void tuning_update_display(void)
 
 	for (i = 0; i < all_tunables.size(); i++) {
 		char res[128];
+		char desc[4096];
 		strcpy(res, all_tunables[i]->result_string());
+		strcpy(desc, all_tunables[i]->description());
 		while (strlen(res) < 12)
 			strcat(res, " ");
-		wprintw(win, "%s  %s\n", res, all_tunables[i]->description());
+
+		while (strlen(desc) < 103)
+			strcat(desc, " ");
+		if ((int)i != cursor_pos) {
+			wattrset(win, A_NORMAL);
+			wprintw(win, "   ");
+		} else {
+			wattrset(win, A_REVERSE);
+			wprintw(win, ">> ");
+		}
+		wprintw(win, "%s  %s\n", res, desc);
 	}
+}
+
+void tuning_update_display(void)
+{
+	class tab_window *w;
+
+	w = tab_windows["Tunables"];
+	if (!w)
+		return;
+	w->repaint();
+}
+
+void tuning_window::repaint(void)
+{
+	__tuning_update_display(cursor_pos);
 }

@@ -64,7 +64,7 @@ void init_display(void)
 	create_tab("Idle stats");
 	create_tab("Frequency stats");
 	create_tab("Device stats");
-	create_tab("Tunables");
+//	create_tab("Tunables");
 //	create_tab("Checklist");
 //	create_tab("Actions");
 
@@ -188,4 +188,25 @@ void show_cur_tab(void)
 	if (!display)
 		return;
 	show_tab(current_tab);
+}
+
+void cursor_down(void)
+{
+	class tab_window *w;
+
+	w = tab_windows[tab_names[current_tab]];
+	if (w)
+		w->cursor_down();
+	show_cur_tab();
+}
+
+void cursor_up(void)
+{
+	class tab_window *w;
+
+	w = tab_windows[tab_names[current_tab]];
+
+	if (w)
+		w->cursor_up();
+	show_cur_tab();
 }

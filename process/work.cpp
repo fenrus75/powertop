@@ -59,8 +59,7 @@ uint64_t work::done(uint64_t time, uint64_t work_struct)
 		return 0;
 
 	delta = time - running_since[work_struct];
-	if (delta < 0)
-		printf("GOT HERE %llin", delta);
+
 	accumulated_runtime += delta;
 
 	raw_count++;

@@ -59,8 +59,7 @@ uint64_t timer::done(uint64_t time, uint64_t timer_struct)
 		return 0;
 
 	delta = time - running_since[timer_struct];
-	if (delta < 0)
-		printf("GOT HERE %llin", delta);
+
 	accumulated_runtime += delta;
 
 	raw_count++;

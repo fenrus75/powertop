@@ -59,7 +59,8 @@ uint64_t process::deschedule_thread(uint64_t time, int thread_id)
 	delta = time - running_since;
 
 	if (time < running_since)
-		printf("%llu time    %llu since \n", time, running_since);
+		printf("%llu time    %llu since \n", (unsigned long long)time, 
+						     (unsigned long long)running_since);
 
 	if (thread_id == 0) /* idle thread */
 		delta = 0;

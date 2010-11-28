@@ -36,12 +36,16 @@ using namespace std;
 static int display = 0;
 
 vector<string> tab_names;
-map<string, WINDOW *> tab_windows;
+map<string, class tab_window *> tab_windows;
 
-static void create_tab(string name)
+void create_tab(string name, class tab_window *w)
 {
+	if (!w)
+		w = new(class tab_window);
+
+	w->win = newpad(1000,1000);
 	tab_names.push_back(name);
-	tab_windows[name] = newpad(1000,1000);
+	tab_windows[name] = w;
 }
 
 
@@ -118,12 +122,46 @@ void show_tab(unsigned int tab)
 	wrefresh(tab_bar);
 	wrefresh(bottom_line);
 
-	win = tab_windows[tab_names[tab]];
+	win = get_ncurses_win(tab_names[tab]);
 	if (!win)
 		return;
 
 	prefresh(win, 0, 0, 1, 0, LINES - 3, COLS - 1);
 }
+
+WINDOW *get_ncurses_win(const char *name)
+{
+	class tab_window *w;
+	WINDOW *win;
+
+	w= tab_windows[name];
+	if (!w)
+		return NULL;
+
+	win = w->win;
+
+	return win;
+}
+
+WINDOW *get_ncurses_win(int nr)
+{
+	class tab_window *w;
+	WINDOW *win;
+
+	w= tab_windows[tab_names[nr]];
+	if (!w)
+		return NULL;
+
+	win = w->win;
+
+	return win;
+}
+
+WINDOW *get_ncurses_win(string name)
+{
+	return get_ncurses_win(name.c_str());
+}
+
 
 void show_next_tab(void)
 {

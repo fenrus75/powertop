@@ -171,8 +171,7 @@ struct workqueue_end {
 } __attribute__((packed));
 
 struct  dirty_inode {
-	uint32_t major;
-	uint32_t minor;
+	uint32_t dev;
 };
 
 

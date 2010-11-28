@@ -39,6 +39,25 @@ extern void show_next_tab(void);
 extern void show_prev_tab(void);
 extern void show_cur_tab(void);
 
-extern map<string, WINDOW *> tab_windows;
+class tab_window {
+public:
+	int cursor_pos;
+	int cursor_max;
+	WINDOW *win;
+	
+	virtual void cursor_down(void) { if (cursor_pos < cursor_max - 1) cursor_pos++; repaint();} ;
+	virtual void cursor_up(void) { if (cursor_pos > 0) cursor_pos--; repaint(); };
+
+	virtual void repaint(void) { };
+};
+
+extern map<string, class tab_window *> tab_windows;
+
+WINDOW *get_ncurses_win(const char *name);
+WINDOW *get_ncurses_win(string name);
+WINDOW *get_ncurses_win(int nr);
+
+void create_tab(string name, class tab_window *w = NULL);
+
 
 #endif

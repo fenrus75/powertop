@@ -362,7 +362,7 @@ void w_display_cpu_cstates(void)
 	class abstract_cpu *_package, * _core, * _cpu;
 	int ctr = 0;
 
-	win = tab_windows["Idle stats"];
+	win = get_ncurses_win("Idle stats");
 	if (!win)
 		return;
 
@@ -545,7 +545,7 @@ void w_display_cpu_pstates(void)
 	class abstract_cpu *_package, * _core, * _cpu;
 	int ctr = 0;
 
-	win = tab_windows["Frequency stats"];
+	win = get_ncurses_win("Frequency stats");
 	if (!win)
 		return;
 

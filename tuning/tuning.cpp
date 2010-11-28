@@ -46,7 +46,7 @@ void tuning_update_display(void)
 	unsigned int i;
 
 
-	win = tab_windows["Tunables"];
+	win = get_ncurses_win("Tunables");
 
 	if (!win)
 		return;

@@ -1,4 +1,4 @@
-From 880a17e27f0b90d32c0c0b9cf4cd9b4e5d779c73 Mon Sep 17 00:00:00 2001
+From 3950d3c04a6bf8ccf9ff912a49bdd242a2fe9e47 Mon Sep 17 00:00:00 2001
 From: Arjan van de Ven <arjan@linux.intel.com>
 Date: Fri, 26 Nov 2010 12:18:03 -0800
 Subject: [PATCH] vfs: Add a trace point in the mark_inode_dirty function
@@ -19,87 +19,87 @@ for later on after a transition time.
 
 Signed-of-by: Arjan van de Ven <arjan@linux.intel.com>
 ---
- fs/fs-writeback.c          |    4 ++++
- fs/inode.c                 |    4 ++++
- include/trace/events/vfs.h |   35 +++++++++++++++++++++++++++++++++++
+ fs/fs-writeback.c                |    3 +++
+ include/linux/fs.h               |   12 ++++++++++++
+ include/trace/events/writeback.h |   28 ++++++++++++++++++++++++++++
  3 files changed, 43 insertions(+), 0 deletions(-)
- create mode 100644 include/trace/events/vfs.h
 
 diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 3d06ccc..6c93517 100644
+index 3d06ccc..62e33cc 100644
 --- a/fs/fs-writeback.c
 +++ b/fs/fs-writeback.c
-@@ -27,6 +27,7 @@
- #include <linux/backing-dev.h>
- #include <linux/buffer_head.h>
- #include <linux/tracepoint.h>
-+#include <trace/events/vfs.h>
- #include "internal.h"
- 
- /*
-@@ -942,6 +943,9 @@ void __mark_inode_dirty(struct inode *inode, int flags)
- 			sb->s_op->dirty_inode(inode);
- 	}
+@@ -952,6 +952,9 @@ void __mark_inode_dirty(struct inode *inode, int flags)
+ 	if ((inode->i_state & flags) == flags)
+ 		return;
  
 +	if (flags & (I_DIRTY_SYNC | I_DIRTY_DATASYNC | I_DIRTY_PAGES))
-+		trace_inode_dirty(inode);
++		trace_writeback_inode_dirty(inode, flags);
 +
- 	/*
- 	 * make sure that changes are seen by all cpus before we test i_state
- 	 * -- mikulas
-diff --git a/fs/inode.c b/fs/inode.c
-index ae2727a..e8b1d42 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -1708,3 +1708,7 @@ void inode_init_owner(struct inode *inode, const struct inode *dir,
- 	inode->i_mode = mode;
- }
- EXPORT_SYMBOL(inode_init_owner);
+ 	if (unlikely(block_dump))
+ 		block_dump___mark_inode_dirty(inode);
+ 
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index c9e06cc..25935e1 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1676,6 +1676,18 @@ struct super_operations {
+ 
+ #define I_DIRTY (I_DIRTY_SYNC | I_DIRTY_DATASYNC | I_DIRTY_PAGES)
+ 
++#define INODE_DIRTY_FLAGS \
++	{ I_DIRTY_SYNC,		"DIRTY-SYNC" }, \
++	{ I_DIRTY_DATASYNC,	"DIRTY-DATASYNC" }, \
++	{ I_DIRTY_PAGES,	"DIRTY-PAGES" }, \
++	{ I_NEW,		"NEW" }, \
++	{ I_WILL_FREE,		"WILL-FREE" }, \
++	{ I_FREEING,		"FREEING" }, \
++	{ I_CLEAR,		"CLEAR" }, \
++	{ I_SYNC,		"SYNC" }, \
++	{ I_REFERENCED,		"REFERENCED" }
 +
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/vfs.h>
 +
-diff --git a/include/trace/events/vfs.h b/include/trace/events/vfs.h
-new file mode 100644
-index 0000000..7e5c135
---- /dev/null
-+++ b/include/trace/events/vfs.h
-@@ -0,0 +1,35 @@
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM vfs
-+
-+#if !defined(_TRACE_VFS_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_VFS_H
-+
+ extern void __mark_inode_dirty(struct inode *, int);
+ static inline void mark_inode_dirty(struct inode *inode)
+ {
+diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+index 89a2b2d..5c80875 100644
+--- a/include/trace/events/writeback.h
++++ b/include/trace/events/writeback.h
+@@ -186,6 +186,34 @@ DEFINE_EVENT(writeback_congest_waited_template, writeback_wait_iff_congested,
+ 	TP_ARGS(usec_timeout, usec_delayed)
+ );
+ 
 +/*
-+ * Tracepoint for dirtying an inode:
++ * Tracepoint for dirtying an inode; used by PowerTOP
 + */
-+TRACE_EVENT(inode_dirty,
++TRACE_EVENT(writeback_inode_dirty,
 +
-+	TP_PROTO(struct inode *inode),
++	TP_PROTO(struct inode *inode, int flags),
 +
-+	TP_ARGS(inode),
++	TP_ARGS(inode, flags),
 +
 +	TP_STRUCT__entry(
-+		__field(	int,	dev_major		)
-+		__field(	int,	dev_minor		)
-+		__field(	ino_t,	ino			)
++		__field(	__kernel_dev_t,	dev		)
++		__field(	ino_t,		ino		)
++		__field(	u32,		flags		)
 +	),
 +
 +	TP_fast_assign(
-+		__entry->dev_major = MAJOR(inode->i_sb->s_dev);
-+		__entry->dev_minor = MINOR(inode->i_sb->s_dev);
-+		__entry->ino	   = inode->i_ino;
++		__entry->dev	= inode->i_sb->s_dev;
++		__entry->ino	= inode->i_ino;
++		__entry->flags  = flags;
 +	),
 +
-+	TP_printk("dev %d,%d ino %lu ", __entry->dev_major, __entry->dev_minor,
-+		  (unsigned long) __entry->ino)
++	TP_printk("dev %d:%d ino %lu flags %d %s", MAJOR(__entry->dev), MINOR(__entry->dev),
++		  (unsigned long) __entry->ino,
++		  __entry->flags,
++		  __print_flags(__entry->flags, "|", INODE_DIRTY_FLAGS)
++	)
 +);
 +
-+#endif /* _TRACE_VFS_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
+ #endif /* _TRACE_WRITEBACK_H */
+ 
+ /* This part must be outside protection */
 -- 
 1.7.2.3
 

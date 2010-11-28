@@ -33,6 +33,7 @@
 #include "tuning.h"
 #include "sysfs.h"
 #include "usb.h"
+#include "runtime.h"
 #include "../display.h"
 
 static void sort_tunables(void);
@@ -55,6 +56,7 @@ void initialize_tuning(void)
 	add_sysfs_tunable("Enable SATA link power management for /dev/sda", "/sys/class/scsi_host/host0/link_power_management_policy", "min_power");
 
 	add_usb_tunables();
+	add_runtime_tunables("pci");
 
 	sort_tunables();
 

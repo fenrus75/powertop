@@ -71,7 +71,7 @@ uint64_t process::deschedule_thread(uint64_t time, int thread_id)
 }
 
 
-process::process(const char *_comm, int _pid) : power_consumer()
+process::process(const char *_comm, int _pid, int _tid) : power_consumer()
 {
 	char line[4096];
 	ifstream file;
@@ -83,6 +83,25 @@ process::process(const char *_comm, int _pid) : power_consumer()
 	last_waker = NULL;
 	waker = NULL;
 	is_kernel = 0;
+	tgid = _tid;
+
+	if (_tid == 0) {
+		sprintf(line, "/proc/%i/status", _pid);
+		file.open(line);
+		while (file) {
+			file.getline(line, 4096);
+			if (strstr(line, "Tgid")) {
+				char *c;
+				c = strchr(line, ':');
+				if (!c)
+					continue;
+				c++;
+				tgid = strtoull(c, NULL, 10);
+				break;
+			}
+		}
+		file.close();
+	}
 
 	if (strncmp(_comm, "kondemand/", 10) == 0)
 		is_idle = 1;
@@ -148,6 +167,17 @@ void merge_processes(void)
 {
 	unsigned int i,j;
 	class process *one, *two;
+
+	/* fold threads */
+	for (i = 0; i < all_processes.size() ; i++) {
+		one = all_processes[i];
+		for (j = i + 1; j < all_processes.size(); j++) {
+			two = all_processes[j];
+			if (one->pid == two->tgid && two->tgid != 0)
+				merge_process(one, two);
+		}
+	}
+
 	/* find dupes and add up */
 	for (i = 0; i < all_processes.size() ; i++) {
 		one = all_processes[i];

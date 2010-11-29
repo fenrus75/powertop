@@ -43,6 +43,7 @@ class process : public power_consumer {
 	uint64_t	running_since;
 	char		desc[256];
 public:
+	int		tgid;
 	char 		comm[16];
 	int 		pid;
 
@@ -51,7 +52,7 @@ public:
 	int 		running;
 	int		is_kernel; /* kernel thread */
 
-	process(const char *_comm, int _pid);
+	process(const char *_comm, int _pid, int _tid = 0);
 
 	virtual void schedule_thread(uint64_t time, int thread_id);
 	virtual uint64_t deschedule_thread(uint64_t time, int thread_id = 0);

@@ -181,6 +181,34 @@ static int net_iface_up(const char *iface)
 	return 0;
 }
 
+static int iface_link(const char *name)
+{
+	int sock;
+	struct ifreq ifr;
+	struct ethtool_value cmd;
+	int link;
+
+	memset(&ifr, 0, sizeof(struct ifreq));
+
+	sock = socket(AF_INET, SOCK_DGRAM, 0);
+	if (sock<0)
+		return 0;
+
+	strcpy(ifr.ifr_name, name);
+
+	memset(&cmd, 0, sizeof(cmd));
+
+	cmd.cmd = ETHTOOL_GLINK;
+	ifr.ifr_data = (caddr_t)&cmd;
+        ioctl(sock, SIOCETHTOOL, &ifr);
+	close(sock);
+
+	link = cmd.data;
+	
+	return link;
+}
+
+
 static int iface_speed(const char *name)
 {
 	int sock;
@@ -205,14 +233,14 @@ static int iface_speed(const char *name)
 
 	speed = ethtool_cmd_speed(&cmd);
 
-	if (speed == 65535)
-		speed = 0; /* no link */
 
 	if (speed > 0 && speed <= 100)
 		speed = 100;
 	if (speed > 100 && speed <= 1000)
 		speed = 1000;
-
+	if (speed == 65535 || !iface_link(name))
+		speed = 0; /* no link */
+	
 	return speed;
 }
 

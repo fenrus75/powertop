@@ -135,7 +135,7 @@ void runtime_pmdevice::set_human_name(char *name)
 }
 
 
-static int device_has_runtime_pm(const char *sysfs_path)
+int device_has_runtime_pm(const char *sysfs_path)
 {
 	char filename[4096];
 	ifstream file;

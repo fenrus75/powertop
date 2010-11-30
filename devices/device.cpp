@@ -106,7 +106,7 @@ void report_devices(void)
 	char util[128];
 	char power[128];
 
-	win = tab_windows["Device stats"];
+	win = get_ncurses_win("Device stats");
         if (!win)
                 return;
 

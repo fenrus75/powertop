@@ -1,3 +1,4 @@
+* there is a filedescriptor leak!
 * move the 2 data files somewhere sane
 * check various tunables (see powertop 1.x) into a tunable checklist
 * pretty print estimate to only do 2 decimal places instead of 3

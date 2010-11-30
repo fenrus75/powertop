@@ -27,10 +27,25 @@
 #include "tunable.h"
 #include <string.h>
 
+vector<class tunable *> all_tunables;
 
-tunable::tunable(const char *str, bool _value, double _score)
+
+tunable::tunable(const char *str, double _score, const char *good, const char *bad, const char *neutral)
 {
-	value = _value;
 	score = _score;
 	strcpy(desc, str);
+	strcpy(good_string, good);
+	strcpy(bad_string, bad);
+	strcpy(neutral_string, neutral);
 }
+
+
+tunable::tunable(void)
+{
+	score = 0;
+	desc[0] = 0;
+	strcpy(good_string, "Good");
+	strcpy(bad_string, "Bad");
+	strcpy(neutral_string, "Unknown");
+}
+

@@ -116,6 +116,10 @@ network::network(char *_name, char *path)
 	start_pkts = 0;
 	end_pkts = 0;
 	pkts = 0;
+	valid_100 = -1;
+	valid_1000 = -1;
+	valid_high = -1;
+
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
 	sprintf(devname, "%s", _name);
 	sprintf(humanname, "nic:%s", _name);
@@ -177,6 +181,34 @@ static int net_iface_up(const char *iface)
 	return 0;
 }
 
+static int iface_link(const char *name)
+{
+	int sock;
+	struct ifreq ifr;
+	struct ethtool_value cmd;
+	int link;
+
+	memset(&ifr, 0, sizeof(struct ifreq));
+
+	sock = socket(AF_INET, SOCK_DGRAM, 0);
+	if (sock<0)
+		return 0;
+
+	strcpy(ifr.ifr_name, name);
+
+	memset(&cmd, 0, sizeof(cmd));
+
+	cmd.cmd = ETHTOOL_GLINK;
+	ifr.ifr_data = (caddr_t)&cmd;
+        ioctl(sock, SIOCETHTOOL, &ifr);
+	close(sock);
+
+	link = cmd.data;
+	
+	return link;
+}
+
+
 static int iface_speed(const char *name)
 {
 	int sock;
@@ -201,14 +233,14 @@ static int iface_speed(const char *name)
 
 	speed = ethtool_cmd_speed(&cmd);
 
-	if (speed == 65535)
-		speed = 0; /* no link */
 
 	if (speed > 0 && speed <= 100)
 		speed = 100;
 	if (speed > 100 && speed <= 1000)
 		speed = 1000;
-
+	if (speed == 65535 || !iface_link(name))
+		speed = 0; /* no link */
+	
 	return speed;
 }
 
@@ -323,18 +355,31 @@ double network::power_usage(struct result_bundle *result, struct parameter_bundl
 
 	power += utilization * factor;
 
-	factor = get_parameter_value(index_link_100, bundle);
-	utilization = get_result_value(rindex_link_100, result);
-	power += utilization * factor / 100;
+
+	if (valid_100 == -1) {
+		valid_100 = utilization_power_valid(rindex_link_100);
+		valid_1000 = utilization_power_valid(rindex_link_1000);
+		valid_high = utilization_power_valid(rindex_link_high);
+	}
+	
+	if (valid_100 > 0) {
+		factor = get_parameter_value(index_link_100, bundle);
+		utilization = get_result_value(rindex_link_100, result);
+		power += utilization * factor / 100;
+	}
 
 
-	factor = get_parameter_value(index_link_1000, bundle);
-	utilization = get_result_value(rindex_link_1000, result);
-	power += utilization * factor / 100;
-
-	factor = get_parameter_value(index_link_high, bundle);
-	utilization = get_result_value(rindex_link_high, result);
-	power += utilization * factor / 100;
+	if (valid_1000 > 0) {
+		factor = get_parameter_value(index_link_1000, bundle);
+		utilization = get_result_value(rindex_link_1000, result);
+		power += utilization * factor / 100;
+	}
+	
+	if (valid_high > 0) {
+		factor = get_parameter_value(index_link_high, bundle);
+		utilization = get_result_value(rindex_link_high, result);
+		power += utilization * factor / 100;
+	}
 
 	factor = get_parameter_value(index_pkts, bundle);
 	utilization = get_result_value(rindex_pkts, result);

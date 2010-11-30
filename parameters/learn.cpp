@@ -277,7 +277,7 @@ void learn_parameters(int iterations, int do_base_power)
 		weed_empties(best_so_far);
 
 	if (debug_learning)
-		printf("Final score %4.2f (%i points)\n", best_so_far->score / past_results.size(), past_results.size());
+		printf("Final score %4.2f (%i points)\n", best_so_far->score / past_results.size(), (int)past_results.size());
 //	dump_parameter_bundle(best_so_far);
 //	dump_past_results();
 }

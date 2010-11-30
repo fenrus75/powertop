@@ -22,49 +22,27 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_TUNABLE_H
-#define _INCLUDE_GUARD_TUNABLE_H
+#ifndef _INCLUDE_GUARD_USB_TUNE_H
+#define _INCLUDE_GUARD_USB_TUNE_H
 
 #include <vector>
 
+#include "tunable.h"
+
 using namespace std;
 
-#define TUNE_GOOD    1
-#define TUNE_BAD     -1
-#define TUNE_UNKNOWN 0
-#define TUNE_NEUTRAL 0
-
-class tunable {
-
-	char good_string[128];
-	char bad_string[128];
-	char neutral_string[128];
+class usb_tunable : public tunable {
+	char usb_path[4096];
 public:
-	char desc[4096];
-	double score;
+	usb_tunable(const char *usb_path, const char *path);
 
-	tunable(void);
-	tunable(const char *str, double _score, const char *good = "", const char *bad = "", const char *neutral ="");
+	virtual int good_bad(void);
 
-	virtual int good_bad(void) { return TUNE_NEUTRAL; }
+	virtual void toggle(void);
 
-	virtual char *result_string(void) 
-	{
-		switch (good_bad()) {
-		case TUNE_GOOD:
-			return good_string;
-		case TUNE_BAD:
-			return bad_string;
-		}
-		return neutral_string;
-	}
-	
-
-	virtual const char *description(void) { return desc; };
-
-	virtual void toggle(void) { };
 };
 
-extern vector<class tunable *> all_tunables;
+extern void add_usb_tunables(void);
+
 
 #endif

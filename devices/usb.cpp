@@ -149,6 +149,8 @@ double usbdevice::utilization(void) /* percentage */
 	d = 100.0 * (active_after - active_before) / (0.01 + connected_after - connected_before);
 	if (d < 0.0)
 		d = 0.0;
+	if (d > 99.8)
+		d = 100.0;
 	return d;
 }
 
@@ -169,7 +171,7 @@ double usbdevice::power_usage(struct result_bundle *result, struct parameter_bun
 	double factor;
 	double utilization;
 
-	if (rootport)
+	if (rootport || !cached_valid)
 		return 0.0;
 
 

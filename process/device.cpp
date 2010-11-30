@@ -29,7 +29,7 @@
 vector<class device_consumer *> all_proc_devices;
 
 
-device_consumer::device_consumer(class device *dev)
+device_consumer::device_consumer(class device *dev) : power_consumer()
 {
 	device = dev;
 	power = device->power_usage(&all_results, &all_parameters);

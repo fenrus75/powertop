@@ -60,7 +60,7 @@ static uint64_t get_msr(int cpu, uint64_t offset)
 
 	retval = pread(fd, &msr, sizeof msr, offset);
 	if (retval != sizeof msr) {
-		fprintf(stderr, "pread cpu%d 0x%llx \n", cpu, offset);
+		fprintf(stderr, "pread cpu%d 0x%llx \n", cpu, (unsigned long long)offset);
 		_exit(-2);
 	}
 	close(fd);

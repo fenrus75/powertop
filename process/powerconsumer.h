@@ -43,6 +43,7 @@ public:
 	int	 	disk_hits;
 	int		wake_ups;
 	int		gpu_ops;
+	int		hard_disk_hits;  /* those which are likely a wakeup of the disk */
 	class power_consumer *waker;
 	class power_consumer *last_waker;
 
@@ -56,7 +57,7 @@ public:
 
 	virtual double usage(void);
 	virtual const char * usage_units(void);
-	virtual double events(void) { return  (wake_ups + gpu_ops) / measurement_time;};
+	virtual double events(void) { return  (wake_ups + gpu_ops + hard_disk_hits) / measurement_time;};
 	virtual int show_events(void) { return 1; };
 };
 

@@ -40,6 +40,8 @@
 #include "calibrate/calibrate.h"
 
 
+#include "tuning/tuning.h"
+
 #include "display.h"
 
 int debug_learning;
@@ -69,8 +71,18 @@ static void do_sleep(int seconds)
 		case KEY_LEFT:
 			show_prev_tab();
 			break;
+		case KEY_DOWN:
+			cursor_down();
+			break;
+		case KEY_UP:
+			cursor_up();
+			break;
+		case 10:
+			cursor_enter();
+			break;
 		case KEY_EXIT:
 		case 'q':
+		case 27:
 			leave_powertop = 1;
 			return;
 		}
@@ -106,6 +118,7 @@ void one_measurement(int seconds)
 	process_update_display();
 	w_display_cpu_cstates();
 	w_display_cpu_pstates();
+	tuning_update_display();
 
 	end_process_data();
 		
@@ -138,6 +151,7 @@ int main(int argc, char **argv)
 	register_parameter("cpu-wakeups", 39.5);
 	register_parameter("cpu-consumption", 1.56);
 	register_parameter("gpu-operations", 0.5576);
+	register_parameter("disk-operations-hard", 0.2);
 
 	if (argc > 1) {
 		if (strcmp(argv[1], "--calibrate") == 0)
@@ -169,11 +183,15 @@ int main(int argc, char **argv)
 		exit(0);
 	}
 
+
 	/* first one is short to not let the user wait too long */
 	init_display();
 	show_tab(0);
 	one_measurement(1);
+	initialize_tuning();
+	tuning_update_display();
 	show_tab(0);
+
 
 
 	while (!leave_powertop) {
@@ -191,9 +209,15 @@ int main(int argc, char **argv)
 
 	save_all_results("saved_results.powertop");
 	save_parameters("saved_parameters.powertop");
-	learn_parameters(100, 1);
+	learn_parameters(100, 0);
 	save_parameters("saved_parameters.powertop");
-	learn_parameters(400, 0);
+	learn_parameters(100, 0);
+	save_parameters("saved_parameters.powertop");
+	learn_parameters(100, 0);
+	save_parameters("saved_parameters.powertop");
+	learn_parameters(100, 0);
+	save_parameters("saved_parameters.powertop");
+	learn_parameters(100, 0);
 	save_parameters("saved_parameters.powertop");
 	dump_parameter_bundle();
 	return 0;

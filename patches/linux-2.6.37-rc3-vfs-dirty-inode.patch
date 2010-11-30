@@ -1,0 +1,105 @@
+From 3950d3c04a6bf8ccf9ff912a49bdd242a2fe9e47 Mon Sep 17 00:00:00 2001
+From: Arjan van de Ven <arjan@linux.intel.com>
+Date: Fri, 26 Nov 2010 12:18:03 -0800
+Subject: [PATCH] vfs: Add a trace point in the mark_inode_dirty function
+
+PowerTOP would like to be able to show who is keeping the disk
+busy by dirtying data. The most logical spot for this is in the vfs
+in the mark_inode_dirty() function, doing this on the block level
+is not possible because by the time the IO hits the block layer the
+guilty party can no longer be found ("kjournald" and "pdflush" are not
+useful answers to "who caused this file to be dirty).
+
+The trace point follows the same logic/style as the block_dump code
+and pretty much dumps the same data, just not to dmesg (and thus to
+/var/log/messages) but via the trace events streams.
+
+Eventually we should be able to phase out the block dump code, but that's
+for later on after a transition time.
+
+Signed-of-by: Arjan van de Ven <arjan@linux.intel.com>
+---
+ fs/fs-writeback.c                |    3 +++
+ include/linux/fs.h               |   12 ++++++++++++
+ include/trace/events/writeback.h |   28 ++++++++++++++++++++++++++++
+ 3 files changed, 43 insertions(+), 0 deletions(-)
+
+diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+index 3d06ccc..62e33cc 100644
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -952,6 +952,9 @@ void __mark_inode_dirty(struct inode *inode, int flags)
+ 	if ((inode->i_state & flags) == flags)
+ 		return;
+ 
++	if (flags & (I_DIRTY_SYNC | I_DIRTY_DATASYNC | I_DIRTY_PAGES))
++		trace_writeback_inode_dirty(inode, flags);
++
+ 	if (unlikely(block_dump))
+ 		block_dump___mark_inode_dirty(inode);
+ 
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index c9e06cc..25935e1 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1676,6 +1676,18 @@ struct super_operations {
+ 
+ #define I_DIRTY (I_DIRTY_SYNC | I_DIRTY_DATASYNC | I_DIRTY_PAGES)
+ 
++#define INODE_DIRTY_FLAGS \
++	{ I_DIRTY_SYNC,		"DIRTY-SYNC" }, \
++	{ I_DIRTY_DATASYNC,	"DIRTY-DATASYNC" }, \
++	{ I_DIRTY_PAGES,	"DIRTY-PAGES" }, \
++	{ I_NEW,		"NEW" }, \
++	{ I_WILL_FREE,		"WILL-FREE" }, \
++	{ I_FREEING,		"FREEING" }, \
++	{ I_CLEAR,		"CLEAR" }, \
++	{ I_SYNC,		"SYNC" }, \
++	{ I_REFERENCED,		"REFERENCED" }
++
++
+ extern void __mark_inode_dirty(struct inode *, int);
+ static inline void mark_inode_dirty(struct inode *inode)
+ {
+diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+index 89a2b2d..5c80875 100644
+--- a/include/trace/events/writeback.h
++++ b/include/trace/events/writeback.h
+@@ -186,6 +186,34 @@ DEFINE_EVENT(writeback_congest_waited_template, writeback_wait_iff_congested,
+ 	TP_ARGS(usec_timeout, usec_delayed)
+ );
+ 
++/*
++ * Tracepoint for dirtying an inode; used by PowerTOP
++ */
++TRACE_EVENT(writeback_inode_dirty,
++
++	TP_PROTO(struct inode *inode, int flags),
++
++	TP_ARGS(inode, flags),
++
++	TP_STRUCT__entry(
++		__field(	__kernel_dev_t,	dev		)
++		__field(	ino_t,		ino		)
++		__field(	u32,		flags		)
++	),
++
++	TP_fast_assign(
++		__entry->dev	= inode->i_sb->s_dev;
++		__entry->ino	= inode->i_ino;
++		__entry->flags  = flags;
++	),
++
++	TP_printk("dev %d:%d ino %lu flags %d %s", MAJOR(__entry->dev), MINOR(__entry->dev),
++		  (unsigned long) __entry->ino,
++		  __entry->flags,
++		  __print_flags(__entry->flags, "|", INODE_DIRTY_FLAGS)
++	)
++);
++
+ #endif /* _TRACE_WRITEBACK_H */
+ 
+ /* This part must be outside protection */
+-- 
+1.7.2.3
+

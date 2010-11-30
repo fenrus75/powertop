@@ -36,12 +36,16 @@ using namespace std;
 static int display = 0;
 
 vector<string> tab_names;
-map<string, WINDOW *> tab_windows;
+map<string, class tab_window *> tab_windows;
 
-static void create_tab(string name)
+void create_tab(string name, class tab_window *w)
 {
+	if (!w)
+		w = new(class tab_window);
+
+	w->win = newpad(1000,1000);
 	tab_names.push_back(name);
-	tab_windows[name] = newpad(1000,1000);
+	tab_windows[name] = w;
 }
 
 
@@ -60,7 +64,7 @@ void init_display(void)
 	create_tab("Idle stats");
 	create_tab("Frequency stats");
 	create_tab("Device stats");
-	create_tab("Tunables");
+//	create_tab("Tunables");
 //	create_tab("Checklist");
 //	create_tab("Actions");
 
@@ -68,6 +72,7 @@ void init_display(void)
 }
 
 WINDOW *tab_bar = NULL;
+WINDOW *bottom_line = NULL;
 
 static int current_tab;
 
@@ -85,12 +90,21 @@ void show_tab(unsigned int tab)
 		tab_bar = NULL;
 	}	
 
-	tab_bar = newwin(1, 0, 0, 0);
+	if (bottom_line) {
+		delwin(bottom_line);
+		bottom_line = NULL;
+	}	
 
+	tab_bar = newwin(1, 0, 0, 0);
 
 	wattrset(tab_bar, A_REVERSE);
 	mvwprintw(tab_bar, 0,0, "%120s", "");
 	mvwprintw(tab_bar, 0,0, "PowerTOP 1.99");
+
+	bottom_line = newwin(1, 0, LINES-1, 0);
+	wattrset(bottom_line, A_REVERSE);
+	mvwprintw(bottom_line, 0,0, "%120s", "");
+	mvwprintw(bottom_line, 0,0, " <ESC> Exit | ");
 
 
 	current_tab = tab;
@@ -106,31 +120,89 @@ void show_tab(unsigned int tab)
 	}
 	
 	wrefresh(tab_bar);
+	wrefresh(bottom_line);
 
-	win = tab_windows[tab_names[tab]];
+	win = get_ncurses_win(tab_names[tab]);
 	if (!win)
 		return;
 
 	prefresh(win, 0, 0, 1, 0, LINES - 3, COLS - 1);
 }
 
+WINDOW *get_ncurses_win(const char *name)
+{
+	class tab_window *w;
+	WINDOW *win;
+
+	w= tab_windows[name];
+	if (!w)
+		return NULL;
+
+	win = w->win;
+
+	return win;
+}
+
+WINDOW *get_ncurses_win(int nr)
+{
+	class tab_window *w;
+	WINDOW *win;
+
+	w= tab_windows[tab_names[nr]];
+	if (!w)
+		return NULL;
+
+	win = w->win;
+
+	return win;
+}
+
+WINDOW *get_ncurses_win(string name)
+{
+	return get_ncurses_win(name.c_str());
+}
+
+
 void show_next_tab(void)
 {
+ 	class tab_window *w;
+
 	if (!display)
 		return;
+
+	w = tab_windows[tab_names[current_tab]];
+	if (w)
+		w->hide();
+
 	current_tab ++;
 	if (current_tab >= (int)tab_names.size())
 		current_tab = 0;
+
+	w = tab_windows[tab_names[current_tab]];
+	if (w)
+		w->expose();
+
 	show_tab(current_tab);
 }
 
 void show_prev_tab(void)
 {
+ 	class tab_window *w;
+
 	if (!display)
 		return;
+	w = tab_windows[tab_names[current_tab]];
+	if (w)
+		w->hide();
+
 	current_tab --;
 	if (current_tab < 0)
 		current_tab = tab_names.size() - 1;
+
+	w = tab_windows[tab_names[current_tab]];
+	if (w)
+		w->expose();
+
 	show_tab(current_tab);
 }
 
@@ -139,4 +211,39 @@ void show_cur_tab(void)
 	if (!display)
 		return;
 	show_tab(current_tab);
+}
+
+void cursor_down(void)
+{
+	class tab_window *w;
+
+	w = tab_windows[tab_names[current_tab]];
+	if (w)
+		w->cursor_down();
+
+	show_cur_tab();
+}
+
+void cursor_up(void)
+{
+	class tab_window *w;
+
+	w = tab_windows[tab_names[current_tab]];
+
+	if (w)
+		w->cursor_up();
+
+	show_cur_tab();
+}
+void cursor_enter(void)
+{
+	class tab_window *w;
+
+	w = tab_windows[tab_names[current_tab]];
+
+	if (w) {
+		w->cursor_enter();
+		w->repaint();
+	}
+	show_cur_tab();
 }

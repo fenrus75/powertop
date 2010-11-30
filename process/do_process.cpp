@@ -204,8 +204,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		class process *new_proc  = NULL;
 
 		sw = (struct sched_switch *)trace;
-
-
+		
 		/* find new process pointer */
 		new_proc = find_create_process(sw->next_comm, sw->next_pid);
 
@@ -467,6 +466,25 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			consumer->gpu_ops++;
 		}
 	}
+	if (strcmp(event_name, "writeback:writeback_inode_dirty") == 0) {
+		static uint64_t prev_time;
+		class power_consumer *consumer;
+		struct dirty_inode *drty;
+
+		consumer = current_consumer(cpu);
+		drty = (struct dirty_inode *)trace;
+
+
+		if (consumer && strcmp(consumer->name(), "process")==0 && (drty->dev>>20) > 0) {
+			consumer->disk_hits++;
+
+			/* if the previous inode dirty was > 1 second ago, it becomes a hard hit */
+			if ((time - prev_time) > 1000000000)
+				consumer->hard_disk_hits++;
+
+			prev_time = time;
+		}
+	}
 }
 
 void start_process_measurement(void)
@@ -488,6 +506,7 @@ void start_process_measurement(void)
 		perf_events->add_event("workqueue:workqueue_execute_start");
 		perf_events->add_event("workqueue:workqueue_execute_end");
 		perf_events->add_event("i915:i915_gem_request_submit");
+		perf_events->add_event("writeback:writeback_inode_dirty");
 	}
 
 	first_stamp = ~0ULL;
@@ -537,7 +556,7 @@ void process_update_display(void)
 
 	show_power = global_power_valid();
 
-	win = tab_windows["Overview"];
+	win = get_ncurses_win("Overview");
 	if (!win)
 		return;
 
@@ -680,6 +699,35 @@ double total_gpu_ops(void)
 	return total;
 }
 
+double total_disk_hits(void)
+{
+	double total = 0;
+	unsigned int i;
+	for (i = 0; i < all_power.size() ; i++)
+		total += all_power[i]->disk_hits;
+
+
+	total = total / measurement_time;
+
+
+	return total;
+}
+
+
+double total_hard_disk_hits(void)
+{
+	double total = 0;
+	unsigned int i;
+	for (i = 0; i < all_power.size() ; i++)
+		total += all_power[i]->hard_disk_hits;
+
+
+	total = total / measurement_time;
+
+
+	return total;
+}
+
 double total_cpu_time(void)
 {
 	unsigned int i;
@@ -705,6 +753,8 @@ void end_process_data(void)
 	report_utilization("cpu-consumption", total_cpu_time());
 	report_utilization("cpu-wakeups", total_wakeups());
 	report_utilization("gpu-operations", total_gpu_ops());
+	report_utilization("disk-operations", total_disk_hits());
+	report_utilization("disk-operations-hard", total_hard_disk_hits());
 
 	/* clean out old data */
 	for (i = 0; i < all_processes.size() ; i++)

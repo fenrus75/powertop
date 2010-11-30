@@ -100,7 +100,14 @@ void runtime_pmdevice::end_measurement(void)
 
 double runtime_pmdevice::utilization(void) /* percentage */
 {
-	return 100 * (after_active_time - before_active_time) / (0.0001 + after_active_time - before_active_time + after_suspended_time - before_suspended_time);
+	double d;
+	d = 100 * (after_active_time - before_active_time) / (0.0001 + after_active_time - before_active_time + after_suspended_time - before_suspended_time);
+
+	if (d < 0.00)
+		d = 0.0;
+	if (d >= 99.9)
+		d = 100.0;
+	return d;
 }
 
 const char * runtime_pmdevice::device_name(void)

@@ -70,6 +70,19 @@ uint64_t process::deschedule_thread(uint64_t time, int thread_id)
 	return delta;
 }
 
+static void cmdline_to_string(char *str)
+{
+	char *c = str;
+	char prev = 0;
+
+	while (prev != 0 || *c  != 0) {
+		prev = *c;
+		if (*c == 0)
+			*c = ' ';
+		c++;
+	}
+}
+
 
 process::process(const char *_comm, int _pid, int _tid) : power_consumer()
 {
@@ -106,13 +119,22 @@ process::process(const char *_comm, int _pid, int _tid) : power_consumer()
 	if (strncmp(_comm, "kondemand/", 10) == 0)
 		is_idle = 1;
 
+	sprintf(desc, "%s", comm);
+
+
 	sprintf(line, "/proc/%i/cmdline", _pid);
-	file.open(line, ios::in);
+	file.open(line, ios::binary);
 	if (file) {
-		file.getline(line, 4096);
+		memset(line, 0, sizeof(line));
+		file.read(line, 4096);
 		file.close();
-		if (strlen(line) < 1)
+		if (strlen(line) < 1) {
 			is_kernel = 1;
+			sprintf(desc, "[%s]", comm);
+		} else {
+			cmdline_to_string(line);
+			strncpy(desc, line, sizeof(desc) - 1);
+		}
 	}
 }
 
@@ -121,9 +143,6 @@ const char * process::description(void)
 
 	if (child_runtime > accumulated_runtime)
 		child_runtime = 0;
-	sprintf(desc, "%s", comm);
-	if (is_kernel)
-		sprintf(desc, "[%s]", comm);
 
 	return desc;
 }

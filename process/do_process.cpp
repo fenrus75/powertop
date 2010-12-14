@@ -419,7 +419,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		work->fire(time, (uint64_t)wq->work);
 
 
-		if (strcmp(work->handler, "do_dbs_timer") != 0) 
+		if (strcmp(work->handler, "do_dbs_timer") != 0 && strcmp(work->handler, "vmstat_update") != 0) 
 			change_blame(cpu, work, LEVEL_WORK);
 	}
 	if (strcmp(event_name, "workqueue:workqueue_execute_end") == 0) {

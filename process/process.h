@@ -41,8 +41,8 @@ Need to collect
  */
 class process : public power_consumer {
 	uint64_t	running_since;
-	char		desc[256];
 public:
+	char		desc[256];
 	int		tgid;
 	char 		comm[16];
 	int 		pid;

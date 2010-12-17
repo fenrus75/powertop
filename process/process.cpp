@@ -202,7 +202,7 @@ void merge_processes(void)
 		one = all_processes[i];
 		for (j = i + 1; j < all_processes.size(); j++) {
 			two = all_processes[j];
-			if (strcmp(one->comm, two->comm) == 0)
+			if (strcmp(one->desc, two->desc) == 0)
 				merge_process(one, two);
 		}
 	}

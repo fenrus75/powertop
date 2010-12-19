@@ -443,6 +443,40 @@ void w_display_cpu_cstates(void)
 	}
 }
 
+static const char *core_class(int line)
+{
+	if (line & 1)
+		return "core_odd";
+	return "core_even";
+}
+
+static const char *package_class(int line)
+{
+	if (line & 1)
+		return "package_odd";
+	return "package_even";
+}
+
+static const char *cpu_class(int line, int cpu)
+{
+	if (line & 1) {
+		if (cpu & 1)
+			return "cpu_odd_odd";
+		return "cpu_odd_even";
+	}
+	if (cpu & 1)
+		return "cpu_even_odd";
+	return "cpu_even_even";
+}
+
+static const char *freq_class(int line)
+{
+	if (line & 1) {
+		return "cpu_odd_freq";
+	}
+	return "cpu_even_req";
+}
+
 
 void html_display_cpu_pstates(void)
 {
@@ -481,7 +515,7 @@ void html_display_cpu_pstates(void)
 
 
 				if (line == LEVEL_HEADER)
-					fprintf(htmlout, "<th>");
+					fprintf(htmlout, "<tr>");
 				else
 					fprintf(htmlout, "<tr>");
 
@@ -490,12 +524,14 @@ void html_display_cpu_pstates(void)
 				buffer2[0] = 0;
 				if (first_pkg == 0) {
 					if (line == LEVEL_HEADER)
-						fprintf(htmlout, "<td colspan=2>%s%s</td>",
+						fprintf(htmlout, "<th colspan=2 class=\"package_header\">%s%s</th>",
 							_package->fill_pstate_name(line, buffer),
 							_package->fill_pstate_line(line, buffer2));
 					else
-						fprintf(htmlout, "<td>%s</td><td>%s</td>",
+						fprintf(htmlout, "<td class=\"%s\">%s</td><td class=\"%s\">%s</td>",
+							freq_class(line),
 							_package->fill_pstate_name(line, buffer),
+							package_class(line),
 							_package->fill_pstate_line(line, buffer2));
 				} else {
 					fprintf(htmlout, "<td colspan=2>&nbsp;</td>");
@@ -505,12 +541,14 @@ void html_display_cpu_pstates(void)
 					buffer[0] = 0;
 					buffer2[0] = 0;
 					if (line == LEVEL_HEADER) 
-						fprintf(htmlout, "<td colspan=2>%s%s</td>",
+						fprintf(htmlout, "<th colspan=2 class=\"core_header\">%s%s</th>",
 							_core->fill_pstate_name(line, buffer),
 							_core->fill_pstate_line(line, buffer2));
 					else
-						fprintf(htmlout, "<td>%s</td><td>%s</td>",
+						fprintf(htmlout, "<td class=\"%s\">%s</td><td class=\"%s\">%s</td>",
+							freq_class(line),
 							_core->fill_pstate_name(line, buffer),
+							core_class(line),
 							_core->fill_pstate_line(line, buffer2));
 				}
 
@@ -521,23 +559,25 @@ void html_display_cpu_pstates(void)
 						continue;
 
 					if (line == LEVEL_HEADER) {
-							fprintf(htmlout, "<td colspan=2>%s</td>", _cpu->fill_pstate_line(line, buffer));
+							fprintf(htmlout, "<th colspan=2 class=\"cpu_header\">%s</th>", _cpu->fill_pstate_line(line, buffer));
 					} else {
 						if (first == 1) {
-							fprintf(htmlout, "<td>%s</td>", _cpu->fill_pstate_name(line, buffer));
+							fprintf(htmlout, "<td class=\"%s\">%s</td>", freq_class(line), _cpu->fill_pstate_name(line, buffer));
 							first = 0;
 							buffer[0] = 0;
-							fprintf(htmlout, "<td>%s</td>",
+							fprintf(htmlout, "<td class=\"%s\">%s</td>",
+								cpu_class(line, cpu),
 								_cpu->fill_pstate_line(line, buffer));
 						} else {
 							buffer[0] = 0;
-							fprintf(htmlout, "<td colspan=2>%s</td>",
+							fprintf(htmlout, "<td colspan=2 class=\"%s\">%s</td>",
+								cpu_class(line, cpu),
 								_cpu->fill_pstate_line(line, buffer));
 						}
 					}
 				}
 				if (line == LEVEL_HEADER)
-					fprintf(htmlout, "</th>\n");
+					fprintf(htmlout, "</tr>\n");
 				else
 					fprintf(htmlout, "</tr>\n");
 

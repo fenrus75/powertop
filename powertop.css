@@ -1,0 +1,64 @@
+
+table
+{
+	background-color: #F8F8F8;
+	color: black;
+}
+
+td.package_odd
+{
+	background-color: #E0ffE0;
+	color: black;
+}
+td.package_even
+{
+	background-color: #F0ffF0;
+	color: black;
+}
+
+td.core_even
+{
+	background-color: #F0ffF0;
+	color: black;
+}
+
+td.core_odd
+{
+	background-color: #E0E0ff;
+	color: black;
+}
+
+td.cpu_even_freq
+{
+	background-color: #E2E2E2;
+	color: black;
+}
+
+td.cpu_odd_freq
+{
+	background-color: #F4f4F4;
+	color: black;
+}
+
+td.cpu_even_even
+{
+	background-color: #E0E0f0;
+	color: black;
+}
+
+td.cpu_even_odd
+{
+	background-color: #F0f0F0;
+	color: black;
+}
+td.cpu_odd_even
+{
+	background-color: #E0E0ff;
+	color: black;
+}
+
+td.cpu_odd_odd
+{
+	background-color: #F0ffF0;
+	color: black;
+}

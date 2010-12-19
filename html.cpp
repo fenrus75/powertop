@@ -37,10 +37,7 @@ static void css_header(void)
 	if (!htmlout)
 		return;
 
-	fprintf(htmlout, "<style type=\"text/css\">\n");
-
-
-	fprintf(htmlout, "</style>\n");
+	fprintf(htmlout, "<link rel=\"stylesheet\" href=\"powertop.css\">\n");
 }
 
 void init_html_output(const char *filename)

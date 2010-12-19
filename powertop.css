@@ -13,6 +13,10 @@ th.device
 {
 	text-align: left;
 }
+th.process
+{
+	text-align: left;
+}
 
 td.package_odd
 {
@@ -91,7 +95,23 @@ tr.device_even
 	color: black;
 }
 
+tr.process_odd
+{
+	background-color: #E0E0E0;
+	color: black;
+}
+tr.process_even
+{
+	background-color: #F0f0F0;
+	color: black;
+}
+
 td.device_power
+{
+	text-align: right;
+}
+
+td.process_power
 {
 	text-align: right;
 }
@@ -99,4 +119,6 @@ td.device_power
 td.device_util
 {
 	text-align: right;
+}
+
 }

@@ -28,6 +28,7 @@
 #include "work.h"
 #include "device.h"
 #include "../lib.h"
+#include "../html.h"
 
 #include <vector>
 #include <algorithm>
@@ -624,6 +625,86 @@ void process_update_display(void)
 		while (strlen(events) < 12) strcat(events, " ");
 		wprintw(win, "%s  %s %s %s %s\n", power, usage, events, name, pretty_print(all_power[i]->description(), descr, 128));
 	}
+}
+
+static const char *process_class(int line)
+{
+	if (line & 1) {
+		return "process_odd";
+	}
+	return "process_even";
+}
+
+void html_process_update_display(int summary)
+{
+	unsigned int i, lines = 0;
+	unsigned int total;
+
+	int show_power;
+
+	if (!htmlout)
+		return;
+
+	sort(all_power.begin(), all_power.end(), power_cpu_sort);
+
+	show_power = global_power_valid();
+
+	if (summary)
+		fprintf(htmlout, "<h2>Power consumption summary</h2>\n");
+	else
+		fprintf(htmlout, "<h2>Overview of software power consumers</h2>\n");
+
+	fprintf(htmlout, "<table>\n");
+
+	if (show_power)
+		fprintf(htmlout, "<tr><th width=10%%>Power est.</th><th width=10%%>Usage/s</th><th width=10%%>Events/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+	else
+		fprintf(htmlout, "<tr><th width=10%%>Usage/s</th><th width=10%%>Events/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+
+	total = all_power.size();
+	if (summary && total > 10)
+		total = 10;
+
+	if (total > 100)
+		total = 100;
+
+	for (i = 0; i < total; i++) {
+		char power[16];
+		char name[20];
+		char usage[20];
+		char events[20];
+		char descr[128];
+		format_watts(all_power[i]->Witts(), power, 10);
+
+
+		if (!show_power)
+			strcpy(power, "          ");
+		sprintf(name, all_power[i]->type());
+
+		if (strcmp(name, "Device") == 0)
+			continue;
+
+		lines++;
+
+		if (all_power[i]->events() == 0 && all_power[i]->usage() == 0 && all_power[i]->Witts() == 0)
+			break;
+
+		usage[0] = 0;
+		if (all_power[i]->usage_units()) {
+			if (all_power[i]->usage() < 1000) 
+				sprintf(usage, "%5.1f%s", all_power[i]->usage(), all_power[i]->usage_units());
+			else
+				sprintf(usage, "%5i%s", (int)all_power[i]->usage(), all_power[i]->usage_units());
+		}
+		sprintf(events, "%5.1f", all_power[i]->events());
+		if (!all_power[i]->show_events())
+			events[0] = 0;
+		if (show_power)
+			fprintf(htmlout, "<tr class=\"%s\"><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td>%s</td><td>%s</td></tr>\n", process_class(lines), power, usage, events, name, pretty_print(all_power[i]->description(), descr, 128));
+		else
+			fprintf(htmlout, "<tr class=\"%s\"><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td>%s</td><td>%s</td></tr>\n", process_class(lines), usage, events, name, pretty_print(all_power[i]->description(), descr, 128));
+	}
+	fprintf(htmlout, "</table>\n");
 }
 
 void process_process_data(void)

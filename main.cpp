@@ -117,10 +117,13 @@ void one_measurement(int seconds)
 
 	/* output stats */
 	process_update_display();
+	html_process_update_display(1);
 	w_display_cpu_cstates();
 	w_display_cpu_pstates();
 	html_display_cpu_cstates();
 	html_display_cpu_pstates();
+
+	html_process_update_display(0);
 	tuning_update_display();
 
 	end_process_data();

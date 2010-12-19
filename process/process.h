@@ -80,6 +80,8 @@ extern class process * find_create_process(char *comm, int pid);
 extern void all_processes_to_all_power(void);
 
 extern void process_update_display(void);
+extern void html_process_update_display(int summary);
+
 
 
 

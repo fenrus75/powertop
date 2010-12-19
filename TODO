@@ -1,7 +1,5 @@
 * html output
-  - summary output
-  - device output
-  - process detailed output
+  - header with powertop version and system info (hw, kernel version, distro)
   - tunables output
      - including devices that don't have runtime PM
 

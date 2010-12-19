@@ -112,7 +112,7 @@ public:
 
 	virtual int	has_cstate_level(int level);
 
-	virtual char *  fill_cstate_line(int line_nr, char *buffer) { return buffer;};
+	virtual char *  fill_cstate_line(int line_nr, char *buffer, const char *separator="") { return buffer;};
 	virtual char *  fill_cstate_name(int line_nr, char *buffer) { return buffer;};
 
 
@@ -152,7 +152,7 @@ public:
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);
 
-	virtual char *  fill_cstate_line(int line_nr, char *buffer);
+	virtual char *  fill_cstate_line(int line_nr, char *buffer, const char *separator="");
 	virtual char *  fill_cstate_name(int line_nr, char *buffer);
 
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
@@ -169,7 +169,7 @@ class cpu_core: public abstract_cpu
 {
 	void		account_freq(uint64_t frequency, uint64_t duration);
 public:
-	virtual char *  fill_cstate_line(int line_nr, char *buffer);
+	virtual char *  fill_cstate_line(int line_nr, char *buffer, const char *separator="");
 	virtual char *  fill_cstate_name(int line_nr, char *buffer);
 
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
@@ -184,7 +184,7 @@ class cpu_package: public abstract_cpu
 {
 	void		account_freq(uint64_t frequency, uint64_t duration);
 public:
-	virtual char *  fill_cstate_line(int line_nr, char *buffer);
+	virtual char *  fill_cstate_line(int line_nr, char *buffer, const char *separator="");
 	virtual char *  fill_cstate_name(int line_nr, char *buffer);
 
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
@@ -201,6 +201,8 @@ public:
 extern void enumerate_cpus(void);
 
 extern void html_display_cpu_pstates(void);
+extern void html_display_cpu_cstates(void);
+
 
 
 extern void display_cpu_cstates(const char *start= "", 

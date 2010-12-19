@@ -264,63 +264,107 @@ static void expand_string(char *string, unsigned int newlen)
 }
 
 
-void display_cpu_cstates(const char *start, const char *end, const char *linestart,
-                                const char *separator, const char *lineend)
+static const char *core_class(int line)
 {
-	char buffer[128];
+	if (line & 1)
+		return "core_odd";
+	return "core_even";
+}
+
+static const char *package_class(int line)
+{
+	if (line & 1)
+		return "package_odd";
+	return "package_even";
+}
+
+static const char *cpu_class(int line, int cpu)
+{
+	if (line & 1) {
+		if (cpu & 1)
+			return "cpu_odd_odd";
+		return "cpu_odd_even";
+	}
+	if (cpu & 1)
+		return "cpu_even_odd";
+	return "cpu_even_even";
+}
+
+static const char *freq_class(int line)
+{
+	if (line & 1) {
+		return "cpu_odd_freq";
+	}
+	return "cpu_even_req";
+}
+
+void html_display_cpu_cstates(void)
+{
+	char buffer[512], buffer2[512];
 	char linebuf[1024];
 	unsigned int package, core, cpu;
 	int line;
 	class abstract_cpu *_package, * _core, * _cpu;
-	int ctr = 0;
 
-	printf("%s", start);		
+	if (!htmlout)
+		return;
+
+	fprintf(htmlout, "<h2>Processor Idle state report</h2>\n");		
 
 	for (package = 0; package < system_level.children.size(); package++) {
 		int first_pkg = 0;
 		_package = system_level.children[package];
 		if (!_package)
 			continue;
+
+		fprintf(htmlout, "<table width=100%%>\n");
 		
 
 		for (core = 0; core < _package->children.size(); core++) {
+			int actual_line = 0;
 			_core = _package->children[core];
 			if (!_core)
 				continue;
 
 			for (line = LEVEL_HEADER; line < 10; line++) {
 				int first = 1;
-				ctr = 0;
 				linebuf[0] = 0;
 				if (!_package->has_cstate_level(line))
 					continue;
 
-				strcat(linebuf, linestart);
-				ctr += strlen(linestart);
-				
-	
+				actual_line++;
+				fprintf(htmlout, "<tr>");
+
 				buffer[0] = 0;
-				if (first_pkg == 0) {
-					strcat(linebuf, _package->fill_cstate_name(line, buffer));
-					expand_string(linebuf, ctr+10);
-					strcat(linebuf, _package->fill_cstate_line(line, buffer));
+				buffer2[0] = 0;
+
+				if (line == LEVEL_HEADER) {
+					fprintf(htmlout,"<th colspan=2 class=\"package_header\">%s</th>", _package->fill_cstate_line(line, buffer));
+
+				} else if (first_pkg == 0) {
+					fprintf(htmlout, "<td class=\"%s\">%s</td><td class=\"%s\">%s</td>",
+						freq_class(actual_line),
+						_package->fill_cstate_name(line, buffer),
+						package_class(actual_line),
+						_package->fill_cstate_line(line, buffer2));
+				} else {
+					fprintf(htmlout, "<td colspan=2>&nbsp;</td>");
 				}
-				ctr += 20;
-				expand_string(linebuf, ctr);
-	
-				strcat(linebuf, separator);
-				ctr += strlen(separator);
 
 				if (!_core->can_collapse()) {
 					buffer[0] = 0;
-					strcat(linebuf, _core->fill_cstate_name(line, buffer));
-					expand_string(linebuf, ctr + 10);
-					strcat(linebuf, _core->fill_cstate_line(line, buffer));
-					ctr += 20;
-					expand_string(linebuf, ctr);
+					buffer2[0] = 0;
 
-					strcat(linebuf, separator);
-					ctr += strlen(separator);
+					if (line == LEVEL_HEADER) {
+						fprintf(htmlout, "<th colspan=2 class=\"core_header\">%s</th>",
+							_core->fill_cstate_line(line, buffer2));
+					} else {
+						fprintf(htmlout, "<td class=\"%s\">%s</td><td class=\"%s\">%s</td>",
+							freq_class(actual_line),
+							_core->fill_cstate_name(line, buffer),
+							core_class(actual_line),
+							_core->fill_cstate_line(line, buffer2));
+					}
 				}
 
 				for (cpu = 0; cpu < _core->children.size(); cpu++) {
@@ -328,29 +372,30 @@ void display_cpu_cstates(const char *start, const char *end, const char *linesta
 					if (!_cpu)
 						continue;
 
-					if (first == 1) {
-						strcat(linebuf, _cpu->fill_cstate_name(line, buffer));
-						expand_string(linebuf, ctr + 10);
-						first = 0;
-						ctr += 12;
+					if (line == LEVEL_HEADER) {
+						fprintf(htmlout, "<th colspan=3 class=\"cpu_header\">%s</th>", _cpu->fill_cstate_line(line, buffer));
+
+					} else {
+						if (first == 1) {
+							fprintf(htmlout, "<td class=\"%s\">%s</td>", freq_class(actual_line), _cpu->fill_cstate_name(line, buffer));
+							first = 0;
+						} else {
+							fprintf(htmlout, "<td class=\"%s\">&nbsp;</td>", freq_class(actual_line) );
+						}
+						buffer[0] = 0;
+						sprintf(buffer2, "</td><td class=\"%s\">", cpu_class(actual_line, cpu));
+						fprintf(htmlout, "<td class=\"%s\">%s</td>", cpu_class(actual_line, cpu), _cpu->fill_cstate_line(line, buffer, buffer2));
 					}
-					buffer[0] = 0;
-					strcat(linebuf, _cpu->fill_cstate_line(line, buffer));
-					ctr += 18;
-					expand_string(linebuf, ctr);
 
 				}
-				strcat(linebuf, lineend);
-				printf("%s", linebuf);
+				fprintf(htmlout, "</tr>\n");
 			}
 
-			printf("\n");
 			first_pkg++;
 		}
-
+		fprintf(htmlout, "</table>\n");
 
 	}
-	printf("%s", end);		
 }
 
 void w_display_cpu_cstates(void)
@@ -443,39 +488,6 @@ void w_display_cpu_cstates(void)
 	}
 }
 
-static const char *core_class(int line)
-{
-	if (line & 1)
-		return "core_odd";
-	return "core_even";
-}
-
-static const char *package_class(int line)
-{
-	if (line & 1)
-		return "package_odd";
-	return "package_even";
-}
-
-static const char *cpu_class(int line, int cpu)
-{
-	if (line & 1) {
-		if (cpu & 1)
-			return "cpu_odd_odd";
-		return "cpu_odd_even";
-	}
-	if (cpu & 1)
-		return "cpu_even_odd";
-	return "cpu_even_even";
-}
-
-static const char *freq_class(int line)
-{
-	if (line & 1) {
-		return "cpu_odd_freq";
-	}
-	return "cpu_even_req";
-}
 
 
 void html_display_cpu_pstates(void)

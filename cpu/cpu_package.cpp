@@ -37,7 +37,7 @@ static int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo)
 }
 
 
-char * cpu_package::fill_cstate_line(int line_nr, char *buffer) 
+char * cpu_package::fill_cstate_line(int line_nr, char *buffer, const char *separator) 
 {
 	unsigned int i;
 	buffer[0] = 0;

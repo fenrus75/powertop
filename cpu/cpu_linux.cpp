@@ -222,7 +222,7 @@ void cpu_linux::measurement_end(void)
 }
 
 
-char * cpu_linux::fill_cstate_line(int line_nr, char *buffer) 
+char * cpu_linux::fill_cstate_line(int line_nr, char *buffer, const char *separator) 
 {
 	unsigned int i;
 	buffer[0] = 0;
@@ -237,9 +237,9 @@ char * cpu_linux::fill_cstate_line(int line_nr, char *buffer)
 			continue;
 
 		if (line_nr == LEVEL_C0) 
-			sprintf(buffer,"%5.1f%%", percentage(cstates[i]->duration_delta / time_factor));
+			sprintf(buffer,"%5.1f%%%s", percentage(cstates[i]->duration_delta / time_factor), separator);
 		else
-			sprintf(buffer,"%5.1f%% %6.1f ms", percentage(cstates[i]->duration_delta / time_factor), 1.0 * cstates[i]->duration_delta / (1+cstates[i]->usage_delta) / 1000);
+			sprintf(buffer,"%5.1f%%%s %6.1f ms", percentage(cstates[i]->duration_delta / time_factor), separator, 1.0 * cstates[i]->duration_delta / (1+cstates[i]->usage_delta) / 1000);
 	}
 
 	return buffer; 

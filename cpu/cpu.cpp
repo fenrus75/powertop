@@ -36,6 +36,7 @@
 #include "../perf/perf_bundle.h"
 #include "../lib.h"
 #include "../display.h"
+#include "../html.h"
 
 static class abstract_cpu system_level;
 
@@ -443,18 +444,20 @@ void w_display_cpu_cstates(void)
 }
 
 
-void display_cpu_pstates(const char *start, const char *end, const char *linestart,
-                                const char *separator, const char *lineend)
+void html_display_cpu_pstates(void)
 {
-	char buffer[128];
+	char buffer[512], buffer2[512];
 	char linebuf[1024];
 	unsigned int package, core, cpu;
 	int line;
 	class abstract_cpu *_package, * _core, * _cpu;
-	int ctr = 0;
+
+	if (!htmlout)
+		return;
 
 
-	printf("%s", start);
+	fprintf(htmlout, "<h2>Processor frequency report</h2>\n");
+
 
 	for (package = 0; package < system_level.children.size(); package++) {
 		int first_pkg = 0;
@@ -462,6 +465,7 @@ void display_cpu_pstates(const char *start, const char *end, const char *linesta
 		if (!_package)
 			continue;
 		
+		fprintf(htmlout, "<table width=100%%>\n");
 
 		for (core = 0; core < _package->children.size(); core++) {
 			_core = _package->children[core];
@@ -470,69 +474,82 @@ void display_cpu_pstates(const char *start, const char *end, const char *linesta
 
 			for (line = LEVEL_HEADER; line < 10; line++) {
 				int first = 1;
-				ctr = 0;
 				linebuf[0] = 0;
 
 				if (!_package->has_pstate_level(line))
 					continue;
 
 
-				printf("%s", linestart);
-				ctr += strlen(linestart);
-					
+				if (line == LEVEL_HEADER)
+					fprintf(htmlout, "<th>");
+				else
+					fprintf(htmlout, "<tr>");
+
+
 				buffer[0] = 0;
+				buffer2[0] = 0;
 				if (first_pkg == 0) {
-					strcat(linebuf, _package->fill_pstate_name(line, buffer));
-					expand_string(linebuf, ctr + 10);
-					strcat(linebuf, _package->fill_pstate_line(line, buffer));
+					if (line == LEVEL_HEADER)
+						fprintf(htmlout, "<td colspan=2>%s%s</td>",
+							_package->fill_pstate_name(line, buffer),
+							_package->fill_pstate_line(line, buffer2));
+					else
+						fprintf(htmlout, "<td>%s</td><td>%s</td>",
+							_package->fill_pstate_name(line, buffer),
+							_package->fill_pstate_line(line, buffer2));
+				} else {
+					fprintf(htmlout, "<td colspan=2>&nbsp;</td>");
 				}
-				ctr += 20;
-				expand_string(linebuf, ctr);
-	
-				strcat(linebuf, separator);
-				ctr += strlen(separator);
 
 				if (!_core->can_collapse()) {
 					buffer[0] = 0;
-					strcat(linebuf, _core->fill_pstate_name(line, buffer));
-					expand_string(linebuf, ctr + 10);
-					strcat(linebuf, _core->fill_pstate_line(line, buffer));
-					ctr += 20;
-					expand_string(linebuf, ctr);
-
-					strcat(linebuf, separator);
-					ctr += strlen(separator);
+					buffer2[0] = 0;
+					if (line == LEVEL_HEADER) 
+						fprintf(htmlout, "<td colspan=2>%s%s</td>",
+							_core->fill_pstate_name(line, buffer),
+							_core->fill_pstate_line(line, buffer2));
+					else
+						fprintf(htmlout, "<td>%s</td><td>%s</td>",
+							_core->fill_pstate_name(line, buffer),
+							_core->fill_pstate_line(line, buffer2));
 				}
 
 				for (cpu = 0; cpu < _core->children.size(); cpu++) {
+					buffer[0] = 0;
 					_cpu = _core->children[cpu];
 					if (!_cpu)
 						continue;
 
-					if (first == 1) {
-						strcat(linebuf, _cpu->fill_pstate_name(line, buffer));
-						expand_string(linebuf, ctr + 10);
-						first = 0;
-						ctr += 12;
+					if (line == LEVEL_HEADER) {
+							fprintf(htmlout, "<td colspan=2>%s</td>", _cpu->fill_pstate_line(line, buffer));
+					} else {
+						if (first == 1) {
+							fprintf(htmlout, "<td>%s</td>", _cpu->fill_pstate_name(line, buffer));
+							first = 0;
+							buffer[0] = 0;
+							fprintf(htmlout, "<td>%s</td>",
+								_cpu->fill_pstate_line(line, buffer));
+						} else {
+							buffer[0] = 0;
+							fprintf(htmlout, "<td colspan=2>%s</td>",
+								_cpu->fill_pstate_line(line, buffer));
+						}
 					}
-					buffer[0] = 0;
-					strcat(linebuf, _cpu->fill_pstate_line(line, buffer));
-					ctr += 10;
-					expand_string(linebuf, ctr);
-
 				}
-				strcat(linebuf, lineend);
-				printf("%s", linebuf);
+				if (line == LEVEL_HEADER)
+					fprintf(htmlout, "</th>\n");
+				else
+					fprintf(htmlout, "</tr>\n");
+
 			}
 
-			printf("\n");
 			first_pkg++;
 		}
 
 
 	}
 
-	printf("%s", end);		
+	fprintf(htmlout, "</table>");		
 }
 
 void w_display_cpu_pstates(void)

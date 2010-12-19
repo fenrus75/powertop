@@ -32,6 +32,7 @@
 #include "perf/perf.h"
 #include "perf/perf_bundle.h"
 #include "lib.h"
+#include "html.h"
 
 #include "devices/device.h"
 #include "devices/usb.h"
@@ -118,6 +119,7 @@ void one_measurement(int seconds)
 	process_update_display();
 	w_display_cpu_cstates();
 	w_display_cpu_pstates();
+	html_display_cpu_pstates();
 	tuning_update_display();
 
 	end_process_data();
@@ -166,6 +168,23 @@ int main(int argc, char **argv)
 	if (argc > 2) {
 		if (strcmp(argv[2], "--debug") == 0)
 			debug_learning = 1;
+	}
+
+	if (argc > 1) {
+		if (strcmp(argv[1], "--html") == 0) {
+			init_html_output("powertop.html");
+			fprintf(stderr, "Measuring for 20 seconds\n");
+			one_measurement(1);
+			initialize_tuning();
+
+			finish_html_output();
+
+			/* and wrap up */
+			learn_parameters(50, 0);
+			save_all_results("saved_results.powertop");
+			save_parameters("saved_parameters.powertop");
+			exit(0);
+		}
 	}
 
 	if (debug_learning)

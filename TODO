@@ -5,7 +5,6 @@
 
 * inode dirty trace point
 * health report (reporting mode, not interactive) needs to include devices that don't support runtime PM
-* status bar at the bottom
 * have a "show me my process" page
 * fix memory leaks
 * find out why CPU %age and C state C0 %age don't mesh sometimes
@@ -59,3 +58,4 @@ done
 * pretty print various kernel pieces
 * deal with debugfs not being in /sys/kernel/debug
 * if you plug in the AC during a run, the battery code is not detecting that
+* status bar at the bottom

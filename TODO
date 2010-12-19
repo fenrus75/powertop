@@ -1,3 +1,12 @@
+* html output
+  - summary output
+  - device output
+  - process detailed output
+  - tunables output
+     - including devices that don't have runtime PM
+
+
+
 * there is a filedescriptor leak!
 * move the 2 data files somewhere sane
 * check various tunables (see powertop 1.x) into a tunable checklist

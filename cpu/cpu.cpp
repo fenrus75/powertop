@@ -345,7 +345,7 @@ void html_display_cpu_cstates(void)
 						fprintf(htmlout,"<th colspan=2 class=\"package_header\">&nbsp;</th>");
 
 				} else if (first_pkg == 0) {
-					fprintf(htmlout, "<td class=\"%s\">%s</td><td class=\"%s\">%s</td>",
+					fprintf(htmlout, "<td class=\"%s\" width=10%%>%s</td><td class=\"%s\">%s</td>",
 						freq_class(actual_line),
 						_package->fill_cstate_name(line, buffer),
 						package_class(actual_line),
@@ -353,6 +353,9 @@ void html_display_cpu_cstates(void)
 				} else {
 					fprintf(htmlout, "<td colspan=2>&nbsp;</td>");
 				}
+
+
+				fprintf(htmlout, "<td width=2%%>&nbsp;</td>");
 
 				if (!_core->can_collapse()) {
 					buffer[0] = 0;
@@ -362,13 +365,15 @@ void html_display_cpu_cstates(void)
 						fprintf(htmlout, "<th colspan=2 class=\"core_header\" width=25%%>%s</th>",
 							_core->fill_cstate_line(line, buffer2));
 					} else {
-						fprintf(htmlout, "<td class=\"%s\">%s</td><td class=\"%s\">%s</td>",
+						fprintf(htmlout, "<td class=\"%s\" width=10%%>%s</td><td class=\"%s\">%s</td>",
 							freq_class(actual_line),
 							_core->fill_cstate_name(line, buffer),
 							core_class(actual_line),
 							_core->fill_cstate_line(line, buffer2));
 					}
 				}
+
+				fprintf(htmlout, "<td width=2%%>&nbsp;</td>");
 
 				for (cpu = 0; cpu < _core->children.size(); cpu++) {
 					_cpu = _core->children[cpu];
@@ -541,7 +546,7 @@ void html_display_cpu_pstates(void)
 							_package->fill_pstate_name(line, buffer),
 							_package->fill_pstate_line(line, buffer2));
 					else
-						fprintf(htmlout, "<td class=\"%s\">%s</td><td class=\"%s\">%s</td>",
+						fprintf(htmlout, "<td class=\"%s\" width=10%%>%s</td><td class=\"%s\">%s</td>",
 							freq_class(line),
 							_package->fill_pstate_name(line, buffer),
 							package_class(line),
@@ -549,6 +554,8 @@ void html_display_cpu_pstates(void)
 				} else {
 					fprintf(htmlout, "<td colspan=2>&nbsp;</td>");
 				}
+
+				fprintf(htmlout, "<td width=2%%>&nbsp;</td>");
 
 				if (!_core->can_collapse()) {
 					buffer[0] = 0;
@@ -558,12 +565,14 @@ void html_display_cpu_pstates(void)
 							_core->fill_pstate_name(line, buffer),
 							_core->fill_pstate_line(line, buffer2));
 					else
-						fprintf(htmlout, "<td class=\"%s\">%s</td><td class=\"%s\">%s</td>",
+						fprintf(htmlout, "<td class=\"%s\" width=10%%>%s</td><td class=\"%s\">%s</td>",
 							freq_class(line),
 							_core->fill_pstate_name(line, buffer),
 							core_class(line),
 							_core->fill_pstate_line(line, buffer2));
 				}
+
+				fprintf(htmlout, "<td width=2%%>&nbsp;</td>");
 
 				for (cpu = 0; cpu < _core->children.size(); cpu++) {
 					buffer[0] = 0;

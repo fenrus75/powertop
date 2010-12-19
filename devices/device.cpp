@@ -42,6 +42,7 @@ using namespace std;
 #include "../parameters/parameters.h"
 #include "../display.h"
 #include "../lib.h"
+#include "../html.h"
 #include "../measurement/measurement.h"
 
 void device::start_measurement(void)
@@ -166,6 +167,92 @@ void report_devices(void)
 			all_devices[i]->human_name()
 			);
 	}
+}
+
+static const char *line_class(int line)
+{
+	if (line & 1) {
+		return "device_odd";
+	}
+	return "device_even";
+}
+
+void html_report_devices(void)
+{
+	unsigned int i;
+	int show_power;
+	double pw;
+
+	char util[128];
+	char power[128];
+
+
+	if (!htmlout)
+		return;
+
+	show_power = global_power_valid();
+
+	sort(all_devices.begin(), all_devices.end(), power_device_sort);
+
+
+	fprintf(htmlout, "<h2>Device power report</h2>\n");
+
+
+	pw = global_joules_consumed();
+	if (pw > 0.0001) {
+		char buf[32];
+		fprintf(htmlout, "<p>The battery reports a discharge rate of %sW</p>\n",
+				fmt_prefix(pw, buf));
+	}
+
+	if (show_power) {
+		char buf[32];
+		fprintf(htmlout, "<p>System baseline power is estimated at %sW</p>\n",
+				fmt_prefix(get_parameter_value("base power"), buf));
+	}
+
+	fprintf(htmlout, "<table width=100%%>\n");
+	if (show_power)
+		fprintf(htmlout, "<tr><th width=10%%>Power est.</th><th width=10%%>Usage</th><th class=\"device\">Device name</th></tr>\n");
+	else
+		fprintf(htmlout, "<tr><th width=10%%>Usage</th><th class=\"device\">Device name</th></tr>\n");
+
+	for (i = 0; i < all_devices.size(); i++) {
+		double P;
+
+		util[0] = 0;
+
+		if (all_devices[i]->util_units()) {
+			if (all_devices[i]->utilization() < 1000)
+				sprintf(util, "%5.1f%s",  all_devices[i]->utilization(),  all_devices[i]->util_units());
+			else
+				sprintf(util, "%5i%s",  (int)all_devices[i]->utilization(),  all_devices[i]->util_units());
+		}
+
+		P = all_devices[i]->power_usage(&all_results, &all_parameters);
+
+		format_watts(P, power, 11);
+
+		if (!show_power || !all_devices[i]->power_valid())
+			strcpy(power, "           ");
+
+
+
+		if (show_power)
+			fprintf(htmlout, "<tr class=\"%s\"><td class=\"device_power\">%s</td><td class=\"device_util\">%s</td><td>%s</td></tr>\n", 
+				line_class(i),
+				power,
+				util,
+				all_devices[i]->human_name()
+				);
+		else
+			fprintf(htmlout, "<tr class=\"%s\"><td class=\"device_util\">%s</td><td>%s</td></tr>\n", 
+				line_class(i),
+				util,
+				all_devices[i]->human_name()
+				);
+	}
+	fprintf(htmlout, "</table>\n");
 }
 
 

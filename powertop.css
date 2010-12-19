@@ -9,6 +9,10 @@ th
 {
 	text-align: right;
 }
+th.device
+{
+	text-align: left;
+}
 
 td.package_odd
 {
@@ -73,5 +77,26 @@ td.cpu_odd_odd
 {
 	background-color: #F0ffF0;
 	color: black;
+	text-align: right;
+}
+
+tr.device_odd
+{
+	background-color: #E0E0E0;
+	color: black;
+}
+tr.device_even
+{
+	background-color: #F0f0F0;
+	color: black;
+}
+
+td.device_power
+{
+	text-align: right;
+}
+
+td.device_util
+{
 	text-align: right;
 }

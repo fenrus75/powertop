@@ -130,6 +130,7 @@ void one_measurement(int seconds)
 	compute_bundle();
 
 	report_devices();
+	html_report_devices();
 
 	store_results(measurement_time);
 	end_cpu_data();

@@ -49,10 +49,8 @@ usb_tunable::usb_tunable(const char *path, const char *name) : tunable("", 0.9, 
 	vendor[0] = 0;
 	product[0] = 0;
 
-	sprintf(filename, "%s/idVendor", path);
-	str1 = read_sysfs_string(filename);
-	sprintf(filename, "%s/idProduct", path);
-	str2 = read_sysfs_string(filename);
+	str1 = read_sysfs_string("%s/idVendor", path);
+	str2 = read_sysfs_string("%s/idProduct", path);
 
 	sprintf(desc, "Autospuspend for unknown USB device %s (%s:%s)", name, str1.c_str(), str2.c_str());
 

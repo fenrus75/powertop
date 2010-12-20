@@ -203,6 +203,27 @@ string read_sysfs_string(string filename)
 	return content;
 }
 
+string read_sysfs_string(const char *format, const char *param)
+{
+	ifstream file;
+	char content[4096];
+	char *c;
+	char filename[8192];
+
+
+	snprintf(filename, 8191, format, param);
+
+	file.open(filename, ios::in);
+	if (!file)
+		return "";
+	file.getline(content, 4096);
+	file.close();
+	c = strchr(content, '\n');
+	if (c)
+		*c = 0;
+	return content;
+}
+
 
 void format_watts(double W, char *buffer, unsigned int len)
 {

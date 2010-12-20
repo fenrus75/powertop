@@ -154,6 +154,11 @@ int main(int argc, char **argv)
 
 	mkdir("/var/cache/powertop", 0600);
 
+	setlocale (LC_ALL, "");
+	bindtextdomain ("powertop", "/usr/share/locale");
+	textdomain ("powertop");
+
+
 
 	load_results("/var/cache/powertop/saved_results.powertop");
 	load_parameters("/var/cache/powertop/saved_parameters.powertop");
@@ -239,7 +244,7 @@ int main(int argc, char **argv)
 	}
 
 	endwin();
-	printf("Leaving PowerTOP\n");
+	printf(_("Leaving PowerTOP\n"));
 
 
 	end_process_data();

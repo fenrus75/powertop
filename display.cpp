@@ -23,6 +23,7 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 #include "display.h"
+#include "lib.h"
 
 #include <ncurses.h>
 
@@ -99,12 +100,12 @@ void show_tab(unsigned int tab)
 
 	wattrset(tab_bar, A_REVERSE);
 	mvwprintw(tab_bar, 0,0, "%120s", "");
-	mvwprintw(tab_bar, 0,0, "PowerTOP 1.99");
+	mvwprintw(tab_bar, 0,0, "PowerTOP %s", POWERTOP_SHORT_VERSION);
 
 	bottom_line = newwin(1, 0, LINES-1, 0);
 	wattrset(bottom_line, A_REVERSE);
 	mvwprintw(bottom_line, 0,0, "%120s", "");
-	mvwprintw(bottom_line, 0,0, " <ESC> Exit | ");
+	mvwprintw(bottom_line, 0,0, _(" <ESC> Exit | "));
 
 
 	current_tab = tab;
@@ -114,7 +115,7 @@ void show_tab(unsigned int tab)
 				wattrset(tab_bar, A_NORMAL);
 			else
 				wattrset(tab_bar, A_REVERSE);
-			mvwprintw(tab_bar, 0, tab_pos, " %s ", tab_names[i].c_str());
+			mvwprintw(tab_bar, 0, tab_pos, " %s ", _(tab_names[i].c_str()));
 
 			tab_pos += 3 + tab_names[i].length();
 	}

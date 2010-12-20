@@ -26,11 +26,25 @@ LIBS += -lpthread -lncursesw -lpci -lz -lresolv
 HEADERS := cpu/cpu.h
 
 
+PREFIX     ?= /usr
+BINDIR      = $(PREFIX)/bin
+LOCALESDIR  = $(PREFIX)/share/locale
+MANDIR      = $(PREFIX)/share/man/man8
+
+
 clean:
 	rm -f *.o *~ powertop DEADJOE core.* */*.o */*~ csstoh css.h
 	
 powertop: $(OBJS) $(HEADERS)
 	g++ $(OBJS) $(LIBS) -o powertop
+	@(cd po/ && $(MAKE))
+	
+install: powertop
+	mkdir -p ${DESTDIR}{BINDIR}
+	cp powertop ${DESTDIR}{BINDIR}
+	mkdir -p ${DESTDIR}{PREFIX}/var/cache/powertop
+	@(cd po/ && env LOCALESDIR=$(LOCALESDIR) DESTDIR=$(DESTDIR) $(MAKE) $@)
+	
 
 csstoh: csstoh.c
 	gcc -o csstoh csstoh.c
@@ -43,3 +57,8 @@ css.h: csstoh powertop.css
 	@echo "  CC  $<"
 	@[ -x /usr/bin/cppcheck ] && /usr/bin/cppcheck -q $< || :
 	@$(CC) $(CFLAGS) -c -o $@ $<
+
+
+uptrans:
+	@(cd po/ && env LG=$(LG) $(MAKE) $@)
+

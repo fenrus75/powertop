@@ -574,14 +574,14 @@ void process_update_display(void)
 		sum += all_power[i]->Witts();
 	}
 
-	wprintw(win, "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n\n",
+	wprintw(win, _("Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n\n"),
 				all_parameters.guessed_power, global_joules_consumed(), sum);
 #endif
 
 	pw = global_joules_consumed();
 	if (pw > 0.0001) {
 		char buf[32];
-		wprintw(win, "The battery reports a discharge rate of %sW\n",
+		wprintw(win, _("The battery reports a discharge rate of %sW\n"),
 				fmt_prefix(pw, buf));
 		wprintw(win, "\n");
 	}
@@ -590,9 +590,9 @@ void process_update_display(void)
 
 
 	if (show_power)
-		wprintw(win, "Power est.      Usage/s     Events/s    Category       Description\n");
+		wprintw(win, _("Power est.      Usage/s     Events/s    Category       Description\n"));
 	else
-		wprintw(win, "                Usage/s     Events/s    Category       Description\n");
+		wprintw(win, _("                Usage/s     Events/s    Category       Description\n"));
 
 	for (i = 0; i < all_power.size(); i++) {
 		char power[16];

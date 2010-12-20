@@ -1,0 +1,26 @@
+
+
+
+Building & Installing PowerTOP
+------------------------------
+
+just type
+
+	make
+	make install
+
+
+
+
+Build dependencies
+------------------
+
+PowerTOP uses C++, and expects g++ and libstdc++ to be functional
+
+in addition to that, it needs the following components:
+
+pciutils-devel
+ncurses-devel
+zlib-devel
+
+and a functional glibc/pthreads development environment

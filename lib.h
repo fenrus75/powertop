@@ -32,6 +32,7 @@
 #define _(STRING)    gettext(STRING)
 
 #define POWERTOP_VERSION "1.99 alpha 1"
+#define POWERTOP_SHORT_VERSION "1.99"
 
 
 extern int get_max_cpu(void);

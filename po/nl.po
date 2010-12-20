@@ -1,0 +1,59 @@
+#: ../process/do_process.cpp:595
+msgid "                Usage/s     Events/s    Category       Description\n"
+msgstr ""
+
+#: ../display.cpp:108
+msgid " <ESC> Exit | "
+msgstr ""
+
+#: ../lib.cpp:92
+#, c-format
+msgid "%3.1f Ghz"
+msgstr ""
+
+#: ../lib.cpp:90
+#, c-format
+msgid "%4.2f Ghz"
+msgstr ""
+
+#: ../lib.cpp:83
+#, c-format
+msgid "%4lli Mhz"
+msgstr ""
+
+#: ../lib.cpp:85
+#, c-format
+msgid "%6lli Mhz"
+msgstr ""
+
+#: ../lib.cpp:79
+#, c-format
+msgid "%9lli"
+msgstr ""
+
+#: ../process/do_process.cpp:577
+#, c-format
+msgid ""
+"Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n"
+"\n"
+msgstr ""
+
+#: ../main.cpp:247
+#, c-format
+msgid "Leaving PowerTOP\n"
+msgstr ""
+
+#: ../process/do_process.cpp:593
+msgid "Power est.      Usage/s     Events/s    Category       Description\n"
+msgstr ""
+
+#: ../process/do_process.cpp:584
+#, c-format
+msgid "The battery reports a discharge rate of %sW\n"
+msgstr ""
+
+#: ../cpu/cpu_core.cpp:118 ../cpu/cpu_linux.cpp:331 ../cpu/cpu_package.cpp:147
+#: ../cpu/intel_cpus.cpp:197 ../cpu/intel_cpus.cpp:415
+#, c-format
+msgid "Turbo Mode"
+msgstr ""

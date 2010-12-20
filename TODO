@@ -1,6 +1,21 @@
 
 
+Needed prior to alpha
+---------------------
+
+* usage documentation / readme sufficient for people to get going
 * there is a filedescriptor leak!
+* pretty print estimate to only do 2 decimal places instead of 3
+* fix memory leaks
+
+
+Needed between alpha and 2.0 final
+----------------------------------
+* investigate tick_sched_timer and why it wakes up
+* find if we can do more detailed reporting about tasklet(softirq)
+	* deal with tasklets -- needs kernel patch
+* device events/sec into the process view
+* USB urbs as events/sec counter
 * check various tunables (see powertop 1.x) into a tunable checklist
   - basic infrastructure done
   - needs porting over of all the powertop 1.x tunables:
@@ -8,17 +23,6 @@
 	  - hpet timer? (is that still relevant?)
 	  - tv out??
 	  - noatime
-
-* pretty print estimate to only do 2 decimal places instead of 3
-
-* fix memory leaks
-* device events/sec into the process view
-* USB urbs as events/sec counter
-
-* investigate tick_sched_timer and why it wakes up
-* find if we can do more detailed reporting about tasklet(softirq)
-	* deal with tasklets -- needs kernel patch
-
 
 
 
@@ -31,6 +35,7 @@ postponed to 2.1
 
 done
 ----
+* internationalization!
 * on NHM, cpu P state stats accumulate and don't reset at measurment time
 * rescan for USB devices each measurement
 * brightness calibration

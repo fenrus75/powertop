@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo You can now type "make" to build PowerTOP

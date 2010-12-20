@@ -39,6 +39,7 @@
 #include "ethernet.h"
 #include "../display.h"
 #include "../html.h"
+#include "../lib.h"
 
 static void sort_tunables(void);
 
@@ -107,7 +108,7 @@ static void __tuning_update_display(int cursor_pos)
 			wattrset(win, A_REVERSE);
 			wprintw(win, ">> ");
 		}
-		wprintw(win, "%s  %s\n", res, desc);
+		wprintw(win, "%s  %s\n", _(res), _(desc));
 	}
 }
 

@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <sys/stat.h>
 
 #include "cpu/cpu.h"
 #include "process/process.h"
@@ -151,9 +152,11 @@ int main(int argc, char **argv)
 
 	srand(time(NULL));
 
+	mkdir("/var/cache/powertop", 0600);
 
-	load_results("saved_results.powertop");
-	load_parameters("saved_parameters.powertop");
+
+	load_results("/var/cache/powertop/saved_results.powertop");
+	load_parameters("/var/cache/powertop/saved_parameters.powertop");
 
 	enumerate_cpus();
 	create_all_devices();
@@ -193,8 +196,8 @@ int main(int argc, char **argv)
 
 			/* and wrap up */
 			learn_parameters(50, 0);
-			save_all_results("saved_results.powertop");
-			save_parameters("saved_parameters.powertop");
+			save_all_results("/var/cache/powertop/saved_results.powertop");
+			save_parameters("/var/cache/powertop/saved_parameters.powertop");
 			exit(0);
 		}
 	}
@@ -205,7 +208,7 @@ int main(int argc, char **argv)
 
 
         learn_parameters(250, 0);
-	save_parameters("saved_parameters.powertop");
+	save_parameters("/var/cache/powertop/saved_parameters.powertop");
 
 
 	if (debug_learning) {
@@ -238,18 +241,18 @@ int main(int argc, char **argv)
 	end_process_data();
 	end_cpu_data();
 
-	save_all_results("saved_results.powertop");
-	save_parameters("saved_parameters.powertop");
+	save_all_results("/var/cache/powertop/saved_results.powertop");
+	save_parameters("/var/cache/powertop/saved_parameters.powertop");
 	learn_parameters(100, 0);
-	save_parameters("saved_parameters.powertop");
+	save_parameters("/var/cache/powertop/saved_parameters.powertop");
 	learn_parameters(100, 0);
-	save_parameters("saved_parameters.powertop");
+	save_parameters("/var/cache/powertop/saved_parameters.powertop");
 	learn_parameters(100, 0);
-	save_parameters("saved_parameters.powertop");
+	save_parameters("/var/cache/powertop/saved_parameters.powertop");
 	learn_parameters(100, 0);
-	save_parameters("saved_parameters.powertop");
+	save_parameters("/var/cache/powertop/saved_parameters.powertop");
 	learn_parameters(100, 0);
-	save_parameters("saved_parameters.powertop");
+	save_parameters("/var/cache/powertop/saved_parameters.powertop");
 	dump_parameter_bundle();
 	return 0;
 

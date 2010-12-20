@@ -1,17 +1,18 @@
 
 
 * there is a filedescriptor leak!
-* move the 2 data files somewhere sane
 * check various tunables (see powertop 1.x) into a tunable checklist
   - basic infrastructure done
   - needs porting over of all the powertop 1.x tunables:
+	  - Various wifi power saving schemes
+	  - hpet timer? (is that still relevant?)
+	  - tv out??
+	  - noatime
 
 * pretty print estimate to only do 2 decimal places instead of 3
 
-* inode dirty trace point
 * have a "show me my process" page
 * fix memory leaks
-* find out why CPU %age and C state C0 %age don't mesh sometimes
 * device events/sec into the process view
 * USB urbs as events/sec counter
 
@@ -65,3 +66,6 @@ done
 * status bar at the bottom
 * health report (reporting mode, not interactive) needs to include devices that don't support runtime PM
 * for unknown USB devices, list VID/PID
+* move the 2 data files somewhere sane
+* inode dirty trace point
+* find out why CPU %age and C state C0 %age don't mesh sometimes

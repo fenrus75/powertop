@@ -58,6 +58,9 @@ void initialize_tuning(void)
 	create_tab("Tunables", w);
 	add_sysfs_tunable("Enable Audio codec power management", "/sys/module/snd_hda_intel/parameters/power_save", "1");
 	add_sysfs_tunable("Enable SATA link power management for /dev/sda", "/sys/class/scsi_host/host0/link_power_management_policy", "min_power");
+	add_sysfs_tunable("NMI watchdog should be turned off", "/proc/sys/kernel/nmi_watchdog", "0");
+	add_sysfs_tunable("Power Aware CPU scheduler", "/sys/devices/system/cpu/sched_mc_power_savings", "1");
+	add_sysfs_tunable("VM writeback timeout", "/proc/sys/vm/dirty_writeback_centisecs", "1500");
 
 	add_usb_tunables();
 	add_runtime_tunables("pci");

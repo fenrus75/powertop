@@ -1,7 +1,6 @@
 * html output
   - header with powertop version and system info (hw, kernel version, distro)
 
-
 * for unknown USB devices, list VID/PID
 
 

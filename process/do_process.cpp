@@ -635,7 +635,7 @@ static const char *process_class(int line)
 	return "process_even";
 }
 
-void html_process_update_display(int summary)
+void html_process_update_display(void)
 {
 	unsigned int i, lines = 0;
 	unsigned int total;
@@ -649,21 +649,16 @@ void html_process_update_display(int summary)
 
 	show_power = global_power_valid();
 
-	if (summary)
-		fprintf(htmlout, "<h2>Power consumption summary</h2>\n");
-	else
-		fprintf(htmlout, "<h2>Overview of software power consumers</h2>\n");
+	fprintf(htmlout, "<h2>Overview of software power consumers</h2>\n");
 
-	fprintf(htmlout, "<table>\n");
+	fprintf(htmlout, "<table width=100%%>\n");
 
 	if (show_power)
-		fprintf(htmlout, "<tr><th width=10%%>Power est.</th><th width=10%%>Usage/s</th><th width=10%%>Events/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+		fprintf(htmlout, "<tr><th width=10%%>Power est.</th><th width=10%%>Usage/s</th><th width=10%%>Wakeups/s</th><th width=10%%>GPU ops/s</th><th width=10%%>Disk IO/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
 	else
-		fprintf(htmlout, "<tr><th width=10%%>Usage/s</th><th width=10%%>Events/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+		fprintf(htmlout, "<tr><th width=10%%>Usage/s</th><th width=10%%>Wakeups/s</th><th width=10%%>GPU ops/s</th><th width=10%%>Disk IO/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
 
 	total = all_power.size();
-	if (summary && total > 10)
-		total = 10;
 
 	if (total > 100)
 		total = 100;
@@ -672,7 +667,9 @@ void html_process_update_display(int summary)
 		char power[16];
 		char name[20];
 		char usage[20];
-		char events[20];
+		char wakes[20];
+		char gpus[20];
+		char disks[20];
 		char descr[128];
 		format_watts(all_power[i]->Witts(), power, 10);
 
@@ -696,9 +693,91 @@ void html_process_update_display(int summary)
 			else
 				sprintf(usage, "%5i%s", (int)all_power[i]->usage(), all_power[i]->usage_units());
 		}
+		sprintf(wakes, "%5.1f", all_power[i]->wake_ups / measurement_time);
+		sprintf(gpus, "%5.1f", all_power[i]->gpu_ops / measurement_time);
+		sprintf(disks, "%5.1f (%5.1f)", all_power[i]->hard_disk_hits / measurement_time, all_power[i]->disk_hits / measurement_time);
+		if (!all_power[i]->show_events()) {
+			wakes[0] = 0;
+			gpus[0] = 0;
+			disks[0] = 0;
+		}
+
+		if (all_power[i]->gpu_ops == 0)
+			gpus[0] = 0;
+		if (all_power[i]->wake_ups == 0)
+			wakes[0] = 0;
+		if (all_power[i]->disk_hits == 0)
+			disks[0] = 0;
+
+		if (show_power)
+			fprintf(htmlout, "<tr class=\"%s\"><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td>%s</td><td>%s</td></tr>\n", process_class(lines), power, usage, wakes, gpus, disks, name, pretty_print(all_power[i]->description(), descr, 128));
+		else
+			fprintf(htmlout, "<tr class=\"%s\"><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td>%s</td><td>%s</td></tr>\n", process_class(lines), usage, wakes, gpus, disks, name, pretty_print(all_power[i]->description(), descr, 128));
+	}
+	fprintf(htmlout, "</table>\n");
+}
+
+void html_summary(void)
+{
+	unsigned int i, lines = 0;
+	unsigned int total;
+
+	int show_power;
+
+	if (!htmlout)
+		return;
+
+	sort(all_power.begin(), all_power.end(), power_cpu_sort);
+
+	show_power = global_power_valid();
+
+	fprintf(htmlout, "<h2>Power consumption summary</h2>\n");
+
+	fprintf(htmlout, "<table width=100%%>\n");
+
+	if (show_power)
+		fprintf(htmlout, "<tr><th width=10%%>Power est.</th><th width=10%%>Usage/s</th><th width=10%%>Events/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+	else
+		fprintf(htmlout, "<tr><th width=10%%>Usage/s</th><th width=10%%>Events/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+
+	total = all_power.size();
+	if (total > 10)
+		total = 10;
+
+	for (i = 0; i < all_power.size(); i++) {
+		char power[16];
+		char name[20];
+		char usage[20];
+		char events[20];
+		char descr[128];
+		format_watts(all_power[i]->Witts(), power, 10);
+
+
+		if (!show_power)
+			strcpy(power, "          ");
+		sprintf(name, all_power[i]->type());
+
+		lines++;
+
+		if (lines > total)
+			break;
+
+		if (all_power[i]->events() == 0 && all_power[i]->usage() == 0 && all_power[i]->Witts() == 0)
+			break;
+
+		usage[0] = 0;
+		if (all_power[i]->usage_units()) {
+			if (all_power[i]->usage() < 1000) 
+				sprintf(usage, "%5.1f%s", all_power[i]->usage(), all_power[i]->usage_units());
+			else
+				sprintf(usage, "%5i%s", (int)all_power[i]->usage(), all_power[i]->usage_units());
+		}
 		sprintf(events, "%5.1f", all_power[i]->events());
-		if (!all_power[i]->show_events())
+		if (!all_power[i]->show_events()) {
 			events[0] = 0;
+		}
+
+
 		if (show_power)
 			fprintf(htmlout, "<tr class=\"%s\"><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td>%s</td><td>%s</td></tr>\n", process_class(lines), power, usage, events, name, pretty_print(all_power[i]->description(), descr, 128));
 		else

@@ -54,6 +54,11 @@ static void do_sleep(int seconds)
 	time_t target;
 	int delta;
 
+	if (!ncurses_initialized()) {
+		sleep(seconds);
+		return;
+	}
+
 	target = time(NULL) + seconds;
 	delta = seconds;
 	do {
@@ -117,13 +122,13 @@ void one_measurement(int seconds)
 
 	/* output stats */
 	process_update_display();
-	html_process_update_display(1);
+	html_summary();
 	w_display_cpu_cstates();
 	w_display_cpu_pstates();
 	html_display_cpu_cstates();
 	html_display_cpu_pstates();
 
-	html_process_update_display(0);
+	html_process_update_display();
 	tuning_update_display();
 
 	end_process_data();
@@ -177,10 +182,11 @@ int main(int argc, char **argv)
 
 	if (argc > 1) {
 		if (strcmp(argv[1], "--html") == 0) {
-			init_html_output("powertop.html");
 			fprintf(stderr, "Measuring for 20 seconds\n");
 			one_measurement(1);
+			init_html_output("powertop.html");
 			initialize_tuning();
+			one_measurement(20);
 			html_show_tunables();
 
 			finish_html_output();

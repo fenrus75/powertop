@@ -247,3 +247,10 @@ void cursor_enter(void)
 	}
 	show_cur_tab();
 }
+
+int ncurses_initialized(void)
+{
+	if (display)
+		return 1;
+	return 0;
+}

@@ -15,6 +15,7 @@ OBJS += parameters/parameters.o parameters/learn.o parameters/persistent.o
 OBJS += calibrate/calibrate.o
 
 OBJS += tuning/tuning.o tuning/tunable.o tuning/sysfs.o tuning/usb.o tuning/runtime.o tuning/bluetooth.o
+OBJS += tuning/cpufreq.o
 
 #
 # ncurses-devel and pciutils-devel 

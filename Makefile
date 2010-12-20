@@ -1,8 +1,8 @@
 all: powertop 
 
-CFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
+CFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector
 CPPFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
-CXXFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
+CXXFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector
 OBJS := lib.o main.o display.o html.o
 OBJS += cpu/cpu.o cpu/abstract_cpu.o cpu/cpu_linux.o cpu/cpu_core.o cpu/cpu_package.o cpu/intel_cpus.o  cpu/cpudevice.cpp
 OBJS += perf/perf.o perf/perf_bundle.o
@@ -15,7 +15,7 @@ OBJS += parameters/parameters.o parameters/learn.o parameters/persistent.o
 OBJS += calibrate/calibrate.o
 
 OBJS += tuning/tuning.o tuning/tunable.o tuning/sysfs.o tuning/usb.o tuning/runtime.o tuning/bluetooth.o
-OBJS += tuning/cpufreq.o
+OBJS += tuning/cpufreq.o tuning/ethernet.o
 
 #
 # ncurses-devel and pciutils-devel 

@@ -27,6 +27,8 @@
 
 extern void initialize_tuning(void);
 extern void tuning_update_display(void);
+extern void html_show_tunables(void);
+
 
 
 #endif

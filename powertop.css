@@ -122,3 +122,25 @@ td.device_util
 }
 
 }
+
+tr.tunable_odd
+{
+	background-color: #E0E0E0;
+	color: black;
+}
+tr.tunable_even
+{
+	background-color: #F0f0F0;
+	color: black;
+}
+
+tr.tunable_odd_bad
+{
+	background-color: #FFE0E0;
+	color: black;
+}
+tr.tunable_even_bad
+{
+	background-color: #FFf0F0;
+	color: black;
+}

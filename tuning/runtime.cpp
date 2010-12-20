@@ -45,6 +45,8 @@ runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *
 
 
 	sprintf(desc, "Runtime PM for %s device %s", bus, dev);
+	if (!device_has_runtime_pm(path))
+		sprintf(desc, "%s device %s has no runtime power management", bus, dev);
 
 	if (strcmp(bus, "pci") == 0) {
 		char filename[4096];
@@ -67,8 +69,13 @@ runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *
 		}
 
 		if (vendor && device) {
-			sprintf(desc, "Runtime PM for PCI Device %s", pci_id_to_name(vendor, device, filename, 4095));
+			if (!device_has_runtime_pm(path))
+				sprintf(desc, "PCI Device %s has no runtime power management", pci_id_to_name(vendor, device, filename, 4095));
+			else
+				sprintf(desc, "Runtime PM for PCI Device %s", pci_id_to_name(vendor, device, filename, 4095));
 		}
+
+		
 	}
 }
 
@@ -122,8 +129,6 @@ void add_runtime_tunables(const char *bus)
 
 		sprintf(filename, "/sys/bus/%s/devices/%s", bus, entry->d_name);
 
-		if (!device_has_runtime_pm(filename))
-			continue;
 
 
 		sprintf(filename, "/sys/bus/%s/devices/%s/power/control", bus, entry->d_name);
@@ -136,7 +141,10 @@ void add_runtime_tunables(const char *bus)
 
 		runtime = new class runtime_tunable(filename, bus, entry->d_name);
 
-		all_tunables.push_back(runtime);
+		if (!device_has_runtime_pm(filename))
+			all_untunables.push_back(runtime);
+		else
+			all_tunables.push_back(runtime);
 
 	}
 	closedir(dir);

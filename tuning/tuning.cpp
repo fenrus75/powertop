@@ -35,6 +35,7 @@
 #include "usb.h"
 #include "runtime.h"
 #include "../display.h"
+#include "../html.h"
 
 static void sort_tunables(void);
 
@@ -161,4 +162,91 @@ void tuning_window::expose(void)
 	cursor_pos = 0;
 	sort_tunables();
 	repaint();
+}
+
+static const char *tune_class(int line)
+{
+	if (line & 1) {
+		return "tunable_odd";
+	}
+	return "tunable_even";
+}
+
+static const char *tune_class_bad(int line)
+{
+	if (line & 1) {
+		return "tunable_odd_bad";
+	}
+	return "tunable_even_bad";
+}
+
+
+void html_show_tunables(void)
+{
+	unsigned int i, line;
+	/* three sections; bad, unfixable, good */
+
+	if (!htmlout)
+		return;
+
+	sort_tunables();
+
+	line = 0;
+	for (i = 0; i < all_tunables.size(); i++) {
+		int gb;
+
+		gb = all_tunables[i]->good_bad();
+
+		if (gb != TUNE_BAD)
+			continue;
+
+		if (line == 0) {	
+			fprintf(htmlout, "<h2>Software settings in need of tuning</h2>\n");
+			fprintf(htmlout, "<p><table width=100%%>\n");
+		}
+
+		line++;
+		fprintf(htmlout, "<tr class=\"%s\"><td>%s</td></tr>\n", tune_class_bad(line), all_tunables[i]->description());
+	}
+
+	if (line > 0) 
+		fprintf(htmlout, "</table></p>\n");
+
+
+	line = 0;
+	for (i = 0; i < all_untunables.size(); i++) {
+		if (line == 0) {	
+			fprintf(htmlout, "<h2>Untunable software issues</h2>\n");
+			fprintf(htmlout, "<p><table width=100%%>\n");
+		}
+
+		line++;
+		fprintf(htmlout, "<tr class=\"%s\"><td>%s</td></tr>\n", tune_class_bad(line), all_untunables[i]->description());
+	}
+
+	if (line > 0) 
+		fprintf(htmlout, "</table></p>\n");
+
+
+	line = 0;
+	for (i = 0; i < all_tunables.size(); i++) {
+		int gb;
+
+		gb = all_tunables[i]->good_bad();
+
+		if (gb != TUNE_GOOD)
+			continue;
+
+		if (line == 0) {	
+			fprintf(htmlout, "<h2>Optimal tuned software settings</h2>\n");
+			fprintf(htmlout, "<p><table width=100%%>\n");
+		}
+
+		line++;
+		fprintf(htmlout, "<tr class=\"%s\"><td>%s</td></tr>\n", tune_class(line), all_tunables[i]->description());
+	}
+
+	if (line > 0) 
+		fprintf(htmlout, "</table></p>\n");
+
 }

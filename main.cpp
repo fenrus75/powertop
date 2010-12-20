@@ -181,6 +181,7 @@ int main(int argc, char **argv)
 			fprintf(stderr, "Measuring for 20 seconds\n");
 			one_measurement(1);
 			initialize_tuning();
+			html_show_tunables();
 
 			finish_html_output();
 

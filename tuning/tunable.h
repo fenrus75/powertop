@@ -31,6 +31,7 @@ using namespace std;
 
 #define TUNE_GOOD    1
 #define TUNE_BAD     -1
+#define TUNE_UNFIXABLE -2
 #define TUNE_UNKNOWN 0
 #define TUNE_NEUTRAL 0
 
@@ -54,6 +55,7 @@ public:
 		case TUNE_GOOD:
 			return good_string;
 		case TUNE_BAD:
+		case TUNE_UNFIXABLE:
 			return bad_string;
 		}
 		return neutral_string;
@@ -66,5 +68,6 @@ public:
 };
 
 extern vector<class tunable *> all_tunables;
+extern vector<class tunable *> all_untunables;
 
 #endif

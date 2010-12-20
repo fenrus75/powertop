@@ -43,12 +43,18 @@ usb_tunable::usb_tunable(const char *path, const char *name) : tunable("", 0.9, 
 	char filename[4096];
 	char vendor[2048];
 	char product[2048];
+	string str1, str2;
 	sprintf(usb_path, "%s/power/control", path);
 
 	vendor[0] = 0;
 	product[0] = 0;
 
-	sprintf(desc, "Autospuspend for unknown USB device %s", name);
+	sprintf(filename, "%s/idVendor", path);
+	str1 = read_sysfs_string(filename);
+	sprintf(filename, "%s/idProduct", path);
+	str2 = read_sysfs_string(filename);
+
+	sprintf(desc, "Autospuspend for unknown USB device %s (%s:%s)", name, str1.c_str(), str2.c_str());
 
 	sprintf(filename, "%s/manufacturer", path);
 	file.open(filename, ios::in);

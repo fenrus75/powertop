@@ -1,7 +1,3 @@
-* html output
-  - header with powertop version and system info (hw, kernel version, distro)
-
-* for unknown USB devices, list VID/PID
 
 
 
@@ -11,7 +7,6 @@
 * pretty print estimate to only do 2 decimal places instead of 3
 
 * inode dirty trace point
-* health report (reporting mode, not interactive) needs to include devices that don't support runtime PM
 * have a "show me my process" page
 * fix memory leaks
 * find out why CPU %age and C state C0 %age don't mesh sometimes
@@ -66,3 +61,5 @@ done
 * deal with debugfs not being in /sys/kernel/debug
 * if you plug in the AC during a run, the battery code is not detecting that
 * status bar at the bottom
+* health report (reporting mode, not interactive) needs to include devices that don't support runtime PM
+* for unknown USB devices, list VID/PID

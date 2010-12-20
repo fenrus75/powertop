@@ -103,6 +103,8 @@ static void system_info(void)
 	str = cpu_model();
 
 	fprintf(htmlout, "<tr class=\"system_odd\"><td>CPU information</td><td>%lix %s</td></tr>\n", sysconf(_SC_NPROCESSORS_ONLN), str.c_str());
+	str = read_sysfs_string("/etc/system-release");
+	fprintf(htmlout, "<tr class=\"system_even\"><td>OS information</td><td>%s</td></tr>\n", str.c_str());
 
 	fprintf(htmlout, "</table>\n");
 

@@ -24,3 +24,33 @@ ncurses-devel
 zlib-devel
 
 and a functional glibc/pthreads development environment
+
+
+
+Outputting a report
+-------------------
+When invoking PowerTOP without arguments, it goes into interactive mode.
+However, for reporting bugs etc there is a special reporting mode:
+
+powertop --html
+
+which will create a "powertop.html" file which is static and can be sent to
+others to help diagnose power issues.
+
+
+
+Calibrating & Power Numbers
+---------------------------
+PowerTOP will, when running on battery, track your power consumption as well
+as your activity on the system. Once there are sufficient such measurements,
+PowerTOP can start to report power estimates for various activities.
+You can help get this estimation more accurate by running a calibration
+cycle:
+
+powertop --calibrate
+
+at least once; this will cycle through various display brightness levels
+(including "off") as well as USB device activities and some other workloads.
+
+
+

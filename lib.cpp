@@ -273,6 +273,12 @@ char *pci_id_to_name(uint16_t vendor, uint16_t device, char *buffer, int len)
 	return ret;
 }
 
+void end_pci_access(void)
+{
+	if (pci_access)
+		pci_free_name_list(pci_access);
+}
+
 static int utf_ok = 0;
 
 

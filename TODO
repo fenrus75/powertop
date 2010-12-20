@@ -11,7 +11,6 @@
 
 * pretty print estimate to only do 2 decimal places instead of 3
 
-* have a "show me my process" page
 * fix memory leaks
 * device events/sec into the process view
 * USB urbs as events/sec counter
@@ -20,13 +19,15 @@
 * find if we can do more detailed reporting about tasklet(softirq)
 	* deal with tasklets -- needs kernel patch
 
-* audio calibration? Need appropriate sample
 
-* "report" mode
+
+
+postponed to 2.1
+----------------
 * CSV-output mode
-
 * delta mode (Tony)
-
+* audio calibration? Need appropriate sample
+* have a "show me my process" page
 
 done
 ----
@@ -69,3 +70,4 @@ done
 * move the 2 data files somewhere sane
 * inode dirty trace point
 * find out why CPU %age and C state C0 %age don't mesh sometimes
+* "report" mode

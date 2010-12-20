@@ -186,10 +186,12 @@ int main(int argc, char **argv)
 	if (argc > 1) {
 		if (strcmp(argv[1], "--html") == 0) {
 			fprintf(stderr, "Measuring for 20 seconds\n");
+			/* one to warm up everything */
 			one_measurement(1);
 			init_html_output("powertop.html");
 			initialize_tuning();
-			one_measurement(1);
+			/* and then the real measurement */
+			one_measurement(20);
 			html_show_tunables();
 
 			finish_html_output();
@@ -198,6 +200,7 @@ int main(int argc, char **argv)
 			learn_parameters(50, 0);
 			save_all_results("/var/cache/powertop/saved_results.powertop");
 			save_parameters("/var/cache/powertop/saved_parameters.powertop");
+			end_pci_access();
 			exit(0);
 		}
 	}
@@ -214,6 +217,7 @@ int main(int argc, char **argv)
 	if (debug_learning) {
 	        learn_parameters(1000, 1);
 		dump_parameter_bundle();
+		end_pci_access();
 		exit(0);
 	}
 
@@ -254,6 +258,7 @@ int main(int argc, char **argv)
 	learn_parameters(100, 0);
 	save_parameters("/var/cache/powertop/saved_parameters.powertop");
 	dump_parameter_bundle();
+	end_pci_access();
 	return 0;
 
 	

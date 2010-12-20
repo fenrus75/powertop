@@ -186,7 +186,7 @@ int main(int argc, char **argv)
 			one_measurement(1);
 			init_html_output("powertop.html");
 			initialize_tuning();
-			one_measurement(20);
+			one_measurement(1);
 			html_show_tunables();
 
 			finish_html_output();

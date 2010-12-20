@@ -144,3 +144,14 @@ tr.tunable_even_bad
 	background-color: #FFf0F0;
 	color: black;
 }
+
+tr.system_odd
+{
+	background-color: #E0E0E0;
+	color: black;
+}
+tr.system_even
+{
+	background-color: #F0f0F0;
+	color: black;
+}

@@ -31,6 +31,8 @@
 
 #define _(STRING)    gettext(STRING)
 
+#define POWERTOP_VERSION "1.99 alpha 1"
+
 
 extern int get_max_cpu(void);
 extern void set_max_cpu(int cpu);

@@ -26,8 +26,12 @@
 #include "html.h"
 #include <errno.h>
 #include <string.h>
+#include <utility>
+#include <iostream>
+#include <fstream>
 
 #include "css.h"
+#include "lib.h"
 
 using namespace std;
 
@@ -39,10 +43,69 @@ static void css_header(void)
 	if (!htmlout)
 		return;
 
-//	fprintf(htmlout, "<link rel=\"stylesheet\" href=\"powertop.css\">\n");
+#ifdef EXTERNAL_CSS_FILE
+	fprintf(htmlout, "<link rel=\"stylesheet\" href=\"powertop.css\">\n");
+#else
 	fprintf(htmlout, "<style type=\"text/css\">\n");
 	fprintf(htmlout, "%s\n", css);
 	fprintf(htmlout, "</style>\n");
+#endif
+}
+
+string cpu_model(void)
+{
+	ifstream file;
+
+	file.open("/proc/cpuinfo", ios::in);
+
+	if (!file)
+		return "";
+
+	while (file) {
+		char line[4096];
+		file.getline(line, 4096);
+		if (strstr(line, "model name")) {
+			char *c;
+			c = strchr(line, ':');
+			if (c) {
+				file.close();
+				c++;
+				return c;
+			}
+		}
+	}
+	file.close();
+	return "";
+}
+
+static void system_info(void)
+{
+	string str, str2, str3;
+	if (!htmlout)
+		return;
+
+	fprintf(htmlout, "<h1>PowerTOP report</h1>\n");
+
+	fprintf(htmlout, "<h2>System information</h2>\n");
+
+	fprintf(htmlout, "<table width=100%%>\n");
+
+	fprintf(htmlout, "<tr class=\"system_even\"><td width=20%%>PowerTOP version</td><td>%s</td></tr>\n", POWERTOP_VERSION);
+
+	str = read_sysfs_string("/proc/version");
+	fprintf(htmlout, "<tr class=\"system_odd\"><td>Kernel version</td><td>%s</td></tr>\n", str.c_str());
+
+	str = read_sysfs_string("/sys/devices/virtual/dmi/id/board_vendor");
+	str2 = read_sysfs_string("/sys/devices/virtual/dmi/id/board_name");
+	str3 = read_sysfs_string("/sys/devices/virtual/dmi/id/product_version");
+	fprintf(htmlout, "<tr class=\"system_even\"><td>System name</td><td>%s %s %s</td></tr>\n", str.c_str(), str2.c_str(), str3.c_str());
+
+	str = cpu_model();
+
+	fprintf(htmlout, "<tr class=\"system_odd\"><td>CPU information</td><td>%lix %s</td></tr>\n", sysconf(_SC_NPROCESSORS_ONLN), str.c_str());
+
+	fprintf(htmlout, "</table>\n");
+
 }
 
 
@@ -63,6 +126,8 @@ void init_html_output(const char *filename)
 
 	fprintf(htmlout, "</head>\n\n");
 	fprintf(htmlout, "<body>\n");
+
+	system_info();
 }
 
 void finish_html_output(void)
@@ -72,4 +137,6 @@ void finish_html_output(void)
 
 	fprintf(htmlout, "</body>\n\n");
 	fprintf(htmlout, "</html>\n");
+	fflush(htmlout);
+	fclose(htmlout);
 }

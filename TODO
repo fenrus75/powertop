@@ -1,9 +1,11 @@
 
 
-
 * there is a filedescriptor leak!
 * move the 2 data files somewhere sane
 * check various tunables (see powertop 1.x) into a tunable checklist
+  - basic infrastructure done
+  - needs porting over of all the powertop 1.x tunables:
+
 * pretty print estimate to only do 2 decimal places instead of 3
 
 * inode dirty trace point

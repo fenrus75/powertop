@@ -34,6 +34,7 @@
 #include "sysfs.h"
 #include "usb.h"
 #include "runtime.h"
+#include "bluetooth.h"
 #include "../display.h"
 #include "../html.h"
 
@@ -58,6 +59,8 @@ void initialize_tuning(void)
 
 	add_usb_tunables();
 	add_runtime_tunables("pci");
+	add_bt_tunable();
+
 
 	sort_tunables();
 

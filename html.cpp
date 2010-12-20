@@ -120,6 +120,7 @@ void init_html_output(const char *filename)
 		fprintf(stderr, "Cannot open output file %s (%s)\n", filename, strerror(errno));
 	}
 
+	printf("Writing PowerTOP output to file %s\n", filename);
 	fprintf(htmlout, "<!DOCTYPE html PUBLIC \"-//W3C/DTD HTML 4.01//EN\">\n");
 	fprintf(htmlout, "<html>\n\n");
 	fprintf(htmlout, "<head>\n");

@@ -1,7 +1,8 @@
 * html output
   - header with powertop version and system info (hw, kernel version, distro)
-  - tunables output
-     - including devices that don't have runtime PM
+
+
+* for unknown USB devices, list VID/PID
 
 
 

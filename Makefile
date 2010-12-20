@@ -26,14 +26,19 @@ HEADERS := cpu/cpu.h
 
 
 clean:
-	rm -f *.o *~ powertop DEADJOE core.* */*.o */*~
+	rm -f *.o *~ powertop DEADJOE core.* */*.o */*~ csstoh css.h
 	
 powertop: $(OBJS) $(HEADERS)
 	g++ $(OBJS) $(LIBS) -o powertop
 
+csstoh: csstoh.c
+	gcc -o csstoh csstoh.c
+
+css.h: csstoh powertop.css
+	./csstoh powertop.css css.h
 
 
-%.o: %.cpp lib.h Makefile
+%.o: %.cpp lib.h css.h Makefile
 	@echo "  CC  $<"
 	@[ -x /usr/bin/cppcheck ] && /usr/bin/cppcheck -q $< || :
 	@$(CC) $(CFLAGS) -c -o $@ $<

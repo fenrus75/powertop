@@ -23,53 +23,46 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 
-#include "html.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <errno.h>
 #include <string.h>
 
-#include "css.h"
-
-using namespace std;
-
-
-FILE *htmlout;
-
-static void css_header(void)
+int main(int argc, char **argv)
 {
-	if (!htmlout)
-		return;
+	FILE *in, *out;
+	char line[4096];
 
-//	fprintf(htmlout, "<link rel=\"stylesheet\" href=\"powertop.css\">\n");
-	fprintf(htmlout, "<style type=\"text/css\">\n");
-	fprintf(htmlout, "%s\n", css);
-	fprintf(htmlout, "</style>\n");
-}
-
-
-
-void init_html_output(const char *filename)
-{
-	htmlout = fopen(filename, "wm");
-
-	if (!htmlout) {
-		fprintf(stderr, "Cannot open output file %s (%s)\n", filename, strerror(errno));
+	if (argc < 2) {
+		printf("Usage:  csstoh cssfile header.h \n");
+		exit(0);
+	}
+	in = fopen(argv[1], "rm");
+	if (!in) {
+		printf("Failed to open input file %s (%s) \n", argv[1], strerror(errno));
+		exit(0);
+	}
+	out = fopen(argv[2], "wm");
+	if (!out) {
+		printf("Failed to open output file %s (%s) \n", argv[1], strerror(errno));
+		exit(0);
 	}
 
-	fprintf(htmlout, "<!DOCTYPE html PUBLIC \"-//W3C/DTD HTML 4.01//EN\">\n");
-	fprintf(htmlout, "<html>\n\n");
-	fprintf(htmlout, "<head>\n");
-	
-	css_header();
+	fprintf(out, "#ifndef __INCLUDE_GUARD_CCS_H\n");
+	fprintf(out, "#define __INCLUDE_GUARD_CCS_H\n");
+	fprintf(out, "\n");
+	fprintf(out, "const char css[] = \n");
 
-	fprintf(htmlout, "</head>\n\n");
-	fprintf(htmlout, "<body>\n");
-}
-
-void finish_html_output(void)
-{
-	if (!htmlout)
-		return;
-
-	fprintf(htmlout, "</body>\n\n");
-	fprintf(htmlout, "</html>\n");
+	while (!feof(in)) {
+		char *c;
+		if (fgets(line, 4095, in) == NULL)
+			break;
+		c = strchr(line, '\n');
+		if (c) *c = 0;
+		fprintf(out, "\t\"%s\\n\"\n", line);
+	}	
+	fprintf(out, ";\n");	
+	fprintf(out, "#endif\n");
+	fclose(out);
+	fclose(in);
 }

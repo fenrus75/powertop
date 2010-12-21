@@ -73,7 +73,7 @@ double power_consumer::usage(void)
 { 
 	double t;
 	t = (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time;
-	if (t < 0.1)
+	if (t < 0.7)
 		t = t * 1000;
 	return t; 
 }

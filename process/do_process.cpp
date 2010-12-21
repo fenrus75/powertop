@@ -768,9 +768,9 @@ void html_summary(void)
 		usage[0] = 0;
 		if (all_power[i]->usage_units()) {
 			if (all_power[i]->usage() < 1000) 
-				sprintf(usage, "%5.1f%s", all_power[i]->usage(), all_power[i]->usage_units());
+				sprintf(usage, "%5.1f%s", all_power[i]->usage_summary(), all_power[i]->usage_units_summary());
 			else
-				sprintf(usage, "%5i%s", (int)all_power[i]->usage(), all_power[i]->usage_units());
+				sprintf(usage, "%5i%s", (int)all_power[i]->usage_summary(), all_power[i]->usage_units_summary());
 		}
 		sprintf(events, "%5.1f", all_power[i]->events());
 		if (!all_power[i]->show_events()) {

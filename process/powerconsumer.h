@@ -57,6 +57,9 @@ public:
 
 	virtual double usage(void);
 	virtual const char * usage_units(void);
+
+	virtual double usage_summary(void) { return usage();};
+	virtual const char * usage_units_summary(void) { return usage_units(); };
 	virtual double events(void) { return  (wake_ups + gpu_ops + hard_disk_hits) / measurement_time;};
 	virtual int show_events(void) { return 1; };
 };

@@ -63,6 +63,9 @@ public:
 	virtual const char * name(void) { return "process"; };
 	virtual const char * type(void) { return "Process"; };
 
+	virtual double usage_summary(void);
+	virtual const char * usage_units_summary(void);
+
 };
 
 extern vector <class process *> all_processes;

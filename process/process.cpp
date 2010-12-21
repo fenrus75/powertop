@@ -147,6 +147,17 @@ const char * process::description(void)
 	return desc;
 }
 
+double process::usage_summary(void) 
+{ 
+	double t;
+	t = (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time / 10;
+	return t; 
+}
+
+const char * process::usage_units_summary(void)
+{
+	return "%";
+}
 
 class process * find_create_process(char *comm, int pid)
 {
@@ -216,3 +227,5 @@ void all_processes_to_all_power(void)
 		if (all_processes[i]->accumulated_runtime)
 			all_power.push_back(all_processes[i]);
 }
+
+

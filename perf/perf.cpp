@@ -42,6 +42,7 @@
 #include "perf_event.h"
 
 #include "perf.h"
+#include "../lib.h"
 
 static int get_trace_type(const char *eventname)
 {
@@ -114,8 +115,10 @@ void perf_event::create_perf_event(char *eventname, int cpu)
 	perf_fd = sys_perf_event_open(&attr, -1, cpu, -1, 0);
 
 	if (perf_fd < 0) {
-		fprintf(stderr, "Perf syscall failed: %i / %i (%s)\n", perf_fd, errno, strerror(errno));
-		return;
+		fprintf(stderr, "PowerTOP " POWERTOP_VERSION " needs the kernel to support the 'perf' subsystem\n");
+		fprintf(stderr, "as well as support for trace points in the kernel:\n");
+		fprintf(stderr, "CONFIG_PERF_EVENTS=y\nCONFIG_PERF_COUNTERS=y\nCONFIG_TRACEPOINTS=y\nCONFIG_TRACING=y\n");
+		exit(EXIT_FAILURE);
 	}
 	if (read(perf_fd, &read_data, sizeof(read_data)) == -1) {
 		perror("Unable to read perf file descriptor\n");

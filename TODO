@@ -2,12 +2,13 @@
 
 Needed prior to alpha
 ---------------------
-* pretty print estimate to only do 2 decimal places instead of 3
 * fix memory leaks
 
 
 Needed between alpha and 2.0 final
 ----------------------------------
+* more translations / strings
+* end user documentation
 * there is a filedescriptor leak! -- or so it seems. Can't reproduce the
   report anymore
 * investigate tick_sched_timer and why it wakes up
@@ -22,6 +23,7 @@ Needed between alpha and 2.0 final
 	  - hpet timer? (is that still relevant?)
 	  - tv out??
 	  - noatime
+* pretty print estimate to only do 2 decimal places instead of 3
 
 
 
@@ -34,8 +36,6 @@ postponed to 2.1
 
 done
 ----
-* usage documentation / readme sufficient for people to get going
-* internationalization!
 * on NHM, cpu P state stats accumulate and don't reset at measurment time
 * rescan for USB devices each measurement
 * brightness calibration
@@ -76,3 +76,8 @@ done
 * inode dirty trace point
 * find out why CPU %age and C state C0 %age don't mesh sometimes
 * "report" mode
+* detect missing kernel options for PERF / too old kernels and report
+  something helpful to the user
+* detect not running as root and exit gracefully
+* usage documentation / readme sufficient for people to get going
+* internationalization!

@@ -147,6 +147,15 @@ void one_measurement(int seconds)
 
 int main(int argc, char **argv)
 {
+	int uid;
+
+	uid = getuid();
+
+	if (uid != 0) {
+		printf("PowerTOP " POWERTOP_VERSION " must be run with root privileges.\n");
+		printf("exiting...\n");
+		exit(EXIT_FAILURE);
+	}
 	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
 	system("/bin/mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
 

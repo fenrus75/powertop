@@ -276,18 +276,18 @@ double ahci::power_usage(struct result_bundle *result, struct parameter_bundle *
 {
 	double power;
 	double factor;
-	double utilization;
+	double util;
 
 	power = 0;
 
 	factor = get_parameter_value(active_index, bundle);
-	utilization = get_result_value(active_rindex, result);
-	power += utilization * factor / 100.0;
+	util = get_result_value(active_rindex, result);
+	power += util * factor / 100.0;
 
 
 	factor = get_parameter_value(partial_index, bundle);
-	utilization = get_result_value(partial_rindex, result);
-	power += utilization * factor / 100.0;
+	util = get_result_value(partial_rindex, result);
+	power += util * factor / 100.0;
 
 	return power;
 }

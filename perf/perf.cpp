@@ -76,7 +76,7 @@ static inline int sys_perf_event_open(struct perf_event_attr *attr,
 			group_fd, flags);
 }
 
-void perf_event::create_perf_event(char *eventname, int cpu)
+void perf_event::create_perf_event(char *eventname, int _cpu)
 {
 	struct perf_event_attr attr;
 	int ret;
@@ -112,7 +112,7 @@ void perf_event::create_perf_event(char *eventname, int cpu)
 	if (attr.config <= 0)
 		return;
 
-	perf_fd = sys_perf_event_open(&attr, -1, cpu, -1, 0);
+	perf_fd = sys_perf_event_open(&attr, -1, _cpu, -1, 0);
 
 	if (perf_fd < 0) {
 		fprintf(stderr, "PowerTOP " POWERTOP_VERSION " needs the kernel to support the 'perf' subsystem\n");

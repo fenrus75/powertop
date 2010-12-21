@@ -125,20 +125,20 @@ double runtime_pmdevice::power_usage(struct result_bundle *result, struct parame
 {
 	double power;
 	double factor;
-	double utilization;
+	double util;
 
 	power = 0;
 
 	factor = get_parameter_value(index, bundle);
-	utilization = get_result_value(r_index, result);
-        power += utilization * factor / 100.0;
+	util = get_result_value(r_index, result);
+        power += util * factor / 100.0;
 
 	return power;
 }
 
-void runtime_pmdevice::set_human_name(char *name)
+void runtime_pmdevice::set_human_name(char *_name)
 {
-	strcpy(humanname, name);
+	strcpy(humanname, _name);
 }
 
 
@@ -177,7 +177,6 @@ static void do_bus(const char *bus)
 	struct dirent *entry;
 	DIR *dir;
 	char filename[4096];
-	ifstream file;
 	
 	sprintf(filename, "/sys/bus/%s/devices/", bus);
 	dir = opendir(filename);

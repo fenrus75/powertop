@@ -1,8 +1,8 @@
 all: powertop 
 
-CFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector
+CFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector -Wshadow -Wformat
 CPPFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
-CXXFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector
+CXXFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector -Wshadow -Wformat
 OBJS := lib.o main.o display.o html.o
 OBJS += cpu/cpu.o cpu/abstract_cpu.o cpu/cpu_linux.o cpu/cpu_core.o cpu/cpu_package.o cpu/intel_cpus.o  cpu/cpudevice.cpp
 OBJS += perf/perf.o perf/perf_bundle.o

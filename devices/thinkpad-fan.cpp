@@ -94,25 +94,25 @@ double thinkpad_fan::power_usage(struct result_bundle *result, struct parameter_
 {
 	double power;
 	double factor;
-	double utilization;
+	double util;
 
 
 	power = 0;
-	utilization = get_result_value(r_index, result);
+	util = get_result_value(r_index, result);
 
-	if (utilization < 0)
-		utilization = 0;
+	if (util < 0)
+		util = 0;
 
 
 	/* physics dictact that fan power goes cubic with the rpms, but there's also a linear component for friction*/
 	factor = get_parameter_value(fancub_index, bundle);
-	power += factor * pow(utilization / 3600.0, 3);
+	power += factor * pow(util / 3600.0, 3);
 
 	factor = get_parameter_value(fansqr_index, bundle) - 5.0;
-	power += factor * pow(utilization / 3600.0, 2);
+	power += factor * pow(util / 3600.0, 2);
 
 	factor = get_parameter_value(fan_index, bundle) - 10.0;
-	power += utilization / 5000.0 * factor;
+	power += util / 5000.0 * factor;
 
 	if (power <= 0.0)
 		power = 0.0;

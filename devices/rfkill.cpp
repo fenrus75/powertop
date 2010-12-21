@@ -173,13 +173,13 @@ double rfkill::power_usage(struct result_bundle *result, struct parameter_bundle
 {
 	double power;
 	double factor;
-	double utilization;
+	double util;
 
 	power = 0;
 	factor = get_parameter_value(index, bundle);
-	utilization = get_result_value(rindex, result);
+	util = get_result_value(rindex, result);
 
-	power += utilization * factor / 100.0;
+	power += util * factor / 100.0;
 
 	return power;
 }

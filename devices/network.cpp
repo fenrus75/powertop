@@ -347,13 +347,13 @@ double network::power_usage(struct result_bundle *result, struct parameter_bundl
 {
 	double power;
 	double factor;
-	double utilization;
+	double util;
 
 	power = 0;
 	factor = get_parameter_value(index_up, bundle);
-	utilization = get_result_value(rindex_up, result);
+	util = get_result_value(rindex_up, result);
 
-	power += utilization * factor;
+	power += util * factor;
 
 
 	if (valid_100 == -1) {
@@ -364,29 +364,29 @@ double network::power_usage(struct result_bundle *result, struct parameter_bundl
 	
 	if (valid_100 > 0) {
 		factor = get_parameter_value(index_link_100, bundle);
-		utilization = get_result_value(rindex_link_100, result);
-		power += utilization * factor / 100;
+		util = get_result_value(rindex_link_100, result);
+		power += util * factor / 100;
 	}
 
 
 	if (valid_1000 > 0) {
 		factor = get_parameter_value(index_link_1000, bundle);
-		utilization = get_result_value(rindex_link_1000, result);
-		power += utilization * factor / 100;
+		util = get_result_value(rindex_link_1000, result);
+		power += util * factor / 100;
 	}
 	
 	if (valid_high > 0) {
 		factor = get_parameter_value(index_link_high, bundle);
-		utilization = get_result_value(rindex_link_high, result);
-		power += utilization * factor / 100;
+		util = get_result_value(rindex_link_high, result);
+		power += util * factor / 100;
 	}
 
 	factor = get_parameter_value(index_pkts, bundle);
-	utilization = get_result_value(rindex_pkts, result);
-	if (utilization > 5000)
-		utilization = 5000;
+	util = get_result_value(rindex_pkts, result);
+	if (util > 5000)
+		util = 5000;
 
-	power += utilization * factor / 100;
+	power += util * factor / 100;
 
 	return power;
 }

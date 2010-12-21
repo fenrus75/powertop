@@ -387,12 +387,12 @@ void abstract_cpu::wiggle(void)
 uint64_t abstract_cpu::total_pstate_time(void)
 {
 	unsigned int i;
-	uint64_t total_stamp = 0;
+	uint64_t stamp = 0;
 
 	for (i = 0; i < pstates.size(); i++)
-		total_stamp += pstates[i]->time_after;
+		stamp += pstates[i]->time_after;
 
-	return total_stamp;
+	return stamp;
 }
 
 

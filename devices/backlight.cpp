@@ -117,7 +117,7 @@ void backlight::end_measurement(void)
 	char powername[4096];
 	ifstream file;
 	double p;
-	int backlight = 0;
+	int _backlight = 0;
 
 	sprintf(filename, "%s/actual_brightness", sysfs_path);
 	file.open(filename, ios::in);
@@ -128,14 +128,14 @@ void backlight::end_measurement(void)
 
 	if (dpms_screen_on()) {
 		p = 100.0 * (end_level + start_level) / 2 / max_level;
-		backlight = 100;
+		_backlight = 100;
 	} else {
 		p = 0;
 	}
 
 	report_utilization(name, p);
 	sprintf(powername, "%s-power", name);
-	report_utilization(powername, backlight);
+	report_utilization(powername, _backlight);
 }
 
 
@@ -187,7 +187,7 @@ double backlight::power_usage(struct result_bundle *result, struct parameter_bun
 {
 	double power;
 	double factor;
-	double utilization;
+	double _utilization;
 	char powername[4096];
 	static int bl_index = 0, blp_index = 0, bl_boost_index40 = 0, bl_boost_index80, bl_boost_index100;
 
@@ -204,20 +204,20 @@ double backlight::power_usage(struct result_bundle *result, struct parameter_bun
 
 	power = 0;
 	factor = get_parameter_value(bl_index, bundle);
-	utilization = get_result_value(r_index, result);
+	_utilization = get_result_value(r_index, result);
 
-	power += utilization * factor / 100.0;
+	power += _utilization * factor / 100.0;
 
 	/*
 	 * most machines have a non-linear backlight scale. to compensate, add a fixed value
 	 * once the brightness hits 40% and 80%
 	 */
 
-	if (utilization >=99)
+	if (_utilization >=99)
 		power += get_parameter_value(bl_boost_index100, bundle);
-	else if (utilization >=80)
+	else if (_utilization >=80)
 		power += get_parameter_value(bl_boost_index80, bundle);
-	else if (utilization >=40)
+	else if (_utilization >=40)
 		power += get_parameter_value(bl_boost_index40, bundle);
 
 	factor = get_parameter_value(blp_index, bundle);
@@ -226,9 +226,9 @@ double backlight::power_usage(struct result_bundle *result, struct parameter_bun
 		sprintf(powername, "%s-power", name);
 		r_index_power = get_result_index(powername);
 	}
-	utilization = get_result_value(r_index_power, result);
+	_utilization = get_result_value(r_index_power, result);
 
-	power += utilization * factor / 100.0;
+	power += _utilization * factor / 100.0;
 
 	return power;
 }

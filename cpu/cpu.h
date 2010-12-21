@@ -96,7 +96,7 @@ public:
 	class abstract_cpu *parent;
 
 
-	void		set_number(int number, int cpu) {this->number = number; this->first_cpu = cpu;};
+	void		set_number(int _number, int cpu) {this->number = _number; this->first_cpu = cpu;};
 
 	virtual void 	measurement_start(void);
 	virtual void 	measurement_end(void);

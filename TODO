@@ -3,6 +3,8 @@
 Needed prior to alpha
 ---------------------
 * fix memory leaks
+	 -- growth in memory seems to not be there.. it's just exit leaks...
+	    yawn.
 
 
 Needed between alpha and 2.0 final

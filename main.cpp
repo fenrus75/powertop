@@ -261,17 +261,8 @@ int main(int argc, char **argv)
 
 	save_all_results("/var/cache/powertop/saved_results.powertop");
 	save_parameters("/var/cache/powertop/saved_parameters.powertop");
-	learn_parameters(100, 0);
+	learn_parameters(500, 0);
 	save_parameters("/var/cache/powertop/saved_parameters.powertop");
-	learn_parameters(100, 0);
-	save_parameters("/var/cache/powertop/saved_parameters.powertop");
-	learn_parameters(100, 0);
-	save_parameters("/var/cache/powertop/saved_parameters.powertop");
-	learn_parameters(100, 0);
-	save_parameters("/var/cache/powertop/saved_parameters.powertop");
-	learn_parameters(100, 0);
-	save_parameters("/var/cache/powertop/saved_parameters.powertop");
-	dump_parameter_bundle();
 	end_pci_access();
 	return 0;
 

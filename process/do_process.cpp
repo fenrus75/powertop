@@ -590,9 +590,9 @@ void process_update_display(void)
 
 
 	if (show_power)
-		wprintw(win, _("Power est.      Usage/s     Events/s    Category       Description\n"));
+		wprintw(win, _("Power est.      Usage       Events/s    Category       Description\n"));
 	else
-		wprintw(win, _("                Usage/s     Events/s    Category       Description\n"));
+		wprintw(win, _("                Usage       Events/s    Category       Description\n"));
 
 	for (i = 0; i < all_power.size(); i++) {
 		char power[16];
@@ -654,9 +654,9 @@ void html_process_update_display(void)
 	fprintf(htmlout, "<table width=100%%>\n");
 
 	if (show_power)
-		fprintf(htmlout, "<tr><th width=10%%>Power est.</th><th width=10%%>Usage/s</th><th width=10%%>Wakeups/s</th><th width=10%%>GPU ops/s</th><th width=10%%>Disk IO/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+		fprintf(htmlout, "<tr><th width=10%%>Power est.</th><th width=10%%>Usage</th><th width=10%%>Wakeups/s</th><th width=10%%>GPU ops/s</th><th width=10%%>Disk IO/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
 	else
-		fprintf(htmlout, "<tr><th width=10%%>Usage/s</th><th width=10%%>Wakeups/s</th><th width=10%%>GPU ops/s</th><th width=10%%>Disk IO/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+		fprintf(htmlout, "<tr><th width=10%%>Usage</th><th width=10%%>Wakeups/s</th><th width=10%%>GPU ops/s</th><th width=10%%>Disk IO/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
 
 	total = all_power.size();
 
@@ -736,9 +736,9 @@ void html_summary(void)
 	fprintf(htmlout, "<table width=100%%>\n");
 
 	if (show_power)
-		fprintf(htmlout, "<tr><th width=10%%>Power est.</th><th width=10%%>Usage/s</th><th width=10%%>Events/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+		fprintf(htmlout, "<tr><th width=10%%>Power est.</th><th width=10%%>Usage</th><th width=10%%>Events/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
 	else
-		fprintf(htmlout, "<tr><th width=10%%>Usage/s</th><th width=10%%>Events/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+		fprintf(htmlout, "<tr><th width=10%%>Usage</th><th width=10%%>Events/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
 
 	total = all_power.size();
 	if (total > 10)

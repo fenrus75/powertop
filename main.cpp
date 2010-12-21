@@ -238,7 +238,6 @@ int main(int argc, char **argv)
 
 	/* first one is short to not let the user wait too long */
 	init_display();
-	show_tab(0);
 	one_measurement(1);
 	initialize_tuning();
 	tuning_update_display();

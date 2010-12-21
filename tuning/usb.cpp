@@ -52,7 +52,7 @@ usb_tunable::usb_tunable(const char *path, const char *name) : tunable("", 0.9, 
 	str1 = read_sysfs_string("%s/idVendor", path);
 	str2 = read_sysfs_string("%s/idProduct", path);
 
-	sprintf(desc, "Autospuspend for unknown USB device %s (%s:%s)", name, str1.c_str(), str2.c_str());
+	sprintf(desc, "Autosuspend for unknown USB device %s (%s:%s)", name, str1.c_str(), str2.c_str());
 
 	sprintf(filename, "%s/manufacturer", path);
 	file.open(filename, ios::in);

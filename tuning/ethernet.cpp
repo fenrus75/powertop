@@ -1,4 +1,4 @@
-/*
+;/*
  * Copyright 2010, Intel Corporation
  *
  * This file is part of PowerTOP
@@ -49,7 +49,6 @@
 
 ethernet_tunable::ethernet_tunable(const char *iface) : tunable("", 0.3, "Good", "Bad", "Unknown")
 {
-	printf("iface is %s \n", iface);
 	memset(interf, 0, sizeof(interf));
 	strncpy(interf, iface, sizeof(interf));
 	sprintf(desc, "Wake-on-lan status for device %s", iface);

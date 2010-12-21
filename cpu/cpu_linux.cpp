@@ -228,7 +228,7 @@ char * cpu_linux::fill_cstate_line(int line_nr, char *buffer, const char *separa
 	buffer[0] = 0;
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,"  CPU %i", number);
+		sprintf(buffer,_("  CPU %i"), number);
 		return buffer;
 	}
 
@@ -286,7 +286,7 @@ char * cpu_linux::fill_pstate_line(int line_nr, char *buffer)
 	}
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer," CPU %i", number);
+		sprintf(buffer,_(" CPU %i"), number);
 		return buffer;
 	}
 

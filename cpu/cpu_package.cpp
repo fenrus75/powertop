@@ -43,7 +43,7 @@ char * cpu_package::fill_cstate_line(int line_nr, char *buffer, const char *sepa
 	buffer[0] = 0;
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,"Package");
+		sprintf(buffer,_("Package"));
 		return buffer;
 	}
 
@@ -101,7 +101,7 @@ char * cpu_package::fill_pstate_line(int line_nr, char *buffer)
 
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,"  Package");
+		sprintf(buffer,_("  Package"));
 		return buffer;
 	}
 

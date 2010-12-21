@@ -2,15 +2,14 @@
 
 Needed prior to alpha
 ---------------------
-
-* usage documentation / readme sufficient for people to get going
-* there is a filedescriptor leak!
 * pretty print estimate to only do 2 decimal places instead of 3
 * fix memory leaks
 
 
 Needed between alpha and 2.0 final
 ----------------------------------
+* there is a filedescriptor leak! -- or so it seems. Can't reproduce the
+  report anymore
 * investigate tick_sched_timer and why it wakes up
 * find if we can do more detailed reporting about tasklet(softirq)
 	* deal with tasklets -- needs kernel patch
@@ -35,6 +34,7 @@ postponed to 2.1
 
 done
 ----
+* usage documentation / readme sufficient for people to get going
 * internationalization!
 * on NHM, cpu P state stats accumulate and don't reset at measurment time
 * rescan for USB devices each measurement

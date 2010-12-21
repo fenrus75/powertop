@@ -43,9 +43,9 @@
 
 #include "perf.h"
 
-
 static int get_trace_type(const char *eventname)
 {
+	static int once = 0;
 	ifstream file;
 
 	int this_trace;
@@ -54,8 +54,9 @@ static int get_trace_type(const char *eventname)
 	sprintf(filename, "/sys/kernel/debug/tracing/events/%s/id", eventname);
 
 	file.open(filename, ios::in);
-	if (!file) {
+	if (!file && !once) {
 		cout << "Invalid trace type " << eventname << "\n";
+		once++;
 		return -1;
 	}
 

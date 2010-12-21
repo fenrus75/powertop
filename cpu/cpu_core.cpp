@@ -43,7 +43,7 @@ char * cpu_core::fill_cstate_line(int line_nr, char *buffer, const char *separat
 	buffer[0] = 0;
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,"  Core");
+		sprintf(buffer,_("  Core"));
 		return buffer;
 	}
 
@@ -187,7 +187,7 @@ char * cpu_core::fill_pstate_line(int line_nr, char *buffer)
 	}
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,"  Core");
+		sprintf(buffer,_("  Core"));
 		return buffer;
 	}
 

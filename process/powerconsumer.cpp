@@ -84,6 +84,6 @@ const char * power_consumer::usage_units(void)
 	t = (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time;
 	if (t < 0.7)
 		return " us/s";
-//		return " µs";
+//		return " s";
 	return " ms/s";
 }

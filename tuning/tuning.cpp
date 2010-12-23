@@ -37,6 +37,7 @@
 #include "bluetooth.h"
 #include "cpufreq.h"
 #include "ethernet.h"
+#include "wifi.h"
 #include "../display.h"
 #include "../html.h"
 #include "../lib.h"
@@ -67,6 +68,7 @@ void initialize_tuning(void)
 	add_runtime_tunables("pci");
 	add_ethernet_tunable();
 	add_bt_tunable();
+	add_wifi_tunables();
 	add_cpufreq_tunable();
 
 	sort_tunables();

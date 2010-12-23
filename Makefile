@@ -3,6 +3,8 @@ all: powertop
 CFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector -Wshadow -Wformat
 CPPFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
 CXXFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector -Wshadow -Wformat
+PKG_CONFIG ?= pkg-config
+
 OBJS := lib.o main.o display.o html.o
 OBJS += cpu/cpu.o cpu/abstract_cpu.o cpu/cpu_linux.o cpu/cpu_core.o cpu/cpu_package.o cpu/intel_cpus.o  cpu/cpudevice.cpp
 OBJS += perf/perf.o perf/perf_bundle.o
@@ -15,7 +17,30 @@ OBJS += parameters/parameters.o parameters/learn.o parameters/persistent.o
 OBJS += calibrate/calibrate.o
 
 OBJS += tuning/tuning.o tuning/tunable.o tuning/sysfs.o tuning/usb.o tuning/runtime.o tuning/bluetooth.o
-OBJS += tuning/cpufreq.o tuning/ethernet.o
+OBJS += tuning/cpufreq.o tuning/ethernet.o tuning/iw.o tuning/wifi.o
+
+
+NL1FOUND := $(shell $(PKG_CONFIG) --atleast-version=1 libnl-1 && echo Y)
+NL2FOUND := $(shell $(PKG_CONFIG) --atleast-version=2 libnl-2.0 && echo Y)
+
+ifeq ($(NL1FOUND),Y)
+NLLIBNAME = libnl-1
+endif
+
+ifeq ($(NL2FOUND),Y)
+CFLAGS += -DCONFIG_LIBNL20
+LIBS += -lnl-genl
+NLLIBNAME = libnl-2.0
+endif
+
+ifeq ($(NLLIBNAME),)
+$(error Cannot find development files for any supported version of libnl)
+endif
+
+LIBS += $(shell $(PKG_CONFIG) --libs $(NLLIBNAME))
+CFLAGS += $(shell $(PKG_CONFIG) --cflags $(NLLIBNAME))
+
+
 
 #
 # ncurses-devel and pciutils-devel 

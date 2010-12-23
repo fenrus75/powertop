@@ -22,6 +22,7 @@ in addition to that, it needs the following components:
 pciutils-devel
 ncurses-devel
 zlib-devel
+libnl-devel
 
 and a functional glibc/pthreads development environment
 

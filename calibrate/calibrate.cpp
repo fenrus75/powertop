@@ -36,6 +36,9 @@
 #include <dirent.h>
 
 #include "../parameters/parameters.h"
+extern "C" {
+#include "../tuning/iw.h"
+}
 
 #include <map>
 #include <vector>
@@ -54,6 +57,8 @@ static map<string, string> saved_sysfs;
 
 
 static volatile int stop_measurement;
+
+static int wireless_PS;
 
 
 static void save_sysfs(const char *filename)
@@ -76,6 +81,8 @@ static void restore_all_sysfs(void)
 
 	for (it = saved_sysfs.begin(); it != saved_sysfs.end(); it++)
 		write_sysfs(it->first, it->second);
+
+	set_wifi_power_saving("wlan0", wireless_PS);
 }
 
 static void find_all_usb(void)
@@ -443,6 +450,7 @@ void calibrate(void)
 	find_all_rfkill();
 	find_backlight();
 	find_scsi_link();
+	wireless_PS = get_wifi_power_saving("wlan0");
 	
         save_sysfs("/sys/modules/snd_hda_intel/parameters/power_save");
 
@@ -450,6 +458,7 @@ void calibrate(void)
 	suspend_all_usb_devices();
 	rfkill_all_radios();
 	lower_backlight();
+	set_wifi_power_saving("wlan0", 1);
 
 	sleep(4);
 	
@@ -464,6 +473,7 @@ void calibrate(void)
 	wakeup_calibration(10000);
 	wakeup_calibration(100000);
 	wakeup_calibration(1000000);
+	set_wifi_power_saving("wlan0", 0);
 	usb_calibration();
 	rfkill_calibration();
 

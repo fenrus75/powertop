@@ -1,5 +1,7 @@
 all: powertop 
 
+VERSION := 1.95
+
 CFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector -Wshadow -Wformat
 CPPFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
 CXXFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector -Wshadow -Wformat
@@ -87,3 +89,9 @@ css.h: csstoh powertop.css
 uptrans:
 	@(cd po/ && env LG=$(LG) $(MAKE) $@)
 
+
+
+dist:
+	git tag v$(VERSION)
+	git archive --format=tar --prefix="powertop-$(VERSION)/" v$(VERSION) | \
+		gzip > powertop-$(VERSION).tar.gz

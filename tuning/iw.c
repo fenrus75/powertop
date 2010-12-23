@@ -264,7 +264,7 @@ static int __handle_cmd(struct nl80211_state *state, const char *iface, int get)
 }
 
 
-int set_wifi_power_saving(char *iface, int state) 
+int set_wifi_power_saving(const char *iface, int state) 
 {
 	struct nl80211_state nlstate;
 	int err;
@@ -282,7 +282,7 @@ int set_wifi_power_saving(char *iface, int state)
 }
 
 
-int get_wifi_power_saving(char *iface)
+int get_wifi_power_saving(const char *iface)
 {
 	struct nl80211_state nlstate;
 	int err;

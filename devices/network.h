@@ -51,10 +51,13 @@ class network: public device {
 	int rindex_link_high;
 	int index_pkts;
 	int rindex_pkts;
+	int index_powerunsave;
+	int rindex_powerunsave;
 	
 	int valid_100;
 	int valid_1000;
 	int valid_high;
+	int valid_powerunsave;
 public:
 	uint64_t pkts;
 	double duration;

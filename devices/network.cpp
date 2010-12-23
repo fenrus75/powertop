@@ -42,6 +42,9 @@ using namespace std;
 #include "network.h"
 #include "../parameters/parameters.h"
 #include "../process/process.h"
+extern "C" {
+#include "../tuning/iw.h"
+}
 
 #include <string.h>
 #include <net/if.h>
@@ -119,6 +122,7 @@ network::network(char *_name, char *path)
 	valid_100 = -1;
 	valid_1000 = -1;
 	valid_high = -1;
+	valid_powerunsave = -1;
 
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
 	sprintf(devname, "%s", _name);
@@ -128,6 +132,10 @@ network::network(char *_name, char *path)
 	sprintf(devname, "%s-up", _name);
 	index_up = get_param_index(devname);
 	rindex_up = get_result_index(devname);
+
+	sprintf(devname, "%s-powerunsave", _name);
+	index_powerunsave = get_param_index(devname);
+	rindex_powerunsave = get_result_index(devname);
 
 	sprintf(devname, "%s-link-100", _name);
 	index_link_100 = get_param_index(devname);
@@ -264,7 +272,7 @@ void network::start_measurement(void)
 
 void network::end_measurement(void)
 {
-	int u_100, u_1000, u_high;
+	int u_100, u_1000, u_high, u_powerunsave;
 
 	gettimeofday(&after, NULL);
 
@@ -295,11 +303,14 @@ void network::end_measurement(void)
 	if (start_pkts > end_pkts)
 		end_pkts = start_pkts;
 
+	u_powerunsave = 100 - 100 * get_wifi_power_saving(name);
+
 	report_utilization(rindex_link_100, u_100);
 	report_utilization(rindex_link_1000, u_1000);
 	report_utilization(rindex_link_high, u_high);
 	report_utilization(rindex_up, (start_up+end_up) / 2.0);
 	report_utilization(rindex_pkts, (end_pkts - start_pkts)/(duration + 0.001));
+	report_utilization(rindex_powerunsave, u_powerunsave);
 }
 
 
@@ -356,10 +367,12 @@ double network::power_usage(struct result_bundle *result, struct parameter_bundl
 	power += util * factor;
 
 
+
 	if (valid_100 == -1) {
 		valid_100 = utilization_power_valid(rindex_link_100);
 		valid_1000 = utilization_power_valid(rindex_link_1000);
 		valid_high = utilization_power_valid(rindex_link_high);
+		valid_powerunsave = utilization_power_valid(rindex_powerunsave);
 	}
 	
 	if (valid_100 > 0) {
@@ -378,6 +391,12 @@ double network::power_usage(struct result_bundle *result, struct parameter_bundl
 	if (valid_high > 0) {
 		factor = get_parameter_value(index_link_high, bundle);
 		util = get_result_value(rindex_link_high, result);
+		power += util * factor / 100;
+	}
+
+	if (valid_powerunsave > 0) {
+		factor = get_parameter_value(index_powerunsave, bundle);
+		util = get_result_value(rindex_powerunsave, result);
 		power += util * factor / 100;
 	}
 

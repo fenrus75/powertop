@@ -66,8 +66,8 @@ enum id_input {
 	II_PHY_IDX,
 };
 
-int get_wifi_power_saving(char *iface);
-int set_wifi_power_saving(char *iface, int state);
+int get_wifi_power_saving(const char *iface);
+int set_wifi_power_saving(const char *iface, int state);
 
 
 #endif /* __IW_H */

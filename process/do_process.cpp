@@ -618,7 +618,7 @@ void process_update_display(void)
 			else
 				sprintf(usage, "%5i%s", (int)all_power[i]->usage(), all_power[i]->usage_units());
 		}
-		while (strlen(usage) < 14) strcat(usage, " ");
+		while (mbstowcs(NULL,usage,0) < 14) strcat(usage, " ");
 		sprintf(events, "%5.1f", all_power[i]->events());
 		if (!all_power[i]->show_events())
 			events[0] = 0;

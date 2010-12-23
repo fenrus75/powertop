@@ -19,9 +19,7 @@ Needed between alpha and 2.0 final
 * device events/sec into the process view
 * USB urbs as events/sec counter
 * check various tunables (see powertop 1.x) into a tunable checklist
-  - basic infrastructure done
   - needs porting over of all the powertop 1.x tunables:
-	  - Various wifi power saving schemes
 	  - hpet timer? (is that still relevant?)
 	  - tv out??
 	  - noatime

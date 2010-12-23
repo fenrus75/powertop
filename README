@@ -55,3 +55,14 @@ at least once; this will cycle through various display brightness levels
 
 
 
+
+
+Code from other open source projects
+------------------------------------
+PowerTOP contains some code from other open source projects; we'd like to
+thank the authors of those projects for their work. 
+Specifically PowerTOP contains code from
+
+nl80211 userspace tool - Copyright 2007, 2008	Johannes Berg <johannes@sipsolutions.net>
+
+

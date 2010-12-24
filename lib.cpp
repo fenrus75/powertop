@@ -289,7 +289,7 @@ char *fmt_prefix(double n, char *buf)
 	static const char prefixes[] = "yzafpnum kMGTPEZY";
 	char tmpbuf[16];
 	int omag, npfx;
-	char *p, *q, pfx;
+	char *p, *q, pfx, *c;
 	int i;
 
 	if (utf_ok == -1) {
@@ -309,7 +309,12 @@ char *fmt_prefix(double n, char *buf)
 	}
 
 	snprintf(tmpbuf, sizeof tmpbuf, "%.2e", n);
-	omag = atoi(strchr(tmpbuf, 'e') + 1);
+	c = strchr(tmpbuf, 'e');
+	if (!c) {
+		sprintf(buf, "NaN");
+		return buf;
+	}
+	omag = atoi(c + 1);
 
 	npfx = ((omag + 27) / 3) - (27/3);
 	omag = (omag + 27) % 3;

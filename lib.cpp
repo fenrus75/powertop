@@ -230,27 +230,13 @@ void format_watts(double W, char *buffer, unsigned int len)
 	buffer[0] = 0;
 	char buf[32];
 
-#if 0
-	if (W > 1.5) 
-		sprintf(buffer, "%6.1f   W", W);
-	else if (W > 0.5)
-		sprintf(buffer, "%7.2f  W", W);
-	else if (W > 0.01)
-		sprintf(buffer, "%6.1f  mW", W*1000);
-	else if (W > 0.001)
-		sprintf(buffer, "%7.2f mW", W*1000);
-	else if (W > 0.0001)
-		sprintf(buffer, "%8.3fmW", W*1000);
-	else
-		sprintf(buffer, "   0.0  mW");
-#endif
 	sprintf(buffer, "%7sW", fmt_prefix(W, buf));
 
 	if (W < 0.0001)
 		sprintf(buffer, "    0 mW");
 		
 			
-	while (strlen(buffer) < len)
+	while (mbstowcs(NULL,buffer,0) < len)
 		strcat(buffer, " ");	
 }
 
@@ -279,7 +265,7 @@ void end_pci_access(void)
 		pci_free_name_list(pci_access);
 }
 
-static int utf_ok = 0;
+static int utf_ok = -1;
 
 
 
@@ -337,7 +323,7 @@ char *fmt_prefix(double n, char *buf)
 	if (pfx == ' ') {
 		/* do nothing */
 	} else if (pfx == 'u' && utf_ok > 0) {
-		strcpy(p, "µ");		/* Mu is a multibyte sequence */
+		strcpy(p, "Âµ");		/* Mu is a multibyte sequence */
 		while (*p)
 			p++;
 	} else {

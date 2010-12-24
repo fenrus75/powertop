@@ -605,7 +605,7 @@ void process_update_display(void)
 		if (!show_power)
 			strcpy(power, "          ");
 		sprintf(name, all_power[i]->type());
-		while (strlen(name) < 14) strcat(name, " ");
+		while (mbstowcs(NULL,name,0) < 14) strcat(name, " ");
 
 
 		if (all_power[i]->events() == 0 && all_power[i]->usage() == 0 && all_power[i]->Witts() == 0)

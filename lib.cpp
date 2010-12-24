@@ -279,7 +279,9 @@ char *fmt_prefix(double n, char *buf)
 	int i;
 
 	if (utf_ok == -1) {
-		if (strstr(getenv("LANG"), "UTF-8"))
+		char *g;
+		g = getenv("LANG");
+		if (g && strstr(g, "UTF-8"))
 			utf_ok = 1;
 		else
 			utf_ok = 0; 

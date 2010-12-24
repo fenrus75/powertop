@@ -1,13 +1,17 @@
 
 
-Needed prior to alpha
+Needed prior to beta
 ---------------------
 * fix memory leaks
 	 -- growth in memory seems to not be there.. it's just exit leaks...
 	    yawn.
 
+* Add battery time left estimation back
+* show "enter" is a toggle key in the tunables tab
+* lsof to show who is keeping the audio busy 
 
-Needed between alpha and 2.0 final
+
+Needed between beta and 2.0 final
 ----------------------------------
 * more translations / strings
 * end user documentation

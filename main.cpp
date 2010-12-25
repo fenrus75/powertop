@@ -263,6 +263,8 @@ int main(int argc, char **argv)
 	learn_parameters(500, 0);
 	save_parameters("/var/cache/powertop/saved_parameters.powertop");
 	end_pci_access();
+	reset_display();
+
 	return 0;
 
 	

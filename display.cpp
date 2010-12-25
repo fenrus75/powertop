@@ -72,6 +72,19 @@ void init_display(void)
 	display = 1;
 }
 
+void reset_display(void)
+{
+	if (!display) return;
+
+	keypad(stdscr, FALSE);
+	echo();
+	nocbreak();
+	
+	//resetty();
+	resetterm();
+}
+
+
 WINDOW *tab_bar = NULL;
 WINDOW *bottom_line = NULL;
 

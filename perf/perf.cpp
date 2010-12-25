@@ -43,6 +43,7 @@
 
 #include "perf.h"
 #include "../lib.h"
+#include "../display.h"
 
 static int get_trace_type(const char *eventname)
 {
@@ -115,12 +116,14 @@ void perf_event::create_perf_event(char *eventname, int _cpu)
 	perf_fd = sys_perf_event_open(&attr, -1, _cpu, -1, 0);
 
 	if (perf_fd < 0) {
+		reset_display();
 		fprintf(stderr, "PowerTOP " POWERTOP_VERSION " needs the kernel to support the 'perf' subsystem\n");
 		fprintf(stderr, "as well as support for trace points in the kernel:\n");
 		fprintf(stderr, "CONFIG_PERF_EVENTS=y\nCONFIG_PERF_COUNTERS=y\nCONFIG_TRACEPOINTS=y\nCONFIG_TRACING=y\n");
 		exit(EXIT_FAILURE);
 	}
 	if (read(perf_fd, &read_data, sizeof(read_data)) == -1) {
+		reset_display();
 		perror("Unable to read perf file descriptor\n");
 		exit(-1);
 	}

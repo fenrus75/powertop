@@ -7,7 +7,6 @@ Needed prior to beta
 	    yawn.
 
 * Add battery time left estimation back
-* show "enter" is a toggle key in the tunables tab
 * lsof to show who is keeping the audio busy 
 
 
@@ -85,3 +84,5 @@ done
 * detect not running as root and exit gracefully
 * usage documentation / readme sufficient for people to get going
 * internationalization!
+* show "enter" is a toggle key in the tunables tab
+

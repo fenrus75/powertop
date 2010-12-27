@@ -31,6 +31,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <string.h>
 
 using namespace std;
 
@@ -39,7 +40,9 @@ static int display = 0;
 vector<string> tab_names;
 map<string, class tab_window *> tab_windows;
 
-void create_tab(string name, class tab_window *w)
+map<string, string> bottom_lines;
+
+void create_tab(string name, class tab_window *w, string bottom_line)
 {
 	if (!w)
 		w = new(class tab_window);
@@ -47,6 +50,7 @@ void create_tab(string name, class tab_window *w)
 	w->win = newpad(1000,1000);
 	tab_names.push_back(name);
 	tab_windows[name] = w;
+	bottom_lines[name] = bottom_line;
 }
 
 
@@ -92,6 +96,7 @@ void show_tab(unsigned int tab)
 	WINDOW *win;
 	unsigned int i;
 	int tab_pos = 17;
+	const char *c;
 
 	if (!display)
 		return;
@@ -115,7 +120,12 @@ void show_tab(unsigned int tab)
 	bottom_line = newwin(1, 0, LINES-1, 0);
 	wattrset(bottom_line, A_REVERSE);
 	mvwprintw(bottom_line, 0,0, "%120s", "");
-	mvwprintw(bottom_line, 0,0, _(" <ESC> Exit | "));
+
+	c = bottom_lines[tab_names[tab]].c_str();
+	if (c && strlen(c) > 0) 
+		mvwprintw(bottom_line, 0,0, c);
+	else
+		mvwprintw(bottom_line, 0,0, _(" <ESC> Exit | "));
 
 
 	current_tab = tab;

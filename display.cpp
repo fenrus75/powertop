@@ -65,22 +65,19 @@ void init_display(void)
 	create_tab("Idle stats");
 	create_tab("Frequency stats");
 	create_tab("Device stats");
-//	create_tab("Tunables");
-//	create_tab("Checklist");
-//	create_tab("Actions");
 
 	display = 1;
 }
 
 void reset_display(void)
 {
-	if (!display) return;
+	if (!display)
+		return;
 
 	keypad(stdscr, FALSE);
 	echo();
 	nocbreak();
 	
-	//resetty();
 	resetterm();
 }
 

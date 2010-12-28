@@ -100,7 +100,6 @@ static int nl80211_init(struct nl80211_state *state)
 
 	state->nl80211 = genl_ctrl_search_by_name(state->nl_cache, "nl80211");
 	if (!state->nl80211) {
-		fprintf(stderr, "nl80211 not found.\n");
 		err = -ENOENT;
 		goto out_cache_free;
 	}

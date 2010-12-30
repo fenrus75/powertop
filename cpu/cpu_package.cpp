@@ -130,7 +130,7 @@ void cpu_package::account_freq(uint64_t freq, uint64_t duration)
 
 
 	if (!state) {
-		state = new struct frequency;
+		state = new(std::nothrow) struct frequency;
 
 		if (!state)
 			return;

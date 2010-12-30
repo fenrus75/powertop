@@ -135,7 +135,7 @@ void abstract_cpu::insert_cstate(const char *linux_name, const char *human_name,
 	struct idle_state *state;
 	const char *c;
 
-	state = new struct idle_state;
+	state = new(std::nothrow) struct idle_state;
 
 	if (!state)
 		return;
@@ -251,7 +251,7 @@ void abstract_cpu::insert_pstate(uint64_t freq, const char *human_name, uint64_t
 {
 	struct frequency *state;
 
-	state = new struct frequency;
+	state = new(std::nothrow) struct frequency;
 
 	if (!state)
 		return;

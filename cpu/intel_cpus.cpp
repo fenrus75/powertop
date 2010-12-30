@@ -33,9 +33,11 @@
 #include <fcntl.h>
 #include <sys/time.h>
 #include <string.h>
+#include <errno.h>
 
 #include "../lib.h"
 #include "../parameters/parameters.h"
+#include "../display.h"
 
 static int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo)
 {
@@ -55,13 +57,15 @@ static uint64_t get_msr(int cpu, uint64_t offset)
 	int fd;
 	char msr_path[256];
 
-	fd  =sprintf(msr_path, "/dev/cpu/%d/msr", cpu);
+	fd = sprintf(msr_path, "/dev/cpu/%d/msr", cpu);
 	fd = open(msr_path, O_RDONLY);
 
 	retval = pread(fd, &msr, sizeof msr, offset);
 	if (retval != sizeof msr) {
-		fprintf(stderr, "pread cpu%d 0x%llx \n", cpu, (unsigned long long)offset);
-		_exit(-2);
+		reset_display();
+		fprintf(stderr, "pread cpu%d 0x%llx : ", cpu, (unsigned long long)offset);
+		fprintf(stderr, "%s\n", strerror(errno));
+		exit(-2);
 	}
 	close(fd);
 	return msr;

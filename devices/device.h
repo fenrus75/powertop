@@ -35,6 +35,7 @@ struct result_bundle;
 class device {
 public:
 	int cached_valid;
+	bool hide;
 
 	virtual void start_measurement(void);
 	virtual void end_measurement(void);
@@ -50,9 +51,11 @@ public:
 
 	virtual double power_usage(struct result_bundle *results, struct parameter_bundle *bundle) { return 0.0; };
 
-	virtual bool show_in_list(void) {return true;};
+	virtual bool show_in_list(void) {return !hide;};
 
 	virtual int power_valid(void) { return 1;};
+
+	virtual void register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle) { ; };
 };
 
 using namespace std;

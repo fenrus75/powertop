@@ -29,6 +29,7 @@
 #include "device.h"
 #include "../lib.h"
 #include "../html.h"
+#include "../devlist.h"
 
 #include <vector>
 #include <algorithm>
@@ -819,6 +820,8 @@ void process_process_data(void)
 	/* process data */
 	perf_events->process();
 	perf_events->clear();
+
+	run_devpower_list();
 
 	merge_processes();
 

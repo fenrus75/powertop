@@ -45,6 +45,7 @@
 #include "tuning/tuning.h"
 
 #include "display.h"
+#include "devlist.h"
 
 int debug_learning;
 
@@ -115,6 +116,7 @@ void one_measurement(int seconds)
 
 	end_cpu_measurement();
 	end_process_measurement();
+	collect_open_devices();
 	devices_end_measurement();
 	end_power_measurement();
 
@@ -166,6 +168,7 @@ int main(int argc, char **argv)
 	setlocale (LC_ALL, "");
 	bindtextdomain ("powertop", "/usr/share/locale");
 	textdomain ("powertop");
+
 
 
 

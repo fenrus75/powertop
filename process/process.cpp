@@ -183,6 +183,7 @@ static void merge_process(class process *one, class process *two)
 	one->disk_hits += two->disk_hits;
 	one->hard_disk_hits += two->hard_disk_hits;
 	one->gpu_ops += two->gpu_ops;
+	one->power_charge += two->power_charge;
 
 	two->accumulated_runtime = 0;
 	two->child_runtime = 0;
@@ -190,6 +191,7 @@ static void merge_process(class process *one, class process *two)
 	two->disk_hits = 0;
 	two->hard_disk_hits = 0;
 	two->gpu_ops = 0;
+	two->power_charge = 0;
 }
 
 

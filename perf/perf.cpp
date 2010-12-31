@@ -182,6 +182,7 @@ perf_event::perf_event(const char *event_name, int _cpu, int buffer_size)
 	bufsize = buffer_size;
 	cpu = _cpu;
 	perf_mmap = NULL;
+	trace_type = 0;
 }
 
 perf_event::perf_event(void)
@@ -189,6 +190,8 @@ perf_event::perf_event(void)
 	perf_fd = -1;
 	bufsize = 128;
 	perf_mmap = NULL;
+	cpu = 0;
+	trace_type = 0;
 }
 
 void perf_event::start(void)

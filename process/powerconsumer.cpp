@@ -55,6 +55,8 @@ double power_consumer::Witts(void)
 
 	cost = cost / measurement_time;
 
+	cost += power_charge;
+
 	return cost;
 }
 
@@ -67,6 +69,7 @@ power_consumer::power_consumer(void)
 	gpu_ops = 0;
 	hard_disk_hits = 0;
 	waker = NULL;
+	power_charge = 0.0;
 }
 
 double power_consumer::usage(void) 

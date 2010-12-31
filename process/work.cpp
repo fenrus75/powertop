@@ -40,6 +40,7 @@ work::work(unsigned long address) : power_consumer()
 {
 	strncpy(handler, kernel_function(address), 31);
 	raw_count = 0;
+	sprintf(desc, "%s", handler);
 }
 
 
@@ -92,7 +93,6 @@ const char * work::description(void)
 	if (child_runtime > accumulated_runtime)
 		child_runtime = 0;
 
-	sprintf(desc, "%s", handler);
 	return desc;
 }
 

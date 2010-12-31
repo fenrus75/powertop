@@ -36,6 +36,8 @@ using namespace std;
 #include "alsa.h"
 #include "../parameters/parameters.h"
 
+#include "../devlist.h"
+
 #include <string.h>
 
 
@@ -198,4 +200,9 @@ double alsa::power_usage(struct result_bundle *result, struct parameter_bundle *
 	power += util * factor / 100.0;
 
 	return power;
+}
+
+void alsa::register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle)
+{
+	register_devpower(&name[7], power_usage(results, bundle), this);	
 }

@@ -44,9 +44,11 @@ using namespace std;
 #include "../lib.h"
 #include "../html.h"
 #include "../measurement/measurement.h"
+#include "../devlist.h"
 
 void device::start_measurement(void)
 {
+	hide = false;
 }
 
 void device::end_measurement(void)
@@ -75,6 +77,13 @@ void devices_end_measurement(void)
 	unsigned int i;
 	for (i = 0; i < all_devices.size(); i++)
 		all_devices[i]->end_measurement();
+
+	clear_devpower();
+
+	for (i = 0; i < all_devices.size(); i++) {
+		all_devices[i]->hide = false;
+		all_devices[i]->register_power_with_devlist(&all_results, &all_parameters);
+	}
 }
 
 static bool power_device_sort(class device * i, class device * j)
@@ -268,3 +277,5 @@ void create_all_devices(void)
 	create_all_nics();
 	create_all_runtime_pm_devices();
 }
+
+

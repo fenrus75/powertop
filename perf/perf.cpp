@@ -177,6 +177,7 @@ void perf_event::set_cpu(int _cpu)
 
 perf_event::perf_event(const char *event_name, int _cpu, int buffer_size)
 {
+	name = NULL;
 	set_event_name(event_name);
 	perf_fd = -1;
 	bufsize = buffer_size;
@@ -187,6 +188,7 @@ perf_event::perf_event(const char *event_name, int _cpu, int buffer_size)
 
 perf_event::perf_event(void)
 {
+	name = NULL;
 	perf_fd = -1;
 	bufsize = 128;
 	perf_mmap = NULL;

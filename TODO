@@ -10,6 +10,7 @@ Needed prior to beta
 
 Needed between beta and 2.0 final
 ----------------------------------
+* MUST use the 2.6.38 new stable tracepoints where available
 * more translations / strings
 * end user documentation
 * investigate tick_sched_timer and why it wakes up

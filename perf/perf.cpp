@@ -47,24 +47,15 @@
 
 static int get_trace_type(const char *eventname)
 {
-	static int once = 0;
-	ifstream file;
+	string str;
 
 	int this_trace;
 
-	char filename[4096];
-	sprintf(filename, "/sys/kernel/debug/tracing/events/%s/id", eventname);
 
-	file.open(filename, ios::in);
-	if (!file && !once) {
-		cout << "Invalid trace type " << eventname << "\n";
-		once++;
+	str = read_sysfs_string("/sys/kernel/debug/tracing/events/%s/id", eventname);
+	if (str.length() < 1)
 		return -1;
-	}
-
-	file >> this_trace;
-
-	file.close();
+	this_trace = strtoull(str.c_str(), NULL, 10);
 	return this_trace;
 }
 
@@ -178,12 +169,12 @@ void perf_event::set_cpu(int _cpu)
 perf_event::perf_event(const char *event_name, int _cpu, int buffer_size)
 {
 	name = NULL;
-	set_event_name(event_name);
 	perf_fd = -1;
 	bufsize = buffer_size;
 	cpu = _cpu;
 	perf_mmap = NULL;
 	trace_type = 0;
+	set_event_name(event_name);
 }
 
 perf_event::perf_event(void)

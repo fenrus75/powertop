@@ -12,8 +12,6 @@ Needed between beta and 2.0 final
 ----------------------------------
 * more translations / strings
 * end user documentation
-* there is a filedescriptor leak! -- or so it seems. Can't reproduce the
-  report anymore
 * investigate tick_sched_timer and why it wakes up
 * find if we can do more detailed reporting about tasklet(softirq)
 	* deal with tasklets -- needs kernel patch
@@ -85,3 +83,5 @@ done
 * show "enter" is a toggle key in the tunables tab
 * lsof to show who is keeping the audio busy 
 * Add battery time left estimation back
+* there is a filedescriptor leak! -- or so it seems. Can't reproduce the
+  report anymore

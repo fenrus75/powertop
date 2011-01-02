@@ -1,6 +1,6 @@
 all: powertop 
 
-VERSION := 1.95
+VERSION := 1.96
 
 CFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector -Wshadow -Wformat -D_FORTIFY_SOURCE=2
 CPPFLAGS += -Wall -O2 -g -fno-omit-frame-pointer

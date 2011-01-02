@@ -36,8 +36,14 @@
 
 class perf_bundle_event: public perf_event 
 {
+public:
+	perf_bundle_event(void);
 	virtual void handle_event(struct perf_event_header *header, void *cookie);
 };
+
+perf_bundle_event::perf_bundle_event(void) : perf_event()
+{
+}
 
 
 void perf_bundle_event::handle_event(struct perf_event_header *header, void *cookie)
@@ -224,3 +230,4 @@ void perf_bundle::handle_trace_point(int type, void *trace, int cpu, uint64_t ti
 {
 	printf("UH OH... abstract handle_trace_point called\n");
 }
+

@@ -58,6 +58,7 @@ alsa::alsa(char *_name, char *path)
 	strncpy(name, devname, sizeof(name));
 	rindex = get_result_index(name);
 
+	guilty[0] = 0;
 	model[0] = 0;
 	vendor[0] = 0;
 	sprintf(devname, "%s/modelname", path);
@@ -205,4 +206,12 @@ double alsa::power_usage(struct result_bundle *result, struct parameter_bundle *
 void alsa::register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle)
 {
 	register_devpower(&name[7], power_usage(results, bundle), this);	
+}
+
+const char * alsa::human_name(void)
+{
+	sprintf(temp_buf, "%s", humanname);
+	if (strlen(guilty) > 0)
+		sprintf(temp_buf, "%s (%s)", humanname, guilty);
+	return temp_buf;
 }

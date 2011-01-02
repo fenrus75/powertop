@@ -37,6 +37,7 @@ class alsa: public device {
 	char sysfs_path[4096];
 	char name[4096];
 	char humanname[4096];
+	char temp_buf[4096];
 	int rindex;
 public:
 
@@ -50,7 +51,7 @@ public:
 	virtual const char * class_name(void) { return "alsa";};
 
 	virtual const char * device_name(void);
-	virtual const char * human_name(void) { return humanname; };
+	virtual const char * human_name(void);
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
 	virtual int power_valid(void) { return utilization_power_valid(rindex);};
 

@@ -37,6 +37,8 @@ public:
 	int cached_valid;
 	bool hide;
 
+	char guilty[4096];
+
 	virtual void start_measurement(void);
 	virtual void end_measurement(void);
 

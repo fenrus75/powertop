@@ -34,6 +34,7 @@ using namespace std;
 #include "perf.h"
 class perf_event;
 
+
 class  perf_bundle {
 protected:
 	vector<class perf_event *> events;

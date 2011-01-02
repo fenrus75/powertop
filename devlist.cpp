@@ -157,7 +157,7 @@ void collect_open_devices(void)
 
 
 /* returns 0 if no process is identified as having the device open and a value > 0 otherwise */
-int charge_device_to_openers(const char *devstring, double power)
+int charge_device_to_openers(const char *devstring, double power, class device *_dev)
 {
 	unsigned int i;
 	int openers = 0;
@@ -188,6 +188,10 @@ int charge_device_to_openers(const char *devstring, double power)
 			proc = find_create_process(one[i]->comm, one[i]->pid);
 			if (proc) {
 				proc->power_charge += power;
+				if (strlen(_dev->guilty) < 2000 && strstr(_dev->guilty, one[i]->comm) == NULL) {
+					strcat(_dev->guilty, one[i]->comm);
+					strcat(_dev->guilty, " ");
+				}
 			}
 		}
 
@@ -196,6 +200,10 @@ int charge_device_to_openers(const char *devstring, double power)
 			proc = find_create_process(two[i]->comm, two[i]->pid);
 			if (proc) {
 				proc->power_charge += power;
+				if (strlen(_dev->guilty) < 2000 && strstr(_dev->guilty, two[i]->comm) == NULL) {
+					strcat(_dev->guilty, two[i]->comm);
+					strcat(_dev->guilty, " ");
+				}
 			}
 		}
 
@@ -210,8 +218,10 @@ void clear_devpower(void)
 {
 	unsigned int i;
 
-	for (i = 0; i < devpower.size(); i++)
+	for (i = 0; i < devpower.size(); i++) {
 		devpower[i]->power = 0.0;
+		devpower[i]->dev->guilty[0] = 0;
+	}
 }
 
 void register_devpower(const char *devstring, double power, class device *_dev)
@@ -240,7 +250,7 @@ void run_devpower_list(void)
 
 	for (i = 0; i < devpower.size(); i++) {
 		int ret;
-		ret = charge_device_to_openers(devpower[i]->device, devpower[i]->power);
+		ret = charge_device_to_openers(devpower[i]->device, devpower[i]->power, devpower[i]->dev);
 		if (ret)
 			devpower[i]->dev->hide = true;
 		else

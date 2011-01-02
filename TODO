@@ -6,6 +6,7 @@ Needed prior to beta
 	 -- growth in memory seems to not be there.. it's just exit leaks...
 	    yawn.
 
+* htmlize UTF8 mu
 
 Needed between beta and 2.0 final
 ----------------------------------

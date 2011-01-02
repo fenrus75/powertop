@@ -1,4 +1,4 @@
-all: powertop 
+all: powertop  po/powertop.pot
 
 VERSION := 1.96
 
@@ -89,6 +89,9 @@ css.h: csstoh powertop.css
 uptrans:
 	@(cd po/ && env LG=$(LG) $(MAKE) $@)
 
+
+po/powertop.pot: *.cpp */*.cpp *.h */*.h
+	xgettext -C -s -k_ -o po/powertop.pot *.cpp */*.cpp *.h */*.h
 
 
 dist:

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-20 15:36-0800\n"
+"POT-Creation-Date: 2011-01-02 10:20-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,62 +17,116 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../process/do_process.cpp:595
-msgid "                Usage/s     Events/s    Category       Description\n"
+#: process/do_process.cpp:605
+msgid "                Usage       Events/s    Category       Description\n"
 msgstr ""
 
-#: ../display.cpp:108
+#: cpu/cpu_linux.cpp:231
+#, c-format
+msgid "  CPU %i"
+msgstr ""
+
+#: cpu/cpu_core.cpp:46 cpu/cpu_core.cpp:190
+#, c-format
+msgid "  Core"
+msgstr ""
+
+#: cpu/cpu_package.cpp:104
+#, c-format
+msgid "  Package"
+msgstr ""
+
+#: display.cpp:128
 msgid " <ESC> Exit | "
 msgstr ""
 
-#: ../lib.cpp:92
+#: tuning/tuning.cpp:60
+msgid " <ESC> Exit | <Enter> Toggle tunable"
+msgstr ""
+
+#: cpu/cpu_linux.cpp:289
+#, c-format
+msgid " CPU %i"
+msgstr ""
+
+#: lib.cpp:92
 #, c-format
 msgid "%3.1f Ghz"
 msgstr ""
 
-#: ../lib.cpp:90
+#: lib.cpp:90
 #, c-format
 msgid "%4.2f Ghz"
 msgstr ""
 
-#: ../lib.cpp:83
+#: lib.cpp:83
 #, c-format
 msgid "%4lli Mhz"
 msgstr ""
 
-#: ../lib.cpp:85
+#: lib.cpp:85
 #, c-format
 msgid "%6lli Mhz"
 msgstr ""
 
-#: ../lib.cpp:79
+#: lib.cpp:79
 #, c-format
 msgid "%9lli"
 msgstr ""
 
-#: ../process/do_process.cpp:577
+#: tuning/tuning.cpp:61
+msgid "Enable Audio codec power management"
+msgstr ""
+
+#: tuning/tuning.cpp:62
+msgid "Enable SATA link power management for /dev/sda"
+msgstr ""
+
+#: process/do_process.cpp:580
 #, c-format
 msgid ""
 "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n"
 "\n"
 msgstr ""
 
-#: ../main.cpp:247
+#: main.cpp:269
 #, c-format
 msgid "Leaving PowerTOP\n"
 msgstr ""
 
-#: ../process/do_process.cpp:593
-msgid "Power est.      Usage/s     Events/s    Category       Description\n"
+#: tuning/tuning.cpp:63
+msgid "NMI watchdog should be turned off"
 msgstr ""
 
-#: ../process/do_process.cpp:584
+#: cpu/cpu_package.cpp:46
+#, c-format
+msgid "Package"
+msgstr ""
+
+#: tuning/tuning.cpp:64
+msgid "Power Aware CPU scheduler"
+msgstr ""
+
+#: process/do_process.cpp:603
+msgid "Power est.      Usage       Events/s    Category       Description\n"
+msgstr ""
+
+#: process/do_process.cpp:588
 #, c-format
 msgid "The battery reports a discharge rate of %sW\n"
 msgstr ""
 
-#: ../cpu/cpu_core.cpp:118 ../cpu/cpu_linux.cpp:331 ../cpu/cpu_package.cpp:147
-#: ../cpu/intel_cpus.cpp:197 ../cpu/intel_cpus.cpp:415
+#: process/do_process.cpp:593
+#, c-format
+msgid "The estimated remaining time is %i minutes\n"
+msgstr ""
+
+#: cpu/cpu_core.cpp:118 cpu/cpu_linux.cpp:331 cpu/cpu_package.cpp:147
+#: cpu/intel_cpus.cpp:201 cpu/intel_cpus.cpp:419
 #, c-format
 msgid "Turbo Mode"
+msgstr ""
+
+#: tuning/tuning.cpp:65
+msgid "VM writeback timeout"
 msgstr ""

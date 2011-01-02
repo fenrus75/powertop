@@ -149,9 +149,18 @@ void one_measurement(int seconds)
 	end_cpu_data();
 }
 
+void out_of_memory()
+{
+	reset_display();
+	printf("Out of memory. Aborting...\n");
+	abort();
+}
+
 int main(int argc, char **argv)
 {
 	int uid;
+
+	set_new_handler(out_of_memory);
 
 	uid = getuid();
 

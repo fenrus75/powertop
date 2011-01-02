@@ -7,7 +7,6 @@ Needed prior to beta
 	    yawn.
 
 * Add battery time left estimation back
-* lsof to show who is keeping the audio busy 
 
 
 Needed between beta and 2.0 final
@@ -85,4 +84,4 @@ done
 * usage documentation / readme sufficient for people to get going
 * internationalization!
 * show "enter" is a toggle key in the tunables tab
-
+* lsof to show who is keeping the audio busy 

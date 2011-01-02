@@ -32,6 +32,7 @@
 #include <time.h>
 #include <sys/stat.h>
 #include <vector>
+#include <algorithm>
 #include <unistd.h> 
 #include <sys/types.h>
 #include <dirent.h>
@@ -41,6 +42,7 @@ using namespace std;
 
 #include "devlist.h"
 #include "lib.h"
+#include "html.h"
 
 #include "process/process.h"
 #include "devices/device.h"
@@ -124,6 +126,8 @@ void collect_open_devices(void)
 
 			if (strcmp(link, "/dev/null") == 0)
 				continue;
+			if (strcmp(link, "/dev/ptmx") == 0)
+				continue;
 			if (strstr(link, "/dev/pts/"))
 				continue;
 			if (strstr(link, "/dev/shm/"))
@@ -133,7 +137,7 @@ void collect_open_devices(void)
 			if (strstr(link, "/dev/tty"))
 				continue;
 
-			if (strstr(link, "/dev")) {
+			if (strncmp(link, "/dev", 4)==0) {
 				dev = (struct devuser *)malloc(sizeof(struct devuser));
 				if (!dev)
 					continue;
@@ -145,7 +149,7 @@ void collect_open_devices(void)
 				
 			}
 		}
-
+		closedir(dir2);
 	}
 	closedir(dir);
 
@@ -258,4 +262,57 @@ void run_devpower_list(void)
 			
 	}
 		
+}
+
+static bool devlist_sort(struct devuser * i, struct devuser * j)
+{
+	if (i->pid != j->pid)
+		return i->pid < j->pid;
+
+	return strcmp(i->device, j->device);
+}
+
+static const char *dev_class(int line)
+{
+	if (line & 1) {
+		return "device_odd";
+	}
+	return "device_even";
+}
+
+void html_show_open_devices(void)
+{
+	vector<struct devuser *> *target;
+	unsigned int i;
+	char prev[128], proc[128];
+
+	if (!htmlout)
+		return;
+
+	prev[0] = 0;
+
+	if (phase == 1)
+		target = &one;
+	else
+		target = &two;
+
+	if (target->size() == 0)
+		return;
+
+	sort(target->begin(), target->end(), devlist_sort);
+
+	fprintf(htmlout, "<h2>Process device activity</h2>\n");
+	fprintf(htmlout, "<table width=100%%>\n");
+	fprintf(htmlout, "<tr><th class=\"device\" width=40%%>Process</th><th class=\"device\">Device</th></tr>\n");
+
+	for (i = 0; i < target->size(); i++) {
+		proc[0] = 0;
+		if (strcmp(prev, (*target)[i]->comm) != 0)
+			sprintf(proc, (*target)[i]->comm);
+		fprintf(htmlout, "<tr class=\"%s\"><td>%s</td><td>%s</td></tr>\n",
+			dev_class(i), proc, (*target)[i]->device);
+		sprintf(prev, (*target)[i]->comm);
+	}
+
+	fprintf(htmlout, "</table>\n");
 }

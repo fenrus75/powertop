@@ -186,6 +186,8 @@ static int net_iface_up(const char *iface)
 		return 1;
 	}
 
+	close(sock);
+
 	return 0;
 }
 

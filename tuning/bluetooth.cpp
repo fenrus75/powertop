@@ -147,6 +147,7 @@ int bt_tunable::good_bad(void)
 			memset(line, 0, 2048);
 			if (fgets(line, 2047, file) == NULL) {
 				result = last_check_result = TUNE_GOOD;
+				pclose(file);
 				goto out;
 			}
 

@@ -142,11 +142,16 @@ int bt_tunable::good_bad(void)
 		if (file) {
 			char line[2048];
 			/* first line is standard header */
-			fgets(line,2048,file);
+			if (fgets(line, 2047, file) == NULL)
+				goto out;
 			memset(line, 0, 2048);
-			fgets(line, 2047, file);
+			if (fgets(line, 2047, file) == NULL) {
+				result = last_check_result = TUNE_GOOD;
+				goto out;
+			}
+
 			pclose(file);
-			if (strlen(line)>0) {
+			if (strlen(line) > 0) {
 				result = last_check_result = TUNE_GOOD;
 				goto out;
 			}
@@ -175,10 +180,11 @@ void bt_tunable::toggle(void)
 }
 
 
+
 void add_bt_tunable(void)
 {
-	class bt_tunable *bt;
 	struct hci_dev_info devinfo;
+	class bt_tunable *bt;
 	int fd;
 	int ret;
 

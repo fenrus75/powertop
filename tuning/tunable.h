@@ -27,6 +27,8 @@
 
 #include <vector>
 
+#include "../lib.h"
+
 using namespace std;
 
 #define TUNE_GOOD    1

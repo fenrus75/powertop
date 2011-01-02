@@ -220,7 +220,7 @@ static void do_bus(const char *bus)
 
 			if (vendor && device) {
 				char devname[4096];
-				sprintf(devname, "PCI Device: %s", pci_id_to_name(vendor, device, filename, 4095));
+				sprintf(devname, _("PCI Device: %s"), pci_id_to_name(vendor, device, filename, 4095));
 				dev->set_human_name(devname);
 			}
 		}

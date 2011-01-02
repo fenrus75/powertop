@@ -47,7 +47,7 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 	strcpy(sysfs_path, path);
 	strcpy(name, _name);
 	strcpy(devname, devid);
-	sprintf(humanname, "USB Device: %s", pretty_print(devid, vendor, 4096));
+	sprintf(humanname, _("USB Device: %s"), pretty_print(devid, vendor, 4096));
 	active_before = 0;
 	active_after = 0;
 	connected_before = 0;
@@ -88,11 +88,11 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 		file.close();
 	};	
 	if (strlen(vendor) && strlen(product))
-		sprintf(humanname, "USB device: %s (%s)", product, vendor);
+		sprintf(humanname, _("USB device: %s (%s)"), product, vendor);
 	else if (strlen(product))
-		sprintf(humanname, "USB device: %s", product);
+		sprintf(humanname, _("USB device: %s"), product);
 	else if (strlen(vendor))
-		sprintf(humanname, "USB device: %s", vendor);
+		sprintf(humanname, _("USB device: %s"), vendor);
 }
 
 

@@ -132,22 +132,22 @@ void report_devices(void)
 	pw = global_joules_consumed();
 	if (pw > 0.0001) {
 		char buf[32];
-		wprintw(win, "The battery reports a discharge rate of %sW\n",
+		wprintw(win, _("The battery reports a discharge rate of %sW\n"),
 				fmt_prefix(pw, buf));
 	}
 
 	if (show_power) {
 		char buf[32];
-		wprintw(win, "System baseline power is estimated at %sW\n",
+		wprintw(win, _("System baseline power is estimated at %sW\n"),
 				fmt_prefix(get_parameter_value("base power"), buf));
 	}
 
 	if (pw > 0.0001 || show_power)
 		wprintw(win, "\n");
 	if (show_power)
-		wprintw(win, "Power est.    Usage     Device name\n");
+		wprintw(win, _("Power est.    Usage     Device name\n"));
 	else
-		wprintw(win, "              Usage     Device name\n");
+		wprintw(win, _("              Usage     Device name\n"));
 
 	for (i = 0; i < all_devices.size(); i++) {
 		double P;

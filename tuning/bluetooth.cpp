@@ -45,7 +45,7 @@
 
 bt_tunable::bt_tunable(void) : tunable("", 1.0, "Good", "Bad", "Unknown")
 {
-	sprintf(desc, "Bluetooth device interface status");
+	sprintf(desc, _("Bluetooth device interface status"));
 }
 
 

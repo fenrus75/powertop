@@ -108,9 +108,9 @@ void perf_event::create_perf_event(char *eventname, int _cpu)
 
 	if (perf_fd < 0) {
 		reset_display();
-		fprintf(stderr, "PowerTOP " POWERTOP_VERSION " needs the kernel to support the 'perf' subsystem\n");
-		fprintf(stderr, "as well as support for trace points in the kernel:\n");
-		fprintf(stderr, "CONFIG_PERF_EVENTS=y\nCONFIG_PERF_COUNTERS=y\nCONFIG_TRACEPOINTS=y\nCONFIG_TRACING=y\n");
+		fprintf(stderr, _("PowerTOP " POWERTOP_VERSION " needs the kernel to support the 'perf' subsystem\n"));
+		fprintf(stderr, _("as well as support for trace points in the kernel:\n"));
+		fprintf(stderr, _("CONFIG_PERF_EVENTS=y\nCONFIG_PERF_COUNTERS=y\nCONFIG_TRACEPOINTS=y\nCONFIG_TRACING=y\n"));
 		exit(EXIT_FAILURE);
 	}
 	if (read(perf_fd, &read_data, sizeof(read_data)) == -1) {

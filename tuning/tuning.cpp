@@ -57,7 +57,7 @@ void initialize_tuning(void)
 	class tuning_window *w;
 
 	w = new tuning_window();
-	create_tab("Tunables", w, _(" <ESC> Exit | <Enter> Toggle tunable"));
+	create_tab("Tunables", _("Tunables"), w, _(" <ESC> Exit | <Enter> Toggle tunable"));
 	add_sysfs_tunable(_("Enable Audio codec power management"), "/sys/module/snd_hda_intel/parameters/power_save", "1");
 	add_sysfs_tunable(_("Enable SATA link power management for /dev/sda"), "/sys/class/scsi_host/host0/link_power_management_policy", "min_power");
 	add_sysfs_tunable(_("NMI watchdog should be turned off"), "/proc/sys/kernel/nmi_watchdog", "0");

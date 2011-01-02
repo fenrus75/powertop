@@ -89,7 +89,7 @@ void cpu_linux::measurement_start(void)
 		}
 
 		if (strcmp(human_name, "C0")==0)
-			strcpy(human_name, "C0 polling");
+			strcpy(human_name, _("C0 polling"));
 
 		sprintf(filename + len, "/%s/usage", entry->d_name);
 		file.open(filename, ios::in); 
@@ -326,7 +326,7 @@ void cpu_linux::account_freq(uint64_t freq, uint64_t duration)
 		state->freq = freq;
 		hz_to_human(freq, state->human_name);
 		if (freq == 0)
-			strcpy(state->human_name, "Idle");
+			strcpy(state->human_name, _("Idle"));
 		if (is_turbo(freq, max_frequency, max_minus_one_frequency))
 			sprintf(state->human_name, _("Turbo Mode"));
 

@@ -45,8 +45,8 @@ tunable::tunable(void)
 {
 	score = 0;
 	desc[0] = 0;
-	strcpy(good_string, "Good");
-	strcpy(bad_string, "Bad");
-	strcpy(neutral_string, "Unknown");
+	strcpy(good_string, _("Good"));
+	strcpy(bad_string, _("Bad"));
+	strcpy(neutral_string, _("Unknown"));
 }
 

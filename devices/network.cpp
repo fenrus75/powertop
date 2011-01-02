@@ -156,7 +156,7 @@ network::network(char *_name, char *path)
 	memset(line, 0, 4096);
 	sprintf(filename, "%s/device/driver", path);
 	if (readlink(filename, line, 4096) > 0) {
-		sprintf(humanname, "Network interface: %s (%s)",_name,  basename(line));
+		sprintf(humanname, _("Network interface: %s (%s)"),_name,  basename(line));
 	};
 }
 

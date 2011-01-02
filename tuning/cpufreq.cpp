@@ -39,10 +39,10 @@
 #include "../lib.h"
 #include "cpufreq.h"
 
-cpufreq_tunable::cpufreq_tunable(void) : tunable("", 0.3, "Good", "Bad", "Unknown")
+cpufreq_tunable::cpufreq_tunable(void) : tunable("", 0.3, _("Good"), _("Bad"), _("Unknown"))
 {
 	string str;
-	sprintf(desc, "Using 'ondemand' cpufreq governor");
+	sprintf(desc, _("Using 'ondemand' cpufreq governor"));
 
 	str = read_sysfs_string("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor");
 	strcpy(original, str.c_str());

@@ -39,10 +39,11 @@ static int display = 0;
 
 vector<string> tab_names;
 map<string, class tab_window *> tab_windows;
+map<string, string> tab_translations;
 
 map<string, string> bottom_lines;
 
-void create_tab(string name, class tab_window *w, string bottom_line)
+void create_tab(string name, string translation, class tab_window *w, string bottom_line)
 {
 	if (!w)
 		w = new(class tab_window);
@@ -50,6 +51,7 @@ void create_tab(string name, class tab_window *w, string bottom_line)
 	w->win = newpad(1000,1000);
 	tab_names.push_back(name);
 	tab_windows[name] = w;
+	tab_translations[name] = translation;
 	bottom_lines[name] = bottom_line;
 }
 
@@ -65,10 +67,10 @@ void init_display(void)
 
 	use_default_colors();
 
-	create_tab("Overview");
-	create_tab("Idle stats");
-	create_tab("Frequency stats");
-	create_tab("Device stats");
+	create_tab("Overview", _("Overview"));
+	create_tab("Idle stats", _("Idle stats"));
+	create_tab("Frequency stats", _("Frequency stats"));
+	create_tab("Device stats", _("Device stats"));
 
 	display = 1;
 }
@@ -135,7 +137,7 @@ void show_tab(unsigned int tab)
 				wattrset(tab_bar, A_NORMAL);
 			else
 				wattrset(tab_bar, A_REVERSE);
-			mvwprintw(tab_bar, 0, tab_pos, " %s ", _(tab_names[i].c_str()));
+			mvwprintw(tab_bar, 0, tab_pos, " %s ", tab_translations[tab_names[i]].c_str());
 
 			tab_pos += 3 + tab_names[i].length();
 	}

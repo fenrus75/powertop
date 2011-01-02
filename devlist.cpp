@@ -301,9 +301,9 @@ void html_show_open_devices(void)
 
 	sort(target->begin(), target->end(), devlist_sort);
 
-	fprintf(htmlout, "<h2>Process device activity</h2>\n");
+	fprintf(htmlout, _("<h2>Process device activity</h2>\n"));
 	fprintf(htmlout, "<table width=100%%>\n");
-	fprintf(htmlout, "<tr><th class=\"device\" width=40%%>Process</th><th class=\"device\">Device</th></tr>\n");
+	fprintf(htmlout, _("<tr><th class=\"device\" width=40%%>Process</th><th class=\"device\">Device</th></tr>\n"));
 
 	for (i = 0; i < target->size(); i++) {
 		proc[0] = 0;

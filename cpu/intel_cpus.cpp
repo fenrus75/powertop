@@ -85,8 +85,8 @@ void nhm_core::measurement_start(void)
 	c6_before    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
-	insert_cstate("core c3", "C3 (cc3)", 0, c3_before, 1);
-	insert_cstate("core c6", "C6 (cc6)", 0, c6_before, 1);
+	insert_cstate("core c3", _("C3 (cc3)"), 0, c3_before, 1);
+	insert_cstate("core c6", _("C6 (cc6)"), 0, c6_before, 1);
 
 	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", first_cpu);
 
@@ -196,7 +196,7 @@ void nhm_core::account_freq(uint64_t freq, uint64_t duration)
 		state->freq = freq;
 		hz_to_human(freq, state->human_name);
 		if (freq == 0)
-			strcpy(state->human_name, "Idle");
+			strcpy(state->human_name, _("Idle"));
 		if (is_turbo(freq, max_frequency, max_minus_one_frequency))
 			sprintf(state->human_name, _("Turbo Mode"));
 
@@ -270,7 +270,7 @@ char * nhm_core::fill_pstate_line(int line_nr, char *buffer)
 	}
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,"  Core");
+		sprintf(buffer,_("  Core"));
 		return buffer;
 	}
 
@@ -296,7 +296,7 @@ char * nhm_package::fill_pstate_line(int line_nr, char *buffer)
 
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,"  Package");
+		sprintf(buffer,_("  Package"));
 		return buffer;
 	}
 
@@ -320,8 +320,8 @@ void nhm_package::measurement_start(void)
 	c6_before    = get_msr(number, MSR_PKG_C6_RESIDENCY);
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
-	insert_cstate("pkg c3", "C3 (pc3)", 0, c3_before, 1);
-	insert_cstate("pkg c6", "C6 (pc6)", 0, c6_before, 1);
+	insert_cstate("pkg c3", _("C3 (pc3)"), 0, c3_before, 1);
+	insert_cstate("pkg c6", _("C6 (pc6)"), 0, c6_before, 1);
 }
 
 void nhm_package::measurement_end(void)
@@ -414,7 +414,7 @@ void nhm_package::account_freq(uint64_t freq, uint64_t duration)
 		state->freq = freq;
 		hz_to_human(freq, state->human_name);
 		if (freq == 0)
-			strcpy(state->human_name, "Idle");
+			strcpy(state->human_name, _("Idle"));
 		if (is_turbo(freq, max_frequency, max_minus_one_frequency))
 			sprintf(state->human_name, _("Turbo Mode"));
 		state->after_count = 1;
@@ -486,7 +486,7 @@ void nhm_cpu::measurement_start(void)
 	mperf_before = get_msr(number, MSR_MPERF);
 	tsc_before   = get_msr(number, MSR_TSC);
 
-	insert_cstate("active", "C0 active", 0, aperf_before, 1);
+	insert_cstate("active", _("C0 active"), 0, aperf_before, 1);
 
 	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", first_cpu);
 
@@ -545,7 +545,7 @@ void nhm_cpu::measurement_end(void)
 char * nhm_cpu::fill_pstate_name(int line_nr, char *buffer)
 {
 	if (line_nr == LEVEL_C0) {
-		sprintf(buffer, "Actual");
+		sprintf(buffer, _("Actual"));
 		return buffer;
 	}
 	return cpu_linux::fill_pstate_name(line_nr, buffer);
@@ -562,7 +562,7 @@ char * nhm_cpu::fill_pstate_line(int line_nr, char *buffer)
 	}
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer," CPU %i", number);
+		sprintf(buffer,_(" CPU %i"), number);
 		return buffer;
 	}
 
@@ -615,7 +615,7 @@ void nhm_cpu::account_freq(uint64_t freq, uint64_t duration)
 		state->freq = freq;
 		hz_to_human(freq, state->human_name);
 		if (freq == 0)
-			strcpy(state->human_name, "Idle");
+			strcpy(state->human_name, _("Idle"));
 		state->after_count = 1;
 	}
 

@@ -74,11 +74,11 @@ alsa::alsa(char *_name, char *path)
 		file.close();
 	}
 	if (strlen(model) && strlen(vendor))
-		sprintf(humanname, "Audio codec %s: %s (%s)", name, model, vendor);
+		sprintf(humanname, _("Audio codec %s: %s (%s)"), name, model, vendor);
 	else if (strlen(model))
-		sprintf(humanname, "Audio codec %s: %s", _name, model);
+		sprintf(humanname, _("Audio codec %s: %s"), _name, model);
 	else if (strlen(vendor))
-		sprintf(humanname, "Audio codec %s: %s", _name, vendor);
+		sprintf(humanname, _("Audio codec %s: %s"), _name, vendor);
 }
 
 void alsa::start_measurement(void)

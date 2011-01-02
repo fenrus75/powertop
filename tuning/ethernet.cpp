@@ -47,11 +47,11 @@
 #include "../lib.h"
 #include "ethernet.h"
 
-ethernet_tunable::ethernet_tunable(const char *iface) : tunable("", 0.3, "Good", "Bad", "Unknown")
+ethernet_tunable::ethernet_tunable(const char *iface) : tunable("", 0.3, _("Good"), _("Bad"), _("Unknown"))
 {
 	memset(interf, 0, sizeof(interf));
 	strncpy(interf, iface, sizeof(interf));
-	sprintf(desc, "Wake-on-lan status for device %s", iface);
+	sprintf(desc, _("Wake-on-lan status for device %s"), iface);
 }
 
 

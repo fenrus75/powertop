@@ -230,10 +230,10 @@ void format_watts(double W, char *buffer, unsigned int len)
 	buffer[0] = 0;
 	char buf[32];
 
-	sprintf(buffer, "%7sW", fmt_prefix(W, buf));
+	sprintf(buffer, _("%7sW"), fmt_prefix(W, buf));
 
 	if (W < 0.0001)
-		sprintf(buffer, "    0 mW");
+		sprintf(buffer, _("    0 mW"));
 		
 			
 	while (mbstowcs(NULL,buffer,0) < len)
@@ -341,9 +341,9 @@ static int pretty_print_init = 0;
 
 static void init_pretty_print(void)
 {
-	pretty_prints["[12] i8042"] = "PS/2 Touchpad / Keyboard / Mouse";
-	pretty_prints["ahci"] = "SATA controller";
-	pretty_prints["usb-device-8087-0020"] = "Intel built in USB hub";
+	pretty_prints["[12] i8042"] = _("PS/2 Touchpad / Keyboard / Mouse");
+	pretty_prints["ahci"] = _("SATA controller");
+	pretty_prints["usb-device-8087-0020"] = _("Intel built in USB hub");
 }
 
 

@@ -34,7 +34,7 @@
 
 #include "../lib.h"
 
-sysfs_tunable::sysfs_tunable(const char *str, const char *_sysfs_path, const char *_target_content) : tunable(str, 1.0, "Good", "Bad", "Unknown")
+sysfs_tunable::sysfs_tunable(const char *str, const char *_sysfs_path, const char *_target_content) : tunable(str, 1.0, _("Good"), _("Bad"), _("Unknown"))
 {
 	strcpy(sysfs_path, _sysfs_path);
 	strcpy(target_value, _target_content);

@@ -162,11 +162,15 @@ int main(int argc, char **argv)
 
 	set_new_handler(out_of_memory);
 
+	setlocale (LC_ALL, "");
+	bindtextdomain ("powertop", "/usr/share/locale");
+	textdomain ("powertop");
+
 	uid = getuid();
 
 	if (uid != 0) {
-		printf("PowerTOP " POWERTOP_VERSION " must be run with root privileges.\n");
-		printf("exiting...\n");
+		printf(_("PowerTOP " POWERTOP_VERSION " must be run with root privileges.\n"));
+		printf(_("exiting...\n"));
 		exit(EXIT_FAILURE);
 	}
 	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
@@ -175,13 +179,6 @@ int main(int argc, char **argv)
 	srand(time(NULL));
 
 	mkdir("/var/cache/powertop", 0600);
-
-	setlocale (LC_ALL, "");
-	bindtextdomain ("powertop", "/usr/share/locale");
-	textdomain ("powertop");
-
-
-
 
 	load_results("/var/cache/powertop/saved_results.powertop");
 	load_parameters("/var/cache/powertop/saved_parameters.powertop");
@@ -213,7 +210,7 @@ int main(int argc, char **argv)
 
 	if (argc > 1) {
 		if (strcmp(argv[1], "--html") == 0) {
-			fprintf(stderr, "Measuring for 20 seconds\n");
+			fprintf(stderr, _("Measuring for 20 seconds\n"));
 			/* one to warm up everything */
 			one_measurement(1);
 			init_html_output("powertop.html");

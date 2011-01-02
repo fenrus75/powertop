@@ -38,15 +38,15 @@
 #include "../lib.h"
 #include "../devices/runtime_pm.h"
 
-runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *dev) : tunable("", 0.4, "Good", "Bad", "Unknown")
+runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *dev) : tunable("", 0.4, _("Good"), _("Bad"), _("Unknown"))
 {
 	ifstream file;
 	sprintf(runtime_path, "%s/power/control", path);
 
 
-	sprintf(desc, "Runtime PM for %s device %s", bus, dev);
+	sprintf(desc, _("Runtime PM for %s device %s"), bus, dev);
 	if (!device_has_runtime_pm(path))
-		sprintf(desc, "%s device %s has no runtime power management", bus, dev);
+		sprintf(desc, _("%s device %s has no runtime power management"), bus, dev);
 
 	if (strcmp(bus, "pci") == 0) {
 		char filename[4096];
@@ -70,9 +70,9 @@ runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *
 
 		if (vendor && device) {
 			if (!device_has_runtime_pm(path))
-				sprintf(desc, "PCI Device %s has no runtime power management", pci_id_to_name(vendor, device, filename, 4095));
+				sprintf(desc, _("PCI Device %s has no runtime power management"), pci_id_to_name(vendor, device, filename, 4095));
 			else
-				sprintf(desc, "Runtime PM for PCI Device %s", pci_id_to_name(vendor, device, filename, 4095));
+				sprintf(desc, _("Runtime PM for PCI Device %s"), pci_id_to_name(vendor, device, filename, 4095));
 		}
 
 		

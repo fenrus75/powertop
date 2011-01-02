@@ -294,7 +294,7 @@ static void *burn_disk(void *dummy)
 	fd = mkstemp(filename);
 
 	if (fd < 0) {
-		printf("Cannot create temp file\n");
+		printf(_("Cannot create temp file\n"));
 		return NULL;
 	}
 
@@ -313,7 +313,7 @@ static void cpu_calibration(int threads)
 	int i;
 	pthread_t thr;
 
-	printf("Calibrating: CPU usage on %i threads\n", threads);
+	printf(_("Calibrating: CPU usage on %i threads\n"), threads);
 
 	stop_measurement = 0;
 	for (i = 0; i < threads; i++)
@@ -328,7 +328,7 @@ static void wakeup_calibration(unsigned long interval)
 {	
 	pthread_t thr;
 
-	printf("Calibrating: CPU wakeup power consumption\n");
+	printf(_("Calibrating: CPU wakeup power consumption\n"));
 
 	stop_measurement = 0;
 	
@@ -345,9 +345,9 @@ static void usb_calibration(void)
 
 	/* chances are one of the USB devices is bluetooth; unrfkill first */
 	unrfkill_all_radios();
-	printf("Calibrating USB devices\n");
+	printf(_("Calibrating USB devices\n"));
 	for (i = 0; i < usb_devices.size(); i++) {
-		printf(".... device %s \n", usb_devices[i].c_str());
+		printf(_(".... device %s \n"), usb_devices[i].c_str());
 		suspend_all_usb_devices();
 		write_sysfs(usb_devices[i], "on\n");
 		one_measurement(15);
@@ -362,9 +362,9 @@ static void rfkill_calibration(void)
 {
 	unsigned int i;
 
-	printf("Calibrating radio devices\n");
+	printf(_("Calibrating radio devices\n"));
 	for (i = 0; i < rfkill_devices.size(); i++) {
-		printf(".... device %s \n", rfkill_devices[i].c_str());
+		printf(_(".... device %s \n"), rfkill_devices[i].c_str());
 		rfkill_all_radios();
 		write_sysfs(rfkill_devices[i], "0\n");
 		one_measurement(15);
@@ -372,7 +372,7 @@ static void rfkill_calibration(void)
 		sleep(3);		
 	}
 	for (i = 0; i < rfkill_devices.size(); i++) {
-		printf(".... device %s \n", rfkill_devices[i].c_str());
+		printf(_(".... device %s \n"), rfkill_devices[i].c_str());
 		unrfkill_all_radios();
 		write_sysfs(rfkill_devices[i], "1\n");
 		one_measurement(15);
@@ -386,10 +386,10 @@ static void backlight_calibration(void)
 {
 	unsigned int i;
 
-	printf("Calibrating backlight\n");
+	printf(_("Calibrating backlight\n"));
 	for (i = 0; i < backlight_devices.size(); i++) {
 		char str[4096];
-		printf(".... device %s \n", backlight_devices[i].c_str());
+		printf(_(".... device %s \n"), backlight_devices[i].c_str());
 		lower_backlight();
 		one_measurement(15);
 		sprintf(str, "%i\n", blmax / 4);
@@ -410,7 +410,7 @@ static void backlight_calibration(void)
 		lower_backlight();
 		sleep(1);		
 	}
-	printf("Calibrating idle\n");
+	printf(_("Calibrating idle\n"));
 	system("DISPLAY=:0 /usr/bin/xset dpms force off");	
 	one_measurement(15);
 	system("DISPLAY=:0 /usr/bin/xset dpms force on");	
@@ -418,7 +418,7 @@ static void backlight_calibration(void)
 
 static void idle_calibration(void)
 {
-	printf("Calibrating idle\n");
+	printf(_("Calibrating idle\n"));
 	system("DISPLAY=:0 /usr/bin/xset dpms force off");	
 	one_measurement(15);
 	system("DISPLAY=:0 /usr/bin/xset dpms force on");	
@@ -429,7 +429,7 @@ static void disk_calibration(void)
 {	
 	pthread_t thr;
 
-	printf("Calibrating: disk usage \n");
+	printf(_("Calibrating: disk usage \n"));
 
 	set_scsi_link("min_power");
 
@@ -454,7 +454,7 @@ void calibrate(void)
 	
         save_sysfs("/sys/modules/snd_hda_intel/parameters/power_save");
 
-	cout << "Starting PowerTOP power estimate calibration \n";
+	cout << _("Starting PowerTOP power estimate calibration \n");
 	suspend_all_usb_devices();
 	rfkill_all_radios();
 	lower_backlight();
@@ -477,11 +477,11 @@ void calibrate(void)
 	usb_calibration();
 	rfkill_calibration();
 
-	cout << "Finishing PowerTOP power estimate calibration \n";
+	cout << _("Finishing PowerTOP power estimate calibration \n");
 
 	restore_all_sysfs();
         learn_parameters(300, 1);
-	printf("Parameters after calibration:\n");
+	printf(_("Parameters after calibration:\n"));
 	dump_parameter_bundle();
 	save_parameters("saved_parameters.powertop");
         save_all_results("saved_results.powertop");

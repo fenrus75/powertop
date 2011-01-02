@@ -37,7 +37,7 @@
 
 #include "../lib.h"
 
-usb_tunable::usb_tunable(const char *path, const char *name) : tunable("", 0.9, "Good", "Bad", "Unknown")
+usb_tunable::usb_tunable(const char *path, const char *name) : tunable("", 0.9, _("Good"), _("Bad"), _("Unknown"))
 {
 	ifstream file;
 	char filename[4096];
@@ -52,7 +52,7 @@ usb_tunable::usb_tunable(const char *path, const char *name) : tunable("", 0.9, 
 	str1 = read_sysfs_string("%s/idVendor", path);
 	str2 = read_sysfs_string("%s/idProduct", path);
 
-	sprintf(desc, "Autosuspend for unknown USB device %s (%s:%s)", name, str1.c_str(), str2.c_str());
+	sprintf(desc, _("Autosuspend for unknown USB device %s (%s:%s)"), name, str1.c_str(), str2.c_str());
 
 	sprintf(filename, "%s/manufacturer", path);
 	file.open(filename, ios::in);
@@ -69,11 +69,11 @@ usb_tunable::usb_tunable(const char *path, const char *name) : tunable("", 0.9, 
 		file.close();
 	};	
 	if (strlen(vendor) && strlen(product))
-		sprintf(desc, "Autosuspend for USB device %s (%s)", product, vendor);
+		sprintf(desc, _("Autosuspend for USB device %s (%s)"), product, vendor);
 	else if (strlen(product))
-		sprintf(desc, "Autosuspend for USB device %s [%s]", product, name);
+		sprintf(desc, _("Autosuspend for USB device %s [%s]"), product, name);
 	else if (strlen(vendor))
-		sprintf(desc, "Autosuspend for USB device %s [%s]", vendor, name);
+		sprintf(desc, _("Autosuspend for USB device %s [%s]"), vendor, name);
 }
 
 int usb_tunable::good_bad(void)

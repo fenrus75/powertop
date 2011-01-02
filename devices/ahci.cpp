@@ -134,9 +134,9 @@ ahci::ahci(char *_name, char *path)
 	diskname = model_name(path, _name);
 
 	if (strlen(diskname.c_str()) == 0)
-		sprintf(humanname, "SATA link: %s", _name);
+		sprintf(humanname, _("SATA link: %s"), _name);
 	else
-		sprintf(humanname, "SATA disk: %s", diskname.c_str());
+		sprintf(humanname, _("SATA disk: %s"), diskname.c_str());
 	
 }
 

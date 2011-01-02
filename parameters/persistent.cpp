@@ -40,7 +40,7 @@ void save_all_results(const char *filename)
 
 	file.open(filename, ios::out);
 	if (!file) {
-		cout << "Cannot save to file " << filename << "\n";
+		cout << _("Cannot save to file ") << filename << "\n";
 		return;
 	}
 	for (i = 0; i < past_results.size(); i++) {	
@@ -69,7 +69,7 @@ void load_results(const char *filename)
 
 	file.open(filename, ios::in);
 	if (!file) {
-		cout << "Cannot load from file " << filename << "\n";
+		cout << _("Cannot load from file ") << filename << "\n";
 		return;
 	}
 
@@ -113,7 +113,7 @@ void load_results(const char *filename)
 	}
 
 	file.close();
-	printf("Loaded %i prior measurements\n", count);
+	printf(_("Loaded %i prior measurements\n"), count);
 }
 
 void save_parameters(const char *filename)
@@ -127,7 +127,7 @@ void save_parameters(const char *filename)
 
 	file.open(filename, ios::out);
 	if (!file) {
-		cout << "Cannot save to file " << filename << "\n";
+		cout << _("Cannot save to file ") << filename << "\n";
 		return;
 	}
 	
@@ -149,7 +149,7 @@ void load_parameters(const char *filename)
 
 	file.open(filename, ios::in);
 	if (!file) {
-		cout << "Cannot load from file " << filename << "\n";
+		cout << _("Cannot load from file ") << filename << "\n";
 		return;
 	}
 

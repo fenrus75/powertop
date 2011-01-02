@@ -47,6 +47,22 @@ double power_meter::joules_consumed(void)
 	return 0.0;
 }
 
+double power_meter::time_left(void)
+{
+	double cap, rate;
+	double left;
+
+	cap = dev_capacity();
+	rate = joules_consumed();
+
+	if (cap <= 0.001)
+		return 0.0;
+
+	left = cap / rate;
+
+	return left;
+}
+
 
 vector<class power_meter *> power_meters;
 
@@ -73,6 +89,16 @@ double global_joules_consumed(void)
 	all_results.power = total;	
 	if (total < min_power && total >= 0.01)
 		min_power = total;
+	return total;
+}
+
+double global_time_left(void)
+{
+	double total = 0.0;
+	unsigned int i;
+	for (i = 0; i < power_meters.size(); i++)
+		total += power_meters[i]->time_left();
+
 	return total;
 }
 

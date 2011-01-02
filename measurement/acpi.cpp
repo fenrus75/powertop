@@ -140,6 +140,17 @@ void acpi_power_meter::measure(void)
 		strcpy(rate_units, "A");
 	}
 
+	if (strcmp(capacity_units, "mAh") == 0) {
+		_capacity = _capacity / 1000.0;
+		strcpy(capacity_units, "Ah");
+	}
+
+
+	if (strcmp(capacity_units, "Ah") == 0 && strcmp(voltage_units, "V") == 0) {
+		_capacity = _capacity * 3600.0 * _voltage;
+		strcpy(capacity_units, "J");
+	}
+
 
 	if (strcmp(rate_units, "A") == 0 && strcmp(voltage_units, "V")==0 ) {
 		_rate = _rate * _voltage;
@@ -147,7 +158,8 @@ void acpi_power_meter::measure(void)
 	}
 
 
-	if (strcmp(capacity_units, "C") == 0)
+
+	if (strcmp(capacity_units, "J") == 0)
 		capacity = _capacity;
 	else
 		capacity = 0.0;

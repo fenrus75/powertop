@@ -551,8 +551,10 @@ void process_update_display(void)
 	unsigned int i;
 	WINDOW *win;
 	double pw;
+	int tl;
 
 	int show_power;
+	int need_linebreak = 0;
 
 	sort(all_power.begin(), all_power.end(), power_cpu_sort);
 
@@ -580,13 +582,20 @@ void process_update_display(void)
 #endif
 
 	pw = global_joules_consumed();
+	tl = global_time_left() / 60;
 	if (pw > 0.0001) {
 		char buf[32];
 		wprintw(win, _("The battery reports a discharge rate of %sW\n"),
 				fmt_prefix(pw, buf));
-		wprintw(win, "\n");
+		need_linebreak = 1;
+	}
+	if (tl > 0 && pw > 0.0001) {
+		wprintw(win, _("The estimated remaining time is %i minutes\n"), tl);
+		need_linebreak = 1;
 	}
 
+	if (need_linebreak)
+		wprintw(win, "\n");
 	
 
 

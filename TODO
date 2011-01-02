@@ -6,7 +6,6 @@ Needed prior to beta
 	 -- growth in memory seems to not be there.. it's just exit leaks...
 	    yawn.
 
-* Add battery time left estimation back
 
 
 Needed between beta and 2.0 final
@@ -85,3 +84,4 @@ done
 * internationalization!
 * show "enter" is a toggle key in the tunables tab
 * lsof to show who is keeping the audio busy 
+* Add battery time left estimation back

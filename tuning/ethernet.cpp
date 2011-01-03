@@ -142,9 +142,24 @@ void ethernet_tunable::toggle(void)
 void add_ethernet_tunable(void)
 {
 	class ethernet_tunable *eth;
+	struct dirent *entry;
+	DIR *dir;
+	dir = opendir("/sys/class/net/");
+	if (!dir)
+		return;
+	while ((entry = readdir(dir))) {
+		if (!entry)
+			break;
+		if (entry->d_name[0] == '.')
+			continue;
+		if (strcmp(entry->d_name, "lo") == 0)
+			continue;
 
-	eth = new class ethernet_tunable("eth0");
-	if (eth)
-		all_tunables.push_back(eth);
+		eth = new(std::nothrow) class ethernet_tunable(entry->d_name);
+		if (eth)
+			all_tunables.push_back(eth);
+	}
+	
+	closedir(dir);
 }
 

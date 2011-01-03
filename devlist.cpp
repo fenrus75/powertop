@@ -308,10 +308,10 @@ void html_show_open_devices(void)
 	for (i = 0; i < target->size(); i++) {
 		proc[0] = 0;
 		if (strcmp(prev, (*target)[i]->comm) != 0)
-			sprintf(proc, (*target)[i]->comm);
+			sprintf(proc, "%s", (*target)[i]->comm);
 		fprintf(htmlout, "<tr class=\"%s\"><td>%s</td><td>%s</td></tr>\n",
 			dev_class(i), proc, (*target)[i]->device);
-		sprintf(prev, (*target)[i]->comm);
+		sprintf(prev, "%s", (*target)[i]->comm);
 	}
 
 	fprintf(htmlout, "</table>\n");

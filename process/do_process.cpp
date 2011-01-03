@@ -614,7 +614,7 @@ void process_update_display(void)
 
 		if (!show_power)
 			strcpy(power, "          ");
-		sprintf(name, all_power[i]->type());
+		sprintf(name, "%s", all_power[i]->type());
 		while (mbstowcs(NULL,name,0) < 14) strcat(name, " ");
 
 
@@ -686,7 +686,7 @@ void html_process_update_display(void)
 
 		if (!show_power)
 			strcpy(power, "          ");
-		sprintf(name, all_power[i]->type());
+		sprintf(name, "%s", all_power[i]->type());
 
 		if (strcmp(name, "Device") == 0)
 			continue;
@@ -765,7 +765,7 @@ void html_summary(void)
 
 		if (!show_power)
 			strcpy(power, "          ");
-		sprintf(name, all_power[i]->type());
+		sprintf(name, "%s", all_power[i]->type());
 
 		lines++;
 

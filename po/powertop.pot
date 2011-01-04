@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-02 10:54-0800\n"
+"POT-Creation-Date: 2011-01-03 21:45-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: process/do_process.cpp:605
+#: process/do_process.cpp:664
 msgid "                Usage       Events/s    Category       Description\n"
 msgstr ""
 
@@ -245,7 +245,7 @@ msgstr ""
 msgid "Enable SATA link power management for /dev/sda"
 msgstr ""
 
-#: process/do_process.cpp:580
+#: process/do_process.cpp:636
 #, c-format
 msgid ""
 "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n"
@@ -335,7 +335,7 @@ msgstr ""
 msgid "Power Aware CPU scheduler"
 msgstr ""
 
-#: process/do_process.cpp:603
+#: process/do_process.cpp:662
 msgid "Power est.      Usage       Events/s    Category       Description\n"
 msgstr ""
 
@@ -391,12 +391,12 @@ msgstr ""
 msgid "System baseline power is estimated at %sW\n"
 msgstr ""
 
-#: devices/device.cpp:135 process/do_process.cpp:588
+#: devices/device.cpp:135 process/do_process.cpp:644
 #, c-format
 msgid "The battery reports a discharge rate of %sW\n"
 msgstr ""
 
-#: process/do_process.cpp:593
+#: process/do_process.cpp:649
 #, c-format
 msgid "The estimated remaining time is %i minutes\n"
 msgstr ""

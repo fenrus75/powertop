@@ -546,6 +546,62 @@ static bool power_cpu_sort(class power_consumer * i, class power_consumer * j)
         return (iW > jW);
 }
 
+double total_wakeups(void)
+{
+	double total = 0;
+	unsigned int i;
+	for (i = 0; i < all_power.size() ; i++)
+		total += all_power[i]->wake_ups;
+
+	total = total / measurement_time;
+
+
+	return total;
+}
+
+double total_gpu_ops(void)
+{
+	double total = 0;
+	unsigned int i;
+	for (i = 0; i < all_power.size() ; i++)
+		total += all_power[i]->gpu_ops;
+
+
+	total = total / measurement_time;
+
+
+	return total;
+}
+
+double total_disk_hits(void)
+{
+	double total = 0;
+	unsigned int i;
+	for (i = 0; i < all_power.size() ; i++)
+		total += all_power[i]->disk_hits;
+
+
+	total = total / measurement_time;
+
+
+	return total;
+}
+
+
+double total_hard_disk_hits(void)
+{
+	double total = 0;
+	unsigned int i;
+	for (i = 0; i < all_power.size() ; i++)
+		total += all_power[i]->hard_disk_hits;
+
+
+	total = total / measurement_time;
+
+
+	return total;
+}
+
 void process_update_display(void)
 {
 	unsigned int i;
@@ -566,7 +622,7 @@ void process_update_display(void)
 
 	wclear(win);
 
-	wmove(win, 2,0);
+	wmove(win, 1,0);
 
 #if 0
 	double sum;
@@ -597,6 +653,9 @@ void process_update_display(void)
 	if (need_linebreak)
 		wprintw(win, "\n");
 	
+
+	wprintw(win, "Summary: %3.1f wakeups/second,  %3.1f GPU ops/second and %3.1f VFS ops/sec\n\n",
+		total_wakeups(), total_gpu_ops(), total_disk_hits());
 
 
 	if (show_power)
@@ -743,6 +802,10 @@ void html_summary(void)
 
 	fprintf(htmlout, "<h2>Power consumption summary</h2>\n");
 
+	fprintf(htmlout, "<p>%3.1f wakeups/second,  %3.1f GPU ops/second and %3.1f VFS ops/sec</p>",
+		total_wakeups(), total_gpu_ops(), total_disk_hits());
+
+
 	fprintf(htmlout, "<table width=100%%>\n");
 
 	if (show_power)
@@ -844,61 +907,6 @@ void process_process_data(void)
 
 }
 
-double total_wakeups(void)
-{
-	double total = 0;
-	unsigned int i;
-	for (i = 0; i < all_power.size() ; i++)
-		total += all_power[i]->wake_ups;
-
-	total = total / measurement_time;
-
-
-	return total;
-}
-
-double total_gpu_ops(void)
-{
-	double total = 0;
-	unsigned int i;
-	for (i = 0; i < all_power.size() ; i++)
-		total += all_power[i]->gpu_ops;
-
-
-	total = total / measurement_time;
-
-
-	return total;
-}
-
-double total_disk_hits(void)
-{
-	double total = 0;
-	unsigned int i;
-	for (i = 0; i < all_power.size() ; i++)
-		total += all_power[i]->disk_hits;
-
-
-	total = total / measurement_time;
-
-
-	return total;
-}
-
-
-double total_hard_disk_hits(void)
-{
-	double total = 0;
-	unsigned int i;
-	for (i = 0; i < all_power.size() ; i++)
-		total += all_power[i]->hard_disk_hits;
-
-
-	total = total / measurement_time;
-
-
-	return total;
-}
 
 double total_cpu_time(void)
 {

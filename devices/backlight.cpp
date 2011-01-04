@@ -45,6 +45,7 @@ backlight::backlight(char *_name, char *path)
 	min_level = 0;
 	max_level = 0;
 	start_level = 0;
+	end_level = 0;
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
 	sprintf(devname, "backlight:%s", _name);
 	strncpy(name, devname, sizeof(name));
@@ -232,3 +233,4 @@ double backlight::power_usage(struct result_bundle *result, struct parameter_bun
 
 	return power;
 }
+

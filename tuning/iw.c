@@ -296,6 +296,9 @@ int get_wifi_power_saving(const char *iface)
 
 	nl80211_cleanup(&nlstate);
 
+	if (err) /* not a wifi interface */
+		return 1;
+
 	return enable_power_save;
 }
 

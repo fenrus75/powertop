@@ -174,6 +174,7 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
+	system("/sbin/modprobe msr > /dev/null 2>&1");
 	system("/bin/mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
 
 	srand(time(NULL));

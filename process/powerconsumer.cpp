@@ -69,6 +69,7 @@ power_consumer::power_consumer(void)
 	gpu_ops = 0;
 	hard_disk_hits = 0;
 	waker = NULL;
+	last_waker = NULL;
 	power_charge = 0.0;
 }
 

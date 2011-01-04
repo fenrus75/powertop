@@ -23,7 +23,7 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 #ifndef __INCLUDE_GUARD_ACPI_H
-#define __INCLUDE_GUARD_ACIP_
+#define __INCLUDE_GUARD_ACPI_H
 
 #include "measurement.h"
 

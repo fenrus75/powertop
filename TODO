@@ -6,11 +6,11 @@ Needed prior to beta
 	 -- growth in memory seems to not be there.. it's just exit leaks...
 	    yawn.
 
-* htmlize UTF8 mu
 
 Needed between beta and 2.0 final
 ----------------------------------
 * MUST use the 2.6.38 new stable tracepoints where available
+* htmlize UTF8 mu
 * more translations / strings
 * end user documentation
 * investigate tick_sched_timer and why it wakes up

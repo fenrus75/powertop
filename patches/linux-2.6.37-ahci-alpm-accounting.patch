@@ -33,10 +33,10 @@ Signed-off-by: Arjan van de Ven <arjan@linux.intel.com>
  drivers/ata/libahci.c |  187 +++++++++++++++++++++++++++++++++++++++++++++++++-
  2 files changed, 200 insertions(+), 2 deletions(-)
 
-Index: linux.trees.git/drivers/ata/ahci.h
+Index: linux-2.6.37/drivers/ata/ahci.h
 ===================================================================
---- linux.trees.git.orig/drivers/ata/ahci.h
-+++ linux.trees.git/drivers/ata/ahci.h
+--- linux-2.6.37.orig/drivers/ata/ahci.h
++++ linux-2.6.37/drivers/ata/ahci.h
 @@ -262,6 +262,13 @@ struct ahci_em_priv {
  	unsigned long led_state;
  };
@@ -66,10 +66,10 @@ Index: linux.trees.git/drivers/ata/ahci.h
  };
  
  struct ahci_host_priv {
-Index: linux.trees.git/drivers/ata/libahci.c
+Index: linux-2.6.37/drivers/ata/libahci.c
 ===================================================================
---- linux.trees.git.orig/drivers/ata/libahci.c
-+++ linux.trees.git/drivers/ata/libahci.c
+--- linux-2.6.37.orig/drivers/ata/libahci.c
++++ linux-2.6.37/drivers/ata/libahci.c
 @@ -58,6 +58,17 @@ MODULE_PARM_DESC(ignore_sss, "Ignore sta
  
  static int ahci_set_lpm(struct ata_link *link, enum ata_lpm_policy policy,

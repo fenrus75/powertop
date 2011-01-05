@@ -73,7 +73,7 @@ void register_parameter(const char *name, double default_value, double weight)
 	index = get_param_index(name);
 
 	if (index >= (int)all_parameters.parameters.size()) {
-		all_parameters.parameters.resize(index+1);
+		all_parameters.parameters.resize(index+1, 0.0);
 		all_parameters.weights.resize(index+1, 1.0);
 	}
 
@@ -90,7 +90,7 @@ void set_parameter_value(const char *name, double value, struct parameter_bundle
 	index = get_param_index(name);
 
 	if (index >= (int)bundle->parameters.size()) {
-		bundle->parameters.resize(index+1);
+		bundle->parameters.resize(index+1, 0.0);
 		bundle->weights.resize(index+1, 1.0);
 	}
 
@@ -102,7 +102,9 @@ double get_parameter_value(const char *name, struct parameter_bundle *the_bundle
 	int index;
 
 	index = get_param_index(name);
-
+	if (index >= the_bundle->parameters.size()) {
+		fprintf(stderr, "BUG: requesting unregistered parameter %s\n", name);
+	}
 	return the_bundle->parameters[index];
 }
 

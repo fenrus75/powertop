@@ -193,6 +193,7 @@ int main(int argc, char **argv)
 	register_parameter("cpu-consumption", 1.56);
 	register_parameter("gpu-operations", 0.5576);
 	register_parameter("disk-operations-hard", 0.2);
+	register_parameter("disk-operations", 0.0);
 
 	if (argc > 1) {
 		if (strcmp(argv[1], "--calibrate") == 0)

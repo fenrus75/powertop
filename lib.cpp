@@ -53,7 +53,8 @@ extern "C" {
 #include <string.h>
 #include <locale.h>
 #include <libintl.h>
-
+#include <limits>
+#include <math.h>
 
 static int kallsyms_read = 0;
 
@@ -365,3 +366,10 @@ char *pretty_print(const char *str, char *buf, int len)
 		buf[len - 1] = 0;
 	return buf;
 }
+
+inline int equals(double a, double b)
+{
+	return fabs(a - b) <= std::numeric_limits<double>::epsilon();
+}
+
+

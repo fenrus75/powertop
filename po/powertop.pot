@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-04 19:39-0800\n"
+"POT-Creation-Date: 2011-01-05 08:08-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -456,11 +456,11 @@ msgstr ""
 msgid "as well as support for trace points in the kernel:\n"
 msgstr ""
 
-#: cpu/cpu.cpp:75
+#: cpu/cpu.cpp:82
 msgid "cpu package"
 msgstr ""
 
-#: cpu/cpu.cpp:74
+#: cpu/cpu.cpp:81
 #, c-format
 msgid "cpu package %i"
 msgstr ""

@@ -59,10 +59,17 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 	class cpudevice *cpudev;
 	char packagename[128];
 	if (strcmp(vendor, "GenuineIntel") == 0) {
-		if (family == 6 && model == 26)
-			ret = new class nhm_package;
-		if (family == 6 && model == 37)
-			ret = new class nhm_package;
+		if (family == 6)
+			switch (model) {
+			case 0x1A:	/* Core i7, Xeon 5500 series */
+			case 0x1E:	/* Core i7 and i5 Processor - Lynnfield Jasper Forest */
+			case 0x1F:	/* Core i7 and i5 Processor - Nehalem */
+			case 0x2E:	/* Nehalem-EX Xeon */
+			case 0x2F:	/* Westmere-EX Xeon */
+			case 0x25:	/* Westmere */
+			case 0x2C:	/* Westmere */
+				ret = new class nhm_package;
+			}
 	}
 
 	if (!ret)

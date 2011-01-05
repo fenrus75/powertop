@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-03 21:45-0800\n"
+"POT-Creation-Date: 2011-01-04 19:39-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -279,7 +279,7 @@ msgstr ""
 msgid "Intel built in USB hub"
 msgstr ""
 
-#: main.cpp:266
+#: main.cpp:267
 #, c-format
 msgid "Leaving PowerTOP\n"
 msgstr ""
@@ -289,7 +289,7 @@ msgstr ""
 msgid "Loaded %i prior measurements\n"
 msgstr ""
 
-#: main.cpp:213
+#: main.cpp:214
 #, c-format
 msgid "Measuring for 20 seconds\n"
 msgstr ""

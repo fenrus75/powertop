@@ -32,6 +32,7 @@
 #include <dirent.h>
 
 #include "../parameters/parameters.h"
+#include "../lib.h"
 
 #include <iostream>
 #include <fstream>
@@ -105,7 +106,7 @@ double runtime_pmdevice::utilization(void) /* percentage */
 
 	if (d < 0.00)
 		d = 0.0;
-	if (d >= 99.9)
+	if (d > 99.9)
 		d = 100.0;
 	return d;
 }

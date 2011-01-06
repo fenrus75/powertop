@@ -148,7 +148,7 @@ static bool tunables_sort(class tunable * i, class tunable * j)
 	i_g = i->good_bad();
 	j_g = j->good_bad();
 
-	if (i_g != j_g)
+	if (!equals(i_g, j_g))
 		return i_g < j_g;
 
 	d = i->score - j->score;

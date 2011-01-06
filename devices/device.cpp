@@ -92,7 +92,7 @@ static bool power_device_sort(class device * i, class device * j)
 	pI = i->power_usage(&all_results, &all_parameters);
 	pJ = j->power_usage(&all_results, &all_parameters);
 
-	if (pI == pJ) {
+	if (equals(pI, pJ)) {
 		int vI, vJ;
 		vI = i->power_valid();
 		vJ = j->power_valid();
@@ -102,7 +102,7 @@ static bool power_device_sort(class device * i, class device * j)
 
 		return i->utilization() > j->utilization();
 	}
-        return pI > pJ;
+	return pI > pJ;
 }
 
 

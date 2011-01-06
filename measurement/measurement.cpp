@@ -25,7 +25,7 @@
 #include "measurement.h"
 #include "acpi.h"
 #include "../parameters/parameters.h"
-
+#include "../lib.h"
 
 #include <sys/types.h>
 #include <dirent.h>
@@ -55,7 +55,7 @@ double power_meter::time_left(void)
 	cap = dev_capacity();
 	rate = joules_consumed();
 
-	if (cap <= 0.001)
+	if (cap < 0.001)
 		return 0.0;
 
 	left = cap / rate;
@@ -87,7 +87,7 @@ double global_joules_consumed(void)
 		total += power_meters[i]->joules_consumed();
 
 	all_results.power = total;	
-	if (total < min_power && total >= 0.01)
+	if (total < min_power && total > 0.01)
 		min_power = total;
 	return total;
 }

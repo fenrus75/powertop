@@ -69,7 +69,7 @@ usb_tunable::usb_tunable(const char *path, const char *name) : tunable("", 0.9, 
 		file.close();
 	};	
 	if (strlen(vendor) && strlen(product))
-		sprintf(desc, _("Autosuspend for USB device %s (%s)"), product, vendor);
+		sprintf(desc, _("Autosuspend for USB device %s [%s]"), product, vendor);
 	else if (strlen(product))
 		sprintf(desc, _("Autosuspend for USB device %s [%s]"), product, name);
 	else if (strlen(vendor))

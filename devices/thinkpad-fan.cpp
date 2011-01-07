@@ -41,7 +41,7 @@
 #include <string.h>
 
 
-thinkpad_fan::thinkpad_fan()
+thinkpad_fan::thinkpad_fan(): device()
 {
 	start_rate = 0;
 	end_rate = 0;
@@ -49,6 +49,7 @@ thinkpad_fan::thinkpad_fan()
 	fansqr_index = get_param_index("thinkpad-fan-sqr");
 	fancub_index = get_param_index("thinkpad-fan-cub");
 	r_index = get_result_index("thinkpad-fan");
+	register_sysfs_path("/sys/devices/platform/thinkpad_hwmon");
 }
 
 void thinkpad_fan::start_measurement(void)

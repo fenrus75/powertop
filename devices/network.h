@@ -76,6 +76,7 @@ public:
 	virtual const char * human_name(void) { return humanname; };
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
 	virtual int power_valid(void) { return utilization_power_valid(rindex_up) + utilization_power_valid(rindex_link_100) + utilization_power_valid(rindex_link_1000)  + utilization_power_valid(rindex_link_high);};
+	virtual int grouping_prio(void) { return 10; };
 };
 
 extern void create_all_nics(void);

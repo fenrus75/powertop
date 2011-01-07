@@ -1,15 +1,14 @@
 
 
-Needed prior to beta
----------------------
-* fix memory leaks
-	 -- growth in memory seems to not be there.. it's just exit leaks...
-	    yawn.
 
 
 Needed between beta and 2.0 final
 ----------------------------------
 * MUST use the 2.6.38 new stable tracepoints where available
+* we're somehow broken on 64 bit. again.
+* fix memory leaks
+	 -- growth in memory seems to not be there.. it's just exit leaks...
+	    yawn.
 * htmlize UTF8 mu
 * more translations / strings
 * end user documentation
@@ -86,3 +85,4 @@ done
 * Add battery time left estimation back
 * there is a filedescriptor leak! -- or so it seems. Can't reproduce the
   report anymore
+* find "underlying device" and group power by that in the overview

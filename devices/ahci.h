@@ -57,6 +57,7 @@ public:
 	virtual const char * human_name(void) { return humanname;};
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
 	virtual int power_valid(void) { return utilization_power_valid(partial_rindex) + utilization_power_valid(active_rindex);};
+	virtual int grouping_prio(void) { return 1; };
 };
 
 extern void create_all_ahcis(void);

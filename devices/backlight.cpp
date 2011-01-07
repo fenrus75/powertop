@@ -39,7 +39,7 @@ using namespace std;
 #include <string.h>
 
 
-backlight::backlight(char *_name, char *path)
+backlight::backlight(char *_name, char *path): device()
 {
 	char devname[128];
 	min_level = 0;
@@ -47,6 +47,7 @@ backlight::backlight(char *_name, char *path)
 	start_level = 0;
 	end_level = 0;
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
+	register_sysfs_path(sysfs_path);
 	sprintf(devname, "backlight:%s", _name);
 	strncpy(name, devname, sizeof(name));
 	r_index = get_result_index(name);

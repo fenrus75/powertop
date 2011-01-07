@@ -27,6 +27,9 @@
 #include <vector>
 #include <algorithm>
 #include <stdio.h>
+#include <limits.h>
+#include <stdlib.h>
+
 using namespace std;
 
 #include "backlight.h"
@@ -45,6 +48,35 @@ using namespace std;
 #include "../html.h"
 #include "../measurement/measurement.h"
 #include "../devlist.h"
+
+device::device(void)
+{
+	cached_valid = 0;
+	hide = 0;
+
+	memset(guilty, 0, sizeof(guilty));
+	memset(real_path, 0, sizeof(real_path));
+}
+
+
+void device::register_sysfs_path(const char *path)
+{
+	char current_path[PATH_MAX + 1];
+	int iter = 0;
+	strcpy(current_path, path);
+
+	while (iter++ < 10) {
+		char test_path[PATH_MAX + 1];
+		sprintf(test_path, "%s/device", current_path);
+		if (access(test_path, R_OK) == 0)
+			strcpy(current_path, test_path);
+		else
+			break;
+	}
+
+	if (!realpath(current_path, real_path))
+		real_path[0] = 0;
+}
 
 void device::start_measurement(void)
 {

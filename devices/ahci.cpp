@@ -107,7 +107,7 @@ static string model_name(char *path, char *shortname)
 	return "";
 }
 
-ahci::ahci(char *_name, char *path)
+ahci::ahci(char *_name, char *path): device()
 {
 	char buffer[4096];
 	char devname[128];
@@ -120,6 +120,9 @@ ahci::ahci(char *_name, char *path)
 	start_slumber = 0;
 	start_partial = 0;
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
+
+	register_sysfs_path(sysfs_path);
+
 	sprintf(devname, "ahci:%s", _name);
 	strncpy(name, devname, sizeof(name));
 	active_index = get_param_index("ahci-link-power-active");

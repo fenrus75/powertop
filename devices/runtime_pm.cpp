@@ -37,9 +37,10 @@
 #include <iostream>
 #include <fstream>
 
-runtime_pmdevice::runtime_pmdevice(const char *_name, const char *path)
+runtime_pmdevice::runtime_pmdevice(const char *_name, const char *path) : device()
 {
 	strcpy(sysfs_path, path);
+	register_sysfs_path(sysfs_path);
 	strcpy(name, _name);
 	sprintf(humanname, "runtime-%s", _name);
 

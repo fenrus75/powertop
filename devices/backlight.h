@@ -49,6 +49,7 @@ public:
 	virtual const char * device_name(void);
 	virtual const char * human_name(void) { return "Display backlight";};
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
+	virtual int grouping_prio(void) { return 10; };
 };
 
 extern void create_all_backlights(void);

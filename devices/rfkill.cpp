@@ -40,7 +40,7 @@ using namespace std;
 #include <string.h>
 
 
-rfkill::rfkill(char *_name, char *path)
+rfkill::rfkill(char *_name, char *path): device()
 {
 	char line[4096];
 	char filename[4096];
@@ -50,6 +50,7 @@ rfkill::rfkill(char *_name, char *path)
 	end_soft = 0;
 	end_hard = 0;
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
+	register_sysfs_path(sysfs_path);
 	sprintf(devname, "radio:%s", _name);
 	sprintf(humanname, "radio:%s", _name);
 	strncpy(name, devname, sizeof(name));

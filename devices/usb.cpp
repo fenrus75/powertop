@@ -37,7 +37,7 @@
 #include <iostream>
 #include <fstream>
 
-usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
+usbdevice::usbdevice(const char *_name, const char *path, const char *devid): device()
 {
 	ifstream file;
 	char filename[4096];
@@ -45,6 +45,7 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 	char product[4096];
 
 	strcpy(sysfs_path, path);
+	register_sysfs_path(sysfs_path);
 	strcpy(name, _name);
 	strcpy(devname, devid);
 	sprintf(humanname, _("USB device: %s"), pretty_print(devid, vendor, 4096));

@@ -41,7 +41,7 @@ using namespace std;
 #include <string.h>
 
 
-alsa::alsa(char *_name, char *path)
+alsa::alsa(char *_name, char *path): device()
 {
 	ifstream file;
 
@@ -53,6 +53,7 @@ alsa::alsa(char *_name, char *path)
 	end_inactive = 0;
 	start_inactive = 0;
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
+
 	sprintf(devname, "alsa:%s", _name);
 	sprintf(humanname, "alsa:%s", _name);
 	strncpy(name, devname, sizeof(name));

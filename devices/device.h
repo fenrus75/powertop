@@ -27,7 +27,7 @@
 
 
 #include <vector>
-
+#include <limits.h>
 
 struct parameter_bundle;
 struct result_bundle;
@@ -38,9 +38,14 @@ public:
 	bool hide;
 
 	char guilty[4096];
+	char real_path[PATH_MAX+1];
 
 	virtual void start_measurement(void);
 	virtual void end_measurement(void);
+
+	device(void);
+
+	void register_sysfs_path(const char *path);
 
 	virtual double	utilization(void); /* percentage */
 
@@ -58,6 +63,8 @@ public:
 	virtual int power_valid(void) { return 1;};
 
 	virtual void register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle) { ; };
+
+	virtual int grouping_prio(void) { return 0; }; /* priority of this device class if multiple classes match to the same underlying device. 0 is lowest */
 };
 
 using namespace std;

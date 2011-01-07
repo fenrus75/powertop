@@ -54,6 +54,7 @@ public:
 	virtual const char * human_name(void);
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
 	virtual int power_valid(void) { return utilization_power_valid(r_index);};
+	virtual int grouping_prio(void) { return 4; };
 };
 
 extern void create_all_usb_devices(void);

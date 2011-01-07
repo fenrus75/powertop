@@ -54,6 +54,7 @@ public:
 	virtual int power_valid(void) { return utilization_power_valid(r_index);};
 
 	void set_human_name(char *name);
+	virtual int grouping_prio(void) { return 1; };
 };
 
 extern void create_all_runtime_pm_devices(void);

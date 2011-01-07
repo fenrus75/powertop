@@ -56,6 +56,7 @@ public:
 	virtual int power_valid(void) { return utilization_power_valid(rindex);};
 
 	virtual void register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle);
+	virtual int grouping_prio(void) { return 0; };
 
 };
 

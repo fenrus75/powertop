@@ -31,10 +31,11 @@
 #include "../devices/device.h"
 
 class device_consumer : public power_consumer {
-	class device *device;
-	double power;
 	char str[4096];
 public:
+	int prio;
+	double power;
+	class device *device;
 	device_consumer(class device *dev);
 
 	virtual const char * description(void);

@@ -52,6 +52,7 @@ public:
 	virtual const char * human_name(void) { return humanname; };
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
 	virtual int power_valid(void) { return utilization_power_valid(rindex);};
+	virtual int grouping_prio(void) { return 5; };
 };
 
 extern void create_all_rfkills(void);

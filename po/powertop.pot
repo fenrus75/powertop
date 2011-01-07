@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-07 08:49-0800\n"
+"POT-Creation-Date: 2011-01-07 09:55-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "                Usage       Events/s    Category       Description\n"
 msgstr ""
 
-#: devices/device.cpp:150
+#: devices/device.cpp:182
 msgid "              Usage     Device name\n"
 msgstr ""
 
@@ -111,12 +111,12 @@ msgstr ""
 msgid "Actual"
 msgstr ""
 
-#: devices/alsa.cpp:79 devices/alsa.cpp:81
+#: devices/alsa.cpp:80 devices/alsa.cpp:82
 #, c-format
 msgid "Audio codec %s: %s"
 msgstr ""
 
-#: devices/alsa.cpp:77
+#: devices/alsa.cpp:78
 #, c-format
 msgid "Audio codec %s: %s (%s)"
 msgstr ""
@@ -288,7 +288,7 @@ msgstr ""
 msgid "NMI watchdog should be turned off"
 msgstr ""
 
-#: devices/network.cpp:159
+#: devices/network.cpp:160
 #, c-format
 msgid "Network interface: %s (%s)"
 msgstr ""
@@ -302,7 +302,7 @@ msgstr ""
 msgid "PCI Device %s has no runtime power management"
 msgstr ""
 
-#: devices/runtime_pm.cpp:224
+#: devices/runtime_pm.cpp:225
 #, c-format
 msgid "PCI Device: %s"
 msgstr ""
@@ -329,7 +329,7 @@ msgstr ""
 msgid "Power est.      Usage       Events/s    Category       Description\n"
 msgstr ""
 
-#: devices/device.cpp:148
+#: devices/device.cpp:180
 msgid "Power est.    Usage     Device name\n"
 msgstr ""
 
@@ -343,7 +343,7 @@ msgstr ""
 msgid "PowerTOP %s needs the kernel to support the 'perf' subsystem\n"
 msgstr ""
 
-#: devices/rfkill.cpp:63 devices/rfkill.cpp:67
+#: devices/rfkill.cpp:64 devices/rfkill.cpp:68
 #, c-format
 msgid "Radio device: %s"
 msgstr ""
@@ -362,12 +362,12 @@ msgstr ""
 msgid "SATA controller"
 msgstr ""
 
-#: devices/ahci.cpp:139
+#: devices/ahci.cpp:142
 #, c-format
 msgid "SATA disk: %s"
 msgstr ""
 
-#: devices/ahci.cpp:137
+#: devices/ahci.cpp:140
 #, c-format
 msgid "SATA link: %s"
 msgstr ""
@@ -376,12 +376,12 @@ msgstr ""
 msgid "Starting PowerTOP power estimate calibration \n"
 msgstr ""
 
-#: devices/device.cpp:141
+#: devices/device.cpp:173
 #, c-format
 msgid "System baseline power is estimated at %sW\n"
 msgstr ""
 
-#: devices/device.cpp:135 process/do_process.cpp:644
+#: devices/device.cpp:167 process/do_process.cpp:644
 #, c-format
 msgid "The battery reports a discharge rate of %sW\n"
 msgstr ""
@@ -401,12 +401,12 @@ msgstr ""
 msgid "Turbo Mode"
 msgstr ""
 
-#: devices/usb.cpp:50 devices/usb.cpp:93 devices/usb.cpp:95
+#: devices/usb.cpp:51 devices/usb.cpp:94 devices/usb.cpp:96
 #, c-format
 msgid "USB device: %s"
 msgstr ""
 
-#: devices/usb.cpp:91
+#: devices/usb.cpp:92
 #, c-format
 msgid "USB device: %s (%s)"
 msgstr ""

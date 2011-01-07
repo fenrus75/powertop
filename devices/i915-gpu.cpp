@@ -40,7 +40,7 @@ using namespace std;
 #include <string.h>
 
 
-i915gpu::i915gpu()
+i915gpu::i915gpu(): device()
 {
 	index = get_param_index("gpu-operations");
 	rindex = get_result_index("gpu-operations");

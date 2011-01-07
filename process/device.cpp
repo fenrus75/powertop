@@ -33,6 +33,7 @@ device_consumer::device_consumer(class device *dev) : power_consumer()
 {
 	device = dev;
 	power = device->power_usage(&all_results, &all_parameters);
+	prio = dev->grouping_prio();
 }
 
 
@@ -50,9 +51,31 @@ double device_consumer::Witts(void)
 static void add_device(class device *device)
 {
 	class device_consumer *dev;
+	unsigned int i;
+
+	/* first check if we want to be shown at all */
 
 	if (device->show_in_list() == 0)
 		return;
+
+	/* then check if a device with the same underlying object is already registered */
+	for (i = 0; i < all_proc_devices.size(); i++) {
+		class device_consumer *cdev;
+		cdev = all_proc_devices[i];
+		if (device->real_path[0] != 0 && strcmp(cdev->device->real_path, device->real_path) == 0) {
+			/* we have a device with the same underlying object */
+
+			/* aggregate the power */
+			cdev->power += device->power_usage(&all_results, &all_parameters);
+
+			if (cdev->prio < device->grouping_prio()) {
+				cdev->device = device;
+				cdev->prio = device->grouping_prio();
+			}
+
+			return;
+		}
+	}
 
 	dev = new class device_consumer(device);
 	all_power.push_back(dev);

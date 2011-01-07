@@ -107,7 +107,7 @@ static void do_proc_net_dev(void)
 }
 
 
-network::network(char *_name, char *path)
+network::network(char *_name, char *path): device()
 {
 	char line[4096];
 	char filename[4096];
@@ -125,6 +125,7 @@ network::network(char *_name, char *path)
 	valid_powerunsave = -1;
 
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
+	register_sysfs_path(sysfs_path);
 	sprintf(devname, "%s", _name);
 	sprintf(humanname, "nic:%s", _name);
 	strncpy(name, devname, sizeof(name));

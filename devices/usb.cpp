@@ -47,7 +47,7 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid)
 	strcpy(sysfs_path, path);
 	strcpy(name, _name);
 	strcpy(devname, devid);
-	sprintf(humanname, _("USB Device: %s"), pretty_print(devid, vendor, 4096));
+	sprintf(humanname, _("USB device: %s"), pretty_print(devid, vendor, 4096));
 	active_before = 0;
 	active_after = 0;
 	connected_before = 0;

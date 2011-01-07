@@ -59,6 +59,32 @@ void perf_bundle_event::handle_event(struct perf_event_header *header, void *coo
 }
 
 
+void perf_bundle::release(void) 
+{
+	class perf_event *ev;
+	unsigned int i = 0;
+
+	for (i = 0; i < events.size(); i++) {
+		ev = events[i];
+		if (!ev)
+			continue;
+		ev->clear();
+		delete ev;
+	}
+	events.clear();
+
+	for (i = 0; i < event_names.size(); i++) {
+		free((void*)event_names[i]);
+	}
+	event_names.clear();
+
+	for(i = 0; i < records.size(); i++) {
+		free(records[i]);
+	}
+	records.clear();
+}
+
+
 void perf_bundle::add_event(const char *event_name)
 {
 	unsigned int i;

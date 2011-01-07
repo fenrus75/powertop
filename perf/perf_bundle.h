@@ -42,6 +42,7 @@ protected:
 public:
 	vector<void *> records;
 
+	virtual void release(void);
 	void add_event(const char *event_name);
 
 	void start(void);

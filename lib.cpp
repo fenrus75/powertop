@@ -367,7 +367,7 @@ char *pretty_print(const char *str, char *buf, int len)
 	return buf;
 }
 
-inline int equals(double a, double b)
+int equals(double a, double b)
 {
 	return fabs(a - b) <= std::numeric_limits<double>::epsilon();
 }

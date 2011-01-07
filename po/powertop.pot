@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-05 08:24-0800\n"
+"POT-Creation-Date: 2011-01-07 08:49-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,14 +25,9 @@ msgstr ""
 msgid "              Usage     Device name\n"
 msgstr ""
 
-#: lib.cpp:236
+#: lib.cpp:237
 #, c-format
 msgid "    0 mW"
-msgstr ""
-
-#: cpu/cpu_linux.cpp:231
-#, c-format
-msgid "  CPU %i"
 msgstr ""
 
 #: cpu/cpu_core.cpp:46 cpu/cpu_core.cpp:190 cpu/intel_cpus.cpp:273
@@ -53,37 +48,37 @@ msgstr ""
 msgid " <ESC> Exit | <Enter> Toggle tunable"
 msgstr ""
 
-#: cpu/cpu_linux.cpp:289 cpu/intel_cpus.cpp:565
+#: cpu/cpu_linux.cpp:231 cpu/cpu_linux.cpp:289 cpu/intel_cpus.cpp:565
 #, c-format
 msgid " CPU %i"
 msgstr ""
 
-#: lib.cpp:92
+#: lib.cpp:93
 #, c-format
 msgid "%3.1f Ghz"
 msgstr ""
 
-#: lib.cpp:90
+#: lib.cpp:91
 #, c-format
 msgid "%4.2f Ghz"
 msgstr ""
 
-#: lib.cpp:83
+#: lib.cpp:84
 #, c-format
 msgid "%4lli Mhz"
 msgstr ""
 
-#: lib.cpp:85
+#: lib.cpp:86
 #, c-format
 msgid "%6lli Mhz"
 msgstr ""
 
-#: lib.cpp:233
+#: lib.cpp:234
 #, c-format
 msgid "%7sW"
 msgstr ""
 
-#: lib.cpp:79
+#: lib.cpp:80
 #, c-format
 msgid "%9lli"
 msgstr ""
@@ -126,12 +121,7 @@ msgstr ""
 msgid "Audio codec %s: %s (%s)"
 msgstr ""
 
-#: tuning/usb.cpp:72
-#, c-format
-msgid "Autosuspend for USB device %s (%s)"
-msgstr ""
-
-#: tuning/usb.cpp:74 tuning/usb.cpp:76
+#: tuning/usb.cpp:72 tuning/usb.cpp:74 tuning/usb.cpp:76
 #, c-format
 msgid "Autosuspend for USB device %s [%s]"
 msgstr ""
@@ -275,11 +265,11 @@ msgstr ""
 msgid "Idle stats"
 msgstr ""
 
-#: lib.cpp:346
+#: lib.cpp:347
 msgid "Intel built in USB hub"
 msgstr ""
 
-#: main.cpp:267
+#: main.cpp:268
 #, c-format
 msgid "Leaving PowerTOP\n"
 msgstr ""
@@ -289,7 +279,7 @@ msgstr ""
 msgid "Loaded %i prior measurements\n"
 msgstr ""
 
-#: main.cpp:214
+#: main.cpp:215
 #, c-format
 msgid "Measuring for 20 seconds\n"
 msgstr ""
@@ -312,12 +302,12 @@ msgstr ""
 msgid "PCI Device %s has no runtime power management"
 msgstr ""
 
-#: devices/runtime_pm.cpp:223
+#: devices/runtime_pm.cpp:224
 #, c-format
 msgid "PCI Device: %s"
 msgstr ""
 
-#: lib.cpp:344
+#: lib.cpp:345
 msgid "PS/2 Touchpad / Keyboard / Mouse"
 msgstr ""
 
@@ -368,7 +358,7 @@ msgstr ""
 msgid "Runtime PM for PCI Device %s"
 msgstr ""
 
-#: lib.cpp:345
+#: lib.cpp:346
 msgid "SATA controller"
 msgstr ""
 
@@ -411,12 +401,7 @@ msgstr ""
 msgid "Turbo Mode"
 msgstr ""
 
-#: devices/usb.cpp:50
-#, c-format
-msgid "USB Device: %s"
-msgstr ""
-
-#: devices/usb.cpp:93 devices/usb.cpp:95
+#: devices/usb.cpp:50 devices/usb.cpp:93 devices/usb.cpp:95
 #, c-format
 msgid "USB device: %s"
 msgstr ""

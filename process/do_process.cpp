@@ -312,7 +312,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 
 		/* find interrupt (top of stack) */
 		irq = (class interrupt *)current_consumer(cpu);
-		if (irq && strcmp(irq->name(), "interrupt"))
+		if (!irq || strcmp(irq->name(), "interrupt"))
 			return;
 		pop_consumer(cpu);
 		/* retire interrupt */

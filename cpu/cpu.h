@@ -219,5 +219,7 @@ extern void start_cpu_measurement(void);
 extern void end_cpu_measurement(void);
 extern void process_cpu_data(void);
 extern void end_cpu_data(void);
+extern void clear_cpu_data(void);
 
 #endif
+

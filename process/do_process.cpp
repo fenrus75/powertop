@@ -966,3 +966,11 @@ void end_process_data(void)
 	perf_events->clear();
 
 }
+
+void clear_process_data(void)
+{
+	if (perf_events)
+		perf_events->release();
+	delete perf_events;
+}
+

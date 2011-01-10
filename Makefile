@@ -63,7 +63,7 @@ clean:
 	rm -f *.o *~ powertop DEADJOE core.* */*.o */*~ csstoh css.h
 	
 powertop: $(OBJS) $(HEADERS)
-	g++ $(OBJS) $(LIBS) -o powertop
+	$(CXX) $(OBJS) $(LIBS) -o powertop
 	@(cd po/ && $(MAKE))
 	
 install: powertop

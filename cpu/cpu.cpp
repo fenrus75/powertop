@@ -69,6 +69,12 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 			case 0x25:	/* Westmere */
 			case 0x2C:	/* Westmere */
 				ret = new class nhm_package;
+				break;
+			case 0x2A:	/* SNB */
+			case 0x2D:	/* SNB Xeon */
+				is_snb = 1;
+				ret = new class nhm_package;
+				break;
 			}
 	}
 
@@ -98,6 +104,8 @@ static class abstract_cpu * new_core(int core, int cpu, char * vendor, int famil
 			case 0x2F:	/* Westmere-EX Xeon */
 			case 0x25:	/* Westmere */
 			case 0x2C:	/* Westmere */
+			case 0x2A:	/* SNB */
+			case 0x2D:	/* SNB Xeon */
 				ret = new class nhm_core;
 			}
 	}
@@ -124,6 +132,8 @@ static class abstract_cpu * new_cpu(int number, char * vendor, int family, int m
 			case 0x2F:	/* Westmere-EX Xeon */
 			case 0x25:	/* Westmere */
 			case 0x2C:	/* Westmere */
+			case 0x2A:	/* SNB */
+			case 0x2D:	/* SNB Xeon */
 				ret = new class nhm_cpu;
 			}
 	}

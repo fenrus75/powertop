@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-10 18:35-0800\n"
+"POT-Creation-Date: 2011-01-10 18:50-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,12 +30,12 @@ msgstr ""
 msgid "    0 mW"
 msgstr ""
 
-#: cpu/cpu_core.cpp:46 cpu/cpu_core.cpp:190 cpu/intel_cpus.cpp:273
+#: cpu/cpu_core.cpp:46 cpu/cpu_core.cpp:190 cpu/intel_cpus.cpp:285
 #, c-format
 msgid "  Core"
 msgstr ""
 
-#: cpu/cpu_package.cpp:104 cpu/intel_cpus.cpp:299
+#: cpu/cpu_package.cpp:104 cpu/intel_cpus.cpp:311
 #, c-format
 msgid "  Package"
 msgstr ""
@@ -48,7 +48,7 @@ msgstr ""
 msgid " <ESC> Exit | <Enter> Toggle tunable"
 msgstr ""
 
-#: cpu/cpu_linux.cpp:231 cpu/cpu_linux.cpp:289 cpu/intel_cpus.cpp:565
+#: cpu/cpu_linux.cpp:231 cpu/cpu_linux.cpp:289 cpu/intel_cpus.cpp:594
 #, c-format
 msgid " CPU %i"
 msgstr ""
@@ -106,7 +106,7 @@ msgid ""
 "th></tr>\n"
 msgstr ""
 
-#: cpu/intel_cpus.cpp:548
+#: cpu/intel_cpus.cpp:577
 #, c-format
 msgid "Actual"
 msgstr ""
@@ -142,7 +142,7 @@ msgstr ""
 msgid "Bluetooth device interface status"
 msgstr ""
 
-#: cpu/intel_cpus.cpp:489
+#: cpu/intel_cpus.cpp:518
 msgid "C0 active"
 msgstr ""
 
@@ -150,20 +150,32 @@ msgstr ""
 msgid "C0 polling"
 msgstr ""
 
-#: cpu/intel_cpus.cpp:88
+#: cpu/intel_cpus.cpp:340
+msgid "C2 (pc2)"
+msgstr ""
+
+#: cpu/intel_cpus.cpp:92
 msgid "C3 (cc3)"
 msgstr ""
 
-#: cpu/intel_cpus.cpp:323
+#: cpu/intel_cpus.cpp:342
 msgid "C3 (pc3)"
 msgstr ""
 
-#: cpu/intel_cpus.cpp:89
+#: cpu/intel_cpus.cpp:93
 msgid "C6 (cc6)"
 msgstr ""
 
-#: cpu/intel_cpus.cpp:324
+#: cpu/intel_cpus.cpp:343
 msgid "C6 (pc6)"
+msgstr ""
+
+#: cpu/intel_cpus.cpp:95
+msgid "C7 (cc7)"
+msgstr ""
+
+#: cpu/intel_cpus.cpp:345
+msgid "C7 (pc7)"
 msgstr ""
 
 #: perf/perf.cpp:113
@@ -257,7 +269,7 @@ msgid "Good"
 msgstr ""
 
 #: cpu/cpu_core.cpp:116 cpu/cpu_linux.cpp:329 cpu/cpu_package.cpp:145
-#: cpu/intel_cpus.cpp:199 cpu/intel_cpus.cpp:417 cpu/intel_cpus.cpp:618
+#: cpu/intel_cpus.cpp:211 cpu/intel_cpus.cpp:446 cpu/intel_cpus.cpp:647
 msgid "Idle"
 msgstr ""
 
@@ -396,7 +408,7 @@ msgid "Tunables"
 msgstr ""
 
 #: cpu/cpu_core.cpp:118 cpu/cpu_linux.cpp:331 cpu/cpu_package.cpp:147
-#: cpu/intel_cpus.cpp:201 cpu/intel_cpus.cpp:419
+#: cpu/intel_cpus.cpp:213 cpu/intel_cpus.cpp:448
 #, c-format
 msgid "Turbo Mode"
 msgstr ""
@@ -441,11 +453,11 @@ msgstr ""
 msgid "as well as support for trace points in the kernel:\n"
 msgstr ""
 
-#: cpu/cpu.cpp:82
+#: cpu/cpu.cpp:88
 msgid "cpu package"
 msgstr ""
 
-#: cpu/cpu.cpp:81
+#: cpu/cpu.cpp:87
 #, c-format
 msgid "cpu package %i"
 msgstr ""

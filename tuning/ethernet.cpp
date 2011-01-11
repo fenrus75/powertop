@@ -78,11 +78,6 @@ int ethernet_tunable::good_bad(void)
 		return result;
 	}
 
-	if (ifr.ifr_flags & (IFF_UP | IFF_RUNNING)) {
-		close(sock);
-		return result;
-	}
-
 	memset(&wol, 0, sizeof(wol));
 
 	wol.cmd = ETHTOOL_GWOL;
@@ -115,11 +110,6 @@ void ethernet_tunable::toggle(void)
 	/* Check if the interface is up */
 	ret = ioctl(sock, SIOCGIFFLAGS, &ifr);
 	if (ret<0) {
-		close(sock);
-		return;
-	}
-
-	if (ifr.ifr_flags & (IFF_UP | IFF_RUNNING)) {
 		close(sock);
 		return;
 	}

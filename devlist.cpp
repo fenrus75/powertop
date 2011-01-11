@@ -126,6 +126,10 @@ void collect_open_devices(void)
 
 			if (strcmp(link, "/dev/null") == 0)
 				continue;
+			if (strcmp(link, "/dev/.udev/queue.bin") == 0)
+				continue;
+			if (strcmp(link, "/dev/initctl") == 0)
+				continue;
 			if (strcmp(link, "/dev/ptmx") == 0)
 				continue;
 			if (strstr(link, "/dev/pts/"))

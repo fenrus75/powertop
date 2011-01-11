@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-10 19:13-0800\n"
+"POT-Creation-Date: 2011-01-10 21:48-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,12 +94,12 @@ msgstr ""
 msgid ".... device %s \n"
 msgstr ""
 
-#: devlist.cpp:304
+#: devlist.cpp:308
 #, c-format
 msgid "<h2>Process device activity</h2>\n"
 msgstr ""
 
-#: devlist.cpp:306
+#: devlist.cpp:310
 #, c-format
 msgid ""
 "<tr><th class=\"device\" width=40%%>Process</th><th class=\"device\">Device</"

@@ -150,14 +150,14 @@ void learn_parameters(int iterations, int do_base_power)
 	if (debug_learning)
 		printf("Delta starts at %5.3f\n", delta);
 
-	if (best_so_far->parameters[bpi] > min_power)
-		best_so_far->parameters[bpi] = min_power;
+	if (best_so_far->parameters[bpi] > min_power * 0.9)
+		best_so_far->parameters[bpi] = min_power * 0.9;
 
 	/* We want to give up a little of base power, to give other parameters room to change;
 	   base power is the end post for everything after all 
          */
 	if (do_base_power && !debug_learning)
-		best_so_far->parameters[bpi] = best_so_far->parameters[bpi] * 0.998;
+		best_so_far->parameters[bpi] = best_so_far->parameters[bpi] * 0.9998;
 
 	start = time(NULL);
 

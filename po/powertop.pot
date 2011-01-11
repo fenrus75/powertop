@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-10 18:50-0800\n"
+"POT-Creation-Date: 2011-01-10 19:02-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "                Usage       Events/s    Category       Description\n"
 msgstr ""
 
-#: devices/device.cpp:182
+#: devices/device.cpp:183
 msgid "              Usage     Device name\n"
 msgstr ""
 
@@ -341,7 +341,7 @@ msgstr ""
 msgid "Power est.      Usage       Events/s    Category       Description\n"
 msgstr ""
 
-#: devices/device.cpp:180
+#: devices/device.cpp:181
 msgid "Power est.    Usage     Device name\n"
 msgstr ""
 
@@ -388,12 +388,12 @@ msgstr ""
 msgid "Starting PowerTOP power estimate calibration \n"
 msgstr ""
 
-#: devices/device.cpp:173
+#: devices/device.cpp:174
 #, c-format
 msgid "System baseline power is estimated at %sW\n"
 msgstr ""
 
-#: devices/device.cpp:167 process/do_process.cpp:644
+#: devices/device.cpp:168 process/do_process.cpp:644
 #, c-format
 msgid "The battery reports a discharge rate of %sW\n"
 msgstr ""

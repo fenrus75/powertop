@@ -99,7 +99,7 @@ void set_parameter_value(const char *name, double value, struct parameter_bundle
 
 double get_parameter_value(const char *name, struct parameter_bundle *the_bundle)
 {
-	int index;
+	unsigned int index;
 
 	index = get_param_index(name);
 	if (index >= the_bundle->parameters.size()) {

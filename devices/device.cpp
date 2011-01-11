@@ -39,6 +39,7 @@ using namespace std;
 #include "rfkill.h"
 #include "i915-gpu.h"
 #include "thinkpad-fan.h"
+#include "thinkpad-light.h"
 #include "network.h"
 #include "runtime_pm.h"
 
@@ -306,6 +307,7 @@ void create_all_devices(void)
 	create_all_rfkills();
 	create_i915_gpu();
 	create_thinkpad_fan();
+	create_thinkpad_light();
 	create_all_nics();
 	create_all_runtime_pm_devices();
 }

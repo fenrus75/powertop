@@ -266,7 +266,7 @@ void end_pci_access(void)
 		pci_free_name_list(pci_access);
 }
 
-static int utf_ok = -1;
+int utf_ok = -1;
 
 
 

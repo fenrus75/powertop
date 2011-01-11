@@ -71,5 +71,6 @@ extern char *fmt_prefix(double n, char *buf);
 extern char *pretty_print(const char *str, char *buf, int len);
 extern int equals(double a, double b);
 
+extern int utf_ok;
 #endif
 

@@ -214,6 +214,7 @@ int main(int argc, char **argv)
 		if (strcmp(argv[1], "--html") == 0) {
 			fprintf(stderr, _("Measuring for 20 seconds\n"));
 			/* one to warm up everything */
+			utf_ok = 0;
 			one_measurement(1);
 			init_html_output("powertop.html");
 			initialize_tuning();

@@ -420,9 +420,6 @@ void abstract_cpu::validate(void)
 void abstract_cpu::reset_pstate_data(void)
 {
 	unsigned int i;
-	uint64_t my_time;
-
-	my_time = total_pstate_time();
 
 	for (i = 0; i < pstates.size(); i++) {
 		pstates[i]->time_before = 0;

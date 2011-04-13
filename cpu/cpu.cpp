@@ -336,7 +336,6 @@ static const char *freq_class(int line)
 void html_display_cpu_cstates(void)
 {
 	char buffer[512], buffer2[512];
-	char linebuf[1024];
 	unsigned int package, core, cpu;
 	int line;
 	class abstract_cpu *_package, * _core, * _cpu;
@@ -363,7 +362,6 @@ void html_display_cpu_cstates(void)
 
 			for (line = LEVEL_HEADER; line < 10; line++) {
 				int first = 1;
-				linebuf[0] = 0;
 				if (!_package->has_cstate_level(line))
 					continue;
 

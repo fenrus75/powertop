@@ -62,7 +62,7 @@ public:
 	uint64_t pkts;
 	double duration;
 
-	network(char *_name, char *path);
+	network(const char *_name, const char *path);
 
 	virtual void start_measurement(void);
 	virtual void end_measurement(void);
@@ -79,7 +79,7 @@ public:
 	virtual int grouping_prio(void) { return 10; };
 };
 
-extern void create_all_nics(void);
-
+extern void create_all_nics(callback fn = NULL);
 
 #endif
+

@@ -107,10 +107,10 @@ static void do_proc_net_dev(void)
 }
 
 
-network::network(char *_name, char *path): device()
+network::network(const char *_name, const char *path): device()
 {
 	char line[4096];
-	char filename[4096];
+	std::string filename(path);
 	char devname[128];
 	start_up = 0;
 	end_up = 0;
@@ -155,9 +155,9 @@ network::network(char *_name, char *path): device()
 	rindex_pkts = get_result_index(devname);
 
 	memset(line, 0, 4096);
-	sprintf(filename, "%s/device/driver", path);
-	if (readlink(filename, line, 4096) > 0) {
-		sprintf(humanname, _("Network interface: %s (%s)"),_name,  basename(line));
+	filename.append("/device/driver");
+	if (readlink(filename.c_str(), line, 4096) > 0) {
+		sprintf(humanname, _("Network interface: %s (%s)"), _name,  basename(line));
 	};
 }
 
@@ -327,17 +327,14 @@ const char * network::device_name(void)
 	return name;
 }
 
-void create_all_nics(void)
+void read_all_nics(callback fn)
 {
 	struct dirent *entry;
 	DIR *dir;
-	char filename[4096];
 	dir = opendir("/sys/class/net/");
 	if (!dir)
 		return;
 	while (1) {
-		class network *bl;
-		ifstream file;
 		entry = readdir(dir);
 		if (!entry)
 			break;
@@ -346,16 +343,31 @@ void create_all_nics(void)
 		if (strcmp(entry->d_name, "lo")==0)
 			continue;
 
-		sprintf(filename, "/sys/class/net/%s", entry->d_name);
-		bl = new class network(entry->d_name, filename);
-		all_devices.push_back(bl);
-		nics[entry->d_name] = bl;
+		fn(entry->d_name);
 	}
-	closedir(dir);
 
+	closedir(dir);
+}
+
+void netdev_callback(const char *d_name)
+{
+	std::string f_name("/sys/class/net/");
+	f_name.append(d_name);
+
+	network *bl = new(std::nothrow) class network(d_name, f_name.c_str());
+	if (bl) {
+		all_devices.push_back(bl);
+		nics[d_name] = bl;
+	}
 }
 
 
+void create_all_nics(callback fn)
+{
+	if (!fn)
+		fn = &netdev_callback;
+	read_all_nics(fn);
+}
 
 double network::power_usage(struct result_bundle *result, struct parameter_bundle *bundle)
 {
@@ -368,8 +380,6 @@ double network::power_usage(struct result_bundle *result, struct parameter_bundl
 	util = get_result_value(rindex_up, result);
 
 	power += util * factor;
-
-
 
 	if (valid_100 == -1) {
 		valid_100 = utilization_power_valid(rindex_link_100);

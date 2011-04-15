@@ -44,5 +44,4 @@ public:
 
 extern void add_ethernet_tunable(void);
 
-
 #endif

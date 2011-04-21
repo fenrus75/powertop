@@ -69,7 +69,7 @@ powertop: $(OBJS) $(HEADERS)
 install: powertop
 	mkdir -p ${DESTDIR}${BINDIR}
 	cp powertop ${DESTDIR}${BINDIR}
-	mkdir -p ${DESTDIR}${PREFIX}/var/cache/powertop
+	mkdir -p ${DESTDIR}/var/cache/powertop
 	@(cd po/ && env LOCALESDIR=$(LOCALESDIR) DESTDIR=$(DESTDIR) $(MAKE) $@)
 	
 

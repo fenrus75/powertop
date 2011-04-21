@@ -168,6 +168,8 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 	file.open(filename, ios::in);
 	if (file) {
 		file >> package_number;
+		if (package_number == (unsigned int) -1)
+			package_number = 0;
 		file.close();
 	}
 
@@ -260,6 +262,8 @@ void enumerate_cpus(void)
 				c++;
 				model = strtoull(c, NULL, 10);
 			}
+		}
+		if (strncasecmp(line, "bogomips\t", 9) == 0) {
 			handle_one_cpu(number, vendor, family, model);
 			set_max_cpu(number);
 		}

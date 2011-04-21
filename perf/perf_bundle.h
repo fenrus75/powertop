@@ -27,7 +27,7 @@
 
 #include <iostream>
 #include <vector>
-
+#include <map>
 
 using namespace std;
 
@@ -38,7 +38,7 @@ class perf_event;
 class  perf_bundle {
 protected:
 	vector<class perf_event *> events;
-	vector<const char *> event_names;
+	std::map<int, char*> event_names;
 public:
 	vector<void *> records;
 

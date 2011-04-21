@@ -56,13 +56,13 @@
 static int get_trace_type(const char *eventname)
 {
 	string str;
-
 	int this_trace;
 
-
-	str = read_sysfs_string("/sys/kernel/debug/tracing/events/%s/id", eventname);
+	str = read_sysfs_string("/sys/kernel/debug/tracing/events/%s/id",
+					eventname);
 	if (str.length() < 1)
 		return -1;
+
 	this_trace = strtoull(str.c_str(), NULL, 10);
 	return this_trace;
 }

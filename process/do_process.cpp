@@ -188,8 +188,9 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 {
 	const char *event_name;
 
-	if (type >= (int)event_names.size())
+	if (event_names.find(type) == event_names.end())
 		return;
+
 	event_name = event_names[type];
 
 	if (time < first_stamp)

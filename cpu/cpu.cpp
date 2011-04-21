@@ -754,8 +754,9 @@ void perf_power_bundle::handle_trace_point(int type, void *trace, int cpunr, uin
 	const char *event_name;
 	class abstract_cpu *cpu;
 
-	if (type >= (int)event_names.size())
+	if (event_names.find(type) == event_names.end())
 		return;
+
 	event_name = event_names[type];
 
 	if (cpunr >= (int)all_cpus.size()) {

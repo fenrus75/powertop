@@ -745,7 +745,7 @@ void w_display_cpu_pstates(void)
 
 
 struct power_entry {
-#ifdef __x86_64__
+#ifndef __i386__
 	int dummy;
 #endif
 	int64_t	type;

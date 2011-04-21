@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-10 21:48-0800\n"
+"POT-Creation-Date: 2011-04-21 13:20-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -86,6 +86,31 @@ msgstr ""
 #: tuning/runtime.cpp:49
 #, c-format
 msgid "%s device %s has no runtime power management"
+msgstr ""
+
+#: main.cpp:81
+#, c-format
+msgid "--calibrate \t runs powertop in calibration mode\n"
+msgstr ""
+
+#: main.cpp:79
+#, c-format
+msgid "--debug \t run in \"debug\" mode\n"
+msgstr ""
+
+#: main.cpp:83
+#, c-format
+msgid "--help \t\t print this help menu\n"
+msgstr ""
+
+#: main.cpp:82
+#, c-format
+msgid "--html[=FILENAME]\t\t generate a html report\n"
+msgstr ""
+
+#: main.cpp:80
+#, c-format
+msgid "--version \t print version information\n"
 msgstr ""
 
 #: calibrate/calibrate.cpp:350 calibrate/calibrate.cpp:367
@@ -258,6 +283,13 @@ msgstr ""
 msgid "Finishing PowerTOP power estimate calibration \n"
 msgstr ""
 
+#: main.cpp:85
+#, c-format
+msgid ""
+"For more help please refer to the README\n"
+"\n"
+msgstr ""
+
 #: display.cpp:72
 msgid "Frequency stats"
 msgstr ""
@@ -281,7 +313,7 @@ msgstr ""
 msgid "Intel built in USB hub"
 msgstr ""
 
-#: main.cpp:269
+#: main.cpp:317
 #, c-format
 msgid "Leaving PowerTOP\n"
 msgstr ""
@@ -291,7 +323,7 @@ msgstr ""
 msgid "Loaded %i prior measurements\n"
 msgstr ""
 
-#: main.cpp:215
+#: main.cpp:258
 #, c-format
 msgid "Measuring for 20 seconds\n"
 msgstr ""
@@ -345,7 +377,7 @@ msgstr ""
 msgid "Power est.    Usage     Device name\n"
 msgstr ""
 
-#: main.cpp:172
+#: main.cpp:208
 #, c-format
 msgid "PowerTOP "
 msgstr ""
@@ -353,6 +385,11 @@ msgstr ""
 #: perf/perf.cpp:111
 #, c-format
 msgid "PowerTOP %s needs the kernel to support the 'perf' subsystem\n"
+msgstr ""
+
+#: main.cpp:73
+#, c-format
+msgid "Powertop version"
 msgstr ""
 
 #: devices/rfkill.cpp:64 devices/rfkill.cpp:68
@@ -429,6 +466,13 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
+#: main.cpp:78
+#, c-format
+msgid ""
+"Usage: powertop [OPTIONS]\n"
+"\n"
+msgstr ""
+
 #: tuning/cpufreq.cpp:45
 #, c-format
 msgid "Using 'ondemand' cpufreq governor"
@@ -462,7 +506,7 @@ msgstr ""
 msgid "cpu package %i"
 msgstr ""
 
-#: main.cpp:173
+#: main.cpp:209
 #, c-format
 msgid "exiting...\n"
 msgstr ""

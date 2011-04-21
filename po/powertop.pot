@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-21 13:40-0700\n"
+"POT-Creation-Date: 2011-04-21 13:48-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -203,7 +203,7 @@ msgstr ""
 msgid "C7 (pc7)"
 msgstr ""
 
-#: perf/perf.cpp:113
+#: perf/perf.cpp:121
 #, c-format
 msgid ""
 "CONFIG_PERF_EVENTS=y\n"
@@ -382,7 +382,7 @@ msgstr ""
 msgid "PowerTOP "
 msgstr ""
 
-#: perf/perf.cpp:111
+#: perf/perf.cpp:119
 #, c-format
 msgid "PowerTOP %s needs the kernel to support the 'perf' subsystem\n"
 msgstr ""
@@ -492,7 +492,7 @@ msgstr ""
 msgid "Wireless Power Saving for interface %s"
 msgstr ""
 
-#: perf/perf.cpp:112
+#: perf/perf.cpp:120
 #, c-format
 msgid "as well as support for trace points in the kernel:\n"
 msgstr ""

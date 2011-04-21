@@ -41,6 +41,14 @@
 
 #include "perf_event.h"
 
+/* __NR_perf_event_open in ia64 and alpha is defined elsewhere */
+#ifdef __ia64__
+#include <asm-generic/unistd.h>
+#endif
+#ifdef __alpha__
+#include <asm-generic/unistd.h>
+#endif
+
 #include "perf.h"
 #include "../lib.h"
 #include "../display.h"

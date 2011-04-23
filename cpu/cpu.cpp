@@ -168,6 +168,8 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 	file.open(filename, ios::in);
 	if (file) {
 		file >> package_number;
+		if (package_number == (unsigned int) -1)
+			package_number = 0;
 		file.close();
 	}
 
@@ -260,6 +262,8 @@ void enumerate_cpus(void)
 				c++;
 				model = strtoull(c, NULL, 10);
 			}
+		}
+		if (strncasecmp(line, "bogomips\t", 9) == 0) {
 			handle_one_cpu(number, vendor, family, model);
 			set_max_cpu(number);
 		}
@@ -332,7 +336,6 @@ static const char *freq_class(int line)
 void html_display_cpu_cstates(void)
 {
 	char buffer[512], buffer2[512];
-	char linebuf[1024];
 	unsigned int package, core, cpu;
 	int line;
 	class abstract_cpu *_package, * _core, * _cpu;
@@ -359,7 +362,6 @@ void html_display_cpu_cstates(void)
 
 			for (line = LEVEL_HEADER; line < 10; line++) {
 				int first = 1;
-				linebuf[0] = 0;
 				if (!_package->has_cstate_level(line))
 					continue;
 
@@ -534,7 +536,6 @@ void w_display_cpu_cstates(void)
 void html_display_cpu_pstates(void)
 {
 	char buffer[512], buffer2[512];
-	char linebuf[1024];
 	unsigned int package, core, cpu;
 	int line;
 	class abstract_cpu *_package, * _core, * _cpu;
@@ -561,7 +562,6 @@ void html_display_cpu_pstates(void)
 
 			for (line = LEVEL_HEADER; line < 10; line++) {
 				int first = 1;
-				linebuf[0] = 0;
 
 				if (!_package->has_pstate_level(line))
 					continue;
@@ -741,7 +741,7 @@ void w_display_cpu_pstates(void)
 
 
 struct power_entry {
-#ifdef __x86_64__
+#ifndef __i386__
 	int dummy;
 #endif
 	int64_t	type;
@@ -754,8 +754,9 @@ void perf_power_bundle::handle_trace_point(int type, void *trace, int cpunr, uin
 	const char *event_name;
 	class abstract_cpu *cpu;
 
-	if (type >= (int)event_names.size())
+	if (event_names.find(type) == event_names.end())
 		return;
+
 	event_name = event_names[type];
 
 	if (cpunr >= (int)all_cpus.size()) {

@@ -101,8 +101,8 @@ void alsa::start_measurement(void)
 			file >> start_active;
 		}
 		file.close();
-	} catch (std::ios_base::failure c) {
-		cout << "Fail\n";
+	} catch (std::ios_base::failure &c) {
+		fprintf(stderr, "%s\n", c.what());
 	}
 
 }
@@ -127,7 +127,8 @@ void alsa::end_measurement(void)
 			file >> end_active;
 		}
 		file.close();
-	} catch (std::ios_base::failure c) {
+	} catch (std::ios_base::failure &c) {
+		fprintf(stderr, "%s\n", c.what());
 	}
 
 

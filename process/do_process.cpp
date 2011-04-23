@@ -188,8 +188,9 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 {
 	const char *event_name;
 
-	if (type >= (int)event_names.size())
+	if (event_names.find(type) == event_names.end())
 		return;
+
 	event_name = event_names[type];
 
 	if (time < first_stamp)
@@ -303,12 +304,8 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 	}
 
 	if (strcmp(event_name, "irq:irq_handler_exit") == 0) {
-		struct irq_exit *irqe;
 		class interrupt *irq;
 		uint64_t t;
-
-		irqe = (struct irq_exit *)trace;
-
 
 		/* find interrupt (top of stack) */
 		irq = (class interrupt *)current_consumer(cpu);
@@ -342,8 +339,6 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		change_blame(cpu, irq, LEVEL_SOFTIRQ);
 	}
 	if (strcmp(event_name, "irq:softirq_exit") == 0) {
-		struct softirq_entry *irqe;
-		irqe = (struct softirq_entry *)trace;
 		class interrupt *irq;
 		uint64_t t;
 

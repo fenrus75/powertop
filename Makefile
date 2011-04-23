@@ -24,6 +24,7 @@ OBJS += tuning/cpufreq.o tuning/ethernet.o tuning/iw.o tuning/wifi.o
 
 NL1FOUND := $(shell $(PKG_CONFIG) --atleast-version=1 libnl-1 && echo Y)
 NL2FOUND := $(shell $(PKG_CONFIG) --atleast-version=2 libnl-2.0 && echo Y)
+NL3FOUND := $(shell $(PKG_CONFIG) --atleast-version=3 libnl-3.0 && echo Y)
 
 ifeq ($(NL1FOUND),Y)
 NLLIBNAME = libnl-1
@@ -33,6 +34,12 @@ ifeq ($(NL2FOUND),Y)
 CFLAGS += -DCONFIG_LIBNL20
 LIBS += -lnl-genl
 NLLIBNAME = libnl-2.0
+endif
+
+ifeq ($(NL3FOUND),Y)
+CFLAGS += -DCONFIG_LIBNL20
+LIBS += -lnl-genl
+NLLIBNAME = libnl-3.0
 endif
 
 ifeq ($(NLLIBNAME),)
@@ -69,7 +76,7 @@ powertop: $(OBJS) $(HEADERS)
 install: powertop
 	mkdir -p ${DESTDIR}${BINDIR}
 	cp powertop ${DESTDIR}${BINDIR}
-	mkdir -p ${DESTDIR}${PREFIX}/var/cache/powertop
+	mkdir -p ${DESTDIR}/var/cache/powertop
 	@(cd po/ && env LOCALESDIR=$(LOCALESDIR) DESTDIR=$(DESTDIR) $(MAKE) $@)
 	
 

@@ -19,6 +19,11 @@
  * Boston, MA 02110-1301 USA
  * or just google for it.
  *
+ * getopt code is taken from "The GNU C Library" reference manual,
+ * section 24.2 "Parsing program options using getopt"
+ * http://www.gnu.org/s/libc/manual/html_node/Getopt-Long-Option-Example.html
+ * Manual published under the terms of the Free Documentation License.
+ *
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
@@ -27,6 +32,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <sys/stat.h>
+#include <getopt.h>
 
 #include "cpu/cpu.h"
 #include "process/process.h"
@@ -47,9 +53,37 @@
 #include "display.h"
 #include "devlist.h"
 
-int debug_learning;
+int debug_learning = 0;
 
 int leave_powertop = 0;
+
+static const struct option long_options[] =
+{
+	/* These options set a flag. */
+	{"debug", no_argument, &debug_learning, 'd'},
+	{"version", no_argument, NULL, 'V'},
+	{"help",no_argument, NULL, 'u'}, /* u for usage */
+	{"calibrate",no_argument, NULL, 'c'},
+	{"html", optional_argument, NULL, 'h'},
+	{NULL, 0, NULL, 0}
+};
+
+static void print_version()
+{
+	printf(_("Powertop version" POWERTOP_VERSION ", compiled on "__DATE__ "\n"));
+}
+
+static void print_usage()
+{
+	printf(_("Usage: powertop [OPTIONS]\n\n"));
+	printf(_("--debug \t run in \"debug\" mode\n"));
+	printf(_("--version \t print version information\n"));
+	printf(_("--calibrate \t runs powertop in calibration mode\n"));
+	printf(_("--html[=FILENAME]\t\t generate a html report\n"));
+	printf(_("--help \t\t print this help menu\n"));
+	printf("\n");
+	printf(_("For more help please refer to the README\n\n"));
+}
 
 static void do_sleep(int seconds)
 {
@@ -159,6 +193,8 @@ void out_of_memory()
 int main(int argc, char **argv)
 {
 	int uid;
+	int option_index;
+	int c;
 
 	set_new_handler(out_of_memory);
 
@@ -195,41 +231,53 @@ int main(int argc, char **argv)
 	register_parameter("disk-operations-hard", 0.2);
 	register_parameter("disk-operations", 0.0);
 
-	if (argc > 1) {
-		if (strcmp(argv[1], "--calibrate") == 0)
-			calibrate();
-	}
 
-	if (argc > 1) {
-		if (strcmp(argv[1], "--debug") == 0)
-			debug_learning = 1;
-	}
+	while (1) { /* parse commandline options */
+		c = getopt_long (argc, argv, "ch:uV", long_options, &option_index);
 
-	if (argc > 2) {
-		if (strcmp(argv[2], "--debug") == 0)
-			debug_learning = 1;
-	}
+		/* Detect the end of the options. */
+		if (c == -1)
+			break;
 
-	if (argc > 1) {
-		if (strcmp(argv[1], "--html") == 0) {
-			fprintf(stderr, _("Measuring for 20 seconds\n"));
-			/* one to warm up everything */
-			utf_ok = 0;
-			one_measurement(1);
-			init_html_output("powertop.html");
-			initialize_tuning();
-			/* and then the real measurement */
-			one_measurement(20);
-			html_show_tunables();
+		switch (c) {
+			case 'V':
+				print_version();
+				exit(0);
+				break;
 
-			finish_html_output();
+			case 'u':
+				print_usage();
+				exit(0);
+				break;
 
-			/* and wrap up */
-			learn_parameters(50, 0);
-			save_all_results("/var/cache/powertop/saved_results.powertop");
-			save_parameters("/var/cache/powertop/saved_parameters.powertop");
-			end_pci_access();
-			exit(0);
+			case 'c':
+				calibrate();
+				break;
+
+			case 'h': /* html report */
+				fprintf(stderr, _("Measuring for 20 seconds\n"));
+				/* one to warm up everything */
+				utf_ok = 0;
+				one_measurement(1);
+				init_html_output( (optarg ? optarg : "powertop.html"));
+				initialize_tuning();
+				/* and then the real measurement */
+				one_measurement(20);
+				html_show_tunables();
+
+				finish_html_output();
+
+				/* and wrap up */
+				learn_parameters(50, 0);
+				save_all_results("/var/cache/powertop/saved_results.powertop");
+				save_parameters("/var/cache/powertop/saved_parameters.powertop");
+				end_pci_access();
+				exit(0);
+				break;
+
+			case '?': /* Unknown option */
+				/* getopt_long already printed an error message. */
+				break;
 		}
 	}
 

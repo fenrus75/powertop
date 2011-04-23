@@ -47,6 +47,8 @@
 #include "../lib.h"
 #include "ethernet.h"
 
+extern void create_all_nics(callback fn);
+
 ethernet_tunable::ethernet_tunable(const char *iface) : tunable("", 0.3, _("Good"), _("Bad"), _("Unknown"))
 {
 	memset(interf, 0, sizeof(interf));
@@ -127,29 +129,15 @@ void ethernet_tunable::toggle(void)
 }
 
 
-
+void ethtunable_callback(const char *d_name)
+{
+	class ethernet_tunable *eth = new(std::nothrow) class ethernet_tunable(d_name);
+	if (eth)
+		all_tunables.push_back(eth);
+}
 
 void add_ethernet_tunable(void)
 {
-	class ethernet_tunable *eth;
-	struct dirent *entry;
-	DIR *dir;
-	dir = opendir("/sys/class/net/");
-	if (!dir)
-		return;
-	while ((entry = readdir(dir))) {
-		if (!entry)
-			break;
-		if (entry->d_name[0] == '.')
-			continue;
-		if (strcmp(entry->d_name, "lo") == 0)
-			continue;
-
-		eth = new(std::nothrow) class ethernet_tunable(entry->d_name);
-		if (eth)
-			all_tunables.push_back(eth);
-	}
-	
-	closedir(dir);
+	create_all_nics(&ethtunable_callback);
 }
 

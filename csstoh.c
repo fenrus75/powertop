@@ -65,4 +65,5 @@ int main(int argc, char **argv)
 	fprintf(out, "#endif\n");
 	fclose(out);
 	fclose(in);
+	return(0);
 }

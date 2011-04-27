@@ -24,6 +24,7 @@
  */
 #include "measurement.h"
 #include "acpi.h"
+#include "extech.h"
 #include "../parameters/parameters.h"
 #include "../lib.h"
 
@@ -107,6 +108,14 @@ void detect_power_meters(void)
 {
 	DIR *dir;
 	struct dirent *entry;
+
+	if (0) {
+		class extech_power_meter *meter;
+
+		meter = new class extech_power_meter("/dev/ttyUSB0");
+
+		power_meters.push_back(meter);
+	}
 	
 	dir = opendir("/proc/acpi/battery");
 	if (!dir)
@@ -125,4 +134,5 @@ void detect_power_meters(void)
 		
 	}
 	closedir(dir);
+
 }

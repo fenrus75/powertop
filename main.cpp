@@ -65,6 +65,7 @@ static const struct option long_options[] =
 	{"help",no_argument, NULL, 'u'}, /* u for usage */
 	{"calibrate",no_argument, NULL, 'c'},
 	{"html", optional_argument, NULL, 'h'},
+	{"extech", optional_argument, NULL, 'e'},
 	{NULL, 0, NULL, 0}
 };
 
@@ -79,6 +80,7 @@ static void print_usage()
 	printf(_("--debug \t run in \"debug\" mode\n"));
 	printf(_("--version \t print version information\n"));
 	printf(_("--calibrate \t runs powertop in calibration mode\n"));
+	printf(_("--extech=devnode \t uses an Extech Power Analyzer for measurements\n"));
 	printf(_("--html[=FILENAME]\t\t generate a html report\n"));
 	printf(_("--help \t\t print this help menu\n"));
 	printf("\n");
@@ -245,6 +247,9 @@ int main(int argc, char **argv)
 				exit(0);
 				break;
 
+			case 'e': /* Extech power analyzer support */
+				extech_power_meter(optarg ? optarg : "/dev/ttyUSB0");
+				break;
 			case 'u':
 				print_usage();
 				exit(0);

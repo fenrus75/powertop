@@ -49,6 +49,8 @@ extern double global_joules_consumed(void);
 extern double global_time_left(void);
 
 extern void detect_power_meters(void);
+extern void extech_power_meter(const char *devnode);
+
 
 extern double min_power;
 

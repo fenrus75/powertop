@@ -66,3 +66,17 @@ Specifically PowerTOP contains code from
 nl80211 userspace tool - Copyright 2007, 2008	Johannes Berg <johannes@sipsolutions.net>
 
 
+
+
+Extech Power Analyzer / Datalogger support
+------------------------------------------
+I use, and our analysis teams use, the Extech Power Analyzer/Datalogger
+(model number 380803) quite a lot, and PowerTOP supports using this
+device over the serial cable. Just pass the device node on the command line
+like this
+
+powertop --extech=/dev/ttyUSB0
+
+(where ttyUSB0 is the devicenode of the serial-to-usb adapter on my system)
+
+

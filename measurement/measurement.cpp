@@ -109,14 +109,6 @@ void detect_power_meters(void)
 	DIR *dir;
 	struct dirent *entry;
 
-	if (0) {
-		class extech_power_meter *meter;
-
-		meter = new class extech_power_meter("/dev/ttyUSB0");
-
-		power_meters.push_back(meter);
-	}
-	
 	dir = opendir("/proc/acpi/battery");
 	if (!dir)
 		return;
@@ -135,4 +127,16 @@ void detect_power_meters(void)
 	}
 	closedir(dir);
 
+}
+
+void extech_power_meter(const char *devnode)
+{
+	DIR *dir;
+	struct dirent *entry;
+
+	class extech_power_meter *meter;
+
+	meter = new class extech_power_meter(devnode);
+
+	power_meters.push_back(meter);
 }

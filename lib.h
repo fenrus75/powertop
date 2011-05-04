@@ -72,6 +72,7 @@ extern char *pretty_print(const char *str, char *buf, int len);
 extern int equals(double a, double b);
 
 typedef void (*callback)(const char*);
+extern void process_directory(const char *d_name, callback fn);
 extern int utf_ok;
 
 #endif

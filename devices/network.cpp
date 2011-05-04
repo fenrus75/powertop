@@ -327,28 +327,6 @@ const char * network::device_name(void)
 	return name;
 }
 
-void read_all_nics(callback fn)
-{
-	struct dirent *entry;
-	DIR *dir;
-	dir = opendir("/sys/class/net/");
-	if (!dir)
-		return;
-	while (1) {
-		entry = readdir(dir);
-		if (!entry)
-			break;
-		if (entry->d_name[0] == '.')
-			continue;
-		if (strcmp(entry->d_name, "lo")==0)
-			continue;
-
-		fn(entry->d_name);
-	}
-
-	closedir(dir);
-}
-
 void netdev_callback(const char *d_name)
 {
 	std::string f_name("/sys/class/net/");
@@ -366,7 +344,7 @@ void create_all_nics(callback fn)
 {
 	if (!fn)
 		fn = &netdev_callback;
-	read_all_nics(fn);
+	process_directory("/sys/class/net/", fn);
 }
 
 double network::power_usage(struct result_bundle *result, struct parameter_bundle *bundle)

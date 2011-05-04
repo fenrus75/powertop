@@ -103,30 +103,17 @@ double global_time_left(void)
 	return total;
 }
 
+void power_meters_callback(const char *d_name)
+{
+	class acpi_power_meter *meter;
+	meter = new(std::nothrow) class acpi_power_meter(d_name);
+	if (meter)
+		power_meters.push_back(meter);
+}
 
 void detect_power_meters(void)
 {
-	DIR *dir;
-	struct dirent *entry;
-
-	dir = opendir("/proc/acpi/battery");
-	if (!dir)
-		return;
-	while (1) {
-		class acpi_power_meter *meter;
-		entry = readdir(dir);
-		if (!entry)
-			break;
-		if (entry->d_name[0] == '.')
-			continue;
-
-		meter = new class acpi_power_meter(entry->d_name);
-
-		power_meters.push_back(meter);
-		
-	}
-	closedir(dir);
-
+	process_directory("/proc/acpi/battery", power_meters_callback);
 }
 
 void extech_power_meter(const char *devnode)

@@ -372,4 +372,25 @@ int equals(double a, double b)
 	return fabs(a - b) <= std::numeric_limits<double>::epsilon();
 }
 
+void process_directory(const char *d_name, callback fn)
+{
+	struct dirent *entry;
+	DIR *dir;
+	dir = opendir(d_name);
+	if (!dir)
+		return;
+	while (1) {
+		entry = readdir(dir);
+		if (!entry)
+			break;
+		if (entry->d_name[0] == '.')
+			continue;
+		if (strcmp(entry->d_name, "lo")==0)
+			continue;
+
+		fn(entry->d_name);
+	}
+
+	closedir(dir);
+}
 

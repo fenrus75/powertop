@@ -66,6 +66,7 @@ static const struct option long_options[] =
 	{"calibrate",no_argument, NULL, 'c'},
 	{"html", optional_argument, NULL, 'h'},
 	{"extech", optional_argument, NULL, 'e'},
+	{"time", optional_argument, NULL, 't'},
 	{NULL, 0, NULL, 0}
 };
 
@@ -82,6 +83,7 @@ static void print_usage()
 	printf(_("--calibrate \t runs powertop in calibration mode\n"));
 	printf(_("--extech=devnode \t uses an Extech Power Analyzer for measurements\n"));
 	printf(_("--html[=FILENAME]\t\t generate a html report\n"));
+	printf(_("--time[=secs]\t\t generate a html report for secs\n"));
 	printf(_("--help \t\t print this help menu\n"));
 	printf("\n");
 	printf(_("For more help please refer to the README\n\n"));
@@ -212,6 +214,33 @@ static void load_board_params()
 	global_power_override = 1;
 }
 
+void html_report(int time, bool file)
+{
+	fprintf(stderr, _("Measuring for %d seconds\n"),time);
+	/* one to warm up everything */
+	utf_ok = 0;
+	one_measurement(1);
+
+	if(file)
+		init_html_output( (optarg ? optarg : "powertop.html"));
+	else
+		init_html_output("powertop.html");
+
+	initialize_tuning();
+	/* and then the real measurement */
+	one_measurement(time);
+	html_show_tunables();
+
+	finish_html_output();
+
+	/* and wrap up */
+	learn_parameters(50, 0);
+	save_all_results("/var/cache/powertop/saved_results.powertop");
+	save_parameters("/var/cache/powertop/saved_parameters.powertop");
+	end_pci_access();
+	exit(0);
+}
+
 int main(int argc, char **argv)
 {
 	int uid;
@@ -256,7 +285,7 @@ int main(int argc, char **argv)
 	load_board_params();
 
 	while (1) { /* parse commandline options */
-		c = getopt_long (argc, argv, "ch:uV", long_options, &option_index);
+		c = getopt_long (argc, argv, "ch:t:uV", long_options, &option_index);
 
 		/* Detect the end of the options. */
 		if (c == -1)
@@ -281,25 +310,13 @@ int main(int argc, char **argv)
 				break;
 
 			case 'h': /* html report */
-				fprintf(stderr, _("Measuring for 20 seconds\n"));
-				/* one to warm up everything */
-				utf_ok = 0;
-				one_measurement(1);
-				init_html_output( (optarg ? optarg : "powertop.html"));
-				initialize_tuning();
-				/* and then the real measurement */
-				one_measurement(20);
-				html_show_tunables();
-
-				finish_html_output();
-
-				/* and wrap up */
-				learn_parameters(50, 0);
-				save_all_results("/var/cache/powertop/saved_results.powertop");
-				save_parameters("/var/cache/powertop/saved_parameters.powertop");
-				end_pci_access();
-				exit(0);
+				html_report(20, TRUE);
 				break;
+
+			case 't': /* html report */
+				html_report((optarg ? atoi(optarg) : 20), FALSE);
+				break;
+
 
 			case '?': /* Unknown option */
 				/* getopt_long already printed an error message. */

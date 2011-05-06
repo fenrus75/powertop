@@ -62,10 +62,10 @@ public:
 extern map<string, class tab_window *> tab_windows;
 
 WINDOW *get_ncurses_win(const char *name);
-WINDOW *get_ncurses_win(string name);
+WINDOW *get_ncurses_win(const string &name);
 WINDOW *get_ncurses_win(int nr);
 
-void create_tab(string name, string translation, class tab_window *w = NULL, string bottom_line = "");
+void create_tab(const string &name, const string &translation, class tab_window *w = NULL, string bottom_line = "");
 
 
 #endif

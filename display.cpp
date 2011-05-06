@@ -43,7 +43,7 @@ map<string, string> tab_translations;
 
 map<string, string> bottom_lines;
 
-void create_tab(string name, string translation, class tab_window *w, string bottom_line)
+void create_tab(const string &name, const string &translation, class tab_window *w, string bottom_line)
 {
 	if (!w)
 		w = new(class tab_window);
@@ -180,7 +180,7 @@ WINDOW *get_ncurses_win(int nr)
 	return win;
 }
 
-WINDOW *get_ncurses_win(string name)
+WINDOW *get_ncurses_win(const string &name)
 {
 	return get_ncurses_win(name.c_str());
 }

@@ -50,7 +50,6 @@ extern "C" {
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include <string.h>
 #include <locale.h>
 #include <libintl.h>
 #include <limits>
@@ -163,7 +162,7 @@ bool stringless::operator()(const char * const & lhs, const char * const & rhs) 
 	return false;
 }  
 
-void write_sysfs(string filename, string value)
+void write_sysfs(const string &filename, const string &value)
 {
 	ofstream file;
 
@@ -174,7 +173,7 @@ void write_sysfs(string filename, string value)
 	file.close();
 }
 
-int read_sysfs(string filename)
+int read_sysfs(const string &filename)
 {
 	ifstream file;
 	int i;
@@ -187,7 +186,7 @@ int read_sysfs(string filename)
 	return i;
 }
 
-string read_sysfs_string(string filename)
+string read_sysfs_string(const string &filename)
 {
 	ifstream file;
 	char content[4096];

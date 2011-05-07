@@ -344,7 +344,9 @@ int main(int argc, char **argv)
 
 
 	end_process_data();
+	clear_process_data();
 	end_cpu_data();
+	clear_cpu_data();
 
 	save_all_results("/var/cache/powertop/saved_results.powertop");
 	save_parameters("/var/cache/powertop/saved_parameters.powertop");

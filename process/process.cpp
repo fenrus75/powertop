@@ -119,8 +119,7 @@ process::process(const char *_comm, int _pid, int _tid) : power_consumer()
 	if (strncmp(_comm, "kondemand/", 10) == 0)
 		is_idle = 1;
 
-	sprintf(desc, "%s", comm);
-
+	strcpy(desc, comm);
 
 	sprintf(line, "/proc/%i/cmdline", _pid);
 	file.open(line, ios::binary);
@@ -184,42 +183,38 @@ static void merge_process(class process *one, class process *two)
 	one->hard_disk_hits += two->hard_disk_hits;
 	one->gpu_ops += two->gpu_ops;
 	one->power_charge += two->power_charge;
-
-	two->accumulated_runtime = 0;
-	two->child_runtime = 0;
-	two->wake_ups = 0;
-	two->disk_hits = 0;
-	two->hard_disk_hits = 0;
-	two->gpu_ops = 0;
-	two->power_charge = 0;
 }
 
 
 void merge_processes(void)
 {
-	unsigned int i,j;
+	std::vector<class process*>::iterator it1, it2;
 	class process *one, *two;
 
-	/* fold threads */
-	for (i = 0; i < all_processes.size() ; i++) {
-		one = all_processes[i];
-		for (j = i + 1; j < all_processes.size(); j++) {
-			two = all_processes[j];
-			if (one->pid == two->tgid && two->tgid != 0)
+	it1 = all_processes.begin();
+	while (it1 != all_processes.end()) {
+		it2 = it1 + 1;
+		one = *it1;
+		while (it2 != all_processes.end()) {
+			two = *it2;
+			/* fold threads */
+			if (one->pid == two->tgid && two->tgid != 0) {
 				merge_process(one, two);
-		}
-	}
-
-	/* find dupes and add up */
-	for (i = 0; i < all_processes.size() ; i++) {
-		one = all_processes[i];
-		for (j = i + 1; j < all_processes.size(); j++) {
-			two = all_processes[j];
-			if (strcmp(one->desc, two->desc) == 0)
+				delete *it2;
+				it2 = all_processes.erase(it2);
+				continue;
+			}
+			/* find dupes and add up */
+			if (!strcmp(one->desc, two->desc)) {
 				merge_process(one, two);
+				delete *it2;
+				it2 = all_processes.erase(it2);
+				continue;
+			}
+			++it2;
 		}
+		++it1;
 	}
-
 }
 
 void all_processes_to_all_power(void)

@@ -46,10 +46,12 @@ const char* softirqs[] = {
 
 interrupt::interrupt(const char *_handler, int _number) : power_consumer()
 {
+	char buf[128];
 	running_since = 0;
 	number = _number;
 	strncpy(handler, _handler, 31);
 	raw_count = 0;
+	sprintf(desc, "[%i] %s", number, pretty_print(handler, buf, 128));
 }
 
 
@@ -72,10 +74,8 @@ uint64_t interrupt::end_interrupt(uint64_t time)
 
 const char * interrupt::description(void)
 {
-	char buf[128];
 	if (child_runtime > accumulated_runtime)
 		child_runtime = 0;
-	sprintf(desc, "[%i] %s", number, pretty_print(handler, buf, 128));
 	return desc;
 }
 

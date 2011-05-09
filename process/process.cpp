@@ -131,8 +131,10 @@ process::process(const char *_comm, int _pid, int _tid) : power_consumer()
 			is_kernel = 1;
 			sprintf(desc, "[%s]", comm);
 		} else {
+			int sz = sizeof(desc) - 1;
 			cmdline_to_string(line);
-			strncpy(desc, line, sizeof(desc) - 1);
+			strncpy(desc, line, sz);
+			desc[sz] = 0x00;
 		}
 	}
 }

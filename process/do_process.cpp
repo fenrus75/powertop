@@ -865,18 +865,10 @@ void process_process_data(void)
 	if (!perf_events)
 		return;
 
+	clear_processes();
+	clear_interrupts();
 
-	/* clean out old data */
-	for (i = 0; i < all_processes.size() ; i++)
-		delete all_processes[i];
-
-	all_processes.erase(all_processes.begin(), all_processes.end());;
-
-	for (i = 0; i < all_interrupts.size() ; i++)
-		delete all_interrupts[i];
-
-	all_interrupts.resize(0);
-	all_power.resize(0);
+	all_power.erase(all_power.begin(), all_power.end());
 	clear_consumers();
 
 
@@ -936,31 +928,12 @@ void end_process_data(void)
 	report_utilization("disk-operations", total_disk_hits());
 	report_utilization("disk-operations-hard", total_hard_disk_hits());
 
-	/* clean out old data */
-	for (i = 0; i < all_processes.size() ; i++)
-		all_processes[i]->wake_ups = 0;
-	for (i = 0; i < all_processes.size() ; i++)
-		all_processes[i]->accumulated_runtime = 0;
-	for (i = 0; i < all_processes.size() ; i++)
-		all_processes[i]->child_runtime = 0;
-
-	for (i = 0; i < all_processes.size() ; i++)
-		delete all_processes[i];
-
-	for (i = 0; i < all_proc_devices.size() ; i++)
-		delete all_proc_devices[i];
-
-	all_processes.erase(all_processes.begin(), all_processes.end());;
-
-	for (i = 0; i < all_interrupts.size() ; i++)
-		delete all_interrupts[i];
-
-	all_interrupts.resize(0);
-	all_power.resize(0);
-	all_proc_devices.resize(0);
+	all_power.erase(all_power.begin(), all_power.end());
+	clear_processes();
+	clear_proc_devices();
+	clear_interrupts();
 	clear_timers();
-	delete_all_work();
-
+	clear_work();
 	clear_consumers();
 
 	perf_events->clear();

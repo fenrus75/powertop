@@ -227,4 +227,11 @@ void all_processes_to_all_power(void)
 			all_power.push_back(all_processes[i]);
 }
 
-
+void clear_processes(void)
+{
+	std::vector <class process *>::iterator it = all_processes.begin();
+	while (it != all_processes.end()) {
+		delete *it;
+		it = all_processes.erase(it);
+	}
+}

@@ -88,3 +88,12 @@ void all_devices_to_all_power(void)
 	for (i = 0; i < all_devices.size(); i++)
 		add_device(all_devices[i]);
 }
+
+void clear_proc_devices(void)
+{
+	std::vector<class device_consumer *>::iterator it = all_proc_devices.begin();
+	while (it != all_proc_devices.end()) {
+		delete *it;
+		it = all_proc_devices.erase(it);
+	}
+}

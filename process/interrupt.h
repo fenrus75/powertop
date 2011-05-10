@@ -47,7 +47,6 @@ public:
 
 	virtual const char * name(void) { return "interrupt"; };
 	virtual const char * type(void) { return "Interrupt"; };
-
 };
 
 extern vector <class interrupt *> all_interrupts;
@@ -56,8 +55,6 @@ extern const char* softirqs[];
 
 extern class interrupt * find_create_interrupt(const char *_handler, int nr, int cpu);
 extern void all_interrupts_to_all_power(void);
-
-
-
+extern void clear_interrupts(void);
 
 #endif

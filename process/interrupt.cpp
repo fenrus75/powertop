@@ -108,3 +108,12 @@ void all_interrupts_to_all_power(void)
 		if (all_interrupts[i]->accumulated_runtime)
 			all_power.push_back(all_interrupts[i]);
 }
+
+void clear_interrupts(void)
+{
+	std::vector<class interrupt *>::iterator it = all_interrupts.begin();
+	while (it != all_interrupts.end()) {
+		delete *it;
+		it = all_interrupts.erase(it);
+	}
+}

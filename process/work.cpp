@@ -81,10 +81,14 @@ void all_work_to_all_power(void)
 
 }
 
-void delete_all_work(void)
+void clear_work(void)
 {
-	/* TODO: does this call the destructors/delete ? */
-	all_work.erase(all_work.begin(), all_work.end());
+	std::map<unsigned long, class work *>::iterator it = all_work.begin();
+	while (it != all_work.end()) {
+		delete it->second;
+		all_work.erase(it);
+		it = all_work.begin();
+	}
 }
 
 
@@ -100,12 +104,11 @@ const char * work::description(void)
 class work * find_create_work(uint64_t func)
 {
 	class work * work;
-	if (all_work[func])
+	if (all_work.find(func) != all_work.end())
 		return all_work[func];
 
 	work = new class work(func);
 	all_work[func] = work;
 	return work;
-	
 }
 

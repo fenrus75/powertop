@@ -94,7 +94,7 @@ const char * timer::description(void)
 class timer * find_create_timer(uint64_t func)
 {
 	class timer * timer;
-	if (all_timers[func])
+	if (all_timers.find(func) != all_timers.end())
 		return all_timers[func];
 
 	timer = new class timer(func);
@@ -105,5 +105,10 @@ class timer * find_create_timer(uint64_t func)
 
 void clear_timers(void)
 {
-	all_timers.erase(all_timers.begin(), all_timers.end());	
+	std::map<unsigned long, class timer *>::iterator it = all_timers.begin();
+	while (it != all_timers.end()) {
+		delete it->second;
+		all_timers.erase(it);
+		it = all_timers.begin();
+	}
 }

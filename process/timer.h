@@ -55,5 +55,6 @@ public:
 
 extern void all_timers_to_all_power(void);
 extern class timer * find_create_timer(uint64_t func);
+extern void clear_timers(void);
 
 #endif

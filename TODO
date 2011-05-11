@@ -4,11 +4,10 @@
 
 Needed between beta and 2.0 final
 ----------------------------------
+
+
 * MUST use the 2.6.38 new stable tracepoints where available
 * we're somehow broken on 64 bit. again.
-* fix memory leaks
-	 -- growth in memory seems to not be there.. it's just exit leaks...
-	    yawn.
 * more translations / strings
 * end user documentation
 * investigate tick_sched_timer and why it wakes up
@@ -86,3 +85,6 @@ done
   report anymore
 * find "underlying device" and group power by that in the overview
 * htmlize UTF8 mu
+* fix memory leaks
+	 -- growth in memory seems to not be there.. it's just exit leaks...
+	    yawn.

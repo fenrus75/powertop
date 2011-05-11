@@ -686,6 +686,9 @@ void process_update_display(void)
 		sprintf(events, "%5.1f", all_power[i]->events());
 		if (!all_power[i]->show_events())
 			events[0] = 0;
+		else if (all_power[i]->events() <= 0.3)
+			sprintf(events, "%5.2f", all_power[i]->events());
+			
 		while (strlen(events) < 12) strcat(events, " ");
 		wprintw(win, "%s  %s %s %s %s\n", power, usage, events, name, pretty_print(all_power[i]->description(), descr, 128));
 	}
@@ -758,6 +761,8 @@ void html_process_update_display(void)
 				sprintf(usage, "%5i%s", (int)all_power[i]->usage(), all_power[i]->usage_units());
 		}
 		sprintf(wakes, "%5.1f", all_power[i]->wake_ups / measurement_time);
+		if (all_power[i]->wake_ups / measurement_time <= 0.3)
+			sprintf(wakes, "%5.2f", all_power[i]->wake_ups / measurement_time);			
 		sprintf(gpus, "%5.1f", all_power[i]->gpu_ops / measurement_time);
 		sprintf(disks, "%5.1f (%5.1f)", all_power[i]->hard_disk_hits / measurement_time, all_power[i]->disk_hits / measurement_time);
 		if (!all_power[i]->show_events()) {
@@ -841,10 +846,10 @@ void html_summary(void)
 				sprintf(usage, "%5i%s", (int)all_power[i]->usage_summary(), all_power[i]->usage_units_summary());
 		}
 		sprintf(events, "%5.1f", all_power[i]->events());
-		if (!all_power[i]->show_events()) {
+		if (!all_power[i]->show_events())
 			events[0] = 0;
-		}
-
+		else if (all_power[i]->events() <= 0.3)
+			sprintf(events, "%5.2f", all_power[i]->events());
 
 		if (show_power)
 			fprintf(htmlout, "<tr class=\"%s\"><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td>%s</td><td>%s</td></tr>\n", process_class(lines), power, usage, events, name, pretty_print(all_power[i]->description(), descr, 128));

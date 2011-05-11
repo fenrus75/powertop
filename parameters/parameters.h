@@ -114,5 +114,8 @@ extern double calculate_params(struct parameter_bundle *params = &all_parameters
 int global_power_valid(void);
 
 
+extern int global_power_override;
+extern int global_fixed_parameters;
+
 
 #endif

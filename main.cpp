@@ -192,6 +192,26 @@ void out_of_memory()
 	abort();
 }
 
+static void load_board_params()
+{
+	string boardname;
+	char filename[4096];
+
+	boardname = read_sysfs_string("/etc/boardname");
+
+	if (boardname.length() < 2)
+		return;
+
+	sprintf(filename, "/var/cache/powertop/saved_parameters.powertop.%s", boardname.c_str());
+
+	if (access(filename, R_OK))
+		return;
+
+	load_parameters(filename);
+	global_fixed_parameters = 1;
+	global_power_override = 1;
+}
+
 int main(int argc, char **argv)
 {
 	int uid;
@@ -221,6 +241,7 @@ int main(int argc, char **argv)
 
 	load_results("/var/cache/powertop/saved_results.powertop");
 	load_parameters("/var/cache/powertop/saved_parameters.powertop");
+	load_board_params();
 
 	enumerate_cpus();
 	create_all_devices();

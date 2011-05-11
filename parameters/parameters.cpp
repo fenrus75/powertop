@@ -421,6 +421,12 @@ int utilization_power_valid(int index)
 }
 
 
+/* force power data to be valid to the rest of the system  */
+int global_power_override = 0;
+
+/* force no calculations to be done on parameters and trust the current ones */
+int global_fixed_parameters = 0;
+
 /* 
  * only report power numbers once we have 3* more measurements than 
  * we have parameters; anything less and our model fit is highly suspect
@@ -431,5 +437,5 @@ int global_power_valid(void)
 		return 1;
 
 
-	return 0;
+	return global_power_override;
 }

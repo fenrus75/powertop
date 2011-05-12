@@ -174,9 +174,9 @@ class perf_process_bundle: public perf_bundle
 /* some processes shouldn't be blamed for the wakeup if they wake a process up... for now this is a hardcoded list */
 int dont_blame_me(char *comm)
 {
-	if (strcmp(comm, "Xorg"))
+	if (strcmp(comm, "Xorg") == 0)
 		return 1;
-	if (strcmp(comm, "dbus-daemon"))
+	if (strcmp(comm, "dbus-daemon") == 0)
 		return 1;
 
 	return 0;
@@ -256,6 +256,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		struct wakeup_entry *we;
 		class power_consumer *from = NULL;
 		class process *dest_proc;
+		int i;
 		
 		we = (struct wakeup_entry *)trace;
 
@@ -280,8 +281,9 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			/* not a process doing the wakeup */
 			from = NULL;
 		}
-		
-		if (!dest_proc->running && dest_proc->waker == NULL && we->pid != 0 && !dont_blame_me(we->comm))
+
+
+		if (from && (dest_proc->running == 0) && (dest_proc->waker == NULL) && (we->pid != 0) && !dont_blame_me(we->comm))
 			dest_proc->waker = from;
 		if (from)
 			dest_proc->last_waker = from;

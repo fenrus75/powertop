@@ -241,7 +241,6 @@ int main(int argc, char **argv)
 
 	load_results("/var/cache/powertop/saved_results.powertop");
 	load_parameters("/var/cache/powertop/saved_parameters.powertop");
-	load_board_params();
 
 	enumerate_cpus();
 	create_all_devices();
@@ -254,6 +253,7 @@ int main(int argc, char **argv)
 	register_parameter("disk-operations-hard", 0.2);
 	register_parameter("disk-operations", 0.0);
 
+	load_board_params();
 
 	while (1) { /* parse commandline options */
 		c = getopt_long (argc, argv, "ch:uV", long_options, &option_index);

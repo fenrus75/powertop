@@ -255,7 +255,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 	if (strcmp(event_name, "sched:sched_wakeup") == 0) {
 		struct wakeup_entry *we;
 		class power_consumer *from = NULL;
-		class process *dest_proc;
+		class process *dest_proc, *from_proc;
 		int i;
 		
 		we = (struct wakeup_entry *)trace;
@@ -280,10 +280,12 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		if (from && strcmp(from->name(), "process")!=0){
 			/* not a process doing the wakeup */
 			from = NULL;
+			from_proc = NULL;
+		} else {
+			from_proc = (class process *) from;
 		}
 
-
-		if (from && (dest_proc->running == 0) && (dest_proc->waker == NULL) && (we->pid != 0) && !dont_blame_me(we->comm))
+		if (from_proc && (dest_proc->running == 0) && (dest_proc->waker == NULL) && (we->pid != 0) && !dont_blame_me(from_proc->comm))
 			dest_proc->waker = from;
 		if (from)
 			dest_proc->last_waker = from;

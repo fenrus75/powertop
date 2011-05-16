@@ -242,6 +242,9 @@ static double extech_read(int fd)
 	struct timeval tv;
 	int ret;
 
+	if (fd < 0)
+		return 0.0;
+
 	FD_ZERO(&read_fd);
 	FD_SET(fd, &read_fd);
 

@@ -68,6 +68,7 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 			case 0x2F:	/* Westmere-EX Xeon */
 			case 0x25:	/* Westmere */
 			case 0x2C:	/* Westmere */
+			case 0x27:	/* Medfield Atom*/
 				ret = new class nhm_package;
 				break;
 			case 0x2A:	/* SNB */

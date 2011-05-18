@@ -180,6 +180,8 @@ struct workqueue_end {
 
 struct  dirty_inode {
 	uint32_t dev;
+	uint32_t inode;
+	uint32_t flags;
 };
 
 

@@ -476,7 +476,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		drty = (struct dirty_inode *)trace;
 
 
-		if (consumer && strcmp(consumer->name(), "process")==0 && (drty->dev>>20) > 0) {
+		if (consumer && strcmp(consumer->name(), "process")==0 && drty->dev > 0) {
 			consumer->disk_hits++;
 
 			/* if the previous inode dirty was > 1 second ago, it becomes a hard hit */

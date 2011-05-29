@@ -653,8 +653,8 @@ void process_update_display(void)
 		wprintw(win, "\n");
 	
 
-	wprintw(win, "Summary: %3.1f wakeups/second,  %3.1f GPU ops/second and %3.1f VFS ops/sec\n\n",
-		total_wakeups(), total_gpu_ops(), total_disk_hits());
+	wprintw(win, "Summary: %3.1f wakeups/second,  %3.1f GPU ops/second, %3.1f VFS ops/sec and %3.1f%% CPU use\n\n",
+		total_wakeups(), total_gpu_ops(), total_disk_hits(), total_cpu_time()*100);
 
 
 	if (show_power)
@@ -806,8 +806,8 @@ void html_summary(void)
 
 	fprintf(htmlout, "<h2>Power consumption summary</h2>\n");
 
-	fprintf(htmlout, "<p>%3.1f wakeups/second,  %3.1f GPU ops/second and %3.1f VFS ops/sec</p>",
-		total_wakeups(), total_gpu_ops(), total_disk_hits());
+	fprintf(htmlout, "<p>%3.1f wakeups/second,  %3.1f GPU ops/second, %3.1f VFS ops/sec and %3.1f%% CPU use</p>",
+		total_wakeups(), total_gpu_ops(), total_disk_hits(), total_cpu_time()*100);
 
 
 	fprintf(htmlout, "<table width=100%%>\n");

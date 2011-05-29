@@ -47,6 +47,8 @@ public:
 
 	virtual const char * name(void) { return "interrupt"; };
 	virtual const char * type(void) { return "Interrupt"; };
+	virtual double usage_summary(void);
+	virtual const char * usage_units_summary(void);
 };
 
 extern vector <class interrupt *> all_interrupts;

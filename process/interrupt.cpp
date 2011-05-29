@@ -79,6 +79,18 @@ const char * interrupt::description(void)
 	return desc;
 }
 
+double interrupt::usage_summary(void) 
+{ 
+	double t;
+	t = (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time / 10;
+	return t; 
+}
+
+const char * interrupt::usage_units_summary(void)
+{
+	return "%";
+}
+
 
 class interrupt * find_create_interrupt(const char *_handler, int nr, int cpu)
 {

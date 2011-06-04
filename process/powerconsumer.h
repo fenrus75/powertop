@@ -44,6 +44,7 @@ public:
 	int		wake_ups;
 	int		gpu_ops;
 	int		hard_disk_hits;  /* those which are likely a wakeup of the disk */
+	int		xwakes;
 
 	double		power_charge;    /* power consumed by devices opened by this process */
 	class power_consumer *waker;

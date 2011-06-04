@@ -183,6 +183,7 @@ static void merge_process(class process *one, class process *two)
 	one->wake_ups += two->wake_ups;
 	one->disk_hits += two->disk_hits;
 	one->hard_disk_hits += two->hard_disk_hits;
+	one->xwakes += two->xwakes;
 	one->gpu_ops += two->gpu_ops;
 	one->power_charge += two->power_charge;
 }

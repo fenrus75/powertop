@@ -281,6 +281,7 @@ int main(int argc, char **argv)
 	register_parameter("gpu-operations", 0.5576);
 	register_parameter("disk-operations-hard", 0.2);
 	register_parameter("disk-operations", 0.0);
+	register_parameter("xwakes", 0.1);
 
 	load_board_params();
 

@@ -290,6 +290,10 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		if (from)
 			dest_proc->last_waker = from;
 
+		/* Account processes that wake up X specially */
+		if (from && dest_proc && strcmp(dest_proc->comm, "Xorg") == 0)
+			from->xwakes ++ ;
+
 	}
 	if (strcmp(event_name, "irq:irq_handler_entry") == 0) {
 		struct irq_entry *irqe;
@@ -601,6 +605,20 @@ double total_hard_disk_hits(void)
 	return total;
 }
 
+double total_xwakes(void)
+{
+	double total = 0;
+	unsigned int i;
+	for (i = 0; i < all_power.size() ; i++)
+		total += all_power[i]->xwakes;
+
+
+	total = total / measurement_time;
+
+
+	return total;
+}
+
 void process_update_display(void)
 {
 	unsigned int i;
@@ -725,9 +743,9 @@ void html_process_update_display(void)
 	fprintf(htmlout, "<table width=100%%>\n");
 
 	if (show_power)
-		fprintf(htmlout, "<tr><th width=10%%>Power est.</th><th width=10%%>Usage</th><th width=10%%>Wakeups/s</th><th width=10%%>GPU ops/s</th><th width=10%%>Disk IO/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+		fprintf(htmlout, "<tr><th width=10%%>Power est.</th><th width=10%%>Usage</th><th width=10%%>Wakeups/s</th><th width=10%%>GPU ops/s</th><th width=10%%>Disk IO/s</th><th width=10%%>GFX Wakeups/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
 	else
-		fprintf(htmlout, "<tr><th width=10%%>Usage</th><th width=10%%>Wakeups/s</th><th width=10%%>GPU ops/s</th><th width=10%%>Disk IO/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+		fprintf(htmlout, "<tr><th width=10%%>Usage</th><th width=10%%>Wakeups/s</th><th width=10%%>GPU ops/s</th><th width=10%%>Disk IO/s</th><th width=10%%>GFX Wakeups/s</th><th width=10%% class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
 
 	total = all_power.size();
 
@@ -741,6 +759,7 @@ void html_process_update_display(void)
 		char wakes[20];
 		char gpus[20];
 		char disks[20];
+		char xwakes[20];
 		char descr[128];
 		format_watts(all_power[i]->Witts(), power, 10);
 
@@ -769,6 +788,7 @@ void html_process_update_display(void)
 			sprintf(wakes, "%5.2f", all_power[i]->wake_ups / measurement_time);			
 		sprintf(gpus, "%5.1f", all_power[i]->gpu_ops / measurement_time);
 		sprintf(disks, "%5.1f (%5.1f)", all_power[i]->hard_disk_hits / measurement_time, all_power[i]->disk_hits / measurement_time);
+		sprintf(xwakes, "%5.1f", all_power[i]->xwakes / measurement_time);
 		if (!all_power[i]->show_events()) {
 			wakes[0] = 0;
 			gpus[0] = 0;
@@ -781,11 +801,13 @@ void html_process_update_display(void)
 			wakes[0] = 0;
 		if (all_power[i]->disk_hits == 0)
 			disks[0] = 0;
+		if (all_power[i]->xwakes == 0)
+			xwakes[0] = 0;
 
 		if (show_power)
-			fprintf(htmlout, "<tr class=\"%s\"><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td>%s</td><td>%s</td></tr>\n", process_class(lines), power, usage, wakes, gpus, disks, name, pretty_print(all_power[i]->description(), descr, 128));
+			fprintf(htmlout, "<tr class=\"%s\"><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td></td><td class=\"process_power\">%s</td><td>%s</td><td>%s</td></tr>\n", process_class(lines), power, usage, wakes, gpus, disks, xwakes, name, pretty_print(all_power[i]->description(), descr, 128));
 		else
-			fprintf(htmlout, "<tr class=\"%s\"><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td>%s</td><td>%s</td></tr>\n", process_class(lines), usage, wakes, gpus, disks, name, pretty_print(all_power[i]->description(), descr, 128));
+			fprintf(htmlout, "<tr class=\"%s\"><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td>%s</td><td>%s</td></tr>\n", process_class(lines), usage, wakes, gpus, disks, xwakes, name, pretty_print(all_power[i]->description(), descr, 128));
 	}
 	fprintf(htmlout, "</table>\n");
 }
@@ -806,8 +828,8 @@ void html_summary(void)
 
 	fprintf(htmlout, "<h2>Power consumption summary</h2>\n");
 
-	fprintf(htmlout, "<p>%3.1f wakeups/second,  %3.1f GPU ops/second, %3.1f VFS ops/sec and %3.1f%% CPU use</p>",
-		total_wakeups(), total_gpu_ops(), total_disk_hits(), total_cpu_time()*100);
+	fprintf(htmlout, "<p>%3.1f wakeups/second,  %3.1f GPU ops/second, %3.1f VFS ops/sec, %3.1f GFX wakes/sec and %3.1f%% CPU use</p>",
+		total_wakeups(), total_gpu_ops(), total_disk_hits(), total_xwakes(), total_cpu_time()*100);
 
 
 	fprintf(htmlout, "<table width=100%%>\n");
@@ -931,6 +953,7 @@ void end_process_data(void)
 	report_utilization("gpu-operations", total_gpu_ops());
 	report_utilization("disk-operations", total_disk_hits());
 	report_utilization("disk-operations-hard", total_hard_disk_hits());
+	report_utilization("xwakes", total_xwakes());
 
 	all_power.erase(all_power.begin(), all_power.end());
 	clear_processes();

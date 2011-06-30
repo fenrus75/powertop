@@ -262,11 +262,19 @@ int main(int argc, char **argv)
 	}
 	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
 	system("/sbin/modprobe msr > /dev/null 2>&1");
-	system("/bin/mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
+
+	if (access("/bin/mount", X_OK) == 0) {
+		system("/bin/mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
+	} else {
+		system("mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
+	}
 
 	srand(time(NULL));
 
-	mkdir("/var/cache/powertop", 0600);
+	if (access("/var/cache/", W_OK) == 0)
+		mkdir("/var/cache/powertop", 0600);
+	else
+		mkdir("/data/local/powertop", 0600);
 
 	load_results("/var/cache/powertop/saved_results.powertop");
 	load_parameters("/var/cache/powertop/saved_parameters.powertop");

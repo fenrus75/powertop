@@ -25,11 +25,14 @@
 #include "measurement.h"
 #include "acpi.h"
 #include "extech.h"
+#include "power_supply.h"
 #include "../parameters/parameters.h"
 #include "../lib.h"
 
 #include <sys/types.h>
 #include <dirent.h>
+#include <stdio.h>
+#include <fstream>
 
 double min_power = 50000.0;
 
@@ -111,16 +114,45 @@ void power_meters_callback(const char *d_name)
 		power_meters.push_back(meter);
 }
 
+void power_supply_callback(const char *d_name)
+{
+	char filename[4096];
+	char line[4096];
+	ifstream file;
+	bool discharging = false;
+
+	sprintf(filename, "/sys/class/power_supply/%s/uevent", d_name);
+	file.open(filename, ios::in);
+	if (!file)
+		return;
+
+	while (file) {
+		file.getline(line, 4096);
+
+		if (strstr(line, "POWER_SUPPLY_STATUS") && strstr(line, "POWER_SUPPLY_STATUS"))
+		      discharging = true;
+	}
+	file.close();
+
+	if (!discharging)
+	    return;
+
+	class power_supply *power;
+	power = new(std::nothrow) class power_supply(d_name);
+	if (power)
+		power_meters.push_back(power);
+}
+
 void detect_power_meters(void)
 {
-	process_directory("/proc/acpi/battery", power_meters_callback);
+	if (access("/sys/class/power_supply", R_OK ) == 0)
+		process_directory("/sys/class/power_supply", power_supply_callback);
+	else if (access("/proc/acpi/battery", R_OK ) == 0)
+		process_directory("/proc/acpi/battery", power_meters_callback);
 }
 
 void extech_power_meter(const char *devnode)
 {
-	DIR *dir;
-	struct dirent *entry;
-
 	class extech_power_meter *meter;
 
 	meter = new class extech_power_meter(devnode);

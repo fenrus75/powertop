@@ -60,6 +60,16 @@ static uint64_t get_msr(int cpu, uint64_t offset)
 	char msr_path[256];
 
 	fd = sprintf(msr_path, "/dev/cpu/%d/msr", cpu);
+
+	if (access(msr_path, R_OK) != 0){
+		fd = sprintf(msr_path, "/dev/msr%d", cpu);
+
+		if (access(msr_path, R_OK) != 0){
+			fprintf(stderr, "msr reg not found");
+			exit(-2);
+		}
+	}
+
 	fd = open(msr_path, O_RDONLY);
 
 	retval = pread(fd, &msr, sizeof msr, offset);

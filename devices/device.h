@@ -45,6 +45,8 @@ public:
 
 	device(void);
 
+	virtual ~device() {};
+
 	void register_sysfs_path(const char *path);
 
 	virtual double	utilization(void); /* percentage */

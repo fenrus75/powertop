@@ -38,7 +38,7 @@ using namespace std;
 #include "../parameters/parameters.h"
 
 #include <string.h>
-
+#include <unistd.h>
 
 rfkill::rfkill(char *_name, char *path): device()
 {

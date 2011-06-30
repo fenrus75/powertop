@@ -93,6 +93,8 @@ public:
 	vector<struct idle_state *> cstates;
 	vector<struct frequency *> pstates;
 
+	virtual ~abstract_cpu() {};
+
 	class abstract_cpu *parent;
 
 

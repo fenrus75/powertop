@@ -51,6 +51,7 @@ public:
 	class power_consumer *last_waker;
 
 	power_consumer(void);
+	virtual ~power_consumer() {};
 
 	virtual double Witts(void);
 	virtual const char * description(void) { return ""; };

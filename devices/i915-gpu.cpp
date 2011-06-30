@@ -38,7 +38,7 @@ using namespace std;
 #include "../process/powerconsumer.h"
 
 #include <string.h>
-
+#include <unistd.h>
 
 i915gpu::i915gpu(): device()
 {

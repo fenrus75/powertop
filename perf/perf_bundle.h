@@ -41,6 +41,7 @@ protected:
 	std::map<int, char*> event_names;
 public:
 	vector<void *> records;
+	virtual ~perf_bundle() {};
 
 	virtual void release(void);
 	void add_event(const char *event_name);

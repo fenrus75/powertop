@@ -39,7 +39,7 @@ using namespace std;
 #include "../devlist.h"
 
 #include <string.h>
-
+#include <unistd.h>
 
 alsa::alsa(char *_name, char *path): device()
 {

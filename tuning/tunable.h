@@ -48,6 +48,7 @@ public:
 
 	tunable(void);
 	tunable(const char *str, double _score, const char *good = "", const char *bad = "", const char *neutral ="");
+	virtual ~tunable() {};
 
 	virtual int good_bad(void) { return TUNE_NEUTRAL; }
 

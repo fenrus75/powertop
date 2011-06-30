@@ -33,6 +33,8 @@
 #include <time.h>
 #include <sys/stat.h>
 #include <getopt.h>
+#include <unistd.h>
+#include <locale.h>
 
 #include "cpu/cpu.h"
 #include "process/process.h"
@@ -248,7 +250,7 @@ int main(int argc, char **argv)
 	int option_index;
 	int c;
 
-	set_new_handler(out_of_memory);
+	//set_new_handler(out_of_memory);
 
 	setlocale (LC_ALL, "");
 #ifndef DISABLE_I18N

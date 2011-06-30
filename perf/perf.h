@@ -49,7 +49,7 @@ public:
 	perf_event(void);
 	perf_event(const char *event_name, int cpu = 0, int buffer_size = 128);
 
-	~perf_event(void);
+	virtual ~perf_event(void);
 
 
 	void set_event_name(const char *event_name);

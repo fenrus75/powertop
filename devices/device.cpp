@@ -49,6 +49,7 @@ using namespace std;
 #include "../html.h"
 #include "../measurement/measurement.h"
 #include "../devlist.h"
+#include <unistd.h>
 
 device::device(void)
 {

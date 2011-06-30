@@ -39,7 +39,7 @@
 #include "../process/powerconsumer.h"
 
 #include <string.h>
-
+#include <unistd.h>
 
 thinkpad_light::thinkpad_light(): device()
 {

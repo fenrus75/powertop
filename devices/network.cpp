@@ -50,10 +50,22 @@ extern "C" {
 #include <net/if.h>
 #include <linux/sockios.h>
 #include <sys/ioctl.h>
-
+#include <unistd.h>
 
 static map<string, class network *> nics;
 
+static inline void ethtool_cmd_speed_set(struct ethtool_cmd *ep,
+						__u32 speed)
+{
+
+	ep->speed = (__u16)speed;
+	ep->speed_hi = (__u16)(speed >> 16);
+}
+
+static inline __u32 ethtool_cmd_speed(struct ethtool_cmd *ep)
+{
+	return (ep->speed_hi << 16) | ep->speed;
+}
 
 static void do_proc_net_dev(void)
 {

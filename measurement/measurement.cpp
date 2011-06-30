@@ -33,6 +33,7 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <fstream>
+#include <unistd.h>
 
 double min_power = 50000.0;
 

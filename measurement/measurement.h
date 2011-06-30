@@ -38,6 +38,8 @@ public:
 	virtual double dev_capacity(void) { return 0.0;};  /* in Joules */
 
 	virtual double time_left(void);
+
+	virtual ~power_meter() {};
 };
 
 

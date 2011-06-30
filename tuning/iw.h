@@ -39,7 +39,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <netlink/genl/family.h>
 #include <netlink/genl/ctrl.h>
 
-#include <linux/nl80211.h>
+#include "nl80211.h"
 
 #define ETH_ALEN 6
 

@@ -364,6 +364,9 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		tmr = (struct timer_expire *)trace;
 
 		timer = find_create_timer((uint64_t)tmr->function);
+
+		if (timer->is_deferred())
+			return;
 		push_consumer(cpu, timer);
 		timer->fire(time, (uint64_t)tmr->timer);
 

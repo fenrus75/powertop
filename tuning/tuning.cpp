@@ -44,20 +44,23 @@
 
 static void sort_tunables(void);
 
-
+#ifndef DISABLE_NCURSES
 class tuning_window: public tab_window {
 public:
 	virtual void repaint(void);
 	virtual void cursor_enter(void);
 	virtual void expose(void);
 };
-
+#endif // DISABLE_NCURSES
 void initialize_tuning(void)
 {
+#ifndef DISABLE_NCURSES
 	class tuning_window *w;
 
 	w = new tuning_window();
 	create_tab("Tunables", _("Tunables"), w, _(" <ESC> Exit | <Enter> Toggle tunable"));
+#endif // DISABLE_NCURSES
+
 	add_sysfs_tunable(_("Enable Audio codec power management"), "/sys/module/snd_hda_intel/parameters/power_save", "1");
 	add_sysfs_tunable(_("Enable SATA link power management for /dev/sda"), "/sys/class/scsi_host/host0/link_power_management_policy", "min_power");
 	add_sysfs_tunable(_("NMI watchdog should be turned off"), "/proc/sys/kernel/nmi_watchdog", "0");
@@ -73,13 +76,16 @@ void initialize_tuning(void)
 
 	sort_tunables();
 
+#ifndef DISABLE_NCURSES
 	w->cursor_max = all_tunables.size() - 1;
+#endif // DISABLE_NCURSES
 }
 
 
 
 static void __tuning_update_display(int cursor_pos)
 {
+#ifndef DISABLE_NCURSES
 	WINDOW *win;
 	unsigned int i;
 
@@ -112,18 +118,21 @@ static void __tuning_update_display(int cursor_pos)
 		}
 		wprintw(win, "%s  %s\n", _(res), _(desc));
 	}
+#endif
 }
 
 void tuning_update_display(void)
 {
+#ifndef DISABLE_NCURSES
 	class tab_window *w;
 
 	w = tab_windows["Tunables"];
 	if (!w)
 		return;
 	w->repaint();
+#endif
 }
-
+#ifndef DISABLE_NCURSES
 void tuning_window::repaint(void)
 {
 	__tuning_update_display(cursor_pos);
@@ -138,7 +147,7 @@ void tuning_window::cursor_enter(void)
 		return;
 	tun->toggle();
 }
-
+#endif // DISABLE_NCURSES
 
 static bool tunables_sort(class tunable * i, class tunable * j)
 {
@@ -168,14 +177,14 @@ static void sort_tunables(void)
 {
 	sort(all_tunables.begin(), all_tunables.end(), tunables_sort);
 }
-
+#ifndef DISABLE_NCURSES
 void tuning_window::expose(void)
 {
 	cursor_pos = 0;
 	sort_tunables();
 	repaint();
 }
-
+#endif // DISABLE_NCURSES
 static const char *tune_class(int line)
 {
 	if (line & 1) {

@@ -141,6 +141,7 @@ static bool power_device_sort(class device * i, class device * j)
 
 void report_devices(void)
 {
+#ifndef DISABLE_NCURSES
 	WINDOW *win;
 	unsigned int i;
 	int show_power;
@@ -209,6 +210,7 @@ void report_devices(void)
 			all_devices[i]->human_name()
 			);
 	}
+#endif // DISABLE_NCURSES
 }
 
 static const char *line_class(int line)

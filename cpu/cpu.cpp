@@ -444,6 +444,7 @@ void html_display_cpu_cstates(void)
 
 void w_display_cpu_cstates(void)
 {
+#ifndef DISABLE_NCURSES
 	WINDOW *win;
 	char buffer[128];
 	char linebuf[1024];
@@ -530,6 +531,7 @@ void w_display_cpu_cstates(void)
 
 
 	}
+#endif // DISABLE_NCURSES
 }
 
 
@@ -648,6 +650,7 @@ void html_display_cpu_pstates(void)
 
 void w_display_cpu_pstates(void)
 {
+#ifndef DISABLE_NCURSES
 	WINDOW *win;
 	char buffer[128];
 	char linebuf[1024];
@@ -736,7 +739,7 @@ void w_display_cpu_pstates(void)
 
 
 	}
-
+#endif // DISABLE_NCURSES
 }
 
 

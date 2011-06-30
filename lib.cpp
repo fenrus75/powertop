@@ -237,9 +237,10 @@ void format_watts(double W, char *buffer, unsigned int len)
 	if (W < 0.0001)
 		sprintf(buffer, _("    0 mW"));
 		
-			
+#ifndef DISABLE_NCURSES			
 	while (mbstowcs(NULL,buffer,0) < len)
-		strcat(buffer, " ");	
+		strcat(buffer, " ");
+#endif	
 }
 
 

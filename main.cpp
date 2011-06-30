@@ -98,7 +98,7 @@ static void do_sleep(int seconds)
 		sleep(seconds);
 		return;
 	}
-
+#ifndef DISABLE_NCURSES
 	target = time(NULL) + seconds;
 	delta = seconds;
 	do {
@@ -138,6 +138,7 @@ static void do_sleep(int seconds)
 			break;
 			
 	} while (1);
+#endif
 }
 
 
@@ -365,8 +366,9 @@ int main(int argc, char **argv)
 		show_cur_tab();
 		learn_parameters(15, 0);
 	}
-
+#ifndef DISABLE_NCURSES
 	endwin();
+#endif
 	printf(_("Leaving PowerTOP\n"));
 
 

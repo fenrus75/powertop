@@ -624,6 +624,7 @@ double total_xwakes(void)
 
 void process_update_display(void)
 {
+#ifndef DISABLE_NCURSES
 	unsigned int i;
 	WINDOW *win;
 	double pw;
@@ -717,6 +718,7 @@ void process_update_display(void)
 		while (strlen(events) < 12) strcat(events, " ");
 		wprintw(win, "%s  %s %s %s %s\n", power, usage, events, name, pretty_print(all_power[i]->description(), descr, 128));
 	}
+#endif // DISABLE_NCURSES
 }
 
 static const char *process_class(int line)

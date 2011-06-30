@@ -168,8 +168,11 @@ void ahci::start_measurement(void)
 				file >> start_slumber;
 		}	
 		file.close();
-	} catch (std::ios_base::failure c) {
 	}
+#ifndef DISABLE_TRYCATCH
+	catch (std::ios_base::failure c) {
+	}
+#endif
 
 }
 
@@ -199,9 +202,11 @@ void ahci::end_measurement(void)
 			file >> end_slumber;
 		}
 		file.close();
-	} catch (std::ios_base::failure c) {
 	}
-
+#ifndef DISABLE_TRYCATCH
+	catch (std::ios_base::failure c) {
+	}
+#endif
 	if (end_active < start_active)
 		end_active = start_active;
 

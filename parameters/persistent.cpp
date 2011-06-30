@@ -26,7 +26,6 @@
 #include <fstream>
 #include <iomanip>
 #include <stdlib.h>
-#include <unistd.h>
 
 #include "parameters.h"
 #include "../measurement/measurement.h"
@@ -38,14 +37,13 @@ void save_all_results(const char *filename)
 	ofstream file;
 	unsigned int i;
 	struct result_bundle *bundle;
-	char* tempfilename = const_cast<char*>(filename);
+	char* pathname;
 
-	if (access("/var/", W_OK ) != 0)
-		sprintf(tempfilename, "/data/local/powertop/saved_results.powertop");
+	pathname = get_param_directory(filename);
 
-	file.open(tempfilename, ios::out);
+	file.open(pathname, ios::out);
 	if (!file) {
-		cout << _("Cannot save to file ") << tempfilename << "\n";
+		cout << _("Cannot save to file ") << pathname << "\n";
 		return;
 	}
 	for (i = 0; i < past_results.size(); i++) {	
@@ -71,14 +69,13 @@ void load_results(const char *filename)
 	struct result_bundle *bundle;
 	int first = 1;
 	unsigned int count = 0;
-	char* tempfilename = const_cast<char*>(filename);
+	char* pathname;
 
-	if (access("/var/", W_OK ) != 0)
-		sprintf(tempfilename, "/data/local/powertop/saved_results.powertop");
+	pathname = get_param_directory(filename);
 
-	file.open(tempfilename, ios::in);
+	file.open(pathname, ios::in);
 	if (!file) {
-		cout << _("Cannot load from file ") << tempfilename << "\n";
+		cout << _("Cannot load from file ") << pathname << "\n";
 		return;
 	}
 
@@ -128,19 +125,18 @@ void load_results(const char *filename)
 void save_parameters(const char *filename)
 {
 	ofstream file;
-	char* tempfilename = const_cast<char*>(filename);
+	char* pathname;
 
 //	printf("result size is %i, #parameters is %i \n", (int)past_results.size(), (int)all_parameters.parameters.size());
 
 	if (!global_power_valid())
 		return;
 
-	if (access("/var/", R_OK ) != 0)
-		sprintf(tempfilename, "/data/local/powertop/saved_parameters.powertop");
+	pathname = get_param_directory(filename);
 
-	file.open(tempfilename, ios::out);
+	file.open(pathname, ios::out);
 	if (!file) {
-		cout << _("Cannot save to file ") << tempfilename << "\n";
+		cout << _("Cannot save to file ") << pathname << "\n";
 		return;
 	}
 	
@@ -159,14 +155,13 @@ void load_parameters(const char *filename)
 	ifstream file;
 	char line[4096];
 	char *c1;
-	char* tempfilename = const_cast<char*>(filename);
+	char* pathname;
 
-	if (access("/var/", R_OK ) != 0)
-		sprintf(tempfilename, "/data/local/powertop/saved_parameters.powertop");
+	pathname = get_param_directory(filename);
 
-	file.open(tempfilename, ios::in);
+	file.open(pathname, ios::in);
 	if (!file) {
-		cout << _("Cannot load from file ") << tempfilename << "\n";
+		cout << _("Cannot load from file ") << pathname << "\n";
 		return;
 	}
 

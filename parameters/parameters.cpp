@@ -332,7 +332,7 @@ void store_results(double duration)
 			past_results.push_back(clone_results(&all_results));	
 		}
 		if ((past_results.size() % 10) == 0)
-			save_all_results();
+			save_all_results("saved_results.powertop");
 	}
 
 }
@@ -439,3 +439,16 @@ int global_power_valid(void)
 
 	return global_power_override;
 }
+
+/* find the directory to store powertop results/parameters based on distribution*/
+char* get_param_directory(const char *filename)
+{
+	static char tempfilename[4096];
+
+	if (access("/var/cache/powertop", W_OK ) == 0)
+		sprintf(tempfilename, "/var/cache/powertop/%s", filename);
+	if (access("/data/local/powertop", W_OK ) == 0)
+		sprintf(tempfilename, "/data/local/powertop/%s", filename);
+
+	return tempfilename;
+};

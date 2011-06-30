@@ -235,8 +235,8 @@ void html_report(int time, bool file)
 
 	/* and wrap up */
 	learn_parameters(50, 0);
-	save_all_results("/var/cache/powertop/saved_results.powertop");
-	save_parameters("/var/cache/powertop/saved_parameters.powertop");
+	save_all_results("saved_results.powertop");
+	save_parameters("saved_parameters.powertop");
 	end_pci_access();
 	exit(0);
 }
@@ -276,8 +276,8 @@ int main(int argc, char **argv)
 	else
 		mkdir("/data/local/powertop", 0600);
 
-	load_results("/var/cache/powertop/saved_results.powertop");
-	load_parameters("/var/cache/powertop/saved_parameters.powertop");
+	load_results("saved_results.powertop");
+	load_parameters("saved_parameters.powertop");
 
 	enumerate_cpus();
 	create_all_devices();
@@ -339,7 +339,7 @@ int main(int argc, char **argv)
 
 
         learn_parameters(250, 0);
-	save_parameters("/var/cache/powertop/saved_parameters.powertop");
+	save_parameters("saved_parameters.powertop");
 
 
 	if (debug_learning) {
@@ -374,10 +374,10 @@ int main(int argc, char **argv)
 	end_cpu_data();
 	clear_cpu_data();
 
-	save_all_results("/var/cache/powertop/saved_results.powertop");
-	save_parameters("/var/cache/powertop/saved_parameters.powertop");
+	save_all_results("saved_results.powertop");
+	save_parameters("saved_parameters.powertop");
 	learn_parameters(500, 0);
-	save_parameters("/var/cache/powertop/saved_parameters.powertop");
+	save_parameters("saved_parameters.powertop");
 	end_pci_access();
 	reset_display();
 

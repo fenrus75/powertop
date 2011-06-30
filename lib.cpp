@@ -51,7 +51,9 @@ extern "C" {
 #include <sys/stat.h>
 #include <dirent.h>
 #include <locale.h>
+#ifndef DISABLE_I18N
 #include <libintl.h>
+#endif
 #include <limits>
 #include <math.h>
 

@@ -250,9 +250,10 @@ int main(int argc, char **argv)
 	set_new_handler(out_of_memory);
 
 	setlocale (LC_ALL, "");
+#ifndef DISABLE_I18N
 	bindtextdomain ("powertop", "/usr/share/locale");
 	textdomain ("powertop");
-
+#endif
 	uid = getuid();
 
 	if (uid != 0) {

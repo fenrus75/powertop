@@ -54,6 +54,8 @@ extern "C" {
 
 static map<string, class network *> nics;
 
+#ifdef DISABLE_TRYCATCH
+
 static inline void ethtool_cmd_speed_set(struct ethtool_cmd *ep,
 						__u32 speed)
 {
@@ -66,6 +68,8 @@ static inline __u32 ethtool_cmd_speed(struct ethtool_cmd *ep)
 {
 	return (ep->speed_hi << 16) | ep->speed;
 }
+
+#endif
 
 static void do_proc_net_dev(void)
 {

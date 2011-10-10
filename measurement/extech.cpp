@@ -62,9 +62,6 @@
 
 using namespace std;
 
-static const char * device = "/dev/ttyUSB0";
-
-
 struct packet {
 	char	buf[256];
 	char	op[32];

@@ -256,7 +256,6 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		struct wakeup_entry *we;
 		class power_consumer *from = NULL;
 		class process *dest_proc, *from_proc;
-		int i;
 		
 		we = (struct wakeup_entry *)trace;
 
@@ -892,7 +891,6 @@ void html_summary(void)
 
 void process_process_data(void)
 {
-	unsigned int i;
 	if (!perf_events)
 		return;
 
@@ -951,8 +949,6 @@ double total_cpu_time(void)
 
 void end_process_data(void)
 {
-	unsigned int i;
-
 	report_utilization("cpu-consumption", total_cpu_time());
 	report_utilization("cpu-wakeups", total_wakeups());
 	report_utilization("gpu-operations", total_gpu_ops());

@@ -163,8 +163,10 @@ bool timer::is_deferred(void)
 			if (!c)
 				continue;
 			c--;
-			if (*c == 'D')
+			if (*c == 'D') {
+				fclose(file);
 				return true;
+			}
 		}
 	}
 	fclose(file);

@@ -175,16 +175,21 @@ void write_sysfs(const string &filename, const string &value)
 	file.close();
 }
 
-int read_sysfs(const string &filename)
+int read_sysfs(const string &filename, bool *ok)
 {
 	ifstream file;
 	int i;
 
 	file.open(filename.c_str(), ios::in);
-	if (!file)
+	if (!file) {
+		if (ok)
+			*ok = false;
 		return 0;
+	}
 	file >> i;
 	file.close();
+	if (ok)
+		*ok = true;
 	return i;
 }
 

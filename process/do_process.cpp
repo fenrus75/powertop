@@ -449,7 +449,10 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 	if (strcmp(event_name, "power:power_end") == 0) {
 		consume_blame(cpu);
 	}
-	if (strcmp(event_name, "i915:i915_gem_request_submit") == 0) {
+	if (strcmp(event_name, "i915:i915_gem_ring_dispatch") == 0
+	 || strcmp(event_name, "i915:i915_gem_request_submit") == 0) {
+		/* any kernel contains only one of the these tracepoints,
+		 * the latter one got replaced by the former one */
 		class power_consumer *consumer;
 		consumer = current_consumer(cpu);
 		/* currently we don't count graphic requests submitted from irq contect */
@@ -512,6 +515,7 @@ void start_process_measurement(void)
 		perf_events->add_event("power:power_end");
 		perf_events->add_event("workqueue:workqueue_execute_start");
 		perf_events->add_event("workqueue:workqueue_execute_end");
+		perf_events->add_event("i915:i915_gem_ring_dispatch");
 		perf_events->add_event("i915:i915_gem_request_submit");
 		perf_events->add_event("writeback:writeback_inode_dirty");
 	}

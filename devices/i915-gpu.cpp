@@ -66,10 +66,14 @@ void create_i915_gpu(void)
 	char filename[4096];
 	class i915gpu *gpu;
 
-	strcpy(filename, "/sys/kernel/debug/tracing/events/i915/i915_gem_request_submit/format");
+	strcpy(filename, "/sys/kernel/debug/tracing/events/i915/i915_gem_ring_dispatch/format");
 
-	if (access(filename, R_OK) !=0)
-		return;
+	if (access(filename, R_OK) !=0) {
+		/* try an older tracepoint */
+		strcpy(filename, "/sys/kernel/debug/tracing/events/i915/i915_gem_request_submit/format");
+		if (access(filename, R_OK) != 0)
+			return;
+	}
 
 	register_parameter("gpu-operations");
 

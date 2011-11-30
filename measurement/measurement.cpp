@@ -26,9 +26,11 @@
 #include "acpi.h"
 #include "extech.h"
 #include "power_supply.h"
+#include "sysfs.h"
 #include "../parameters/parameters.h"
 #include "../lib.h"
 
+#include <string>
 #include <sys/types.h>
 #include <dirent.h>
 #include <stdio.h>
@@ -107,7 +109,20 @@ double global_time_left(void)
 	return total;
 }
 
-void power_meters_callback(const char *d_name)
+void sysfs_power_meters_callback(const char *d_name)
+{
+	std::string type = read_sysfs_string("/sys/class/power_supply/%s/type", d_name);
+
+	if (type != "Battery" && type != "UPS")
+		return;
+
+	class sysfs_power_meter *meter;
+	meter = new(std::nothrow) class sysfs_power_meter(d_name);
+	if (meter)
+		power_meters.push_back(meter);
+}
+
+void acpi_power_meters_callback(const char *d_name)
 {
 	class acpi_power_meter *meter;
 	meter = new(std::nothrow) class acpi_power_meter(d_name);

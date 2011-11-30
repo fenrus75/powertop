@@ -170,11 +170,15 @@ class perf_process_bundle: public perf_bundle
         virtual void handle_trace_point(int type, void *trace, int cpu, uint64_t time, unsigned char flags);
 };
 
+static bool comm_is_xorg(char *comm)
+{
+	return strcmp(comm, "Xorg") == 0 || strcmp(comm, "X") == 0;
+}
 
 /* some processes shouldn't be blamed for the wakeup if they wake a process up... for now this is a hardcoded list */
 int dont_blame_me(char *comm)
 {
-	if (strcmp(comm, "Xorg") == 0)
+	if (comm_is_xorg(comm))
 		return 1;
 	if (strcmp(comm, "dbus-daemon") == 0)
 		return 1;
@@ -290,7 +294,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			dest_proc->last_waker = from;
 
 		/* Account processes that wake up X specially */
-		if (from && dest_proc && strcmp(dest_proc->comm, "Xorg") == 0)
+		if (from && dest_proc && comm_is_xorg(dest_proc->comm))
 			from->xwakes ++ ;
 
 	}
@@ -465,7 +469,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		if (consumer && strcmp(consumer->name(), "process")==0) {
 			class process *proc;
 			proc = (class process *) consumer;
-			if (strcmp(proc->comm, "Xorg")==0 && proc->last_waker) {
+			if (comm_is_xorg(proc->comm) && proc->last_waker) {
 				consumer = proc->last_waker;
 			}
 		}

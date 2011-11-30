@@ -565,7 +565,7 @@ void w_display_cpu_cstates(void)
 			if (!_core)
 				continue;
 
-			for (line = LEVEL_HEADER; line < 10; line++) {
+			for (line = LEVEL_HEADER; line < 20; line++) {
 				int first = 1;
 				ctr = 0;
 				linebuf[0] = 0;

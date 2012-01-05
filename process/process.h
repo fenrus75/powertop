@@ -30,7 +30,7 @@
 #include "powerconsumer.h"
 
 #ifdef __x86_64__
-#define BIT64 1 
+#define BIT64 1
 #endif
 
 /*
@@ -85,8 +85,8 @@ extern void all_processes_to_all_power(void);
 
 extern void clear_processes(void);
 extern void process_update_display(void);
-extern void html_process_update_display(void);
-extern void html_summary(void);
+extern void report_process_update_display(void);
+extern void report_summary(void);
 
 
 

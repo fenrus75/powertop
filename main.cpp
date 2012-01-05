@@ -1,7 +1,7 @@
 /*
  * Copyright 2010, Intel Corporation
  *
- * This file is part of PowerTOP
+ * This is part of PowerTOP
  *
  * This program file is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -41,7 +41,7 @@
 #include "perf/perf.h"
 #include "perf/perf_bundle.h"
 #include "lib.h"
-#include "html.h"
+
 
 #include "devices/device.h"
 #include "devices/usb.h"
@@ -54,6 +54,7 @@
 
 #include "display.h"
 #include "devlist.h"
+#include "report.h"
 
 int debug_learning = 0;
 
@@ -67,8 +68,10 @@ static const struct option long_options[] =
 	{"help",no_argument, NULL, 'u'}, /* u for usage */
 	{"calibrate",no_argument, NULL, 'c'},
 	{"html", optional_argument, NULL, 'h'},
+    {"csv", optional_argument, NULL, 'C'},
 	{"extech", optional_argument, NULL, 'e'},
 	{"time", optional_argument, NULL, 't'},
+	{"iteration", optional_argument, NULL, 'i'},
 	{NULL, 0, NULL, 0}
 };
 
@@ -85,7 +88,9 @@ static void print_usage()
 	printf(_("--calibrate \t runs powertop in calibration mode\n"));
 	printf(_("--extech=devnode \t uses an Extech Power Analyzer for measurements\n"));
 	printf(_("--html[=FILENAME]\t\t generate a html report\n"));
-	printf(_("--time[=secs]\t\t generate a html report for secs\n"));
+	printf(_("--csv[=FILENAME]\t\t generate a csv report\n"));
+	printf(_("--time[=secs]\t\t generate a report for secs\n"));
+	printf(_("--iteration[=iterations]\t\t number of times to run tests\n"));
 	printf(_("--help \t\t print this help menu\n"));
 	printf("\n");
 	printf(_("For more help please refer to the README\n\n"));
@@ -138,7 +143,7 @@ static void do_sleep(int seconds)
 		delta = target - time(NULL);
 		if (delta <= 0)
 			break;
-			
+
 	} while (1);
 #endif
 }
@@ -154,7 +159,6 @@ void one_measurement(int seconds)
 
 	do_sleep(seconds);
 
-
 	end_cpu_measurement();
 	end_process_measurement();
 	collect_open_devices();
@@ -166,25 +170,24 @@ void one_measurement(int seconds)
 
 	/* output stats */
 	process_update_display();
-	html_summary();
+	report_summary();
 	w_display_cpu_cstates();
 	w_display_cpu_pstates();
-	html_display_cpu_cstates();
-	html_display_cpu_pstates();
+	report_display_cpu_cstates();
+	report_display_cpu_pstates();
+	report_process_update_display();
 
-	html_process_update_display();
 	tuning_update_display();
 
 	end_process_data();
-		
 
 	global_joules_consumed();
 	compute_bundle();
 
-	report_devices();
-	html_show_open_devices();
+	show_report_devices();
+	report_show_open_devices();
 
-	html_report_devices();
+	report_devices();
 
 	store_results(measurement_time);
 	end_cpu_data();
@@ -217,25 +220,22 @@ static void load_board_params()
 	global_power_override = 1;
 }
 
-void html_report(int time, bool file)
+void report(int time, int iterations, char *file)
 {
-	fprintf(stderr, _("Measuring for %d seconds\n"),time);
+
 	/* one to warm up everything */
+	fprintf(stderr, _("Preparing to take measurements\n"));
 	utf_ok = 0;
 	one_measurement(1);
-
-	if(file)
-		init_html_output( (optarg ? optarg : "powertop.html"));
-	else
-		init_html_output("powertop.html");
-
-	initialize_tuning();
-	/* and then the real measurement */
-	one_measurement(time);
-	html_show_tunables();
-
-	finish_html_output();
-
+	fprintf(stderr, _("Measuring %d time(s) for %d seconds each\n"),iterations,time);
+	for (int i=0; i != iterations; i++){
+		init_report_output(file);
+		initialize_tuning();
+		/* and then the real measurement */
+		one_measurement(time);
+		report_show_tunables();
+		finish_report_output();
+	}
 	/* and wrap up */
 	learn_parameters(50, 0);
 	save_all_results("saved_results.powertop");
@@ -246,9 +246,14 @@ void html_report(int time, bool file)
 
 int main(int argc, char **argv)
 {
+	int ret;
 	int uid;
 	int option_index;
 	int c;
+	bool wantreport = FALSE;
+	char filename[4096];;
+	int  timetotest = 20;
+	int  iterations = 1;
 
 	//set_new_handler(out_of_memory);
 
@@ -264,13 +269,13 @@ int main(int argc, char **argv)
 		printf(_("exiting...\n"));
 		exit(EXIT_FAILURE);
 	}
-	system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
-	system("/sbin/modprobe msr > /dev/null 2>&1");
+	ret = system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
+	ret = system("/sbin/modprobe msr > /dev/null 2>&1");
 
 	if (access("/bin/mount", X_OK) == 0) {
-		system("/bin/mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
+		ret = system("/bin/mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
 	} else {
-		system("mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
+		ret = system("mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
 	}
 
 	srand(time(NULL));
@@ -298,8 +303,7 @@ int main(int argc, char **argv)
 	load_board_params();
 
 	while (1) { /* parse commandline options */
-		c = getopt_long (argc, argv, "ch:t:uV", long_options, &option_index);
-
+		c = getopt_long (argc, argv, "ch:C:i:t:uV", long_options, &option_index);
 		/* Detect the end of the options. */
 		if (c == -1)
 			break;
@@ -323,26 +327,39 @@ int main(int argc, char **argv)
 				break;
 
 			case 'h': /* html report */
-				html_report(20, TRUE);
+				wantreport = TRUE;
+				reporttype = 1;
+				sprintf(filename, "%s", optarg ? optarg : "powertop.html" );
 				break;
 
-			case 't': /* html report */
-				html_report((optarg ? atoi(optarg) : 20), FALSE);
+			case 't':
+				timetotest = (optarg ? atoi(optarg) : 20);
 				break;
 
+			case 'i':
+				iterations = (optarg ? atoi(optarg) : 1);
+				break;
 
+            case 'C': /* csv report*/
+            	wantreport = TRUE;
+            	reporttype = 0;
+				sprintf(filename, "%s", optarg ? optarg : "powertop.csv");
+				break;
 			case '?': /* Unknown option */
 				/* getopt_long already printed an error message. */
 				break;
 		}
 	}
 
+	if (wantreport)
+		 report(timetotest, iterations, filename);
+
 	if (debug_learning)
 		printf("Learning debugging enabled\n");
 
 
 
-        learn_parameters(250, 0);
+    learn_parameters(250, 0);
 	save_parameters("saved_parameters.powertop");
 
 
@@ -388,5 +405,5 @@ int main(int argc, char **argv)
 
 	return 0;
 
-	
+
 }

@@ -21,6 +21,6 @@ extern void clear_devpower(void);
 extern void register_devpower(const char *devstring, double power, class device *dev);
 extern void run_devpower_list(void);
 
-extern void html_show_open_devices(void);
+extern void report_show_open_devices(void);
 
 #endif

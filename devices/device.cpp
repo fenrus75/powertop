@@ -46,7 +46,7 @@ using namespace std;
 #include "../parameters/parameters.h"
 #include "../display.h"
 #include "../lib.h"
-#include "../html.h"
+#include "../report.h"
 #include "../measurement/measurement.h"
 #include "../devlist.h"
 #include <unistd.h>
@@ -205,7 +205,7 @@ void report_devices(void)
 			strcpy(power, "           ");
 
 
-		wprintw(win, "%s %s %s\n", 
+		wprintw(win, "%s %s %s\n",
 			power,
 			util,
 			all_devices[i]->human_name()
@@ -222,7 +222,7 @@ static const char *line_class(int line)
 	return "device_even";
 }
 
-void html_report_devices(void)
+void show_report_devices(void)
 {
 	unsigned int i;
 	int show_power;
@@ -231,36 +231,58 @@ void html_report_devices(void)
 	char util[128];
 	char power[128];
 
-
-	if (!htmlout)
+	if ((!reportout.csv_report)&&(!reportout.http_report))
 		return;
 
 	show_power = global_power_valid();
 
 	sort(all_devices.begin(), all_devices.end(), power_device_sort);
 
+	if (reporttype)
+		fprintf(reportout.http_report,
+			"<h2>Device Power Report</h2>\n");
+	else
+		fprintf(reportout.csv_report,
+			"**Device Power Report**,\n");
 
-	fprintf(htmlout, "<h2>Device power report</h2>\n");
 
 
 	pw = global_joules_consumed();
 	if (pw > 0.0001) {
 		char buf[32];
-		fprintf(htmlout, "<p>The battery reports a discharge rate of %sW</p>\n",
+		if (reporttype)
+			fprintf(reportout.http_report,
+				"<p>The battery reports a discharge rate of %sW</p>\n",
+				fmt_prefix(pw, buf));
+		else
+			fprintf(reportout.csv_report,
+				"The battery reports a discharge rate of:, %sW, \n",
 				fmt_prefix(pw, buf));
 	}
 
 	if (show_power) {
 		char buf[32];
-		fprintf(htmlout, "<p>System baseline power is estimated at %sW</p>\n",
+		if (reporttype) {
+			fprintf(reportout.http_report,
+				"<p>System baseline power is estimated at %sW</p>\n <table width=100%%>\n",
 				fmt_prefix(get_parameter_value("base power"), buf));
+			fprintf(reportout.http_report,
+				"<tr><th width=10%%>Power est.</th><th width=10%%>Usage</th><th class=\"device\">Device name</th></tr>\n");
+		} else {
+			fprintf(reportout.csv_report,
+				"System baseline power is estimated at:,  %sW, \n\n",
+				fmt_prefix(get_parameter_value("base power"), buf));
+			fprintf(reportout.csv_report,
+				"Power est.:, Usage:,  Device name:, \n");
+		}
+	}else {
+		if (reporttype)
+			fprintf(reportout.http_report,
+					" <table width=100%%>\n <tr><th width=10%%>Usage</th><th class=\"device\">Device name</th></tr>\n");
+		else
+			fprintf(reportout.csv_report,
+					"Usage:, Device name:, \n");
 	}
-
-	fprintf(htmlout, "<table width=100%%>\n");
-	if (show_power)
-		fprintf(htmlout, "<tr><th width=10%%>Power est.</th><th width=10%%>Usage</th><th class=\"device\">Device name</th></tr>\n");
-	else
-		fprintf(htmlout, "<tr><th width=10%%>Usage</th><th class=\"device\">Device name</th></tr>\n");
 
 	for (i = 0; i < all_devices.size(); i++) {
 		double P;
@@ -283,21 +305,25 @@ void html_report_devices(void)
 
 
 
-		if (show_power)
-			fprintf(htmlout, "<tr class=\"%s\"><td class=\"device_power\">%s</td><td class=\"device_util\">%s</td><td>%s</td></tr>\n", 
-				line_class(i),
-				power,
-				util,
-				all_devices[i]->human_name()
-				);
-		else
-			fprintf(htmlout, "<tr class=\"%s\"><td class=\"device_util\">%s</td><td>%s</td></tr>\n", 
-				line_class(i),
-				util,
-				all_devices[i]->human_name()
-				);
+		if (show_power) {
+			if (reporttype)
+				fprintf(reportout.http_report,"<tr class=\"%s\"><td class=\"device_power\">%s</td><td class=\"device_util\">%s</td><td>%s</td></tr>\n",
+					line_class(i), power, util, all_devices[i]->human_name());
+			else
+				fprintf(reportout.csv_report,"%s, %s, \"%s\", \n", power, util, all_devices[i]->human_name());
+
+		} else {
+			if (reporttype)
+				fprintf(reportout.http_report,"<tr class=\"%s\"><td class=\"device_util\">%s</td><td>%s</td></tr>\n",
+					line_class(i), util, all_devices[i]->human_name());
+			else
+				fprintf(reportout.csv_report,"%s, \"%s\", \n", util, all_devices[i]->human_name());
+		}
 	}
-	fprintf(htmlout, "</table>\n");
+	if (reporttype)
+		fprintf(reportout.http_report, "</table>\n");
+	else
+		fprintf(reportout.csv_report,"\n");
 }
 
 

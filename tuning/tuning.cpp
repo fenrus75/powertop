@@ -39,7 +39,7 @@
 #include "ethernet.h"
 #include "wifi.h"
 #include "../display.h"
-#include "../html.h"
+#include "../report.h"
 #include "../lib.h"
 
 static void sort_tunables(void);
@@ -168,7 +168,7 @@ static bool tunables_sort(class tunable * i, class tunable * j)
 
 	if (strcasecmp(i->description(), j->description()) == -1)
 		return true;
-	
+
 	return false;
 }
 
@@ -202,12 +202,12 @@ static const char *tune_class_bad(int line)
 }
 
 
-void html_show_tunables(void)
+void report_show_tunables(void)
 {
 	unsigned int i, line;
 	/* three sections; bad, unfixable, good */
 
-	if (!htmlout)
+	if ((!reportout.csv_report)&&(!reportout.http_report))
 		return;
 
 	sort_tunables();
@@ -221,33 +221,59 @@ void html_show_tunables(void)
 		if (gb != TUNE_BAD)
 			continue;
 
-		if (line == 0) {	
-			fprintf(htmlout, "<h2>Software settings in need of tuning</h2>\n");
-			fprintf(htmlout, "<p><table width=100%%>\n");
+		if (line == 0) {
+			if(reporttype)
+				fprintf(reportout.http_report,"<h2>Software Settings in need of Tuning</h2>\n <p><table width=100%%>\n");
+			else
+				fprintf(reportout.csv_report,"**Software Settings in need of Tuning**, \n\n");
+
 		}
 
 		line++;
-		fprintf(htmlout, "<tr class=\"%s\"><td>%s</td></tr>\n", tune_class_bad(line), all_tunables[i]->description());
+		if (i < 1 && !reporttype)
+			fprintf(reportout.csv_report, "Description, \n");
+
+		if (reporttype)
+			fprintf(reportout.http_report,"<tr class=\"%s\"><td>%s</td></tr>\n", tune_class_bad(line) , all_tunables[i]->description());
+		else
+			fprintf(reportout.csv_report, "\"%s\", \n", all_tunables[i]->description());
 	}
 
-	if (line > 0) 
-		fprintf(htmlout, "</table></p>\n");
+	if (line > 0)
+		if(reporttype)
+			fprintf(reportout.http_report,"</table></p>\n");
+		else
+			fprintf(reportout.csv_report, "\n");
 
 
 	line = 0;
 	for (i = 0; i < all_untunables.size(); i++) {
-		if (line == 0) {	
-			fprintf(htmlout, "<h2>Untunable software issues</h2>\n");
-			fprintf(htmlout, "<p><table width=100%%>\n");
+		if (line == 0) {
+			if(reporttype)
+				fprintf(reportout.http_report,
+					"<h2>Untunable Software Issues</h2>\n <p><table width=100%%>\n");
+			else
+				fprintf(reportout.csv_report,
+					"**Untunable Software Issues**,\n\n");
 		}
 
 		line++;
-		fprintf(htmlout, "<tr class=\"%s\"><td>%s</td></tr>\n", tune_class_bad(line), all_untunables[i]->description());
+		if (i < 1 && !reporttype)
+			fprintf(reportout.csv_report, "Description, \n");
+
+		if (reporttype)
+			fprintf(reportout.http_report,
+					"<tr class=\"%s\"><td>%s</td></tr>\n",
+					tune_class_bad(line), all_untunables[i]->description());
+		else
+			fprintf(reportout.csv_report,"\"%s\", \n", all_untunables[i]->description());
 	}
 
-	if (line > 0) 
-		fprintf(htmlout, "</table></p>\n");
-
+	if (line > 0)
+		if(reporttype)
+			fprintf(reportout.http_report,"</table></p>\n");
+		else
+			fprintf(reportout.csv_report,"\n");
 
 	line = 0;
 	for (i = 0; i < all_tunables.size(); i++) {
@@ -258,16 +284,30 @@ void html_show_tunables(void)
 		if (gb != TUNE_GOOD)
 			continue;
 
-		if (line == 0) {	
-			fprintf(htmlout, "<h2>Optimal tuned software settings</h2>\n");
-			fprintf(htmlout, "<p><table width=100%%>\n");
+		if (line == 0) {
+			if (reporttype)
+				fprintf(reportout.http_report,
+					"<h2>Optimal Tuned Software Settings</h2>\n <p><table width=100%%>\n");
+			else
+				fprintf(reportout.csv_report,
+					"**Optimal Tuned Software Settings**, \n\n");
 		}
 
 		line++;
-		fprintf(htmlout, "<tr class=\"%s\"><td>%s</td></tr>\n", tune_class(line), all_tunables[i]->description());
+		if (i < 1 && !reporttype)
+			fprintf(reportout.csv_report, "Description, \n");
+
+		if (reporttype)
+			fprintf(reportout.http_report,"<tr class=\"%s\"><td>%s</td></tr>\n",
+			tune_class(line), all_tunables[i]->description());
+		else
+			fprintf(reportout.csv_report,"\"%s\", \n", all_tunables[i]->description());
 	}
 
-	if (line > 0) 
-		fprintf(htmlout, "</table></p>\n");
-
+	if (line > 0){
+		if (reporttype)
+			fprintf(reportout.http_report,"</table></p>\n");
+		else
+			fprintf(reportout.csv_report,"\n");
+	}
 }

@@ -33,7 +33,7 @@
 #include <sys/stat.h>
 #include <vector>
 #include <algorithm>
-#include <unistd.h> 
+#include <unistd.h>
 #include <sys/types.h>
 #include <dirent.h>
 #include <string.h>
@@ -42,7 +42,7 @@ using namespace std;
 
 #include "devlist.h"
 #include "lib.h"
-#include "html.h"
+#include "report.h"
 
 #include "process/process.h"
 #include "devices/device.h"
@@ -63,7 +63,7 @@ static vector<struct devuser *> one;
 static vector<struct devuser *> two;
 
 static int phase;
-/* 
+/*
  * 0 - one = before,  two = after
  * 1 - one = after,   two = before
  */
@@ -89,7 +89,7 @@ void collect_open_devices(void)
 	}
 	target->resize(0);
 
-	
+
 	dir = opendir("/proc/");
 	if (!dir)
 		return;
@@ -150,7 +150,7 @@ void collect_open_devices(void)
 				sprintf(filename, "/proc/%s/comm", entry->d_name);
 				strncpy(dev->comm, read_sysfs_string("/proc/%s/comm", entry->d_name).c_str(), 31);
 				target->push_back(dev);
-				
+
 			}
 		}
 		closedir(dir2);
@@ -263,9 +263,9 @@ void run_devpower_list(void)
 			devpower[i]->dev->hide = true;
 		else
 			devpower[i]->dev->hide = false;
-			
+
 	}
-		
+
 }
 
 static bool devlist_sort(struct devuser * i, struct devuser * j)
@@ -284,13 +284,13 @@ static const char *dev_class(int line)
 	return "device_even";
 }
 
-void html_show_open_devices(void)
+void report_show_open_devices(void)
 {
 	vector<struct devuser *> *target;
 	unsigned int i;
 	char prev[128], proc[128];
 
-	if (!htmlout)
+	if ((!reportout.csv_report)&&(!reportout.http_report))
 		return;
 
 	prev[0] = 0;
@@ -305,18 +305,34 @@ void html_show_open_devices(void)
 
 	sort(target->begin(), target->end(), devlist_sort);
 
-	fprintf(htmlout, _("<h2>Process device activity</h2>\n"));
-	fprintf(htmlout, "<table width=100%%>\n");
-	fprintf(htmlout, _("<tr><th class=\"device\" width=40%%>Process</th><th class=\"device\">Device</th></tr>\n"));
+	if (reporttype) {
+		fprintf(reportout.http_report,_("<h2>Process device activity</h2>\n <table width=100%%>\n"));
+		fprintf(reportout.http_report,_("<tr><th class=\"device\" width=40%%>Process</th><th class=\"device\">Device</th></tr>\n"));
+ 	}else {
+		fprintf(reportout.csv_report,_("**Process Device Activity**, \n\n"));
+		fprintf(reportout.csv_report,_("Process, Device, \n"));
+ 	}
 
 	for (i = 0; i < target->size(); i++) {
 		proc[0] = 0;
+
 		if (strcmp(prev, (*target)[i]->comm) != 0)
 			sprintf(proc, "%s", (*target)[i]->comm);
-		fprintf(htmlout, "<tr class=\"%s\"><td>%s</td><td>%s</td></tr>\n",
-			dev_class(i), proc, (*target)[i]->device);
+
+		if (reporttype)
+			fprintf(reportout.http_report,
+				"<tr class=\"%s\"><td>%s</td><td>%s</td></tr>\n",
+				dev_class(i), proc, (*target)[i]->device);
+		 else
+			fprintf(reportout.csv_report,
+				"%s, %s, \n",
+				proc, (*target)[i]->device);
+
 		sprintf(prev, "%s", (*target)[i]->comm);
 	}
-
-	fprintf(htmlout, "</table>\n");
+	if (reporttype)
+		fprintf(reportout.http_report,"</table>\n");
+	else
+		fprintf(reportout.csv_report,"\n");
 }
+

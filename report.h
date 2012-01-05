@@ -22,19 +22,25 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef __INCLUDE_GUARD_HTML_H_
-#define __INCLUDE_GUARD_HTML_H_
+#ifndef __INCLUDE_GUARD_REPORT_H_
+#define __INCLUDE_GUARD_REPORT_H_
 
 #include <string>
 #include <stdio.h>
 
 using namespace std;
 
+struct reportstream {
+	FILE *http_report;
+	FILE *csv_report;
+	char filename[256];
+};
 
-extern FILE *htmlout;
+void http_header_output(void);
 
-extern void init_html_output(const char *filename);
-extern void finish_html_output(void);
-
+extern bool reporttype;
+extern struct reportstream reportout;
+extern void init_report_output(char *filename_str);
+extern void finish_report_output(void);
 
 #endif

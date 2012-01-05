@@ -62,17 +62,17 @@ struct frequency {
 	int line_level;
 
 	uint64_t freq;
-	
+
 	uint64_t time_after;
 	uint64_t time_before;
 
 	int before_count;
 	int after_count;
 
-	double   display_value;	
+	double   display_value;
 };
 
-class abstract_cpu 
+class abstract_cpu
 {
 protected:
 	int	first_cpu;
@@ -87,7 +87,7 @@ public:
 	int	childcount;
 	bool	idle, old_idle;
 	uint64_t	current_frequency;
-	uint64_t	effective_frequency;	
+	uint64_t	effective_frequency;
 
 	vector<class abstract_cpu *> children;
 	vector<struct idle_state *> cstates;
@@ -146,7 +146,7 @@ public:
 
 extern vector<class abstract_cpu *> all_cpus;
 
-class cpu_linux: public abstract_cpu 
+class cpu_linux: public abstract_cpu
 {
 
 	void		account_freq(uint64_t frequency, uint64_t duration);
@@ -167,7 +167,7 @@ public:
 
 };
 
-class cpu_core: public abstract_cpu 
+class cpu_core: public abstract_cpu
 {
 	void		account_freq(uint64_t frequency, uint64_t duration);
 public:
@@ -182,7 +182,7 @@ public:
 	virtual void	change_effective_frequency(uint64_t time, uint64_t freq);
 };
 
-class cpu_package: public abstract_cpu 
+class cpu_package: public abstract_cpu
 {
 	void		account_freq(uint64_t frequency, uint64_t duration);
 public:
@@ -202,15 +202,15 @@ public:
 
 extern void enumerate_cpus(void);
 
-extern void html_display_cpu_pstates(void);
-extern void html_display_cpu_cstates(void);
+extern void report_display_cpu_pstates(void);
+extern void report_display_cpu_cstates(void);
 
 
 
-extern void display_cpu_cstates(const char *start= "", 
-				const char *end = "", 
-				const char *linestart = "", 
-				const char *separator = "| ", 
+extern void display_cpu_cstates(const char *start= "",
+				const char *end = "",
+				const char *linestart = "",
+				const char *separator = "| ",
 				const char *lineend = "\n");
 
 extern void w_display_cpu_cstates(void);

@@ -36,7 +36,7 @@
 #include "../perf/perf_bundle.h"
 #include "../lib.h"
 #include "../display.h"
-#include "../html.h"
+#include "../report.h"
 
 static class abstract_cpu system_level;
 
@@ -145,12 +145,12 @@ static class abstract_cpu * new_cpu(int number, char * vendor, int family, int m
 		ret = new class cpu_linux;
 	ret->set_number(number, number);
 	ret->childcount = 0;
-	
+
 	return ret;
 }
 
 
-	
+
 
 static void handle_one_cpu(unsigned int number, char *vendor, int family, int model)
 {
@@ -216,7 +216,7 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 
 void enumerate_cpus(void)
 {
-	ifstream file;	
+	ifstream file;
 	char line[1024];
 
 	int number = -1;
@@ -336,17 +336,23 @@ static const char *freq_class(int line)
 	return "cpu_even_req";
 }
 
-void html_display_cpu_cstates(void)
+void report_display_cpu_cstates(void)
 {
 	char buffer[512], buffer2[512];
 	unsigned int package, core, cpu;
 	int line;
 	class abstract_cpu *_package, * _core, * _cpu;
 
-	if (!htmlout)
+	if ((!reportout.csv_report)&&(!reportout.http_report))
 		return;
 
-	fprintf(htmlout, "<h2>Processor Idle state report</h2>\n");		
+	if (reporttype)
+		fprintf(reportout.http_report,
+			"<h2>Processor Idle state report</h2>\n");
+	else
+		fprintf(reportout.csv_report,
+			"**Processor Idle State Report**, \n");
+
 
 	for (package = 0; package < system_level.children.size(); package++) {
 		int first_pkg = 0;
@@ -354,8 +360,10 @@ void html_display_cpu_cstates(void)
 		if (!_package)
 			continue;
 
-		fprintf(htmlout, "<table width=100%%>\n");
-		
+		if (reporttype)
+			fprintf(reportout.http_report,"<table width=100%%>\n");
+		else
+			fprintf(reportout.csv_report,"\n");
 
 		for (core = 0; core < _package->children.size(); core++) {
 			int actual_line = 0;
@@ -369,47 +377,95 @@ void html_display_cpu_cstates(void)
 					continue;
 
 				actual_line++;
-				fprintf(htmlout, "<tr>");
+				if (reporttype)
+					fprintf(reportout.http_report, "<tr>");
 
 				buffer[0] = 0;
 				buffer2[0] = 0;
 
 				if (line == LEVEL_HEADER) {
-					if (first_pkg == 0)
-						fprintf(htmlout,"<th colspan=2 class=\"package_header\" width=25%%>%s</th>", _package->fill_cstate_line(line, buffer));
-					else
-						fprintf(htmlout,"<th colspan=2 class=\"package_header\">&nbsp;</th>");
+					if (first_pkg == 0) {
+						if (reporttype)
+							fprintf(reportout.http_report,
+										"<th colspan=2 class=\"package_header\" width=25%%>%s</th>"
+										, _package->fill_cstate_line(line, buffer));
+						else
+							fprintf(reportout.csv_report, ",%s,", "Package");
+
+					} else {
+						if (reporttype)
+							fprintf(reportout.http_report, "<th colspan=2 class=\"package_header\">&nbsp;</th>");
+					}
 
 				} else if (first_pkg == 0) {
-					fprintf(htmlout, "<td class=\"%s\" width=10%%>%s</td><td class=\"%s\">%s</td>",
-						freq_class(actual_line),
-						_package->fill_cstate_name(line, buffer),
-						package_class(actual_line),
-						_package->fill_cstate_line(line, buffer2));
+
+					if (reporttype)
+						fprintf(reportout.http_report, "<td class=\"%s\" width=10%%>%s</td><td class=\"%s\">%s</td>",
+							freq_class(actual_line),
+							_package->fill_cstate_name(line, buffer),
+							package_class(actual_line),
+							_package->fill_cstate_line(line, buffer2));
+					else
+						fprintf(reportout.csv_report, "%s, %s,",
+							_package->fill_cstate_name(line, buffer),
+							_package->fill_cstate_line(line, buffer2));
+
+
 				} else {
-					fprintf(htmlout, "<td colspan=2>&nbsp;</td>");
+					if (reporttype)
+						fprintf(reportout.http_report,"<td colspan=2>&nbsp;</td>");
 				}
 
 
-				fprintf(htmlout, "<td width=2%%>&nbsp;</td>");
+				if (reporttype)
+						fprintf(reportout.http_report,"<td width=2%%>&nbsp;</td>");
 
 				if (!_core->can_collapse()) {
 					buffer[0] = 0;
 					buffer2[0] = 0;
 
 					if (line == LEVEL_HEADER) {
-						fprintf(htmlout, "<th colspan=2 class=\"core_header\" width=25%%>%s</th>",
-							_core->fill_cstate_line(line, buffer2));
+						if (reporttype) {
+							fprintf(reportout.http_report,
+								"<th colspan=2 class=\"core_header\" width=25%%>%s</th>",
+								_core->fill_cstate_line(line, buffer2));
+					    } else {
+							if (!first_pkg==0) {
+								fprintf(reportout.csv_report,
+									",,,Core,,",
+									_core->fill_cstate_line(line, buffer2));
+							} else {
+					    		fprintf(reportout.csv_report,
+									",Core,,",
+									_core->fill_cstate_line(line, buffer2));
+					    	}
+					    }
 					} else {
-						fprintf(htmlout, "<td class=\"%s\" width=10%%>%s</td><td class=\"%s\">%s</td>",
-							freq_class(actual_line),
-							_core->fill_cstate_name(line, buffer),
-							core_class(actual_line),
-							_core->fill_cstate_line(line, buffer2));
+						if (reporttype) {
+							fprintf(reportout.http_report,
+								"<td class=\"%s\" width=10%%>%s</td><td class=\"%s\">%s</td>",
+								freq_class(actual_line),
+								_core->fill_cstate_name(line, buffer),
+								core_class(actual_line),
+								_core->fill_cstate_line(line, buffer2));
+						} else {
+							if (first_pkg==0) {
+								fprintf(reportout.csv_report,
+									"%s, %s,",
+									_core->fill_cstate_name(line, buffer),
+									_core->fill_cstate_line(line, buffer2));
+							} else {
+								fprintf(reportout.csv_report,
+									",,%s, %s,",
+									_core->fill_cstate_name(line, buffer),
+									_core->fill_cstate_line(line, buffer2));
+							}
+						}
 					}
 				}
 
-				fprintf(htmlout, "<td width=2%%>&nbsp;</td>");
+				if (reporttype)
+					fprintf(reportout.http_report,"<td width=2%%>&nbsp;</td>");
 
 				for (cpu = 0; cpu < _core->children.size(); cpu++) {
 					_cpu = _core->children[cpu];
@@ -417,30 +473,65 @@ void html_display_cpu_cstates(void)
 						continue;
 
 					if (line == LEVEL_HEADER) {
-						fprintf(htmlout, "<th colspan=3 class=\"cpu_header\">%s</th>", _cpu->fill_cstate_line(line, buffer));
-
+						if (reporttype)
+							fprintf(reportout.http_report,"<th colspan=3 class=\"cpu_header\">%s</th>",
+								_cpu->fill_cstate_line(line, buffer));
+						else
+							fprintf(reportout.csv_report, ",%s,",
+									_cpu->fill_cstate_line(line, buffer));
 					} else {
 						if (first == 1) {
-							fprintf(htmlout, "<td class=\"%s\" width=10%%>%s</td>", freq_class(actual_line), _cpu->fill_cstate_name(line, buffer));
+							if (reporttype )
+								fprintf(reportout.http_report,"<td class=\"%s\" width=10%%>%s</td>",
+									freq_class(actual_line),
+									_cpu->fill_cstate_name(line, buffer));
+							else
+								fprintf(reportout.csv_report, "%s,",
+									_cpu->fill_cstate_name(line, buffer));
+
 							first = 0;
 							buffer[0] = 0;
-							sprintf(buffer2, "</td><td class=\"%s\">", cpu_class(actual_line, cpu));
-							fprintf(htmlout, "<td class=\"%s\">%s</td>", cpu_class(actual_line, cpu), _cpu->fill_cstate_line(line, buffer, buffer2));
+
+							if (reporttype) {
+								sprintf(buffer2, "</td><td class=\"%s\">",
+									cpu_class(actual_line, cpu));
+
+								fprintf(reportout.http_report,"<td class=\"%s\">%s</td>",
+									cpu_class(actual_line, cpu),
+									_cpu->fill_cstate_line(line, buffer, buffer2));
+							}else {
+								fprintf(reportout.csv_report,"%s,",
+									_cpu->fill_cstate_line(line, buffer, ","));
+							}
 						} else {
 							buffer[0] = 0;
-							sprintf(buffer2, "</td><td class=\"%s\">", cpu_class(actual_line, cpu));
-							fprintf(htmlout, "<td colspan=2 class=\"%s\">%s</td>", cpu_class(actual_line, cpu), _cpu->fill_cstate_line(line, buffer, buffer2));
+
+							if (reporttype) {
+								sprintf(buffer2, "</td><td class=\"%s\">",
+									cpu_class(actual_line, cpu));
+
+								fprintf(reportout.http_report,"<td colspan=2 class=\"s\">%s</td>",
+								 	_cpu->fill_cstate_line(line, buffer, buffer2));
+							} else {
+								fprintf(reportout.csv_report, "%s,",
+									_cpu->fill_cstate_line(line, buffer, ","));
+							}
 						}
 					}
 
 				}
-				fprintf(htmlout, "</tr>\n");
+				if (reporttype)
+					fprintf(reportout.http_report, "</tr>\n");
+				else
+					fprintf(reportout.csv_report, "\n");
 			}
 
 			first_pkg++;
 		}
-		fprintf(htmlout, "</table>\n");
-
+		if (reporttype)
+			fprintf(reportout.http_report,"</table>\n");
+		else
+			fprintf(reportout.csv_report, "\n");
 	}
 }
 
@@ -467,7 +558,7 @@ void w_display_cpu_cstates(void)
 		_package = system_level.children[package];
 		if (!_package)
 			continue;
-		
+
 
 		for (core = 0; core < _package->children.size(); core++) {
 			_core = _package->children[core];
@@ -481,7 +572,7 @@ void w_display_cpu_cstates(void)
 				if (!_package->has_cstate_level(line))
 					continue;
 
-	
+
 				buffer[0] = 0;
 				if (first_pkg == 0) {
 					strcat(linebuf, _package->fill_cstate_name(line, buffer));
@@ -490,7 +581,7 @@ void w_display_cpu_cstates(void)
 				}
 				ctr += 20;
 				expand_string(linebuf, ctr);
-	
+
 				strcat(linebuf, "| ");
 				ctr += strlen("| ");
 
@@ -538,27 +629,32 @@ void w_display_cpu_cstates(void)
 
 
 
-void html_display_cpu_pstates(void)
+void report_display_cpu_pstates(void)
 {
 	char buffer[512], buffer2[512];
 	unsigned int package, core, cpu;
 	int line;
 	class abstract_cpu *_package, * _core, * _cpu;
 
-	if (!htmlout)
+	if ((!reportout.csv_report)&&(!reportout.http_report))
 		return;
 
-
-	fprintf(htmlout, "<h2>Processor frequency report</h2>\n");
-
+	if (reporttype)
+		fprintf(reportout.http_report, "<h2>Processor frequency report</h2>\n");
+	else
+		fprintf(reportout.csv_report, "**Processor Frequency Report**, \n");
 
 	for (package = 0; package < system_level.children.size(); package++) {
 		int first_pkg = 0;
 		_package = system_level.children[package];
 		if (!_package)
 			continue;
-		
-		fprintf(htmlout, "<table width=100%%>\n");
+
+		if (reporttype)
+			fprintf(reportout.http_report,"<table width=100%%>\n");
+		else
+			fprintf(reportout.csv_report,"\n");
+
 
 		for (core = 0; core < _package->children.size(); core++) {
 			_core = _package->children[core];
@@ -572,43 +668,89 @@ void html_display_cpu_pstates(void)
 					continue;
 
 
-				fprintf(htmlout, "<tr>");
+				if (reporttype)
+					fprintf(reportout.http_report,"<tr>");
 
 				buffer[0] = 0;
 				buffer2[0] = 0;
 				if (first_pkg == 0) {
-					if (line == LEVEL_HEADER)
-						fprintf(htmlout, "<th colspan=2 class=\"package_header\" width=25%%>%s%s</th>",
-							_package->fill_pstate_name(line, buffer),
-							_package->fill_pstate_line(line, buffer2));
-					else
-						fprintf(htmlout, "<td class=\"%s\" width=10%%>%s</td><td class=\"%s\">%s</td>",
-							freq_class(line),
-							_package->fill_pstate_name(line, buffer),
-							package_class(line),
-							_package->fill_pstate_line(line, buffer2));
+					if (line == LEVEL_HEADER) {
+						 if (reporttype)
+						 		fprintf(reportout.http_report,
+									"<th colspan=2 class=\"package_header\" width=25%%>%s%s</th>",
+									_package->fill_pstate_name(line, buffer),
+									_package->fill_pstate_line(line, buffer2));
+						else
+								fprintf(reportout.csv_report,",%s,", "Package");
+
+					} else {
+						if (reporttype) {
+							fprintf(reportout.http_report,
+								"<td class=\"%s\" width=10%%>%s</td><td class=\"%s\">%s</td>",
+								freq_class(line),
+								_package->fill_pstate_name(line, buffer),
+								package_class(line),
+								_package->fill_pstate_line(line, buffer2));
+						} else {
+							fprintf(reportout.csv_report,"%s, %s,",
+								_package->fill_pstate_name(line, buffer),
+								_package->fill_pstate_line(line, buffer2));
+						}
+					}
 				} else {
-					fprintf(htmlout, "<td colspan=2>&nbsp;</td>");
+					if (reporttype)
+						fprintf(reportout.http_report,"<td colspan=2>&nbsp;</td>");
 				}
 
-				fprintf(htmlout, "<td width=2%%>&nbsp;</td>");
+
+				if (reporttype)
+					fprintf(reportout.http_report,"<td width=2%%>&nbsp;</td>");
 
 				if (!_core->can_collapse()) {
 					buffer[0] = 0;
 					buffer2[0] = 0;
-					if (line == LEVEL_HEADER) 
-						fprintf(htmlout, "<th colspan=2 class=\"core_header\" width=25%%>%s%s</th>",
+					if (line == LEVEL_HEADER) {
+						if (reporttype) {
+						fprintf(reportout.http_report,
+							"<th colspan=2 class=\"core_header\" width=25%%>%s%s</th>",
 							_core->fill_pstate_name(line, buffer),
 							_core->fill_pstate_line(line, buffer2));
-					else
-						fprintf(htmlout, "<td class=\"%s\" width=10%%>%s</td><td class=\"%s\">%s</td>",
-							freq_class(line),
-							_core->fill_pstate_name(line, buffer),
-							core_class(line),
-							_core->fill_pstate_line(line, buffer2));
+						} else {
+							if (first_pkg == 0) {
+								fprintf(reportout.csv_report, "%s,%s,,",
+									_core->fill_pstate_name(line, buffer),
+									_core->fill_pstate_line(line, buffer2));
+							} else {
+								fprintf(reportout.csv_report, ",,%s,%s,,",
+									_core->fill_pstate_name(line, buffer),
+									_core->fill_pstate_line(line, buffer2));
+
+							}
+						}
+					}else {
+						if (reporttype)	{
+							fprintf(reportout.http_report,
+								"<td class=\"%s\" width=10%%>%s</td><td class=\"%s\">%s</td>",
+								freq_class(line),
+								_core->fill_pstate_name(line, buffer),
+								core_class(line),
+								_core->fill_pstate_line(line, buffer2));
+						} else {
+							if (first_pkg == 0) {
+								fprintf(reportout.csv_report, "%s,%s,",
+									_core->fill_pstate_name(line, buffer),
+									_core->fill_pstate_line(line, buffer2));
+							} else {
+								fprintf(reportout.csv_report, ",,%s,%s,",
+									_core->fill_pstate_name(line, buffer),
+									_core->fill_pstate_line(line, buffer2));
+							}
+						}
+					}
 				}
 
-				fprintf(htmlout, "<td width=2%%>&nbsp;</td>");
+				if (reporttype)
+					fprintf(reportout.http_report,"<td width=2%%>&nbsp;</td>");
 
 				for (cpu = 0; cpu < _core->children.size(); cpu++) {
 					buffer[0] = 0;
@@ -617,27 +759,55 @@ void html_display_cpu_pstates(void)
 						continue;
 
 					if (line == LEVEL_HEADER) {
-							fprintf(htmlout, "<th colspan=2 class=\"cpu_header\">%s</th>", _cpu->fill_pstate_line(line, buffer));
+						if (reporttype)
+							fprintf(reportout.http_report,
+								"<th colspan=2 class=\"cpu_header\">%s</th>",
+								_cpu->fill_pstate_line(line, buffer));
+						else
+							fprintf(reportout.csv_report, "%s,",
+								_cpu->fill_pstate_line(line, buffer));
 					} else {
 						if (first == 1) {
-							fprintf(htmlout, "<td class=\"%s\" width=10%%>%s</td>", freq_class(line), _cpu->fill_pstate_name(line, buffer));
+							if (reporttype)
+								fprintf(reportout.http_report,
+									"<td class=\"%s\" width=10%%>%s</td>",
+									freq_class(line),
+									_cpu->fill_pstate_name(line, buffer));
+							else
+								fprintf(reportout.csv_report,"%s,",
+									_cpu->fill_pstate_name(line, buffer));
+
 							first = 0;
 							buffer[0] = 0;
-							fprintf(htmlout, "<td class=\"%s\">%s</td>",
-								cpu_class(line, cpu),
-								_cpu->fill_pstate_line(line, buffer));
+
+							if (reporttype)
+								fprintf(reportout.http_report,"<td class=\"%s\">%s</td>",
+									cpu_class(line, cpu),
+									_cpu->fill_pstate_line(line, buffer));
+							else
+								fprintf(reportout.csv_report, "%s,",
+									_cpu->fill_pstate_line(line, buffer));
+
 						} else {
+
 							buffer[0] = 0;
-							fprintf(htmlout, "<td colspan=2 class=\"%s\">%s</td>",
-								cpu_class(line, cpu),
-								_cpu->fill_pstate_line(line, buffer));
+
+							if (reporttype)
+								fprintf(reportout.http_report,
+									"<td colspan=2 class=\"%s\">%s</td>",
+									cpu_class(line, cpu),
+									_cpu->fill_pstate_line(line, buffer));
+							else
+								fprintf(reportout.csv_report,"%s,",
+									_cpu->fill_pstate_line(line, buffer));
+
 						}
 					}
 				}
-				if (line == LEVEL_HEADER)
-					fprintf(htmlout, "</tr>\n");
+				if (reporttype)
+					fprintf(reportout.http_report,"</tr>\n");
 				else
-					fprintf(htmlout, "</tr>\n");
+					fprintf(reportout.csv_report, "\n");
 
 			}
 
@@ -647,8 +817,13 @@ void html_display_cpu_pstates(void)
 
 	}
 
-	fprintf(htmlout, "</table>");		
+	if (reporttype)
+		fprintf(reportout.http_report,"</table>");
+	else
+		fprintf(reportout.csv_report, "\n");
 }
+
+
 
 void w_display_cpu_pstates(void)
 {
@@ -674,7 +849,7 @@ void w_display_cpu_pstates(void)
 		_package = system_level.children[package];
 		if (!_package)
 			continue;
-		
+
 
 		for (core = 0; core < _package->children.size(); core++) {
 			_core = _package->children[core];
@@ -698,7 +873,7 @@ void w_display_cpu_pstates(void)
 				}
 				ctr += 20;
 				expand_string(linebuf, ctr);
-	
+
 				strcat(linebuf, "| ");
 				ctr += strlen("| ");
 
@@ -813,7 +988,7 @@ void process_cpu_data(void)
 void end_cpu_data(void)
 {
 	system_level.reset_pstate_data();
-	
+
 	perf_events->clear();
 }
 

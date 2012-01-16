@@ -77,6 +77,8 @@ runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *
 
 		
 	}
+	sprintf(toggle_good, "echo 'auto' > '%s';", runtime_path);
+	sprintf(toggle_bad, "echo 'on' > '%s';", runtime_path);
 }
 
 int runtime_tunable::good_bad(void)
@@ -103,6 +105,18 @@ void runtime_tunable::toggle(void)
 	}
 
 	write_sysfs(runtime_path, "auto");
+}
+
+const char *runtime_tunable::toggle_script(void)
+{
+	int good;
+	good = good_bad();
+
+	if (good == TUNE_GOOD) {
+		return toggle_bad;
+	}
+
+	return toggle_good;
 }
 
 

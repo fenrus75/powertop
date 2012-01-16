@@ -42,6 +42,9 @@ class tunable {
 	char good_string[128];
 	char bad_string[128];
 	char neutral_string[128];
+protected:
+	char toggle_good[4096];
+	char toggle_bad[4096];
 public:
 	char desc[4096];
 	double score;
@@ -68,6 +71,8 @@ public:
 	virtual const char *description(void) { return desc; };
 
 	virtual void toggle(void) { };
+
+	virtual const char *toggle_script(void) { return NULL; }
 };
 
 extern vector<class tunable *> all_tunables;

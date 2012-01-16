@@ -46,6 +46,9 @@ wifi_tunable::wifi_tunable(const char *_iface) : tunable("", 1.5, _("Good"), _("
 {
 	strcpy(iface, _iface);
 	sprintf(desc, _("Wireless Power Saving for interface %s"), iface);
+	
+	sprintf(toggle_good, "iw dev %s set power_save off", iface);
+	sprintf(toggle_bad, "iw dev %s set power_save on", iface);
 }
 
 int wifi_tunable::good_bad(void)
@@ -69,6 +72,17 @@ void wifi_tunable::toggle(void)
 	set_wifi_power_saving(iface, 1);
 }
 
+const char *wifi_tunable::toggle_script(void)
+{
+	int good;
+	good = good_bad();
+
+	if (good == TUNE_GOOD) {
+		return toggle_bad;
+	}
+
+	return toggle_good;
+}
 
 void add_wifi_tunables(void)
 {

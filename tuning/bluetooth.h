@@ -39,6 +39,8 @@ public:
 
 	virtual void toggle(void);
 
+	virtual const char *toggle_script(void);
+
 };
 
 extern void add_bt_tunable(void);

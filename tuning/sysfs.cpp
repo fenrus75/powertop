@@ -39,6 +39,8 @@ sysfs_tunable::sysfs_tunable(const char *str, const char *_sysfs_path, const cha
 	strcpy(sysfs_path, _sysfs_path);
 	strcpy(target_value, _target_content);
 	bad_value[0] = 0;
+	sprintf(toggle_good, "echo '%s' > '%s';", target_value, sysfs_path);
+	sprintf(toggle_bad, "echo '%s' > '%s';", bad_value, sysfs_path);
 }
 
 int sysfs_tunable::good_bad(void)
@@ -75,6 +77,19 @@ void sysfs_tunable::toggle(void)
 	}
 
 	write_sysfs(sysfs_path, target_value);
+}
+
+const char *sysfs_tunable::toggle_script(void) {
+	int good;
+	good = good_bad();
+
+	if (good == TUNE_GOOD) {
+		if (strlen(bad_value) > 0)
+			return toggle_bad;
+		return NULL;
+	}
+
+	return toggle_good;
 }
 
 

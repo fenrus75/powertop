@@ -35,6 +35,7 @@
 #include <unistd.h> 
 #include <dirent.h>
 #include <errno.h>
+#include <sys/stat.h>
 
 #include "../lib.h"
 #include "cpufreq.h"
@@ -153,6 +154,54 @@ void cpufreq_tunable::toggle(void)
 	closedir(dir);
 }
 
+const char *cpufreq_tunable::toggle_script(void) {
+	DIR *dir;
+	struct dirent *dirent;
+	FILE *file;
+	char filename[PATH_MAX];
+	char tmp[4096];
+	struct stat statbuf;
+	int good;
+	good = good_bad();
+
+	strcpy(toggle_good, "/sbin/modprobe cpufreq_ondemand > /dev/null 2>&1\n");
+
+	if (good == TUNE_GOOD) {
+		dir = opendir("/sys/devices/system/cpu");
+		if (!dir)
+			return NULL;
+
+		while ((dirent = readdir(dir))) {
+			if (dirent->d_name[0]=='.')
+				continue;
+			sprintf(filename, "/sys/devices/system/cpu/%s/cpufreq/scaling_governor", dirent->d_name);
+			if (stat(filename, &statbuf) == -1)
+				continue;
+			sprintf(tmp, "echo '%s' > '%s';\n", original, filename);
+			strcat(toggle_good, tmp);
+		}
+
+		closedir(dir);
+		return toggle_good;
+	}
+
+	dir = opendir("/sys/devices/system/cpu");
+	if (!dir)
+		return NULL;
+
+	while ((dirent = readdir(dir))) {
+		if (dirent->d_name[0]=='.')
+			continue;
+		sprintf(filename, "/sys/devices/system/cpu/%s/cpufreq/scaling_governor", dirent->d_name);
+		if (stat(filename, &statbuf) == -1)
+			continue;
+		sprintf(tmp, "echo 'ondemand' > '%s';\n", filename);
+		strcat(toggle_good, tmp);
+	}
+
+	closedir(dir);
+	return toggle_good;
+}
 
 
 void add_cpufreq_tunable(void)

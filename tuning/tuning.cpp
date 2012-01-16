@@ -234,7 +234,7 @@ void report_show_tunables(void)
 			fprintf(reportout.csv_report, "Description, \n");
 
 		if (reporttype)
-			fprintf(reportout.http_report,"<tr class=\"%s\"><td>%s</td></tr>\n", tune_class_bad(line) , all_tunables[i]->description());
+		        fprintf(reportout.http_report, "<tr class=\"%s\"><td>%s</td><td>%s</td></tr>\n", tune_class_bad(line), all_tunables[i]->description(), all_tunables[i]->toggle_script());
 		else
 			fprintf(reportout.csv_report, "\"%s\", \n", all_tunables[i]->description());
 	}

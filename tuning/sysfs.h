@@ -42,6 +42,8 @@ public:
 
 	virtual void toggle(void);
 
+	virtual const char *toggle_script(void);
+
 };
 
 extern void add_sysfs_tunable(const char *str, const char *_sysfs_path, const char *_target_content);

@@ -46,6 +46,8 @@
 bt_tunable::bt_tunable(void) : tunable("", 1.0, "Good", "Bad", "Unknown")
 {
 	sprintf(desc, _("Bluetooth device interface status"));
+	strcpy(toggle_bad, "/usr/sbin/hciconfig hci0 up &> /dev/null &");
+	strcpy(toggle_good, "/usr/sbin/hciconfig hci0 down &> /dev/null");
 }
 
 
@@ -180,6 +182,16 @@ void bt_tunable::toggle(void)
 	system("/usr/sbin/hciconfig hci0 down &> /dev/null");
 }
 
+const char *bt_tunable::toggle_script(void)
+{
+	int good;
+	good = good_bad();
+
+	if (good == TUNE_GOOD) {
+		return toggle_bad;
+	}
+	return toggle_good;
+}
 
 
 void add_bt_tunable(void)

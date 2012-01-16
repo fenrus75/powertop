@@ -55,6 +55,8 @@ ethernet_tunable::ethernet_tunable(const char *iface) : tunable("", 0.3, _("Good
 	memset(interf, 0, sizeof(interf));
 	strncpy(interf, iface, sizeof(interf));
 	sprintf(desc, _("Wake-on-lan status for device %s"), iface);
+	sprintf(toggle_good, "ethtool -s %s wol d;", iface);
+	
 }
 
 
@@ -127,6 +129,18 @@ void ethernet_tunable::toggle(void)
         ioctl(sock, SIOCETHTOOL, &ifr);
 
 	close(sock);
+}
+
+const char *ethernet_tunable::toggle_script(void)
+{
+	int good;
+	good = good_bad();
+
+	if (good != TUNE_GOOD) {
+		return toggle_good;
+	}
+
+	return NULL;
 }
 
 

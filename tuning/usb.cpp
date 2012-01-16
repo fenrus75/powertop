@@ -74,6 +74,9 @@ usb_tunable::usb_tunable(const char *path, const char *name) : tunable("", 0.9, 
 		sprintf(desc, _("Autosuspend for USB device %s [%s]"), product, name);
 	else if (strlen(vendor))
 		sprintf(desc, _("Autosuspend for USB device %s [%s]"), vendor, name);
+
+	sprintf(toggle_good, "echo 'auto' > '%s';", usb_path);
+	sprintf(toggle_bad, "echo 'on' > '%s';", usb_path);
 }
 
 int usb_tunable::good_bad(void)
@@ -102,6 +105,17 @@ void usb_tunable::toggle(void)
 	write_sysfs(usb_path, "auto");
 }
 
+const char *usb_tunable::toggle_script(void)
+{
+	int good;
+	good = good_bad();
+
+	if (good == TUNE_GOOD) {
+		return toggle_bad;
+	}
+
+	return toggle_good;
+}
 
 void add_usb_tunables(void)
 {

@@ -161,10 +161,10 @@ void power_supply_callback(const char *d_name)
 
 void detect_power_meters(void)
 {
-	if (access("/sys/class/power_supply", R_OK ) == 0)
-		process_directory("/sys/class/power_supply", power_supply_callback);
-	else if (access("/proc/acpi/battery", R_OK ) == 0)
-		process_directory("/proc/acpi/battery", power_meters_callback);
+	process_directory("/sys/class/power_supply", sysfs_power_meters_callback);
+	if (power_meters.size() == 0) {
+		process_directory("/proc/acpi/battery", acpi_power_meters_callback);
+	}
 }
 
 void extech_power_meter(const char *devnode)

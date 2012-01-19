@@ -34,6 +34,7 @@
 #include <sys/time.h>
 #include <string.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include "../lib.h"
 #include "../parameters/parameters.h"

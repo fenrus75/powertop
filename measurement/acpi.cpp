@@ -108,8 +108,13 @@ void acpi_power_meter::measure(void)
 			while (*c == ' ') c++;
 			_capacity = strtoull(c, NULL, 10);
 			c = strchr(c, ' ');
-			c++;
-			strcpy(capacity_units, c);
+			if (c) {
+				c++;
+				strcpy(capacity_units, c);
+			} else {
+				_capacity = 0;
+				strcpy(capacity_units, "Unknown");
+			}
 		}
 		if (strstr(line, "present voltage:")) {
 			c = strchr(line, ':');
@@ -117,8 +122,13 @@ void acpi_power_meter::measure(void)
 			while (*c == ' ') c++;
 			_voltage = strtoull(c, NULL, 10);
 			c = strchr(c, ' ');
-			c++;
-			strcpy(voltage_units, c);
+			if (c) {
+				c++;
+				strcpy(voltage_units, c);
+			} else {
+				_voltage = 0;
+				strcpy(voltage_units, "Unknown");
+			}
 		}
 	}
 	file.close();

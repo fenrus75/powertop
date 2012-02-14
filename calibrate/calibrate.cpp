@@ -452,7 +452,7 @@ void calibrate(void)
 	find_scsi_link();
 	wireless_PS = get_wifi_power_saving("wlan0");
 	
-        save_sysfs("/sys/modules/snd_hda_intel/parameters/power_save");
+        save_sysfs("/sys/module/snd_hda_intel/parameters/power_save");
 
 	cout << _("Starting PowerTOP power estimate calibration \n");
 	suspend_all_usb_devices();
@@ -467,7 +467,7 @@ void calibrate(void)
 	disk_calibration();
 	backlight_calibration();
 	
-	write_sysfs("/sys/modules/snd_hda_intel/parameters/power_save", "1\n");
+	write_sysfs("/sys/module/snd_hda_intel/parameters/power_save", "1\n");
 	cpu_calibration(1);
 	cpu_calibration(4);
 	wakeup_calibration(10000);

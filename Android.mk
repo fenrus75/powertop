@@ -37,7 +37,7 @@ LOCAL_SRC_FILES += \
 	measurement/extech.cpp \
 	measurement/power_supply.cpp \
 	display.cpp \
-	html.cpp \
+	report.cpp \
 	main.cpp \
 	tuning/tuning.cpp \
 	tuning/usb.cpp \

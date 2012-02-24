@@ -76,7 +76,8 @@ void power_supply::measure(void)
 	char line[4096];
 	ifstream file;
 
-	double _rate = 0;
+	double _power_rate = 0;
+	double _current_rate = 0;
 	double _capacity = 0;
 	double _voltage = 0;
 
@@ -114,11 +115,21 @@ void power_supply::measure(void)
 			c = strchr(line, '=');
 			c++;
 			if(*c == '-') c++; // ignoring the negative sign
-			_rate = strtoull(c, NULL, 10);
+			_current_rate = strtoull(c, NULL, 10);
 			if (c) {
-				//printf ("CURRENT: %f. \n",_rate);
+				//printf ("CURRENT: %f. \n",_current_rate);
 			} else {
-				_rate = 0;
+				_current_rate = 0;
+			}
+		}
+		if (strstr(line, "POWER_NOW")) {
+			c = strchr(line, '=');
+			c++;
+			_power_rate = strtoull(c, NULL, 10);
+			if (c) {
+				//printf ("POWER: %f. \n",_power_rate);
+			} else {
+				_power_rate = 0;
 			}
 		}
 		if (strstr(line, "CAPACITY=")) {
@@ -152,10 +163,13 @@ void power_supply::measure(void)
 		voltage = 0.0;
 	}
 
-	if(_rate) {
-		_rate = _rate / 1000.0;
-		_rate = _rate * _voltage;
-		rate = _rate;
+	if(_power_rate)
+	{
+		rate = _power_rate / 1000000.0;
+	}
+	else if(_current_rate) {
+		_current_rate = _current_rate / 1000.0;
+		rate = _current_rate * _voltage;
 	} else {
 		rate = 0.0;
 	}

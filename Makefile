@@ -38,7 +38,7 @@ endif
 
 ifeq ($(NL3FOUND),Y)
 CFLAGS += -DCONFIG_LIBNL20
-LIBS += -lnl-genl
+LIBS += -lnl-genl-3
 NLLIBNAME = libnl-3.0
 endif
 

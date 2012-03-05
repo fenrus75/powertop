@@ -417,6 +417,8 @@ int main(int argc, char **argv)
 	end_pci_access();
 	reset_display();
 
+	clear_all_devices();
+
 	return 0;
 
 

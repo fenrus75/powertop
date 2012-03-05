@@ -84,5 +84,6 @@ extern void report_devices(void);
 
 
 extern void create_all_devices(void);
+extern void clear_all_devices(void);
 
 #endif

@@ -1016,3 +1016,11 @@ void clear_cpu_data(void)
 	delete perf_events;
 }
 
+
+void clear_all_cpus(void)
+{
+	for (int i = 0; i < all_cpus.size(); i++) {
+		delete all_cpus[i];
+	}
+	all_cpus.clear();
+}

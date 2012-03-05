@@ -418,6 +418,7 @@ int main(int argc, char **argv)
 	reset_display();
 
 	clear_all_devices();
+	clear_all_cpus();
 
 	return 0;
 

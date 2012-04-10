@@ -3,8 +3,6 @@ all: powertop  po/powertop.pot
 VERSION := 1.98
 
 CFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector -Wshadow -Wformat -D_FORTIFY_SOURCE=2
-CPPFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
-CXXFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector -Wshadow -Wformat -D_FORTIFY_SOURCE=2
 PKG_CONFIG ?= pkg-config
 
 OBJS := lib.o main.o display.o report.o devlist.o
@@ -32,7 +30,6 @@ endif
 
 ifeq ($(NL2FOUND),Y)
 CFLAGS += -DCONFIG_LIBNL20
-LIBS += -lnl-genl
 NLLIBNAME = libnl-2.0
 endif
 

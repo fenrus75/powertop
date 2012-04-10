@@ -28,6 +28,30 @@ and a functional glibc/pthreads development environment
 
 
 
+Kernel Parameters:
+------------------
+
+PowerTOP needs some kernel config options enabled in order function properly.
+As of linux-3.3.0 these are (list probably incomplete):
+
+CONFIG_NO_HZ
+CONFIG_HIGH_RES_TIMERS
+CONFIG_HPET_TIMER
+CONFIG_CPU_FREQ_GOV_ONDEMAND
+CONFIG_USB_SUSPEND
+CONFIG_SND_AC97_POWER_SAVE
+CONFIG_TIMER_STATS
+CONFIG_PERF_EVENTS
+CONFIG_PERF_COUNTERS
+CONFIG_TRACEPOINTS
+CONFIG_TRACING
+CONFIG_EVENT_POWER_TRACING_DEPRECATED
+
+The patches in the patches/ subdirectory are required for PowerTOP to function
+fully.
+
+
+
 Outputting a report
 -------------------
 When invoking PowerTOP without arguments, it goes into interactive mode.

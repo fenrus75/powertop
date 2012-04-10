@@ -990,7 +990,6 @@ void process_process_data(void)
 	all_devices_to_all_power();
 
 	sort(all_power.begin(), all_power.end(), power_cpu_sort);
-
 }
 
 

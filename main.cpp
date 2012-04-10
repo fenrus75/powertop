@@ -68,7 +68,7 @@ static const struct option long_options[] =
 	{"help",no_argument, NULL, 'u'}, /* u for usage */
 	{"calibrate",no_argument, NULL, 'c'},
 	{"html", optional_argument, NULL, 'h'},
-    {"csv", optional_argument, NULL, 'C'},
+	{"csv", optional_argument, NULL, 'C'},
 	{"extech", optional_argument, NULL, 'e'},
 	{"time", optional_argument, NULL, 't'},
 	{"iteration", optional_argument, NULL, 'i'},
@@ -340,9 +340,9 @@ int main(int argc, char **argv)
 				iterations = (optarg ? atoi(optarg) : 1);
 				break;
 
-            case 'C': /* csv report*/
-            	wantreport = TRUE;
-            	reporttype = 0;
+			case 'C': /* csv report*/
+				wantreport = TRUE;
+				reporttype = 0;
 				sprintf(filename, "%s", optarg ? optarg : "powertop.csv");
 				break;
 			case '?': /* Unknown option */
@@ -359,7 +359,7 @@ int main(int argc, char **argv)
 
 
 
-    learn_parameters(250, 0);
+	learn_parameters(250, 0);
 	save_parameters("saved_parameters.powertop");
 
 

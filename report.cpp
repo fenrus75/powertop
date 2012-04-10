@@ -84,6 +84,35 @@ string cpu_model(void)
 	return "";
 }
 
+static string read_os_release(const string &filename)
+{
+	ifstream file;
+	char content[4096];
+	char *c;
+	const char *pname = "PRETTY_NAME=";
+	string os("");
+
+	file.open(filename.c_str(), ios::in);
+	if (!file)
+		return "";
+	while (file.getline(content, 4096)) {
+		if (strncasecmp(pname, content, strlen(pname)) == 0) {
+			c = strchr(content, '=');
+			if (!c)
+				break;
+			c += 1;
+			if (*c == '"' || *c == '\'')
+				c += 1;
+			*strchrnul(c, '"') = 0;
+			*strchrnul(c, '\'') = 0;
+			os = c;
+			break;
+		}
+	}
+	file.close();
+	return os;
+}
+
 static void system_info(void)
 {
 	string str, str2, str3;
@@ -133,6 +162,8 @@ static void system_info(void)
 	str = read_sysfs_string("/etc/system-release");
 	if (str.length() < 1)
 		str = read_sysfs_string("/etc/redhat-release");
+	if (str.length() < 1)
+		str = read_os_release("/etc/os-release");
 
 	if (reporttype) {
 		fprintf(reportout.http_report, "<tr class=\"system_even\"><td>OS Information</td><td>%s</td></tr>\n",

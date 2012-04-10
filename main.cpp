@@ -133,6 +133,8 @@ static void do_sleep(int seconds)
 		case 10:
 			cursor_enter();
 			break;
+		case 'i':
+			return;
 		case KEY_EXIT:
 		case 'q':
 		case 27:

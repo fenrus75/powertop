@@ -256,7 +256,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		}
 		new_proc->waker = NULL;
 	}
-	if (strcmp(event_name, "sched:sched_wakeup") == 0) {
+	else if (strcmp(event_name, "sched:sched_wakeup") == 0) {
 		struct wakeup_entry *we;
 		class power_consumer *from = NULL;
 		class process *dest_proc, *from_proc;
@@ -298,7 +298,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			from->xwakes ++ ;
 
 	}
-	if (strcmp(event_name, "irq:irq_handler_entry") == 0) {
+	else if (strcmp(event_name, "irq:irq_handler_entry") == 0) {
 		struct irq_entry *irqe;
 		class interrupt *irq;
 		irqe = (struct irq_entry *)trace;
@@ -314,7 +314,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 
 	}
 
-	if (strcmp(event_name, "irq:irq_handler_exit") == 0) {
+	else if (strcmp(event_name, "irq:irq_handler_exit") == 0) {
 		class interrupt *irq;
 		uint64_t t;
 
@@ -328,7 +328,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		consumer_child_time(cpu, t);
 	}
 
-	if (strcmp(event_name, "irq:softirq_entry") == 0) {
+	else if (strcmp(event_name, "irq:softirq_entry") == 0) {
 		struct softirq_entry *irqe;
 		class interrupt *irq;
 
@@ -349,7 +349,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		irq->start_interrupt(time);
 		change_blame(cpu, irq, LEVEL_SOFTIRQ);
 	}
-	if (strcmp(event_name, "irq:softirq_exit") == 0) {
+	else if (strcmp(event_name, "irq:softirq_exit") == 0) {
 		class interrupt *irq;
 		uint64_t t;
 
@@ -361,7 +361,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		t = irq->end_interrupt(time);
 		consumer_child_time(cpu, t);
 	}
-	if (strcmp(event_name, "timer:timer_expire_entry") == 0) {
+	else if (strcmp(event_name, "timer:timer_expire_entry") == 0) {
 		struct timer_expire *tmr;
 		class timer *timer;
 		tmr = (struct timer_expire *)trace;
@@ -377,7 +377,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		if (strcmp(timer->handler, "delayed_work_timer_fn"))
 			change_blame(cpu, timer, LEVEL_TIMER);
 	}
-	if (strcmp(event_name, "timer:timer_expire_exit") == 0) {
+	else if (strcmp(event_name, "timer:timer_expire_exit") == 0) {
 		class timer *timer;
 		struct timer_cancel *tmr;
 		uint64_t t;
@@ -391,7 +391,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		t = timer->done(time, (uint64_t)tmr->timer);
 		consumer_child_time(cpu, t);
 	}
-	if (strcmp(event_name, "timer:hrtimer_expire_entry") == 0) {
+	else if (strcmp(event_name, "timer:hrtimer_expire_entry") == 0) {
 		struct hrtimer_expire *tmr;
 		class timer *timer;
 		tmr = (struct hrtimer_expire *)trace;
@@ -405,7 +405,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		if (strcmp(timer->handler, "delayed_work_timer_fn"))
 			change_blame(cpu, timer, LEVEL_TIMER);
 	}
-	if (strcmp(event_name, "timer:hrtimer_expire_exit") == 0) {
+	else if (strcmp(event_name, "timer:hrtimer_expire_exit") == 0) {
 		class timer *timer;
 		struct timer_cancel *tmr;
 		uint64_t t;
@@ -419,7 +419,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		t = timer->done(time, (uint64_t)tmr->timer);
 		consumer_child_time(cpu, t);
 	}
-	if (strcmp(event_name, "workqueue:workqueue_execute_start") == 0) {
+	else if (strcmp(event_name, "workqueue:workqueue_execute_start") == 0) {
 		struct workqueue_start *wq;
 		class work *work;
 		wq = (struct workqueue_start *)trace;
@@ -433,7 +433,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		if (strcmp(work->handler, "do_dbs_timer") != 0 && strcmp(work->handler, "vmstat_update") != 0)
 			change_blame(cpu, work, LEVEL_WORK);
 	}
-	if (strcmp(event_name, "workqueue:workqueue_execute_end") == 0) {
+	else if (strcmp(event_name, "workqueue:workqueue_execute_end") == 0) {
 		class work *work;
 		struct workqueue_end *wq;
 		uint64_t t;
@@ -447,13 +447,13 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		t = work->done(time, (uint64_t)wq->work);
 		consumer_child_time(cpu, t);
 	}
-	if (strcmp(event_name, "power:power_start") == 0) {
+	else if (strcmp(event_name, "power:power_start") == 0) {
 		set_wakeup_pending(cpu);
 	}
-	if (strcmp(event_name, "power:power_end") == 0) {
+	else if (strcmp(event_name, "power:power_end") == 0) {
 		consume_blame(cpu);
 	}
-	if (strcmp(event_name, "i915:i915_gem_ring_dispatch") == 0
+	else if (strcmp(event_name, "i915:i915_gem_ring_dispatch") == 0
 	 || strcmp(event_name, "i915:i915_gem_request_submit") == 0) {
 		/* any kernel contains only one of the these tracepoints,
 		 * the latter one got replaced by the former one */
@@ -480,7 +480,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			consumer->gpu_ops++;
 		}
 	}
-	if (strcmp(event_name, "writeback:writeback_inode_dirty") == 0) {
+	else if (strcmp(event_name, "writeback:writeback_inode_dirty") == 0) {
 		static uint64_t prev_time;
 		class power_consumer *consumer;
 		struct dirty_inode *drty;

@@ -82,16 +82,16 @@ char *hz_to_human(unsigned long hz, char *buffer, int digits)
 
 	if (Hz>1000) {
 		if (digits == 2)
-			sprintf(buffer, _("%4lli Mhz"), (Hz+500)/1000);
+			sprintf(buffer, _("%4lli MHz"), (Hz+500)/1000);
 		else
-			sprintf(buffer, _("%6lli Mhz"), (Hz+500)/1000);
+			sprintf(buffer, _("%6lli MHz"), (Hz+500)/1000);
 	}
 
 	if (Hz>1500000) {
 		if (digits == 2)
-			sprintf(buffer, _("%4.2f Ghz"), (Hz+5000.0)/1000000);
+			sprintf(buffer, _("%4.2f GHz"), (Hz+5000.0)/1000000);
 		else
-			sprintf(buffer, _("%3.1f Ghz"), (Hz+5000.0)/1000000);
+			sprintf(buffer, _("%3.1f GHz"), (Hz+5000.0)/1000000);
 	}
 
 	return buffer;

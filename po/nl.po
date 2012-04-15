@@ -41,22 +41,22 @@ msgstr ""
 
 #: lib.cpp:92
 #, c-format
-msgid "%3.1f Ghz"
+msgid "%3.1f GHz"
 msgstr ""
 
 #: lib.cpp:90
 #, c-format
-msgid "%4.2f Ghz"
+msgid "%4.2f GHz"
 msgstr ""
 
 #: lib.cpp:83
 #, c-format
-msgid "%4lli Mhz"
+msgid "%4lli MHz"
 msgstr ""
 
 #: lib.cpp:85
 #, c-format
-msgid "%6lli Mhz"
+msgid "%6lli MHz"
 msgstr ""
 
 #: lib.cpp:233

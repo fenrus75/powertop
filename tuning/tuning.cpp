@@ -223,7 +223,7 @@ void report_show_tunables(void)
 
 		if (line == 0) {
 			if(reporttype)
-				fprintf(reportout.http_report,"<h2>Software Settings in need of Tuning</h2>\n <p><table width=100%%>\n");
+				fprintf(reportout.http_report,"<h2>Software Settings in need of Tuning</h2>\n <table width=\"100%%\">\n");
 			else
 				fprintf(reportout.csv_report,"**Software Settings in need of Tuning**, \n\n");
 
@@ -241,7 +241,7 @@ void report_show_tunables(void)
 
 	if (line > 0)
 		if(reporttype)
-			fprintf(reportout.http_report,"</table></p>\n");
+			fprintf(reportout.http_report,"</table>\n");
 		else
 			fprintf(reportout.csv_report, "\n");
 
@@ -251,7 +251,7 @@ void report_show_tunables(void)
 		if (line == 0) {
 			if(reporttype)
 				fprintf(reportout.http_report,
-					"<h2>Untunable Software Issues</h2>\n <p><table width=100%%>\n");
+					"<h2>Untunable Software Issues</h2>\n <table width=\"100%%\">\n");
 			else
 				fprintf(reportout.csv_report,
 					"**Untunable Software Issues**,\n\n");
@@ -271,7 +271,7 @@ void report_show_tunables(void)
 
 	if (line > 0)
 		if(reporttype)
-			fprintf(reportout.http_report,"</table></p>\n");
+			fprintf(reportout.http_report,"</table>\n");
 		else
 			fprintf(reportout.csv_report,"\n");
 
@@ -287,7 +287,7 @@ void report_show_tunables(void)
 		if (line == 0) {
 			if (reporttype)
 				fprintf(reportout.http_report,
-					"<h2>Optimal Tuned Software Settings</h2>\n <p><table width=100%%>\n");
+					"<h2>Optimal Tuned Software Settings</h2>\n <table width=\"100%%\">\n");
 			else
 				fprintf(reportout.csv_report,
 					"**Optimal Tuned Software Settings**, \n\n");
@@ -306,7 +306,7 @@ void report_show_tunables(void)
 
 	if (line > 0){
 		if (reporttype)
-			fprintf(reportout.http_report,"</table></p>\n");
+			fprintf(reportout.http_report,"</table>\n");
 		else
 			fprintf(reportout.csv_report,"\n");
 	}

@@ -88,7 +88,7 @@ msgstr ""
 #: devlist.cpp:306
 #, c-format
 msgid ""
-"<tr><th class=\"device\" width=40%%>Process</th><th class=\"device\">Device</"
+"<tr><th class=\"device\" width=\"40%%\">Process</th><th class=\"device\">Device</"
 "th></tr>\n"
 msgstr ""
 

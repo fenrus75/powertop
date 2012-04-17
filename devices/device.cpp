@@ -265,10 +265,10 @@ void show_report_devices(void)
 		char buf[32];
 		if (reporttype) {
 			fprintf(reportout.http_report,
-				"<p>System baseline power is estimated at %sW</p>\n <table width=100%%>\n",
+				"<p>System baseline power is estimated at %sW</p>\n <table width=\"100%%\">\n",
 				fmt_prefix(get_parameter_value("base power"), buf));
 			fprintf(reportout.http_report,
-				"<tr><th width=10%%>Power est.</th><th width=10%%>Usage</th><th class=\"device\">Device name</th></tr>\n");
+				"<tr><th width=\"10%%\">Power est.</th><th width=\"10%%\">Usage</th><th class=\"device\">Device name</th></tr>\n");
 		} else {
 			fprintf(reportout.csv_report,
 				"System baseline power is estimated at:,  %sW, \n\n",
@@ -279,7 +279,7 @@ void show_report_devices(void)
 	}else {
 		if (reporttype)
 			fprintf(reportout.http_report,
-					" <table width=100%%>\n <tr><th width=10%%>Usage</th><th class=\"device\">Device name</th></tr>\n");
+					" <table width=\"100%%\">\n <tr><th width=\"10%%\">Usage</th><th class=\"device\">Device name</th></tr>\n");
 		else
 			fprintf(reportout.csv_report,
 					"Usage:, Device name:, \n");

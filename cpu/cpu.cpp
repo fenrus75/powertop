@@ -276,11 +276,14 @@ void enumerate_cpus(void)
 	file.close();
 
 	perf_events = new perf_power_bundle();
-
-	perf_events->add_event("power:power_frequency");
-	perf_events->add_event("power:power_start");
-	perf_events->add_event("power:power_end");
-
+	
+	if (!perf_events->add_event("power:cpu_idle")){
+		perf_events->add_event("power:power_start");
+		perf_events->add_event("power:power_end");
+	}
+	if (!perf_events->add_event("power:cpu_frequency"))
+		perf_events->add_event("power:power_frequency");
+	
 }
 
 void start_cpu_measurement(void)
@@ -963,19 +966,29 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 		if (system_level.children[i])
 			system_level.children[i]->validate();
 #endif
+	unsigned long long val; 
+	int ret; 
+	if (strcmp(event->name, "cpu_idle")==0) {
 
-	if (strcmp(event->name, "power_frequency")==0) {
-		unsigned long long val;
-		int ret;
+		ret = pevent_get_field_val(NULL, event, "state", &rec, &val, 0);
+		if (val == 4294967295)
+			cpu->go_unidle(time);
+		else
+			cpu->go_idle(time);
+	}
+
+	if (strcmp(event->name, "power_frequency") ||
+	   	strcmp(event->name, "cpu_frequency")==0){
 
 		ret = pevent_get_field_val(NULL, event, "state", &rec, &val, 0);
 		if (ret < 0) {
-			fprintf(stderr, "WTF no state?\n");
+			fprintf(stderr, "no state?\n");
 			exit(-1);
 		}
 
 		cpu->change_freq(time, val);
 	}
+
 	if (strcmp(event->name, "power_start")==0)
 		cpu->go_idle(time);
 	if (strcmp(event->name, "power_end")==0)

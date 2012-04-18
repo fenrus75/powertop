@@ -133,10 +133,12 @@ static void parse_event_format(const char *event_name)
 	free(buf);
 }
 
-void perf_bundle::add_event(const char *event_name)
+bool perf_bundle::add_event(const char *event_name)
 {
 	unsigned int i;
+	int event_added = false; 
 	class perf_event *ev;
+	
 
 	for (i = 0; i < all_cpus.size(); i++) {
 
@@ -154,10 +156,12 @@ void perf_bundle::add_event(const char *event_name)
 				parse_event_format(event_name);
 			}
 			events.push_back(ev);
+			event_added = true; 
 		} else {
 			delete ev;
 		}
 	}
+	return event_added; 
 }
 
 void perf_bundle::start(void)

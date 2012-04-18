@@ -44,7 +44,7 @@ public:
 	virtual ~perf_bundle() {};
 
 	virtual void release(void);
-	void add_event(const char *event_name);
+	bool add_event(const char *event_name);
 
 	void start(void);
 	void stop(void);

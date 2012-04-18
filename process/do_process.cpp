@@ -542,6 +542,12 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		t = work->done(time, wk);
 		consumer_child_time(cpu, t);
 	}
+	else if (strcmp(event->name, "cpu_idle") == 0) {
+		if (val == 4294967295)
+			consume_blame(cpu);
+		else
+			set_wakeup_pending(cpu);
+	} 
 	else if (strcmp(event->name, "power_start") == 0) {
 		set_wakeup_pending(cpu);
 	}
@@ -622,8 +628,10 @@ void start_process_measurement(void)
 		perf_events->add_event("timer:timer_expire_exit");
 		perf_events->add_event("timer:hrtimer_expire_entry");
 		perf_events->add_event("timer:hrtimer_expire_exit");
-		perf_events->add_event("power:power_start");
-		perf_events->add_event("power:power_end");
+		if (!perf_events->add_event("power:cpu_idle")){
+			perf_events->add_event("power:power_start");
+			perf_events->add_event("power:power_end");
+		}
 		perf_events->add_event("workqueue:workqueue_execute_start");
 		perf_events->add_event("workqueue:workqueue_execute_end");
 		perf_events->add_event("i915:i915_gem_ring_dispatch");

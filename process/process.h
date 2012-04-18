@@ -80,6 +80,7 @@ extern void end_process_data(void);
 extern void clear_process_data(void);
 extern void merge_processes(void);
 
+extern class process * find_create_process(const char *comm, int pid);
 extern class process * find_create_process(char *comm, int pid);
 extern void all_processes_to_all_power(void);
 
@@ -91,98 +92,6 @@ extern void report_summary(void);
 
 
 extern void clear_timers(void);
-
-
-
-#define TASK_COMM_LEN 16
-struct sched_switch {
-	char prev_comm[TASK_COMM_LEN];
-	int  prev_pid;
-	int  prev_prio;
-	long prev_state; /* Arjan weeps. */
-#ifdef BIT64
-	int dummy;
-#endif
-	char next_comm[TASK_COMM_LEN];
-	int  next_pid;
-	int  next_prio;
-} __attribute__((packed));
-
-struct irq_entry {
-	int irq;
-	int len;
-	char handler[16];
-};
-
-
-
-struct wakeup_entry {
-	char comm[TASK_COMM_LEN];
-	int   pid;
-	int   prio;
-	int   success;
-};
-
-
-struct irq_exit {
-	int irq;
-	int ret;
-};
-
-struct  softirq_entry {
-	uint32_t vec;
-};
-
-struct timer_start {
-#ifdef BIT64
-	int padding;
-#endif
-	void		*timer;
-	void		*function;
-} __attribute__((packed));;
-
-struct timer_cancel {
-#ifdef BIT64
-	int padding;
-#endif
-	void		*timer;
-} __attribute__((packed));;
-
-struct timer_expire {
-#ifdef BIT64
-	int padding;
-#endif
-	void		*timer;
-	unsigned long	now;
-	void		*function;
-} __attribute__((packed));;
-struct hrtimer_expire {
-#ifdef BIT64
-	int padding;
-#endif
-	void		*timer;
-	int64_t		now;
-	void		*function;
-} __attribute__((packed));;
-struct workqueue_start {
-#ifdef BIT64
-	int padding;
-#endif
-	void		*work;
-	void		*function;
-} __attribute__((packed));;
-struct workqueue_end {
-#ifdef BIT64
-	int padding;
-#endif
-	void		*work;
-} __attribute__((packed));
-
-struct  dirty_inode {
-	uint32_t dev;
-	uint32_t inode;
-	uint32_t flags;
-};
 
 
 #endif

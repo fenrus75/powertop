@@ -898,6 +898,7 @@ static inline void perf_event_init(void)				{ }
 #endif /* __KERNEL__ */
 
 
+#if 0
 /*
  * trace_flag_type is an enumeration that holds different
  * states when a trace occurs. These are:
@@ -914,5 +915,6 @@ enum trace_flag_type {
 	TRACE_FLAG_HARDIRQ		= 0x08,
 	TRACE_FLAG_SOFTIRQ		= 0x10,
 };
+#endif
 
 #endif /* _LINUX_PERF_EVENT_H */

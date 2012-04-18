@@ -48,7 +48,7 @@ static	class perf_bundle * perf_events;
 
 class perf_power_bundle: public perf_bundle
 {
-	virtual void handle_trace_point(int type, void *trace, int cpu, uint64_t time, unsigned char flags);
+	virtual void handle_trace_point(void *trace, int cpu, uint64_t time);
 
 };
 
@@ -930,21 +930,30 @@ struct power_entry {
 } __attribute__((packed));
 
 
-void perf_power_bundle::handle_trace_point(int type, void *trace, int cpunr, uint64_t time, unsigned char flags)
+void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time)
 {
 	const char *event_name;
+	struct event_format *event;
+        struct record rec; /* holder */
 	class abstract_cpu *cpu;
+	int type; 
 
 	if (event_names.find(type) == event_names.end())
 		return;
 
-	event_name = event_names[type];
+	rec.data = trace; 	
+	
+	type = pevent_data_type(perf_event::pevent, &rec);
+	event = pevent_find_event(perf_event::pevent, type);
+	if (!event)
+		return;
 
 	if (cpunr >= (int)all_cpus.size()) {
 		cout << "INVALID cpu nr in handle_trace_point\n";
 		return;
 	}
 
+	printf("event: %s\n", event->name); 
 	cpu = all_cpus[cpunr];
 
 #if 0
@@ -955,13 +964,21 @@ void perf_power_bundle::handle_trace_point(int type, void *trace, int cpunr, uin
 			system_level.children[i]->validate();
 #endif
 
-	if (strcmp(event_name, "power:power_frequency")==0) {
-		struct power_entry *pe = (struct power_entry *)trace;
-		cpu->change_freq(time, pe->value);
+	if (strcmp(event->name, "power_frequency")==0) {
+		unsigned long long val;
+		int ret;
+
+		ret = pevent_get_field_val(NULL, event, "state", &rec, &val, 0);
+		if (ret < 0) {
+			fprintf(stderr, "WTF no state?\n");
+			exit(-1);
+		}
+
+		cpu->change_freq(time, val);
 	}
-	if (strcmp(event_name, "power:power_start")==0)
+	if (strcmp(event->name, "power_start")==0)
 		cpu->go_idle(time);
-	if (strcmp(event_name, "power:power_end")==0)
+	if (strcmp(event->name, "power_end")==0)
 		cpu->go_unidle(time);
 
 #if 0

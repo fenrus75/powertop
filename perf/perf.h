@@ -27,6 +27,10 @@
 
 #include <iostream>
 
+extern "C" {
+#include "../pevent/parse-events.h"
+}
+
 using namespace std;
 
 class  perf_event {
@@ -62,7 +66,9 @@ public:
 	void process(void *cookie);
 
 	virtual void handle_event(struct perf_event_header *header, void *cookie) { };
-};
 
+	static struct pevent *pevent;
+
+};
 
 #endif

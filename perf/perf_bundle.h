@@ -52,7 +52,7 @@ public:
 
 	void process(void);
 
-	virtual void handle_trace_point(int type, void *trace, int cpu = 0, uint64_t time = 0, unsigned char flags = 0);
+	virtual void handle_trace_point(void *trace, int cpu = 0, uint64_t time = 0);
 };
 
 

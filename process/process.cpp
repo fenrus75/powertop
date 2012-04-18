@@ -160,7 +160,7 @@ const char * process::usage_units_summary(void)
 	return "%";
 }
 
-class process * find_create_process(char *comm, int pid)
+class process * find_create_process(const char *comm, int pid)
 {
 	unsigned int i;
 	class process *new_proc;
@@ -175,6 +175,11 @@ class process * find_create_process(char *comm, int pid)
 	return new_proc;
 }
 
+/* C++... really? */
+class process * find_create_process(char *comm, int pid)
+{
+	return find_create_process((const char*)comm, pid);
+}
 
 static void merge_process(class process *one, class process *two)
 {

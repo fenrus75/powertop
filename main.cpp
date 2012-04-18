@@ -32,6 +32,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <sys/stat.h>
+#include <sys/statfs.h>
 #include <getopt.h>
 #include <unistd.h>
 #include <locale.h>
@@ -55,6 +56,8 @@
 #include "display.h"
 #include "devlist.h"
 #include "report.h"
+
+#define DEBUGFS_MAGIC          0x64626720
 
 int debug_learning = 0;
 
@@ -256,6 +259,7 @@ int main(int argc, char **argv)
 	char filename[4096];;
 	int  timetotest = 20;
 	int  iterations = 1;
+	struct statfs st_fs;
 
 	//set_new_handler(out_of_memory);
 
@@ -280,11 +284,12 @@ int main(int argc, char **argv)
 		ret = system("mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
 	}
 	if (ret != 0) {
-        	printf(_("Failed to mount debugfs!\n"));
+       		printf(_("Failed to mount debugfs!\n"));
         	printf(_("exiting...\n"));
-        	exit(EXIT_FAILURE);
+       		exit(EXIT_FAILURE);
 	}
-	
+
+
 	srand(time(NULL));
 
 	if (access("/var/cache/", W_OK) == 0)

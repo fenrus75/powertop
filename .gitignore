@@ -1,5 +1,6 @@
 *~
 *.o
+*.a
 powertop
 powertop.html
 css.h

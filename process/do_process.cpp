@@ -167,7 +167,7 @@ static void consume_blame(unsigned int cpu)
 
 class perf_process_bundle: public perf_bundle
 {
-        virtual void handle_trace_point(int type, void *trace, int cpu, uint64_t time, unsigned char flags);
+	virtual void handle_trace_point(void *trace, int cpu, uint64_t time);
 };
 
 static bool comm_is_xorg(char *comm)
@@ -188,14 +188,21 @@ int dont_blame_me(char *comm)
 
 
 
-void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uint64_t time, unsigned char flags)
+void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time)
 {
-	const char *event_name;
+	struct event_format *event;
+	struct record rec; /* holder */
+	struct format_field *field;
+	unsigned long long val;
+	int type;
+	int ret;
 
-	if (event_names.find(type) == event_names.end())
+	rec.data = trace;
+
+	type = pevent_data_type(perf_event::pevent, &rec);
+	event = pevent_find_event(perf_event::pevent, type);
+	if (!event)
 		return;
-
-	event_name = event_names[type];
 
 	if (time < first_stamp)
 		first_stamp = time;
@@ -205,15 +212,30 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		measurement_time = (0.0001 + last_stamp - first_stamp) / 1000000000 ;
 	}
 
-	if (strcmp(event_name, "sched:sched_switch") == 0) {
-		struct sched_switch *sw;
+	if (strcmp(event->name, "sched_switch") == 0) {
 		class process *old_proc = NULL;
 		class process *new_proc  = NULL;
+		const char *next_comm;
+		int next_pid;
+		int prev_pid;
 
-		sw = (struct sched_switch *)trace;
+		field = pevent_find_any_field(event, "next_comm");
+		if (!field)
+			return; /* ?? */
+		next_comm = (char *)trace + field->offset;
+
+		ret = pevent_get_field_val(NULL, event, "next_pid", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		next_pid = (int)val;
+
+		ret = pevent_get_field_val(NULL, event, "prev_pid", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		prev_pid = (int)val;
 
 		/* find new process pointer */
-		new_proc = find_create_process(sw->next_comm, sw->next_pid);
+		new_proc = find_create_process(next_comm, next_pid);
 
 		/* find the old process pointer */
 
@@ -230,7 +252,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		/* retire the old process */
 
 		if (old_proc) {
-			old_proc->deschedule_thread(time, sw->prev_pid);
+			old_proc->deschedule_thread(time, prev_pid);
 			old_proc->waker = NULL;
 		}
 
@@ -240,10 +262,10 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		push_consumer(cpu, new_proc);
 
 		/* start new process */
-		new_proc->schedule_thread(time, sw->next_pid);
+		new_proc->schedule_thread(time, next_pid);
 
-		if (strncmp(sw->next_comm,"migration/", 10) && strncmp(sw->next_comm,"kworker/", 8) && strncmp(sw->next_comm, "kondemand/",10)) {
-			if (sw->next_pid) {
+		if (strncmp(next_comm,"migration/", 10) && strncmp(next_comm,"kworker/", 8) && strncmp(next_comm, "kondemand/",10)) {
+			if (next_pid) {
 				/* If someone woke us up.. blame him instead */
 				if (new_proc->waker) {
 					change_blame(cpu, new_proc->waker, LEVEL_PROCESS);
@@ -256,12 +278,18 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		}
 		new_proc->waker = NULL;
 	}
-	else if (strcmp(event_name, "sched:sched_wakeup") == 0) {
-		struct wakeup_entry *we;
+	else if (strcmp(event->name, "sched_wakeup") == 0) {
 		class power_consumer *from = NULL;
 		class process *dest_proc, *from_proc;
+		const char *comm;
+		int flags; 
+		int pid; 
 
-		we = (struct wakeup_entry *)trace;
+
+		ret = pevent_get_common_field_val(NULL, event, "flags", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		flags = (int)val;
 
 		if ( (flags & TRACE_FLAG_HARDIRQ) || (flags & TRACE_FLAG_SOFTIRQ)) {
 			class timer *timer;
@@ -278,8 +306,19 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			from = current_consumer(cpu);
 		}
 
-		dest_proc = find_create_process(we->comm, we->pid);
+                               
+		field = pevent_find_any_field(event, "comm");
+		if (!field)
+			return; 
+		comm = (char *)trace + field->offset;
 
+		ret = pevent_get_field_val(NULL, event, "pid", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		pid = (int)val;
+
+		dest_proc = find_create_process(comm, pid);
+ 
 		if (from && strcmp(from->name(), "process")!=0){
 			/* not a process doing the wakeup */
 			from = NULL;
@@ -288,7 +327,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			from_proc = (class process *) from;
 		}
 
-		if (from_proc && (dest_proc->running == 0) && (dest_proc->waker == NULL) && (we->pid != 0) && !dont_blame_me(from_proc->comm))
+		if (from_proc && (dest_proc->running == 0) && (dest_proc->waker == NULL) && (pid != 0) && !dont_blame_me(from_proc->comm))
 			dest_proc->waker = from;
 		if (from)
 			dest_proc->last_waker = from;
@@ -298,12 +337,23 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			from->xwakes ++ ;
 
 	}
-	else if (strcmp(event_name, "irq:irq_handler_entry") == 0) {
-		struct irq_entry *irqe;
+	else if (strcmp(event->name, "irq_handler_entry") == 0) {
 		class interrupt *irq;
-		irqe = (struct irq_entry *)trace;
+		const char *handler;
+		int nr;
 
-		irq = find_create_interrupt(irqe->handler, irqe->irq, cpu);
+		field = pevent_find_any_field(event, "name");
+		if (!field)
+			return; /* ?? */
+		handler = (char *)trace + field->offset;
+
+		ret = pevent_get_field_val(NULL, event, "irq", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		nr = (int)val;
+
+		irq = find_create_interrupt(handler, nr, cpu);
+
 
 		push_consumer(cpu, irq);
 
@@ -314,7 +364,7 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 
 	}
 
-	else if (strcmp(event_name, "irq:irq_handler_exit") == 0) {
+	else if (strcmp(event->name, "irq_handler_exit") == 0) {
 		class interrupt *irq;
 		uint64_t t;
 
@@ -328,28 +378,30 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		consumer_child_time(cpu, t);
 	}
 
-	else if (strcmp(event_name, "irq:softirq_entry") == 0) {
-		struct softirq_entry *irqe;
+	else if (strcmp(event->name, "softirq_entry") == 0) {
 		class interrupt *irq;
-
-		irqe = (struct softirq_entry *)trace;
-
 		const char *handler = NULL;
+		int vec; 
 
-		if (irqe->vec <= 9)
-			handler = softirqs[irqe->vec];
+		ret = pevent_get_field_val(NULL, event, "vec", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		vec = (int)val;
+
+		if (vec <= 9)
+			handler = softirqs[vec];
 
 		if (!handler)
 			return;
 
-		irq = find_create_interrupt(handler, irqe->vec, cpu);
+		irq = find_create_interrupt(handler, vec, cpu);
 
 		push_consumer(cpu, irq);
 
 		irq->start_interrupt(time);
 		change_blame(cpu, irq, LEVEL_SOFTIRQ);
 	}
-	else if (strcmp(event_name, "irq:softirq_exit") == 0) {
+	else if (strcmp(event->name, "softirq_exit") == 0) {
 		class interrupt *irq;
 		uint64_t t;
 
@@ -361,103 +413,153 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 		t = irq->end_interrupt(time);
 		consumer_child_time(cpu, t);
 	}
-	else if (strcmp(event_name, "timer:timer_expire_entry") == 0) {
-		struct timer_expire *tmr;
+	else if (strcmp(event->name, "timer_expire_entry") == 0) {
 		class timer *timer;
-		tmr = (struct timer_expire *)trace;
+		uint64_t function;
+		uint64_t tmr;
 
-		timer = find_create_timer((uint64_t)tmr->function);
+		ret = pevent_get_field_val(NULL, event, "function", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		function = (uint64_t)val;
+
+		timer = find_create_timer(function);
 
 		if (timer->is_deferred())
 			return;
-		push_consumer(cpu, timer);
-		timer->fire(time, (uint64_t)tmr->timer);
 
+		ret = pevent_get_field_val(NULL, event, "timer", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		tmr = (uint64_t)val;
+
+ 		push_consumer(cpu, timer);
+		timer->fire(time, tmr);
 
 		if (strcmp(timer->handler, "delayed_work_timer_fn"))
 			change_blame(cpu, timer, LEVEL_TIMER);
 	}
-	else if (strcmp(event_name, "timer:timer_expire_exit") == 0) {
+	else if (strcmp(event->name, "timer_expire_exit") == 0) {
 		class timer *timer;
-		struct timer_cancel *tmr;
-		uint64_t t;
-		tmr = (struct timer_cancel *)trace;
+		uint64_t tmr;
+ 		uint64_t t;
+
+		ret = pevent_get_field_val(NULL, event, "timer", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		tmr = (uint64_t)val;
 
 		timer = (class timer *) current_consumer(cpu);
 		if (!timer || strcmp(timer->name(), "timer")) {
 			return;
 		}
 		pop_consumer(cpu);
-		t = timer->done(time, (uint64_t)tmr->timer);
+		t = timer->done(time, tmr);
 		consumer_child_time(cpu, t);
 	}
-	else if (strcmp(event_name, "timer:hrtimer_expire_entry") == 0) {
-		struct hrtimer_expire *tmr;
-		class timer *timer;
-		tmr = (struct hrtimer_expire *)trace;
+	else if (strcmp(event->name, "hrtimer_expire_entry") == 0) {
+ 		class timer *timer;
+		uint64_t function;
+		uint64_t tmr;
 
-		timer = find_create_timer((uint64_t)tmr->function);
+		ret = pevent_get_field_val(NULL, event, "function", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		function = (uint64_t)val;
+
+		timer = find_create_timer(function);
+
+		ret = pevent_get_field_val(NULL, event, "htimer", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		tmr = (uint64_t)val;
 
 		push_consumer(cpu, timer);
-		timer->fire(time, (uint64_t)tmr->timer);
-
+		timer->fire(time, tmr);
 
 		if (strcmp(timer->handler, "delayed_work_timer_fn"))
 			change_blame(cpu, timer, LEVEL_TIMER);
 	}
-	else if (strcmp(event_name, "timer:hrtimer_expire_exit") == 0) {
-		class timer *timer;
-		struct timer_cancel *tmr;
-		uint64_t t;
-		tmr = (struct timer_cancel *)trace;
+	else if (strcmp(event->name, "hrtimer_expire_exit") == 0) {
+	 	class timer *timer;
+		uint64_t tmr;
+ 		uint64_t t;
 
-		timer = (class timer *) current_consumer(cpu);
-		if (!timer || strcmp(timer->name(), "timer")) {
+ 		timer = (class timer *) current_consumer(cpu);
+ 		if (!timer || strcmp(timer->name(), "timer")) {
+ 			return;
+ 		}
+
+		ret = pevent_get_field_val(NULL, event, "htimer", &rec, &val, 0);
+		if (ret < 0)
 			return;
-		}
-		pop_consumer(cpu);
-		t = timer->done(time, (uint64_t)tmr->timer);
+		tmr = (uint64_t)val;
+
+ 		pop_consumer(cpu);
+		t = timer->done(time, tmr);
 		consumer_child_time(cpu, t);
 	}
-	else if (strcmp(event_name, "workqueue:workqueue_execute_start") == 0) {
-		struct workqueue_start *wq;
-		class work *work;
-		wq = (struct workqueue_start *)trace;
+	else if (strcmp(event->name, "workqueue_execute_start") == 0) {
+ 		class work *work;
+		uint64_t function;
+		uint64_t wk;
 
-		work = find_create_work((uint64_t)wq->function);
+		ret = pevent_get_field_val(NULL, event, "function", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		function = (uint64_t)val;
+
+		ret = pevent_get_field_val(NULL, event, "work", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		wk = (uint64_t)val;
+
+		work = find_create_work(function);
+
 
 		push_consumer(cpu, work);
-		work->fire(time, (uint64_t)wq->work);
+		work->fire(time, wk);
 
 
 		if (strcmp(work->handler, "do_dbs_timer") != 0 && strcmp(work->handler, "vmstat_update") != 0)
 			change_blame(cpu, work, LEVEL_WORK);
 	}
-	else if (strcmp(event_name, "workqueue:workqueue_execute_end") == 0) {
-		class work *work;
-		struct workqueue_end *wq;
-		uint64_t t;
-		wq = (struct workqueue_end *)trace;
+	else if (strcmp(event->name, "workqueue_execute_end") == 0) {
+ 		class work *work;
+ 		uint64_t t;
+		uint64_t wk;
+
+		ret = pevent_get_field_val(NULL, event, "work", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		wk = (uint64_t)val;
 
 		work = (class work *) current_consumer(cpu);
 		if (!work || strcmp(work->name(), "work")) {
 			return;
 		}
 		pop_consumer(cpu);
-		t = work->done(time, (uint64_t)wq->work);
+		t = work->done(time, wk);
 		consumer_child_time(cpu, t);
 	}
-	else if (strcmp(event_name, "power:power_start") == 0) {
+	else if (strcmp(event->name, "power_start") == 0) {
 		set_wakeup_pending(cpu);
 	}
-	else if (strcmp(event_name, "power:power_end") == 0) {
+	else if (strcmp(event->name, "power_end") == 0) {
 		consume_blame(cpu);
 	}
-	else if (strcmp(event_name, "i915:i915_gem_ring_dispatch") == 0
-	 || strcmp(event_name, "i915:i915_gem_request_submit") == 0) {
+	else if (strcmp(event->name, "i915_gem_ring_dispatch") == 0
+	 || strcmp(event->name, "i915_gem_request_submit") == 0) {
 		/* any kernel contains only one of the these tracepoints,
 		 * the latter one got replaced by the former one */
 		class power_consumer *consumer;
+		int flags;
+
+		ret = pevent_get_common_field_val(NULL, event, "flags", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		flags = (int)val;
+
 		consumer = current_consumer(cpu);
 		/* currently we don't count graphic requests submitted from irq contect */
 		if ( (flags & TRACE_FLAG_HARDIRQ) || (flags & TRACE_FLAG_SOFTIRQ)) {
@@ -480,16 +582,21 @@ void perf_process_bundle::handle_trace_point(int type, void *trace, int cpu, uin
 			consumer->gpu_ops++;
 		}
 	}
-	else if (strcmp(event_name, "writeback:writeback_inode_dirty") == 0) {
+	else if (strcmp(event->name, "writeback_inode_dirty") == 0) {
 		static uint64_t prev_time;
 		class power_consumer *consumer;
-		struct dirty_inode *drty;
+		int dev; 
 
 		consumer = current_consumer(cpu);
-		drty = (struct dirty_inode *)trace;
+		
+		ret = pevent_get_field_val(NULL, event, "dev", &rec, &val, 0);
+		if (ret < 0)
+			return;
+		dev = (int)val;
 
-
-		if (consumer && strcmp(consumer->name(), "process")==0 && drty->dev > 0) {
+		if (consumer && strcmp(consumer->name(), 
+			"process")==0 && dev > 0) {
+			
 			consumer->disk_hits++;
 
 			/* if the previous inode dirty was > 1 second ago, it becomes a hard hit */

@@ -27,6 +27,9 @@
 #include <algorithm>
 #include <string.h>
 #include <stdint.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include "perf_bundle.h"
 #include "perf_event.h"
@@ -84,6 +87,51 @@ void perf_bundle::release(void)
 	records.clear();
 }
 
+static char * read_file(const char *file)
+{
+	char *buffer = NULL; /* quient gcc */
+	char buf[4096];
+	int len = 0;
+	int fd;
+	int r;
+
+	fd = open(file, O_RDONLY);
+	if (fd < 0)
+		exit(-1);
+
+	while((r = read(fd, buf, 4096)) > 0) {
+		if (len)
+			buffer = (char *)realloc(buffer, len + r + 1);
+		else
+			buffer = (char *)malloc(r + 1);
+		memcpy(buffer + len, buf, r);
+		len += r;
+		buffer[len] = '\0';
+	}
+
+	return buffer;
+}
+
+static void parse_event_format(const char *event_name)
+{
+	char *tptr;
+	char *name = strdup(event_name);
+	char *sys = strtok_r(name, ":", &tptr);
+	char *event = strtok_r(NULL, ":", &tptr);
+	char *file;
+	char *buf;
+
+	file = (char *)malloc(strlen(sys) + strlen(event) +
+		      strlen("/sys/kernel/debug/tracing/events////format") + 2);
+	sprintf(file, "/sys/kernel/debug/tracing/events/%s/%s/format", sys, event);
+
+	buf = read_file(file);
+	free(file);
+
+	pevent_parse_event(perf_event::pevent, buf, strlen(buf), sys);
+	free(name);
+	free(buf);
+}
 
 void perf_bundle::add_event(const char *event_name)
 {
@@ -101,9 +149,10 @@ void perf_bundle::add_event(const char *event_name)
 		ev->set_cpu(i);
 
 		if ((int)ev->trace_type >= 0) {
-			if (event_names.find(ev->trace_type) == event_names.end())
+			if (event_names.find(ev->trace_type) == event_names.end()) {
 				event_names[ev->trace_type] = strdup(event_name);
-
+				parse_event_format(event_name);
+			}
 			events.push_back(ev);
 		} else {
 			delete ev;
@@ -160,11 +209,6 @@ struct trace_entry {
 	uint32_t		cpu;
 	uint32_t		res;
 	__u32			size;
-	unsigned short		type;
-	unsigned char		flags;
-	unsigned char		preempt_count;
-	int			pid;
-	int			lock_depth;
 } __attribute__((packed));;
 
 
@@ -244,12 +288,11 @@ void perf_bundle::process(void)
 		if (sample->header.type != PERF_RECORD_SAMPLE)
 			continue;
 
-		handle_trace_point(sample->trace.type, &sample->data, sample->trace.cpu, sample->trace.time, sample->trace.flags);
-		
+		handle_trace_point(&sample->data, sample->trace.cpu, sample->trace.time);	
 	}
 }
 
-void perf_bundle::handle_trace_point(int type, void *trace, int cpu, uint64_t time, unsigned char flags)
+void perf_bundle::handle_trace_point(void *trace, int cpu, uint64_t time)
 {
 	printf("UH OH... abstract handle_trace_point called\n");
 }

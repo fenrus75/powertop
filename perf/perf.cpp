@@ -53,6 +53,8 @@
 #include "../lib.h"
 #include "../display.h"
 
+struct pevent *perf_event::pevent;
+
 static int get_trace_type(const char *eventname)
 {
 	string str;
@@ -166,6 +168,12 @@ perf_event::~perf_event(void)
 {
 	if (name)
 		free(name);
+
+	if (perf_event::pevent->ref_count == 1) {
+		pevent_free(perf_event::pevent);
+		perf_event::pevent = NULL;
+	} else
+		pevent_unref(perf_event::pevent);
 }
 
 void perf_event::set_cpu(int _cpu)
@@ -173,9 +181,17 @@ void perf_event::set_cpu(int _cpu)
 	cpu = _cpu;
 }
 
+static void allocate_pevent(void)
+{
+	if (!perf_event::pevent)
+		perf_event::pevent = pevent_alloc();
+	else
+		pevent_ref(perf_event::pevent);
+}
 
 perf_event::perf_event(const char *event_name, int _cpu, int buffer_size)
 {
+	allocate_pevent();
 	name = NULL;
 	perf_fd = -1;
 	bufsize = buffer_size;
@@ -187,6 +203,7 @@ perf_event::perf_event(const char *event_name, int _cpu, int buffer_size)
 
 perf_event::perf_event(void)
 {
+	allocate_pevent();
 	name = NULL;
 	perf_fd = -1;
 	bufsize = 128;

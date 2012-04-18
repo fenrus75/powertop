@@ -1,4 +1,4 @@
-all: powertop  po/powertop.pot
+all: pevents/libparseevent.a powertop  po/powertop.pot
 
 VERSION := 1.98
 
@@ -42,8 +42,8 @@ ifeq ($(NLLIBNAME),)
 $(error Cannot find development files for any supported version of libnl)
 endif
 
-LIBS += $(shell $(PKG_CONFIG) --libs $(NLLIBNAME))
-CFLAGS += $(shell $(PKG_CONFIG) --cflags $(NLLIBNAME))
+LIBS += $(shell $(PKG_CONFIG) --libs $(NLLIBNAME)) -Lpevent
+CFLAGS += $(shell $(PKG_CONFIG) --cflags $(NLLIBNAME)) -Ipevent
 
 
 
@@ -51,9 +51,9 @@ CFLAGS += $(shell $(PKG_CONFIG) --cflags $(NLLIBNAME))
 # ncurses-devel and pciutils-devel 
 #
 
-LIBS += -lpthread -lncursesw -lpci -lz -lresolv
+LIBS += -lpthread -lncursesw -lpci -lz -lresolv -lparseevent
 
-HEADERS := cpu/cpu.h
+HEADERS += cpu/cpu.h pevent/parse-events.h
 
 
 PREFIX     ?= /usr
@@ -64,17 +64,20 @@ MANDIR      = $(PREFIX)/share/man/man8
 
 clean:
 	rm -f *.o *~ powertop DEADJOE core.* */*.o */*~ csstoh css.h
-	
+
+pevents/libparseevent.a:
+	$(MAKE) -C pevent
+
 powertop: $(OBJS) $(HEADERS)
 	$(CXX) $(OBJS) $(LIBS) -o powertop
 	@(cd po/ && $(MAKE))
-	
+
 install: powertop
 	mkdir -p ${DESTDIR}${BINDIR}
 	cp powertop ${DESTDIR}${BINDIR}
 	mkdir -p ${DESTDIR}/var/cache/powertop
 	@(cd po/ && env LOCALESDIR=$(LOCALESDIR) DESTDIR=$(DESTDIR) $(MAKE) $@)
-	
+
 
 csstoh: csstoh.c
 	gcc -o csstoh csstoh.c

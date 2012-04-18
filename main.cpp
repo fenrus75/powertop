@@ -278,17 +278,19 @@ int main(int argc, char **argv)
 	ret = system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
 	ret = system("/sbin/modprobe msr > /dev/null 2>&1");
 
-	if (access("/bin/mount", X_OK) == 0) {
-		ret = system("/bin/mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
-	} else {
-		ret = system("mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
+	statfs("/sys/kernel/debug", &st_fs);
+	if (st_fs.f_type != (long) DEBUGFS_MAGIC) {
+		if (access("/bin/mount", X_OK) == 0) {
+			ret = system("/bin/mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
+		} else {
+			ret = system("mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
+		}
+		if (ret != 0) {
+        		printf(_("Failed to mount debugfs!\n"));
+	        	printf(_("exiting...\n"));
+        		exit(EXIT_FAILURE);
+		}
 	}
-	if (ret != 0) {
-       		printf(_("Failed to mount debugfs!\n"));
-        	printf(_("exiting...\n"));
-       		exit(EXIT_FAILURE);
-	}
-
 
 	srand(time(NULL));
 

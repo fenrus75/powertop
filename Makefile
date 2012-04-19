@@ -2,7 +2,9 @@ all: pevents/libparseevent.a powertop  po/powertop.pot
 
 VERSION := 1.98
 
-CFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector -Wshadow -Wformat -D_FORTIFY_SOURCE=2
+CXXFLAGS ?= -O2 -g -fno-omit-frame-pointer -fstack-protector
+CXXFLAGS += -Wall -Wshadow -Wformat
+CPPFLAGS += -D_FORTIFY_SOURCE=2
 PKG_CONFIG ?= pkg-config
 
 OBJS := lib.o main.o display.o report.o devlist.o
@@ -29,12 +31,12 @@ NLLIBNAME = libnl-1
 endif
 
 ifeq ($(NL2FOUND),Y)
-CFLAGS += -DCONFIG_LIBNL20
+CPPFLAGS += -DCONFIG_LIBNL20
 NLLIBNAME = libnl-2.0
 endif
 
 ifeq ($(NL3FOUND),Y)
-CFLAGS += -DCONFIG_LIBNL20
+CPPFLAGS += -DCONFIG_LIBNL20
 NLLIBNAME = libnl-3.0 libnl-genl-3.0
 endif
 
@@ -43,7 +45,7 @@ $(error Cannot find development files for any supported version of libnl)
 endif
 
 LIBS += $(shell $(PKG_CONFIG) --libs $(NLLIBNAME)) -Lpevent
-CFLAGS += $(shell $(PKG_CONFIG) --cflags $(NLLIBNAME)) -Ipevent
+CPPFLAGS += $(shell $(PKG_CONFIG) --cflags $(NLLIBNAME)) -Ipevent
 
 
 
@@ -69,7 +71,7 @@ pevents/libparseevent.a:
 	$(MAKE) -C pevent
 
 powertop: $(OBJS) $(HEADERS)
-	$(CXX) $(OBJS) $(LIBS) -o powertop
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o powertop
 	@(cd po/ && $(MAKE))
 
 install: powertop
@@ -90,7 +92,7 @@ css.h: csstoh powertop.css
 %.o: %.cpp lib.h css.h Makefile
 	@echo "  CC  $<"
 	@[ -x /usr/bin/cppcheck ] && /usr/bin/cppcheck -q $< || :
-	@$(CC) $(CFLAGS) -c -o $@ $<
+	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 
 uptrans:

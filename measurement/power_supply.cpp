@@ -81,14 +81,6 @@ void power_supply::measure(void)
 	double _capacity = 0;
 	double _voltage = 0;
 
-	char rate_units[16];
-	char capacity_units[16];
-	char voltage_units[16];
-
-	rate_units[0] = 0;
-	capacity_units[0] = 0;
-	voltage_units[0] = 0;
-
 	rate = 0;
 	voltage = 0;
 	capacity = 0;

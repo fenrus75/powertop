@@ -998,7 +998,7 @@ void report_summary(void)
 		fprintf(reportout.csv_report,
 			"**Power Consumption Summary** \n");
 		fprintf(reportout.csv_report,
-			"%3.1f, wakeups/second,\n%3.1f, GPU ops/second\n%3.1f, VFS ops/sec \n\n",
+			"%3.1f wakeups/second,  %3.1f GPU ops/second, %3.1f VFS ops/sec, %3.1f GFX wakes/sec and %3.1f%% CPU use \n\n",
 			total_wakeups(), total_gpu_ops(), total_disk_hits(), total_xwakes(), total_cpu_time()*100);
 
 		if (show_power)

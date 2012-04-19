@@ -345,7 +345,8 @@ void create_all_devices(void)
 
 void clear_all_devices(void)
 {
-	for (int i = 0; i < all_devices.size(); i++) {
+	unsigned int i; 
+	for (i = 0; i < all_devices.size(); i++) {
 		delete all_devices[i];
 	}
 	all_devices.clear();

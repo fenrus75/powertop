@@ -157,7 +157,6 @@ void cpufreq_tunable::toggle(void)
 const char *cpufreq_tunable::toggle_script(void) {
 	DIR *dir;
 	struct dirent *dirent;
-	FILE *file;
 	char filename[PATH_MAX];
 	char tmp[4096];
 	struct stat statbuf;

@@ -239,11 +239,12 @@ void report_show_tunables(void)
 			fprintf(reportout.csv_report, "\"%s\", \n", all_tunables[i]->description());
 	}
 
-	if (line > 0)
+	if (line > 0) {
 		if(reporttype)
 			fprintf(reportout.http_report,"</table>\n");
 		else
-			fprintf(reportout.csv_report, "\n");
+			fprintf(reportout.csv_report, "\n");		
+	}
 
 
 	line = 0;
@@ -300,8 +301,8 @@ void report_show_tunables(void)
 		if (reporttype)
 			fprintf(reportout.http_report,"<tr class=\"%s\"><td>%s</td></tr>\n",
 			tune_class(line), all_tunables[i]->description());
-		else
-			fprintf(reportout.csv_report,"\"%s\", \n", all_tunables[i]->description());
+		else 
+			fprintf(reportout.csv_report,"\"%s\", \n", all_tunables[i]->description());		
 	}
 
 	if (line > 0){

@@ -435,11 +435,11 @@ void report_display_cpu_cstates(void)
 					    } else {
 							if (!first_pkg==0) {
 								fprintf(reportout.csv_report,
-									",,,Core,,",
+									",,,Core %s ,,",
 									_core->fill_cstate_line(line, buffer2));
 							} else {
 					    		fprintf(reportout.csv_report,
-									",Core,,",
+									",Core %s ,,",
 									_core->fill_cstate_line(line, buffer2));
 					    	}
 					    }
@@ -935,7 +935,6 @@ struct power_entry {
 
 void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time)
 {
-	const char *event_name;
 	struct event_format *event;
         struct record rec; /* holder */
 	class abstract_cpu *cpu;
@@ -1032,7 +1031,8 @@ void clear_cpu_data(void)
 
 void clear_all_cpus(void)
 {
-	for (int i = 0; i < all_cpus.size(); i++) {
+	unsigned int i; 
+	for (i = 0; i < all_cpus.size(); i++) {
 		delete all_cpus[i];
 	}
 	all_cpus.clear();

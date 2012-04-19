@@ -286,9 +286,8 @@ extech_power_meter::extech_power_meter(const char *extech_name)
 
 void extech_power_meter::measure(void)
 {
-	int ret;
 	/* trigger the extech to send data */
-	ret = write(fd, " ", 1);
+	write(fd, " ", 1);
 
 	rate = extech_read(fd);
 

@@ -63,7 +63,7 @@ MANDIR      = $(PREFIX)/share/man/man8
 
 
 clean:
-	rm -f *.o *~ powertop DEADJOE core.* */*.o */*~ csstoh css.h
+	rm -f *.o *~ powertop DEADJOE core.* */*.[ao] */*~ csstoh css.h
 
 pevents/libparseevent.a:
 	$(MAKE) -C pevent

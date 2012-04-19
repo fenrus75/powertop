@@ -32,7 +32,7 @@
 #include <utility>
 #include <iostream>
 #include <fstream>
-#include <unistd.h> 
+#include <unistd.h>
 #include <dirent.h>
 #include <errno.h>
 #include <sys/stat.h>
@@ -210,4 +210,3 @@ void add_cpufreq_tunable(void)
 	cf = new class cpufreq_tunable();
 	all_tunables.push_back(cf);
 }
-

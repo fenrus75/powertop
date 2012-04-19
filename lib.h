@@ -49,11 +49,11 @@ extern char *hz_to_human(unsigned long hz, char *buffer, int digits = 2);
 
 extern const char *kernel_function(uint64_t address);
 
-class stringless  
-{  
+class stringless
+{
 public:
 	bool operator()(const char * const & lhs, const char * const & rhs) const ;
-};  
+};
 
 
 
@@ -81,4 +81,3 @@ extern void process_directory(const char *d_name, callback fn);
 extern int utf_ok;
 
 #endif
-

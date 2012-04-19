@@ -32,7 +32,7 @@
 class timer : public power_consumer {
 	char desc[256];
 public:
-	char 		handler[32];
+	char		handler[32];
 	int		raw_count;
 
 	timer(unsigned long timer_func);

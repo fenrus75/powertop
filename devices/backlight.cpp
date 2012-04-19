@@ -69,7 +69,7 @@ void backlight::start_measurement(void)
 	sprintf(filename, "%s/actual_brightness", sysfs_path);
 	file.open(filename, ios::in);
 	if (file) {
-		file >> start_level;		
+		file >> start_level;
 		file.close();
 	}
 }
@@ -159,7 +159,7 @@ void create_all_backlights(void)
 	struct dirent *entry;
 	DIR *dir;
 	char filename[4096];
-	
+
 	dir = opendir("/sys/class/backlight/");
 	if (!dir)
 		return;
@@ -234,4 +234,3 @@ double backlight::power_usage(struct result_bundle *result, struct parameter_bun
 
 	return power;
 }
-

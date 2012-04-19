@@ -282,8 +282,8 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		class power_consumer *from = NULL;
 		class process *dest_proc, *from_proc;
 		const char *comm;
-		int flags; 
-		int pid; 
+		int flags;
+		int pid;
 
 
 		ret = pevent_get_common_field_val(NULL, event, "flags", &rec, &val, 0);
@@ -306,10 +306,10 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			from = current_consumer(cpu);
 		}
 
-                               
+
 		field = pevent_find_any_field(event, "comm");
 		if (!field)
-			return; 
+			return;
 		comm = (char *)trace + field->offset;
 
 		ret = pevent_get_field_val(NULL, event, "pid", &rec, &val, 0);
@@ -318,7 +318,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		pid = (int)val;
 
 		dest_proc = find_create_process(comm, pid);
- 
+
 		if (from && strcmp(from->name(), "process")!=0){
 			/* not a process doing the wakeup */
 			from = NULL;
@@ -381,7 +381,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 	else if (strcmp(event->name, "softirq_entry") == 0) {
 		class interrupt *irq;
 		const char *handler = NULL;
-		int vec; 
+		int vec;
 
 		ret = pevent_get_field_val(NULL, event, "vec", &rec, &val, 0);
 		if (ret < 0)
@@ -433,7 +433,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			return;
 		tmr = (uint64_t)val;
 
- 		push_consumer(cpu, timer);
+		push_consumer(cpu, timer);
 		timer->fire(time, tmr);
 
 		if (strcmp(timer->handler, "delayed_work_timer_fn"))
@@ -442,7 +442,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 	else if (strcmp(event->name, "timer_expire_exit") == 0) {
 		class timer *timer;
 		uint64_t tmr;
- 		uint64_t t;
+		uint64_t t;
 
 		ret = pevent_get_field_val(NULL, event, "timer", &rec, &val, 0);
 		if (ret < 0)
@@ -458,7 +458,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		consumer_child_time(cpu, t);
 	}
 	else if (strcmp(event->name, "hrtimer_expire_entry") == 0) {
- 		class timer *timer;
+		class timer *timer;
 		uint64_t function;
 		uint64_t tmr;
 
@@ -481,26 +481,26 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			change_blame(cpu, timer, LEVEL_TIMER);
 	}
 	else if (strcmp(event->name, "hrtimer_expire_exit") == 0) {
-	 	class timer *timer;
+		class timer *timer;
 		uint64_t tmr;
- 		uint64_t t;
+		uint64_t t;
 
- 		timer = (class timer *) current_consumer(cpu);
- 		if (!timer || strcmp(timer->name(), "timer")) {
- 			return;
- 		}
+		timer = (class timer *) current_consumer(cpu);
+		if (!timer || strcmp(timer->name(), "timer")) {
+			return;
+		}
 
 		ret = pevent_get_field_val(NULL, event, "htimer", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		tmr = (uint64_t)val;
 
- 		pop_consumer(cpu);
+		pop_consumer(cpu);
 		t = timer->done(time, tmr);
 		consumer_child_time(cpu, t);
 	}
 	else if (strcmp(event->name, "workqueue_execute_start") == 0) {
- 		class work *work;
+		class work *work;
 		uint64_t function;
 		uint64_t wk;
 
@@ -525,8 +525,8 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			change_blame(cpu, work, LEVEL_WORK);
 	}
 	else if (strcmp(event->name, "workqueue_execute_end") == 0) {
- 		class work *work;
- 		uint64_t t;
+		class work *work;
+		uint64_t t;
 		uint64_t wk;
 
 		ret = pevent_get_field_val(NULL, event, "work", &rec, &val, 0);
@@ -547,7 +547,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			consume_blame(cpu);
 		else
 			set_wakeup_pending(cpu);
-	} 
+	}
 	else if (strcmp(event->name, "power_start") == 0) {
 		set_wakeup_pending(cpu);
 	}
@@ -591,18 +591,18 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 	else if (strcmp(event->name, "writeback_inode_dirty") == 0) {
 		static uint64_t prev_time;
 		class power_consumer *consumer;
-		int dev; 
+		int dev;
 
 		consumer = current_consumer(cpu);
-		
+
 		ret = pevent_get_field_val(NULL, event, "dev", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		dev = (int)val;
 
-		if (consumer && strcmp(consumer->name(), 
+		if (consumer && strcmp(consumer->name(),
 			"process")==0 && dev > 0) {
-			
+
 			consumer->disk_hits++;
 
 			/* if the previous inode dirty was > 1 second ago, it becomes a hard hit */
@@ -989,10 +989,10 @@ void report_summary(void)
 
 		if (show_power)
 			fprintf(reportout.http_report,
-            	"<tr><th width=\"10%%\">Power est.</th><th width=\"10%%\">Usage</th><th width=\"10%%\">Events/s</th><th width=\"10%%\" class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+		"<tr><th width=\"10%%\">Power est.</th><th width=\"10%%\">Usage</th><th width=\"10%%\">Events/s</th><th width=\"10%%\" class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
 		else
-        	fprintf(reportout.http_report,
-            	"<tr><th width=\"10%%\">Usage</th><th width=\"10%%\">Events/s</th><th width=\"10%%\" class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+		fprintf(reportout.http_report,
+		"<tr><th width=\"10%%\">Usage</th><th width=\"10%%\">Events/s</th><th width=\"10%%\" class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
 
 	}else {
 		fprintf(reportout.csv_report,
@@ -1152,4 +1152,3 @@ void clear_process_data(void)
 		perf_events->release();
 	delete perf_events;
 }
-

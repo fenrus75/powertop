@@ -58,7 +58,7 @@ double cpudevice::power_usage(struct result_bundle *result, struct parameter_bun
 
 	power += utilization * factor;
 
-	return power;	
+	return power;
 }
 
 double	cpudevice::utilization(void)

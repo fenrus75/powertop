@@ -67,11 +67,11 @@ uint64_t timer::done(uint64_t time, uint64_t timer_struct)
 	return delta;
 }
 
-double timer::usage_summary(void) 
-{ 
+double timer::usage_summary(void)
+{
 	double t;
 	t = (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time / 10;
-	return t; 
+	return t;
 }
 
 const char * timer::usage_units_summary(void)
@@ -112,7 +112,7 @@ class timer * find_create_timer(uint64_t func)
 	timer = new class timer(func);
 	all_timers[func] = timer;
 	return timer;
-	
+
 }
 
 void clear_timers(void)

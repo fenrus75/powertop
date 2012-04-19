@@ -46,14 +46,14 @@ void save_all_results(const char *filename)
 		cout << _("Cannot save to file ") << pathname << "\n";
 		return;
 	}
-	for (i = 0; i < past_results.size(); i++) {	
+	for (i = 0; i < past_results.size(); i++) {
 		bundle = past_results[i];
 		map<string, int>::iterator it;
 		file << setiosflags(ios::fixed) <<  setprecision(5) << bundle->power << "\n";
 
 		for (it = result_index.begin(); it != result_index.end(); it++) {
 			file << it->first << "\t" << setprecision(5) << get_result_value(it->second, bundle) << "\n";
-		}	
+		}
 		file << ":\n";
 	}
 
@@ -139,14 +139,14 @@ void save_parameters(const char *filename)
 		cout << _("Cannot save to file ") << pathname << "\n";
 		return;
 	}
-	
+
 	map<string, int>::iterator it;
 
 	for (it = param_index.begin(); it != param_index.end(); it++) {
 		int index;
 		index = it->second;
 		file << it->first << "\t" << setprecision(9) << all_parameters.parameters[index] << "\n";
-	}	
+	}
 	file.close();
 }
 
@@ -176,9 +176,9 @@ void load_parameters(const char *filename)
 		*c1 = 0;
 		c1++;
 		sscanf(c1, "%lf", &d);
-		
 
-		set_parameter_value(line, d);		
+
+		set_parameter_value(line, d);
 	}
 
 	file.close();

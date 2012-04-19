@@ -37,7 +37,7 @@
 
 #include "../cpu/cpu.h"
 
-class perf_bundle_event: public perf_event 
+class perf_bundle_event: public perf_event
 {
 public:
 	perf_bundle_event(void);
@@ -55,14 +55,14 @@ void perf_bundle_event::handle_event(struct perf_event_header *header, void *coo
 	vector<void *> *vector;
 
 	buffer = (unsigned char *)malloc(header->size);
-	memcpy(buffer, header, header->size);	
+	memcpy(buffer, header, header->size);
 
 	vector = (typeof(vector))cookie;
 	vector->push_back(buffer);
 }
 
 
-void perf_bundle::release(void) 
+void perf_bundle::release(void)
 {
 	class perf_event *ev;
 	unsigned int i = 0;
@@ -136,9 +136,9 @@ static void parse_event_format(const char *event_name)
 bool perf_bundle::add_event(const char *event_name)
 {
 	unsigned int i;
-	int event_added = false; 
+	int event_added = false;
 	class perf_event *ev;
-	
+
 
 	for (i = 0; i < all_cpus.size(); i++) {
 
@@ -156,12 +156,12 @@ bool perf_bundle::add_event(const char *event_name)
 				parse_event_format(event_name);
 			}
 			events.push_back(ev);
-			event_added = true; 
+			event_added = true;
 		} else {
 			delete ev;
 		}
 	}
-	return event_added; 
+	return event_added;
 }
 
 void perf_bundle::start(void)
@@ -174,7 +174,7 @@ void perf_bundle::start(void)
 		if (!ev)
 			continue;
 		ev->start();
-	}		
+	}
 }
 void perf_bundle::stop(void)
 {
@@ -186,7 +186,7 @@ void perf_bundle::stop(void)
 		if (!ev)
 			continue;
 		ev->stop();
-	}		
+	}
 }
 void perf_bundle::clear(void)
 {
@@ -199,7 +199,7 @@ void perf_bundle::clear(void)
 		if (!ev)
 			continue;
 		ev->clear();
-	}		
+	}
 
 	for (i = 0; i < records.size(); i++) {
 		free(records[i]);
@@ -256,16 +256,16 @@ static uint64_t timestamp(perf_event_header *event)
 	printf("\n");
 #endif
 	return sample->trace.time;
-	
+
 }
 
-static bool event_sort_function (void *i, void *j) 
-{ 
+static bool event_sort_function (void *i, void *j)
+{
 	struct perf_event_header *I, *J;
 
 	I = (struct perf_event_header *) i;
 	J = (struct perf_event_header *) j;
-	return (timestamp(I)<timestamp(J)); 
+	return (timestamp(I)<timestamp(J));
 }
 
 void perf_bundle::process(void)
@@ -279,7 +279,7 @@ void perf_bundle::process(void)
 		if (!ev)
 			continue;
 		ev->process(&records);
-	}		
+	}
 	sort(records.begin(), records.end(), event_sort_function);
 
 	for (i = 0; i < records.size(); i++) {
@@ -292,7 +292,7 @@ void perf_bundle::process(void)
 		if (sample->header.type != PERF_RECORD_SAMPLE)
 			continue;
 
-		handle_trace_point(&sample->data, sample->trace.cpu, sample->trace.time);	
+		handle_trace_point(&sample->data, sample->trace.cpu, sample->trace.time);
 	}
 }
 
@@ -300,4 +300,3 @@ void perf_bundle::handle_trace_point(void *trace, int cpu, uint64_t time)
 {
 	printf("UH OH... abstract handle_trace_point called\n");
 }
-

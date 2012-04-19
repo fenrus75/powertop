@@ -64,4 +64,4 @@ static inline int has_text(const char *text)
 	return 0;
 }
 
-#endif 
+#endif

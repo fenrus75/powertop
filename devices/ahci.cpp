@@ -140,7 +140,7 @@ ahci::ahci(char *_name, char *path): device()
 		sprintf(humanname, _("SATA link: %s"), _name);
 	else
 		sprintf(humanname, _("SATA disk: %s"), diskname.c_str());
-	
+
 }
 
 void ahci::start_measurement(void)
@@ -157,7 +157,7 @@ void ahci::start_measurement(void)
 		file.close();
 		sprintf(filename, "%s/ahci_alpm_partial", sysfs_path);
 		file.open(filename, ios::in);
-		
+
 		if (file) {
 			file >> start_partial;
 		}
@@ -166,7 +166,7 @@ void ahci::start_measurement(void)
 		file.open(filename, ios::in);
 		if (file) {
 				file >> start_slumber;
-		}	
+		}
 		file.close();
 	}
 #ifndef DISABLE_TRYCATCH
@@ -249,7 +249,7 @@ void create_all_ahcis(void)
 	struct dirent *entry;
 	DIR *dir;
 	char filename[4096];
-	
+
 	dir = opendir("/sys/class/scsi_host/");
 	if (!dir)
 		return;

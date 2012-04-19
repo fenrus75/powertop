@@ -31,7 +31,7 @@
 #include <utility>
 #include <iostream>
 #include <fstream>
-#include <unistd.h> 
+#include <unistd.h>
 #include <sys/types.h>
 #include <dirent.h>
 
@@ -61,13 +61,13 @@ usb_tunable::usb_tunable(const char *path, const char *name) : tunable("", 0.9, 
 		if (strstr(vendor, "Linux "))
 			vendor[0] = 0;
 		file.close();
-	};	
+	};
 	sprintf(filename, "%s/product", path);
 	file.open(filename, ios::in);
 	if (file) {
 		file.getline(product, 2040);
 		file.close();
-	};	
+	};
 	if (strlen(vendor) && strlen(product))
 		sprintf(desc, _("Autosuspend for USB device %s [%s]"), product, vendor);
 	else if (strlen(product))
@@ -122,7 +122,7 @@ void add_usb_tunables(void)
 	struct dirent *entry;
 	DIR *dir;
 	char filename[4096];
-	
+
 	dir = opendir("/sys/bus/usb/devices/");
 	if (!dir)
 		return;
@@ -155,4 +155,3 @@ void add_usb_tunables(void)
 	}
 	closedir(dir);
 }
-

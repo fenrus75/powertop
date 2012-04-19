@@ -44,12 +44,12 @@ class process : public power_consumer {
 public:
 	char		desc[256];
 	int		tgid;
-	char 		comm[16];
-	int 		pid;
+	char		comm[16];
+	int		pid;
 
 
 	int		is_idle;   /* count this as if the cpu was idle */
-	int 		running;
+	int		running;
 	int		is_kernel; /* kernel thread */
 
 	process(const char *_comm, int _pid, int _tid = 0);

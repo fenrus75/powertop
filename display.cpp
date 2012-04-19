@@ -84,7 +84,7 @@ void reset_display(void)
 	keypad(stdscr, FALSE);
 	echo();
 	nocbreak();
-	
+
 	resetterm();
 }
 
@@ -107,12 +107,12 @@ void show_tab(unsigned int tab)
 	if (tab_bar) {
 		delwin(tab_bar);
 		tab_bar = NULL;
-	}	
+	}
 
 	if (bottom_line) {
 		delwin(bottom_line);
 		bottom_line = NULL;
-	}	
+	}
 
 	tab_bar = newwin(1, 0, 0, 0);
 
@@ -125,7 +125,7 @@ void show_tab(unsigned int tab)
 	mvwprintw(bottom_line, 0,0, "%120s", "");
 
 	c = bottom_lines[tab_names[tab]].c_str();
-	if (c && strlen(c) > 0) 
+	if (c && strlen(c) > 0)
 		mvwprintw(bottom_line, 0,0, c);
 	else
 		mvwprintw(bottom_line, 0,0, _(" <ESC> Exit | "));
@@ -142,7 +142,7 @@ void show_tab(unsigned int tab)
 
 			tab_pos += 3 + tab_names[i].length();
 	}
-	
+
 	wrefresh(tab_bar);
 	wrefresh(bottom_line);
 
@@ -189,7 +189,7 @@ WINDOW *get_ncurses_win(const string &name)
 
 void show_next_tab(void)
 {
- 	class tab_window *w;
+	class tab_window *w;
 
 	if (!display)
 		return;
@@ -211,7 +211,7 @@ void show_next_tab(void)
 
 void show_prev_tab(void)
 {
- 	class tab_window *w;
+	class tab_window *w;
 
 	if (!display)
 		return;

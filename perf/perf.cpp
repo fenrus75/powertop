@@ -264,5 +264,3 @@ void perf_event::clear(void)
 		close(perf_fd);
 	perf_fd = -1;
 }
-
-

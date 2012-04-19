@@ -276,14 +276,14 @@ void enumerate_cpus(void)
 	file.close();
 
 	perf_events = new perf_power_bundle();
-	
+
 	if (!perf_events->add_event("power:cpu_idle")){
 		perf_events->add_event("power:power_start");
 		perf_events->add_event("power:power_end");
 	}
 	if (!perf_events->add_event("power:cpu_frequency"))
 		perf_events->add_event("power:power_frequency");
-	
+
 }
 
 void start_cpu_measurement(void)
@@ -438,10 +438,10 @@ void report_display_cpu_cstates(void)
 									",,,Core %s ,,",
 									_core->fill_cstate_line(line, buffer2));
 							} else {
-					    		fprintf(reportout.csv_report,
+							fprintf(reportout.csv_report,
 									",Core %s ,,",
 									_core->fill_cstate_line(line, buffer2));
-					    	}
+						}
 					    }
 					} else {
 						if (reporttype) {
@@ -514,7 +514,7 @@ void report_display_cpu_cstates(void)
 									cpu_class(actual_line, cpu));
 
 								fprintf(reportout.http_report,"<td colspan=2 class=\"s\">%s</td>",
-								 	_cpu->fill_cstate_line(line, buffer, buffer2));
+									_cpu->fill_cstate_line(line, buffer, buffer2));
 							} else {
 								fprintf(reportout.csv_report, "%s,",
 									_cpu->fill_cstate_line(line, buffer, ","));
@@ -679,7 +679,7 @@ void report_display_cpu_pstates(void)
 				if (first_pkg == 0) {
 					if (line == LEVEL_HEADER) {
 						 if (reporttype)
-						 		fprintf(reportout.http_report,
+								fprintf(reportout.http_report,
 									"<th colspan=2 class=\"package_header\" width=\"25%%\">%s%s</th>",
 									_package->fill_pstate_name(line, buffer),
 									_package->fill_pstate_line(line, buffer2));
@@ -938,13 +938,13 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 	struct event_format *event;
         struct record rec; /* holder */
 	class abstract_cpu *cpu;
-	int type; 
+	int type;
 
 	if (event_names.find(type) == event_names.end())
 		return;
 
-	rec.data = trace; 	
-	
+	rec.data = trace;
+
 	type = pevent_data_type(perf_event::pevent, &rec);
 	event = pevent_find_event(perf_event::pevent, type);
 	if (!event)
@@ -955,7 +955,7 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 		return;
 	}
 
-	printf("event: %s\n", event->name); 
+	printf("event: %s\n", event->name);
 	cpu = all_cpus[cpunr];
 
 #if 0
@@ -965,8 +965,8 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 		if (system_level.children[i])
 			system_level.children[i]->validate();
 #endif
-	unsigned long long val; 
-	int ret; 
+	unsigned long long val;
+	int ret;
 	if (strcmp(event->name, "cpu_idle")==0) {
 
 		ret = pevent_get_field_val(NULL, event, "state", &rec, &val, 0);
@@ -977,7 +977,7 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 	}
 
 	if (strcmp(event->name, "power_frequency") ||
-	   	strcmp(event->name, "cpu_frequency")==0){
+		strcmp(event->name, "cpu_frequency")==0){
 
 		ret = pevent_get_field_val(NULL, event, "state", &rec, &val, 0);
 		if (ret < 0) {
@@ -1031,7 +1031,7 @@ void clear_cpu_data(void)
 
 void clear_all_cpus(void)
 {
-	unsigned int i; 
+	unsigned int i;
 	for (i = 0; i < all_cpus.size(); i++) {
 		delete all_cpus[i];
 	}

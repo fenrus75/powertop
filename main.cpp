@@ -286,9 +286,9 @@ int main(int argc, char **argv)
 			ret = system("mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
 		}
 		if (ret != 0) {
-        		printf(_("Failed to mount debugfs!\n"));
-	        	printf(_("exiting...\n"));
-        		exit(EXIT_FAILURE);
+			printf(_("Failed to mount debugfs!\n"));
+			printf(_("exiting...\n"));
+			exit(EXIT_FAILURE);
 		}
 	}
 

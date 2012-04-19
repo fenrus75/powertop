@@ -261,7 +261,7 @@ static int add_new_comm(struct pevent *pevent, const char *comm, int pid)
 	cmdlines[pevent->cmdline_count].comm = strdup(comm);
 	if (!cmdlines[pevent->cmdline_count].comm)
 		die("malloc comm");
-		
+
 	if (cmdlines[pevent->cmdline_count].comm)
 		pevent->cmdline_count++;
 
@@ -969,7 +969,7 @@ static enum event_type force_token(const char *str, char **tok)
 	unsigned long long save_input_buf_ptr;
 	unsigned long long save_input_buf_siz;
 	enum event_type type;
-	
+
 	/* save off the current input pointers */
 	save_input_buf = input_buf;
 	save_input_buf_ptr = input_buf_ptr;
@@ -2656,7 +2656,7 @@ static int event_read_print(struct event_format *event)
 		token = cat;
 		goto concat;
 	}
-			
+
 	if (test_type_token(type, token, EVENT_DELIM, ","))
 		goto fail;
 
@@ -4535,7 +4535,7 @@ int pevent_parse_event(struct pevent *pevent,
 		if (strcmp(event->name, "bprint") == 0)
 			event->flags |= EVENT_FL_ISBPRINT;
 	}
-		
+
 	event->id = event_read_id();
 	if (event->id < 0)
 		die("failed to read event id");
@@ -5077,4 +5077,3 @@ void pevent_unref(struct pevent *pevent)
 {
        pevent_free(pevent);
 }
-

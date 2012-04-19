@@ -49,4 +49,3 @@ tunable::tunable(void)
 	strcpy(bad_string, _("Bad"));
 	strcpy(neutral_string, _("Unknown"));
 }
-

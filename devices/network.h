@@ -37,7 +37,7 @@ class network: public device {
 
 	int start_speed; /* 0 is "no link" */
 	int end_speed; /* 0 is "no link" */
-	
+
 	char sysfs_path[4096];
 	char name[4096];
 	char humanname[4096];
@@ -53,7 +53,7 @@ class network: public device {
 	int rindex_pkts;
 	int index_powerunsave;
 	int rindex_powerunsave;
-	
+
 	int valid_100;
 	int valid_1000;
 	int valid_high;
@@ -67,7 +67,7 @@ public:
 	virtual void start_measurement(void);
 	virtual void end_measurement(void);
 
-	virtual double	utilization(void); 
+	virtual double	utilization(void);
 	virtual const char * util_units(void) { return " pkts/s"; };
 
 	virtual const char * class_name(void) { return "ethernet";};
@@ -82,4 +82,3 @@ public:
 extern void create_all_nics(callback fn = NULL);
 
 #endif
-

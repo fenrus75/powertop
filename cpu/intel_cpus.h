@@ -40,7 +40,7 @@
 #define MSR_CORE_C7_RESIDENCY		0x3FE
 
 
-class nhm_package: public cpu_package 
+class nhm_package: public cpu_package
 {
 private:
 	uint64_t	c2_before, c2_after;
@@ -55,8 +55,8 @@ private:
 	void		account_freq(uint64_t frequency, uint64_t duration);
 
 public:
-	virtual void 	measurement_start(void);
-	virtual void 	measurement_end(void);
+	virtual void	measurement_start(void);
+	virtual void	measurement_end(void);
 	virtual int     can_collapse(void) { return 0;};
 
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
@@ -66,7 +66,7 @@ public:
 
 };
 
-class nhm_core: public cpu_core 
+class nhm_core: public cpu_core
 {
 private:
 	uint64_t	c3_before, c3_after;
@@ -79,8 +79,8 @@ private:
 
 	void		account_freq(uint64_t frequency, uint64_t duration);
 public:
-	virtual void 	measurement_start(void);
-	virtual void 	measurement_end(void);
+	virtual void	measurement_start(void);
+	virtual void	measurement_end(void);
 	virtual int     can_collapse(void) { return 0;};
 
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
@@ -104,8 +104,8 @@ private:
 
 	void		account_freq(uint64_t frequency, uint64_t duration);
 public:
-	virtual void 	measurement_start(void);
-	virtual void 	measurement_end(void);
+	virtual void	measurement_start(void);
+	virtual void	measurement_end(void);
 	virtual int     can_collapse(void) { return 0;};
 
 	virtual char *  fill_pstate_name(int line_nr, char *buffer);
@@ -119,19 +119,19 @@ public:
 
 };
 
-class atom_package: public cpu_package 
+class atom_package: public cpu_package
 {
 public:
-	virtual void 	measurement_start(void);
-	virtual void 	measurement_end(void);
+	virtual void	measurement_start(void);
+	virtual void	measurement_end(void);
 
 };
 
 class atom_core: public cpu_core
 {
 public:
-	virtual void 	measurement_start(void);
-	virtual void 	measurement_end(void);
+	virtual void	measurement_start(void);
+	virtual void	measurement_end(void);
 
 };
 

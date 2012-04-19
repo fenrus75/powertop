@@ -32,7 +32,7 @@
 #include <utility>
 #include <iostream>
 #include <fstream>
-#include <unistd.h> 
+#include <unistd.h>
 #include <sys/types.h>
 #include <dirent.h>
 #include <sys/types.h>
@@ -224,4 +224,3 @@ void add_bt_tunable(void)
 	bt = new class bt_tunable();
 	all_tunables.push_back(bt);
 }
-

@@ -90,7 +90,7 @@ static void find_all_usb(void)
 	struct dirent *entry;
 	DIR *dir;
 	char filename[4096];
-	
+
 	dir = opendir("/sys/bus/usb/devices/");
 	if (!dir)
 		return;
@@ -140,7 +140,7 @@ static void find_all_rfkill(void)
 	struct dirent *entry;
 	DIR *dir;
 	char filename[4096];
-	
+
 	dir = opendir("/sys/class/rfkill/");
 	if (!dir)
 		return;
@@ -185,7 +185,7 @@ static void find_backlight(void)
 	struct dirent *entry;
 	DIR *dir;
 	char filename[4096];
-	
+
 	dir = opendir("/sys/class/backlight/");
 	if (!dir)
 		return;
@@ -227,7 +227,7 @@ static void find_scsi_link(void)
 	struct dirent *entry;
 	DIR *dir;
 	char filename[4096];
-	
+
 	dir = opendir("/sys/class/scsi_host/");
 	if (!dir)
 		return;
@@ -309,7 +309,7 @@ static void *burn_disk(void *dummy)
 
 
 static void cpu_calibration(int threads)
-{	
+{
 	int i;
 	pthread_t thr;
 
@@ -325,13 +325,13 @@ static void cpu_calibration(int threads)
 }
 
 static void wakeup_calibration(unsigned long interval)
-{	
+{
 	pthread_t thr;
 
 	printf(_("Calibrating: CPU wakeup power consumption\n"));
 
 	stop_measurement = 0;
-	
+
 	pthread_create(&thr, NULL, burn_cpu_wakeups, (void *)interval);
 
 	one_measurement(15);
@@ -352,7 +352,7 @@ static void usb_calibration(void)
 		write_sysfs(usb_devices[i], "on\n");
 		one_measurement(15);
 		suspend_all_usb_devices();
-		sleep(3);		
+		sleep(3);
 	}
 	rfkill_all_radios();
 	sleep(4);
@@ -369,7 +369,7 @@ static void rfkill_calibration(void)
 		write_sysfs(rfkill_devices[i], "0\n");
 		one_measurement(15);
 		rfkill_all_radios();
-		sleep(3);		
+		sleep(3);
 	}
 	for (i = 0; i < rfkill_devices.size(); i++) {
 		printf(_(".... device %s \n"), rfkill_devices[i].c_str());
@@ -377,7 +377,7 @@ static void rfkill_calibration(void)
 		write_sysfs(rfkill_devices[i], "1\n");
 		one_measurement(15);
 		unrfkill_all_radios();
-		sleep(3);		
+		sleep(3);
 	}
 	rfkill_all_radios();
 }
@@ -408,25 +408,25 @@ static void backlight_calibration(void)
 		write_sysfs(backlight_devices[i], str);
 		one_measurement(15);
 		lower_backlight();
-		sleep(1);		
+		sleep(1);
 	}
 	printf(_("Calibrating idle\n"));
-	system("DISPLAY=:0 /usr/bin/xset dpms force off");	
+	system("DISPLAY=:0 /usr/bin/xset dpms force off");
 	one_measurement(15);
-	system("DISPLAY=:0 /usr/bin/xset dpms force on");	
+	system("DISPLAY=:0 /usr/bin/xset dpms force on");
 }
 
 static void idle_calibration(void)
 {
 	printf(_("Calibrating idle\n"));
-	system("DISPLAY=:0 /usr/bin/xset dpms force off");	
+	system("DISPLAY=:0 /usr/bin/xset dpms force off");
 	one_measurement(15);
-	system("DISPLAY=:0 /usr/bin/xset dpms force on");	
+	system("DISPLAY=:0 /usr/bin/xset dpms force on");
 }
 
 
 static void disk_calibration(void)
-{	
+{
 	pthread_t thr;
 
 	printf(_("Calibrating: disk usage \n"));
@@ -451,7 +451,7 @@ void calibrate(void)
 	find_backlight();
 	find_scsi_link();
 	wireless_PS = get_wifi_power_saving("wlan0");
-	
+
         save_sysfs("/sys/module/snd_hda_intel/parameters/power_save");
 
 	cout << _("Starting PowerTOP power estimate calibration \n");
@@ -461,12 +461,12 @@ void calibrate(void)
 	set_wifi_power_saving("wlan0", 1);
 
 	sleep(4);
-	
+
 
 	idle_calibration();
 	disk_calibration();
 	backlight_calibration();
-	
+
 	write_sysfs("/sys/module/snd_hda_intel/parameters/power_save", "1\n");
 	cpu_calibration(1);
 	cpu_calibration(4);

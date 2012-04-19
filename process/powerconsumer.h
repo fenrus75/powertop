@@ -40,7 +40,7 @@ class power_consumer {
 public:
 	uint64_t	accumulated_runtime;
 	uint64_t	child_runtime;
-	int	 	disk_hits;
+	int		disk_hits;
 	int		wake_ups;
 	int		gpu_ops;
 	int		hard_disk_hits;  /* those which are likely a wakeup of the disk */

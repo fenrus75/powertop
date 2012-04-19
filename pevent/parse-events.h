@@ -212,7 +212,7 @@ struct print_flag_sym {
 };
 
 struct print_arg_typecast {
-	char 			*type;
+	char			*type;
 	struct print_arg	*item;
 };
 
@@ -385,7 +385,7 @@ struct pevent {
 	int pid_offset;
 	int pid_size;
 
- 	int pc_offset;
+	int pc_offset;
 	int pc_size;
 
 	int flags_offset;
@@ -806,4 +806,4 @@ int pevent_filter_copy(struct event_filter *dest, struct event_filter *source);
 int pevent_update_trivial(struct event_filter *dest, struct event_filter *source,
 			  enum filter_trivial_type type);
 
-#endif 
+#endif

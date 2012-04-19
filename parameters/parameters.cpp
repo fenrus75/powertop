@@ -78,7 +78,7 @@ void register_parameter(const char *name, double default_value, double weight)
 		all_parameters.weights.resize(index+1, 1.0);
 	}
 
-	if (all_parameters.parameters[index] <= 0.0001) 
+	if (all_parameters.parameters[index] <= 0.0001)
 		all_parameters.parameters[index] = default_value;
 
 	all_parameters.weights[index] = weight;
@@ -179,7 +179,7 @@ double compute_bundle(struct parameter_bundle *parameters, struct result_bundle 
 
 	if (!bpi)
 		bpi = get_param_index("base power");
-	
+
 	power = parameters->parameters[bpi];
 
 	for (i = 0; i < all_devices.size(); i++) {
@@ -200,7 +200,7 @@ void precompute_valid(void)
 {
 	unsigned int i;
 
-	
+
 	for (i = 0; i < all_devices.size(); i++) {
 		all_devices[i]->cached_valid = all_devices[i]->power_valid();
 	}
@@ -219,7 +219,7 @@ double bundle_power(struct parameter_bundle *parameters, struct result_bundle *r
 	if (!precomputed_valid)
 		precompute_valid();
 
-	
+
 	power = parameters->parameters[bpi];
 
 	for (i = 0; i < all_devices.size(); i++) {
@@ -330,7 +330,7 @@ void store_results(double duration)
 			/* memory leak, must free old one first */
 			past_results[overflow_index] = clone_results(&all_results);
 		} else {
-			past_results.push_back(clone_results(&all_results));	
+			past_results.push_back(clone_results(&all_results));
 		}
 		if ((past_results.size() % 10) == 0)
 			save_all_results("saved_results.powertop");
@@ -369,7 +369,7 @@ double average_power(void)
 	for (i = 0; i < past_results.size(); i++)
 		sum += past_results[i]->power;
 
-	if (past_results.size()) 
+	if (past_results.size())
 		sum = sum / past_results.size() + 0.0001;
 	else
 		sum = 0.0001;
@@ -391,7 +391,7 @@ int utilization_power_valid(const char *u)
 		if (get_result_value(index, past_results[i]) < first_value - 0.0001)
 			return 1;
 		if (get_result_value(index, past_results[i]) > first_value + 0.0001)
-			return 1;	
+			return 1;
 	}
 
 	return 0;
@@ -415,7 +415,7 @@ int utilization_power_valid(int index)
 		if (get_result_value(index, past_results[i]) < first_value - 0.0001)
 			return 1;
 		if (get_result_value(index, past_results[i]) > first_value + 0.0001)
-			return 1;	
+			return 1;
 	}
 
 	return 0;
@@ -428,8 +428,8 @@ int global_power_override = 0;
 /* force no calculations to be done on parameters and trust the current ones */
 int global_fixed_parameters = 0;
 
-/* 
- * only report power numbers once we have 3* more measurements than 
+/*
+ * only report power numbers once we have 3* more measurements than
  * we have parameters; anything less and our model fit is highly suspect
  */
 int global_power_valid(void)

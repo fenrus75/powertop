@@ -49,7 +49,7 @@ public:
 	int cursor_pos;
 	int cursor_max;
 	WINDOW *win;
-	
+
 	virtual void cursor_down(void) { if (cursor_pos < cursor_max ) cursor_pos++; repaint(); } ;
 	virtual void cursor_up(void) { if (cursor_pos > 0) cursor_pos--; repaint(); };
 

@@ -53,7 +53,7 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid): de
 	active_after = 0;
 	connected_before = 0;
 	connected_after = 0;
-	
+
 	index = get_param_index(devname);
 	r_index = get_result_index(name);
 	rootport = 0;
@@ -70,7 +70,7 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid): de
 		file.close();
 		if (dclass == 9)
 			rootport = 1;
-	};	
+	};
 
 	vendor[0] = 0;
 	product[0] = 0;
@@ -81,13 +81,13 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid): de
 		if (strstr(vendor, "Linux "))
 			vendor[0] = 0;
 		file.close();
-	};	
+	};
 	sprintf(filename, "%s/product", path);
 	file.open(filename, ios::in);
 	if (file) {
 		file.getline(product, 2040);
 		file.close();
-	};	
+	};
 	if (strlen(vendor) && strlen(product))
 		sprintf(humanname, _("USB device: %s (%s)"), product, vendor);
 	else if (strlen(product))
@@ -107,7 +107,7 @@ void usbdevice::start_measurement(void)
 	active_after = 0;
 	connected_before = 0;
 	connected_after = 0;
-	
+
 	sprintf(fullpath, "%s/power/active_duration", sysfs_path);
 	file.open(fullpath, ios::in);
 	if (file) {
@@ -127,7 +127,7 @@ void usbdevice::end_measurement(void)
 {
 	ifstream file;
 	char fullpath[4096];
-	
+
 	sprintf(fullpath, "%s/power/active_duration", sysfs_path);
 	file.open(fullpath, ios::in);
 	if (file) {
@@ -192,7 +192,7 @@ void create_all_usb_devices(void)
 	struct dirent *entry;
 	DIR *dir;
 	char filename[4096];
-	
+
 	dir = opendir("/sys/bus/usb/devices/");
 	if (!dir)
 		return;
@@ -240,4 +240,3 @@ void create_all_usb_devices(void)
 	}
 	closedir(dir);
 }
-

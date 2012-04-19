@@ -100,8 +100,8 @@ public:
 
 	void		set_number(int _number, int cpu) {this->number = _number; this->first_cpu = cpu;};
 
-	virtual void 	measurement_start(void);
-	virtual void 	measurement_end(void);
+	virtual void	measurement_start(void);
+	virtual void	measurement_end(void);
 
 	virtual int     can_collapse(void) { return 0;};
 
@@ -151,8 +151,8 @@ class cpu_linux: public abstract_cpu
 
 	void		account_freq(uint64_t frequency, uint64_t duration);
 public:
-	virtual void 	measurement_start(void);
-	virtual void 	measurement_end(void);
+	virtual void	measurement_start(void);
+	virtual void	measurement_end(void);
 
 	virtual char *  fill_cstate_line(int line_nr, char *buffer, const char *separator="");
 	virtual char *  fill_cstate_name(int line_nr, char *buffer);
@@ -225,4 +225,3 @@ extern void clear_cpu_data(void);
 extern void clear_all_cpus(void);
 
 #endif
-

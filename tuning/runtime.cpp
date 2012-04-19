@@ -31,7 +31,7 @@
 #include <utility>
 #include <iostream>
 #include <fstream>
-#include <unistd.h> 
+#include <unistd.h>
 #include <sys/types.h>
 #include <dirent.h>
 
@@ -75,7 +75,7 @@ runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *
 				sprintf(desc, _("Runtime PM for PCI Device %s"), pci_id_to_name(vendor, device, filename, 4095));
 		}
 
-		
+
 	}
 	sprintf(toggle_good, "echo 'auto' > '%s';", runtime_path);
 	sprintf(toggle_bad, "echo 'on' > '%s';", runtime_path);
@@ -125,7 +125,7 @@ void add_runtime_tunables(const char *bus)
 	struct dirent *entry;
 	DIR *dir;
 	char filename[4096];
-	
+
 	sprintf(filename, "/sys/bus/%s/devices/", bus);
 	dir = opendir(filename);
 	if (!dir)
@@ -163,4 +163,3 @@ void add_runtime_tunables(const char *bus)
 	}
 	closedir(dir);
 }
-

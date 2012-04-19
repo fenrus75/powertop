@@ -141,7 +141,7 @@ void create_all_rfkills(void)
 	DIR *dir;
 	char filename[4096];
 	char name[4096];
-	
+
 	dir = opendir("/sys/class/rfkill/");
 	if (!dir)
 		return;
@@ -157,7 +157,7 @@ void create_all_rfkills(void)
 		strcpy(name, entry->d_name);
 		file.open(filename, ios::in);
 		if (file) {
-			file.getline(name, 100);		
+			file.getline(name, 100);
 			file.close();
 		}
 

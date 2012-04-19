@@ -59,7 +59,7 @@ uint64_t process::deschedule_thread(uint64_t time, int thread_id)
 	delta = time - running_since;
 
 	if (time < running_since)
-		printf("%llu time    %llu since \n", (unsigned long long)time, 
+		printf("%llu time    %llu since \n", (unsigned long long)time,
 						     (unsigned long long)running_since);
 
 	if (thread_id == 0) /* idle thread */
@@ -148,11 +148,11 @@ const char * process::description(void)
 	return desc;
 }
 
-double process::usage_summary(void) 
-{ 
+double process::usage_summary(void)
+{
 	double t;
 	t = (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time / 10;
-	return t; 
+	return t;
 }
 
 const char * process::usage_units_summary(void)

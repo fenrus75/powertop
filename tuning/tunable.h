@@ -55,7 +55,7 @@ public:
 
 	virtual int good_bad(void) { return TUNE_NEUTRAL; }
 
-	virtual char *result_string(void) 
+	virtual char *result_string(void)
 	{
 		switch (good_bad()) {
 		case TUNE_GOOD:
@@ -66,7 +66,7 @@ public:
 		}
 		return neutral_string;
 	}
-	
+
 
 	virtual const char *description(void) { return desc; };
 

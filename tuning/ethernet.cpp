@@ -32,7 +32,7 @@
 #include <utility>
 #include <iostream>
 #include <fstream>
-#include <unistd.h> 
+#include <unistd.h>
 #include <dirent.h>
 #include <sys/socket.h>
 #include <errno.h>
@@ -56,7 +56,7 @@ ethernet_tunable::ethernet_tunable(const char *iface) : tunable("", 0.3, _("Good
 	strncpy(interf, iface, sizeof(interf));
 	sprintf(desc, _("Wake-on-lan status for device %s"), iface);
 	sprintf(toggle_good, "ethtool -s %s wol d;", iface);
-	
+
 }
 
 
@@ -155,4 +155,3 @@ void add_ethernet_tunable(void)
 {
 	create_all_nics(&ethtunable_callback);
 }
-

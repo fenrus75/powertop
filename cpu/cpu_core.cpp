@@ -37,7 +37,7 @@ static int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo)
 	return 1;
 }
 
-char * cpu_core::fill_cstate_line(int line_nr, char *buffer, const char *separator) 
+char * cpu_core::fill_cstate_line(int line_nr, char *buffer, const char *separator)
 {
 	unsigned int i;
 	buffer[0] = 0;
@@ -53,11 +53,11 @@ char * cpu_core::fill_cstate_line(int line_nr, char *buffer, const char *separat
 		sprintf(buffer,"%5.1f%%", percentage(cstates[i]->duration_delta / time_factor));
 	}
 
-	return buffer; 
+	return buffer;
 }
 
 
-char * cpu_core::fill_cstate_name(int line_nr, char *buffer) 
+char * cpu_core::fill_cstate_name(int line_nr, char *buffer)
 {
 	unsigned int i;
 	buffer[0] = 0;
@@ -69,12 +69,12 @@ char * cpu_core::fill_cstate_name(int line_nr, char *buffer)
 		sprintf(buffer,"%s", cstates[i]->human_name);
 	}
 
-	return buffer; 
+	return buffer;
 }
 
 
 
-char * cpu_core::fill_pstate_name(int line_nr, char *buffer) 
+char * cpu_core::fill_pstate_name(int line_nr, char *buffer)
 {
 	buffer[0] = 0;
 
@@ -83,7 +83,7 @@ char * cpu_core::fill_pstate_name(int line_nr, char *buffer)
 
 	sprintf(buffer,"%s", pstates[line_nr]->human_name);
 
-	return buffer; 
+	return buffer;
 }
 
 
@@ -131,7 +131,7 @@ void cpu_core::calculate_freq(uint64_t time)
 	bool is_idle = true;
 	unsigned int i;
 
-	
+
 	/* calculate the maximum frequency of all children */
 	for (i = 0; i < children.size(); i++)
 		if (children[i]) {
@@ -155,9 +155,9 @@ void cpu_core::change_effective_frequency(uint64_t time, uint64_t frequency)
 {
 	uint64_t freq = 0;
 	uint64_t time_delta, fr;
-	
 
-	if (last_stamp) 
+
+	if (last_stamp)
 		time_delta = time - last_stamp;
 	else
 		time_delta = 1;
@@ -168,13 +168,13 @@ void cpu_core::change_effective_frequency(uint64_t time, uint64_t frequency)
 		fr = 0;
 
 	account_freq(fr, time_delta);
-	
+
 	effective_frequency = freq;
 	last_stamp = time;
 	abstract_cpu::change_effective_frequency(time, frequency);
 }
 
-char * cpu_core::fill_pstate_line(int line_nr, char *buffer) 
+char * cpu_core::fill_pstate_line(int line_nr, char *buffer)
 {
 	buffer[0] = 0;
 	unsigned int i;
@@ -196,6 +196,5 @@ char * cpu_core::fill_pstate_line(int line_nr, char *buffer)
 
 
 	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
-	return buffer; 
+	return buffer;
 }
-

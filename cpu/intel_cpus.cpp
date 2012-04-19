@@ -105,7 +105,7 @@ void nhm_core::measurement_start(void)
 	if (is_snb) {
 		insert_cstate("core c7", _("C7 (cc7)"), 0, c7_before, 1);
 	}
-	
+
 
 	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", first_cpu);
 
@@ -237,7 +237,7 @@ void nhm_core::calculate_freq(uint64_t time)
 	bool is_idle = true;
 	unsigned int i;
 
-	
+
 	/* calculate the maximum frequency of all children */
 	for (i = 0; i < children.size(); i++)
 		if (children[i]) {
@@ -261,9 +261,9 @@ void nhm_core::change_effective_frequency(uint64_t time, uint64_t frequency)
 {
 	uint64_t freq = 0;
 	uint64_t time_delta, fr;
-	
 
-	if (last_stamp) 
+
+	if (last_stamp)
 		time_delta = time - last_stamp;
 	else
 		time_delta = 1;
@@ -274,13 +274,13 @@ void nhm_core::change_effective_frequency(uint64_t time, uint64_t frequency)
 		fr = 0;
 
 	account_freq(fr, time_delta);
-	
+
 	effective_frequency = freq;
 	last_stamp = time;
 	abstract_cpu::change_effective_frequency(time, frequency);
 }
 
-char * nhm_core::fill_pstate_line(int line_nr, char *buffer) 
+char * nhm_core::fill_pstate_line(int line_nr, char *buffer)
 {
 	buffer[0] = 0;
 	unsigned int i;
@@ -302,10 +302,10 @@ char * nhm_core::fill_pstate_line(int line_nr, char *buffer)
 
 
 	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
-	return buffer; 
+	return buffer;
 }
 
-char * nhm_package::fill_pstate_line(int line_nr, char *buffer) 
+char * nhm_package::fill_pstate_line(int line_nr, char *buffer)
 {
 	buffer[0] = 0;
 	unsigned int i;
@@ -328,7 +328,7 @@ char * nhm_package::fill_pstate_line(int line_nr, char *buffer)
 
 
 	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
-	return buffer; 
+	return buffer;
 }
 
 
@@ -494,8 +494,8 @@ void nhm_package::calculate_freq(uint64_t time)
 void nhm_package::change_effective_frequency(uint64_t time, uint64_t frequency)
 {
 	uint64_t time_delta, fr;
-	
-	if (last_stamp) 
+
+	if (last_stamp)
 		time_delta = time - last_stamp;
 	else
 		time_delta = 1;
@@ -505,7 +505,7 @@ void nhm_package::change_effective_frequency(uint64_t time, uint64_t frequency)
 		fr = 0;
 
 	account_freq(fr, time_delta);
-	
+
 	effective_frequency = frequency;
 	last_stamp = time;
 
@@ -617,7 +617,7 @@ char * nhm_cpu::fill_pstate_line(int line_nr, char *buffer)
 
 
 	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
-	return buffer; 
+	return buffer;
 
 }
 
@@ -677,8 +677,8 @@ void nhm_cpu::change_freq(uint64_t time, int frequency)
 void nhm_cpu::change_effective_frequency(uint64_t time, uint64_t frequency)
 {
 	uint64_t time_delta, fr;
-	
-	if (last_stamp) 
+
+	if (last_stamp)
 		time_delta = time - last_stamp;
 	else
 		time_delta = 1;
@@ -688,14 +688,14 @@ void nhm_cpu::change_effective_frequency(uint64_t time, uint64_t frequency)
 		fr = 0;
 
 	account_freq(fr, time_delta);
-	
+
 	effective_frequency = frequency;
 	last_stamp = time;
 }
 
 void nhm_cpu::go_idle(uint64_t time)
 {
-	
+
 	idle = true;
 
 	if (parent)

@@ -167,7 +167,7 @@ void abstract_cpu::insert_cstate(const char *linux_name, const char *human_name,
 
 void abstract_cpu::finalize_cstate(const char *linux_name, uint64_t usage, uint64_t duration, int count)
 {
- 	unsigned int i;
+	unsigned int i;
 	struct idle_state *state = NULL;
 
 	for (i = 0; i < cstates.size(); i++) {
@@ -189,7 +189,7 @@ void abstract_cpu::finalize_cstate(const char *linux_name, uint64_t usage, uint6
 
 void abstract_cpu::update_cstate(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count)
 {
- 	unsigned int i;
+	unsigned int i;
 	struct idle_state *state = NULL;
 
 	for (i = 0; i < cstates.size(); i++) {
@@ -222,7 +222,7 @@ int abstract_cpu::has_cstate_level(int level)
 			return 1;
 
 	for (i = 0; i < children.size(); i++)
-		if (children[i]) 
+		if (children[i])
 			if (children[i]->has_cstate_level(level))
 				return 1;
 	return  0;
@@ -239,7 +239,7 @@ int abstract_cpu::has_pstate_level(int level)
 		return 1;
 
 	for (i = 0; i < children.size(); i++)
-		if (children[i]) 
+		if (children[i])
 			if (children[i]->has_pstate_level(level))
 				return 1;
 	return  0;
@@ -270,7 +270,7 @@ void abstract_cpu::insert_pstate(uint64_t freq, const char *human_name, uint64_t
 
 void abstract_cpu::finalize_pstate(uint64_t freq, uint64_t duration, int count)
 {
- 	unsigned int i;
+	unsigned int i;
 	struct frequency *state = NULL;
 
 	for (i = 0; i < pstates.size(); i++) {
@@ -291,7 +291,7 @@ void abstract_cpu::finalize_pstate(uint64_t freq, uint64_t duration, int count)
 
 void abstract_cpu::update_pstate(uint64_t freq, const char *human_name, uint64_t duration, int count)
 {
- 	unsigned int i;
+	unsigned int i;
 	struct frequency *state = NULL;
 
 	for (i = 0; i < pstates.size(); i++) {
@@ -316,7 +316,7 @@ void abstract_cpu::calculate_freq(uint64_t time)
 	uint64_t freq = 0;
 	bool is_idle = true;
 	unsigned int i;
-	
+
 	/* calculate the maximum frequency of all children */
 	for (i = 0; i < children.size(); i++)
 		if (children[i]) {
@@ -339,7 +339,7 @@ void abstract_cpu::calculate_freq(uint64_t time)
 void abstract_cpu::change_effective_frequency(uint64_t time, uint64_t frequency)
 {
 	unsigned int i;
-	
+
 	/* propagate to all children */
 	for (i = 0; i < children.size(); i++)
 		if (children[i]) {
@@ -408,7 +408,7 @@ void abstract_cpu::validate(void)
 		if (children[i]) {
 			if (my_time != children[i]->total_pstate_time())
 				printf("My (%i) time %llu is not the same as child (%i) time %llu\n",
-					first_cpu, 
+					first_cpu,
 					(unsigned long long)my_time,
 					children[i]->number,
 					(unsigned long long)children[i]->total_pstate_time());
@@ -436,4 +436,3 @@ void abstract_cpu::reset_pstate_data(void)
 		if (children[i])
 			children[i]->reset_pstate_data();
 }
-

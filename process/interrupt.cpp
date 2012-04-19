@@ -79,11 +79,11 @@ const char * interrupt::description(void)
 	return desc;
 }
 
-double interrupt::usage_summary(void) 
-{ 
+double interrupt::usage_summary(void)
+{
 	double t;
 	t = (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time / 10;
-	return t; 
+	return t;
 }
 
 const char * interrupt::usage_units_summary(void)
@@ -101,7 +101,7 @@ class interrupt * find_create_interrupt(const char *_handler, int nr, int cpu)
 	strcpy(handler, _handler);
 	if (strcmp(handler, "timer")==0)
 		sprintf(handler, "timer/%i", cpu);
-		
+
 
 	for (i = 0; i < all_interrupts.size(); i++) {
 		if (all_interrupts[i] && all_interrupts[i]->number == nr && strcmp(handler, all_interrupts[i]->handler) == 0)

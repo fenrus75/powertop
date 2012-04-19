@@ -8,7 +8,7 @@
  * and has been stripped down to just the pieces needed.
  */
 
-/* 
+/*
 
 Copyright (c) 2007, 2008	Johannes Berg
 Copyright (c) 2007		Andy Lutomirski
@@ -38,10 +38,10 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdbool.h>
-                     
+
 #include <netlink/genl/genl.h>
 #include <netlink/genl/family.h>
-#include <netlink/genl/ctrl.h>  
+#include <netlink/genl/ctrl.h>
 #include <netlink/msg.h>
 #include <netlink/attr.h>
 
@@ -236,7 +236,7 @@ static int __handle_cmd(struct nl80211_state *state, const char *iface, int get)
 		err = get_power_save(state, cb, msg);
 	else
 		err = set_power_save(state, cb, msg);
-		
+
 	if (err)
 		goto out;
 
@@ -263,7 +263,7 @@ static int __handle_cmd(struct nl80211_state *state, const char *iface, int get)
 }
 
 
-int set_wifi_power_saving(const char *iface, int state) 
+int set_wifi_power_saving(const char *iface, int state)
 {
 	struct nl80211_state nlstate;
 	int err;
@@ -301,4 +301,3 @@ int get_wifi_power_saving(const char *iface)
 
 	return enable_power_save;
 }
-

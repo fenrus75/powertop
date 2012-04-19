@@ -32,7 +32,7 @@
 class work : public power_consumer {
 	char desc[256];
 public:
-	char 		handler[32];
+	char		handler[32];
 	int		raw_count;
 
 	work(unsigned long work_func);

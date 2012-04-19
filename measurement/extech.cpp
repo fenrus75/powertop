@@ -121,7 +121,7 @@ static int setup_serial_device(int dev_fd)
 
 	ret = tcsetattr(dev_fd, TCSANOW, &t);
 
-	if (ret) 
+	if (ret)
 		return ret;
 
 	/*
@@ -251,9 +251,9 @@ static double extech_read(int fd)
 	memset(&p, 0, sizeof(p));
 
 	ret = select(fd + 1, &read_fd, NULL, NULL, &tv);
-	if (ret <= 0) 
+	if (ret <= 0)
 		return -1;
-	
+
 	ret = read(fd, &p.buf, 250);
 	if (ret < 0)
 		return ret;

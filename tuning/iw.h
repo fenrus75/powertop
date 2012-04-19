@@ -11,7 +11,7 @@
  * and has been stripped down to just the pieces needed.
  */
 
-/* 
+/*
 
 Copyright (c) 2007, 2008	Johannes Berg
 Copyright (c) 2007		Andy Lutomirski

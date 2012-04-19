@@ -68,11 +68,11 @@ uint64_t work::done(uint64_t time, uint64_t work_struct)
 	return delta;
 }
 
-double work::usage_summary(void) 
-{ 
+double work::usage_summary(void)
+{
 	double t;
 	t = (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time / 10;
-	return t; 
+	return t;
 }
 
 const char * work::usage_units_summary(void)
@@ -124,4 +124,3 @@ class work * find_create_work(uint64_t func)
 	all_work[func] = work;
 	return work;
 }
-

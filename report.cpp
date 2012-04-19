@@ -197,7 +197,7 @@ void init_report_output(char *filename_str)
 		time_t stamp;
 		char datestr[200];
 		memset(&datestr, 0, 200);
-  		memset(&stamp, 0, sizeof(time_t));
+		memset(&stamp, 0, sizeof(time_t));
 		stamp=time(NULL);
 		strftime(datestr, sizeof(datestr), "%Y%m%d-%H%M%S", localtime(&stamp));
 		sprintf(reportout.filename, "%s-%s.%s", file_prefix, datestr,file_postfix);
@@ -240,4 +240,3 @@ void finish_report_output(void)
 	}
 
 }
-

@@ -68,7 +68,7 @@ alsa::alsa(char *_name, char *path): device()
 	if (file) {
 		file.getline(model, 4096);
 		file.close();
-	}	
+	}
 	sprintf(devname, "%s/vendor_name", path);
 	file.open(devname);
 	if (file) {
@@ -97,12 +97,12 @@ void alsa::start_measurement(void)
 		file.close();
 		sprintf(filename, "%s/power_on_acct", sysfs_path);
 		file.open(filename, ios::in);
-		
+
 		if (file) {
 			file >> start_active;
 		}
 		file.close();
-	} 
+	}
 #ifndef DISABLE_TRYCATCH
 	catch (std::ios_base::failure &c) {
 		fprintf(stderr, "%s\n", c.what());
@@ -126,7 +126,7 @@ void alsa::end_measurement(void)
 		file.close();
 		sprintf(filename, "%s/power_on_acct", sysfs_path);
 		file.open(filename, ios::in);
-		
+
 		if (file) {
 			file >> end_active;
 		}
@@ -162,7 +162,7 @@ void create_all_alsa(void)
 	struct dirent *entry;
 	DIR *dir;
 	char filename[4096];
-	
+
 	dir = opendir("/sys/class/sound/card0/");
 	if (!dir)
 		return;
@@ -183,7 +183,7 @@ void create_all_alsa(void)
 
 		bl = new class alsa(entry->d_name, filename);
 		all_devices.push_back(bl);
-		register_parameter("alsa-codec-power", 0.5); 
+		register_parameter("alsa-codec-power", 0.5);
 	}
 	closedir(dir);
 
@@ -213,7 +213,7 @@ double alsa::power_usage(struct result_bundle *result, struct parameter_bundle *
 
 void alsa::register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle)
 {
-	register_devpower(&name[7], power_usage(results, bundle), this);	
+	register_devpower(&name[7], power_usage(results, bundle), this);
 }
 
 const char * alsa::human_name(void)

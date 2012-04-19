@@ -77,7 +77,7 @@ void runtime_pmdevice::start_measurement(void)
 	if (!file)
 		return;
 	file >> before_active_time;
-	file.close();	
+	file.close();
 }
 
 void runtime_pmdevice::end_measurement(void)
@@ -97,7 +97,7 @@ void runtime_pmdevice::end_measurement(void)
 	if (!file)
 		return;
 	file >> after_active_time;
-	file.close();	
+	file.close();
 }
 
 double runtime_pmdevice::utilization(void) /* percentage */
@@ -149,7 +149,7 @@ int device_has_runtime_pm(const char *sysfs_path)
 	char filename[4096];
 	ifstream file;
 	unsigned long value;
-	
+
 	sprintf(filename, "%s/power/runtime_suspended_time", sysfs_path);
 	file.open(filename, ios::in);
 	if (!file)
@@ -167,7 +167,7 @@ int device_has_runtime_pm(const char *sysfs_path)
 	file.close();
 	if (value)
 		return 1;
-	
+
 	return 0;
 }
 
@@ -179,7 +179,7 @@ static void do_bus(const char *bus)
 	struct dirent *entry;
 	DIR *dir;
 	char filename[4096];
-	
+
 	sprintf(filename, "/sys/bus/%s/devices/", bus);
 	dir = opendir(filename);
 	if (!dir)

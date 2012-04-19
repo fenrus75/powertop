@@ -77,13 +77,13 @@ power_consumer::power_consumer(void)
 	power_charge = 0.0;
 }
 
-double power_consumer::usage(void) 
-{ 
+double power_consumer::usage(void)
+{
 	double t;
 	t = (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time;
 	if (t < 0.7)
 		t = t * 1000;
-	return t; 
+	return t;
 }
 
 const char * power_consumer::usage_units(void)

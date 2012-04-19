@@ -124,11 +124,11 @@ static void read_kallsyms(void)
 
 		address = strtoull(line, NULL, 16);
 		c = strchr(c2, '\t');
-		if (c) 
+		if (c)
 			*c = 0;
 		if (address != 0)
 			kallsyms[address] = c2;
-	}	
+	}
 	file.close();
 }
 
@@ -157,12 +157,12 @@ void set_max_cpu(int cpu)
 }
 
 
-bool stringless::operator()(const char * const & lhs, const char * const & rhs) const  
-{  
+bool stringless::operator()(const char * const & lhs, const char * const & rhs) const
+{
 	if (strcmp(lhs, rhs) < 0)
 		return true;
 	return false;
-}  
+}
 
 void write_sysfs(const string &filename, const string &value)
 {
@@ -241,11 +241,11 @@ void format_watts(double W, char *buffer, unsigned int len)
 
 	if (W < 0.0001)
 		sprintf(buffer, _("    0 mW"));
-		
-#ifndef DISABLE_NCURSES			
+
+#ifndef DISABLE_NCURSES
 	while (mbstowcs(NULL,buffer,0) < len)
 		strcat(buffer, " ");
-#endif	
+#endif
 }
 
 
@@ -292,7 +292,7 @@ char *fmt_prefix(double n, char *buf)
 		if (g && strstr(g, "UTF-8"))
 			utf_ok = 1;
 		else
-			utf_ok = 0; 
+			utf_ok = 0;
 	}
 
 	p = buf;
@@ -400,4 +400,3 @@ void process_directory(const char *d_name, callback fn)
 
 	closedir(dir);
 }
-

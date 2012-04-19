@@ -38,14 +38,14 @@ double calculate_params(struct parameter_bundle *params)
 	params->score = 0;
 
 
-	for (i = 0; i < past_results.size(); i++) 
+	for (i = 0; i < past_results.size(); i++)
 		compute_bundle(params, past_results[i]);
 
 	return params->score;
 }
 
 
-/* 
+/*
  * gradual linear convergence of non-independent variables works better if once in a while
  * you make a wrong move....
  */
@@ -53,7 +53,7 @@ static int random_disturb(int retry_left)
 {
 	if (retry_left < 10)
 		return 0;
-	
+
 	if ( (rand() % 500) == 7)
 		return 1;
 	return 0;
@@ -79,7 +79,7 @@ static void weed_empties(struct parameter_bundle *best_so_far)
 
 	best_score = best_so_far->score;
 
-		
+
 	for (i = 0; i < best_so_far->parameters.size(); i++) {
 		double orgvalue;
 
@@ -157,7 +157,7 @@ void learn_parameters(int iterations, int do_base_power)
 		best_so_far->parameters[bpi] = min_power * 0.9;
 
 	/* We want to give up a little of base power, to give other parameters room to change;
-	   base power is the end post for everything after all 
+	   base power is the end post for everything after all
          */
 	if (do_base_power && !debug_learning)
 		best_so_far->parameters[bpi] = best_so_far->parameters[bpi] * 0.9998;
@@ -179,7 +179,7 @@ void learn_parameters(int iterations, int do_base_power)
 		calculate_params(best_so_far);
 		orgscore = best_score = best_so_far->score;
 
-		
+
 	        for (i = 1; i < best_so_far->parameters.size(); i++) {
 			double value, orgvalue;
 
@@ -230,7 +230,7 @@ void learn_parameters(int iterations, int do_base_power)
 				best_so_far->parameters[i] = value;
 
 				calculate_params(best_so_far);
-			
+
 				if (best_so_far->score + 0.00001 < best_score || (random_disturb(retry) && value > 0.0)) {
 					best_score = best_so_far->score;
 					newvalue = value;
@@ -249,7 +249,7 @@ void learn_parameters(int iterations, int do_base_power)
 				if (iterations < 25)
 					mult = 0.5;
 				delta = delta * mult;
-			} 
+			}
 			locked = 0;
 			prevparam = -1;
 		} else {
@@ -257,7 +257,7 @@ void learn_parameters(int iterations, int do_base_power)
 				printf("Retry is %i \n", retry);
 					printf("delta is %5.4f\n", delta);
 				printf("Best parameter is %i \n", bestparam);
-				printf("Changing score from %4.3f to %4.3f\n", orgscore, best_score); 
+				printf("Changing score from %4.3f to %4.3f\n", orgscore, best_score);
 				printf("Changing value from %4.3f to %4.3f\n", best_so_far->parameters[bestparam], newvalue);
 			}
 			best_so_far->parameters[bestparam] = newvalue;

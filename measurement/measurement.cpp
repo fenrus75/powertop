@@ -93,7 +93,7 @@ double global_joules_consumed(void)
 	for (i = 0; i < power_meters.size(); i++)
 		total += power_meters[i]->joules_consumed();
 
-	all_results.power = total;	
+	all_results.power = total;
 	if (total < min_power && total > 0.01)
 		min_power = total;
 	return total;

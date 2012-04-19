@@ -2285,5 +2285,5 @@ int pevent_filter_compare(struct event_filter *filter1, struct event_filter *fil
 
 	if (i < filter1->filters)
 		return 0;
-	return 1; 
+	return 1;
 }

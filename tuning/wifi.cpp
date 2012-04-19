@@ -31,7 +31,7 @@
 #include <utility>
 #include <iostream>
 #include <fstream>
-#include <unistd.h> 
+#include <unistd.h>
 #include <sys/types.h>
 #include <dirent.h>
 
@@ -46,7 +46,7 @@ wifi_tunable::wifi_tunable(const char *_iface) : tunable("", 1.5, _("Good"), _("
 {
 	strcpy(iface, _iface);
 	sprintf(desc, _("Wireless Power Saving for interface %s"), iface);
-	
+
 	sprintf(toggle_good, "iw dev %s set power_save off", iface);
 	sprintf(toggle_bad, "iw dev %s set power_save on", iface);
 }
@@ -88,7 +88,7 @@ void add_wifi_tunables(void)
 {
 	DIR *dir;
 	class wifi_tunable *wifi;
-	
+
 
 	dir = opendir("/sys/class/net/wlan0/");
 	if (!dir)
@@ -99,4 +99,3 @@ void add_wifi_tunables(void)
 
 	all_tunables.push_back(wifi);
 }
-

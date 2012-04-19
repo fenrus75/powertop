@@ -117,7 +117,7 @@ static void do_proc_net_dev(void)
 			if (i == 1 || i == 10)
 				pkt += val;
 
-		}	
+		}
 		dev->pkts = pkt;
 	}
 	file.close();
@@ -232,7 +232,7 @@ static int iface_link(const char *name)
 	close(sock);
 
 	link = cmd.data;
-	
+
 	return link;
 }
 
@@ -268,7 +268,7 @@ static int iface_speed(const char *name)
 		speed = 1000;
 	if (speed == 65535 || !iface_link(name))
 		speed = 0; /* no link */
-	
+
 	return speed;
 }
 
@@ -382,7 +382,7 @@ double network::power_usage(struct result_bundle *result, struct parameter_bundl
 		valid_high = utilization_power_valid(rindex_link_high);
 		valid_powerunsave = utilization_power_valid(rindex_powerunsave);
 	}
-	
+
 	if (valid_100 > 0) {
 		factor = get_parameter_value(index_link_100, bundle);
 		util = get_result_value(rindex_link_100, result);
@@ -395,7 +395,7 @@ double network::power_usage(struct result_bundle *result, struct parameter_bundl
 		util = get_result_value(rindex_link_1000, result);
 		power += util * factor / 100;
 	}
-	
+
 	if (valid_high > 0) {
 		factor = get_parameter_value(index_link_high, bundle);
 		util = get_result_value(rindex_link_high, result);

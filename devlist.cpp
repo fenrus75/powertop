@@ -308,10 +308,10 @@ void report_show_open_devices(void)
 	if (reporttype) {
 		fprintf(reportout.http_report,_("<h2>Process device activity</h2>\n <table width=\"100%%\">\n"));
 		fprintf(reportout.http_report,_("<tr><th class=\"device\" width=\"40%%\">Process</th><th class=\"device\">Device</th></tr>\n"));
- 	}else {
+	}else {
 		fprintf(reportout.csv_report,_("**Process Device Activity**, \n\n"));
 		fprintf(reportout.csv_report,_("Process, Device, \n"));
- 	}
+	}
 
 	for (i = 0; i < target->size(); i++) {
 		proc[0] = 0;
@@ -335,4 +335,3 @@ void report_show_open_devices(void)
 	else
 		fprintf(reportout.csv_report,"\n");
 }
-

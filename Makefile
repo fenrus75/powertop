@@ -79,8 +79,9 @@ install: powertop
 	@(cd po/ && env LOCALESDIR=$(LOCALESDIR) DESTDIR=$(DESTDIR) $(MAKE) $@)
 
 
+BUILD_CC ?= gcc
 csstoh: csstoh.c
-	gcc -o csstoh csstoh.c
+	$(BUILD_CC) -o csstoh csstoh.c
 
 css.h: csstoh powertop.css
 	./csstoh powertop.css css.h

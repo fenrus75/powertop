@@ -30,6 +30,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #include "perf_bundle.h"
 #include "perf_event.h"
@@ -100,15 +101,20 @@ static char * read_file(const char *file)
 		exit(-1);
 
 	while((r = read(fd, buf, 4096)) > 0) {
-		if (len)
-			buffer = (char *)realloc(buffer, len + r + 1);
-		else
+		if (len) {
+			char *tmp = (char *)realloc(buffer, len + r + 1);
+			if (!tmp)
+				free(buffer);
+			buffer = tmp;
+		} else
 			buffer = (char *)malloc(r + 1);
+		if (!buffer)
+			goto out;
 		memcpy(buffer + len, buf, r);
 		len += r;
 		buffer[len] = '\0';
 	}
-
+out:
 	return buffer;
 }
 
@@ -127,6 +133,8 @@ static void parse_event_format(const char *event_name)
 
 	buf = read_file(file);
 	free(file);
+	if (!buf)
+		return;
 
 	pevent_parse_event(perf_event::pevent, buf, strlen(buf), sys);
 	free(name);

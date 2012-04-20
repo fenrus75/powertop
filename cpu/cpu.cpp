@@ -940,13 +940,11 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 	class abstract_cpu *cpu;
 	int type;
 
-	if (event_names.find(type) == event_names.end())
-		return;
-
 	rec.data = trace;
 
 	type = pevent_data_type(perf_event::pevent, &rec);
 	event = pevent_find_event(perf_event::pevent, type);
+
 	if (!event)
 		return;
 
@@ -955,7 +953,6 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 		return;
 	}
 
-	printf("event: %s\n", event->name);
 	cpu = all_cpus[cpunr];
 
 #if 0
@@ -970,18 +967,23 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 	if (strcmp(event->name, "cpu_idle")==0) {
 
 		ret = pevent_get_field_val(NULL, event, "state", &rec, &val, 0);
+                if (ret < 0) {
+                        fprintf(stderr, "cpu_idle event returned no state?\n");
+                        exit(-1);
+                }
+
 		if (val == 4294967295)
 			cpu->go_unidle(time);
 		else
 			cpu->go_idle(time);
 	}
 
-	if (strcmp(event->name, "power_frequency") ||
-		strcmp(event->name, "cpu_frequency")==0){
+	if (strcmp(event->name, "power_frequency") == 0 
+	|| strcmp(event->name, "cpu_frequency") == 0){
 
 		ret = pevent_get_field_val(NULL, event, "state", &rec, &val, 0);
 		if (ret < 0) {
-			fprintf(stderr, "no state?\n");
+			fprintf(stderr, "power or cpu_frequecny event returned no state?\n");
 			exit(-1);
 		}
 

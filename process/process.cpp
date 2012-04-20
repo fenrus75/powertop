@@ -175,7 +175,6 @@ class process * find_create_process(const char *comm, int pid)
 	return new_proc;
 }
 
-/* C++... really? */
 class process * find_create_process(char *comm, int pid)
 {
 	return find_create_process((const char*)comm, pid);

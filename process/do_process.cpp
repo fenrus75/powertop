@@ -384,8 +384,10 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		int vec;
 
 		ret = pevent_get_field_val(NULL, event, "vec", &rec, &val, 0);
-		if (ret < 0)
-			return;
+                if (ret < 0) {
+                        fprintf(stderr, "softirq_entry event returned no vector number?\n");
+                        return;
+                }
 		vec = (int)val;
 
 		if (vec <= 9)
@@ -419,8 +421,10 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		uint64_t tmr;
 
 		ret = pevent_get_field_val(NULL, event, "function", &rec, &val, 0);
-		if (ret < 0)
+		if (ret < 0) {
+			fprintf(stderr, "timer_expire_entry event returned no fucntion value?\n");
 			return;
+		}
 		function = (uint64_t)val;
 
 		timer = find_create_timer(function);
@@ -429,8 +433,10 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			return;
 
 		ret = pevent_get_field_val(NULL, event, "timer", &rec, &val, 0);
-		if (ret < 0)
+		if (ret < 0) {
+			fprintf(stderr, "softirq_entry event returned no timer ?\n");
 			return;
+		}
 		tmr = (uint64_t)val;
 
 		push_consumer(cpu, timer);
@@ -469,7 +475,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 		timer = find_create_timer(function);
 
-		ret = pevent_get_field_val(NULL, event, "htimer", &rec, &val, 0);
+		ret = pevent_get_field_val(NULL, event, "hrtimer", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		tmr = (uint64_t)val;
@@ -490,7 +496,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			return;
 		}
 
-		ret = pevent_get_field_val(NULL, event, "htimer", &rec, &val, 0);
+		ret = pevent_get_field_val(NULL, event, "hrtimer", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		tmr = (uint64_t)val;
@@ -597,6 +603,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 		ret = pevent_get_field_val(NULL, event, "dev", &rec, &val, 0);
 		if (ret < 0)
+			
 			return;
 		dev = (int)val;
 
@@ -626,8 +633,8 @@ void start_process_measurement(void)
 		perf_events->add_event("irq:softirq_exit");
 		perf_events->add_event("timer:timer_expire_entry");
 		perf_events->add_event("timer:timer_expire_exit");
-		perf_events->add_event("timer:hrtimer_expire_entry");
-		perf_events->add_event("timer:hrtimer_expire_exit");
+		perf_events->add_event("hrtimer_expire_entry");
+		perf_events->add_event("hrtimer_expire_exit");
 		if (!perf_events->add_event("power:cpu_idle")){
 			perf_events->add_event("power:power_start");
 			perf_events->add_event("power:power_end");

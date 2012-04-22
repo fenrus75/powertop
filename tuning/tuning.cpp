@@ -312,3 +312,16 @@ void report_show_tunables(void)
 			fprintf(reportout.csv_report,"\n");
 	}
 }
+
+void clear_tuning()
+{
+	for (int i = 0; i < all_tunables.size(); i++) {
+		delete all_tunables[i];
+	}
+	all_tunables.clear();
+
+	for (int i = 0; i < all_untunables.size(); i++) {
+		delete all_untunables[i];
+	}
+	all_untunables.clear();
+}

@@ -240,6 +240,7 @@ void report(int time, int iterations, char *file)
 		one_measurement(time);
 		report_show_tunables();
 		finish_report_output();
+		clear_tuning();
 	}
 	/* and wrap up */
 	learn_parameters(50, 0);
@@ -415,6 +416,7 @@ int main(int argc, char **argv)
 	learn_parameters(500, 0);
 	save_parameters("saved_parameters.powertop");
 	end_pci_access();
+	clear_tuning();
 	reset_display();
 
 	clear_all_devices();

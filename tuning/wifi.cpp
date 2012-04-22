@@ -86,16 +86,27 @@ const char *wifi_tunable::toggle_script(void)
 
 void add_wifi_tunables(void)
 {
+	struct dirent *entry;
 	DIR *dir;
+	char* wlan_name;
 	class wifi_tunable *wifi;
 
 
-	dir = opendir("/sys/class/net/wlan0/");
+	dir = opendir("/sys/class/net/");
 	if (!dir)
 		return;
+	while (1) {
+		entry = readdir(dir);
+		if (!entry)
+			break;
+		wlan_name = strstr(entry->d_name, "wlan");
+		if (wlan_name) {
+			wifi = new class wifi_tunable(wlan_name);
+			all_tunables.push_back(wifi);
+		}
+	
+	}
+
 	closedir(dir);
 
-	wifi = new class wifi_tunable("wlan0");
-
-	all_tunables.push_back(wifi);
 }

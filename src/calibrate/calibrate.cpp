@@ -145,8 +145,6 @@ static void find_all_rfkill(void)
 	if (!dir)
 		return;
 	while (1) {
-		ifstream file;
-
 		entry = readdir(dir);
 
 		if (!entry)
@@ -190,8 +188,6 @@ static void find_backlight(void)
 	if (!dir)
 		return;
 	while (1) {
-		ifstream file;
-
 		entry = readdir(dir);
 
 		if (!entry)
@@ -232,8 +228,6 @@ static void find_scsi_link(void)
 	if (!dir)
 		return;
 	while (1) {
-		ifstream file;
-
 		entry = readdir(dir);
 
 		if (!entry)

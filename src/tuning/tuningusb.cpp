@@ -81,7 +81,6 @@ usb_tunable::usb_tunable(const char *path, const char *name) : tunable("", 0.9, 
 
 int usb_tunable::good_bad(void)
 {
-	ifstream file;
 	string content;
 
 	content = read_sysfs_string(usb_path);
@@ -127,7 +126,6 @@ void add_usb_tunables(void)
 	if (!dir)
 		return;
 	while (1) {
-		ifstream file;
 		class usb_tunable *usb;
 
 		entry = readdir(dir);

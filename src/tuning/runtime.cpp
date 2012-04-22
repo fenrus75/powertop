@@ -83,7 +83,6 @@ runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *
 
 int runtime_tunable::good_bad(void)
 {
-	ifstream file;
 	string content;
 
 	content = read_sysfs_string(runtime_path);
@@ -131,7 +130,6 @@ void add_runtime_tunables(const char *bus)
 	if (!dir)
 		return;
 	while (1) {
-		ifstream file;
 		class runtime_tunable *runtime;
 
 		entry = readdir(dir);

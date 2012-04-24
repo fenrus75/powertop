@@ -60,7 +60,7 @@
 #define DEBUGFS_MAGIC          0x64626720
 
 int debug_learning = 0;
-
+unsigned time_out = 20;
 int leave_powertop = 0;
 
 static const struct option long_options[] =
@@ -81,6 +81,20 @@ static const struct option long_options[] =
 static void print_version()
 {
 	printf(_("Powertop version" POWERTOP_VERSION ", compiled on "__DATE__ "\n"));
+}
+
+static bool set_refresh_timeout()
+{
+	static char buf[4];
+	mvprintw(1, 0, "%s (currently %u): ", _("Set refresh time out"), time_out);
+	memset(buf, '\0', sizeof(buf));
+	get_user_input(buf, sizeof(buf) - 1);
+	show_tab(0);
+	unsigned time = strtoul(buf, NULL, 0);
+	if (!time) return 0;
+	if (time > 32) time = 32;
+	time_out = time;
+	return 1;
 }
 
 static void print_usage()
@@ -135,6 +149,10 @@ static void do_sleep(int seconds)
 			break;
 		case 10:
 			cursor_enter();
+			break;
+		case 's':
+			if (set_refresh_timeout())
+				return;
 			break;
 		case 'r':
 			window_refresh();
@@ -259,7 +277,6 @@ int main(int argc, char **argv)
 	int c;
 	bool wantreport = FALSE;
 	char filename[4096];;
-	int  timetotest = 20;
 	int  iterations = 1;
 	struct statfs st_fs;
 
@@ -349,7 +366,7 @@ int main(int argc, char **argv)
 				break;
 
 			case 't':
-				timetotest = (optarg ? atoi(optarg) : 20);
+				time_out = (optarg ? atoi(optarg) : 20);
 				break;
 
 			case 'i':
@@ -368,7 +385,7 @@ int main(int argc, char **argv)
 	}
 
 	if (wantreport)
-		 report(timetotest, iterations, filename);
+		 report(time_out, iterations, filename);
 
 	if (debug_learning)
 		printf("Learning debugging enabled\n");
@@ -397,7 +414,7 @@ int main(int argc, char **argv)
 
 
 	while (!leave_powertop) {
-		one_measurement(timetotest);
+		one_measurement(time_out);
 		show_cur_tab();
 		learn_parameters(15, 0);
 	}

@@ -125,50 +125,26 @@ void clear_timers(void)
 	}
 }
 
-bool get_timerstats(void)
-{
-	FILE *file;
-	file = fopen("/proc/timer_stats", "w");
-	if (!file) {
-		return false;
-	}
-	fprintf(file, "1\n");
-	fclose(file);
-	return true;
-}
-
 bool timer::is_deferred(void)
 {
-	FILE *file;
-	char line[4096];
+	FILE    *file;
+	bool    ret = false;
+	char    line[4096];
 
-	if (!get_timerstats()){
-		return false;
-	}
-	file = fopen("/proc/timer_stats", "r");
+	file = fopen("/proc/timer_stats", "r");	
 	if (!file) {
-		return false;
+		return ret;
 	}
 
-	while (file && !feof(file)) {
-		char *c;
-		if (fgets(line, 4096,file)== NULL)
+	while (!feof(file)) {
+		if (fgets(line, 4096, file) == NULL)
 			break;
-		if (strstr(line, "total events"))
-			break;
-		if (!handler)
-			break;
-		if (strstr(line, handler)){
-			c = strchr(line, ',');
-			if (!c)
-				continue;
-			c--;
-			if (*c == 'D') {
-				fclose(file);
-				return true;
-			}
+		if (strstr(line, handler)) {
+			ret = (strstr(line, "D,") != NULL);
+			if (ret == true)
+				break;
 		}
 	}
 	fclose(file);
-	return false;
+	return ret;
 }

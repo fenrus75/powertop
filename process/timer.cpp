@@ -35,11 +35,35 @@
 
 using namespace std;
 
+static bool timer_is_deferred(const char *handler)
+{
+	FILE    *file;
+	bool    ret = false;
+	char    line[4096];
+
+	file = fopen("/proc/timer_stats", "r");	
+	if (!file) {
+		return ret;
+	}
+
+	while (!feof(file)) {
+		if (fgets(line, 4096, file) == NULL)
+			break;
+		if (strstr(line, handler)) {
+			ret = (strstr(line, "D,") != NULL);
+			if (ret == true)
+				break;
+		}
+	}
+	fclose(file);
+	return ret;
+}
 
 timer::timer(unsigned long address) : power_consumer()
 {
 	strncpy(handler, kernel_function(address), 31);
 	raw_count = 0;
+	deferred = timer_is_deferred(handler);
 }
 
 
@@ -127,24 +151,5 @@ void clear_timers(void)
 
 bool timer::is_deferred(void)
 {
-	FILE    *file;
-	bool    ret = false;
-	char    line[4096];
-
-	file = fopen("/proc/timer_stats", "r");	
-	if (!file) {
-		return ret;
-	}
-
-	while (!feof(file)) {
-		if (fgets(line, 4096, file) == NULL)
-			break;
-		if (strstr(line, handler)) {
-			ret = (strstr(line, "D,") != NULL);
-			if (ret == true)
-				break;
-		}
-	}
-	fclose(file);
-	return ret;
+	return deferred;
 }

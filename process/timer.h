@@ -34,6 +34,7 @@ class timer : public power_consumer {
 public:
 	char		handler[32];
 	int		raw_count;
+	bool		deferred;
 
 	timer(unsigned long timer_func);
 

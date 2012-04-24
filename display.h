@@ -42,6 +42,7 @@ extern void show_cur_tab(void);
 extern void cursor_up(void);
 extern void cursor_down(void);
 extern void cursor_enter(void);
+extern void window_refresh(void);
 
 #ifndef DISABLE_NCURSES
 class tab_window {
@@ -54,6 +55,7 @@ public:
 	virtual void cursor_up(void) { if (cursor_pos > 0) cursor_pos--; repaint(); };
 
 	virtual void cursor_enter(void) { };
+	virtual void window_refresh() { };
 
 	virtual void repaint(void) { };
 	virtual void expose(void) { cursor_pos = 0; repaint();};

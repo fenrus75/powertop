@@ -50,17 +50,12 @@ public:
 	virtual void repaint(void);
 	virtual void cursor_enter(void);
 	virtual void expose(void);
+	virtual void window_refresh(void);
 };
 #endif // DISABLE_NCURSES
-void initialize_tuning(void)
+
+static void init_tuning(void)
 {
-#ifndef DISABLE_NCURSES
-	class tuning_window *w;
-
-	w = new tuning_window();
-	create_tab("Tunables", _("Tunables"), w, _(" <ESC> Exit | <Enter> Toggle tunable"));
-#endif // DISABLE_NCURSES
-
 	add_sysfs_tunable(_("Enable Audio codec power management"), "/sys/module/snd_hda_intel/parameters/power_save", "1");
 	add_sysfs_tunable(_("Enable SATA link power management for /dev/sda"), "/sys/class/scsi_host/host0/link_power_management_policy", "min_power");
 	add_sysfs_tunable(_("NMI watchdog should be turned off"), "/proc/sys/kernel/nmi_watchdog", "0");
@@ -75,6 +70,18 @@ void initialize_tuning(void)
 	add_cpufreq_tunable();
 
 	sort_tunables();
+}
+
+void initialize_tuning(void)
+{
+#ifndef DISABLE_NCURSES
+	class tuning_window *w;
+
+	w = new tuning_window();
+	create_tab("Tunables", _("Tunables"), w, _(" <ESC> Exit | <Enter> Toggle tunable | <r> Window refresh"));
+#endif // DISABLE_NCURSES
+
+	init_tuning();
 
 #ifndef DISABLE_NCURSES
 	w->cursor_max = all_tunables.size() - 1;
@@ -172,6 +179,11 @@ static bool tunables_sort(class tunable * i, class tunable * j)
 	return false;
 }
 
+void tuning_window::window_refresh()
+{
+	clear_tuning();
+	init_tuning();
+}
 
 static void sort_tunables(void)
 {

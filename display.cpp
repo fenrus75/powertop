@@ -259,6 +259,7 @@ void cursor_up(void)
 
 	show_cur_tab();
 }
+
 void cursor_enter(void)
 {
 	class tab_window *w;
@@ -269,6 +270,20 @@ void cursor_enter(void)
 		w->cursor_enter();
 		w->repaint();
 	}
+	show_cur_tab();
+}
+
+void window_refresh()
+{
+	class tab_window *w;
+	
+	w = tab_windows[tab_names[current_tab]];
+
+	if (w) {
+		w->window_refresh();
+		w->repaint();
+	}
+
 	show_cur_tab();
 }
 

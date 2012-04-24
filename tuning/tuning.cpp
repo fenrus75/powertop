@@ -286,11 +286,12 @@ void report_show_tunables(void)
 			fprintf(reportout.csv_report,"\"%s\", \n", all_untunables[i]->description());
 	}
 
-	if (line > 0)
+	if (line > 0) {
 		if(reporttype)
 			fprintf(reportout.http_report,"</table>\n");
 		else
 			fprintf(reportout.csv_report,"\n");
+	}
 
 	line = 0;
 	for (i = 0; i < all_tunables.size(); i++) {

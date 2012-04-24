@@ -332,12 +332,12 @@ void report_show_tunables(void)
 
 void clear_tuning()
 {
-	for (int i = 0; i < all_tunables.size(); i++) {
+	for (size_t i = 0; i < all_tunables.size(); i++) {
 		delete all_tunables[i];
 	}
 	all_tunables.clear();
 
-	for (int i = 0; i < all_untunables.size(); i++) {
+	for (size_t i = 0; i < all_untunables.size(); i++) {
 		delete all_untunables[i];
 	}
 	all_untunables.clear();

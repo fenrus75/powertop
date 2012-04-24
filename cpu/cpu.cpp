@@ -339,6 +339,46 @@ static const char *freq_class(int line)
 	return "cpu_even_req";
 }
 
+static int has_state_level(class abstract_cpu *acpu, int state, int line)
+{
+	switch (state) {
+		case PSTATE:
+			return acpu->has_pstate_level(line);
+			break;
+		case CSTATE:
+			return acpu->has_cstate_level(line);
+			break;
+	}
+	return 0;
+}
+
+static const char * fill_state_name(class abstract_cpu *acpu, int state, int line, char *buf)
+{
+	switch (state) {
+		case PSTATE:
+			return acpu->fill_pstate_name(line, buf);
+			break;
+		case CSTATE:
+			return acpu->fill_cstate_name(line, buf);
+			break;
+	}
+	return "-EINVAL";
+}
+
+static const char * fill_state_line(class abstract_cpu *acpu, int state, int line,
+					char *buf, const char *sep = "")
+{
+	switch (state) {
+		case PSTATE:
+			return acpu->fill_pstate_line(line, buf);
+			break;
+		case CSTATE:
+			return acpu->fill_cstate_line(line, buf, sep);
+			break;
+	}
+	return "-EINVAL";
+}
+
 void report_display_cpu_cstates(void)
 {
 	char buffer[512], buffer2[512];
@@ -538,100 +578,6 @@ void report_display_cpu_cstates(void)
 	}
 }
 
-void w_display_cpu_cstates(void)
-{
-#ifndef DISABLE_NCURSES
-	WINDOW *win;
-	char buffer[128];
-	char linebuf[1024];
-	unsigned int package, core, cpu;
-	int line;
-	class abstract_cpu *_package, * _core, * _cpu;
-	int ctr = 0;
-
-	win = get_ncurses_win("Idle stats");
-	if (!win)
-		return;
-
-	wclear(win);
-        wmove(win, 2,0);
-
-	for (package = 0; package < system_level.children.size(); package++) {
-		int first_pkg = 0;
-		_package = system_level.children[package];
-		if (!_package)
-			continue;
-
-
-		for (core = 0; core < _package->children.size(); core++) {
-			_core = _package->children[core];
-			if (!_core)
-				continue;
-
-			for (line = LEVEL_HEADER; line < 20; line++) {
-				int first = 1;
-				ctr = 0;
-				linebuf[0] = 0;
-				if (!_package->has_cstate_level(line))
-					continue;
-
-
-				buffer[0] = 0;
-				if (first_pkg == 0) {
-					strcat(linebuf, _package->fill_cstate_name(line, buffer));
-					expand_string(linebuf, ctr+10);
-					strcat(linebuf, _package->fill_cstate_line(line, buffer));
-				}
-				ctr += 20;
-				expand_string(linebuf, ctr);
-
-				strcat(linebuf, "| ");
-				ctr += strlen("| ");
-
-				if (!_core->can_collapse()) {
-					buffer[0] = 0;
-					strcat(linebuf, _core->fill_cstate_name(line, buffer));
-					expand_string(linebuf, ctr + 10);
-					strcat(linebuf, _core->fill_cstate_line(line, buffer));
-					ctr += 20;
-					expand_string(linebuf, ctr);
-
-					strcat(linebuf, "| ");
-					ctr += strlen("| ");
-				}
-
-				for (cpu = 0; cpu < _core->children.size(); cpu++) {
-					_cpu = _core->children[cpu];
-					if (!_cpu)
-						continue;
-
-					if (first == 1) {
-						strcat(linebuf, _cpu->fill_cstate_name(line, buffer));
-						expand_string(linebuf, ctr + 10);
-						first = 0;
-						ctr += 12;
-					}
-					buffer[0] = 0;
-					strcat(linebuf, _cpu->fill_cstate_line(line, buffer));
-					ctr += 18;
-					expand_string(linebuf, ctr);
-
-				}
-				strcat(linebuf, "\n");
-				wprintw(win, "%s", linebuf);
-			}
-
-			wprintw(win, "\n");
-			first_pkg++;
-		}
-
-
-	}
-#endif // DISABLE_NCURSES
-}
-
-
-
 void report_display_cpu_pstates(void)
 {
 	char buffer[512], buffer2[512];
@@ -826,9 +772,7 @@ void report_display_cpu_pstates(void)
 		fprintf(reportout.csv_report, "\n");
 }
 
-
-
-void w_display_cpu_pstates(void)
+void impl_w_display_cpu_states(int state)
 {
 #ifndef DISABLE_NCURSES
 	WINDOW *win;
@@ -839,20 +783,22 @@ void w_display_cpu_pstates(void)
 	class abstract_cpu *_package, * _core, * _cpu;
 	int ctr = 0;
 
-	win = get_ncurses_win("Frequency stats");
+	if (state == PSTATE)
+		win = get_ncurses_win("Frequency stats");
+	else
+		win = get_ncurses_win("Idle stats");
+
 	if (!win)
 		return;
 
 	wclear(win);
         wmove(win, 2,0);
 
-
 	for (package = 0; package < system_level.children.size(); package++) {
 		int first_pkg = 0;
 		_package = system_level.children[package];
 		if (!_package)
 			continue;
-
 
 		for (core = 0; core < _package->children.size(); core++) {
 			_core = _package->children[core];
@@ -864,15 +810,14 @@ void w_display_cpu_pstates(void)
 				ctr = 0;
 				linebuf[0] = 0;
 
-				if (!_package->has_pstate_level(line))
+				if (!has_state_level(_package, state, line))
 					continue;
-
 
 				buffer[0] = 0;
 				if (first_pkg == 0) {
-					strcat(linebuf, _package->fill_pstate_name(line, buffer));
+					strcat(linebuf, fill_state_name(_package, state, line, buffer));
 					expand_string(linebuf, ctr + 10);
-					strcat(linebuf, _package->fill_pstate_line(line, buffer));
+					strcat(linebuf, fill_state_line(_package, state, line, buffer));
 				}
 				ctr += 20;
 				expand_string(linebuf, ctr);
@@ -882,9 +827,9 @@ void w_display_cpu_pstates(void)
 
 				if (!_core->can_collapse()) {
 					buffer[0] = 0;
-					strcat(linebuf, _core->fill_pstate_name(line, buffer));
+					strcat(linebuf, fill_state_name(_core, state, line, buffer));
 					expand_string(linebuf, ctr + 10);
-					strcat(linebuf, _core->fill_pstate_line(line, buffer));
+					strcat(linebuf, fill_state_line(_core, state, line, buffer));
 					ctr += 20;
 					expand_string(linebuf, ctr);
 
@@ -898,13 +843,13 @@ void w_display_cpu_pstates(void)
 						continue;
 
 					if (first == 1) {
-						strcat(linebuf, _cpu->fill_pstate_name(line, buffer));
+						strcat(linebuf, fill_state_name(_cpu, state, line, buffer));
 						expand_string(linebuf, ctr + 10);
 						first = 0;
 						ctr += 12;
 					}
 					buffer[0] = 0;
-					strcat(linebuf, _cpu->fill_pstate_line(line, buffer));
+					strcat(linebuf, fill_state_line(_cpu, state, line, buffer));
 					ctr += 10;
 					expand_string(linebuf, ctr);
 
@@ -912,17 +857,22 @@ void w_display_cpu_pstates(void)
 				strcat(linebuf, "\n");
 				wprintw(win, "%s", linebuf);
 			}
-
 			wprintw(win, "\n");
 			first_pkg++;
 		}
-
-
 	}
 #endif // DISABLE_NCURSES
 }
 
+void w_display_cpu_pstates(void)
+{
+	impl_w_display_cpu_states(PSTATE);
+}
 
+void w_display_cpu_cstates(void)
+{
+	impl_w_display_cpu_states(CSTATE);
+}
 
 struct power_entry {
 #ifndef __i386__

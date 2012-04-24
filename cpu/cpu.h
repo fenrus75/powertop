@@ -39,6 +39,9 @@ class abstract_cpu;
 #define LEVEL_C0 -1
 #define LEVEL_HEADER -2
 
+#define PSTATE 1
+#define CSTATE 2
+
 struct idle_state {
 	char linux_name[16]; /* state0 etc.. cpuidle name */
 	char human_name[32];

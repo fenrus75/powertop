@@ -56,6 +56,7 @@ extern "C" {
 #endif
 #include <limits>
 #include <math.h>
+#include <ncurses.h>
 
 static int kallsyms_read = 0;
 
@@ -399,4 +400,16 @@ void process_directory(const char *d_name, callback fn)
 	}
 
 	closedir(dir);
+}
+
+int get_user_input(char *buf, unsigned sz)
+{
+	fflush(stdout);
+	echo();
+	/* Upon successful completion, these functions return OK. Otherwise, they return ERR. */
+	int ret = getnstr(buf, sz);
+	noecho();
+	fflush(stdout);
+	/* to distinguish between getnstr error and empty line */
+	return ret || strlen(buf);
 }

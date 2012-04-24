@@ -79,5 +79,6 @@ extern int equals(double a, double b);
 typedef void (*callback)(const char*);
 extern void process_directory(const char *d_name, callback fn);
 extern int utf_ok;
+extern int get_user_input(char *buf, unsigned sz);
 
 #endif

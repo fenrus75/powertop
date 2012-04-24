@@ -60,6 +60,12 @@ public:
 	virtual void repaint(void) { };
 	virtual void expose(void) { cursor_pos = 0; repaint();};
 	virtual void hide(void) { };
+
+	virtual ~tab_window() 
+	{
+		delwin(win);
+		win = NULL;
+	}
 };
 
 extern map<string, class tab_window *> tab_windows;

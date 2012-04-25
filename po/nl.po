@@ -1,163 +1,247 @@
-#: process/do_process.cpp:605
-msgid "                Usage       Events/s    Category       Description\n"
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: powertop\n"
+"Report-Msgid-Bugs-To: \"power@bughost.org\"\n"
+"POT-Creation-Date: 2012-04-24 15:00-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/parameters/persistent.cpp:46 src/parameters/persistent.cpp:139
+msgid "Cannot save to file "
 msgstr ""
 
-#: devices/device.cpp:150
-msgid "              Usage     Device name\n"
+#: src/parameters/persistent.cpp:78 src/parameters/persistent.cpp:164
+msgid "Cannot load from file "
 msgstr ""
 
-#: lib.cpp:236
+#: src/parameters/persistent.cpp:122
 #, c-format
-msgid "    0 mW"
+msgid "Loaded %i prior measurements\n"
 msgstr ""
 
-#: cpu/cpu_linux.cpp:231
-#, c-format
-msgid "  CPU %i"
+#: src/display.cpp:68
+msgid "Overview"
 msgstr ""
 
-#: cpu/cpu_core.cpp:46 cpu/cpu_core.cpp:190 cpu/intel_cpus.cpp:273
+#: src/display.cpp:69
+msgid "Idle stats"
+msgstr ""
+
+#: src/display.cpp:70
+msgid "Frequency stats"
+msgstr ""
+
+#: src/display.cpp:71
+msgid "Device stats"
+msgstr ""
+
+#: src/display.cpp:128
+msgid " <ESC> Exit | "
+msgstr ""
+
+#: src/cpu/cpu_core.cpp:46 src/cpu/cpu_core.cpp:190 src/cpu/intel_cpus.cpp:296
 #, c-format
 msgid "  Core"
 msgstr ""
 
-#: cpu/cpu_package.cpp:104 cpu/intel_cpus.cpp:299
+#: src/cpu/cpu_core.cpp:116 src/cpu/cpu_linux.cpp:329
+#: src/cpu/cpu_package.cpp:145 src/cpu/intel_cpus.cpp:222
+#: src/cpu/intel_cpus.cpp:457 src/cpu/intel_cpus.cpp:658
+msgid "Idle"
+msgstr ""
+
+#: src/cpu/cpu_core.cpp:118 src/cpu/cpu_linux.cpp:331
+#: src/cpu/cpu_package.cpp:147 src/cpu/intel_cpus.cpp:224
+#: src/cpu/intel_cpus.cpp:459
 #, c-format
-msgid "  Package"
+msgid "Turbo Mode"
 msgstr ""
 
-#: display.cpp:130
-msgid " <ESC> Exit | "
+#: src/cpu/cpu.cpp:88
+#, c-format
+msgid "cpu package %i"
 msgstr ""
 
-#: tuning/tuning.cpp:60
-msgid " <ESC> Exit | <Enter> Toggle tunable"
+#: src/cpu/cpu.cpp:89
+msgid "cpu package"
 msgstr ""
 
-#: cpu/cpu_linux.cpp:289 cpu/intel_cpus.cpp:565
+#: src/cpu/cpu_linux.cpp:92
+msgid "C0 polling"
+msgstr ""
+
+#: src/cpu/cpu_linux.cpp:231 src/cpu/cpu_linux.cpp:289
+#: src/cpu/intel_cpus.cpp:605
 #, c-format
 msgid " CPU %i"
 msgstr ""
 
-#: lib.cpp:92
+#: src/cpu/cpu_package.cpp:46
 #, c-format
-msgid "%3.1f GHz"
+msgid "Package"
 msgstr ""
 
-#: lib.cpp:90
+#: src/cpu/cpu_package.cpp:104 src/cpu/intel_cpus.cpp:322
 #, c-format
-msgid "%4.2f GHz"
+msgid "  Package"
 msgstr ""
 
-#: lib.cpp:83
-#, c-format
-msgid "%4lli MHz"
+#: src/cpu/intel_cpus.cpp:103
+msgid "C3 (cc3)"
 msgstr ""
 
-#: lib.cpp:85
-#, c-format
-msgid "%6lli MHz"
+#: src/cpu/intel_cpus.cpp:104
+msgid "C6 (cc6)"
 msgstr ""
 
-#: lib.cpp:233
-#, c-format
-msgid "%7sW"
+#: src/cpu/intel_cpus.cpp:106
+msgid "C7 (cc7)"
 msgstr ""
 
-#: lib.cpp:79
-#, c-format
-msgid "%9lli"
+#: src/cpu/intel_cpus.cpp:351
+msgid "C2 (pc2)"
 msgstr ""
 
-#: tuning/runtime.cpp:49
-#, c-format
-msgid "%s device %s has no runtime power management"
+#: src/cpu/intel_cpus.cpp:353
+msgid "C3 (pc3)"
 msgstr ""
 
-#: calibrate/calibrate.cpp:350 calibrate/calibrate.cpp:367
-#: calibrate/calibrate.cpp:375 calibrate/calibrate.cpp:392
-#, c-format
-msgid ".... device %s \n"
+#: src/cpu/intel_cpus.cpp:354
+msgid "C6 (pc6)"
 msgstr ""
 
-#: devlist.cpp:304
-#, c-format
-msgid "<h2>Process device activity</h2>\n"
+#: src/cpu/intel_cpus.cpp:356
+msgid "C7 (pc7)"
 msgstr ""
 
-#: devlist.cpp:306
-#, c-format
-msgid ""
-"<tr><th class=\"device\" width=\"40%%\">Process</th><th class=\"device\">Device</"
-"th></tr>\n"
+#: src/cpu/intel_cpus.cpp:529
+msgid "C0 active"
 msgstr ""
 
-#: cpu/intel_cpus.cpp:548
+#: src/cpu/intel_cpus.cpp:588
 #, c-format
 msgid "Actual"
 msgstr ""
 
-#: devices/alsa.cpp:79 devices/alsa.cpp:81
+#: src/devlist.cpp:309
 #, c-format
-msgid "Audio codec %s: %s"
+msgid ""
+"<h2>Process device activity</h2>\n"
+" <table width=\"100%%\">\n"
 msgstr ""
 
-#: devices/alsa.cpp:77
+#: src/devlist.cpp:310
 #, c-format
-msgid "Audio codec %s: %s (%s)"
+msgid ""
+"<tr><th class=\"device\" width=\"40%%\">Process</th><th class=\"device"
+"\">Device</th></tr>\n"
 msgstr ""
 
-#: tuning/usb.cpp:72
+#: src/devlist.cpp:312
 #, c-format
-msgid "Autosuspend for USB device %s (%s)"
+msgid ""
+"**Process Device Activity**, \n"
+"\n"
 msgstr ""
 
-#: tuning/usb.cpp:74 tuning/usb.cpp:76
+#: src/devlist.cpp:313
 #, c-format
-msgid "Autosuspend for USB device %s [%s]"
+msgid "Process, Device, \n"
 msgstr ""
 
-#: tuning/usb.cpp:55
+#: src/lib.cpp:81
 #, c-format
-msgid "Autosuspend for unknown USB device %s (%s:%s)"
+msgid "%9lli"
 msgstr ""
 
-#: tuning/cpufreq.cpp:42 tuning/ethernet.cpp:50 tuning/runtime.cpp:41
-#: tuning/sysfs.cpp:37 tuning/tunable.cpp:49 tuning/usb.cpp:40
-#: tuning/wifi.cpp:45
-msgid "Bad"
-msgstr ""
-
-#: tuning/bluetooth.cpp:48
+#: src/lib.cpp:85
 #, c-format
-msgid "Bluetooth device interface status"
+msgid "%4lli MHz"
 msgstr ""
 
-#: cpu/intel_cpus.cpp:489
-msgid "C0 active"
+#: src/lib.cpp:87
+#, c-format
+msgid "%6lli MHz"
 msgstr ""
 
-#: cpu/cpu_linux.cpp:92
-msgid "C0 polling"
+#: src/lib.cpp:92
+#, c-format
+msgid "%4.2f GHz"
 msgstr ""
 
-#: cpu/intel_cpus.cpp:88
-msgid "C3 (cc3)"
+#: src/lib.cpp:94
+#, c-format
+msgid "%3.1f GHz"
 msgstr ""
 
-#: cpu/intel_cpus.cpp:323
-msgid "C3 (pc3)"
+#: src/lib.cpp:240
+#, c-format
+msgid "%7sW"
 msgstr ""
 
-#: cpu/intel_cpus.cpp:89
-msgid "C6 (cc6)"
+#: src/lib.cpp:243
+#, c-format
+msgid "    0 mW"
 msgstr ""
 
-#: cpu/intel_cpus.cpp:324
-msgid "C6 (pc6)"
+#: src/lib.cpp:352
+msgid "PS/2 Touchpad / Keyboard / Mouse"
 msgstr ""
 
-#: perf/perf.cpp:113
+#: src/lib.cpp:353
+msgid "SATA controller"
+msgstr ""
+
+#: src/lib.cpp:354
+msgid "Intel built in USB hub"
+msgstr ""
+
+#: src/process/do_process.cpp:786
+#, c-format
+msgid ""
+"Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n"
+"\n"
+msgstr ""
+
+#: src/process/do_process.cpp:794 src/devices/device.cpp:171
+#, c-format
+msgid "The battery reports a discharge rate of %sW\n"
+msgstr ""
+
+#: src/process/do_process.cpp:799
+#, c-format
+msgid "The estimated remaining time is %i minutes\n"
+msgstr ""
+
+#: src/process/do_process.cpp:812
+msgid "Power est.      Usage       Events/s    Category       Description\n"
+msgstr ""
+
+#: src/process/do_process.cpp:814
+msgid "                Usage       Events/s    Category       Description\n"
+msgstr ""
+
+#: src/perf/perf.cpp:121
+#, c-format
+msgid "PowerTOP %s needs the kernel to support the 'perf' subsystem\n"
+msgstr ""
+
+#: src/perf/perf.cpp:122
+#, c-format
+msgid "as well as support for trace points in the kernel:\n"
+msgstr ""
+
+#: src/perf/perf.cpp:123
 #, c-format
 msgid ""
 "CONFIG_PERF_EVENTS=y\n"
@@ -166,287 +250,310 @@ msgid ""
 "CONFIG_TRACING=y\n"
 msgstr ""
 
-#: calibrate/calibrate.cpp:348
-#, c-format
-msgid "Calibrating USB devices\n"
-msgstr ""
-
-#: calibrate/calibrate.cpp:389
-#, c-format
-msgid "Calibrating backlight\n"
-msgstr ""
-
-#: calibrate/calibrate.cpp:413 calibrate/calibrate.cpp:421
-#, c-format
-msgid "Calibrating idle\n"
-msgstr ""
-
-#: calibrate/calibrate.cpp:365
-#, c-format
-msgid "Calibrating radio devices\n"
-msgstr ""
-
-#: calibrate/calibrate.cpp:316
-#, c-format
-msgid "Calibrating: CPU usage on %i threads\n"
-msgstr ""
-
-#: calibrate/calibrate.cpp:331
-#, c-format
-msgid "Calibrating: CPU wakeup power consumption\n"
-msgstr ""
-
-#: calibrate/calibrate.cpp:432
-#, c-format
-msgid "Calibrating: disk usage \n"
-msgstr ""
-
-#: calibrate/calibrate.cpp:297
-#, c-format
-msgid "Cannot create temp file\n"
-msgstr ""
-
-#: parameters/persistent.cpp:72 parameters/persistent.cpp:152
-msgid "Cannot load from file "
-msgstr ""
-
-#: parameters/persistent.cpp:43 parameters/persistent.cpp:130
-msgid "Cannot save to file "
-msgstr ""
-
-#: display.cpp:73
-msgid "Device stats"
-msgstr ""
-
-#: tuning/tuning.cpp:61
-msgid "Enable Audio codec power management"
-msgstr ""
-
-#: tuning/tuning.cpp:62
-msgid "Enable SATA link power management for /dev/sda"
-msgstr ""
-
-#: process/do_process.cpp:580
-#, c-format
-msgid ""
-"Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n"
-"\n"
-msgstr ""
-
-#: calibrate/calibrate.cpp:480
-msgid "Finishing PowerTOP power estimate calibration \n"
-msgstr ""
-
-#: display.cpp:72
-msgid "Frequency stats"
-msgstr ""
-
-#: tuning/cpufreq.cpp:42 tuning/ethernet.cpp:50 tuning/runtime.cpp:41
-#: tuning/sysfs.cpp:37 tuning/tunable.cpp:48 tuning/usb.cpp:40
-#: tuning/wifi.cpp:45
-msgid "Good"
-msgstr ""
-
-#: cpu/cpu_core.cpp:116 cpu/cpu_linux.cpp:329 cpu/cpu_package.cpp:145
-#: cpu/intel_cpus.cpp:199 cpu/intel_cpus.cpp:417 cpu/intel_cpus.cpp:618
-msgid "Idle"
-msgstr ""
-
-#: display.cpp:71
-msgid "Idle stats"
-msgstr ""
-
-#: lib.cpp:346
-msgid "Intel built in USB hub"
-msgstr ""
-
-#: main.cpp:266
-#, c-format
-msgid "Leaving PowerTOP\n"
-msgstr ""
-
-#: parameters/persistent.cpp:116
-#, c-format
-msgid "Loaded %i prior measurements\n"
-msgstr ""
-
-#: main.cpp:213
-#, c-format
-msgid "Measuring for 20 seconds\n"
-msgstr ""
-
-#: tuning/tuning.cpp:63
-msgid "NMI watchdog should be turned off"
-msgstr ""
-
-#: devices/network.cpp:159
-#, c-format
-msgid "Network interface: %s (%s)"
-msgstr ""
-
-#: display.cpp:70
-msgid "Overview"
-msgstr ""
-
-#: tuning/runtime.cpp:73
-#, c-format
-msgid "PCI Device %s has no runtime power management"
-msgstr ""
-
-#: devices/runtime_pm.cpp:223
-#, c-format
-msgid "PCI Device: %s"
-msgstr ""
-
-#: lib.cpp:344
-msgid "PS/2 Touchpad / Keyboard / Mouse"
-msgstr ""
-
-#: cpu/cpu_package.cpp:46
-#, c-format
-msgid "Package"
-msgstr ""
-
-#: calibrate/calibrate.cpp:484
-#, c-format
-msgid "Parameters after calibration:\n"
-msgstr ""
-
-#: tuning/tuning.cpp:64
-msgid "Power Aware CPU scheduler"
-msgstr ""
-
-#: process/do_process.cpp:603
-msgid "Power est.      Usage       Events/s    Category       Description\n"
-msgstr ""
-
-#: devices/device.cpp:148
-msgid "Power est.    Usage     Device name\n"
-msgstr ""
-
-#: main.cpp:172
-#, c-format
-msgid "PowerTOP "
-msgstr ""
-
-#: perf/perf.cpp:111
-#, c-format
-msgid "PowerTOP %s needs the kernel to support the 'perf' subsystem\n"
-msgstr ""
-
-#: devices/rfkill.cpp:63 devices/rfkill.cpp:67
-#, c-format
-msgid "Radio device: %s"
-msgstr ""
-
-#: tuning/runtime.cpp:47
-#, c-format
-msgid "Runtime PM for %s device %s"
-msgstr ""
-
-#: tuning/runtime.cpp:75
-#, c-format
-msgid "Runtime PM for PCI Device %s"
-msgstr ""
-
-#: lib.cpp:345
-msgid "SATA controller"
-msgstr ""
-
-#: devices/ahci.cpp:139
-#, c-format
-msgid "SATA disk: %s"
-msgstr ""
-
-#: devices/ahci.cpp:137
-#, c-format
-msgid "SATA link: %s"
-msgstr ""
-
-#: calibrate/calibrate.cpp:457
-msgid "Starting PowerTOP power estimate calibration \n"
-msgstr ""
-
-#: devices/device.cpp:141
+#: src/devices/device.cpp:177
 #, c-format
 msgid "System baseline power is estimated at %sW\n"
 msgstr ""
 
-#: devices/device.cpp:135 process/do_process.cpp:588
+#: src/devices/device.cpp:184
+msgid "Power est.    Usage     Device name\n"
+msgstr ""
+
+#: src/devices/device.cpp:186
+msgid "              Usage     Device name\n"
+msgstr ""
+
+#: src/devices/alsa.cpp:79
 #, c-format
-msgid "The battery reports a discharge rate of %sW\n"
+msgid "Audio codec %s: %s (%s)"
 msgstr ""
 
-#: process/do_process.cpp:593
+#: src/devices/alsa.cpp:81 src/devices/alsa.cpp:83
 #, c-format
-msgid "The estimated remaining time is %i minutes\n"
+msgid "Audio codec %s: %s"
 msgstr ""
 
-#: tuning/tuning.cpp:60
-msgid "Tunables"
-msgstr ""
-
-#: cpu/cpu_core.cpp:118 cpu/cpu_linux.cpp:331 cpu/cpu_package.cpp:147
-#: cpu/intel_cpus.cpp:201 cpu/intel_cpus.cpp:419
+#: src/devices/runtime_pm.cpp:225
 #, c-format
-msgid "Turbo Mode"
+msgid "PCI Device: %s"
 msgstr ""
 
-#: devices/usb.cpp:50
-#, c-format
-msgid "USB Device: %s"
-msgstr ""
-
-#: devices/usb.cpp:93 devices/usb.cpp:95
+#: src/devices/usb.cpp:51 src/devices/usb.cpp:94 src/devices/usb.cpp:96
 #, c-format
 msgid "USB device: %s"
 msgstr ""
 
-#: devices/usb.cpp:91
+#: src/devices/usb.cpp:92
 #, c-format
 msgid "USB device: %s (%s)"
 msgstr ""
 
-#: tuning/cpufreq.cpp:42 tuning/ethernet.cpp:50 tuning/runtime.cpp:41
-#: tuning/sysfs.cpp:37 tuning/tunable.cpp:50 tuning/usb.cpp:40
-#: tuning/wifi.cpp:45
+#: src/devices/ahci.cpp:140
+#, c-format
+msgid "SATA link: %s"
+msgstr ""
+
+#: src/devices/ahci.cpp:142
+#, c-format
+msgid "SATA disk: %s"
+msgstr ""
+
+#: src/devices/rfkill.cpp:65 src/devices/rfkill.cpp:69
+#, c-format
+msgid "Radio device: %s"
+msgstr ""
+
+#: src/devices/network.cpp:177
+#, c-format
+msgid "Network interface: %s (%s)"
+msgstr ""
+
+#: src/tuning/bluetooth.cpp:48
+#, c-format
+msgid "Bluetooth device interface status"
+msgstr ""
+
+#: src/tuning/cpufreq.cpp:43 src/tuning/ethernet.cpp:53
+#: src/tuning/tunable.cpp:48 src/tuning/wifi.cpp:45 src/tuning/runtime.cpp:41
+#: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:37
+msgid "Good"
+msgstr ""
+
+#: src/tuning/cpufreq.cpp:43 src/tuning/ethernet.cpp:53
+#: src/tuning/tunable.cpp:49 src/tuning/wifi.cpp:45 src/tuning/runtime.cpp:41
+#: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:37
+msgid "Bad"
+msgstr ""
+
+#: src/tuning/cpufreq.cpp:43 src/tuning/ethernet.cpp:53
+#: src/tuning/tunable.cpp:50 src/tuning/wifi.cpp:45 src/tuning/runtime.cpp:41
+#: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:37
 msgid "Unknown"
 msgstr ""
 
-#: tuning/cpufreq.cpp:45
+#: src/tuning/cpufreq.cpp:46
 #, c-format
 msgid "Using 'ondemand' cpufreq governor"
 msgstr ""
 
-#: tuning/tuning.cpp:65
+#: src/tuning/tuning.cpp:61
+msgid "Tunables"
+msgstr ""
+
+#: src/tuning/tuning.cpp:61
+msgid " <ESC> Exit | <Enter> Toggle tunable"
+msgstr ""
+
+#: src/tuning/tuning.cpp:64
+msgid "Enable Audio codec power management"
+msgstr ""
+
+#: src/tuning/tuning.cpp:65
+msgid "Enable SATA link power management for /dev/sda"
+msgstr ""
+
+#: src/tuning/tuning.cpp:66
+msgid "NMI watchdog should be turned off"
+msgstr ""
+
+#: src/tuning/tuning.cpp:67
+msgid "Power Aware CPU scheduler"
+msgstr ""
+
+#: src/tuning/tuning.cpp:68
 msgid "VM writeback timeout"
 msgstr ""
 
-#: tuning/ethernet.cpp:54
+#: src/tuning/ethernet.cpp:57
 #, c-format
 msgid "Wake-on-lan status for device %s"
 msgstr ""
 
-#: tuning/wifi.cpp:48
+#: src/tuning/wifi.cpp:48
 #, c-format
 msgid "Wireless Power Saving for interface %s"
 msgstr ""
 
-#: perf/perf.cpp:112
+#: src/tuning/runtime.cpp:47
 #, c-format
-msgid "as well as support for trace points in the kernel:\n"
+msgid "Runtime PM for %s device %s"
 msgstr ""
 
-#: cpu/cpu.cpp:75
-msgid "cpu package"
-msgstr ""
-
-#: cpu/cpu.cpp:74
+#: src/tuning/runtime.cpp:49
 #, c-format
-msgid "cpu package %i"
+msgid "%s device %s has no runtime power management"
 msgstr ""
 
-#: main.cpp:173
+#: src/tuning/runtime.cpp:73
+#, c-format
+msgid "PCI Device %s has no runtime power management"
+msgstr ""
+
+#: src/tuning/runtime.cpp:75
+#, c-format
+msgid "Runtime PM for PCI Device %s"
+msgstr ""
+
+#: src/tuning/tuningusb.cpp:55
+#, c-format
+msgid "Autosuspend for unknown USB device %s (%s:%s)"
+msgstr ""
+
+#: src/tuning/tuningusb.cpp:72 src/tuning/tuningusb.cpp:74
+#: src/tuning/tuningusb.cpp:76
+#, c-format
+msgid "Autosuspend for USB device %s [%s]"
+msgstr ""
+
+#: src/calibrate/calibrate.cpp:297
+#, c-format
+msgid "Cannot create temp file\n"
+msgstr ""
+
+#: src/calibrate/calibrate.cpp:316
+#, c-format
+msgid "Calibrating: CPU usage on %i threads\n"
+msgstr ""
+
+#: src/calibrate/calibrate.cpp:331
+#, c-format
+msgid "Calibrating: CPU wakeup power consumption\n"
+msgstr ""
+
+#: src/calibrate/calibrate.cpp:348
+#, c-format
+msgid "Calibrating USB devices\n"
+msgstr ""
+
+#: src/calibrate/calibrate.cpp:350 src/calibrate/calibrate.cpp:367
+#: src/calibrate/calibrate.cpp:375 src/calibrate/calibrate.cpp:392
+#, c-format
+msgid ".... device %s \n"
+msgstr ""
+
+#: src/calibrate/calibrate.cpp:365
+#, c-format
+msgid "Calibrating radio devices\n"
+msgstr ""
+
+#: src/calibrate/calibrate.cpp:389
+#, c-format
+msgid "Calibrating backlight\n"
+msgstr ""
+
+#: src/calibrate/calibrate.cpp:413 src/calibrate/calibrate.cpp:421
+#, c-format
+msgid "Calibrating idle\n"
+msgstr ""
+
+#: src/calibrate/calibrate.cpp:432
+#, c-format
+msgid "Calibrating: disk usage \n"
+msgstr ""
+
+#: src/calibrate/calibrate.cpp:457
+msgid "Starting PowerTOP power estimate calibration \n"
+msgstr ""
+
+#: src/calibrate/calibrate.cpp:480
+msgid "Finishing PowerTOP power estimate calibration \n"
+msgstr ""
+
+#: src/calibrate/calibrate.cpp:484
+#, c-format
+msgid "Parameters after calibration:\n"
+msgstr ""
+
+#: src/main.cpp:83
+#, c-format
+msgid "Powertop version"
+msgstr ""
+
+#: src/main.cpp:88
+#, c-format
+msgid ""
+"Usage: powertop [OPTIONS]\n"
+"\n"
+msgstr ""
+
+#: src/main.cpp:89
+#, c-format
+msgid "--debug \t run in \"debug\" mode\n"
+msgstr ""
+
+#: src/main.cpp:90
+#, c-format
+msgid "--version \t print version information\n"
+msgstr ""
+
+#: src/main.cpp:91
+#, c-format
+msgid "--calibrate \t runs powertop in calibration mode\n"
+msgstr ""
+
+#: src/main.cpp:92
+#, c-format
+msgid "--extech=devnode \t uses an Extech Power Analyzer for measurements\n"
+msgstr ""
+
+#: src/main.cpp:93
+#, c-format
+msgid "--html[=FILENAME]\t\t generate a html report\n"
+msgstr ""
+
+#: src/main.cpp:94
+#, c-format
+msgid "--csv[=FILENAME]\t\t generate a csv report\n"
+msgstr ""
+
+#: src/main.cpp:95
+#, c-format
+msgid "--time[=secs]\t\t generate a report for secs\n"
+msgstr ""
+
+#: src/main.cpp:96
+#, c-format
+msgid "--iteration[=iterations]\t\t number of times to run tests\n"
+msgstr ""
+
+#: src/main.cpp:97
+#, c-format
+msgid "--help \t\t print this help menu\n"
+msgstr ""
+
+#: src/main.cpp:99
+#, c-format
+msgid ""
+"For more help please refer to the README\n"
+"\n"
+msgstr ""
+
+#: src/main.cpp:232
+#, c-format
+msgid "Preparing to take measurements\n"
+msgstr ""
+
+#: src/main.cpp:235
+#, c-format
+msgid "Measuring %d time(s) for %d seconds each\n"
+msgstr ""
+
+#: src/main.cpp:274
+#, c-format
+msgid "PowerTOP "
+msgstr ""
+
+#: src/main.cpp:275 src/main.cpp:290
 #, c-format
 msgid "exiting...\n"
+msgstr ""
+
+#: src/main.cpp:289
+#, c-format
+msgid "Failed to mount debugfs!\n"
+msgstr ""
+
+#: src/main.cpp:405
+#, c-format
+msgid "Leaving PowerTOP\n"
 msgstr ""

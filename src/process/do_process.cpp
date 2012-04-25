@@ -26,7 +26,7 @@
 #include "interrupt.h"
 #include "timer.h"
 #include "work.h"
-#include "device.h"
+#include "processdevice.h"
 #include "../lib.h"
 #include "../report.h"
 #include "../devlist.h"

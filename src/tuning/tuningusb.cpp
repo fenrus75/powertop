@@ -26,7 +26,7 @@
 #include "tuning.h"
 #include "tunable.h"
 #include "unistd.h"
-#include "usb.h"
+#include "tuningusb.h"
 #include <string.h>
 #include <utility>
 #include <iostream>

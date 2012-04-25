@@ -1,31 +1,30 @@
-
+﻿
 
 
 Building & Installing PowerTOP
 ------------------------------
 
-just type
+To build and install PowerTOP type the following commands, 
+	./configure 
+	./make
+	./make install
 
-	make
-	make install
-
-
-
+Note: For Android (running Intel Architecture ) there is a Android.mk 
+that was provided by community members, and at this time is supported
+ mostly by community members. 
 
 Build dependencies
 ------------------
 
-PowerTOP uses C++, and expects g++ and libstdc++ to be functional
+PowerTOP uses C++, and expects g++ and libstdc++ to be functional 
+along with a glibc/pthreads development environment. 
 
-in addition to that, it needs the following components:
+in addition to that, PowerTOP requires the following components:
 
 pciutils-devel
 ncurses-devel
 zlib-devel
 libnl-devel
-
-and a functional glibc/pthreads development environment
-
 
 
 Kernel Parameters:
@@ -47,27 +46,39 @@ CONFIG_TRACEPOINTS
 CONFIG_TRACING
 CONFIG_EVENT_POWER_TRACING_DEPRECATED
 
-The patches in the patches/ subdirectory are required for PowerTOP to function
+The patches in the patches/ sub-directory are required for PowerTOP to function
 fully.
 
 
 
 Outputting a report
 -------------------
-When invoking PowerTOP without arguments, it goes into interactive mode.
-However, for reporting bugs etc there is a special reporting mode:
+When invoking PowerTOP without arguments, PowerTOP starts in interactive mode.
+However, for reporting bugs etc there is a special reporting modes:
+
+For an HTML formatted report simply execute PowerTOP with the following,  
 
 powertop --html
 
 which will create a "powertop.html" file which is static and can be sent to
-others to help diagnose power issues.
+others to help diagnose power issues. Additionally has the feature of showing 
+the tunables executions withing the report as a reference. 
 
-Note for the developers: if you make changes on the report format please
+Note for the developers: If you make changes on the report format please
 make sure that the output can be cleanly validated by the W3C Markup
 Validation Service and W3C CSS Validation Service:
  * http://validator.w3.org/#validate_by_upload
  * http://jigsaw.w3.org/css-validator/#validate_by_upload
 
+For a CVS formatted report, simply execute PowerTOP with the following, 
+
+Powertop --csv 
+
+which will create a “powertop.csv” file which is static and can be used in 
+reporting, diagnoses, and analytical data analysis. 
+
+Also you can set the number of iterations, and duration of test, in which case 
+all reports will time stamp for you. 
 
 Calibrating & Power Numbers
 ---------------------------
@@ -83,18 +94,14 @@ at least once; this will cycle through various display brightness levels
 (including "off") as well as USB device activities and some other workloads.
 
 
-
-
-
 Code from other open source projects
 ------------------------------------
 PowerTOP contains some code from other open source projects; we'd like to
 thank the authors of those projects for their work. 
 Specifically PowerTOP contains code from
 
+Parse Event Library - Copyright 2009, 2010 Red Hat Inc  Steven Rosted <srostedt@redhat.com>
 nl80211 userspace tool - Copyright 2007, 2008	Johannes Berg <johannes@sipsolutions.net>
-
-
 
 
 Extech Power Analyzer / Datalogger support
@@ -107,5 +114,4 @@ like this
 powertop --extech=/dev/ttyUSB0
 
 (where ttyUSB0 is the devicenode of the serial-to-usb adapter on my system)
-
 

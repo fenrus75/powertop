@@ -31,8 +31,8 @@
 
 
 #include "tuning.h"
-#include "sysfs.h"
-#include "usb.h"
+#include "tuningsysfs.h"
+#include "tuningusb.h"
 #include "runtime.h"
 #include "bluetooth.h"
 #include "cpufreq.h"

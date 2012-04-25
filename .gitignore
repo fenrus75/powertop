@@ -1,8 +1,8 @@
 *~
 *.o
 *.a
-powertop
-powertop.html
-css.h
-csstoh
+./src/powertop
+./src/powertop.html
+./src/css.h
+./src/csstoh
 po/powertop.pot

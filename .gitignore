@@ -7,7 +7,6 @@
 ./src/csstoh
 po/powertop.pot
 ChangeLog
-INSTALL
 Makefile.in
 aclocal.m4
 config.guess

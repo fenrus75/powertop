@@ -5,6 +5,7 @@ Building & Installing PowerTOP
 ------------------------------
 
 To build and install PowerTOP type the following commands, 
+	./autogen.sh
 	./configure 
 	./make
 	./make install

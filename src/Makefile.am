@@ -15,9 +15,11 @@ powertop_CXXFLAGS = -O2 -g -fno-omit-frame-pointer -fstack-protector -Wall -Wsha
 
 powertop_CPPFLAGS = -D_FORTIFY_SOURCE=2 $(NCURSESW_CFLAGS) $(PCIUTILS_CFLAGS) $(LIBNIL_CFLAGS) $(GLIB2_CFLAGS)
 
-AM_LDFLAGS = $(NCURSESW_LIBS) $(PCIUTILS_LIBS) $(LIBNIL_LIBS) $(LIBZ) $(NCURES_LIBS) -lpthread -lresolv ../pevent/libparseevent.la
+powertop_LDADD = ../pevent/libparseevent.la
 
-BUILT_SOURCES = css.h 
+AM_LDFLAGS = $(NCURSESW_LIBS) $(PCIUTILS_LIBS) $(LIBNIL_LIBS) $(LIBZ) $(NCURES_LIBS) -lpthread -lresolv
+
+BUILT_SOURCES = css.h
 CLEANFILES = css.h
 css.h: csstoh powertop.css
 	./csstoh powertop.css css.h

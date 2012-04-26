@@ -4,9 +4,8 @@
 <script>
 $(document).ready(function(){ 
      
-        $('#summary h2').addClass('hide');  
-	$('#summary table').addClass('hide');
-	$('#summary p').addClass('hide');		
+        $('#system h2').addClass('hide');  
+	$('#system table').addClass('hide');
         $('#cpuidle h2').addClass('hide');  
 	$('#cpuidle table').addClass('hide'); 
         $('#cpufreq h2').addClass('hide');  
@@ -27,7 +26,7 @@ $(document).ready(function(){
         $('#top').append('<div class=\"DeviceButton\"   onclick=\"toggleDevice()\">Device Info</div>'); 
         $('#top').append('<div class=\"TuningButton\"   onclick=\"toggleTuning()\">Tuning</div>'); 
 	$('#top').append('<div class=\"AllButton\"      onclick=\"toggleAll()\">All</div>'); 
-	$('#top .SystemButton').toggleClass('pressed');
+	$('#top .SummaryButton').toggleClass('pressed');
 
     }
 	);

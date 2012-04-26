@@ -875,7 +875,7 @@ void report_process_update_display(void)
 
 	if (reporttype){
 		fprintf(reportout.http_report,
-			"<h2>Overview of Software Power Consumers</h2>\n <table width=\"100%%\">\n");
+			"<div id=\"software\"><h2>Overview of Software Power Consumers</h2>\n <table width=\"100%%\">\n");
 		if (show_power)
 			fprintf(reportout.http_report,
 				"<tr><th width=\"10%%\">Power est.</th><th width=\"10%%\">Usage</th><th width=\"10%%\">Wakeups/s</th><th width=\"10%%\">GPU ops/s</th><th width=\"10%%\">Disk IO/s</th><th width=\"10%%\">GFX Wakeups/s</th><th width=\"10%%\" class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
@@ -969,7 +969,7 @@ void report_process_update_display(void)
 		}
 	}
 	if (reporttype)
-		fprintf(reportout.http_report,"</table>\n");
+		fprintf(reportout.http_report,"</table></div>\n");
 	else
 		fprintf(reportout.csv_report,"\n");
 }
@@ -990,7 +990,7 @@ void report_summary(void)
 
 	if (reporttype) {
 		fprintf(reportout.http_report,
-			"<h2>Power Consumption Summary</h2>\n");
+			"<div id=\"summary\"><h2>Power Consumption Summary</h2>\n");
 		fprintf(reportout.http_report,
 			"<p>%3.1f wakeups/second,  %3.1f GPU ops/second, %3.1f VFS ops/sec, %3.1f GFX wakes/sec and %3.1f%% CPU use</p>\n <table width=\"100%%\">\n",
 			total_wakeups(), total_gpu_ops(), total_disk_hits(), total_xwakes(), total_cpu_time()*100);
@@ -1071,7 +1071,7 @@ void report_summary(void)
 		}
 	}
 	if (reporttype)
-		fprintf(reportout.http_report,"</table>\n");
+		fprintf(reportout.http_report,"</table></div>\n");
 	else
 		fprintf(reportout.csv_report,"\n");
 }

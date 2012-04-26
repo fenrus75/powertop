@@ -43,3 +43,11 @@ src/perf/.deps/
 src/process/.deps/
 src/tuning/.deps/
 m4
+*.dirstamp
+src/css.h
+src/csstoh
+src/powertop
+*.lo
+*.la
+autom4te.cache
+remove-potcdate.sed

@@ -331,7 +331,7 @@ void report_show_open_devices(void)
 		sprintf(prev, "%s", (*target)[i]->comm);
 	}
 	if (reporttype)
-		fprintf(reportout.http_report,"</table>\n");
+		fprintf(reportout.http_report,"</table></div>\n");
 	else
 		fprintf(reportout.csv_report,"\n");
 }

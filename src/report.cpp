@@ -46,14 +46,13 @@ static void css_header(void)
 	if (!reportout.http_report)
 		return;
 
+
 #ifdef EXTERNAL_CSS_FILE
 	if (reporttype)
 		fprintf(reportout.http_report, "<link rel=\"stylesheet\" href=\"powertop.css\">\n");
 #else
 	if (reporttype) {
-		fprintf(reportout.http_report, "<style type=\"text/css\">\n");
 		fprintf(reportout.http_report, "%s\n", css);
-		fprintf(reportout.http_report, "</style>\n");
 	}
 #endif
 }
@@ -120,9 +119,7 @@ static void system_info(void)
 		return;
 
 	if (reporttype) {
-		fprintf(reportout.http_report, "<h1>PowerTOP Report</h1>\n");
-		fprintf(reportout.http_report, "<h2>System Information</h2>\n");
-		fprintf(reportout.http_report, "<table width=100%%>\n");
+		fprintf(reportout.http_report, "<div id=\"top\">\n<h1><a href=\"#top\">&nbsp;</a></h1>\n</div>\n<div id=\"system\">\n<table>");
 		fprintf(reportout.http_report, "<tr class=\"system_even\"><td width=20%%>PowerTOP Version</td><td>%s</td></tr>\n", POWERTOP_VERSION);
 	} else {
 		fprintf(reportout.csv_report, "***PowerTOP Report***, \n");
@@ -168,7 +165,7 @@ static void system_info(void)
 	if (reporttype) {
 		fprintf(reportout.http_report, "<tr class=\"system_even\"><td>OS Information</td><td>%s</td></tr>\n",
 				 str.c_str());
-		fprintf(reportout.http_report,"</table>\n");
+		fprintf(reportout.http_report,"</table></div>\n");
 	} else {
 		fprintf(reportout.csv_report,"OS Information:,\"%s\", \n",
 				 str.c_str());
@@ -214,12 +211,9 @@ void init_report_output(char *filename_str)
 void http_header_output(void) {
 	if (!reportout.http_report)
 		return;
-	fprintf(reportout.http_report, "<!DOCTYPE html PUBLIC \"-//W3C/DTD HTML 4.01//EN\">\n");
-	fprintf(reportout.http_report, "<html>\n\n <head>\n");
 
 	css_header();
 
-	fprintf(reportout.http_report, "</head>\n\n <body>\n");
 
 }
 

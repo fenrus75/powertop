@@ -239,7 +239,7 @@ void report_show_tunables(void)
 
 		if (line == 0) {
 			if(reporttype)
-				fprintf(reportout.http_report,"<h2>Software Settings in need of Tuning</h2>\n <table width=\"100%%\">\n");
+				fprintf(reportout.http_report,"<div id=\"tuning\"><h2>Software Settings in need of Tuning</h2>\n <table width=\"100%%\">\n");
 			else
 				fprintf(reportout.csv_report,"**Software Settings in need of Tuning**, \n\n");
 
@@ -324,7 +324,7 @@ void report_show_tunables(void)
 
 	if (line > 0){
 		if (reporttype)
-			fprintf(reportout.http_report,"</table>\n");
+			fprintf(reportout.http_report,"</table></div>\n");
 		else
 			fprintf(reportout.csv_report,"\n");
 	}

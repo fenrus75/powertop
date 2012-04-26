@@ -391,7 +391,7 @@ void report_display_cpu_cstates(void)
 
 	if (reporttype)
 		fprintf(reportout.http_report,
-			"<h2>Processor Idle state report</h2>\n");
+			"<div id=\"cpuidle\"><h2>Processor Idle state report</h2>\n");
 	else
 		fprintf(reportout.csv_report,
 			"**Processor Idle State Report**, \n");
@@ -572,7 +572,7 @@ void report_display_cpu_cstates(void)
 			first_pkg++;
 		}
 		if (reporttype)
-			fprintf(reportout.http_report,"</table>\n");
+			fprintf(reportout.http_report,"</table></div>\n");
 		else
 			fprintf(reportout.csv_report, "\n");
 	}
@@ -589,7 +589,7 @@ void report_display_cpu_pstates(void)
 		return;
 
 	if (reporttype)
-		fprintf(reportout.http_report, "<h2>Processor frequency report</h2>\n");
+		fprintf(reportout.http_report, "<div id=\"cpufreq\"><h2>Processor frequency report</h2>\n");
 	else
 		fprintf(reportout.csv_report, "**Processor Frequency Report**, \n");
 
@@ -767,7 +767,7 @@ void report_display_cpu_pstates(void)
 	}
 
 	if (reporttype)
-		fprintf(reportout.http_report,"</table>");
+		fprintf(reportout.http_report,"</table></div>");
 	else
 		fprintf(reportout.csv_report, "\n");
 }

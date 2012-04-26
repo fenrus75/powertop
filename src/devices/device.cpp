@@ -241,7 +241,7 @@ void show_report_devices(void)
 
 	if (reporttype)
 		fprintf(reportout.http_report,
-			"<h2>Device Power Report</h2>\n");
+			"<div id=\"device\"><h2>Device Power Report</h2>\n");
 	else
 		fprintf(reportout.csv_report,
 			"**Device Power Report**,\n");

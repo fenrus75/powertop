@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: powertop\n"
 "Report-Msgid-Bugs-To: \"power@bughost.org\"\n"
-"POT-Creation-Date: 2012-04-25 14:27-0700\n"
+"POT-Creation-Date: 2012-04-27 13:05-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,12 +67,12 @@ msgstr ""
 msgid "Turbo Mode"
 msgstr ""
 
-#: src/cpu/cpu.cpp:88
+#: src/cpu/cpu.cpp:89
 #, c-format
 msgid "cpu package %i"
 msgstr ""
 
-#: src/cpu/cpu.cpp:89
+#: src/cpu/cpu.cpp:90
 msgid "cpu package"
 msgstr ""
 

@@ -345,7 +345,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		field = pevent_find_any_field(event, "name");
 		if (!field)
 			return; /* ?? */
-		handler = (char *)trace + field->offset;
+		handler = (char *)trace + field->offset + 4;
 
 		ret = pevent_get_field_val(NULL, event, "irq", &rec, &val, 0);
 		if (ret < 0)

@@ -45,13 +45,16 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <netlink/msg.h>
 #include <netlink/attr.h>
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "nl80211.h"
 #include <asm/errno.h>
 #include <linux/genetlink.h>
 #include "iw.h"
 
 
-#ifndef CONFIG_LIBNL20
+#ifndef HAVE_LIBNL20
 /* libnl 2.0 compatibility code */
 
 static inline struct nl_handle *nl_socket_alloc(void)
@@ -73,7 +76,7 @@ static inline int __genl_ctrl_alloc_cache(struct nl_sock *h, struct nl_cache **c
 	return 0;
 }
 #define genl_ctrl_alloc_cache __genl_ctrl_alloc_cache
-#endif /* CONFIG_LIBNL20 */
+#endif /* HAVE_LIBNL20 */
 
 
 static int nl80211_init(struct nl80211_state *state)

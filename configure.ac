@@ -50,7 +50,7 @@ PKG_CHECK_MODULES([PCIUTILS], [libpci])
 
 PKG_CHECK_MODULES([LIBNIL], [libnl-1],[],[
 	PKG_CHECK_MODULES([LIBNIL], [libnl-2.0],[AC_DEFINE([HAVE_LIBNL20],[1],[Define if you have libnl-2.0 or higher])] ,[
-		PKG_CHECK_MODULES([LIBNIL], [libnl-3.0, libnl-genl-3.0],[AC_DEFINE([HAVE_LIBNL20],[1],[Define if you have libnl-3.0 or higher])] ,[AC_MSG_ERROR([libnl is required but was not found])])
+		PKG_CHECK_MODULES([LIBNIL], [libnl-3.0 libnl-genl-3.0],[AC_DEFINE([HAVE_LIBNL20],[1],[Define if you have libnl-3.0 or higher])] ,[AC_MSG_ERROR([libnl is required but was not found])])
 	])
 ])
 	

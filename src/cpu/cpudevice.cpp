@@ -29,10 +29,10 @@
 #include "../parameters/parameters.h"
 
 
-cpudevice::cpudevice(const char *classname, const char *device_name, class abstract_cpu *_cpu)
+cpudevice::cpudevice(const char *classname, const char *dev_name, class abstract_cpu *_cpu)
 {
 	strcpy(_class, classname);
-	strcpy(_cpuname, device_name);
+	strcpy(_cpuname, dev_name);
 	cpu = _cpu;
 	wake_index = get_param_index("cpu-wakeups");;
 	consumption_index = get_param_index("cpu-consumption");;
@@ -45,27 +45,27 @@ double cpudevice::power_usage(struct result_bundle *result, struct parameter_bun
 {
 	double power;
 	double factor;
-	double utilization;
+	double _utilization;
 
 	power = 0;
 	factor = get_parameter_value(wake_index, bundle);
-	utilization = get_result_value(r_wake_index, result);
+	_utilization = get_result_value(r_wake_index, result);
 
-	power += utilization * factor / 10000.0;
+	power += _utilization * factor / 10000.0;
 
 	factor = get_parameter_value(consumption_index, bundle);
-	utilization = get_result_value(r_consumption_index, result);
+	_utilization = get_result_value(r_consumption_index, result);
 
-	power += utilization * factor;
+	power += _utilization * factor;
 
 	return power;
 }
 
 double	cpudevice::utilization(void)
 {
-	double utilization;
-	utilization = get_result_value(r_consumption_index);
+	double _utilization;
+	_utilization = get_result_value(r_consumption_index);
 
-	return utilization * 100;
+	return _utilization * 100;
 
 }

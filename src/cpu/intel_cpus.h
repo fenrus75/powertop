@@ -136,4 +136,4 @@ public:
 };
 
 
-extern int is_snb;
+extern int has_c2c7_res;

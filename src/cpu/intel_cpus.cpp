@@ -49,7 +49,7 @@ static int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo)
 	return 1;
 }
 
-int is_snb;
+int has_c2c7_res;
 
 
 
@@ -96,13 +96,13 @@ void nhm_core::measurement_start(void)
 
 	c3_before    = get_msr(first_cpu, MSR_CORE_C3_RESIDENCY);
 	c6_before    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
-	if (is_snb)
+	if (has_c2c7_res)
 		c7_before    = get_msr(first_cpu, MSR_CORE_C7_RESIDENCY);
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
 	insert_cstate("core c3", _("C3 (cc3)"), 0, c3_before, 1);
 	insert_cstate("core c6", _("C6 (cc6)"), 0, c6_before, 1);
-	if (is_snb) {
+	if (has_c2c7_res) {
 		insert_cstate("core c7", _("C7 (cc7)"), 0, c7_before, 1);
 	}
 
@@ -134,7 +134,7 @@ void nhm_core::measurement_end(void)
 
 	c3_after    = get_msr(first_cpu, MSR_CORE_C3_RESIDENCY);
 	c6_after    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
-	if (is_snb)
+	if (has_c2c7_res)
 		c7_after    = get_msr(first_cpu, MSR_CORE_C7_RESIDENCY);
 	tsc_after   = get_msr(first_cpu, MSR_TSC);
 
@@ -142,7 +142,7 @@ void nhm_core::measurement_end(void)
 
 	finalize_cstate("core c3", 0, c3_after, 1);
 	finalize_cstate("core c6", 0, c6_after, 1);
-	if (is_snb)
+	if (has_c2c7_res)
 		finalize_cstate("core c7", 0, c7_after, 1);
 
 	gettimeofday(&stamp_after, NULL);
@@ -339,20 +339,20 @@ void nhm_package::measurement_start(void)
 
 	last_stamp = 0;
 
-	if (is_snb)
+	if (has_c2c7_res)
 		c2_before    = get_msr(number, MSR_PKG_C2_RESIDENCY);
 	c3_before    = get_msr(number, MSR_PKG_C3_RESIDENCY);
 	c6_before    = get_msr(number, MSR_PKG_C6_RESIDENCY);
-	if (is_snb)
+	if (has_c2c7_res)
 		c7_before    = get_msr(number, MSR_PKG_C7_RESIDENCY);
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
-	if (is_snb)
+	if (has_c2c7_res)
 		insert_cstate("pkg c2", _("C2 (pc2)"), 0, c2_before, 1);
 
 	insert_cstate("pkg c3", _("C3 (pc3)"), 0, c3_before, 1);
 	insert_cstate("pkg c6", _("C6 (pc6)"), 0, c6_before, 1);
-	if (is_snb)
+	if (has_c2c7_res)
 		insert_cstate("pkg c7", _("C7 (pc7)"), 0, c7_before, 1);
 }
 
@@ -367,11 +367,11 @@ void nhm_package::measurement_end(void)
 			children[i]->wiggle();
 
 
-	if (is_snb)
+	if (has_c2c7_res)
 		c2_after    = get_msr(number, MSR_PKG_C2_RESIDENCY);
 	c3_after    = get_msr(number, MSR_PKG_C3_RESIDENCY);
 	c6_after    = get_msr(number, MSR_PKG_C6_RESIDENCY);
-	if (is_snb)
+	if (has_c2c7_res)
 		c7_after    = get_msr(number, MSR_PKG_C7_RESIDENCY);
 	tsc_after   = get_msr(first_cpu, MSR_TSC);
 
@@ -380,11 +380,11 @@ void nhm_package::measurement_end(void)
 	time_factor = 1000000.0 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
 
 
-	if (is_snb)
+	if (has_c2c7_res)
 		finalize_cstate("pkg c2", 0, c2_after, 1);
 	finalize_cstate("pkg c3", 0, c3_after, 1);
 	finalize_cstate("pkg c6", 0, c6_after, 1);
-	if (is_snb)
+	if (has_c2c7_res)
 		finalize_cstate("pkg c7", 0, c7_after, 1);
 
 	for (i = 0; i < children.size(); i++)

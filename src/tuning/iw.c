@@ -45,10 +45,6 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <netlink/msg.h>
 #include <netlink/attr.h>
 
-#if HAVE_CONFIG_H
-#include "config.h"
-#endif
-#include "nl80211.h"
 #include <asm/errno.h>
 #include <linux/genetlink.h>
 #include "iw.h"

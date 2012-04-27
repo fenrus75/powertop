@@ -32,19 +32,22 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 */
 
-
 #include <stdbool.h>
 #include <netlink/netlink.h>
 #include <netlink/genl/genl.h>
 #include <netlink/genl/family.h>
 #include <netlink/genl/ctrl.h>
 
-#include "nl80211.h"
+#include <linux/nl80211.h>
 
 #define ETH_ALEN 6
 
-#ifndef CONFIG_LIBNL20
-#  define nl_sock nl_handle
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifndef HAVE_LIBNL20
+#define nl_sock nl_handle
 #endif
 
 struct nl80211_state {
@@ -68,6 +71,5 @@ enum id_input {
 
 int get_wifi_power_saving(const char *iface);
 int set_wifi_power_saving(const char *iface, int state);
-
 
 #endif /* __IW_H */

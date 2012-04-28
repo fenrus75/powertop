@@ -186,7 +186,18 @@ int dont_blame_me(char *comm)
 	return 0;
 }
 
+static void dbg_printf_pevent_info(struct event_format *event, struct record *rec)
+{
+	static struct trace_seq s;
 
+	event->pevent->print_raw = 1;
+	trace_seq_init(&s);
+	pevent_event_info(&s, event, rec);
+	trace_seq_putc(&s, '\n');
+	trace_seq_terminate(&s);
+	fprintf(stderr, "%.*s", s.len, s.buffer);
+	trace_seq_destroy(&s);
+}
 
 void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time)
 {

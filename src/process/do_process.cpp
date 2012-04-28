@@ -338,14 +338,19 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 	}
 	else if (strcmp(event->name, "irq_handler_entry") == 0) {
+		unsigned long long offset, len;
 		class interrupt *irq;
 		const char *handler;
 		int nr;
 
 		field = pevent_find_any_field(event, "name");
-		if (!field)
+		if (!field || !(field->flags & FIELD_IS_STRING))
 			return; /* ?? */
-		handler = (char *)trace + field->offset + sizeof(long);
+		offset = field->offset;
+		len = field->size;
+		offset = pevent_read_number(event->pevent, (char *)trace + offset, len);
+		offset &= 0xffff;
+		handler = (char *)trace + offset;
 
 		ret = pevent_get_field_val(NULL, event, "irq", &rec, &val, 0);
 		if (ret < 0)

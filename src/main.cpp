@@ -276,11 +276,13 @@ int main(int argc, char **argv)
 	int option_index;
 	int c;
 	bool wantreport = FALSE;
-	char filename[4096];;
+	char filename[4096];
 	int  iterations = 1;
 	struct statfs st_fs;
 
-	//set_new_handler(out_of_memory);
+#ifndef DISABLE_TRYCATCH
+	set_new_handler(out_of_memory);
+#endif
 
 	setlocale (LC_ALL, "");
 #ifndef DISABLE_I18N

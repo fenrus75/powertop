@@ -199,6 +199,20 @@ static void dbg_printf_pevent_info(struct event_format *event, struct record *re
 	trace_seq_destroy(&s);
 }
 
+static char * get_pevent_field_str(void *trace, struct event_format *event, struct format_field *field)
+{
+	unsigned long long offset, len;
+	if (field->flags & FIELD_IS_DYNAMIC) {
+		offset = field->offset;
+		len = field->size;
+		offset = pevent_read_number(event->pevent, (char *)trace + offset, len);
+		offset &= 0xffff;
+		return (char *)trace + offset;
+	}
+	/** no __data_loc field type*/
+	return (char *)trace + field->offset;
+}
+
 void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time)
 {
 	struct event_format *event;
@@ -226,20 +240,15 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 	if (strcmp(event->name, "sched_switch") == 0) {
 		class process *old_proc = NULL;
 		class process *new_proc  = NULL;
-		unsigned long long offset, len; 
 		const char *next_comm;
 		int next_pid;
 		int prev_pid;
 
 		field = pevent_find_any_field(event, "next_comm");
-		if (!field || !(field->flags & FIELD_IS_STRING ))
+		if (!field || !(field->flags & FIELD_IS_STRING))
 			return; /* ?? */
-		
-		offset = field->offset;
-		len = field->size;
-		offset = pevent_read_number(event->pevent, (char *)trace + offset, len);
-		offset &= 0xffff;
-		next_comm = (char *)trace + offset;
+	
+		next_comm = get_pevent_field_str(trace, event, field);
 
 		ret = pevent_get_field_val(NULL, event, "next_pid", &rec, &val, 0);
 		if (ret < 0)
@@ -299,11 +308,9 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		class power_consumer *from = NULL;
 		class process *dest_proc = NULL;  
 		class process *from_proc = NULL; 
-		unsigned long long offset, len;
 		const char *comm;
 		int flags;
 		int pid;
-
 
 		ret = pevent_get_common_field_val(NULL, event, "flags", &rec, &val, 0);
 		if (ret < 0)
@@ -330,12 +337,8 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 		if (!field || !(field->flags & FIELD_IS_STRING))
  			return; 
-		
-		offset = field->offset;
-		len = field->size;
-		offset = pevent_read_number(event->pevent, (char *)trace + offset, len);
-		offset &= 0xffff;
-		comm = (char *)trace + offset;
+
+		comm = get_pevent_field_str(trace, event, field);
 
 		ret = pevent_get_field_val(NULL, event, "pid", &rec, &val, 0);
 		if (ret < 0)
@@ -363,7 +366,6 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 	}
 	else if (strcmp(event->name, "irq_handler_entry") == 0) {
-		unsigned long long offset, len;
 		class interrupt *irq = NULL;
 		const char *handler;
 		int nr;
@@ -371,11 +373,8 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		field = pevent_find_any_field(event, "name");
 		if (!field || !(field->flags & FIELD_IS_STRING))
 			return; /* ?? */
-		offset = field->offset;
-		len = field->size;
-		offset = pevent_read_number(event->pevent, (char *)trace + offset, len);
-		offset &= 0xffff;
-		handler = (char *)trace + offset;
+
+		handler = get_pevent_field_str(trace, event, field);
 
 		ret = pevent_get_field_val(NULL, event, "irq", &rec, &val, 0);
 		if (ret < 0)

@@ -100,15 +100,15 @@ static bool set_refresh_timeout()
 static void print_usage()
 {
 	printf(_("Usage: powertop [OPTIONS]\n\n"));
-	printf(_("--debug \t run in \"debug\" mode\n"));
-	printf(_("--version \t print version information\n"));
-	printf(_("--calibrate \t runs powertop in calibration mode\n"));
+	printf(_("--debug \t\t run in \"debug\" mode\n"));
+	printf(_("--version \t\t print version information\n"));
+	printf(_("--calibrate \t\t runs powertop in calibration mode\n"));
 	printf(_("--extech=devnode \t uses an Extech Power Analyzer for measurements\n"));
-	printf(_("--html[=FILENAME]\t\t generate a html report\n"));
-	printf(_("--csv[=FILENAME]\t\t generate a csv report\n"));
-	printf(_("--time[=secs]\t\t generate a report for secs\n"));
-	printf(_("--iteration[=iterations]\t\t number of times to run tests\n"));
-	printf(_("--help \t\t print this help menu\n"));
+	printf(_("--html[=FILENAME] \t generate a html report\n"));
+	printf(_("--csv[=FILENAME] \t generate a csv report\n"));
+	printf(_("--time[=secs] \t\t generate a report for 'x' secs\n"));
+	printf(_("--iteration[=iterations] number of times to run each test\n"));
+	printf(_("--help \t\t\t print this help menu\n"));
 	printf("\n");
 	printf(_("For more help please refer to the README\n\n"));
 }

@@ -179,20 +179,24 @@ void init_report_output(char *filename_str)
 	size_t period;
 	char file_prefix[256];
 	char file_postfix[8];
+	time_t stamp;
+	char datestr[200];
 
 	string mystring = string(filename_str);
 	sprintf(file_postfix, "%s", reporttype ? "html":"csv");
 	period=mystring.find_last_of(".");
 	sprintf(file_prefix, "%s",mystring.substr(0,period).c_str());
 	if (reporttype) {
-		sprintf(reportout.filename, "%s.%s", file_prefix, file_postfix);
+                memset(&datestr, 0, 200);
+                memset(&stamp, 0, sizeof(time_t));
+                stamp=time(NULL);
+                strftime(datestr, sizeof(datestr), "%Y%m%d-%H%M%S", localtime(&stamp));
+                sprintf(reportout.filename, "%s-%s.%s", file_prefix, datestr,file_postfix);
 		reportout.http_report = fopen(reportout.filename, "wm");
 		if (!reportout.http_report) {
 			fprintf(stderr, "Cannot open output file %s (%s)\n", reportout.filename, strerror(errno));
 		}
 	}else {
-		time_t stamp;
-		char datestr[200];
 		memset(&datestr, 0, 200);
 		memset(&stamp, 0, sizeof(time_t));
 		stamp=time(NULL);

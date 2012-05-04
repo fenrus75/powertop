@@ -18,7 +18,9 @@ Build dependencies
 ------------------
 
 PowerTOP uses C++, and expects g++ and libstdc++ to be functional 
-along with a glibc/pthreads development environment. 
+along with a glibc/pthreadsi, autoconf, automake, and libtool in the 
+development environment.
+ 
 
 in addition to that, PowerTOP requires the following components:
 

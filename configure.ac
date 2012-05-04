@@ -58,9 +58,9 @@ PKG_CHECK_MODULES([LIBZ], [zlib],[],[
 
 has_libnl=no
 PKG_CHECK_MODULES([LIBNL], [libnl-1], [has_libnl=yes],[
-	AC_CHECK_LIB([libnl], [main],[has_libnl=yes AC_SUBST(LIBNL_LIBS, "-lnl"," ")],[
+	AC_CHECK_LIB([libnl], [main],[has_libnl=yes AC_SUBST(LIBNL_LIBS, "-lnl","Update LIBNL_LIBS based on AC_CHECK_LIB")],[
 		PKG_CHECK_MODULES([LIBNL], [libnl-2.0 libnl-3.0 libnl-genl-3.0], [has_libnl=yes AC_DEFINE([HAVE_LIBNL20],[1],[Define if you have libnl-2.0 or higher])],[ 
-			AC_CHECK_LIB([libnl libnl-genl], [main],[has_libnl=yes AC_SUBST(LIBNL_LIBS, "-lnl"," ") AC_DEFINE([HAVE_LIBNL20],[1],[Define if you have libnl-3.0 or higher])],[dummy=no])
+			AC_CHECK_LIB([libnl>= 2.0 libnl-genl], [main],[has_libnl=yes AC_SUBST(LIBNL_LIBS, "-lnl","Update LIBNL_LIBS based on AC_CHECK_LIB") AC_DEFINE([HAVE_LIBNL20],[1],[Define if you have libnl-2.0 or higher])],[dummy=no])
 		])
 	])
 ])

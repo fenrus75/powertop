@@ -228,6 +228,10 @@ void report_show_tunables(void)
 
 	sort_tunables();
 
+
+	if (reporttype)
+		fprintf(reportout.http_report, "<div id=\"tuning\">\n");
+
 	line = 0;
 	for (i = 0; i < all_tunables.size(); i++) {
 		int gb;
@@ -239,7 +243,7 @@ void report_show_tunables(void)
 
 		if (line == 0) {
 			if(reporttype)
-				fprintf(reportout.http_report,"<div id=\"tuning\"><h2>Software Settings in need of Tuning</h2>\n <table width=\"100%%\">\n");
+				fprintf(reportout.http_report,"<h2>Software Settings in need of Tuning</h2>\n <table width=\"100%%\">\n");
 			else
 				fprintf(reportout.csv_report,"**Software Settings in need of Tuning**, \n\n");
 

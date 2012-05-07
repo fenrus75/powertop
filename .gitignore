@@ -1,10 +1,9 @@
 *~
 *.o
 *.a
-./src/powertop
-./src/powertop.html
-./src/css.h
-./src/csstoh
+*.html
+*.csv
+*.powertop
 po/powertop.pot
 ChangeLog
 Makefile.in
@@ -31,6 +30,9 @@ po/Makefile
 po/POTFILES
 po/nl.gmo
 po/stamp-po
+src/powertop
+src/css.h
+src/csstoh
 src/Makefile.in
 src/.deps/
 src/Makefile
@@ -44,10 +46,8 @@ src/process/.deps/
 src/tuning/.deps/
 m4
 *.dirstamp
-src/css.h
-src/csstoh
-src/powertop
 *.lo
 *.la
 autom4te.cache
 remove-potcdate.sed
+compile

@@ -4,19 +4,17 @@
 AC_PREREQ([2.68])
 AC_LANG([C++])
 AC_INIT([powertop], [1.98], [power@bughost.org])
-AM_INIT_AUTOMAKE([1.10 -Wall -Werror foreign])
+AM_INIT_AUTOMAKE([-Wall -Werror foreign ])
 AC_CONFIG_FILES([Makefile src/Makefile pevent/Makefile po/Makefile.in])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h])
-#AC_SUBST(LIBTOOL_DEPS)
-#AC_LTDL_DLLIB
 GETTEXT_PACKAGE=powertop
 AC_SUBST(GETTEXT_PACKAGE)
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.18])
 
-AM_PROG_AR
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 # Checks for programs.
 AC_PROG_CPP
 AC_PROG_CXX

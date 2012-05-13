@@ -38,6 +38,10 @@
 
 #include "../cpu/cpu.h"
 
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || (__cplusplus >= 201103L)
+# define USE_DECLTYPE
+#endif
+
 class perf_bundle_event: public perf_event
 {
 public:
@@ -58,7 +62,11 @@ void perf_bundle_event::handle_event(struct perf_event_header *header, void *coo
 	buffer = (unsigned char *)malloc(header->size);
 	memcpy(buffer, header, header->size);
 
+#ifdef USE_DECLTYPE
+	vector = (decltype(vector))cookie;
+#else
 	vector = (typeof(vector))cookie;
+#endif
 	vector->push_back(buffer);
 }
 

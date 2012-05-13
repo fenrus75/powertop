@@ -80,7 +80,7 @@ static const struct option long_options[] =
 
 static void print_version()
 {
-	printf(_("Powertop version" POWERTOP_VERSION ", compiled on "__DATE__ "\n"));
+	printf(_("Powertop version" POWERTOP_VERSION ", compiled on " __DATE__ "\n"));
 }
 
 static bool set_refresh_timeout()

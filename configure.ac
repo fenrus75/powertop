@@ -56,7 +56,7 @@ PKG_CHECK_MODULES([LIBZ], [zlib],[],[
 
 has_libnl_ver=0
 PKG_CHECK_MODULES([LIBNL], [libnl-1], [has_libnl_ver=1], [
-	AC_SEARCH_LIBS([nl_socket_alloc], [nl], [has_libnl_ver=2], [
+	AC_SEARCH_LIBS([nl_socket_alloc], [libnl-2.0], [has_libnl_ver=2], [
 		     PKG_CHECK_MODULES([LIBNL], [libnl-3.0 libnl-genl-3.0], [has_libnl_ver=3],
 				       [AC_SEARCH_LIBS([nl_socket_alloc], [nl-3 nl-genl-3], [has_libnl_ver=3], [], [])])
 	], [])

@@ -145,7 +145,7 @@ void power_supply_callback(const char *d_name)
 	while (file) {
 		file.getline(line, 4096);
 
-		if (strstr(line, "POWER_SUPPLY_STATUS") && strstr(line, "POWER_SUPPLY_STATUS"))
+		if (strstr(line, "POWER_SUPPLY_STATUS") && strstr(line, "Discharging"))
 		      discharging = true;
 	}
 	file.close();

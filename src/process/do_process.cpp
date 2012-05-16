@@ -985,7 +985,7 @@ void report_process_update_display(void)
 
 		if (show_power) {
 			if (reporttype)
-				fprintf(reportout.http_report,"<tr class=\"%s\"><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td></td><td class=\"process_power\">%s</td><td>%s</td><td>%s</td></tr>\n",
+				fprintf(reportout.http_report,"<tr class=\"%s\"><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td class=\"process_power\">%s</td><td>%s</td><td>%s</td></tr>\n",
 					process_class(lines), power, usage, wakes, gpus, disks, xwakes, name, pretty_print(all_power[i]->description(), descr, 128));
 			else
 				fprintf(reportout.csv_report,"%s, %s, %s, %s, %s, %s, %s, %s,\n",

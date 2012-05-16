@@ -120,7 +120,7 @@ static void system_info(void)
 
 	if (reporttype) {
 		fprintf(reportout.http_report, "<div id=\"top\">\n<h1><a href=\"#top\">&nbsp;</a></h1>\n</div>\n<div id=\"system\">\n<table>");
-		fprintf(reportout.http_report, "<tr class=\"system_even\"><td width=20%%>PowerTOP Version</td><td>%s</td></tr>\n", POWERTOP_VERSION);
+		fprintf(reportout.http_report, "<tr class=\"system_even\"><td width=\"20%%\">PowerTOP Version</td><td>%s</td></tr>\n", POWERTOP_VERSION);
 	} else {
 		fprintf(reportout.csv_report, "***PowerTOP Report***, \n");
 		fprintf(reportout.csv_report, "**System Information**, \n");

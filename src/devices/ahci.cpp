@@ -258,12 +258,20 @@ void create_all_ahcis(void)
 	while (1) {
 		class ahci *bl;
 		ofstream file;
+		ifstream check_file;
 		entry = readdir(dir);
 		if (!entry)
 			break;
 		if (entry->d_name[0] == '.')
 			continue;
 		sprintf(filename, "/sys/class/scsi_host/%s/ahci_alpm_accounting", entry->d_name);
+
+		check_file.open(filename, ios::in);
+		check_file.get();
+		check_file.close();
+		if (check_file.bad())
+			continue;
+		
 		file.open(filename, ios::in);
 		if (!file)
 			continue;

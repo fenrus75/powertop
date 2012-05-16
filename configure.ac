@@ -3,19 +3,18 @@
 
 AC_PREREQ([2.68])
 AC_LANG([C++])
-AC_INIT([powertop], [1.98], [power@bughost.org])
-AM_INIT_AUTOMAKE([1.10 -Wall -Werror foreign])
+AC_INIT([powertop], [2.0], [power@bughost.org])
+AM_INIT_AUTOMAKE([-Wall -Werror foreign ])
 AC_CONFIG_FILES([Makefile src/Makefile pevent/Makefile po/Makefile.in])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h])
-#AC_SUBST(LIBTOOL_DEPS)
-#AC_LTDL_DLLIB
 GETTEXT_PACKAGE=powertop
 AC_SUBST(GETTEXT_PACKAGE)
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.18])
 
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 # Checks for programs.
 AC_PROG_CPP
 AC_PROG_CXX
@@ -46,33 +45,30 @@ AC_FUNC_REALLOC
 AC_FUNC_STRTOD
 AC_CHECK_FUNCS([fdatasync getpagesize gettimeofday memmove memset mkdir munmap pow realpath regcomp select setlocale socket sqrt strcasecmp strchr strdup strerror strncasecmp strstr strtoul strtoull])
 
-PKG_CHECK_MODULES([NCURSES], [ncurses],[],[
-	AC_CHECK_LIB([ncurses], [main],[AC_SUBST(NCURSES_LIBS, "-lncurses"," ")],AC_MSG_ERROR([ncurses is required but was not found]))
-]) 
+AC_SEARCH_LIBS([delwin], [ncursesw ncurses], [], AC_MSG_ERROR([ncurses is required but was not found]), [])
+
 PKG_CHECK_MODULES([PCIUTILS], [libpci],[],[
-	AC_CHECK_LIB([libpci], [main],[AC_SUBST(PCIUTILS_LIBS, "-lpci"," ")],AC_MSG_ERROR([libpci is required but was not found]))
+	AC_SEARCH_LIBS([pci_get_dev], [pci], [], AC_MSG_ERROR([libpci is required but was not found]), [])
 ]) 
 PKG_CHECK_MODULES([LIBZ], [zlib],[],[
-	AC_CHECK_LIB([zlib], [main],[AC_SUBST(LIBZ_LIBS, "-lz"," ")],AC_MSG_ERROR([zlib is required but was not found]))
+	AC_SEARCH_LIBS([deflate], [z], [], AC_MSG_ERROR([zlib is required but was not found]), [])
 ]) 
 
-has_libnl=no
-PKG_CHECK_MODULES([LIBNL], [libnl-1], [has_libnl=yes],[
-	AC_CHECK_LIB([libnl], [main],[has_libnl=yes AC_SUBST(LIBNL_LIBS, "-lnl"," ")],[
-		PKG_CHECK_MODULES([LIBNL], [libnl-2.0 libnl-3.0 libnl-genl-3.0], [has_libnl=yes AC_DEFINE([HAVE_LIBNL20],[1],[Define if you have libnl-2.0 or higher])],[ 
-			AC_CHECK_LIB([libnl libnl-genl], [main],[has_libnl=yes AC_SUBST(LIBNL_LIBS, "-lnl"," ") AC_DEFINE([HAVE_LIBNL20],[1],[Define if you have libnl-3.0 or higher])],[dummy=no])
-		])
-	])
+has_libnl_ver=0
+PKG_CHECK_MODULES([LIBNL], [libnl-1], [has_libnl_ver=1], [
+	AC_SEARCH_LIBS([nl_socket_alloc], [nl], [has_libnl_ver=2], [
+		     PKG_CHECK_MODULES([LIBNL], [libnl-3.0 libnl-genl-3.0], [has_libnl_ver=3],
+				       [AC_SEARCH_LIBS([nl_socket_alloc], [nl-3 nl-genl-3], [has_libnl_ver=3], [], [])])
+	], [])
 ])
-if (test "${has_libnl}" = "no"); then
+if (test "$has_libnl_ver" -eq 0); then
 	AC_MSG_ERROR(libnl is required but not found)
 fi
+if (test "$has_libnl_ver" -gt 1); then
+	AC_DEFINE([HAVE_LIBNL20], [1], [Define if you have libnl-2.0 or higher])
+fi
 
-AC_CHECK_LIB([pthread], [pthread_create],[AC_SUBST(PTHREAD_LIBS, "-lpthread"," ")] , AC_MSG_ERROR([libpthread is required but was not found]))
-
-# FIXME: Replace `main' with a function in `-lresolv':
-AC_CHECK_LIB([resolv], [main],[AC_SUBST(RESOLV_LIBS, "-lresolv"," ")], AC_MSG_ERROR([libresolv is required but was not found]))
-
-
+AC_SEARCH_LIBS([pthread_create], [pthread], [], AC_MSG_ERROR([libpthread is required but was not found]), [])
+AC_SEARCH_LIBS([inet_aton], [resolv], [], AC_MSG_ERROR([libresolv is required but was not found]), [])
 
 AC_OUTPUT

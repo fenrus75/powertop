@@ -36,8 +36,8 @@
 #define _(STRING)    (STRING)
 #endif
 
-#define POWERTOP_VERSION "1.98 beta 1"
-#define POWERTOP_SHORT_VERSION "1.98"
+#define POWERTOP_VERSION "v2.0"
+#define POWERTOP_SHORT_VERSION "2.0"
 
 
 extern int get_max_cpu(void);

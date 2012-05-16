@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: powertop\n"
 "Report-Msgid-Bugs-To: \"power@bughost.org\"\n"
-"POT-Creation-Date: 2012-04-27 13:05-0700\n"
+"POT-Creation-Date: 2012-05-10 12:53-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,12 +67,12 @@ msgstr ""
 msgid "Turbo Mode"
 msgstr ""
 
-#: src/cpu/cpu.cpp:89
+#: src/cpu/cpu.cpp:90
 #, c-format
 msgid "cpu package %i"
 msgstr ""
 
-#: src/cpu/cpu.cpp:90
+#: src/cpu/cpu.cpp:91
 msgid "cpu package"
 msgstr ""
 
@@ -206,28 +206,28 @@ msgstr ""
 msgid "Intel built in USB hub"
 msgstr ""
 
-#: src/process/do_process.cpp:787
+#: src/process/do_process.cpp:816
 #, c-format
 msgid ""
 "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n"
 "\n"
 msgstr ""
 
-#: src/process/do_process.cpp:795 src/devices/device.cpp:171
+#: src/process/do_process.cpp:824 src/devices/device.cpp:171
 #, c-format
 msgid "The battery reports a discharge rate of %sW\n"
 msgstr ""
 
-#: src/process/do_process.cpp:800
+#: src/process/do_process.cpp:829
 #, c-format
 msgid "The estimated remaining time is %i minutes\n"
 msgstr ""
 
-#: src/process/do_process.cpp:813
+#: src/process/do_process.cpp:842
 msgid "Power est.      Usage       Events/s    Category       Description\n"
 msgstr ""
 
-#: src/process/do_process.cpp:815
+#: src/process/do_process.cpp:844
 msgid "                Usage       Events/s    Category       Description\n"
 msgstr ""
 
@@ -482,17 +482,17 @@ msgstr ""
 
 #: src/main.cpp:103
 #, c-format
-msgid "--debug \t run in \"debug\" mode\n"
+msgid "--debug \t\t run in \"debug\" mode\n"
 msgstr ""
 
 #: src/main.cpp:104
 #, c-format
-msgid "--version \t print version information\n"
+msgid "--version \t\t print version information\n"
 msgstr ""
 
 #: src/main.cpp:105
 #, c-format
-msgid "--calibrate \t runs powertop in calibration mode\n"
+msgid "--calibrate \t\t runs powertop in calibration mode\n"
 msgstr ""
 
 #: src/main.cpp:106
@@ -502,27 +502,27 @@ msgstr ""
 
 #: src/main.cpp:107
 #, c-format
-msgid "--html[=FILENAME]\t\t generate a html report\n"
+msgid "--html[=FILENAME] \t generate a html report\n"
 msgstr ""
 
 #: src/main.cpp:108
 #, c-format
-msgid "--csv[=FILENAME]\t\t generate a csv report\n"
+msgid "--csv[=FILENAME] \t generate a csv report\n"
 msgstr ""
 
 #: src/main.cpp:109
 #, c-format
-msgid "--time[=secs]\t\t generate a report for secs\n"
+msgid "--time[=secs] \t\t generate a report for 'x' secs\n"
 msgstr ""
 
 #: src/main.cpp:110
 #, c-format
-msgid "--iteration[=iterations]\t\t number of times to run tests\n"
+msgid "--iteration[=iterations] number of times to run each test\n"
 msgstr ""
 
 #: src/main.cpp:111
 #, c-format
-msgid "--help \t\t print this help menu\n"
+msgid "--help \t\t\t print this help menu\n"
 msgstr ""
 
 #: src/main.cpp:113
@@ -542,22 +542,22 @@ msgstr ""
 msgid "Measuring %d time(s) for %d seconds each\n"
 msgstr ""
 
-#: src/main.cpp:293
+#: src/main.cpp:277
 #, c-format
 msgid "PowerTOP "
 msgstr ""
 
-#: src/main.cpp:294 src/main.cpp:309
+#: src/main.cpp:278 src/main.cpp:367
 #, c-format
 msgid "exiting...\n"
 msgstr ""
 
-#: src/main.cpp:308
+#: src/main.cpp:366
 #, c-format
 msgid "Failed to mount debugfs!\n"
 msgstr ""
 
-#: src/main.cpp:424
+#: src/main.cpp:433
 #, c-format
 msgid "Leaving PowerTOP\n"
 msgstr ""

@@ -172,8 +172,13 @@ void write_sysfs(const string &filename, const string &value)
 	file.open(filename.c_str(), ios::out);
 	if (!file)
 		return;
-	file << value;
-	file.close();
+	try 
+	{
+		file << value;
+		file.close();
+	} catch (std::exception &exc) {
+		return;
+	}
 }
 
 int read_sysfs(const string &filename, bool *ok)
@@ -187,10 +192,17 @@ int read_sysfs(const string &filename, bool *ok)
 			*ok = false;
 		return 0;
 	}
-	file >> i;
+	try
+	{
+		file >> i;
+		if (ok)
+			*ok = true;
+	} catch (std::exception &exc) {
+		if (ok)
+			*ok = "false";
+		i = 0;
+	}
 	file.close();
-	if (ok)
-		*ok = true;
 	return i;
 }
 
@@ -203,11 +215,17 @@ string read_sysfs_string(const string &filename)
 	file.open(filename.c_str(), ios::in);
 	if (!file)
 		return "";
-	file.getline(content, 4096);
-	file.close();
-	c = strchr(content, '\n');
-	if (c)
-		*c = 0;
+	try
+	{
+		file.getline(content, 4096);
+		file.close();
+		c = strchr(content, '\n');
+		if (c)
+			*c = 0;
+	} catch (std::exception &exc) {
+		file.close();
+		return "";
+	}
 	return content;
 }
 
@@ -224,11 +242,17 @@ string read_sysfs_string(const char *format, const char *param)
 	file.open(filename, ios::in);
 	if (!file)
 		return "";
-	file.getline(content, 4096);
-	file.close();
-	c = strchr(content, '\n');
-	if (c)
-		*c = 0;
+	try
+	{
+		file.getline(content, 4096);
+		file.close();
+		c = strchr(content, '\n');
+		if (c)
+			*c = 0;
+	} catch (std::exception &exc) {
+		file.close();
+		return "";
+	}
 	return content;
 }
 

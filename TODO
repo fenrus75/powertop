@@ -1,89 +1,13 @@
-
-
-
-
-Needed between beta and 2.0 final
+Needed for 2.1
 ----------------------------------
 
-
-* MUST use the 2.6.38 new stable tracepoints where available
-* we're somehow broken on 64 bit. again.
 * more translations / strings
 * end user documentation
-* investigate tick_sched_timer and why it wakes up
-* find if we can do more detailed reporting about tasklet(softirq)
-	* deal with tasklets -- needs kernel patch
-* device events/sec into the process view
-* USB urbs as events/sec counter
-* check various tunables (see powertop 1.x) into a tunable checklist
-  - needs porting over of all the powertop 1.x tunables:
-	  - hpet timer? (is that still relevant?)
-	  - tv out??
-	  - noatime
-* pretty print estimate to only do 2 decimal places instead of 3
 
 
-
-postponed to 2.1
-----------------
-* delta mode (Tony)
+Needed for 2.2
+----------------------------------
 * audio calibration? Need appropriate sample
-* have a "show me my process" page
 
-done
-----
-* on NHM, cpu P state stats accumulate and don't reset at measurment time
-* rescan for USB devices each measurement
-* brightness calibration
-* rfkill calibration
-* wakeup calibration
-* disk calibration
-* in learning, find the biggest delta and only adjust that parameter, not 
-  all of them as they go
-* in learning, try slightly lower base power
-* display device power in power top 20
-* find out why CPU power and sum of components doesn't add up
-* exclude xorg/etc from wakeup blame backcounting
-* GPU ops in interrupt context -> do not account special ?
-* try to see if we can account graphics ops done by X to the guy who woke up
-  X
-* don't save measurements < 5 seconds
-* auto save every 10 or so measurements
-* between 500 - 1000 measurements, start replacing (at random) existing ones
-  with a hard cap at 1000
-* network interfaces as device
-* network interfaces -- packet counters as events
-  from /proc/net/dev
-* identify kernel threads in the process list for visual differentiation
-* deal with the "no measurements" case better with default values
-* add device runtime PM stats for pci, spi and i2c
-* looks like events/sec keep adding up for processes
-* Readable PCI names for runtime PM pci devices
-* debug why wakeups sometimes go to all 0's
-  -looks like I fixed it, keep an eye on it
-* pretty print estimates to only show 2 significant places cleanly
-* pretty print various kernel pieces
-* deal with debugfs not being in /sys/kernel/debug
-* if you plug in the AC during a run, the battery code is not detecting that
-* status bar at the bottom
-* health report (reporting mode, not interactive) needs to include devices that don't support runtime PM
-* for unknown USB devices, list VID/PID
-* move the 2 data files somewhere sane
-* inode dirty trace point
-* find out why CPU %age and C state C0 %age don't mesh sometimes
-* "report" mode
-* detect missing kernel options for PERF / too old kernels and report
-  something helpful to the user
-* detect not running as root and exit gracefully
-* usage documentation / readme sufficient for people to get going
-* internationalization!
-* show "enter" is a toggle key in the tunables tab
-* lsof to show who is keeping the audio busy 
-* Add battery time left estimation back
-* there is a filedescriptor leak! -- or so it seems. Can't reproduce the
-  report anymore
-* find "underlying device" and group power by that in the overview
-* htmlize UTF8 mu
-* fix memory leaks
-	 -- growth in memory seems to not be there.. it's just exit leaks...
-	    yawn.
+Nice to Have
+----------------------------------

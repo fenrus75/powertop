@@ -66,7 +66,7 @@ static uint64_t get_msr(int cpu, uint64_t offset)
 		fd = sprintf(msr_path, "/dev/msr%d", cpu);
 
 		if (access(msr_path, R_OK) != 0){
-			fprintf(stderr, "msr reg not found");
+			fprintf(stderr, _("msr reg not found"));
 			exit(-2);
 		}
 	}
@@ -76,7 +76,7 @@ static uint64_t get_msr(int cpu, uint64_t offset)
 	retval = pread(fd, &msr, sizeof msr, offset);
 	if (retval != sizeof msr) {
 		reset_display();
-		fprintf(stderr, "pread cpu%d 0x%llx : ", cpu, (unsigned long long)offset);
+		fprintf(stderr, _("pread cpu%d 0x%llx : "), cpu, (unsigned long long)offset);
 		fprintf(stderr, "%s\n", strerror(errno));
 		exit(-2);
 	}
@@ -100,10 +100,10 @@ void nhm_core::measurement_start(void)
 		c7_before    = get_msr(first_cpu, MSR_CORE_C7_RESIDENCY);
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
-	insert_cstate("core c3", _("C3 (cc3)"), 0, c3_before, 1);
-	insert_cstate("core c6", _("C6 (cc6)"), 0, c6_before, 1);
+	insert_cstate("core c3", "C3 (cc3)", 0, c3_before, 1);
+	insert_cstate("core c6", "C6 (cc6)", 0, c6_before, 1);
 	if (has_c2c7_res) {
-		insert_cstate("core c7", _("C7 (cc7)"), 0, c7_before, 1);
+		insert_cstate("core c7", "C7 (cc7)", 0, c7_before, 1);
 	}
 
 

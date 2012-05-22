@@ -80,7 +80,7 @@ static const struct option long_options[] =
 
 static void print_version()
 {
-	printf(_("Powertop version" POWERTOP_VERSION ", compiled on " __DATE__ "\n"));
+	printf(_("PowerTOP version" POWERTOP_VERSION ", compiled on " __DATE__ "\n"));
 }
 
 static bool set_refresh_timeout()
@@ -220,7 +220,7 @@ void one_measurement(int seconds)
 void out_of_memory()
 {
 	reset_display();
-	printf("Out of memory. Aborting...\n");
+	printf(_("Out of memory. Aborting...\n"));
 	abort();
 }
 
@@ -382,7 +382,7 @@ int main(int argc, char **argv)
 			case 'h': /* html report */
 				wantreport = TRUE;
 				reporttype = 1;
-				sprintf(filename, "%s", optarg ? optarg : "powertop.html" );
+				sprintf(filename, "%s", optarg ? optarg : "PowerTOP.html" );
 				break;
 
 			case 't':
@@ -396,7 +396,7 @@ int main(int argc, char **argv)
 			case 'C': /* csv report*/
 				wantreport = TRUE;
 				reporttype = 0;
-				sprintf(filename, "%s", optarg ? optarg : "powertop.csv");
+				sprintf(filename, "%s", optarg ? optarg : "PowerTOP.csv");
 				break;
 			case '?': /* Unknown option */
 				/* getopt_long already printed an error message. */

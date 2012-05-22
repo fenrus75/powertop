@@ -194,7 +194,7 @@ void init_report_output(char *filename_str)
                 sprintf(reportout.filename, "%s-%s.%s", file_prefix, datestr,file_postfix);
 		reportout.http_report = fopen(reportout.filename, "wm");
 		if (!reportout.http_report) {
-			fprintf(stderr, "Cannot open output file %s (%s)\n", reportout.filename, strerror(errno));
+			fprintf(stderr, _("Cannot open output file %s (%s)\n"), reportout.filename, strerror(errno));
 		}
 	}else {
 		memset(&datestr, 0, 200);
@@ -204,7 +204,7 @@ void init_report_output(char *filename_str)
 		sprintf(reportout.filename, "%s-%s.%s", file_prefix, datestr,file_postfix);
 		reportout.csv_report = fopen(reportout.filename, "wm");
 		if (!reportout.csv_report) {
-			fprintf(stderr, "Cannot open output file %s (%s)\n", reportout.filename, strerror(errno));
+			fprintf(stderr, _("Cannot open output file %s (%s)\n"), reportout.filename, strerror(errno));
 		}
 	}
 
@@ -223,7 +223,7 @@ void http_header_output(void) {
 
 void finish_report_output(void)
 {
-	printf("PowerTOP outputing using base filename %s\n", reportout.filename);
+	printf(_("PowerTOP outputing using base filename %s\n"), reportout.filename);
 
 	if (reportout.http_report){
 		fprintf(reportout.http_report, "</body>\n\n </html>\n");

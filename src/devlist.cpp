@@ -306,11 +306,11 @@ void report_show_open_devices(void)
 	sort(target->begin(), target->end(), devlist_sort);
 
 	if (reporttype) {
-		fprintf(reportout.http_report,_("<h2>Process device activity</h2>\n <table width=\"100%%\">\n"));
-		fprintf(reportout.http_report,_("<tr><th class=\"device\" width=\"40%%\">Process</th><th class=\"device\">Device</th></tr>\n"));
+		fprintf(reportout.http_report,"<h2>Process device activity</h2>\n <table width=\"100%%\">\n");
+		fprintf(reportout.http_report,"<tr><th class=\"device\" width=\"40%%\">Process</th><th class=\"device\">Device</th></tr>\n");
 	}else {
-		fprintf(reportout.csv_report,_("**Process Device Activity**, \n\n"));
-		fprintf(reportout.csv_report,_("Process, Device, \n"));
+		fprintf(reportout.csv_report,"**Process Device Activity**, \n\n");
+		fprintf(reportout.csv_report,"Process, Device, \n");
 	}
 
 	for (i = 0; i < target->size(); i++) {

@@ -1,0 +1,6 @@
+[main]
+host = https://www.transifex.net
+[PowerTOP.devel-english-powertop-pot-file]
+file_filter=<lang>.po
+source_lang=en
+

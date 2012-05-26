@@ -32,7 +32,6 @@
 #include <string>
 #include <ctype.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include <math.h>
 #include <stdlib.h>
 

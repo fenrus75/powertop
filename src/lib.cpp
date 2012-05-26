@@ -158,13 +158,6 @@ void set_max_cpu(int cpu)
 }
 
 
-bool stringless::operator()(const char * const & lhs, const char * const & rhs) const
-{
-	if (strcmp(lhs, rhs) < 0)
-		return true;
-	return false;
-}
-
 void write_sysfs(const string &filename, const string &value)
 {
 	ofstream file;

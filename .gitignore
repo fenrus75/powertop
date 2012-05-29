@@ -50,3 +50,4 @@ m4
 autom4te.cache
 remove-potcdate.sed
 compile
+stamp-po

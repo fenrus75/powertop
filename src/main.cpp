@@ -42,6 +42,7 @@
 #include "perf/perf.h"
 #include "perf/perf_bundle.h"
 #include "lib.h"
+#include "../config.h"
 
 
 #include "devices/device.h"
@@ -349,8 +350,8 @@ int main(int argc, char **argv)
 
 	setlocale (LC_ALL, "");
 #ifndef DISABLE_I18N
-	bindtextdomain ("powertop", "/usr/share/locale");
-	textdomain ("powertop");
+	bindtextdomain (PACKAGE, LOCALEDIR);
+	textdomain (PACKAGE);
 #endif
 
 	while (1) { /* parse commandline options */

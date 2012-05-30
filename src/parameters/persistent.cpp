@@ -119,6 +119,7 @@ void load_results(const char *filename)
 	}
 
 	file.close();
+	// '%i" is for count, do not translate
 	printf(_("Loaded %i prior measurements\n"), count);
 }
 
@@ -136,7 +137,7 @@ void save_parameters(const char *filename)
 
 	file.open(pathname, ios::out);
 	if (!file) {
-		cout << _("Cannot save to file ") << pathname << "\n";
+		cout << _("Cannot save to file") << pathname << "\n";
 		return;
 	}
 
@@ -161,7 +162,7 @@ void load_parameters(const char *filename)
 
 	file.open(pathname, ios::in);
 	if (!file) {
-		cout << _("Cannot load from file ") << pathname << "\n";
+		cout << _("Cannot load from file") << pathname << "\n";
 		return;
 	}
 

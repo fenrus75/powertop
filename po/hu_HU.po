@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Márton Németh <nemeth.marton@gmail.com>, 2012.
 # Márton Németh <nm127@freemail.hu>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"power@bughost.org\"\n"
 "POT-Creation-Date: 2012-05-10 12:53-0700\n"
-"PO-Revision-Date: 2012-05-29 05:28+0000\n"
+"PO-Revision-Date: 2012-05-30 06:43+0000\n"
 "Last-Translator: Márton Németh <nemeth.marton@gmail.com>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.net/projects/p/PowerTOP/language/hu_HU/)\n"
 "MIME-Version: 1.0\n"
@@ -20,16 +21,16 @@ msgstr ""
 
 #: src/parameters/persistent.cpp:46 src/parameters/persistent.cpp:139
 msgid "Cannot save to file "
-msgstr "Nem tudtam menteni a következő fájlba: "
+msgstr "Nem lehet menteni a következő fájlba: "
 
 #: src/parameters/persistent.cpp:78 src/parameters/persistent.cpp:164
 msgid "Cannot load from file "
-msgstr "Nem tudtam betölteni a következő fájlból: "
+msgstr "Nem lehet betölteni a következő fájlból: "
 
 #: src/parameters/persistent.cpp:122
 #, c-format
 msgid "Loaded %i prior measurements\n"
-msgstr "%i korábbi mérést betöltöttem\n"
+msgstr "%i korábbi mérés betöltve\n"
 
 #: src/display.cpp:71
 msgid "Overview"
@@ -37,15 +38,15 @@ msgstr "Áttekintés"
 
 #: src/display.cpp:72
 msgid "Idle stats"
-msgstr "Üresjárat statisztika"
+msgstr "Üresjárat-statisztika"
 
 #: src/display.cpp:73
 msgid "Frequency stats"
-msgstr "Frekvencia statisztika"
+msgstr "Frekvenciastatisztika"
 
 #: src/display.cpp:74
 msgid "Device stats"
-msgstr "Eszköz statisztika"
+msgstr "Eszközstatisztika"
 
 #: src/display.cpp:131
 msgid " <ESC> Exit | "
@@ -140,7 +141,7 @@ msgstr "Aktuális"
 msgid ""
 "<h2>Process device activity</h2>\n"
 " <table width=\"100%%\">\n"
-msgstr "<h2>Eszközfolyamatok aktivitása</h2>\n <table width=\"100%%\">\n"
+msgstr "<h2>Folyamatok eszközaktivitása</h2>\n <table width=\"100%%\">\n"
 
 #: src/devlist.cpp:310
 #, c-format
@@ -154,7 +155,7 @@ msgstr "<tr><th class=\"device\" width=\"40%%\">Folyamat</th><th class=\"device\
 msgid ""
 "**Process Device Activity**, \n"
 "\n"
-msgstr "**Eszközfolyamatok aktivitása**, \n\n"
+msgstr "**Folyamatok eszközaktivitása**, \n\n"
 
 #: src/devlist.cpp:313
 #, c-format
@@ -206,7 +207,7 @@ msgstr "SATA vezérlő"
 
 #: src/lib.cpp:355
 msgid "Intel built in USB hub"
-msgstr "beépített Intel USB hub"
+msgstr "Beépített Intel USB hub"
 
 #: src/process/do_process.cpp:816
 #, c-format
@@ -218,7 +219,7 @@ msgstr "Becsült teljesítmény: %5.1f    Mért teljesítmény: %5.1f    Összeg
 #: src/process/do_process.cpp:824 src/devices/device.cpp:171
 #, c-format
 msgid "The battery reports a discharge rate of %sW\n"
-msgstr "A telep %sW kisülési arányt jelent\n"
+msgstr "A akkumulátor %sW kisülési sebességet jelent\n"
 
 #: src/process/do_process.cpp:829
 #, c-format
@@ -236,12 +237,12 @@ msgstr "                Használat   Esemény/s   Kategória      Leírás\n"
 #: src/perf/perf.cpp:121
 #, c-format
 msgid "PowerTOP %s needs the kernel to support the 'perf' subsystem\n"
-msgstr "A PowerTOP %s verziójának szüksége van arra, hogy a rendszermag támogassa a ,,perf'' alrendszert\n"
+msgstr "A PowerTOP %s verziójának szüksége van arra, hogy a rendszermag támogassa a „perf” alrendszert\n"
 
 #: src/perf/perf.cpp:122
 #, c-format
 msgid "as well as support for trace points in the kernel:\n"
-msgstr "valamint a nyomkövetési pontokra (trace points) is a rendszermagban:\n"
+msgstr "valamint a nyomkövetési pontokra is a rendszermagban:\n"
 
 #: src/perf/perf.cpp:123
 #, c-format
@@ -255,7 +256,7 @@ msgstr "CONFIG_PERF_EVENTS=y\nCONFIG_PERF_COUNTERS=y\nCONFIG_TRACEPOINTS=y\nCONF
 #: src/devices/device.cpp:177
 #, c-format
 msgid "System baseline power is estimated at %sW\n"
-msgstr "%sW a becsült rendszer alapkonfiguráció teljesítmény\n"
+msgstr "%sW a rendszer becsült alapteljesítménye\n"
 
 #: src/devices/device.cpp:184
 msgid "Power est.    Usage     Device name\n"
@@ -268,12 +269,12 @@ msgstr "                Használat   Eszköz név\n"
 #: src/devices/alsa.cpp:79
 #, c-format
 msgid "Audio codec %s: %s (%s)"
-msgstr "Hang kodek %s: %s (%s)"
+msgstr "Hangkodek %s: %s (%s)"
 
 #: src/devices/alsa.cpp:81 src/devices/alsa.cpp:83
 #, c-format
 msgid "Audio codec %s: %s"
-msgstr "Hang kodek %s: %s"
+msgstr "Hangkodek %s: %s"
 
 #: src/devices/runtime_pm.cpp:225
 #, c-format
@@ -308,12 +309,12 @@ msgstr "Rádiós eszköz: %s"
 #: src/devices/network.cpp:177
 #, c-format
 msgid "Network interface: %s (%s)"
-msgstr "Hálózati illesztőegység: %s (%s)"
+msgstr "Hálózati csatoló: %s (%s)"
 
 #: src/tuning/bluetooth.cpp:48
 #, c-format
 msgid "Bluetooth device interface status"
-msgstr "Bluetooth eszköz illesztőegység státusz"
+msgstr "Bluetooth eszközcsatoló állapota"
 
 #: src/tuning/cpufreq.cpp:43 src/tuning/ethernet.cpp:53
 #: src/tuning/tunable.cpp:48 src/tuning/wifi.cpp:45 src/tuning/runtime.cpp:41
@@ -336,7 +337,7 @@ msgstr "Ismeretlen"
 #: src/tuning/cpufreq.cpp:46
 #, c-format
 msgid "Using 'ondemand' cpufreq governor"
-msgstr "Igény szerinti (ondemand) cpufreq vezérlő használt"
+msgstr "Igény szerinti (ondemand) cpufreq vezérlő használata"
 
 #: src/tuning/tuning.cpp:60
 msgid "Enable Audio codec power management"
@@ -374,7 +375,7 @@ msgstr "Felébredés hálózati eseményre (wake-on-lan) állapot a(z) %s eszkö
 #: src/tuning/wifi.cpp:48
 #, c-format
 msgid "Wireless Power Saving for interface %s"
-msgstr "Vezetéknélküli teljesítménymegtakarítás a(z) %s illesztőegységen"
+msgstr "Vezeték nélküli teljesítménymegtakarítás a(z) %s illesztőegységen"
 
 #: src/tuning/runtime.cpp:47
 #, c-format
@@ -399,13 +400,13 @@ msgstr "Futásidejű energiagazdálkodás a(z) %s PCI eszközön"
 #: src/tuning/tuningusb.cpp:55
 #, c-format
 msgid "Autosuspend for unknown USB device %s (%s:%s)"
-msgstr "Önműködő alvás a(z) %s (%s:%s) ismereltlen USB eszközön"
+msgstr "Automatikus felfüggesztés a(z) %s (%s:%s) ismeretlen USB eszközön"
 
 #: src/tuning/tuningusb.cpp:72 src/tuning/tuningusb.cpp:74
 #: src/tuning/tuningusb.cpp:76
 #, c-format
 msgid "Autosuspend for USB device %s [%s]"
-msgstr "Önműködő alvás a(z) %s [%s] USB eszközön"
+msgstr "Automatikus felfüggesztés a(z) %s [%s] USB eszközön"
 
 #: src/calibrate/calibrate.cpp:297
 #, c-format
@@ -459,7 +460,7 @@ msgstr "PowerTop teljesítménybecslés kalibrálás indítása \n"
 
 #: src/calibrate/calibrate.cpp:480
 msgid "Finishing PowerTOP power estimate calibration \n"
-msgstr "PowerTop teljesítménybecslés kalibrálás befejezése \n"
+msgstr "PowerTop teljesítménybecslés-kalibrálás befejezése \n"
 
 #: src/calibrate/calibrate.cpp:484
 #, c-format
@@ -473,7 +474,7 @@ msgstr "PowerTop verzió"
 
 #: src/main.cpp:89
 msgid "Set refresh time out"
-msgstr "Frissítés időtúllépésének beállítása"
+msgstr "Frissítés időkorlát leteltének beállítása"
 
 #: src/main.cpp:102
 #, c-format
@@ -485,7 +486,7 @@ msgstr "Használat: powertop [OPCIÓK]\n\n"
 #: src/main.cpp:103
 #, c-format
 msgid "--debug \t\t run in \"debug\" mode\n"
-msgstr "--debug \t\t futtatás nyomkövetési módban\n"
+msgstr "--debug \t\t futtatás hibakeresési módban\n"
 
 #: src/main.cpp:104
 #, c-format
@@ -505,7 +506,7 @@ msgstr "--extech=devnode \t Extech Power Analyzer eszköz használata a mérése
 #: src/main.cpp:107
 #, c-format
 msgid "--html[=FILENAME] \t generate a html report\n"
-msgstr "--html[=FILENAME] \t HTML jelentésm készítése\n"
+msgstr "--html[=FILENAME] \t HTML jelentés készítése\n"
 
 #: src/main.cpp:108
 #, c-format

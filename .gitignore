@@ -27,7 +27,7 @@ pevent/Makefile
 pevent/Makefile.in
 po/Makefile
 po/POTFILES
-po/nl.gmo
+po/*.gmo
 po/stamp-po
 src/powertop
 src/css.h

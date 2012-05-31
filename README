@@ -73,7 +73,7 @@ Validation Service and W3C CSS Validation Service:
  * http://validator.w3.org/#validate_by_upload
  * http://jigsaw.w3.org/css-validator/#validate_by_upload
 
-For a CVS formatted report, simply execute PowerTOP with the following, 
+For a CSV formatted report, simply execute PowerTOP with the following, 
 
 Powertop --csv 
 

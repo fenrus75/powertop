@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([powertop], [2.0], [power@bughost.org])
+AC_INIT([powertop], [2.0], [powertop@lists.01.org])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign ])
 AC_LANG([C++])
 AC_CONFIG_FILES([Makefile src/Makefile pevent/Makefile po/Makefile.in])

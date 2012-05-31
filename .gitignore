@@ -60,3 +60,4 @@ remove-potcdate.sed
 compile
 stamp-po
 ABOUT-NLS
+ar-lib

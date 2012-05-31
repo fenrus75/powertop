@@ -99,18 +99,18 @@ static bool set_refresh_timeout()
 
 static void print_usage()
 {
-	printf(_("Usage: powertop [OPTIONS]\n\n"));
-	printf(_("--debug \t\t run in \"debug\" mode\n"));
-	printf(_("--version \t\t print version information\n"));
-	printf(_("--calibrate \t\t runs powertop in calibration mode\n"));
-	printf(_("--extech=devnode \t uses an Extech Power Analyzer for measurements\n"));
-	printf(_("--html[=FILENAME] \t generate a html report\n"));
-	printf(_("--csv[=FILENAME] \t generate a csv report\n"));
-	printf(_("--time[=secs] \t\t generate a report for 'x' secs\n"));
-	printf(_("--iteration[=iterations] number of times to run each test\n"));
-	printf(_("--help \t\t\t print this help menu\n"));
+	sprintf("%s\n\n",_("Usage: powertop [OPTIONS]"));
+	sprintf("--debug %s \t\t\n",_("run in \"debug\" mode"));
+	sprintf("--version %s \t\t",_(" print version information"));
+	sprintf("--calibrate %s \t\t\n",_("runs powertop in calibration mode"));
+	sprintf("--extech%s \t\n",_("[=devnode] uses an Extech Power Analyzer for measurements"));
+	sprintf("--html%s \t %s\n",_("[=FILENAME]"),_("generate a html report"));
+	sprintf("--csv%s \t %s\n",_("[=FILENAME]"),_("generate a csv report"));
+	sprintf("--time%s \t\n",_("[=secs] generate a report for 'x' secs"));
+	sprintf("--iteration%s\n", _("[=iterations] number of times to run each test"));
+	sprintf("--help %s \t\t\t\n",_(" print this help menu"));
 	printf("\n");
-	printf(_("For more help please refer to the README\n\n"));
+	sprintf("%s\n\n",_("For more help please refer to the README"));
 }
 
 static void do_sleep(int seconds)
@@ -220,7 +220,7 @@ void one_measurement(int seconds)
 void out_of_memory()
 {
 	reset_display();
-	printf(_("Out of memory. Aborting...\n"));
+	sprintf("%s...\n",_("PowerTOP is out of memory. PowerTOP is Aborting"));
 	abort();
 }
 
@@ -251,7 +251,7 @@ void report(int time, int iterations, char *file)
 	fprintf(stderr, _("Preparing to take measurements\n"));
 	utf_ok = 0;
 	one_measurement(1);
-	fprintf(stderr, _("Measuring %d time(s) for %d seconds each\n"),iterations,time);
+	fprintf(stderr, _("Taking %d measurement(s) for a duration of %d second(s) each.\n"),iterations,time);
 	for (int i=0; i != iterations; i++){
 		init_report_output(file);
 		initialize_tuning();
@@ -439,7 +439,7 @@ int main(int argc, char **argv)
 #ifndef DISABLE_NCURSES
 	endwin();
 #endif
-	printf(_("Leaving PowerTOP\n"));
+	sprintf("%s\n", _("Leaving PowerTOP"));
 
 	end_process_data();
 	clear_process_data();

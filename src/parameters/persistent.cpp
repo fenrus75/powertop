@@ -136,7 +136,7 @@ void save_parameters(const char *filename)
 
 	file.open(pathname, ios::out);
 	if (!file) {
-		cout << _("Cannot save to file ") << pathname << "\n";
+		cout << _("Cannot save to file ")<< " "<< pathname << "\n";
 		return;
 	}
 
@@ -161,7 +161,7 @@ void load_parameters(const char *filename)
 
 	file.open(pathname, ios::in);
 	if (!file) {
-		cout << _("Cannot load from file ") << pathname << "\n";
+		cout << _("Cannot load from file ")<< " "<< pathname << "\n";
 		return;
 	}
 

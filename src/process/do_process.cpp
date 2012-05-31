@@ -839,14 +839,13 @@ void process_update_display(void)
 		wprintw(win, "\n");
 
 
-	wprintw(win, "Summary: %3.1f wakeups/second,  %3.1f GPU ops/second, %3.1f VFS ops/sec and %3.1f%% CPU use\n\n",
-		total_wakeups(), total_gpu_ops(), total_disk_hits(), total_cpu_time()*100);
+	wprintw(win, "%s: %3.1f %s,  %3.1f %s, %3.1f %s %3.1f%% %s\n\n",_("Summary"), total_wakeups(), _("wakeups/second"), total_gpu_ops(), _("GPU ops/seconds"), total_disk_hits(), _("VFS ops/sec and"), total_cpu_time()*100, _("CPU use"));
 
 
 	if (show_power)
-		wprintw(win, _("Power est.      Usage       Events/s    Category       Description\n"));
+		wprintw(win, "%s              %s       %s    %s       %s\n", _("Power est."), _("Usage"), _("Events/s"), _("Category"), _("Description"));
 	else
-		wprintw(win, _("                Usage       Events/s    Category       Description\n"));
+		wprintw(win, "                %s       %s    %s       %s\n", _("Usage"), _("Events/s"), _("Category"), _("Description"));
 
 	for (i = 0; i < all_power.size(); i++) {
 		char power[16];
@@ -909,13 +908,13 @@ void report_process_update_display(void)
 
 	if (reporttype){
 		fprintf(reportout.http_report,
-			"<div id=\"software\"><h2>Overview of Software Power Consumers</h2>\n <table width=\"100%%\">\n");
+			"<div id=\"software\"><h2>%s</h2>\n <table width=\"100%%\">\n",_("Overview of Software Power Consumers"));
 		if (show_power)
 			fprintf(reportout.http_report,
-				"<tr><th width=\"10%%\">Power est.</th><th width=\"10%%\">Usage</th><th width=\"10%%\">Wakeups/s</th><th width=\"10%%\">GPU ops/s</th><th width=\"10%%\">Disk IO/s</th><th width=\"10%%\">GFX Wakeups/s</th><th width=\"10%%\" class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+				"<tr><th width=\"10%%\">%s</th><th width=\"10%%\">%s</th><th width=\"10%%\">%s</th><th width=\"10%%\">%s</th><th width=\"10%%\">%s</th><th width=\"10%%\">%s</th><th width=\"10%%\" class=\"process\">%s</th><th class=\"process\">%s</th></tr>\n",_("Power est."), _("Usage"), _("Wakeups/s"),_("GPU ops/s"),_("Disk IO/s"), _("GFX Wakeups/s"),_("Category"),_("Description"));
 		else
 			fprintf(reportout.http_report,
-				"<tr><th width=\"10%%\">Usage</th><th width=\"10%%\">Wakeups/s</th><th width=\"10%%\">GPU ops/s</th><th width=\"10%%\">Disk IO/s</th><th width=\"10%%\">GFX Wakeups/s</th><th width=\"10%%\" class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+				"<tr><th width=\"10%%\">%s</th><th width=\"10%%\">%s</th><th width=\"10%%\">%s</th><th width=\"10%%\">%s</th><th width=\"10%%\">%s</th><th width=\"10%%\" class=\"process\">%s</th><th class=\"process\">%s</th></tr>\n",_("Usage"), _("Wakeups/s"),_("GPU ops/s"),_("Disk IO/s"), _("GFX Wakeups/s"),_("Category"),_("Description"));
 	}else {
 		fprintf(reportout.csv_report,"**Overview of Software Power Consumers**, \n\n");
 		if (show_power)
@@ -1024,17 +1023,19 @@ void report_summary(void)
 
 	if (reporttype) {
 		fprintf(reportout.http_report,
-			"<div id=\"summary\"><h2>Power Consumption Summary</h2>\n");
+			"<div id=\"summary\"><h2>%s</h2>\n",_("Power Consumption Summary"));
 		fprintf(reportout.http_report,
-			"<p>%3.1f wakeups/second,  %3.1f GPU ops/second, %3.1f VFS ops/sec, %3.1f GFX wakes/sec and %3.1f%% CPU use</p>\n <table width=\"100%%\">\n",
-			total_wakeups(), total_gpu_ops(), total_disk_hits(), total_xwakes(), total_cpu_time()*100);
+			"<p>%3.1f %s,  %3.1f %s, %3.1f %s, %3.1f %s %3.1f%% %s</p>\n <table width=\"100%%\">\n",
+			total_wakeups(), _("wakeups/second"), total_gpu_ops(),_("GPU ops/second"), total_disk_hits(),
+			_("VFS ops/sec"), total_xwakes(),_("GFX wakes/sec and"), total_cpu_time()*100, _("CPU use"));
 
 		if (show_power)
 			fprintf(reportout.http_report,
-		"<tr><th width=\"10%%\">Power est.</th><th width=\"10%%\">Usage</th><th width=\"10%%\">Events/s</th><th width=\"10%%\" class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+			"<tr><th width=\"10%%\">%s</th><th width=\"10%%\">%s</th><th width=\"10%%\">%s</th><th width=\"10%%\" class=\"process\">%s</th><th class=\"process\">%s</th></tr>\n", _("Power est."), _("Usage"), _("Events/s"),_("Category"),_("Description"));
+
 		else
 		fprintf(reportout.http_report,
-		"<tr><th width=\"10%%\">Usage</th><th width=\"10%%\">Events/s</th><th width=\"10%%\" class=\"process\">Category</th><th class=\"process\">Description</th></tr>\n");
+		"<tr><th width=\"10%%\">%s</th><th width=\"10%%\">%s</th><th width=\"10%%\" class=\"process\">%s</th><th class=\"process\">%s</th></tr>\n", _("Usage"), _("Events/s"),_("Category"),_("Description"));
 
 	}else {
 		fprintf(reportout.csv_report,
@@ -1194,3 +1195,4 @@ void clear_process_data(void)
 		perf_events->release();
 	delete perf_events;
 }
+

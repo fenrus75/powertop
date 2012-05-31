@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: powertop 2.0\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
-"POT-Creation-Date: 2012-05-31 10:51-0700\n"
+"POT-Creation-Date: 2012-05-31 14:03-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,25 +17,17 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/parameters/persistent.cpp:46
+#: src/parameters/persistent.cpp:46 src/parameters/persistent.cpp:140
 msgid "Cannot save to file "
 msgstr ""
 
-#: src/parameters/persistent.cpp:78
+#: src/parameters/persistent.cpp:78 src/parameters/persistent.cpp:165
 msgid "Cannot load from file "
 msgstr ""
 
 #: src/parameters/persistent.cpp:123
 #, c-format
 msgid "Loaded %i prior measurements\n"
-msgstr ""
-
-#: src/parameters/persistent.cpp:140
-msgid "Cannot save to file"
-msgstr ""
-
-#: src/parameters/persistent.cpp:165
-msgid "Cannot load from file"
 msgstr ""
 
 #: src/display.cpp:71
@@ -55,7 +47,7 @@ msgid "Device stats"
 msgstr ""
 
 #: src/display.cpp:131
-msgid " <ESC> Exit | "
+msgid "Exit"
 msgstr ""
 
 #: src/cpu/cpu_core.cpp:46 src/cpu/cpu_core.cpp:190 src/cpu/intel_cpus.cpp:296
@@ -173,12 +165,88 @@ msgstr ""
 msgid "The estimated remaining time is %i hours, %i minutes\n"
 msgstr ""
 
-#: src/process/do_process.cpp:847
-msgid "Power est.      Usage       Events/s    Category       Description\n"
+#: src/process/do_process.cpp:842
+msgid "Summary"
 msgstr ""
 
-#: src/process/do_process.cpp:849
-msgid "                Usage       Events/s    Category       Description\n"
+#: src/process/do_process.cpp:842 src/process/do_process.cpp:1029
+msgid "wakeups/second"
+msgstr ""
+
+#: src/process/do_process.cpp:842
+msgid "GPU ops/seconds"
+msgstr ""
+
+#: src/process/do_process.cpp:842
+msgid "VFS ops/sec and"
+msgstr ""
+
+#: src/process/do_process.cpp:842 src/process/do_process.cpp:1030
+msgid "CPU use"
+msgstr ""
+
+#: src/process/do_process.cpp:846 src/process/do_process.cpp:914
+#: src/process/do_process.cpp:1034
+msgid "Power est."
+msgstr ""
+
+#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
+#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+msgid "Usage"
+msgstr ""
+
+#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
+#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+msgid "Events/s"
+msgstr ""
+
+#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
+#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+msgid "Category"
+msgstr ""
+
+#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
+#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+msgid "Description"
+msgstr ""
+
+#: src/process/do_process.cpp:911
+msgid "Overview of Software Power Consumers"
+msgstr ""
+
+#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+msgid "Wakeups/s"
+msgstr ""
+
+#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+msgid "GPU ops/s"
+msgstr ""
+
+#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+msgid "Disk IO/s"
+msgstr ""
+
+#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+msgid "GFX Wakeups/s"
+msgstr ""
+
+#: src/process/do_process.cpp:1026
+msgid "Power Consumption Summary"
+msgstr ""
+
+#: src/process/do_process.cpp:1029
+msgid "GPU ops/second"
+msgstr ""
+
+#: src/process/do_process.cpp:1030
+msgid "VFS ops/sec"
+msgstr ""
+
+#: src/process/do_process.cpp:1030
+msgid "GFX wakes/sec and"
 msgstr ""
 
 #: src/perf/perf.cpp:121
@@ -415,67 +483,64 @@ msgid "Set refresh time out"
 msgstr ""
 
 #: src/main.cpp:103
-#, c-format
-msgid ""
-"Usage: powertop [OPTIONS]\n"
-"\n"
+msgid "Usage: powertop [OPTIONS]"
 msgstr ""
 
 #: src/main.cpp:104
-#, c-format
-msgid "--debug \t\t run in \"debug\" mode\n"
+msgid "run in \"debug\" mode"
 msgstr ""
 
 #: src/main.cpp:105
-#, c-format
-msgid "--version \t\t print version information\n"
+msgid "print version information"
 msgstr ""
 
 #: src/main.cpp:106
-#, c-format
-msgid "--calibrate \t\t runs powertop in calibration mode\n"
+msgid "runs powertop in calibration mode"
 msgstr ""
 
 #: src/main.cpp:107
-#, c-format
-msgid "--extech=devnode \t uses an Extech Power Analyzer for measurements\n"
+msgid "[=devnode]"
+msgstr ""
+
+#: src/main.cpp:107
+msgid "uses an Extech Power Analyzer for measurements"
+msgstr ""
+
+#: src/main.cpp:108 src/main.cpp:109
+msgid "[=FILENAME]"
 msgstr ""
 
 #: src/main.cpp:108
-#, c-format
-msgid "--html[=FILENAME] \t generate a html report\n"
+msgid "generate a html report"
 msgstr ""
 
 #: src/main.cpp:109
-#, c-format
-msgid "--csv[=FILENAME] \t generate a csv report\n"
+msgid "generate a csv report"
 msgstr ""
 
 #: src/main.cpp:110
-#, c-format
-msgid "--time[=secs] \t\t generate a report for 'x' secs\n"
+msgid "[=seconds]"
+msgstr ""
+
+#: src/main.cpp:110
+msgid "generate a report for 'x' seconds"
 msgstr ""
 
 #: src/main.cpp:111
-#, c-format
-msgid "--iteration[=iterations] number of times to run each test\n"
+msgid "[=iterations] number of times to run each test"
 msgstr ""
 
 #: src/main.cpp:112
-#, c-format
-msgid "--help \t\t\t print this help menu\n"
+msgid "print this help menu"
 msgstr ""
 
 #: src/main.cpp:114
-#, c-format
-msgid ""
-"For more help please refer to the README\n"
-"\n"
+msgid "For more help please refer to the README"
 msgstr ""
 
 #: src/main.cpp:224
 #, c-format
-msgid "Out of memory. Aborting...\n"
+msgid "PowerTOP is out of memory. PowerTOP is Aborting"
 msgstr ""
 
 #: src/main.cpp:252
@@ -485,7 +550,7 @@ msgstr ""
 
 #: src/main.cpp:255
 #, c-format
-msgid "Measuring %d time(s) for %d seconds each\n"
+msgid "Taking %d measurement(s) for a duration of %d second(s) each.\n"
 msgstr ""
 
 #: src/main.cpp:278
@@ -505,5 +570,5 @@ msgstr ""
 
 #: src/main.cpp:443
 #, c-format
-msgid "Leaving PowerTOP\n"
+msgid "Leaving PowerTOP"
 msgstr ""

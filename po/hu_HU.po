@@ -1,33 +1,34 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Intel Corporation
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Márton Németh <nemeth.marton@gmail.com>, 2012.
 # Márton Németh <nm127@freemail.hu>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
-"Report-Msgid-Bugs-To: \"power@bughost.org\"\n"
-"POT-Creation-Date: 2012-05-10 12:53-0700\n"
+"Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
+"POT-Creation-Date: 2012-05-31 14:03-0700\n"
 "PO-Revision-Date: 2012-05-30 06:43+0000\n"
 "Last-Translator: Márton Németh <nemeth.marton@gmail.com>\n"
-"Language-Team: Hungarian (Hungary) (http://www.transifex.net/projects/p/PowerTOP/language/hu_HU/)\n"
+"Language-Team: Hungarian (Hungary) (http://www.transifex.net/projects/p/"
+"PowerTOP/language/hu_HU/)\n"
+"Language: hu_HU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: hu_HU\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: src/parameters/persistent.cpp:46 src/parameters/persistent.cpp:139
+#: src/parameters/persistent.cpp:46 src/parameters/persistent.cpp:140
 msgid "Cannot save to file "
 msgstr "Nem lehet menteni a következő fájlba: "
 
-#: src/parameters/persistent.cpp:78 src/parameters/persistent.cpp:164
+#: src/parameters/persistent.cpp:78 src/parameters/persistent.cpp:165
 msgid "Cannot load from file "
 msgstr "Nem lehet betölteni a következő fájlból: "
 
-#: src/parameters/persistent.cpp:122
+#: src/parameters/persistent.cpp:123
 #, c-format
 msgid "Loaded %i prior measurements\n"
 msgstr "%i korábbi mérés betöltve\n"
@@ -49,8 +50,8 @@ msgid "Device stats"
 msgstr "Eszközstatisztika"
 
 #: src/display.cpp:131
-msgid " <ESC> Exit | "
-msgstr " <ESC> Kilépés | "
+msgid "Exit"
+msgstr ""
 
 #: src/cpu/cpu_core.cpp:46 src/cpu/cpu_core.cpp:190 src/cpu/intel_cpus.cpp:296
 #, c-format
@@ -79,6 +80,16 @@ msgstr "CPU tok %i"
 msgid "cpu package"
 msgstr "CPU tok"
 
+#: src/cpu/cpu.cpp:925
+#, c-format
+msgid "cpu_idle event returned no state?\n"
+msgstr ""
+
+#: src/cpu/cpu.cpp:940
+#, c-format
+msgid "power or cpu_frequecny event returned no state?\n"
+msgstr ""
+
 #: src/cpu/cpu_linux.cpp:92
 msgid "C0 polling"
 msgstr "C0 ciklikus lekérdezés"
@@ -99,33 +110,15 @@ msgstr "tok"
 msgid "  Package"
 msgstr "  tok"
 
-#: src/cpu/intel_cpus.cpp:103
-msgid "C3 (cc3)"
-msgstr "C3 (cc3)"
+#: src/cpu/intel_cpus.cpp:69
+#, c-format
+msgid "msr reg not found"
+msgstr ""
 
-#: src/cpu/intel_cpus.cpp:104
-msgid "C6 (cc6)"
-msgstr "C6 (cc6)"
-
-#: src/cpu/intel_cpus.cpp:106
-msgid "C7 (cc7)"
-msgstr "C7 (cc7)"
-
-#: src/cpu/intel_cpus.cpp:351
-msgid "C2 (pc2)"
-msgstr "C2 (pc2)"
-
-#: src/cpu/intel_cpus.cpp:353
-msgid "C3 (pc3)"
-msgstr "C3 (pc3)"
-
-#: src/cpu/intel_cpus.cpp:354
-msgid "C6 (pc6)"
-msgstr "C6 (pc6)"
-
-#: src/cpu/intel_cpus.cpp:356
-msgid "C7 (pc7)"
-msgstr "C7 (pc7)"
+#: src/cpu/intel_cpus.cpp:79
+#, c-format
+msgid "pread cpu%d 0x%llx : "
+msgstr ""
 
 #: src/cpu/intel_cpus.cpp:529
 msgid "C0 active"
@@ -136,122 +129,143 @@ msgstr "C0 aktív"
 msgid "Actual"
 msgstr "Aktuális"
 
-#: src/devlist.cpp:309
-#, c-format
-msgid ""
-"<h2>Process device activity</h2>\n"
-" <table width=\"100%%\">\n"
-msgstr "<h2>Folyamatok eszközaktivitása</h2>\n <table width=\"100%%\">\n"
-
-#: src/devlist.cpp:310
-#, c-format
-msgid ""
-"<tr><th class=\"device\" width=\"40%%\">Process</th><th "
-"class=\"device\">Device</th></tr>\n"
-msgstr "<tr><th class=\"device\" width=\"40%%\">Folyamat</th><th class=\"device\">Eszköz</th></tr>\n"
-
-#: src/devlist.cpp:312
-#, c-format
-msgid ""
-"**Process Device Activity**, \n"
-"\n"
-msgstr "**Folyamatok eszközaktivitása**, \n\n"
-
-#: src/devlist.cpp:313
-#, c-format
-msgid "Process, Device, \n"
-msgstr "Folyamat, Eszköz, \n"
-
-#: src/lib.cpp:82
-#, c-format
-msgid "%9lli"
-msgstr "%9lli"
-
-#: src/lib.cpp:86
-#, c-format
-msgid "%4lli MHz"
-msgstr "%4lli MHz"
-
-#: src/lib.cpp:88
-#, c-format
-msgid "%6lli MHz"
-msgstr "%6lli MHz"
-
-#: src/lib.cpp:93
-#, c-format
-msgid "%4.2f GHz"
-msgstr "%4.2f GHz"
-
-#: src/lib.cpp:95
-#, c-format
-msgid "%3.1f GHz"
-msgstr "%3.1f GHz"
-
-#: src/lib.cpp:241
+#: src/lib.cpp:257
 #, c-format
 msgid "%7sW"
 msgstr "%7sW"
 
-#: src/lib.cpp:244
+#: src/lib.cpp:260
 #, c-format
 msgid "    0 mW"
 msgstr "    0 mW"
 
-#: src/lib.cpp:353
+#: src/lib.cpp:369
 msgid "PS/2 Touchpad / Keyboard / Mouse"
 msgstr "PS/2 tapipad / billentyűzet / egér"
 
-#: src/lib.cpp:354
+#: src/lib.cpp:370
 msgid "SATA controller"
 msgstr "SATA vezérlő"
 
-#: src/lib.cpp:355
+#: src/lib.cpp:371
 msgid "Intel built in USB hub"
 msgstr "Beépített Intel USB hub"
 
-#: src/process/do_process.cpp:816
+#: src/process/do_process.cpp:818
 #, c-format
 msgid ""
 "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n"
 "\n"
-msgstr "Becsült teljesítmény: %5.1f    Mért teljesítmény: %5.1f    Összeg: %5.1f\n\n"
+msgstr ""
+"Becsült teljesítmény: %5.1f    Mért teljesítmény: %5.1f    Összeg: %5.1f\n"
+"\n"
 
-#: src/process/do_process.cpp:824 src/devices/device.cpp:171
+#: src/process/do_process.cpp:829 src/devices/device.cpp:171
 #, c-format
 msgid "The battery reports a discharge rate of %sW\n"
 msgstr "A akkumulátor %sW kisülési sebességet jelent\n"
 
-#: src/process/do_process.cpp:829
-#, c-format
-msgid "The estimated remaining time is %i minutes\n"
+#: src/process/do_process.cpp:834
+#, fuzzy, c-format
+msgid "The estimated remaining time is %i hours, %i minutes\n"
 msgstr "%i perc a becsült hátralévő idő\n"
 
 #: src/process/do_process.cpp:842
-msgid "Power est.      Usage       Events/s    Category       Description\n"
-msgstr "Becsült telj.   Használat   Esemény/s   Kategória      Leírás\n"
+msgid "Summary"
+msgstr ""
 
-#: src/process/do_process.cpp:844
-msgid "                Usage       Events/s    Category       Description\n"
-msgstr "                Használat   Esemény/s   Kategória      Leírás\n"
+#: src/process/do_process.cpp:842 src/process/do_process.cpp:1029
+msgid "wakeups/second"
+msgstr ""
+
+#: src/process/do_process.cpp:842
+msgid "GPU ops/seconds"
+msgstr ""
+
+#: src/process/do_process.cpp:842
+msgid "VFS ops/sec and"
+msgstr ""
+
+#: src/process/do_process.cpp:842 src/process/do_process.cpp:1030
+msgid "CPU use"
+msgstr ""
+
+#: src/process/do_process.cpp:846 src/process/do_process.cpp:914
+#: src/process/do_process.cpp:1034
+#, fuzzy
+msgid "Power est."
+msgstr "PowerTOP "
+
+#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
+#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+msgid "Usage"
+msgstr ""
+
+#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
+#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+msgid "Events/s"
+msgstr ""
+
+#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
+#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+msgid "Category"
+msgstr ""
+
+#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
+#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+msgid "Description"
+msgstr ""
+
+#: src/process/do_process.cpp:911
+msgid "Overview of Software Power Consumers"
+msgstr ""
+
+#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+msgid "Wakeups/s"
+msgstr ""
+
+#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+msgid "GPU ops/s"
+msgstr ""
+
+#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+msgid "Disk IO/s"
+msgstr ""
+
+#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+msgid "GFX Wakeups/s"
+msgstr ""
+
+#: src/process/do_process.cpp:1026
+msgid "Power Consumption Summary"
+msgstr ""
+
+#: src/process/do_process.cpp:1029
+msgid "GPU ops/second"
+msgstr ""
+
+#: src/process/do_process.cpp:1030
+msgid "VFS ops/sec"
+msgstr ""
+
+#: src/process/do_process.cpp:1030
+msgid "GFX wakes/sec and"
+msgstr ""
 
 #: src/perf/perf.cpp:121
 #, c-format
 msgid "PowerTOP %s needs the kernel to support the 'perf' subsystem\n"
-msgstr "A PowerTOP %s verziójának szüksége van arra, hogy a rendszermag támogassa a „perf” alrendszert\n"
+msgstr ""
+"A PowerTOP %s verziójának szüksége van arra, hogy a rendszermag támogassa a "
+"„perf” alrendszert\n"
 
 #: src/perf/perf.cpp:122
 #, c-format
 msgid "as well as support for trace points in the kernel:\n"
 msgstr "valamint a nyomkövetési pontokra is a rendszermagban:\n"
-
-#: src/perf/perf.cpp:123
-#, c-format
-msgid ""
-"CONFIG_PERF_EVENTS=y\n"
-"CONFIG_PERF_COUNTERS=y\n"
-"CONFIG_TRACEPOINTS=y\n"
-"CONFIG_TRACING=y\n"
-msgstr "CONFIG_PERF_EVENTS=y\nCONFIG_PERF_COUNTERS=y\nCONFIG_TRACEPOINTS=y\nCONFIG_TRACING=y\n"
 
 #: src/devices/device.cpp:177
 #, c-format
@@ -408,159 +422,257 @@ msgstr "Automatikus felfüggesztés a(z) %s (%s:%s) ismeretlen USB eszközön"
 msgid "Autosuspend for USB device %s [%s]"
 msgstr "Automatikus felfüggesztés a(z) %s [%s] USB eszközön"
 
-#: src/calibrate/calibrate.cpp:297
+#: src/calibrate/calibrate.cpp:291
 #, c-format
 msgid "Cannot create temp file\n"
 msgstr "Nem tudok létrehozni ideiglenes fájlt\n"
 
-#: src/calibrate/calibrate.cpp:316
+#: src/calibrate/calibrate.cpp:310
 #, c-format
 msgid "Calibrating: CPU usage on %i threads\n"
 msgstr "Kalibrálás: CPU használtság %i szálon\n"
 
-#: src/calibrate/calibrate.cpp:331
+#: src/calibrate/calibrate.cpp:325
 #, c-format
 msgid "Calibrating: CPU wakeup power consumption\n"
 msgstr "Kalibrálás: CPU felébredési teljesítményfelvétel\n"
 
-#: src/calibrate/calibrate.cpp:348
+#: src/calibrate/calibrate.cpp:342
 #, c-format
 msgid "Calibrating USB devices\n"
 msgstr "USB eszközök kalibrálása\n"
 
-#: src/calibrate/calibrate.cpp:350 src/calibrate/calibrate.cpp:367
-#: src/calibrate/calibrate.cpp:375 src/calibrate/calibrate.cpp:392
+#: src/calibrate/calibrate.cpp:344 src/calibrate/calibrate.cpp:361
+#: src/calibrate/calibrate.cpp:369 src/calibrate/calibrate.cpp:386
 #, c-format
 msgid ".... device %s \n"
 msgstr ".... %s eszköz \n"
 
-#: src/calibrate/calibrate.cpp:365
+#: src/calibrate/calibrate.cpp:359
 #, c-format
 msgid "Calibrating radio devices\n"
 msgstr "Rádiós eszközök kalibrálása\n"
 
-#: src/calibrate/calibrate.cpp:389
+#: src/calibrate/calibrate.cpp:383
 #, c-format
 msgid "Calibrating backlight\n"
 msgstr "Háttérvilágítás kalibrálása\n"
 
-#: src/calibrate/calibrate.cpp:413 src/calibrate/calibrate.cpp:421
+#: src/calibrate/calibrate.cpp:407 src/calibrate/calibrate.cpp:415
 #, c-format
 msgid "Calibrating idle\n"
 msgstr "Üresjárat kalibrálása\n"
 
-#: src/calibrate/calibrate.cpp:432
+#: src/calibrate/calibrate.cpp:426
 #, c-format
 msgid "Calibrating: disk usage \n"
 msgstr "Kalibrálás: lemezhasználat \n"
 
-#: src/calibrate/calibrate.cpp:457
+#: src/calibrate/calibrate.cpp:451
 msgid "Starting PowerTOP power estimate calibration \n"
 msgstr "PowerTop teljesítménybecslés kalibrálás indítása \n"
 
-#: src/calibrate/calibrate.cpp:480
+#: src/calibrate/calibrate.cpp:474
 msgid "Finishing PowerTOP power estimate calibration \n"
 msgstr "PowerTop teljesítménybecslés-kalibrálás befejezése \n"
 
-#: src/calibrate/calibrate.cpp:484
+#: src/calibrate/calibrate.cpp:478
 #, c-format
 msgid "Parameters after calibration:\n"
 msgstr "Paraméterek a kalibrálás után:\n"
 
-#: src/main.cpp:83
-#, c-format
-msgid "Powertop version"
+#: src/main.cpp:84
+#, fuzzy, c-format
+msgid "PowerTOP version"
 msgstr "PowerTop verzió"
 
-#: src/main.cpp:89
+#: src/main.cpp:90
 msgid "Set refresh time out"
 msgstr "Frissítés időkorlát leteltének beállítása"
 
-#: src/main.cpp:102
-#, c-format
-msgid ""
-"Usage: powertop [OPTIONS]\n"
-"\n"
-msgstr "Használat: powertop [OPCIÓK]\n\n"
-
 #: src/main.cpp:103
-#, c-format
-msgid "--debug \t\t run in \"debug\" mode\n"
-msgstr "--debug \t\t futtatás hibakeresési módban\n"
+#, fuzzy
+msgid "Usage: powertop [OPTIONS]"
+msgstr ""
+"Használat: powertop [OPCIÓK]\n"
+"\n"
 
 #: src/main.cpp:104
-#, c-format
-msgid "--version \t\t print version information\n"
-msgstr "--version \t\t verzióinformáció kiíratása\n"
+#, fuzzy
+msgid "run in \"debug\" mode"
+msgstr "--debug \t\t futtatás hibakeresési módban\n"
 
 #: src/main.cpp:105
-#, c-format
-msgid "--calibrate \t\t runs powertop in calibration mode\n"
-msgstr "--calibrate \t\t a powertop futtatása kalibrációs módban\n"
+#, fuzzy
+msgid "print version information"
+msgstr "--version \t\t verzióinformáció kiíratása\n"
 
 #: src/main.cpp:106
-#, c-format
-msgid "--extech=devnode \t uses an Extech Power Analyzer for measurements\n"
-msgstr "--extech=devnode \t Extech Power Analyzer eszköz használata a mérésekhez\n"
+#, fuzzy
+msgid "runs powertop in calibration mode"
+msgstr "--calibrate \t\t a powertop futtatása kalibrációs módban\n"
 
 #: src/main.cpp:107
-#, c-format
-msgid "--html[=FILENAME] \t generate a html report\n"
-msgstr "--html[=FILENAME] \t HTML jelentés készítése\n"
+msgid "[=devnode]"
+msgstr ""
+
+#: src/main.cpp:107
+#, fuzzy
+msgid "uses an Extech Power Analyzer for measurements"
+msgstr ""
+"--extech=devnode \t Extech Power Analyzer eszköz használata a mérésekhez\n"
+
+#: src/main.cpp:108 src/main.cpp:109
+msgid "[=FILENAME]"
+msgstr ""
 
 #: src/main.cpp:108
-#, c-format
-msgid "--csv[=FILENAME] \t generate a csv report\n"
-msgstr "--csv[=FILENAME] \t CSV jelentés készítése\n"
+#, fuzzy
+msgid "generate a html report"
+msgstr "--html[=FILENAME] \t HTML jelentés készítése\n"
 
 #: src/main.cpp:109
-#, c-format
-msgid "--time[=secs] \t\t generate a report for 'x' secs\n"
-msgstr "--time[=secs] \t\t ennyi másodpercig készüljön a jelentés\n"
+#, fuzzy
+msgid "generate a csv report"
+msgstr "--csv[=FILENAME] \t CSV jelentés készítése\n"
 
 #: src/main.cpp:110
-#, c-format
-msgid "--iteration[=iterations] number of times to run each test\n"
-msgstr "--iteration[=iterations] ennyiszer fusson le minden egyes teszt\n"
+msgid "[=seconds]"
+msgstr ""
+
+#: src/main.cpp:110
+#, fuzzy
+msgid "generate a report for 'x' seconds"
+msgstr "--time[=secs] \t\t ennyi másodpercig készüljön a jelentés\n"
 
 #: src/main.cpp:111
-#, c-format
-msgid "--help \t\t\t print this help menu\n"
+#, fuzzy
+msgid "[=iterations] number of times to run each test"
+msgstr "--iteration[=iterations] ennyiszer fusson le minden egyes teszt\n"
+
+#: src/main.cpp:112
+#, fuzzy
+msgid "print this help menu"
 msgstr "--help \t\t\t e súgó kiíratása\n"
 
-#: src/main.cpp:113
-#, c-format
-msgid ""
-"For more help please refer to the README\n"
+#: src/main.cpp:114
+#, fuzzy
+msgid "For more help please refer to the README"
+msgstr ""
+"További információk a README fájlban találhatók\n"
 "\n"
-msgstr "További információk a README fájlban találhatók\n\n"
 
-#: src/main.cpp:251
+#: src/main.cpp:224
+#, c-format
+msgid "PowerTOP is out of memory. PowerTOP is Aborting"
+msgstr ""
+
+#: src/main.cpp:252
 #, c-format
 msgid "Preparing to take measurements\n"
 msgstr "Előkészülés a mérések elvégzéséhez\n"
 
-#: src/main.cpp:254
-#, c-format
-msgid "Measuring %d time(s) for %d seconds each\n"
+#: src/main.cpp:255
+#, fuzzy, c-format
+msgid "Taking %d measurement(s) for a duration of %d second(s) each.\n"
 msgstr "%d darab, egyenként %d másodperces mérés\n"
 
-#: src/main.cpp:277
+#: src/main.cpp:278
 #, c-format
 msgid "PowerTOP "
 msgstr "PowerTOP "
 
-#: src/main.cpp:278 src/main.cpp:367
+#: src/main.cpp:279 src/main.cpp:307
 #, c-format
 msgid "exiting...\n"
 msgstr "kilépés...\n"
 
-#: src/main.cpp:366
+#: src/main.cpp:306
 #, c-format
 msgid "Failed to mount debugfs!\n"
 msgstr "Nem tudtam csatolni a debugfs-t!\n"
 
-#: src/main.cpp:433
-#, c-format
-msgid "Leaving PowerTOP\n"
+#: src/main.cpp:443
+#, fuzzy, c-format
+msgid "Leaving PowerTOP"
 msgstr "A PowerTOP elhagyása\n"
+
+#~ msgid " <ESC> Exit | "
+#~ msgstr " <ESC> Kilépés | "
+
+#~ msgid "C3 (cc3)"
+#~ msgstr "C3 (cc3)"
+
+#~ msgid "C6 (cc6)"
+#~ msgstr "C6 (cc6)"
+
+#~ msgid "C7 (cc7)"
+#~ msgstr "C7 (cc7)"
+
+#~ msgid "C2 (pc2)"
+#~ msgstr "C2 (pc2)"
+
+#~ msgid "C3 (pc3)"
+#~ msgstr "C3 (pc3)"
+
+#~ msgid "C6 (pc6)"
+#~ msgstr "C6 (pc6)"
+
+#~ msgid "C7 (pc7)"
+#~ msgstr "C7 (pc7)"
+
+#~ msgid ""
+#~ "<h2>Process device activity</h2>\n"
+#~ " <table width=\"100%%\">\n"
+#~ msgstr ""
+#~ "<h2>Folyamatok eszközaktivitása</h2>\n"
+#~ " <table width=\"100%%\">\n"
+
+#~ msgid ""
+#~ "<tr><th class=\"device\" width=\"40%%\">Process</th><th class=\"device"
+#~ "\">Device</th></tr>\n"
+#~ msgstr ""
+#~ "<tr><th class=\"device\" width=\"40%%\">Folyamat</th><th class=\"device"
+#~ "\">Eszköz</th></tr>\n"
+
+#~ msgid ""
+#~ "**Process Device Activity**, \n"
+#~ "\n"
+#~ msgstr ""
+#~ "**Folyamatok eszközaktivitása**, \n"
+#~ "\n"
+
+#~ msgid "Process, Device, \n"
+#~ msgstr "Folyamat, Eszköz, \n"
+
+#~ msgid "%9lli"
+#~ msgstr "%9lli"
+
+#~ msgid "%4lli MHz"
+#~ msgstr "%4lli MHz"
+
+#~ msgid "%6lli MHz"
+#~ msgstr "%6lli MHz"
+
+#~ msgid "%4.2f GHz"
+#~ msgstr "%4.2f GHz"
+
+#~ msgid "%3.1f GHz"
+#~ msgstr "%3.1f GHz"
+
+#~ msgid "Power est.      Usage       Events/s    Category       Description\n"
+#~ msgstr "Becsült telj.   Használat   Esemény/s   Kategória      Leírás\n"
+
+#~ msgid "                Usage       Events/s    Category       Description\n"
+#~ msgstr "                Használat   Esemény/s   Kategória      Leírás\n"
+
+#~ msgid ""
+#~ "CONFIG_PERF_EVENTS=y\n"
+#~ "CONFIG_PERF_COUNTERS=y\n"
+#~ "CONFIG_TRACEPOINTS=y\n"
+#~ "CONFIG_TRACING=y\n"
+#~ msgstr ""
+#~ "CONFIG_PERF_EVENTS=y\n"
+#~ "CONFIG_PERF_COUNTERS=y\n"
+#~ "CONFIG_TRACEPOINTS=y\n"
+#~ "CONFIG_TRACING=y\n"

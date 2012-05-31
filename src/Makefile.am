@@ -36,7 +36,7 @@ powertop_SOURCES = parameters/persistent.cpp parameters/learn.cpp parameters/par
 powertop_CXXFLAGS = -fno-omit-frame-pointer -fstack-protector -Wall -Wshadow -Wformat -I/usr/include/ $(NCURSES_CFLAGS) $(PCIUTILS_CFLAGS) $(LIBNL_CFLAGS) $(GLIB2_CFLAGS)
 
 
-powertop_CPPFLAGS = -D_FORTIFY_SOURCE=2 $(NCURSES_CFLAGS) $(PCIUTILS_CFLAGS) $(LIBNL_CFLAGS) $(GLIB2_CFLAGS) $(LIBZ_CFLAGS)
+powertop_CPPFLAGS = -D_FORTIFY_SOURCE=2 $(NCURSES_CFLAGS) $(PCIUTILS_CFLAGS) $(LIBNL_CFLAGS) $(GLIB2_CFLAGS) $(LIBZ_CFLAGS) -DLOCALEDIR=\"$(localedir)\"
 
 powertop_LDADD = ../pevent/libparseevent.la
 

@@ -348,12 +348,12 @@ void nhm_package::measurement_start(void)
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
 	if (has_c2c7_res)
-		insert_cstate("pkg c2", _("C2 (pc2)"), 0, c2_before, 1);
+		insert_cstate("pkg c2", "C2 (pc2)", 0, c2_before, 1);
 
-	insert_cstate("pkg c3", _("C3 (pc3)"), 0, c3_before, 1);
-	insert_cstate("pkg c6", _("C6 (pc6)"), 0, c6_before, 1);
+	insert_cstate("pkg c3", "C3 (pc3)", 0, c3_before, 1);
+	insert_cstate("pkg c6", "C6 (pc6)", 0, c6_before, 1);
 	if (has_c2c7_res)
-		insert_cstate("pkg c7", _("C7 (pc7)"), 0, c7_before, 1);
+		insert_cstate("pkg c7", "C7 (pc7)", 0, c7_before, 1);
 }
 
 void nhm_package::measurement_end(void)

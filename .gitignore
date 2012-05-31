@@ -26,8 +26,16 @@ pevent/.deps/
 pevent/Makefile
 pevent/Makefile.in
 po/Makefile
+po/Makevars.template
 po/POTFILES
-po/nl.gmo
+po/Rules-quot
+po/boldquot.sed
+po/en@boldquot.header
+po/en@quot.header
+po/insert-header.sin
+po/quot.sed
+po/remove-potcdate.sin
+po/*.gmo
 po/stamp-po
 src/powertop
 src/css.h
@@ -50,3 +58,6 @@ m4
 autom4te.cache
 remove-potcdate.sed
 compile
+stamp-po
+ABOUT-NLS
+ar-lib

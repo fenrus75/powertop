@@ -1,0 +1,59 @@
+.TH POWERTOP 8 "June 1, 2012" "Linux" "powertop manual"
+.SH NAME
+powertop \- a power consumption and power management diagnosis tool.
+.SH SYNOPSIS
+.B powertop
+.RB [
+.IR options
+.RB ]
+.SH DESCRIPTION
+.P
+\fBpowertop\fP is a program that helps to diagnose various issues with power consumption
+and power management. It also has an interactive mode allowing one to
+experiment with various power management settings. When invoking powertop
+without arguments powertop starts in interactive mode.
+.SH OPTIONS
+.TP
+\fB\-\-csv[\fR=\fIFILENAME\fR]
+generate a CSV report. If a filename is not specified then the
+default name "powertop.csv" is used. The CSV report can be
+used for reporting and data analysis.
+.TP
+\fB\-\-calibrate
+runs powertop in calibration mode. When running on battery, powertop
+can track power consumption as well as system activity. When there
+are enough measurements, powertop can start to report power estimates. One
+can get more accurate estimates by using this option to enable a
+calibration cycle. This will cycle through various display levesl and USB
+device activities and workloads.
+.TP
+\fB\-\-debug
+ run in "debug" mode.
+.TP
+\fB\-\-extech\fR=\fIdevnode\fR
+use the Extech Power Analyzer for measurements. This allows one to
+specify the serial device node of the serial to USB adaptor connecting to
+the Extech Power Analyzer, for example /dev/ttyUSB0.
+.TP
+\fB\-\-help
+ show the help message.
+.TP
+\fB\-\-html[\fR=\fIFILENAME\fR]
+generate an HTML report. If a filename is not specified then the
+default name "powertop.html" is used. The HTML report can be
+sent to others to help diagnose power issues.
+.TP
+\fB\-\-iteration[\fR=\fIiterations\fR]
+number of times to run each test.
+.TP
+\fB\-\-time[\fR=\fIseconds\fR]
+generate a report for a specified number of seconds.
+.TP
+\fB\-\-version
+print version information and exit.
+.SH BUGS
+Send bug reports to <powertop@lists.01.org>
+.SH SEE ALSO
+The program is more fully described at https://01.org/powertop
+.SH AUTHOR
+powertop was written by Arjan van de Ven <arjan@linux.intel.com>, and is currently maintained by Chris E Ferron <chris.e.ferron@linux.intel.com>.

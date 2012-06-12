@@ -76,6 +76,7 @@ static const struct option long_options[] =
 	{"extech", optional_argument, NULL, 'e'},
 	{"time", optional_argument, NULL, 't'},
 	{"iteration", optional_argument, NULL, 'i'},
+	{"workload", optional_argument, NULL, 'w'},
 	{NULL, 0, NULL, 0}
 };
 
@@ -109,6 +110,7 @@ static void print_usage()
 	printf("--csv%s \t %s\n",_("[=FILENAME]"),_("generate a csv report"));
 	printf("--time%s \t %s\n",_("[=seconds]"), _("generate a report for 'x' seconds"));
 	printf("--iteration%s\n", _("[=iterations] number of times to run each test"));
+	printf("--workload%s \t %s\n", _("[=workload]"), _("file to execute for workload"));
 	printf("--help \t\t\t %s\n",_("print this help menu"));
 	printf("\n");
 	printf("%s\n\n",_("For more help please refer to the README"));
@@ -174,15 +176,21 @@ static void do_sleep(int seconds)
 }
 
 
-void one_measurement(int seconds)
+void one_measurement(int seconds, char *workload)
 {
+	int tmp;
+	
 	create_all_usb_devices();
 	start_power_measurement();
 	devices_start_measurement();
 	start_process_measurement();
 	start_cpu_measurement();
 
-	do_sleep(seconds);
+	if (workload && workload[0]) {
+		tmp = system(workload);
+	}
+	else
+		do_sleep(seconds);
 
 	end_cpu_measurement();
 	end_process_measurement();
@@ -245,19 +253,23 @@ static void load_board_params()
 	global_power_override = 1;
 }
 
-void report(int time, int iterations, char *file)
+void report(int time, char *workload, int iterations, char *file)
 {
 
 	/* one to warm up everything */
 	fprintf(stderr, _("Preparing to take measurements\n"));
 	utf_ok = 0;
-	one_measurement(1);
-	fprintf(stderr, _("Taking %d measurement(s) for a duration of %d second(s) each.\n"),iterations,time);
+	one_measurement(1, NULL);
+	
+	if (!workload[0])
+	  fprintf(stderr, _("Taking %d measurement(s) for a duration of %d second(s) each.\n"),iterations,time);
+	else
+	   fprintf(stderr, _("Measuring workload %s.\n"), workload);
 	for (int i=0; i != iterations; i++){
 		init_report_output(file);
 		initialize_tuning();
 		/* and then the real measurement */
-		one_measurement(time);
+		one_measurement(time, workload);
 		report_show_tunables();
 		finish_report_output();
 		clear_tuning();
@@ -342,6 +354,7 @@ int main(int argc, char **argv)
 	int c;
 	bool wantreport = FALSE;
 	char filename[4096];
+	char workload[4096];
 	int  iterations = 1;
 
 #ifndef DISABLE_TRYCATCH
@@ -355,7 +368,7 @@ int main(int argc, char **argv)
 #endif
 
 	while (1) { /* parse commandline options */
-		c = getopt_long (argc, argv, "ch:C:i:t:uV", long_options, &option_index);
+		c = getopt_long (argc, argv, "ch:C:i:t:uV:w", long_options, &option_index);
 		/* Detect the end of the options. */
 		if (c == -1)
 			break;
@@ -394,6 +407,11 @@ int main(int argc, char **argv)
 				iterations = (optarg ? atoi(optarg) : 1);
 				break;
 
+			case 'w': /* measure workload */
+				wantreport = TRUE;
+				sprintf(workload, "%s", optarg ? optarg :'\0' );
+				break;
+
 			case 'C': /* csv report*/
 				wantreport = TRUE;
 				reporttype = 0;
@@ -409,7 +427,7 @@ int main(int argc, char **argv)
 	powertop_init();
 
 	if (wantreport)
-		 report(time_out, iterations, filename);
+		report(time_out, workload, iterations, filename);
 
 	if (debug_learning)
 		printf("Learning debugging enabled\n");
@@ -427,14 +445,14 @@ int main(int argc, char **argv)
 
 	/* first one is short to not let the user wait too long */
 	init_display();
-	one_measurement(1);
+	one_measurement(1, NULL);
 	initialize_tuning();
 	tuning_update_display();
 	show_tab(0);
 
 	while (!leave_powertop) {
 		show_cur_tab();
-		one_measurement(time_out);
+		one_measurement(time_out, workload);
 		learn_parameters(15, 0);
 	}
 #ifndef DISABLE_NCURSES

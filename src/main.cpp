@@ -408,7 +408,6 @@ int main(int argc, char **argv)
 				break;
 
 			case 'w': /* measure workload */
-				wantreport = TRUE;
 				sprintf(workload, "%s", optarg ? optarg :'\0' );
 				break;
 
@@ -452,7 +451,7 @@ int main(int argc, char **argv)
 
 	while (!leave_powertop) {
 		show_cur_tab();
-		one_measurement(time_out, workload);
+		one_measurement(time_out, NULL);
 		learn_parameters(15, 0);
 	}
 #ifndef DISABLE_NCURSES

@@ -293,15 +293,56 @@ void extech_power_meter::measure(void)
 
 }
 
+void extech_power_meter::sample(void) 
+{
+	ssize_t ret;
+	struct timespec tv;
+
+	tv.tv_sec = 0;
+	tv.tv_nsec = 200000000;
+	while (!end_thread) {
+		nanosleep(&tv, NULL);
+		/* trigger the extech to send data */
+		ret = write(fd, " ", 1);
+		if (ret < 0)
+			continue;
+		
+		sum += extech_read(fd);
+		samples++;
+	
+	}
+}
+
+extern "C"
+{
+	void* thread_proc(void *arg) 
+	{
+		class extech_power_meter *parent;
+		parent = (class extech_power_meter*)arg;
+		parent->sample();
+		return 0;
+	}
+}
 
 void extech_power_meter::end_measurement(void)
 {
-	measure();
+	end_thread = 1;
+	pthread_join( thread, NULL);
+	if (samples){
+		rate = sum / samples;
+	}
+	else
+		measure();
 }
 
 void extech_power_meter::start_measurement(void)
 {
-	/* ACPI battery state is a lagging indication, lets only measure at the end */
+	end_thread = 0;
+	sum = samples = 0;
+	
+	if (pthread_create(&thread, NULL, thread_proc, this))
+		fprintf(stderr, "ERROR: extech measurement thread creation failed\n");
+
 }
 
 

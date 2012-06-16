@@ -231,7 +231,7 @@ void one_measurement(int seconds, char *workload)
 void out_of_memory()
 {
 	reset_display();
-	sprintf("%s...\n",_("PowerTOP is out of memory. PowerTOP is Aborting"));
+	printf("%s...\n",_("PowerTOP is out of memory. PowerTOP is Aborting"));
 	abort();
 }
 
@@ -462,7 +462,7 @@ int main(int argc, char **argv)
 #ifndef DISABLE_NCURSES
 	endwin();
 #endif
-	sprintf("%s\n", _("Leaving PowerTOP"));
+	printf("%s\n", _("Leaving PowerTOP"));
 
 	end_process_data();
 	clear_process_data();

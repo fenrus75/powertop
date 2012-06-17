@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.68])
 AC_INIT([powertop], [2.0], [powertop@lists.01.org])
-AM_INIT_AUTOMAKE([-Wall -Werror foreign ])
+AM_INIT_AUTOMAKE([-Wall foreign ])
 AC_LANG([C++])
 AC_CONFIG_FILES([Makefile src/Makefile pevent/Makefile po/Makefile.in doc/Makefile])
 AC_CONFIG_SRCDIR([src/main.cpp])

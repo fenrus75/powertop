@@ -268,7 +268,7 @@ void report(int time, char *workload, int iterations, char *file)
 	else
 	   fprintf(stderr, _("Measuring workload %s.\n"), workload);
 	for (int i=0; i != iterations; i++){
-		init_report_output(file);
+		init_report_output(file, iterations);
 		initialize_tuning();
 		/* and then the real measurement */
 		one_measurement(time, workload);

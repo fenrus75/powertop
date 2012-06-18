@@ -40,7 +40,7 @@ void http_header_output(void);
 
 extern bool reporttype;
 extern struct reportstream reportout;
-extern void init_report_output(char *filename_str);
+extern void init_report_output(char *filename_str, int iterations);
 extern void finish_report_output(void);
 
 #endif

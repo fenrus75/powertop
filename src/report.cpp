@@ -174,7 +174,7 @@ static void system_info(void)
 }
 
 
-void init_report_output(char *filename_str)
+void init_report_output(char *filename_str, int iterations)
 {
 	size_t period;
 	char file_prefix[256];
@@ -186,25 +186,29 @@ void init_report_output(char *filename_str)
 	sprintf(file_postfix, "%s", reporttype ? "html":"csv");
 	period=mystring.find_last_of(".");
 	sprintf(file_prefix, "%s",mystring.substr(0,period).c_str());
+	memset(&datestr, 0, 200);
+	memset(&stamp, 0, sizeof(time_t));
+	stamp=time(NULL);
+	strftime(datestr, sizeof(datestr), "%Y%m%d-%H%M%S", localtime(&stamp));
+	
+	if (iterations != 1)
+		sprintf(reportout.filename, "%s-%s.%s", 
+			file_prefix, datestr,file_postfix);
+	else
+		sprintf(reportout.filename, "%s.%s", 
+			file_prefix, file_postfix);
+
 	if (reporttype) {
-                memset(&datestr, 0, 200);
-                memset(&stamp, 0, sizeof(time_t));
-                stamp=time(NULL);
-                strftime(datestr, sizeof(datestr), "%Y%m%d-%H%M%S", localtime(&stamp));
-                sprintf(reportout.filename, "%s-%s.%s", file_prefix, datestr,file_postfix);
 		reportout.http_report = fopen(reportout.filename, "wm");
 		if (!reportout.http_report) {
-			fprintf(stderr, _("Cannot open output file %s (%s)\n"), reportout.filename, strerror(errno));
+			fprintf(stderr, _("Cannot open output file %s (%s)\n"),
+				reportout.filename, strerror(errno));
 		}
 	}else {
-		memset(&datestr, 0, 200);
-		memset(&stamp, 0, sizeof(time_t));
-		stamp=time(NULL);
-		strftime(datestr, sizeof(datestr), "%Y%m%d-%H%M%S", localtime(&stamp));
-		sprintf(reportout.filename, "%s-%s.%s", file_prefix, datestr,file_postfix);
 		reportout.csv_report = fopen(reportout.filename, "wm");
 		if (!reportout.csv_report) {
-			fprintf(stderr, _("Cannot open output file %s (%s)\n"), reportout.filename, strerror(errno));
+			fprintf(stderr, _("Cannot open output file %s (%s)\n"),
+				reportout.filename, strerror(errno));
 		}
 	}
 

@@ -120,7 +120,7 @@ void load_results(const char *filename)
 
 	file.close();
 	// '%i" is for count, do not translate
-	printf(_("Loaded %i prior measurements\n"), count);
+	fprintf(stderr, _("Loaded %i prior measurements\n"), count);
 }
 
 void save_parameters(const char *filename)

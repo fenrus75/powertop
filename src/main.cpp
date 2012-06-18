@@ -77,6 +77,7 @@ static const struct option long_options[] =
 	{"time", optional_argument, NULL, 't'},
 	{"iteration", optional_argument, NULL, 'i'},
 	{"workload", optional_argument, NULL, 'w'},
+	{"quite", optional_argument, NULL, 'q'},
 	{NULL, 0, NULL, 0}
 };
 
@@ -111,6 +112,7 @@ static void print_usage()
 	printf("--time%s \t %s\n",_("[=seconds]"), _("generate a report for 'x' seconds"));
 	printf("--iteration%s\n", _("[=iterations] number of times to run each test"));
 	printf("--workload%s \t %s\n", _("[=workload]"), _("file to execute for workload"));
+	printf("--quite \t %s\n", _("supress stderr output"));
 	printf("--help \t\t\t %s\n",_("print this help menu"));
 	printf("\n");
 	printf("%s\n\n",_("For more help please refer to the README"));
@@ -368,7 +370,7 @@ int main(int argc, char **argv)
 #endif
 
 	while (1) { /* parse commandline options */
-		c = getopt_long (argc, argv, "ch:C:i:t:uV:w", long_options, &option_index);
+		c = getopt_long (argc, argv, "ch:C:i:t:uV:w:q", long_options, &option_index);
 		/* Detect the end of the options. */
 		if (c == -1)
 			break;
@@ -410,7 +412,10 @@ int main(int argc, char **argv)
 			case 'w': /* measure workload */
 				sprintf(workload, "%s", optarg ? optarg :'\0' );
 				break;
-
+			case 'q':
+				freopen("/dev/null", "a", stderr);
+				break;
+				
 			case 'C': /* csv report*/
 				wantreport = TRUE;
 				reporttype = 0;

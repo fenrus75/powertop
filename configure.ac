@@ -48,7 +48,7 @@ AC_CHECK_FUNCS([fdatasync getpagesize gettimeofday memmove memset mkdir munmap p
 AC_SEARCH_LIBS([delwin], [ncursesw ncurses], [], AC_MSG_ERROR([ncurses is required but was not found]), [])
 
 PKG_CHECK_MODULES([PCIUTILS], [libpci],[],[
-	AC_SEARCH_LIBS([pci_get_dev], [pci], [], AC_MSG_ERROR([libpci is required but was not found]), [])
+	AC_SEARCH_LIBS([pci_get_dev], [pci],[], AC_DEFINE([HAVE_NO_PCI],[1],[Define if pci is not supported]), [])
 ]) 
 
 has_libnl_ver=0

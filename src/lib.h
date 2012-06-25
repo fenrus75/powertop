@@ -30,6 +30,11 @@
 #endif
 #include <stdint.h>
 
+/* Include only for Automake builds */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #ifndef DISABLE_I18N
 #define _(STRING)    gettext(STRING)
 #else

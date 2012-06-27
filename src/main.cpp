@@ -356,7 +356,7 @@ int main(int argc, char **argv)
 	int c;
 	bool wantreport = FALSE;
 	char filename[4096];
-	char workload[4096];
+	char workload[4096] = {0,};
 	int  iterations = 1;
 
 #ifndef DISABLE_TRYCATCH

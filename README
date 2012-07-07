@@ -1,3 +1,5 @@
+Octotip: You are editing a file in a project you do not have write access to. We are forking this project for you (if one does not yet exist) to write your proposed changes to. Submitting a change to this file will write it to a new branch in your fork so you can send a pull request.
+Back to source view
 ﻿
 
 
@@ -47,7 +49,8 @@ CONFIG_PERF_COUNTERS
 CONFIG_TRACEPOINTS
 CONFIG_TRACING
 CONFIG_EVENT_POWER_TRACING_DEPRECATED
-ACPI_PROCFS_POWER
+CONFIG_ACPI_PROCFS_POWER
+CONFIG_X86_MSR
 
 The patches in the patches/ sub-directory are required for PowerTOP to function
 fully.

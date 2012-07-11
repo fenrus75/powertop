@@ -588,7 +588,11 @@ void report_display_cpu_pstates(void)
 	unsigned int package, core, cpu;
 	int line;
 	class abstract_cpu *_package, * _core, * _cpu;
-
+	unsigned int i, pstates_num;
+	
+	for (i = 0, pstates_num = 0; i<  all_cpus.size(); i++)
+		if (all_cpus[i]&&  all_cpus[i]->pstates.size()>  pstates_num)
+			pstates_num = all_cpus[i]->pstates.size(); 
 	if ((!reportout.csv_report)&&(!reportout.http_report))
 		return;
 
@@ -614,7 +618,7 @@ void report_display_cpu_pstates(void)
 			if (!_core)
 				continue;
 
-			for (line = LEVEL_HEADER; line < 10; line++) {
+			for (line = LEVEL_HEADER; line < (int)pstates_num; line++) {
 				int first = 1;
 
 				if (!_package->has_pstate_level(line))

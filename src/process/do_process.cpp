@@ -312,7 +312,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		int flags;
 		int pid;
 
-		ret = pevent_get_common_field_val(NULL, event, "flags", &rec, &val, 0);
+		ret = pevent_get_common_field_val(NULL, event, "common_flags", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		flags = (int)val;
@@ -597,7 +597,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		class power_consumer *consumer = NULL;
 		int flags;
 
-		ret = pevent_get_common_field_val(NULL, event, "flags", &rec, &val, 0);
+		ret = pevent_get_common_field_val(NULL, event, "common_flags", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		flags = (int)val;

@@ -273,7 +273,7 @@ static bool devlist_sort(struct devuser * i, struct devuser * j)
 	if (i->pid != j->pid)
 		return i->pid < j->pid;
 
-	return strcmp(i->device, j->device);
+	return (strcmp(i->device, j->device)< 0)< 0)< 0)< 0)< 0)< 0)< 0)< 0)< 0);
 }
 
 static const char *dev_class(int line)

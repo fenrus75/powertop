@@ -232,6 +232,8 @@ void enumerate_cpus(void)
 
 	if (!file)
 		return;
+	/* Not all /proc/cpuinfo include "vendor_id\t". */
+	vendor[0] = '\0';
 
 	while (file) {
 
@@ -271,8 +273,15 @@ void enumerate_cpus(void)
 			}
 		}
 		if (strncasecmp(line, "bogomips\t", 9) == 0) {
-			handle_one_cpu(number, vendor, family, model);
-			set_max_cpu(number);
+			if (number == -1) {
+				/* Not all /proc/cpuinfo include "processor\t". */
+				number = 0;
+			}
+			if (number >= 0) {
+				handle_one_cpu(number, vendor, family, model);
+				set_max_cpu(number);
+				number = -2; 
+			}
 		}
 	}
 

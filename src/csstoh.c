@@ -40,12 +40,12 @@ int main(int argc, char **argv)
 	in = fopen(argv[1], "rm");
 	if (!in) {
 		printf("Failed to open input file %s (%s) \n", argv[1], strerror(errno));
-		exit(0);
+		return EXIT_FAILURE;
 	}
 	out = fopen(argv[2], "wm");
 	if (!out) {
 		printf("Failed to open output file %s (%s) \n", argv[1], strerror(errno));
-		exit(0);
+		return EXIT_FAILURE;
 	}
 
 	fprintf(out, "#ifndef __INCLUDE_GUARD_CCS_H\n");

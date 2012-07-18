@@ -50,9 +50,6 @@ AC_SEARCH_LIBS([delwin], [ncursesw ncurses], [], AC_MSG_ERROR([ncurses is requir
 PKG_CHECK_MODULES([PCIUTILS], [libpci],[],[
 	AC_SEARCH_LIBS([pci_get_dev], [pci], [], AC_MSG_ERROR([libpci is required but was not found]), [])
 ]) 
-PKG_CHECK_MODULES([LIBZ], [zlib],[],[
-	AC_SEARCH_LIBS([deflate], [z], [], AC_MSG_ERROR([zlib is required but was not found]), [])
-]) 
 
 has_libnl_ver=0
 PKG_CHECK_MODULES([LIBNL], [libnl-1], [has_libnl_ver=1], [

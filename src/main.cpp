@@ -354,7 +354,7 @@ int main(int argc, char **argv)
 {
 	int option_index;
 	int c;
-	bool wantreport = FALSE;
+	bool wantreport = false;
 	char filename[4096];
 	char workload[4096] = {0,};
 	int  iterations = 1;
@@ -396,7 +396,7 @@ int main(int argc, char **argv)
 				break;
 
 			case 'h': /* html report */
-				wantreport = TRUE;
+				wantreport = true;
 				reporttype = 1;
 				sprintf(filename, "%s", optarg ? optarg : "PowerTOP.html" );
 				break;
@@ -417,7 +417,7 @@ int main(int argc, char **argv)
 				break;
 				
 			case 'C': /* csv report*/
-				wantreport = TRUE;
+				wantreport = true;
 				reporttype = 0;
 				sprintf(filename, "%s", optarg ? optarg : "PowerTOP.csv");
 				break;

@@ -43,7 +43,7 @@
 #include "../lib.h"
 
 static void sort_tunables(void);
-static bool should_clear = FALSE;
+static bool should_clear = false;
 
 #ifndef DISABLE_NCURSES
 class tuning_window: public tab_window {
@@ -103,7 +103,7 @@ static void __tuning_update_display(int cursor_pos)
 		return;
 
 	if (should_clear) {
-		should_clear = FALSE;
+		should_clear = false;
 		wclear(win);
 	}
 
@@ -185,7 +185,7 @@ static bool tunables_sort(class tunable * i, class tunable * j)
 void tuning_window::window_refresh()
 {
 	clear_tuning();
-	should_clear = TRUE;
+	should_clear = true;
 	init_tuning();
 }
 

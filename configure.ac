@@ -47,9 +47,10 @@ AC_CHECK_FUNCS([fdatasync getpagesize gettimeofday memmove memset mkdir munmap p
 
 AC_SEARCH_LIBS([delwin], [ncursesw ncurses], [], AC_MSG_ERROR([ncurses is required but was not found]), [])
 
-PKG_CHECK_MODULES([PCIUTILS], [libpci],[],[
-	AC_SEARCH_LIBS([pci_get_dev], [pci],[], AC_DEFINE([HAVE_NO_PCI],[1],[Define if pci is not supported]), [])
-]) 
+has_libpci=0
+PKG_CHECK_MODULES([PCIUTILS], [libpci],[has_libpci=1],[
+	AC_SEARCH_LIBS([pci_get_dev], [pci],[has_libpci=1], [has_libpci=0] )])
+ 
 
 has_libnl_ver=0
 PKG_CHECK_MODULES([LIBNL], [libnl-1], [has_libnl_ver=1], [
@@ -63,6 +64,16 @@ if (test "$has_libnl_ver" -eq 0); then
 fi
 if (test "$has_libnl_ver" -gt 1); then
 	AC_DEFINE([HAVE_LIBNL20], [1], [Define if you have libnl-2.0 or higher])
+fi
+
+if (test "$has_libpci" -eq 0); then 
+	AC_DEFINE([HAVE_NO_PCI],[1],[Define if pci is not supported])
+        AC_MSG_WARN([
+			************* LIBPCI SUPPORT NOT CONFIGURED**************
+			If you need or want pci support, please install libpci 
+			and re-configure PowerTOP. 
+			*********************************************************
+	])
 fi
 
 AC_SEARCH_LIBS([pthread_create], [pthread], [], AC_MSG_ERROR([libpthread is required but was not found]), [])

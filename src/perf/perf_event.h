@@ -41,17 +41,7 @@
 #include <linux/types.h>
 #include <linux/ioctl.h>
 #include <asm/byteorder.h>
-
-
-/* some people have stale headers */
-#ifndef __NR_perf_event_open
-#ifdef __i386__
-#define __NR_perf_event_open	336
-#endif
-#if __x86_64__
-#define __NR_perf_event_open	298
-#endif
-#endif
+#include <sys/syscall.h>
 
 
 /*

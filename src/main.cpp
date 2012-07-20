@@ -235,26 +235,6 @@ void out_of_memory()
 	abort();
 }
 
-static void load_board_params()
-{
-	string boardname;
-	char filename[4096];
-
-	boardname = read_sysfs_string("/etc/boardname");
-
-	if (boardname.length() < 2)
-		return;
-
-	sprintf(filename, "/var/cache/powertop/saved_parameters.powertop.%s", boardname.c_str());
-
-	if (access(filename, R_OK))
-		return;
-
-	load_parameters(filename);
-	global_fixed_parameters = 1;
-	global_power_override = 1;
-}
-
 void report(int time, char *workload, int iterations, char *file)
 {
 
@@ -301,6 +281,7 @@ static void powertop_init(void)
 	static char initialized = 0;
 	int ret;
 	struct statfs st_fs;
+	char filename[4096];
 
 	if (initialized)
 		return;
@@ -345,7 +326,12 @@ static void powertop_init(void)
 	register_parameter("disk-operations", 0.0);
 	register_parameter("xwakes", 0.1);
 
-	load_board_params();
+        if (access("/var/cache/powertop/saved_parameters.powertop", R_OK)){
+	        load_parameters("/var/cache/powertop/saved_parameters.powertop");
+        	global_fixed_parameters = 1;
+	        global_power_override = 1;
+	}
+
 	initialized = 1;
 }
 

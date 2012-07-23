@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Intel Corporation
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Yuan CHAO <yuanchao@gmail.com>, 2012.
 msgid ""
@@ -9,14 +9,13 @@ msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
 "POT-Creation-Date: 2012-05-31 14:03-0700\n"
-"PO-Revision-Date: 2012-05-27 21:06+0000\n"
+"PO-Revision-Date: 2012-06-05 19:51+0000\n"
 "Last-Translator: Yuan CHAO <yuanchao@gmail.com>\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.net/projects/p/"
-"PowerTOP/language/zh_TW/)\n"
-"Language: zh_TW\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/PowerTOP/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
 #: src/parameters/persistent.cpp:46 src/parameters/persistent.cpp:140
@@ -50,7 +49,7 @@ msgstr "設備統計"
 
 #: src/display.cpp:131
 msgid "Exit"
-msgstr ""
+msgstr "離開"
 
 #: src/cpu/cpu_core.cpp:46 src/cpu/cpu_core.cpp:190 src/cpu/intel_cpus.cpp:296
 #, c-format
@@ -82,12 +81,12 @@ msgstr "cpu 代號"
 #: src/cpu/cpu.cpp:925
 #, c-format
 msgid "cpu_idle event returned no state?\n"
-msgstr ""
+msgstr "cpu_idle 事件沒有傳回狀態？\n"
 
 #: src/cpu/cpu.cpp:940
 #, c-format
 msgid "power or cpu_frequecny event returned no state?\n"
-msgstr ""
+msgstr "power 或 cpu_frequecny 事件沒有傳回狀態？\n"
 
 #: src/cpu/cpu_linux.cpp:92
 msgid "C0 polling"
@@ -112,12 +111,12 @@ msgstr "  代號"
 #: src/cpu/intel_cpus.cpp:69
 #, c-format
 msgid "msr reg not found"
-msgstr ""
+msgstr "找不到 msr 暫存器"
 
 #: src/cpu/intel_cpus.cpp:79
 #, c-format
 msgid "pread cpu%d 0x%llx : "
-msgstr ""
+msgstr "pread cpu%d 0x%llx : "
 
 #: src/cpu/intel_cpus.cpp:529
 msgid "C0 active"
@@ -155,9 +154,7 @@ msgstr "Intel 內建 USB 集線器"
 msgid ""
 "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n"
 "\n"
-msgstr ""
-"預估用電量: %5.1f         實測用電量: %5.1f        總計: %5.1f\n"
-"\n"
+msgstr "預估用電量: %5.1f         實測用電量: %5.1f        總計: %5.1f\n\n"
 
 #: src/process/do_process.cpp:829 src/devices/device.cpp:171
 #, c-format
@@ -165,94 +162,93 @@ msgid "The battery reports a discharge rate of %sW\n"
 msgstr "電池回報放電速率為 %sW\n"
 
 #: src/process/do_process.cpp:834
-#, fuzzy, c-format
+#, c-format
 msgid "The estimated remaining time is %i hours, %i minutes\n"
-msgstr "預期剩餘時間為 %i 分鐘\n"
+msgstr "預期剩餘時間為 %i 小時 %i 分鐘\n"
 
 #: src/process/do_process.cpp:842
 msgid "Summary"
-msgstr ""
+msgstr "總覽"
 
 #: src/process/do_process.cpp:842 src/process/do_process.cpp:1029
 msgid "wakeups/second"
-msgstr ""
+msgstr "喚醒 / 秒"
 
 #: src/process/do_process.cpp:842
 msgid "GPU ops/seconds"
-msgstr ""
+msgstr "GPU 指令 / 秒"
 
 #: src/process/do_process.cpp:842
 msgid "VFS ops/sec and"
-msgstr ""
+msgstr "VFS 指令 / 秒 以及"
 
 #: src/process/do_process.cpp:842 src/process/do_process.cpp:1030
 msgid "CPU use"
-msgstr ""
+msgstr "CPU 用量"
 
 #: src/process/do_process.cpp:846 src/process/do_process.cpp:914
 #: src/process/do_process.cpp:1034
-#, fuzzy
 msgid "Power est."
-msgstr "PowerTOP "
+msgstr "電源預計"
 
 #: src/process/do_process.cpp:846 src/process/do_process.cpp:848
 #: src/process/do_process.cpp:914 src/process/do_process.cpp:917
 #: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
 msgid "Usage"
-msgstr ""
+msgstr "用法"
 
 #: src/process/do_process.cpp:846 src/process/do_process.cpp:848
 #: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
 msgid "Events/s"
-msgstr ""
+msgstr "事件 / 秒"
 
 #: src/process/do_process.cpp:846 src/process/do_process.cpp:848
 #: src/process/do_process.cpp:914 src/process/do_process.cpp:917
 #: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
 msgid "Category"
-msgstr ""
+msgstr "分類"
 
 #: src/process/do_process.cpp:846 src/process/do_process.cpp:848
 #: src/process/do_process.cpp:914 src/process/do_process.cpp:917
 #: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
 msgid "Description"
-msgstr ""
+msgstr "描述"
 
 #: src/process/do_process.cpp:911
 msgid "Overview of Software Power Consumers"
-msgstr ""
+msgstr "軟體耗電量大戶總覽"
 
 #: src/process/do_process.cpp:914 src/process/do_process.cpp:917
 msgid "Wakeups/s"
-msgstr ""
+msgstr "喚醒 / 秒"
 
 #: src/process/do_process.cpp:914 src/process/do_process.cpp:917
 msgid "GPU ops/s"
-msgstr ""
+msgstr "GPU 指令 / 秒"
 
 #: src/process/do_process.cpp:914 src/process/do_process.cpp:917
 msgid "Disk IO/s"
-msgstr ""
+msgstr "磁碟 IO / 秒"
 
 #: src/process/do_process.cpp:914 src/process/do_process.cpp:917
 msgid "GFX Wakeups/s"
-msgstr ""
+msgstr "GFX 喚醒 / 秒"
 
 #: src/process/do_process.cpp:1026
 msgid "Power Consumption Summary"
-msgstr ""
+msgstr "電源使用量總覽"
 
 #: src/process/do_process.cpp:1029
 msgid "GPU ops/second"
-msgstr ""
+msgstr "GPU 指令 / 秒"
 
 #: src/process/do_process.cpp:1030
 msgid "VFS ops/sec"
-msgstr ""
+msgstr "VFS 指令 / 秒"
 
 #: src/process/do_process.cpp:1030
 msgid "GFX wakes/sec and"
-msgstr ""
+msgstr "GFX 喚醒 / 秒 以及"
 
 #: src/perf/perf.cpp:121
 #, c-format
@@ -479,89 +475,74 @@ msgid "Parameters after calibration:\n"
 msgstr "校正取得參數:\n"
 
 #: src/main.cpp:84
-#, fuzzy, c-format
+#, c-format
 msgid "PowerTOP version"
-msgstr "Powertop 版本"
+msgstr "PowerTop 版本"
 
 #: src/main.cpp:90
 msgid "Set refresh time out"
 msgstr "設定更新週期"
 
 #: src/main.cpp:103
-#, fuzzy
 msgid "Usage: powertop [OPTIONS]"
-msgstr ""
-"用法: powertop [選項]\n"
-"\n"
+msgstr "用法: powertop [選項]"
 
 #: src/main.cpp:104
-#, fuzzy
 msgid "run in \"debug\" mode"
-msgstr "--debug \t\t 以 \"debug\" 模式執行\n"
+msgstr "以 \"debug\" 模式執行"
 
 #: src/main.cpp:105
-#, fuzzy
 msgid "print version information"
-msgstr "--version \t\t 顯示版本資訊\n"
+msgstr "顯示版本資訊"
 
 #: src/main.cpp:106
-#, fuzzy
 msgid "runs powertop in calibration mode"
-msgstr "--calibrate \t\t 以校正模式執行 powertop\n"
+msgstr "以校正模式執行 powertop"
 
 #: src/main.cpp:107
 msgid "[=devnode]"
-msgstr ""
+msgstr "[= 設備節點]"
 
 #: src/main.cpp:107
-#, fuzzy
 msgid "uses an Extech Power Analyzer for measurements"
-msgstr "--extech=devnode \t 使用 Extech 電源分析儀進行量測\n"
+msgstr "使用 Extech 電源分析儀進行量測"
 
 #: src/main.cpp:108 src/main.cpp:109
 msgid "[=FILENAME]"
-msgstr ""
+msgstr "[= 檔案名稱]"
 
 #: src/main.cpp:108
-#, fuzzy
 msgid "generate a html report"
-msgstr "--html[=FILENAME] \t 產生 html 報告\n"
+msgstr "產生 html 報告"
 
 #: src/main.cpp:109
-#, fuzzy
 msgid "generate a csv report"
-msgstr "--csv[=FILENAME] \t 產生 csv 報告\n"
+msgstr "產生 csv 報告"
 
 #: src/main.cpp:110
 msgid "[=seconds]"
-msgstr ""
+msgstr "[= 秒]"
 
 #: src/main.cpp:110
-#, fuzzy
 msgid "generate a report for 'x' seconds"
-msgstr "--time[=secs] \t\t 產生蒐集資料 'x' 秒鐘的報告\n"
+msgstr "產生蒐集資料 'x' 秒鐘的報告"
 
 #: src/main.cpp:111
-#, fuzzy
 msgid "[=iterations] number of times to run each test"
-msgstr "--iteration[=iterations] 每次檢驗進行量測次數\n"
+msgstr "[=iterations] 每次檢驗進行量測次數"
 
 #: src/main.cpp:112
-#, fuzzy
 msgid "print this help menu"
-msgstr "--help \t\t\t 顯示此輔助說明選單\n"
+msgstr "顯示此輔助說明選單"
 
 #: src/main.cpp:114
-#, fuzzy
 msgid "For more help please refer to the README"
-msgstr ""
-"更多的輔助說明請參閱 README\n"
-"\n"
+msgstr "更多的輔助說明請參閱 README"
 
 #: src/main.cpp:224
 #, c-format
 msgid "PowerTOP is out of memory. PowerTOP is Aborting"
-msgstr ""
+msgstr "PowerTOP 已耗盡記憶體，退出中。"
 
 #: src/main.cpp:252
 #, c-format
@@ -569,9 +550,9 @@ msgid "Preparing to take measurements\n"
 msgstr "量測準備中\n"
 
 #: src/main.cpp:255
-#, fuzzy, c-format
+#, c-format
 msgid "Taking %d measurement(s) for a duration of %d second(s) each.\n"
-msgstr "測量 %d 次於每 %d 秒\n"
+msgstr "測量 %d 次於每 %d 秒。\n"
 
 #: src/main.cpp:278
 #, c-format
@@ -589,86 +570,6 @@ msgid "Failed to mount debugfs!\n"
 msgstr "debugfs 掛載失敗!\n"
 
 #: src/main.cpp:443
-#, fuzzy, c-format
+#, c-format
 msgid "Leaving PowerTOP"
-msgstr "離開 PowerTOP\n"
-
-#~ msgid " <ESC> Exit | "
-#~ msgstr " <ESC> 離開 | "
-
-#~ msgid "C3 (cc3)"
-#~ msgstr "C3 (cc3)"
-
-#~ msgid "C6 (cc6)"
-#~ msgstr "C6 (cc6)"
-
-#~ msgid "C7 (cc7)"
-#~ msgstr "C7 (cc7)"
-
-#~ msgid "C2 (pc2)"
-#~ msgstr "C2 (pc2)"
-
-#~ msgid "C3 (pc3)"
-#~ msgstr "C3 (pc3)"
-
-#~ msgid "C6 (pc6)"
-#~ msgstr "C6 (pc6)"
-
-#~ msgid "C7 (pc7)"
-#~ msgstr "C7 (pc7)"
-
-#~ msgid ""
-#~ "<h2>Process device activity</h2>\n"
-#~ " <table width=\"100%%\">\n"
-#~ msgstr ""
-#~ "<h2>程緒 設備 活動量</h2>\n"
-#~ " <table width=\"100%%\">\n"
-
-#~ msgid ""
-#~ "<tr><th class=\"device\" width=\"40%%\">Process</th><th class=\"device"
-#~ "\">Device</th></tr>\n"
-#~ msgstr ""
-#~ "<tr><th class=\"device\" width=\"40%%\">程緒</th><th class=\"device\">設備"
-#~ "</th></tr>\n"
-
-#~ msgid ""
-#~ "**Process Device Activity**, \n"
-#~ "\n"
-#~ msgstr ""
-#~ "**程緒 設備 活動量**, \n"
-#~ "\n"
-
-#~ msgid "Process, Device, \n"
-#~ msgstr "程緒, 設備, \n"
-
-#~ msgid "%9lli"
-#~ msgstr "%9lli"
-
-#~ msgid "%4lli MHz"
-#~ msgstr "%4lli MHz"
-
-#~ msgid "%6lli MHz"
-#~ msgstr "%6lli MHz"
-
-#~ msgid "%4.2f GHz"
-#~ msgstr "%4.2f GHz"
-
-#~ msgid "%3.1f GHz"
-#~ msgstr "%3.1f GHz"
-
-#~ msgid "Power est.      Usage       Events/s    Category       Description\n"
-#~ msgstr "電源預估        使用量      頻率        分類           描述\n"
-
-#~ msgid "                Usage       Events/s    Category       Description\n"
-#~ msgstr "                使用量      頻率        分類           描述\n"
-
-#~ msgid ""
-#~ "CONFIG_PERF_EVENTS=y\n"
-#~ "CONFIG_PERF_COUNTERS=y\n"
-#~ "CONFIG_TRACEPOINTS=y\n"
-#~ "CONFIG_TRACING=y\n"
-#~ msgstr ""
-#~ "CONFIG_PERF_EVENTS=y\n"
-#~ "CONFIG_PERF_COUNTERS=y\n"
-#~ "CONFIG_TRACEPOINTS=y\n"
-#~ "CONFIG_TRACING=y\n"
+msgstr "離開 PowerTOP"

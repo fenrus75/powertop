@@ -186,7 +186,7 @@ int dont_blame_me(char *comm)
 	return 0;
 }
 
-static void dbg_printf_pevent_info(struct event_format *event, struct record *rec)
+static void dbg_printf_pevent_info(struct event_format *event, struct pevent_record *rec)
 {
 	static struct trace_seq s;
 
@@ -216,7 +216,7 @@ static char * get_pevent_field_str(void *trace, struct event_format *event, stru
 void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time)
 {
 	struct event_format *event;
-	struct record rec; /* holder */
+	struct pevent_record rec; /* holder */
 	struct format_field *field;
 	unsigned long long val;
 	int type;

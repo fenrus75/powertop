@@ -1,8 +1,7 @@
 /*
  * Copyright (C) 2009, 2010 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
  *
- *
- *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation;
@@ -15,11 +14,9 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
- * 02110-1301 USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- *
- *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 #ifndef _PARSE_EVENTS_H
 #define _PARSE_EVENTS_H
@@ -42,7 +39,7 @@
 #define DEBUG_RECORD 0
 #endif
 
-struct record {
+struct pevent_record {
 	unsigned long long	ts;
 	unsigned long long	offset;
 	long long		missed_events;	/* buffer dropped events before */
@@ -52,10 +49,10 @@ struct record {
 	int			cpu;
 	int			ref_count;
 	int			locked;		/* Do not free, even if ref_count is zero */
-	void			*r_private;
+	void			*p_private;
 #if DEBUG_RECORD
-	struct record		*prev;
-	struct record		*next;
+	struct pevent_record	*prev;
+	struct pevent_record	*next;
 	long			alloc_addr;
 #endif
 };
@@ -94,7 +91,7 @@ struct pevent;
 struct event_format;
 
 typedef int (*pevent_event_handler_func)(struct trace_seq *s,
-					 struct record *record,
+					 struct pevent_record *record,
 					 struct event_format *event,
 					 void *context);
 
@@ -170,6 +167,8 @@ enum format_flags {
 	FIELD_IS_STRING		= 8,
 	FIELD_IS_DYNAMIC	= 16,
 	FIELD_IS_LONG		= 32,
+	FIELD_IS_FLAG		= 64,
+	FIELD_IS_SYMBOLIC	= 128,
 };
 
 struct format_field {
@@ -212,7 +211,7 @@ struct print_flag_sym {
 };
 
 struct print_arg_typecast {
-	char			*type;
+	char 			*type;
 	struct print_arg	*item;
 };
 
@@ -225,6 +224,11 @@ struct print_arg_flags {
 struct print_arg_symbol {
 	struct print_arg	*field;
 	struct print_flag_sym	*symbols;
+};
+
+struct print_arg_hex {
+	struct print_arg	*field;
+	struct print_arg	*size;
 };
 
 struct print_arg_dynarray {
@@ -254,6 +258,7 @@ enum print_arg_type {
 	PRINT_FIELD,
 	PRINT_FLAGS,
 	PRINT_SYMBOL,
+	PRINT_HEX,
 	PRINT_TYPE,
 	PRINT_STRING,
 	PRINT_BSTRING,
@@ -271,6 +276,7 @@ struct print_arg {
 		struct print_arg_typecast	typecast;
 		struct print_arg_flags		flags;
 		struct print_arg_symbol		symbol;
+		struct print_arg_hex		hex;
 		struct print_arg_func		func;
 		struct print_arg_string		string;
 		struct print_arg_op		op;
@@ -335,6 +341,10 @@ enum pevent_func_arg_type {
 	PEVENT_FUNC_ARG_MAX_TYPES
 };
 
+enum pevent_flag {
+	PEVENT_NSEC_OUTPUT		= 1,	/* output in NSECS */
+};
+
 struct cmdline;
 struct cmdline_list;
 struct func_map;
@@ -374,6 +384,7 @@ struct pevent {
 	struct printk_list *printklist;
 	unsigned int printk_count;
 
+
 	struct event_format **events;
 	int nr_events;
 	struct event_format **sort_events;
@@ -385,7 +396,7 @@ struct pevent {
 	int pid_offset;
 	int pid_size;
 
-	int pc_offset;
+ 	int pc_offset;
 	int pc_size;
 
 	int flags_offset;
@@ -398,6 +409,8 @@ struct pevent {
 
 	int test_filters;
 
+	int flags;
+
 	struct format_field *bprint_ip_field;
 	struct format_field *bprint_fmt_field;
 	struct format_field *bprint_buf_field;
@@ -405,27 +418,14 @@ struct pevent {
 	struct event_handler *handlers;
 	struct pevent_function_handler *func_handlers;
 
-	int parsing_failures;
-
 	/* cache */
 	struct event_format *last_event;
 };
 
-/* Can be overridden */
-void die(const char *fmt, ...);
-void *malloc_or_die(unsigned int size);
-void warning(const char *fmt, ...);
-void pr_stat(const char *fmt, ...);
-void vpr_stat(const char *fmt, va_list ap);
-
-/* Always available */
-void __die(const char *fmt, ...);
-void __warning(const char *fmt, ...);
-void __pr_stat(const char *fmt, ...);
-
-void __vdie(const char *fmt, ...);
-void __vwarning(const char *fmt, ...);
-void __vpr_stat(const char *fmt, ...);
+static inline void pevent_set_flag(struct pevent *pevent, int flag)
+{
+	pevent->flags |= flag;
+}
 
 static inline unsigned short
 __data2host2(struct pevent *pevent, unsigned short data)
@@ -504,7 +504,7 @@ int pevent_register_print_string(struct pevent *pevent, char *fmt,
 int pevent_pid_is_registered(struct pevent *pevent, int pid);
 
 void pevent_print_event(struct pevent *pevent, struct trace_seq *s,
-			struct record *record);
+			struct pevent_record *record);
 
 int pevent_parse_header_page(struct pevent *pevent, char *buf, unsigned long size,
 			     int long_size);
@@ -513,22 +513,22 @@ int pevent_parse_event(struct pevent *pevent, const char *buf,
 		       unsigned long size, const char *sys);
 
 void *pevent_get_field_raw(struct trace_seq *s, struct event_format *event,
-			   const char *name, struct record *record,
+			   const char *name, struct pevent_record *record,
 			   int *len, int err);
 
 int pevent_get_field_val(struct trace_seq *s, struct event_format *event,
-			 const char *name, struct record *record,
+			 const char *name, struct pevent_record *record,
 			 unsigned long long *val, int err);
 int pevent_get_common_field_val(struct trace_seq *s, struct event_format *event,
-				const char *name, struct record *record,
+				const char *name, struct pevent_record *record,
 				unsigned long long *val, int err);
 int pevent_get_any_field_val(struct trace_seq *s, struct event_format *event,
-			     const char *name, struct record *record,
+			     const char *name, struct pevent_record *record,
 			     unsigned long long *val, int err);
 
 int pevent_print_num_field(struct trace_seq *s, const char *fmt,
 			   struct event_format *event, const char *name,
-			   struct record *record, int err);
+			   struct pevent_record *record, int err);
 
 int pevent_register_event_handler(struct pevent *pevent, int id, char *sys_name, char *event_name,
 				  pevent_event_handler_func func, void *context);
@@ -538,8 +538,8 @@ int pevent_register_print_function(struct pevent *pevent,
 				   char *name, ...);
 
 struct format_field *pevent_find_common_field(struct event_format *event, const char *name);
-struct format_field *pevent_find_field(struct event_format *event,const char *name);
-struct format_field *pevent_find_any_field(struct event_format *event,const char *name);
+struct format_field *pevent_find_field(struct event_format *event, const char *name);
+struct format_field *pevent_find_any_field(struct event_format *event, const char *name);
 
 const char *pevent_find_function(struct pevent *pevent, unsigned long long addr);
 unsigned long long
@@ -554,13 +554,13 @@ struct event_format *
 pevent_find_event_by_name(struct pevent *pevent, const char *sys, const char *name);
 
 void pevent_data_lat_fmt(struct pevent *pevent,
-			 struct trace_seq *s, struct record *record);
-int pevent_data_type(struct pevent *pevent, struct record *rec);
+			 struct trace_seq *s, struct pevent_record *record);
+int pevent_data_type(struct pevent *pevent, struct pevent_record *rec);
 struct event_format *pevent_data_event_from_type(struct pevent *pevent, int type);
-int pevent_data_pid(struct pevent *pevent, struct record *rec);
+int pevent_data_pid(struct pevent *pevent, struct pevent_record *rec);
 const char *pevent_data_comm_from_pid(struct pevent *pevent, int pid);
 void pevent_event_info(struct trace_seq *s, struct event_format *event,
-		       struct record *record);
+		       struct pevent_record *record);
 
 struct event_format **pevent_list_events(struct pevent *pevent, enum event_sort_type);
 struct format_field **pevent_event_common_fields(struct event_format *event);
@@ -780,7 +780,7 @@ int pevent_filter_add_filter_str(struct event_filter *filter,
 
 
 int pevent_filter_match(struct event_filter *filter,
-			struct record *record);
+			struct pevent_record *record);
 
 int pevent_event_filtered(struct event_filter *filter,
 			  int event_id);
@@ -806,4 +806,6 @@ int pevent_filter_copy(struct event_filter *dest, struct event_filter *source);
 int pevent_update_trivial(struct event_filter *dest, struct event_filter *source,
 			  enum filter_trivial_type type);
 
-#endif
+int pevent_filter_compare(struct event_filter *filter1, struct event_filter *filter2);
+
+#endif /* _PARSE_EVENTS_H */

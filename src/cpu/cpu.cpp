@@ -903,7 +903,7 @@ struct power_entry {
 void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time)
 {
 	struct event_format *event;
-        struct record rec; /* holder */
+        struct pevent_record rec; /* holder */
 	class abstract_cpu *cpu;
 	int type;
 

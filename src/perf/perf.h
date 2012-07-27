@@ -27,9 +27,11 @@
 
 #include <iostream>
 
+
 extern "C" {
-#include "../pevent/parse-events.h"
+	#include "../traceevent/event-parse.h"
 }
+
 
 using namespace std;
 

@@ -1,8 +1,7 @@
 /*
  * Copyright (C) 2010 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
  *
- *
- *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation;
@@ -15,9 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
- * 02110-1301 USA.
- *
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
@@ -28,8 +25,8 @@
 #include <errno.h>
 #include <sys/types.h>
 
-#include "parse-events.h"
-#include "util.h"
+#include "event-parse.h"
+#include "event-utils.h"
 
 #define COMM "COMM"
 
@@ -99,7 +96,7 @@ static enum event_type read_token(char **tok)
 	    (strcmp(token, "=") == 0 || strcmp(token, "!") == 0) &&
 	    pevent_peek_char() == '~') {
 		/* append it */
-		*tok = malloc(3);
+		*tok = malloc_or_die(3);
 		sprintf(*tok, "%c%c", *token, '~');
 		free_token(token);
 		/* Now remove the '~' from the buffer */
@@ -151,17 +148,11 @@ add_filter_type(struct event_filter *filter, int id)
 	if (filter_type)
 		return filter_type;
 
-	if (!filter->filters)
-		filter->event_filters =
-			malloc_or_die(sizeof(*filter->event_filters));
-	else {
-		filter->event_filters =
-			realloc(filter->event_filters,
-				sizeof(*filter->event_filters) *
-				(filter->filters + 1));
-		if (!filter->event_filters)
-			die("Could not allocate filter");
-	}
+	filter->event_filters =	realloc(filter->event_filters,
+					sizeof(*filter->event_filters) *
+					(filter->filters + 1));
+	if (!filter->event_filters)
+		die("Could not allocate filter");
 
 	for (i = 0; i < filter->filters; i++) {
 		if (filter->event_filters[i].event_id > id)
@@ -328,9 +319,8 @@ static void free_events(struct event_list *events)
 }
 
 static struct filter_arg *
-create_arg_item(struct event_format *event,
-		const char *token, enum filter_arg_type type,
-		char **error_str)
+create_arg_item(struct event_format *event, const char *token,
+		enum event_type type, char **error_str)
 {
 	struct format_field *field;
 	struct filter_arg *arg;
@@ -1484,7 +1474,7 @@ void pevent_filter_clear_trivial(struct event_filter *filter,
 {
 	struct filter_type *filter_type;
 	int count = 0;
-	int *ids;
+	int *ids = NULL;
 	int i;
 
 	if (!filter->filters)
@@ -1508,10 +1498,8 @@ void pevent_filter_clear_trivial(struct event_filter *filter,
 		default:
 			break;
 		}
-		if (count)
-			ids = realloc(ids, sizeof(*ids) * (count + 1));
-		else
-			ids = malloc(sizeof(*ids));
+
+		ids = realloc(ids, sizeof(*ids) * (count + 1));
 		if (!ids)
 			die("Can't allocate ids");
 		ids[count++] = filter_type->event_id;
@@ -1564,10 +1552,10 @@ int pevent_filter_event_has_trivial(struct event_filter *filter,
 }
 
 static int test_filter(struct event_format *event,
-		       struct filter_arg *arg, struct record *record);
+		       struct filter_arg *arg, struct pevent_record *record);
 
 static const char *
-get_comm(struct event_format *event, struct record *record)
+get_comm(struct event_format *event, struct pevent_record *record)
 {
 	const char *comm;
 	int pid;
@@ -1579,7 +1567,7 @@ get_comm(struct event_format *event, struct record *record)
 
 static unsigned long long
 get_value(struct event_format *event,
-	  struct format_field *field, struct record *record)
+	  struct format_field *field, struct pevent_record *record)
 {
 	unsigned long long val;
 
@@ -1588,7 +1576,7 @@ get_value(struct event_format *event,
 		const char *name;
 
 		name = get_comm(event, record);
-		return (unsigned long long)name;
+		return (unsigned long)name;
 	}
 
 	pevent_read_number_field(field, record->data, &val);
@@ -1610,10 +1598,10 @@ get_value(struct event_format *event,
 }
 
 static unsigned long long
-get_arg_value(struct event_format *event, struct filter_arg *arg, struct record *record);
+get_arg_value(struct event_format *event, struct filter_arg *arg, struct pevent_record *record);
 
 static unsigned long long
-get_exp_value(struct event_format *event, struct filter_arg *arg, struct record *record)
+get_exp_value(struct event_format *event, struct filter_arg *arg, struct pevent_record *record)
 {
 	unsigned long long lval, rval;
 
@@ -1659,7 +1647,7 @@ get_exp_value(struct event_format *event, struct filter_arg *arg, struct record 
 }
 
 static unsigned long long
-get_arg_value(struct event_format *event, struct filter_arg *arg, struct record *record)
+get_arg_value(struct event_format *event, struct filter_arg *arg, struct pevent_record *record)
 {
 	switch (arg->type) {
 	case FILTER_ARG_FIELD:
@@ -1680,7 +1668,7 @@ get_arg_value(struct event_format *event, struct filter_arg *arg, struct record 
 }
 
 static int test_num(struct event_format *event,
-		    struct filter_arg *arg, struct record *record)
+		    struct filter_arg *arg, struct pevent_record *record)
 {
 	unsigned long long lval, rval;
 
@@ -1712,7 +1700,7 @@ static int test_num(struct event_format *event,
 	}
 }
 
-static const char *get_field_str(struct filter_arg *arg, struct record *record)
+static const char *get_field_str(struct filter_arg *arg, struct pevent_record *record)
 {
 	struct event_format *event;
 	struct pevent *pevent;
@@ -1755,7 +1743,7 @@ static const char *get_field_str(struct filter_arg *arg, struct record *record)
 }
 
 static int test_str(struct event_format *event,
-		    struct filter_arg *arg, struct record *record)
+		    struct filter_arg *arg, struct pevent_record *record)
 {
 	const char *val;
 
@@ -1785,7 +1773,7 @@ static int test_str(struct event_format *event,
 }
 
 static int test_op(struct event_format *event,
-		   struct filter_arg *arg, struct record *record)
+		   struct filter_arg *arg, struct pevent_record *record)
 {
 	switch (arg->op.type) {
 	case FILTER_OP_AND:
@@ -1806,7 +1794,7 @@ static int test_op(struct event_format *event,
 }
 
 static int test_filter(struct event_format *event,
-		       struct filter_arg *arg, struct record *record)
+		       struct filter_arg *arg, struct pevent_record *record)
 {
 	switch (arg->type) {
 	case FILTER_ARG_BOOLEAN:
@@ -1871,7 +1859,7 @@ int pevent_event_filtered(struct event_filter *filter,
  * -2 - if no filters exist
  */
 int pevent_filter_match(struct event_filter *filter,
-			struct record *record)
+			struct pevent_record *record)
 {
 	struct pevent *pevent = filter->pevent;
 	struct filter_type *filter_type;
@@ -2030,11 +2018,13 @@ static char *exp_to_str(struct event_filter *filter, struct filter_arg *arg)
 	char *lstr;
 	char *rstr;
 	char *op;
-	char *str;
+	char *str = NULL;
 	int len;
 
 	lstr = arg_to_str(filter, arg->exp.left);
 	rstr = arg_to_str(filter, arg->exp.right);
+	if (!lstr || !rstr)
+		goto out;
 
 	switch (arg->exp.type) {
 	case FILTER_EXP_ADD:
@@ -2074,6 +2064,7 @@ static char *exp_to_str(struct event_filter *filter, struct filter_arg *arg)
 	len = strlen(op) + strlen(lstr) + strlen(rstr) + 4;
 	str = malloc_or_die(len);
 	snprintf(str, len, "%s %s %s", lstr, op, rstr);
+out:
 	free(lstr);
 	free(rstr);
 
@@ -2090,6 +2081,8 @@ static char *num_to_str(struct event_filter *filter, struct filter_arg *arg)
 
 	lstr = arg_to_str(filter, arg->num.left);
 	rstr = arg_to_str(filter, arg->num.right);
+	if (!lstr || !rstr)
+		goto out;
 
 	switch (arg->num.type) {
 	case FILTER_CMP_EQ:
@@ -2126,6 +2119,7 @@ static char *num_to_str(struct event_filter *filter, struct filter_arg *arg)
 		break;
 	}
 
+out:
 	free(lstr);
 	free(rstr);
 	return str;
@@ -2276,7 +2270,12 @@ int pevent_filter_compare(struct event_filter *filter1, struct event_filter *fil
 		/* The best way to compare complex filters is with strings */
 		str1 = arg_to_str(filter1, filter_type1->filter);
 		str2 = arg_to_str(filter2, filter_type2->filter);
-		result = strcmp(str1, str2) != 0;
+		if (str1 && str2)
+			result = strcmp(str1, str2) != 0;
+		else
+			/* bail out if allocation fails */
+			result = 1;
+
 		free(str1);
 		free(str2);
 		if (result)
@@ -2287,3 +2286,4 @@ int pevent_filter_compare(struct event_filter *filter1, struct event_filter *fil
 		return 0;
 	return 1;
 }
+

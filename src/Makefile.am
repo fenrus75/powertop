@@ -38,7 +38,7 @@ powertop_CXXFLAGS = -fno-omit-frame-pointer -fstack-protector -Wall -Wshadow -Wf
 
 powertop_CPPFLAGS = -D_FORTIFY_SOURCE=2 $(NCURSES_CFLAGS) $(PCIUTILS_CFLAGS) $(LIBNL_CFLAGS) $(GLIB2_CFLAGS) $(LIBZ_CFLAGS) -DLOCALEDIR=\"$(localedir)\"
 
-powertop_LDADD = ../pevent/libparseevent.la
+powertop_LDADD = ../traceevent/libtraceevnet.la
 
 AM_LDFLAGS = $(LIBS) $(NCURSES_LIBS) $(PCIUTILS_LIBS) $(LIBNL_LIBS) $(LIBZ_LIBS) $(PTHREAD_LIBS)  $(RESOLV_LIBS)
 

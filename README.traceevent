@@ -1,0 +1,15 @@
+traceevent: 
+
+The traceevent library being built in PowerTOP is really a effort by Steven Rostedt. 
+The long term intent is for Steven to push the trace event library to distributions, and consume it externally. Right now the PowerTOP project is keeping in sync with his code posted in the Linux kernel git under tools/lib/traceevent. 
+We will not take patches into the traceevent code directly, rather we will be re-basing 
+against that code base. 
+
+If you find a bug in the trace event code, you should to one of two things. 
+
+1. Send a patch to the PowerTOP mailing list, which will get forwared to Steven if appropriate. 
+2. Send a patch to the PowerTOP mailing list, cc <Steven Rostedt> rostedt@goodmis.org
+
+
+Please do use the PowerTOP mailing list to discuss topics about traceevent as its used with PowerTOP.
+

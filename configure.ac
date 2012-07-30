@@ -53,12 +53,13 @@ PKG_CHECK_MODULES([PCIUTILS], [libpci],[has_libpci=1],[
  
 
 has_libnl_ver=0
-PKG_CHECK_MODULES([LIBNL], [libnl-1], [has_libnl_ver=1], [
-	AC_SEARCH_LIBS([nl_socket_alloc], [nl], [has_libnl_ver=2], [
-		     PKG_CHECK_MODULES([LIBNL], [libnl-3.0 libnl-genl-3.0], [has_libnl_ver=3],
-				       [AC_SEARCH_LIBS([nl_socket_alloc], [nl-3 nl-genl-3], [has_libnl_ver=3], [], [])])
-	], [])
-])
+PKG_CHECK_MODULES([LIBNL], [libnl-3.0 libnl-genl-3.0], [
+	has_libnl_ver=3], [
+	AC_SEARCH_LIBS([nl_socket_alloc], [nl-3 nl-genl-3], [
+		has_libnl_ver=3], [
+		AC_SEARCH_LIBS([nl_socket_alloc], [nl], [
+			has_libnl_ver=2], [
+			PKG_CHECK_MODULES([LIBNL], [libnl-1], [has_libnl_ver=1], [])])])])
 if (test "$has_libnl_ver" -eq 0); then
 	AC_MSG_ERROR(libnl is required but not found)
 fi

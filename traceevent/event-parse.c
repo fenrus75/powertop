@@ -4734,8 +4734,7 @@ int pevent_parse_event(struct pevent *pevent,
 	 * If the event has an override, don't print warnings if the event
 	 * print format fails to parse.
 	 */
-	if (find_event_handle(pevent, event))
-		show_warning = 0;
+	show_warning = 0;
 
 	ret = event_read_print(event);
 	if (ret < 0) {

@@ -61,6 +61,5 @@ compile
 stamp-po
 ABOUT-NLS
 ar-lib
-.deps/*
-.libs/*
-
+traceevent/.deps/
+traceevents/.libs/

@@ -663,8 +663,8 @@ void start_process_measurement(void)
 		perf_events->add_event("irq:softirq_exit");
 		perf_events->add_event("timer:timer_expire_entry");
 		perf_events->add_event("timer:timer_expire_exit");
-		perf_events->add_event("hrtimer_expire_entry");
-		perf_events->add_event("hrtimer_expire_exit");
+		perf_events->add_event("timer:hrtimer_expire_entry");
+		perf_events->add_event("timer:hrtimer_expire_exit");
 		if (!perf_events->add_event("power:cpu_idle")){
 			perf_events->add_event("power:power_start");
 			perf_events->add_event("power:power_end");

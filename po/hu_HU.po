@@ -553,7 +553,7 @@ msgstr "Előkészülés a mérések elvégzéséhez\n"
 #: src/main.cpp:255
 #, c-format
 msgid "Taking %d measurement(s) for a duration of %d second(s) each.\n"
-msgstr "%d darab, egyenként %d másodperces mérés készítése.\\n"
+msgstr "%d darab, egyenként %d másodperces mérés készítése.\n"
 
 #: src/main.cpp:278
 #, c-format

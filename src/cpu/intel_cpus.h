@@ -137,3 +137,26 @@ public:
 
 
 extern int has_c2c7_res;
+
+class i965_core: public cpu_core
+{
+private:
+	uint64_t	rc6_before, rc6_after;
+	uint64_t	rc6p_before, rc6p_after;
+	uint64_t	rc6pp_before, rc6pp_after;
+	
+	struct timeval	before;
+	struct timeval	after;
+
+public:
+	virtual void	measurement_start(void);
+	virtual void	measurement_end(void);
+	virtual int     can_collapse(void) { return 0;};
+
+	virtual char *  fill_pstate_line(int line_nr, char *buffer);
+	virtual char *  fill_pstate_name(int line_nr, char *buffer);
+	virtual char *  fill_cstate_line(int line_nr, char *buffer, const char *separator);
+	virtual int	has_pstate_level(int level) { return 0; };
+	virtual int	has_pstates(void) { return 0; };
+
+};

@@ -30,7 +30,7 @@ powertop_SOURCES = parameters/persistent.cpp parameters/learn.cpp parameters/par
 		calibrate/calibrate.h measurement/measurement.cpp measurement/power_supply.cpp \
 		measurement/measurement.h measurement/acpi.cpp measurement/sysfs.h measurement/sysfs.cpp \
 		measurement/acpi.h measurement/extech.cpp measurement/power_supply.h measurement/extech.h \
-		main.cpp css.h powertop.css
+		main.cpp css.h powertop.css cpu/intel_gpu.cpp
 
 
 powertop_CXXFLAGS = -fno-omit-frame-pointer -fstack-protector -Wall -Wshadow -Wformat $(NCURSES_CFLAGS) $(PCIUTILS_CFLAGS) $(LIBNL_CFLAGS) $(GLIB2_CFLAGS)

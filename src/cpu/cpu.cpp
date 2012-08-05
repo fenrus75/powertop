@@ -123,6 +123,16 @@ static class abstract_cpu * new_core(int core, int cpu, char * vendor, int famil
 	return ret;
 }
 
+static class abstract_cpu * new_i965_gpu(void)
+{
+	class abstract_cpu *ret = NULL;
+
+	ret = new class i965_core;
+	ret->childcount = 0;
+
+	return ret;
+}
+
 static class abstract_cpu * new_cpu(int number, char * vendor, int family, int model)
 {
 	class abstract_cpu * ret = NULL;
@@ -218,6 +228,26 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 	all_cpus[number] = cpu;
 }
 
+static void handle_i965_gpu(void)
+{
+	unsigned int core_number = 0;
+	class abstract_cpu *package;
+
+
+	package = system_level.children[0];
+	
+	core_number = package->children.size();
+
+	if (package->children.size() <= core_number)
+		package->children.resize(core_number + 1, NULL);
+
+	if (!package->children[core_number]) {
+		package->children[core_number] = new_i965_gpu();
+		package->childcount++;
+	}
+}
+
+
 void enumerate_cpus(void)
 {
 	ifstream file;
@@ -287,6 +317,9 @@ void enumerate_cpus(void)
 
 
 	file.close();
+
+	if (access("/sys/class/drm/card0/power/rc6_residency_ms", R_OK) == 0)
+		handle_i965_gpu();
 
 	perf_events = new perf_power_bundle();
 

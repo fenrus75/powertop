@@ -111,8 +111,8 @@ public:
 
 	/* C state related methods */
 
-	void		insert_cstate(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count);
-	void		update_cstate(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count);
+	void		insert_cstate(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count, int level = -1);
+	void		update_cstate(const char *linux_name, const char *human_name, uint64_t usage, uint64_t duration, int count, int level = -1);
 	void		finalize_cstate(const char *linux_name, uint64_t usage, uint64_t duration, int count);
 
 	virtual int	has_cstate_level(int level);

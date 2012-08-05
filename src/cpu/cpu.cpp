@@ -626,6 +626,8 @@ void report_display_cpu_pstates(void)
 			_core = _package->children[core];
 			if (!_core)
 				continue;
+			if (!_core->has_pstates())
+				continue;
 
 			for (line = LEVEL_HEADER; line < (int)pstates_num; line++) {
 				int first = 1;
@@ -821,6 +823,9 @@ void impl_w_display_cpu_states(int state)
 			_core = _package->children[core];
 			if (!_core)
 				continue;
+			if (!_core->has_pstates() && state == PSTATE)
+				continue;
+
 
 			for (line = LEVEL_HEADER; line < 10; line++) {
 				int first = 1;

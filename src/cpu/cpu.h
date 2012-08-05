@@ -130,6 +130,7 @@ public:
 	virtual char *  fill_pstate_line(int line_nr, char *buffer) { return buffer;};
 	virtual char *  fill_pstate_name(int line_nr, char *buffer) { return buffer;};
 	virtual int	has_pstate_level(int level);
+	virtual int	has_pstates(void) { return 1; };
 
 	/* Frequency micro accounting methods */
 	virtual void    calculate_freq(uint64_t time);

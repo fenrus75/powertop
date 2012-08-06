@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Intel Corporation
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # capimans, 2012.
 # Il_Tifossi <lluita_i_no_dorm@hotmail.com>, 2011.
@@ -13,11 +13,12 @@ msgstr ""
 "POT-Creation-Date: 2012-05-31 14:03-0700\n"
 "PO-Revision-Date: 2012-06-04 19:23+0000\n"
 "Last-Translator: Juanma Hernández <juanmah@gmail.com>\n"
-"Language-Team: Catalan (http://www.transifex.com/projects/p/PowerTOP/language/ca/)\n"
+"Language-Team: Catalan (http://www.transifex.com/projects/p/PowerTOP/"
+"language/ca/)\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: src/parameters/persistent.cpp:46 src/parameters/persistent.cpp:140
@@ -156,7 +157,9 @@ msgstr "Intel connectat a port USB"
 msgid ""
 "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n"
 "\n"
-msgstr "Potència estimada: %5.1f    Potència mesurada: %5.1f    Suma: %5.1f\n\n"
+msgstr ""
+"Potència estimada: %5.1f    Potència mesurada: %5.1f    Suma: %5.1f\n"
+"\n"
 
 #: src/process/do_process.cpp:829 src/devices/device.cpp:171
 #, c-format

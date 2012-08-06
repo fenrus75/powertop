@@ -28,7 +28,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ncurses.h>
-
+#include <unistd.h>
 #include "cpu.h"
 #include "cpudevice.h"
 #include "../parameters/parameters.h"

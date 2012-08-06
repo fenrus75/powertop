@@ -180,8 +180,6 @@ static void do_sleep(int seconds)
 
 void one_measurement(int seconds, char *workload)
 {
-	int tmp;
-	
 	create_all_usb_devices();
 	start_power_measurement();
 	devices_start_measurement();
@@ -189,11 +187,10 @@ void one_measurement(int seconds, char *workload)
 	start_cpu_measurement();
 
 	if (workload && workload[0]) {
-		tmp = system(workload);
-	}
-	else
+		system(workload);
+	} else {
 		do_sleep(seconds);
-
+	}
 	end_cpu_measurement();
 	end_process_measurement();
 	collect_open_devices();
@@ -281,7 +278,6 @@ static void powertop_init(void)
 	static char initialized = 0;
 	int ret;
 	struct statfs st_fs;
-	char filename[4096];
 
 	if (initialized)
 		return;

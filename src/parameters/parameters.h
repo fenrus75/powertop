@@ -116,7 +116,6 @@ int global_power_valid(void);
 
 
 extern int global_power_override;
-extern int global_fixed_parameters;
 
 
 #endif

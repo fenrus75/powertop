@@ -112,10 +112,6 @@ void learn_parameters(int iterations, int do_base_power)
 	unsigned int i;
 	time_t start;
 
-	if (global_fixed_parameters)
-		return;
-
-
 	/* don't start fitting anything until we have at least 1 more measurement than we have parameters */
 	if (past_results.size() <= all_parameters.parameters.size())
 		return;

@@ -1,13 +1,11 @@
-Needed for 2.1
+Needed for 2.2
 ----------------------------------
 
 * more translations / strings
-* end user documentation
-
-
-Needed for 2.2
-----------------------------------
+* interactive mode scrolling 
+* more end user documentation
 * audio calibration? Need appropriate sample
+* reporting for workload mode 
 
 Nice to Have
 ----------------------------------

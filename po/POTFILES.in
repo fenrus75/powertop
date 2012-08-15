@@ -1,6 +1,6 @@
 # List of source files which contain translatable strings.
 
-pevent/parse-utils.c
+traceevent/parse-utils.c
 src/parameters/persistent.cpp
 src/display.cpp
 src/cpu/cpu_core.cpp

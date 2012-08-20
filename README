@@ -1,7 +1,4 @@
-﻿
-
-
-Building & Installing PowerTOP
+﻿Building & Installing PowerTOP
 ------------------------------
 
 To build and install PowerTOP type the following commands, 
@@ -24,8 +21,8 @@ development environment.
 in addition to that, PowerTOP requires the following components:
 
 pciutils-devel (is only required if you have PCI) 
-ncurses-devel 
-libnl-devel
+ncurses-devel  (required) 
+libnl-devel    (required)
 kernel version => 2.6.38
 
 Kernel Parameters:

@@ -826,7 +826,6 @@ void report_display_cpu_pstates(void)
 
 void impl_w_display_cpu_states(int state)
 {
-#ifndef DISABLE_NCURSES
 	WINDOW *win;
 	char buffer[128];
 	char linebuf[1024];
@@ -916,7 +915,6 @@ void impl_w_display_cpu_states(int state)
 			first_pkg++;
 		}
 	}
-#endif // DISABLE_NCURSES
 }
 
 void w_display_cpu_pstates(void)

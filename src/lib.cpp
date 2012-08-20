@@ -52,9 +52,7 @@ extern "C" {
 #include <sys/stat.h>
 #include <dirent.h>
 #include <locale.h>
-#ifndef DISABLE_I18N
 #include <libintl.h>
-#endif
 #include <limits>
 #include <math.h>
 #include <ncurses.h>
@@ -261,10 +259,8 @@ void format_watts(double W, char *buffer, unsigned int len)
 	if (W < 0.0001)
 		sprintf(buffer, _("    0 mW"));
 
-#ifndef DISABLE_NCURSES
 	while (mbstowcs(NULL,buffer,0) < len)
 		strcat(buffer, " ");
-#endif
 }
 
 

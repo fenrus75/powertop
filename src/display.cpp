@@ -43,7 +43,6 @@ map<string, string> tab_translations;
 
 map<string, string> bottom_lines;
 
-#ifndef DISABLE_NCURSES
 void create_tab(const string &name, const string &translation, class tab_window *w, string bottom_line)
 {
 	if (!w)
@@ -293,52 +292,3 @@ int ncurses_initialized(void)
 		return 1;
 	return 0;
 }
-
-#else /* DISABLE_NCURSES - stub implementations*/
-
-void create_tab(const string &name, const string &translation, class tab_window *w, string bottom_line)
-{
-}
-
-
-void init_display(void)
-{
-}
-
-void reset_display(void)
-{
-}
-
-void show_tab(unsigned int tab)
-{
-}
-
-void show_next_tab(void)
-{
-}
-
-void show_prev_tab(void)
-{
-}
-
-void show_cur_tab(void)
-{
-}
-
-void cursor_down(void)
-{
-}
-
-void cursor_up(void)
-{
-}
-void cursor_enter(void)
-{
-}
-
-int ncurses_initialized(void)
-{
-	return 0;
-}
-
-#endif

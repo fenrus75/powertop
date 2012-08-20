@@ -169,11 +169,9 @@ void ahci::start_measurement(void)
 		}
 		file.close();
 	}
-#ifndef DISABLE_TRYCATCH
 	catch (std::ios_base::failure &c) {
 		fprintf(stderr, "%s\n", c.what());
 	}
-#endif
 
 }
 
@@ -204,11 +202,9 @@ void ahci::end_measurement(void)
 		}
 		file.close();
 	}
-#ifndef DISABLE_TRYCATCH
 	catch (std::ios_base::failure &c) {
 		fprintf(stderr, "%s\n", c.what());
 	}
-#endif
 	if (end_active < start_active)
 		end_active = start_active;
 

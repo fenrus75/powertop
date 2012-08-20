@@ -127,7 +127,6 @@ static void do_sleep(int seconds)
 		sleep(seconds);
 		return;
 	}
-#ifndef DISABLE_NCURSES
 	target = time(NULL) + seconds;
 	delta = seconds;
 	do {
@@ -174,7 +173,6 @@ static void do_sleep(int seconds)
 			break;
 
 	} while (1);
-#endif
 }
 
 
@@ -338,15 +336,11 @@ int main(int argc, char **argv)
 	char workload[4096] = {0,};
 	int  iterations = 1;
 
-#ifndef DISABLE_TRYCATCH
 	set_new_handler(out_of_memory);
-#endif
 
 	setlocale (LC_ALL, "");
-#ifndef DISABLE_I18N
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
-#endif
 
 	while (1) { /* parse commandline options */
 		c = getopt_long (argc, argv, "ch:C:i:t:uV:w:q", long_options, &option_index);
@@ -438,9 +432,7 @@ int main(int argc, char **argv)
 		one_measurement(time_out, NULL);
 		learn_parameters(15, 0);
 	}
-#ifndef DISABLE_NCURSES
 	endwin();
-#endif
 	printf("%s\n", _("Leaving PowerTOP"));
 
 	end_process_data();

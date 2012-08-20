@@ -32,10 +32,6 @@
 struct parameter_bundle;
 struct result_bundle;
 
-#ifdef DISABLE_TRYCATCH
-#define try		if(1)
-#endif
-
 class device {
 public:
 	int cached_valid;

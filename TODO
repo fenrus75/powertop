@@ -9,3 +9,7 @@ Needed for 2.2
 
 Nice to Have
 ----------------------------------
+NCURSES STUB (anyone who may care to do this)
+        PowerTOP is intended to be run with ncurses. As such if there is any
+	distribution that can't or won't support ncurses, they need to supply 
+	a separate stub to handle there issues.  

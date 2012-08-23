@@ -14,18 +14,18 @@ experiment with various power management settings. When invoking powertop
 without arguments powertop starts in interactive mode.
 .SH OPTIONS
 .TP
-\fB\-\-csv[\fR=\fIFILENAME\fR]
-generate a CSV report. If a filename is not specified then the
-default name "powertop.csv" is used. The CSV report can be
-used for reporting and data analysis.
-.TP
 \fB\-\-calibrate
 runs powertop in calibration mode. When running on battery, powertop
 can track power consumption as well as system activity. When there
 are enough measurements, powertop can start to report power estimates. One
 can get more accurate estimates by using this option to enable a
-calibration cycle. This will cycle through various display levesl and USB
+calibration cycle. This will cycle through various display levels and USB
 device activities and workloads.
+.TP
+\fB\-\-csv[\fR=\fIFILENAME\fR]
+generate a CSV report. If a filename is not specified then the
+default name "powertop.csv" is used. The CSV report can be
+used for reporting and data analysis.
 .TP
 \fB\-\-debug
  run in "debug" mode.

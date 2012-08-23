@@ -371,7 +371,7 @@ int main(int argc, char **argv)
 			case 'h': /* html report */
 				wantreport = true;
 				reporttype = 1;
-				sprintf(filename, "%s", optarg ? optarg : "PowerTOP.html" );
+				sprintf(filename, "%s", optarg ? optarg : "powertop.html" );
 				break;
 
 			case 't':
@@ -392,7 +392,7 @@ int main(int argc, char **argv)
 			case 'C': /* csv report*/
 				wantreport = true;
 				reporttype = 0;
-				sprintf(filename, "%s", optarg ? optarg : "PowerTOP.csv");
+				sprintf(filename, "%s", optarg ? optarg : "powertop.csv");
 				break;
 			case '?': /* Unknown option */
 				/* getopt_long already printed an error message. */

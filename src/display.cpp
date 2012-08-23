@@ -275,7 +275,7 @@ void cursor_enter(void)
 void window_refresh()
 {
 	class tab_window *w;
-	
+
 	w = tab_windows[tab_names[current_tab]];
 
 	if (w) {

@@ -164,7 +164,7 @@ void write_sysfs(const string &filename, const string &value)
 	file.open(filename.c_str(), ios::out);
 	if (!file)
 		return;
-	try 
+	try
 	{
 		file << value;
 		file.close();

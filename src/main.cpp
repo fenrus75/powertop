@@ -237,7 +237,7 @@ void report(int time, char *workload, int iterations, char *file)
 	fprintf(stderr, _("Preparing to take measurements\n"));
 	utf_ok = 0;
 	one_measurement(1, NULL);
-	
+
 	if (!workload[0])
 	  fprintf(stderr, _("Taking %d measurement(s) for a duration of %d second(s) each.\n"),iterations,time);
 	else
@@ -260,7 +260,7 @@ void report(int time, char *workload, int iterations, char *file)
 }
 
 static void checkroot() {
-	int uid; 
+	int uid;
 	uid = getuid();
 
 	if (uid != 0) {
@@ -268,7 +268,7 @@ static void checkroot() {
 		printf(_("exiting...\n"));
 		exit(EXIT_FAILURE);
 	}
-	
+
 }
 
 static void powertop_init(void)
@@ -280,7 +280,7 @@ static void powertop_init(void)
 	if (initialized)
 		return;
 
-	checkroot(); 
+	checkroot();
 	ret = system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
 	ret = system("/sbin/modprobe msr > /dev/null 2>&1");
 	statfs("/sys/kernel/debug", &st_fs);
@@ -355,7 +355,7 @@ int main(int argc, char **argv)
 				break;
 
 			case 'e': /* Extech power analyzer support */
-				checkroot(); 
+				checkroot();
 				extech_power_meter(optarg ? optarg : "/dev/ttyUSB0");
 				break;
 			case 'u':
@@ -388,7 +388,7 @@ int main(int argc, char **argv)
 			case 'q':
 				freopen("/dev/null", "a", stderr);
 				break;
-				
+
 			case 'C': /* csv report*/
 				wantreport = true;
 				reporttype = 0;

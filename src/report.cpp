@@ -190,12 +190,12 @@ void init_report_output(char *filename_str, int iterations)
 	memset(&stamp, 0, sizeof(time_t));
 	stamp=time(NULL);
 	strftime(datestr, sizeof(datestr), "%Y%m%d-%H%M%S", localtime(&stamp));
-	
+
 	if (iterations != 1)
-		sprintf(reportout.filename, "%s-%s.%s", 
+		sprintf(reportout.filename, "%s-%s.%s",
 			file_prefix, datestr,file_postfix);
 	else
-		sprintf(reportout.filename, "%s.%s", 
+		sprintf(reportout.filename, "%s.%s",
 			file_prefix, file_postfix);
 
 	if (reporttype) {

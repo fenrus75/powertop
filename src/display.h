@@ -60,7 +60,7 @@ public:
 	virtual void expose(void) { cursor_pos = 0; repaint();};
 	virtual void hide(void) { };
 
-	virtual ~tab_window() 
+	virtual ~tab_window()
 	{
 		delwin(win);
 		win = NULL;

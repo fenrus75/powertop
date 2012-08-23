@@ -343,7 +343,7 @@ int main(int argc, char **argv)
 	textdomain (PACKAGE);
 
 	while (1) { /* parse commandline options */
-		c = getopt_long (argc, argv, "ch:C:i:t:uV:w:q", long_options, &option_index);
+		c = getopt_long (argc, argv, "ch:C:i:t:uVw:q", long_options, &option_index);
 		/* Detect the end of the options. */
 		if (c == -1)
 			break;

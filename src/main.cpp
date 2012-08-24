@@ -320,8 +320,7 @@ static void powertop_init(void)
 	register_parameter("disk-operations", 0.0);
 	register_parameter("xwakes", 0.1);
 
-        if (access("/var/cache/powertop/saved_parameters.powertop", R_OK))
-	        load_parameters("/var/cache/powertop/saved_parameters.powertop");
+        load_parameters("saved_parameters.powertop");
 
 	initialized = 1;
 }

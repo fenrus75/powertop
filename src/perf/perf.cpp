@@ -218,12 +218,11 @@ void perf_event::stop(void)
 void perf_event::process(void *cookie)
 {
 	struct perf_event_header *header;
-	int i = 0;
 
 	if (perf_fd < 0)
 		return;
 
-	while (pc->data_tail != pc->data_head && i++ < 5000) {
+	while (pc->data_tail != pc->data_head ) {
 		while (pc->data_tail >= (unsigned int)bufsize * getpagesize())
 			pc->data_tail -= bufsize * getpagesize();
 

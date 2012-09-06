@@ -56,6 +56,9 @@ uint64_t work::done(uint64_t time, uint64_t work_struct)
 {
 	int64_t delta;
 
+	if (running_since.find(work_struct) == running_since.end())
+		return ~0ULL;
+
 	if (running_since[work_struct] > time)
 		return 0;
 
@@ -102,6 +105,7 @@ void clear_work(void)
 		all_work.erase(it);
 		it = all_work.begin();
 	}
+	running_since.clear();
 }
 
 

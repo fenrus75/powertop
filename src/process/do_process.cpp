@@ -490,6 +490,10 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		}
 		pop_consumer(cpu);
 		t = timer->done(time, tmr);
+		if (t == ~0ULL) {
+			timer->fire(first_stamp, tmr);
+			t = timer->done(time, tmr);
+		}
 		consumer_child_time(cpu, t);
 	}
 	else if (strcmp(event->name, "hrtimer_expire_entry") == 0) {
@@ -532,6 +536,10 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 		pop_consumer(cpu);
 		t = timer->done(time, tmr);
+		if (t == ~0ULL) {
+			timer->fire(first_stamp, tmr);
+			t = timer->done(time, tmr);
+		}
 		consumer_child_time(cpu, t);
 	}
 	else if (strcmp(event->name, "workqueue_execute_start") == 0) {
@@ -575,6 +583,10 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		}
 		pop_consumer(cpu);
 		t = work->done(time, wk);
+		if (t == ~0ULL) {
+			work->fire(first_stamp, wk);
+			t = work->done(time, wk);
+		}
 		consumer_child_time(cpu, t);
 	}
 	else if (strcmp(event->name, "cpu_idle") == 0) {

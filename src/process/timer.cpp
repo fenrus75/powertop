@@ -79,6 +79,9 @@ uint64_t timer::done(uint64_t time, uint64_t timer_struct)
 {
 	int64_t delta;
 
+	if (running_since.find(timer_struct) == running_since.end())
+		return ~0ULL;
+
 	if (running_since[timer_struct] > time)
 		return 0;
 
@@ -147,6 +150,7 @@ void clear_timers(void)
 		all_timers.erase(it);
 		it = all_timers.begin();
 	}
+	running_since.clear();
 }
 
 bool timer::is_deferred(void)

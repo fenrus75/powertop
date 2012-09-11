@@ -135,22 +135,28 @@ static void do_sleep(int seconds)
 		halfdelay(delta * 10);
 
 		c = getch();
-
 		switch (c) {
-		case KEY_NPAGE:
-		case KEY_RIGHT:
-			show_next_tab();
-			break;
-		case KEY_PPAGE:
-		case KEY_LEFT:
+		case 353: 
 			show_prev_tab();
 			break;
+		case 9:
+			show_next_tab(); 
+			break;
+		case KEY_RIGHT:
+			cursor_right(); 
+			break;
+		case KEY_LEFT:
+			cursor_left(); 
+			break;
+		case KEY_NPAGE:
 		case KEY_DOWN:
 			cursor_down();
 			break;
+		case KEY_PPAGE:
 		case KEY_UP:
 			cursor_up();
 			break;
+		case 32:
 		case 10:
 			cursor_enter();
 			break;

@@ -421,12 +421,6 @@ void abstract_cpu::validate(void)
 	for (i = 0; i < children.size(); i++) {
 
 		if (children[i]) {
-			if (my_time != children[i]->total_pstate_time())
-				printf("My (%i) time %llu is not the same as child (%i) time %llu\n",
-					first_cpu,
-					(unsigned long long)my_time,
-					children[i]->number,
-					(unsigned long long)children[i]->total_pstate_time());
 			children[i]->validate();
 		}
 	}

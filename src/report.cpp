@@ -144,7 +144,7 @@ static void system_info(void)
 		fprintf(reportout.http_report, "<tr class=\"system_even\"><td>System Name</td><td>%s %s %s</td></tr>\n",
 				str.c_str(), str2.c_str(), str3.c_str());
 	else
-		fprintf(reportout.csv_report,"System Name:,\"%s %s %s,\" \n",
+		fprintf(reportout.csv_report,"System Name:,\"%s %s %s\", \n",
 				str.c_str(), str2.c_str(), str3.c_str());
 
 	str = cpu_model();

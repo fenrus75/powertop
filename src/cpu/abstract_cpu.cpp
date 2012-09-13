@@ -414,15 +414,10 @@ uint64_t abstract_cpu::total_pstate_time(void)
 void abstract_cpu::validate(void)
 {
 	unsigned int i;
-	uint64_t my_time;
-
-	my_time = total_pstate_time();
 
 	for (i = 0; i < children.size(); i++) {
-
-		if (children[i]) {
+		if (children[i])
 			children[i]->validate();
-		}
 	}
 }
 

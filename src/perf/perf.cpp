@@ -128,7 +128,7 @@ void perf_event::create_perf_event(char *eventname, int _cpu)
 		return;
 	}
 
-	ret = ioctl(perf_fd, PERF_EVENT_IOC_ENABLE);
+	ret = ioctl(perf_fd, PERF_EVENT_IOC_ENABLE, 0);
 
 	if (ret < 0) {
 		fprintf(stderr, "failed to enable perf \n");
@@ -210,7 +210,7 @@ void perf_event::start(void)
 void perf_event::stop(void)
 {
 	int ret;
-	ret = ioctl(perf_fd, PERF_EVENT_IOC_DISABLE);
+	ret = ioctl(perf_fd, PERF_EVENT_IOC_DISABLE, 0);
 	if (ret)
 		cout << "stop failing\n";
 }

@@ -145,6 +145,11 @@ void perf_event::set_event_name(const char *event_name)
 	if (name)
 		free(name);
 	name = strdup(event_name);
+	if (!name) {
+		fprintf(stderr, "failed to allocate event name\n");
+		return;
+	}
+
 	char *c;
 
 	c = strchr(name, ':');

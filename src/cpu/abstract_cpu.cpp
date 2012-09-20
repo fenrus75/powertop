@@ -341,7 +341,7 @@ void abstract_cpu::calculate_freq(uint64_t time)
 				is_idle = false;
 			}
 			if (f > freq)
-				f = freq;
+				freq = f;
 		}
 
 	current_frequency = freq;

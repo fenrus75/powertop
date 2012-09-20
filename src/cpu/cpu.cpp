@@ -385,7 +385,7 @@ static const char *freq_class(int line)
 	if (line & 1) {
 		return "cpu_odd_freq";
 	}
-	return "cpu_even_req";
+	return "cpu_even_freq";
 }
 
 static int has_state_level(class abstract_cpu *acpu, int state, int line)

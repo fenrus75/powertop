@@ -451,7 +451,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 		ret = pevent_get_field_val(NULL, event, "function", &rec, &val, 0);
 		if (ret < 0) {
-			fprintf(stderr, "timer_expire_entry event returned no fucntion value?\n");
+			fprintf(stderr, "timer_expire_entry event returned no function value?\n");
 			return;
 		}
 		function = (uint64_t)val;

@@ -162,7 +162,7 @@ void abstract_cpu::insert_cstate(const char *linux_name, const char *human_name,
 		c++;
 	}
 
-	/* some architectures (ARM) don't have good numbers in thier human name.. fall back to the linux name for those */
+	/* some architectures (ARM) don't have good numbers in their human name.. fall back to the linux name for those */
 	c = linux_name;
 	while (*c && state->line_level < 0) {
 		if (*c >= '0' && *c <='9') {

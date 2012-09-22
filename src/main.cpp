@@ -112,7 +112,7 @@ static void print_usage()
 	printf("--time%s \t %s\n",_("[=seconds]"), _("generate a report for 'x' seconds"));
 	printf("--iteration%s\n", _("[=iterations] number of times to run each test"));
 	printf("--workload%s \t %s\n", _("[=workload]"), _("file to execute for workload"));
-	printf("--quiet \t\t %s\n", _("supress stderr output"));
+	printf("--quiet \t\t %s\n", _("suppress stderr output"));
 	printf("--help \t\t\t %s\n",_("print this help menu"));
 	printf("\n");
 	printf("%s\n\n",_("For more help please refer to the README"));

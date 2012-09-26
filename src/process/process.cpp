@@ -86,7 +86,7 @@ static void cmdline_to_string(char *str)
 
 process::process(const char *_comm, int _pid, int _tid) : power_consumer()
 {
-	char line[4096];
+	char line[4097];
 	ifstream file;
 
 	strcpy(comm, _comm);
@@ -103,6 +103,7 @@ process::process(const char *_comm, int _pid, int _tid) : power_consumer()
 		file.open(line);
 		while (file) {
 			file.getline(line, 4096);
+			line[4096] = '\0';
 			if (strstr(line, "Tgid")) {
 				char *c;
 				c = strchr(line, ':');

@@ -24,9 +24,9 @@
  *  Chris Ferron <chris.e.ferron@linux.intel.com>
  */
 
-#include "css.h"
 #include "lib.h"
 #include "report.h"
+#include "report/report-maker.h"
 #include <errno.h>
 #include <string.h>
 #include <utility>
@@ -39,23 +39,8 @@
 using namespace std;
 
 struct reportstream reportout;
-bool reporttype;
-
-static void css_header(void)
-{
-	if (!reportout.http_report)
-		return;
-
-
-#ifdef EXTERNAL_CSS_FILE
-	if (reporttype)
-		fprintf(reportout.http_report, "<link rel=\"stylesheet\" href=\"powertop.css\">\n");
-#else
-	if (reporttype) {
-		fprintf(reportout.http_report, "%s\n", css);
-	}
-#endif
-}
+report_type reporttype = REPORT_OFF;
+report_maker report(REPORT_OFF);
 
 string cpu_model(void)
 {
@@ -115,46 +100,38 @@ static string read_os_release(const string &filename)
 static void system_info(void)
 {
 	string str, str2, str3;
-	if ((!reportout.csv_report)&&(!reportout.http_report))
-		return;
 
-	if (reporttype) {
-		fprintf(reportout.http_report, "<div id=\"top\">\n<h1><a href=\"#top\">&nbsp;</a></h1>\n</div>\n<div id=\"system\">\n<table>");
-		fprintf(reportout.http_report, "<tr class=\"system_even\"><td width=\"20%%\">PowerTOP Version</td><td>%s</td></tr>\n", POWERTOP_VERSION);
-	} else {
-		fprintf(reportout.csv_report, "***PowerTOP Report***, \n");
-		fprintf(reportout.csv_report, "**System Information**, \n");
-		fprintf(reportout.csv_report, "\n");
-		fprintf(reportout.csv_report,  "PowerTOP Version:, \"%s\", \n", POWERTOP_VERSION);
-	}
+	report.begin_section(SECTION_SYSINFO);
+	report.add_header("System Information");
+	report.begin_table();
+	report.begin_row(ROW_SYSINFO);
+	report.begin_cell(CELL_SYSINFO);
+	report.add("PowerTOP Version");
+	report.begin_cell();
+	report.add(POWERTOP_VERSION);
+
 	str = read_sysfs_string("/proc/version");
+	report.begin_row(ROW_SYSINFO);
+	report.begin_cell();
+	report.add("Kernel Version");
+	report.begin_cell();
+	report.add(str.c_str());
 
-	if (reporttype)
-		fprintf(reportout.http_report,"<tr class=\"system_odd\"><td>Kernel Version</td><td>%s</td></tr>\n",
-				str.c_str());
-	else
-		fprintf(reportout.csv_report, "Kernel Version:, \"%s\", \n",
-				str.c_str());
-
-	str = read_sysfs_string("/sys/devices/virtual/dmi/id/board_vendor");
+	str  = read_sysfs_string("/sys/devices/virtual/dmi/id/board_vendor");
 	str2 = read_sysfs_string("/sys/devices/virtual/dmi/id/board_name");
 	str3 = read_sysfs_string("/sys/devices/virtual/dmi/id/product_version");
-
-	if (reporttype)
-		fprintf(reportout.http_report, "<tr class=\"system_even\"><td>System Name</td><td>%s %s %s</td></tr>\n",
-				str.c_str(), str2.c_str(), str3.c_str());
-	else
-		fprintf(reportout.csv_report,"System Name:,\"%s %s %s\", \n",
-				str.c_str(), str2.c_str(), str3.c_str());
+	report.begin_row(ROW_SYSINFO);
+	report.begin_cell();
+	report.add("System Name");
+	report.begin_cell();
+	report.addf("%s %s %s", str.c_str(), str2.c_str(), str3.c_str());
 
 	str = cpu_model();
-
-	if (reporttype)
-		fprintf(reportout.http_report, "<tr class=\"system_odd\"><td>CPU Information</td><td>%lix %s</td></tr>\n",
-			 sysconf(_SC_NPROCESSORS_ONLN), str.c_str());
-	else
-		fprintf(reportout.csv_report,"CPU Information:, %lix \"%s\", \n",
-			 sysconf(_SC_NPROCESSORS_ONLN), str.c_str());
+	report.begin_row(ROW_SYSINFO);
+	report.begin_cell();
+	report.add("CPU Information");
+	report.begin_cell();
+	report.addf("%lix %s", sysconf(_SC_NPROCESSORS_ONLN), str.c_str());
 
 	str = read_sysfs_string("/etc/system-release");
 	if (str.length() < 1)
@@ -162,28 +139,24 @@ static void system_info(void)
 	if (str.length() < 1)
 		str = read_os_release("/etc/os-release");
 
-	if (reporttype) {
-		fprintf(reportout.http_report, "<tr class=\"system_even\"><td>OS Information</td><td>%s</td></tr>\n",
-				 str.c_str());
-		fprintf(reportout.http_report,"</table></div>\n");
-	} else {
-		fprintf(reportout.csv_report,"OS Information:,\"%s\", \n",
-				 str.c_str());
-		fprintf(reportout.csv_report,"\n");
-	}
+	report.begin_row(ROW_SYSINFO);
+	report.begin_cell();
+	report.add("OS Information");
+	report.begin_cell();
+	report.add(str.c_str());
 }
-
 
 void init_report_output(char *filename_str, int iterations)
 {
 	size_t period;
-	char file_prefix[256];
+	char file_prefix[4096];
 	char file_postfix[8];
 	time_t stamp;
 	char datestr[200];
 
 	string mystring = string(filename_str);
-	sprintf(file_postfix, "%s", reporttype ? "html":"csv");
+	sprintf(file_postfix, "%s",
+		(reporttype == REPORT_HTML ? "html" : "csv"));
 	period=mystring.find_last_of(".");
 	sprintf(file_prefix, "%s",mystring.substr(0,period).c_str());
 	memset(&datestr, 0, 200);
@@ -198,47 +171,25 @@ void init_report_output(char *filename_str, int iterations)
 		sprintf(reportout.filename, "%s.%s",
 			file_prefix, file_postfix);
 
-	if (reporttype) {
-		reportout.http_report = fopen(reportout.filename, "wm");
-		if (!reportout.http_report) {
-			fprintf(stderr, _("Cannot open output file %s (%s)\n"),
-				reportout.filename, strerror(errno));
-		}
-	}else {
-		reportout.csv_report = fopen(reportout.filename, "wm");
-		if (!reportout.csv_report) {
-			fprintf(stderr, _("Cannot open output file %s (%s)\n"),
-				reportout.filename, strerror(errno));
-		}
+	reportout.report_file = fopen(reportout.filename, "wm");
+	if (!reportout.report_file) {
+		fprintf(stderr, _("Cannot open output file %s (%s)\n"),
+			reportout.filename, strerror(errno));
 	}
 
-	http_header_output();
+	report.set_type(reporttype);
 	system_info();
-}
-
-void http_header_output(void) {
-	if (!reportout.http_report)
-		return;
-
-	css_header();
-
-
 }
 
 void finish_report_output(void)
 {
 	fprintf(stderr, _("PowerTOP outputing using base filename %s\n"), reportout.filename);
+	if (reporttype == REPORT_OFF)
+		return;
 
-	if (reportout.http_report){
-		fprintf(reportout.http_report, "</body>\n\n </html>\n");
-		fflush(reportout.http_report);
-		fdatasync(fileno(reportout.http_report));
-		fclose(reportout.http_report);
-	}
-	if (reportout.csv_report) {
-		fflush(reportout.csv_report);
-		fdatasync(fileno(reportout.csv_report));
-		fclose(reportout.csv_report);
-	}
-
+	report.finish_report();
+	fputs(report.get_result(), reportout.report_file);
+	fdatasync(fileno(reportout.report_file));
+	fclose(reportout.report_file);
+	report.clear_result();
 }

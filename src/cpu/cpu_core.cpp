@@ -42,11 +42,6 @@ char * cpu_core::fill_cstate_line(int line_nr, char *buffer, const char *separat
 	unsigned int i;
 	buffer[0] = 0;
 
-	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,_("  Core"));
-		return buffer;
-	}
-
 	for (i = 0; i < cstates.size(); i++) {
 		if (cstates[i]->line_level != line_nr)
 			continue;
@@ -186,14 +181,8 @@ char * cpu_core::fill_pstate_line(int line_nr, char *buffer)
 			total_stamp = 1;
 	}
 
-	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,_("  Core"));
-		return buffer;
-	}
-
 	if (line_nr >= (int)pstates.size() || line_nr < 0)
 		return buffer;
-
 
 	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
 	return buffer;

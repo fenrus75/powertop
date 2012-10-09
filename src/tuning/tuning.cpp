@@ -40,6 +40,7 @@
 #include "wifi.h"
 #include "../display.h"
 #include "../report.h"
+#include "../report/report-maker.h"
 #include "../lib.h"
 
 static void sort_tunables(void);
@@ -190,136 +191,74 @@ void tuning_window::expose(void)
 	repaint();
 }
 
-static const char *tune_class(int line)
-{
-	if (line & 1) {
-		return "tunable_odd";
-	}
-	return "tunable_even";
-}
-
-static const char *tune_class_bad(int line)
-{
-	if (line & 1) {
-		return "tunable_odd_bad";
-	}
-	return "tunable_even_bad";
-}
-
-
 void report_show_tunables(void)
 {
-	unsigned int i, line;
-	/* three sections; bad, unfixable, good */
-
-	if ((!reportout.csv_report)&&(!reportout.http_report))
-		return;
+	unsigned int i;
+	bool is_header;
+	/* three tables; bad, unfixable, good */
 
 	sort_tunables();
+	report.begin_section(SECTION_TUNING);
 
-
-	if (reporttype)
-		fprintf(reportout.http_report, "<div id=\"tuning\">\n");
-
-	line = 0;
-	for (i = 0; i < all_tunables.size(); i++) {
+	for (is_header = true, i = 0; i < all_tunables.size(); i++) {
 		int gb;
 
 		gb = all_tunables[i]->good_bad();
-
 		if (gb != TUNE_BAD)
 			continue;
 
-		if (line == 0) {
-			if(reporttype)
-				fprintf(reportout.http_report,"<h2>Software Settings in need of Tuning</h2>\n <table width=\"100%%\">\n");
-			else
-				fprintf(reportout.csv_report,"**Software Settings in need of Tuning**, \n\n");
-
+		if (is_header) {
+			report.add_header("Software Settings in need of Tuning");
+			report.begin_table(TABLE_WIDE);
+			report.begin_row();
+			report.begin_cell(CELL_TUNABLE_HEADER);
+			report.add("Description");
+			report.begin_cell(CELL_TUNABLE_HEADER);
+			report.add("Script");
+			is_header = false;
 		}
 
-		line++;
-		if (i < 1 && !reporttype)
-			fprintf(reportout.csv_report, "Description, \n");
-
-		if (reporttype)
-		        fprintf(reportout.http_report, "<tr class=\"%s\"><td>%s</td><td>%s</td></tr>\n", tune_class_bad(line), all_tunables[i]->description(), all_tunables[i]->toggle_script());
-		else
-			fprintf(reportout.csv_report, "\"%s\", \n", all_tunables[i]->description());
+		report.begin_row(ROW_TUNABLE_BAD);
+		report.begin_cell();
+		report.add(all_tunables[i]->description());
+		report.begin_cell();
+		report.add(all_tunables[i]->toggle_script());
 	}
 
-	if (line > 0) {
-		if(reporttype)
-			fprintf(reportout.http_report,"</table>\n");
-		else
-			fprintf(reportout.csv_report, "\n");
-	}
-
-
-	line = 0;
-	for (i = 0; i < all_untunables.size(); i++) {
-		if (line == 0) {
-			if(reporttype)
-				fprintf(reportout.http_report,
-					"<h2>Untunable Software Issues</h2>\n <table width=\"100%%\">\n");
-			else
-				fprintf(reportout.csv_report,
-					"**Untunable Software Issues**,\n\n");
+	for (i = 0, is_header = true; i < all_untunables.size(); i++) {
+		if (is_header) {
+			report.add_header("Untunable Software Issues");
+			report.begin_table(TABLE_WIDE);
+			report.begin_row();
+			report.begin_cell(CELL_TUNABLE_HEADER);
+			report.add("Description");
+			is_header = false;
 		}
 
-		line++;
-		if (i < 1 && !reporttype)
-			fprintf(reportout.csv_report, "Description, \n");
-
-		if (reporttype)
-			fprintf(reportout.http_report,
-					"<tr class=\"%s\"><td>%s</td></tr>\n",
-					tune_class_bad(line), all_untunables[i]->description());
-		else
-			fprintf(reportout.csv_report,"\"%s\", \n", all_untunables[i]->description());
+		report.begin_row(ROW_TUNABLE_BAD);
+		report.begin_cell();
+		report.add(all_untunables[i]->description());
 	}
 
-	if (line > 0) {
-		if(reporttype)
-			fprintf(reportout.http_report,"</table>\n");
-		else
-			fprintf(reportout.csv_report,"\n");
-	}
-
-	line = 0;
-	for (i = 0; i < all_tunables.size(); i++) {
+	for (i = 0, is_header = true; i < all_tunables.size(); i++) {
 		int gb;
 
 		gb = all_tunables[i]->good_bad();
-
 		if (gb != TUNE_GOOD)
 			continue;
 
-		if (line == 0) {
-			if (reporttype)
-				fprintf(reportout.http_report,
-					"<h2>Optimal Tuned Software Settings</h2>\n <table width=\"100%%\">\n");
-			else
-				fprintf(reportout.csv_report,
-					"**Optimal Tuned Software Settings**, \n\n");
+		if (is_header) {
+			report.add_header("Optimal Tuned Software Settings");
+			report.begin_table(TABLE_WIDE);
+			report.begin_row();
+			report.begin_cell(CELL_TUNABLE_HEADER);
+			report.add("Description");
+			is_header = false;
 		}
 
-		line++;
-		if (i < 1 && !reporttype)
-			fprintf(reportout.csv_report, "Description, \n");
-
-		if (reporttype)
-			fprintf(reportout.http_report,"<tr class=\"%s\"><td>%s</td></tr>\n",
-			tune_class(line), all_tunables[i]->description());
-		else
-			fprintf(reportout.csv_report,"\"%s\", \n", all_tunables[i]->description());
-	}
-
-	if (line > 0){
-		if (reporttype)
-			fprintf(reportout.http_report,"</table></div>\n");
-		else
-			fprintf(reportout.csv_report,"\n");
+		report.begin_row(ROW_TUNABLE);
+		report.begin_cell();
+		report.add(all_tunables[i]->description());
 	}
 }
 

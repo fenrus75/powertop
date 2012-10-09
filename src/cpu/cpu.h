@@ -102,6 +102,7 @@ public:
 
 
 	void		set_number(int _number, int cpu) {this->number = _number; this->first_cpu = cpu;};
+	int		get_number(void) { return number; };
 
 	virtual void	measurement_start(void);
 	virtual void	measurement_end(void);
@@ -118,6 +119,8 @@ public:
 	virtual int	has_cstate_level(int level);
 
 	virtual char *  fill_cstate_line(int line_nr, char *buffer, const char *separator="") { return buffer;};
+	virtual char *  fill_cstate_percentage(int line_nr, char *buffer) { return buffer; };
+	virtual char *  fill_cstate_time(int line_nr, char *buffer) { return buffer; };
 	virtual char *  fill_cstate_name(int line_nr, char *buffer) { return buffer;};
 
 
@@ -160,6 +163,8 @@ public:
 
 	virtual char *  fill_cstate_line(int line_nr, char *buffer, const char *separator="");
 	virtual char *  fill_cstate_name(int line_nr, char *buffer);
+	virtual char *  fill_cstate_percentage(int line_nr, char *buffer);
+	virtual char *  fill_cstate_time(int line_nr, char *buffer);
 
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
 	virtual char *  fill_pstate_name(int line_nr, char *buffer);

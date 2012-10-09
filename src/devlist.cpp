@@ -43,6 +43,7 @@ using namespace std;
 #include "devlist.h"
 #include "lib.h"
 #include "report.h"
+#include "report/report-maker.h"
 
 #include "process/process.h"
 #include "devices/device.h"
@@ -277,22 +278,11 @@ static bool devlist_sort(struct devuser * i, struct devuser * j)
 	return (strcmp(i->device, j->device)< 0);
 }
 
-static const char *dev_class(int line)
-{
-	if (line & 1) {
-		return "device_odd";
-	}
-	return "device_even";
-}
-
 void report_show_open_devices(void)
 {
 	vector<struct devuser *> *target;
 	unsigned int i;
 	char prev[128], proc[128];
-
-	if ((!reportout.csv_report)&&(!reportout.http_report))
-		return;
 
 	prev[0] = 0;
 
@@ -306,13 +296,13 @@ void report_show_open_devices(void)
 
 	sort(target->begin(), target->end(), devlist_sort);
 
-	if (reporttype) {
-		fprintf(reportout.http_report,"<h2>Process device activity</h2>\n <table width=\"100%%\">\n");
-		fprintf(reportout.http_report,"<tr><th class=\"device\" width=\"40%%\">Process</th><th class=\"device\">Device</th></tr>\n");
-	}else {
-		fprintf(reportout.csv_report,"**Process Device Activity**, \n\n");
-		fprintf(reportout.csv_report,"Process, Device, \n");
-	}
+	report.add_header("Process device activity");
+	report.begin_table(TABLE_WIDE);
+	report.begin_row();
+	report.begin_cell(CELL_DEVACTIVITY_PROCESS);
+	report.add("Process");
+	report.begin_cell(CELL_DEVACTIVITY_DEVICE);
+	report.add("Device");
 
 	for (i = 0; i < target->size(); i++) {
 		proc[0] = 0;
@@ -320,19 +310,11 @@ void report_show_open_devices(void)
 		if (strcmp(prev, (*target)[i]->comm) != 0)
 			sprintf(proc, "%s", (*target)[i]->comm);
 
-		if (reporttype)
-			fprintf(reportout.http_report,
-				"<tr class=\"%s\"><td>%s</td><td>%s</td></tr>\n",
-				dev_class(i), proc, (*target)[i]->device);
-		 else
-			fprintf(reportout.csv_report,
-				"%s, %s, \n",
-				proc, (*target)[i]->device);
-
+		report.begin_row(ROW_DEVPOWER);
+		report.begin_cell();
+		report.add(proc);
+		report.begin_cell();
+		report.add((*target)[i]->device);
 		sprintf(prev, "%s", (*target)[i]->comm);
 	}
-	if (reporttype)
-		fprintf(reportout.http_report,"</table></div>\n");
-	else
-		fprintf(reportout.csv_report,"\n");
 }

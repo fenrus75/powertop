@@ -292,6 +292,11 @@ th.process
 	text-align: left;
 }
 
+th.tunable
+{
+	text-align: left;
+}
+
 td.package_odd
 {
 	background-color: #E0ffE0;
@@ -542,3 +547,8 @@ p.hide {
 </head>
 
 <body>
+
+<div id='top'>
+<h1><a href='#top'>&nbsp;</a></h1>
+</div>
+

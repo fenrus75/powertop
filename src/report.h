@@ -28,17 +28,17 @@
 #include <string>
 #include <stdio.h>
 
+#include "report/report-maker.h"
+
 using namespace std;
 
 struct reportstream {
-	FILE *http_report;
-	FILE *csv_report;
-	char filename[256];
+	FILE *report_file;
+	char filename[4096];
 };
 
-void http_header_output(void);
-
-extern bool reporttype;
+extern report_type reporttype;
+extern report_maker report;
 extern struct reportstream reportout;
 extern void init_report_output(char *filename_str, int iterations);
 extern void finish_report_output(void);

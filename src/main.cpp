@@ -236,7 +236,7 @@ void out_of_memory()
 	abort();
 }
 
-void report(int time, char *workload, int iterations, char *file)
+void make_report(int time, char *workload, int iterations, char *file)
 {
 
 	/* one to warm up everything */
@@ -336,7 +336,6 @@ int main(int argc, char **argv)
 {
 	int option_index;
 	int c;
-	bool wantreport = false;
 	char filename[4096];
 	char workload[4096] = {0,};
 	int  iterations = 1;
@@ -374,8 +373,7 @@ int main(int argc, char **argv)
 				break;
 
 			case 'h': /* html report */
-				wantreport = true;
-				reporttype = 1;
+				reporttype = REPORT_HTML;
 				sprintf(filename, "%s", optarg ? optarg : "powertop.html" );
 				break;
 
@@ -395,8 +393,7 @@ int main(int argc, char **argv)
 				break;
 
 			case 'C': /* csv report*/
-				wantreport = true;
-				reporttype = 0;
+				reporttype = REPORT_CSV;
 				sprintf(filename, "%s", optarg ? optarg : "powertop.csv");
 				break;
 			case '?': /* Unknown option */
@@ -408,8 +405,8 @@ int main(int argc, char **argv)
 
 	powertop_init();
 
-	if (wantreport)
-		report(time_out, workload, iterations, filename);
+	if (reporttype != REPORT_OFF)
+		make_report(time_out, workload, iterations, filename);
 
 	if (debug_learning)
 		printf("Learning debugging enabled\n");

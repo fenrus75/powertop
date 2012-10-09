@@ -48,6 +48,7 @@ using namespace std;
 #include "../display.h"
 #include "../lib.h"
 #include "../report.h"
+#include "../report/report-maker.h"
 #include "../measurement/measurement.h"
 #include "../devlist.h"
 #include <unistd.h>
@@ -213,116 +214,81 @@ void report_devices(void)
 	}
 }
 
-static const char *line_class(int line)
-{
-	if (line & 1) {
-		return "device_odd";
-	}
-	return "device_even";
-}
-
 void show_report_devices(void)
 {
 	unsigned int i;
 	int show_power;
 	double pw;
 
-	char util[128];
-	char power[128];
-
-	if ((!reportout.csv_report)&&(!reportout.http_report))
-		return;
-
 	show_power = global_power_valid();
-
 	sort(all_devices.begin(), all_devices.end(), power_device_sort);
 
-	if (reporttype)
-		fprintf(reportout.http_report,
-			"<div id=\"device\"><h2>Device Power Report</h2>\n");
-	else
-		fprintf(reportout.csv_report,
-			"**Device Power Report**,\n");
-
-
+	report.begin_section(SECTION_DEVPOWER);
+	report.add_header("Device Power Report");
 
 	pw = global_joules_consumed();
 	if (pw > 0.0001) {
 		char buf[32];
-		if (reporttype)
-			fprintf(reportout.http_report,
-				"<p>The battery reports a discharge rate of %sW</p>\n",
-				fmt_prefix(pw, buf));
-		else
-			fprintf(reportout.csv_report,
-				"The battery reports a discharge rate of:, %sW, \n",
-				fmt_prefix(pw, buf));
+
+		report.begin_paragraph();
+		report.addf("The battery reports a discharge rate of %sW",
+			    fmt_prefix(pw, buf));
 	}
 
 	if (show_power) {
 		char buf[32];
-		if (reporttype) {
-			fprintf(reportout.http_report,
-				"<p>System baseline power is estimated at %sW</p>\n <table width=\"100%%\">\n",
-				fmt_prefix(get_parameter_value("base power"), buf));
-			fprintf(reportout.http_report,
-				"<tr><th width=\"10%%\">Power est.</th><th width=\"10%%\">Usage</th><th class=\"device\">Device name</th></tr>\n");
-		} else {
-			fprintf(reportout.csv_report,
-				"System baseline power is estimated at:,  %sW, \n\n",
-				fmt_prefix(get_parameter_value("base power"), buf));
-			fprintf(reportout.csv_report,
-				"Power est.:, Usage:,  Device name:, \n");
-		}
-	}else {
-		if (reporttype)
-			fprintf(reportout.http_report,
-					" <table width=\"100%%\">\n <tr><th width=\"10%%\">Usage</th><th class=\"device\">Device name</th></tr>\n");
-		else
-			fprintf(reportout.csv_report,
-					"Usage:, Device name:, \n");
+
+		report.begin_paragraph();
+		report.addf("System baseline power is estimated at %sW",
+			    fmt_prefix(get_parameter_value("base power"), buf));
 	}
+
+	report.begin_table(TABLE_WIDE);
+	report.begin_row();
+	if (show_power) {
+		report.begin_cell(CELL_DEVPOWER_HEADER);
+		report.add("Power est.");
+	}
+
+	report.begin_cell(CELL_DEVPOWER_HEADER);
+	report.add("Usage");
+	report.begin_cell(CELL_DEVPOWER_DEV_NAME);
+	report.add("Device name");
 
 	for (i = 0; i < all_devices.size(); i++) {
 		double P;
+		char util[128];
+		char power[128];
 
 		util[0] = 0;
-
 		if (all_devices[i]->util_units()) {
 			if (all_devices[i]->utilization() < 1000)
-				sprintf(util, "%5.1f%s",  all_devices[i]->utilization(),  all_devices[i]->util_units());
+				sprintf(util, "%5.1f%s",
+					all_devices[i]->utilization(),
+					all_devices[i]->util_units());
 			else
-				sprintf(util, "%5i%s",  (int)all_devices[i]->utilization(),  all_devices[i]->util_units());
+				sprintf(util, "%5i%s",
+					(int)all_devices[i]->utilization(),
+					all_devices[i]->util_units());
 		}
 
 		P = all_devices[i]->power_usage(&all_results, &all_parameters);
-
 		format_watts(P, power, 11);
 
 		if (!show_power || !all_devices[i]->power_valid())
 			strcpy(power, "           ");
 
-
-
+		report.begin_row(ROW_DEVPOWER);
 		if (show_power) {
-			if (reporttype)
-				fprintf(reportout.http_report,"<tr class=\"%s\"><td class=\"device_power\">%s</td><td class=\"device_util\">%s</td><td>%s</td></tr>\n",
-					line_class(i), power, util, all_devices[i]->human_name());
-			else
-				fprintf(reportout.csv_report,"%s, %s, \"%s\", \n", power, util, all_devices[i]->human_name());
-
-		} else {
-			if (reporttype)
-				fprintf(reportout.http_report,"<tr class=\"%s\"><td class=\"device_util\">%s</td><td>%s</td></tr>\n",
-					line_class(i), util, all_devices[i]->human_name());
-			else
-				fprintf(reportout.csv_report,"%s, \"%s\", \n", util, all_devices[i]->human_name());
+			report.begin_cell(CELL_DEVPOWER_POWER);
+			report.add(power);
 		}
+
+		report.begin_cell(CELL_DEVPOWER_UTIL);
+		report.add(util);
+		report.begin_cell();
+		report.add(all_devices[i]->human_name());
 	}
-	if (reporttype)
-		fprintf(reportout.http_report, "</table>\n");
-	else
-		fprintf(reportout.csv_report,"\n");
 }
 
 

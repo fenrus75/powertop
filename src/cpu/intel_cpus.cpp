@@ -292,14 +292,8 @@ char * nhm_core::fill_pstate_line(int line_nr, char *buffer)
 			total_stamp = 1;
 	}
 
-	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,_("  Core"));
-		return buffer;
-	}
-
 	if (line_nr >= (int)pstates.size() || line_nr < 0)
 		return buffer;
-
 
 	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
 	return buffer;
@@ -317,15 +311,8 @@ char * nhm_package::fill_pstate_line(int line_nr, char *buffer)
 			total_stamp = 1;
 	}
 
-
-	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,_("  Package"));
-		return buffer;
-	}
-
 	if (line_nr >= (int)pstates.size() || line_nr < 0)
 		return buffer;
-
 
 	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
 	return buffer;
@@ -601,11 +588,6 @@ char * nhm_cpu::fill_pstate_line(int line_nr, char *buffer)
 			total_stamp = 1;
 	}
 
-	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,_(" CPU %i"), number);
-		return buffer;
-	}
-
 	if (line_nr == LEVEL_C0) {
 		double F;
 		F = 1.0 * (tsc_after - tsc_before) * (aperf_after - aperf_before) / (mperf_after - mperf_before) / time_factor * 1000;
@@ -614,7 +596,6 @@ char * nhm_cpu::fill_pstate_line(int line_nr, char *buffer)
 	}
 	if (line_nr >= (int)pstates.size() || line_nr < 0)
 		return buffer;
-
 
 	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
 	return buffer;

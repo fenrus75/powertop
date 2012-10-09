@@ -227,19 +227,55 @@ char * cpu_linux::fill_cstate_line(int line_nr, char *buffer, const char *separa
 	unsigned int i;
 	buffer[0] = 0;
 
-	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,_(" CPU %i"), number);
-		return buffer;
-	}
-
 	for (i = 0; i < cstates.size(); i++) {
 		if (cstates[i]->line_level != line_nr)
 			continue;
 
 		if (line_nr == LEVEL_C0)
-			sprintf(buffer,"%5.1f%%%s", percentage(cstates[i]->duration_delta / time_factor), separator);
+			sprintf(buffer,"%5.1f%%", percentage(cstates[i]->duration_delta / time_factor));
 		else
-			sprintf(buffer,"%5.1f%%%s %6.1f ms", percentage(cstates[i]->duration_delta / time_factor), separator, 1.0 * cstates[i]->duration_delta / (1+cstates[i]->usage_delta) / 1000);
+			sprintf(buffer,"%5.1f%%%s %6.1f ms",
+				percentage(cstates[i]->duration_delta / time_factor),
+				separator,
+				1.0 * cstates[i]->duration_delta / (1 + cstates[i]->usage_delta) / 1000);
+	}
+
+	return buffer;
+}
+
+char * cpu_linux::fill_cstate_percentage(int line_nr, char *buffer)
+{
+	unsigned int i;
+	buffer[0] = 0;
+
+	for (i = 0; i < cstates.size(); i++) {
+		if (cstates[i]->line_level != line_nr)
+			continue;
+
+		sprintf(buffer,"%5.1f%%",
+			percentage(cstates[i]->duration_delta / time_factor));
+		break;
+	}
+
+	return buffer;
+}
+
+char * cpu_linux::fill_cstate_time(int line_nr, char *buffer)
+{
+	unsigned int i;
+	buffer[0] = 0;
+
+	if (line_nr == LEVEL_C0)
+		return buffer;
+
+	for (i = 0; i < cstates.size(); i++) {
+		if (cstates[i]->line_level != line_nr)
+			continue;
+
+		sprintf(buffer,"%6.1f ms",
+			1.0 * cstates[i]->duration_delta /
+			(1 + cstates[i]->usage_delta) / 1000);
+		break;
 	}
 
 	return buffer;
@@ -283,11 +319,6 @@ char * cpu_linux::fill_pstate_line(int line_nr, char *buffer)
 			total_stamp += pstates[i]->time_after;
 		if (total_stamp == 0)
 			total_stamp = 1;
-	}
-
-	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,_(" CPU %i"), number);
-		return buffer;
 	}
 
 	if (line_nr >= (int)pstates.size() || line_nr < 0)

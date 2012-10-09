@@ -30,6 +30,11 @@ powertop_SOURCES = parameters/persistent.cpp parameters/learn.cpp parameters/par
 		calibrate/calibrate.h measurement/measurement.cpp measurement/power_supply.cpp \
 		measurement/measurement.h measurement/acpi.cpp measurement/sysfs.h measurement/sysfs.cpp \
 		measurement/acpi.h measurement/extech.cpp measurement/power_supply.h measurement/extech.h \
+		report/report-maker.cpp report/report-maker.h report/report-formatter.h \
+		report/report-formatter-base.cpp report/report-formatter-base.h \
+		report/report-formatter-csv.cpp report/report-formatter-csv.h \
+		report/report-formatter-html.cpp report/report-formatter-html.h \
+		report/report-formatter-null.cpp report/report-formatter-null.h \
 		main.cpp css.h powertop.css cpu/intel_gpu.cpp
 
 

@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
 "POT-Creation-Date: 2012-05-31 14:03-0700\n"
-"PO-Revision-Date: 2012-06-01 03:46+0000\n"
+"PO-Revision-Date: 2012-10-10 01:35+0000\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian (Indonesia) (http://www.transifex.com/projects/p/PowerTOP/language/id_ID/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: id_ID\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/parameters/persistent.cpp:46 src/parameters/persistent.cpp:140
 msgid "Cannot save to file "
@@ -168,7 +168,7 @@ msgstr "Perkiraan sisa waktu adalah %i jam, %i menit\n"
 
 #: src/process/do_process.cpp:842
 msgid "Summary"
-msgstr "Ringksan"
+msgstr "Ringkasan"
 
 #: src/process/do_process.cpp:842 src/process/do_process.cpp:1029
 msgid "wakeups/second"

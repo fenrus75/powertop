@@ -36,7 +36,7 @@
 /* ************************************************************************ */
 
 const char *
-report_formatter_base::get_result()
+report_formatter_string_base::get_result()
 {
 	return result.c_str();
 }
@@ -44,7 +44,7 @@ report_formatter_base::get_result()
 /* ************************************************************************ */
 
 void
-report_formatter_base::clear_result()
+report_formatter_string_base::clear_result()
 {
 	result.clear();
 }
@@ -52,7 +52,7 @@ report_formatter_base::clear_result()
 /* ************************************************************************ */
 
 void
-report_formatter_base::add(const char *str)
+report_formatter_string_base::add(const char *str)
 {
 	assert(str);
 
@@ -62,7 +62,7 @@ report_formatter_base::add(const char *str)
 /* ************************************************************************ */
 
 void
-report_formatter_base::add_exact(const char *str)
+report_formatter_string_base::add_exact(const char *str)
 {
 	assert(str);
 
@@ -74,7 +74,7 @@ report_formatter_base::add_exact(const char *str)
 #define LINE_SIZE 8192
 
 void
-report_formatter_base::addv(const char *fmt, va_list ap)
+report_formatter_string_base::addv(const char *fmt, va_list ap)
 {
 	char str[LINE_SIZE];
 
@@ -87,7 +87,7 @@ report_formatter_base::addv(const char *fmt, va_list ap)
 /* ************************************************************************ */
 
 void
-report_formatter_base::addf(const char *fmt, ...)
+report_formatter_string_base::addf(const char *fmt, ...)
 {
 	va_list ap;
 
@@ -101,7 +101,7 @@ report_formatter_base::addf(const char *fmt, ...)
 /* ************************************************************************ */
 
 void
-report_formatter_base::addf_exact(const char *fmt, ...)
+report_formatter_string_base::addf_exact(const char *fmt, ...)
 {
 	char str[LINE_SIZE];
 	va_list ap;

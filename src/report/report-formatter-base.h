@@ -28,7 +28,7 @@
 
 #include "report-formatter.h"
 
-class report_formatter_base: public report_formatter
+class report_formatter_string_base: public report_formatter
 {
 public:
 	virtual const char *get_result();

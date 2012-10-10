@@ -44,7 +44,7 @@
 
 /* ************************************************************************ */
 
-class report_formatter_csv: public report_formatter_base
+class report_formatter_csv: public report_formatter_string_base
 {
 public:
 	report_formatter_csv();

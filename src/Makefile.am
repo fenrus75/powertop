@@ -34,7 +34,6 @@ powertop_SOURCES = parameters/persistent.cpp parameters/learn.cpp parameters/par
 		report/report-formatter-base.cpp report/report-formatter-base.h \
 		report/report-formatter-csv.cpp report/report-formatter-csv.h \
 		report/report-formatter-html.cpp report/report-formatter-html.h \
-		report/report-formatter-null.cpp report/report-formatter-null.h \
 		main.cpp css.h powertop.css cpu/intel_gpu.cpp
 
 

@@ -55,7 +55,7 @@ struct html_cell {
 
 /* ************************************************************************ */
 
-class report_formatter_html: public report_formatter_base
+class report_formatter_html: public report_formatter_string_base
 {
 public:
 	report_formatter_html();

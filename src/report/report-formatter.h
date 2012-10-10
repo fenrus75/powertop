@@ -28,38 +28,38 @@
 
 #include "report-maker.h"
 
-class report_formatter /* Interface */
+class report_formatter
 {
 public:
 	virtual ~report_formatter() {}
 
-	virtual void finish_report() = 0;
-	virtual const char *get_result() = 0;
-	virtual void clear_result() = 0;
+	virtual void finish_report() {};
+	virtual const char *get_result() {return "Basic report_formatter::get_resul call\n";};
+	virtual void clear_result() {};
 
-	virtual void add(const char *str) = 0;
-	virtual void addv(const char *fmt, va_list ap) = 0;
+	virtual void add(const char *str) {};
+	virtual void addv(const char *fmt, va_list ap) {};
 
-	virtual void add_header(const char *header, int level) = 0;
+	virtual void add_header(const char *header, int level) {};
 
-	virtual void begin_section(section_type stype) = 0;
-	virtual void end_section() = 0;
+	virtual void begin_section(section_type stype) {};
+	virtual void end_section() {};
 
-	virtual void begin_table(table_type ttype) = 0;
-	virtual void end_table() = 0;
+	virtual void begin_table(table_type ttype) {};
+	virtual void end_table() {};
 
-	virtual void begin_row(row_type rtype) = 0;
-	virtual void end_row() = 0;
+	virtual void begin_row(row_type rtype) {};
+	virtual void end_row() {};
 
-	virtual void begin_cell(cell_type ctype) = 0;
-	virtual void end_cell() = 0;
-	virtual void add_empty_cell() = 0;
+	virtual void begin_cell(cell_type ctype) {};
+	virtual void end_cell() {};
+	virtual void add_empty_cell() {};
 
-	virtual void begin_paragraph() = 0;
-	virtual void end_paragraph() = 0;
+	virtual void begin_paragraph() {};
+	virtual void end_paragraph() {};
 
 	/* For quad-colouring CPU tables in HTML */
-	virtual void set_cpu_number(int nr) = 0;
+	virtual void set_cpu_number(int nr) {};
 };
 
 #endif /* _REPORT_FORMATTER_H_ */

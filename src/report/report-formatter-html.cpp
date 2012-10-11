@@ -25,7 +25,8 @@
 
 #define _BSD_SOURCE
 
-#define NDEBUG /* Enable asserts */
+/* Uncomment to disable asserts */
+/*#define NDEBUG*/
 
 #include <stdio.h>
 #include <assert.h>

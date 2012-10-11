@@ -23,7 +23,8 @@
  * Written by Igor Zhbanov <i.zhbanov@samsung.com>
  * 2012.10 */
 
-#define NDEBUG /* Enable asserts */
+/* Uncomment to disable asserts */
+/*#define NDEBUG*/
 
 #include <assert.h>
 #include <stdarg.h>

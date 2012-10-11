@@ -39,7 +39,7 @@
 #include "ethernet.h"
 #include "wifi.h"
 #include "../display.h"
-#include "../report.h"
+#include "../report/report.h"
 #include "../report/report-maker.h"
 #include "../lib.h"
 

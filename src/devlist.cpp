@@ -42,7 +42,7 @@ using namespace std;
 
 #include "devlist.h"
 #include "lib.h"
-#include "report.h"
+#include "report/report.h"
 #include "report/report-maker.h"
 
 #include "process/process.h"

@@ -47,7 +47,7 @@ using namespace std;
 #include "../parameters/parameters.h"
 #include "../display.h"
 #include "../lib.h"
-#include "../report.h"
+#include "../report/report.h"
 #include "../report/report-maker.h"
 #include "../measurement/measurement.h"
 #include "../devlist.h"

@@ -11,10 +11,10 @@ powertop_SOURCES = parameters/persistent.cpp parameters/learn.cpp parameters/par
 		parameters/parameters.h display.cpp cpu/cpu_core.cpp cpu/cpudevice.cpp  \
 		cpu/cpu.cpp cpu/cpu.h cpu/cpu_linux.cpp cpu/abstract_cpu.cpp cpu/intel_cpus.h \
 		cpu/cpu_package.cpp cpu/cpudevice.h cpu/intel_cpus.cpp devlist.h devlist.cpp \
-		lib.cpp report.cpp process/process.cpp process/interrupt.h process/timer.h  \
+		lib.cpp report/report.cpp process/process.cpp process/interrupt.h process/timer.h  \
 		process/processdevice.cpp process/powerconsumer.cpp process/work.h \
 		process/timer.cpp process/process.h process/work.cpp process/do_process.cpp \
-		process/processdevice.h process/interrupt.cpp process/powerconsumer.h report.h \
+		process/processdevice.h process/interrupt.cpp process/powerconsumer.h report/report.h \
 		perf/perf.cpp perf/perf_event.h perf/perf.h perf/perf_bundle.h perf/perf_bundle.cpp \
 		display.h devices/rfkill.h devices/i915-gpu.cpp devices/device.cpp devices/alsa.cpp \
 		devices/runtime_pm.cpp devices/thinkpad-fan.cpp devices/usb.cpp devices/ahci.cpp \

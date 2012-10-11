@@ -36,7 +36,7 @@
 #include "../perf/perf_bundle.h"
 #include "../lib.h"
 #include "../display.h"
-#include "../report.h"
+#include "../report/report.h"
 #include "../report/report-maker.h"
 
 static class abstract_cpu system_level;

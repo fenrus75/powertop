@@ -28,7 +28,7 @@
 #include <string>
 #include <stdio.h>
 
-#include "report/report-maker.h"
+#include "report-maker.h"
 
 using namespace std;
 

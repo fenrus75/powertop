@@ -26,7 +26,7 @@
 
 #include "lib.h"
 #include "report.h"
-#include "report/report-maker.h"
+#include "report-maker.h"
 #include <errno.h>
 #include <string.h>
 #include <utility>

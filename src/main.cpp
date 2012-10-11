@@ -56,7 +56,7 @@
 
 #include "display.h"
 #include "devlist.h"
-#include "report.h"
+#include "report/report.h"
 
 #define DEBUGFS_MAGIC          0x64626720
 

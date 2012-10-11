@@ -60,7 +60,11 @@ int sysfs_tunable::good_bad(void)
 
 	if (strcmp(current_value, target_value) == 0)
 		return TUNE_GOOD;
-
+		
+	if (strcmp("/proc/sys/vm/dirty_writeback_centisecs", sysfs_path) == 0 &&
+		atoi(current_value) > atoi(target_value))
+		return TUNE_GOOD;
+		
 	strcpy(bad_value, current_value);
 	return TUNE_BAD;
 }

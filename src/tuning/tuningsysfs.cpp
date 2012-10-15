@@ -28,9 +28,16 @@
 #include "unistd.h"
 #include "tuningsysfs.h"
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <utility>
 #include <iostream>
 #include <fstream>
+#include <unistd.h>
+#include <sys/types.h>
+#include <dirent.h>
+
 
 #include "../lib.h"
 
@@ -104,4 +111,39 @@ void add_sysfs_tunable(const char *str, const char *_sysfs_path, const char *_ta
 
 
 	all_tunables.push_back(tunable);
+}
+
+void add_sata_tunables(void)
+{
+	struct dirent *entry;
+	DIR *dir;
+	char filename[4096];
+	char msg[4096];
+
+	dir = opendir("/sys/class/scsi_host");
+
+	if (!dir)
+		return;
+
+        while (1) {
+		entry = readdir(dir);
+
+		if (!entry)
+			break;
+
+                if (strcmp(entry->d_name, ".") == 0)
+                        continue;
+
+		if (strcmp(entry->d_name, "..") == 0)
+			continue;
+
+		sprintf(filename, "/sys/class/scsi_host/%s/link_power_management_policy", entry->d_name);
+
+	        sprintf(msg, _("Enable SATA link power Managmenet for %s"),entry->d_name);
+
+		add_sysfs_tunable(msg, filename,"min_power");
+
+        }
+
+        closedir(dir);
 }

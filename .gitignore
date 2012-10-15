@@ -51,6 +51,7 @@ src/parameters/.deps/
 src/perf/.deps/
 src/process/.deps/
 src/tuning/.deps/
+src/report/.deps/
 m4
 *.dirstamp
 *.lo

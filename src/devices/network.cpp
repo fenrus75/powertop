@@ -114,7 +114,7 @@ static void do_proc_net_dev(void)
 			c2 = c;
 			val = strtoull(c, &c, 10);
 			i++;
-			if (i == 1 || i == 10)
+			if (i == 2 || i == 10)
 				pkt += val;
 
 		}

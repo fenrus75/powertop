@@ -63,11 +63,12 @@ rfkill::rfkill(char *_name, char *path): device()
 	sprintf(filename, "%s/device/driver", path);
 	if (readlink(filename, line, 4096) > 0) {
 		sprintf(humanname, _("Radio device: %s"), basename(line));
-	};
+	}
 	sprintf(filename, "%s/device/device/driver", path);
 	if (readlink(filename, line, 4096) > 0) {
 		sprintf(humanname, _("Radio device: %s"), basename(line));
-	}}
+	}
+}
 
 void rfkill::start_measurement(void)
 {

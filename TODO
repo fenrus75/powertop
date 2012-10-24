@@ -6,7 +6,6 @@ Needed for 2.2
 * audio calibration? Need appropriate sample
 * reporting for workload mode 
 * Add GPU stats to reports [csv,html]
-* In tunables suggest writing min_power to all SATA ports 
 
 
 Nice to Have
@@ -19,3 +18,4 @@ NCURSES STUB (anyone who may care to do this)
 DONE for 2.2
 ----------------------------------
 * interactive mode scrolling 
+* In tunables suggest writing min_power to all SATA ports 

@@ -87,6 +87,7 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 		ret = new class cpu_package;
 
 	ret->set_number(package, cpu);
+	ret->set_type("Package");
 	ret->childcount = 0;
 
 	sprintf(packagename, _("cpu package %i"), cpu);
@@ -122,6 +123,7 @@ static class abstract_cpu * new_core(int core, int cpu, char * vendor, int famil
 		ret = new class cpu_core;
 	ret->set_number(core, cpu);
 	ret->childcount = 0;
+	ret->set_type("Core");
 
 	return ret;
 }
@@ -132,6 +134,7 @@ static class abstract_cpu * new_i965_gpu(void)
 
 	ret = new class i965_core;
 	ret->childcount = 0;
+	ret->set_type("GPU");
 
 	return ret;
 }
@@ -162,6 +165,7 @@ static class abstract_cpu * new_cpu(int number, char * vendor, int family, int m
 	if (!ret)
 		ret = new class cpu_linux;
 	ret->set_number(number, number);
+	ret->set_type("CPU");
 	ret->childcount = 0;
 
 	return ret;
@@ -239,7 +243,7 @@ static void handle_i965_gpu(void)
 
 
 	package = system_level.children[0];
-	
+
 	core_number = package->children.size();
 
 	if (package->children.size() <= core_number)
@@ -314,7 +318,7 @@ void enumerate_cpus(void)
 			if (number >= 0) {
 				handle_one_cpu(number, vendor, family, model);
 				set_max_cpu(number);
-				number = -2; 
+				number = -2;
 			}
 		}
 	}
@@ -430,7 +434,7 @@ void report_display_cpu_cstates(void)
 				if (line == LEVEL_HEADER) {
 					if (first_core) {
 						report.begin_cell(CELL_FIRST_PACKAGE_HEADER);
-						report.addf(__("Package %i"), _package->get_number());
+						report.addf(__("%s %i"), _package->get_type(), _package->get_number());
 					} else {
 						report.begin_cell(CELL_EMPTY_PACKAGE_HEADER);
 						report.add_empty_cell();
@@ -454,10 +458,10 @@ void report_display_cpu_cstates(void)
 
 					if (line == LEVEL_HEADER) {
 						report.begin_cell(CELL_CORE_HEADER);
-						report.addf(__("Core %i"), _core->get_number());
-					} else {
-						report.begin_cell(CELL_STATE_NAME);
-						report.add(_core->fill_cstate_name(line, buffer));
+						report.addf(__("%s %i"), _core->get_type(), _core->get_number());
+                                       } else {
+                                                report.begin_cell(CELL_STATE_NAME);
+                                                report.add(_core->fill_cstate_name(line, buffer));
 						report.begin_cell(CELL_CORE_STATE_VALUE);
 						report.add(_core->fill_cstate_line(line, buffer2));
 					}
@@ -474,7 +478,7 @@ void report_display_cpu_cstates(void)
 					report.set_cpu_number(cpu);
 					if (line == LEVEL_HEADER) {
 						report.begin_cell(CELL_CPU_CSTATE_HEADER);
-						report.addf(__("CPU %i"), _cpu->get_number());
+						report.addf(__("%s %i"), _cpu->get_type(), _cpu->get_number());
 						continue;
 					}
 
@@ -507,10 +511,10 @@ void report_display_cpu_pstates(void)
 	int line;
 	class abstract_cpu *_package, * _core, * _cpu;
 	unsigned int i, pstates_num;
-	
+
 	for (i = 0, pstates_num = 0; i < all_cpus.size(); i++)
 		if (all_cpus[i] && all_cpus[i]->pstates.size() > pstates_num)
-			pstates_num = all_cpus[i]->pstates.size(); 
+			pstates_num = all_cpus[i]->pstates.size();
 
 	report.begin_section(SECTION_CPUFREQ);
 	report.add_header("Processor Frequency Report");
@@ -544,7 +548,7 @@ void report_display_cpu_pstates(void)
 				if (first_core) {
 					if (line == LEVEL_HEADER) {
 						report.begin_cell(CELL_FIRST_PACKAGE_HEADER);
-						report.addf(__("Package %i"), _package->get_number());
+						report.addf(__("%s %i"), _package->get_type(), _package->get_number());
 					} else {
 						report.begin_cell(CELL_STATE_NAME);
 						report.add(_package->fill_pstate_name(line, buffer));
@@ -564,7 +568,7 @@ void report_display_cpu_pstates(void)
 					buffer2[0] = 0;
 					if (line == LEVEL_HEADER) {
 						report.begin_cell(CELL_CORE_HEADER);
-						report.addf(__("Core %i"), _core->get_number());
+						report.addf(__("%s %i"), _core->get_type(), _core->get_number());
 					} else {
 						report.begin_cell(CELL_STATE_NAME);
 						report.add(_core->fill_pstate_name(line, buffer));
@@ -585,7 +589,7 @@ void report_display_cpu_pstates(void)
 					report.set_cpu_number(cpu);
 					if (line == LEVEL_HEADER) {
 						report.begin_cell(CELL_CPU_PSTATE_HEADER);
-						report.addf(__("CPU %i"), _cpu->get_number());
+						report.addf(__("%s %i"), _cpu->get_type(), _cpu->get_number());
 						continue;
 					}
 
@@ -763,7 +767,7 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 			cpu->go_idle(time);
 	}
 
-	if (strcmp(event->name, "power_frequency") == 0 
+	if (strcmp(event->name, "power_frequency") == 0
 	|| strcmp(event->name, "cpu_frequency") == 0){
 
 		ret = pevent_get_field_val(NULL, event, "state", &rec, &val, 0);

@@ -88,6 +88,7 @@ public:
 	uint64_t	total_stamp;
 	int	number;
 	int	childcount;
+	const char*    name;
 	bool	idle, old_idle;
 	uint64_t	current_frequency;
 	uint64_t	effective_frequency;
@@ -101,8 +102,10 @@ public:
 	class abstract_cpu *parent;
 
 
-	void		set_number(int _number, int cpu) {this->number = _number; this->first_cpu = cpu;};
-	int		get_number(void) { return number; };
+	void	set_number(int _number, int cpu) {this->number = _number; this->first_cpu = cpu;};
+	void	set_type(const char* _name) {this->name = _name;};
+	int	get_number(void) { return number; };
+	const char* get_type(void) { return name; };
 
 	virtual void	measurement_start(void);
 	virtual void	measurement_end(void);

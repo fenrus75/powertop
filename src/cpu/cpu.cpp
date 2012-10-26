@@ -434,7 +434,7 @@ void report_display_cpu_cstates(void)
 				if (line == LEVEL_HEADER) {
 					if (first_core) {
 						report.begin_cell(CELL_FIRST_PACKAGE_HEADER);
-						report.addf(__("%s %i"), _package->get_type(), _package->get_number());
+						report.addf(__("Package %i"), _package->get_number());
 					} else {
 						report.begin_cell(CELL_EMPTY_PACKAGE_HEADER);
 						report.add_empty_cell();
@@ -458,7 +458,19 @@ void report_display_cpu_cstates(void)
 
 					if (line == LEVEL_HEADER) {
 						report.begin_cell(CELL_CORE_HEADER);
-						report.addf(__("%s %i"), _core->get_type(), _core->get_number());
+						/* Here we need to check for which core type we
+  						 * are using. Do not use the core type for the 
+  						 * report.addf as it breaks an important macro use 
+  						 * for translation decision making for the reports. 
+  						   */
+						const char* core_type = _core->get_type(); 
+					        if (core_type != NULL) {	
+							if (strcmp(core_type, "Core") == 0 ) {
+								report.addf(__("Core %i"), _core->get_number());
+							} else {
+								report.addf(__("GPU %i"), _core->get_number());
+							} 
+						}
                                        } else {
                                                 report.begin_cell(CELL_STATE_NAME);
                                                 report.add(_core->fill_cstate_name(line, buffer));
@@ -478,7 +490,7 @@ void report_display_cpu_cstates(void)
 					report.set_cpu_number(cpu);
 					if (line == LEVEL_HEADER) {
 						report.begin_cell(CELL_CPU_CSTATE_HEADER);
-						report.addf(__("%s %i"), _cpu->get_type(), _cpu->get_number());
+						report.addf(__("CPU %i"), _cpu->get_number());
 						continue;
 					}
 
@@ -548,7 +560,7 @@ void report_display_cpu_pstates(void)
 				if (first_core) {
 					if (line == LEVEL_HEADER) {
 						report.begin_cell(CELL_FIRST_PACKAGE_HEADER);
-						report.addf(__("%s %i"), _package->get_type(), _package->get_number());
+						report.addf(__("Package %i"), _package->get_number());
 					} else {
 						report.begin_cell(CELL_STATE_NAME);
 						report.add(_package->fill_pstate_name(line, buffer));
@@ -568,7 +580,7 @@ void report_display_cpu_pstates(void)
 					buffer2[0] = 0;
 					if (line == LEVEL_HEADER) {
 						report.begin_cell(CELL_CORE_HEADER);
-						report.addf(__("%s %i"), _core->get_type(), _core->get_number());
+						report.addf(__("Core %i"), _core->get_number());
 					} else {
 						report.begin_cell(CELL_STATE_NAME);
 						report.add(_core->fill_pstate_name(line, buffer));
@@ -589,7 +601,7 @@ void report_display_cpu_pstates(void)
 					report.set_cpu_number(cpu);
 					if (line == LEVEL_HEADER) {
 						report.begin_cell(CELL_CPU_PSTATE_HEADER);
-						report.addf(__("%s %i"), _cpu->get_type(), _cpu->get_number());
+						report.addf(__("CPU %i"), _cpu->get_number());
 						continue;
 					}
 

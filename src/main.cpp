@@ -191,7 +191,8 @@ void one_measurement(int seconds, char *workload)
 	start_cpu_measurement();
 
 	if (workload && workload[0]) {
-		system(workload);
+		if (!system(workload))
+			fprintf(stderr, _("Unknown issue running workload!\n"));
 	} else {
 		do_sleep(seconds);
 	}
@@ -389,7 +390,8 @@ int main(int argc, char **argv)
 				sprintf(workload, "%s", optarg ? optarg :'\0' );
 				break;
 			case 'q':
-				freopen("/dev/null", "a", stderr);
+				if(freopen("/dev/null", "a", stderr))
+					fprintf(stderr, _("Quite mode failed!\n"));
 				break;
 
 			case 'C': /* csv report*/

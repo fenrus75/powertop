@@ -49,7 +49,7 @@ void i965_core::measurement_start(void)
 	rc6p_before = read_sysfs("/sys/class/drm/card0/power/rc6p_residency_ms", NULL);
 	rc6pp_before = read_sysfs("/sys/class/drm/card0/power/rc6pp_residency_ms", NULL);
 
-	update_cstate("gpu c0", "Active", 0, 0, 1, 0);
+	update_cstate("gpu c0", "Powered On", 0, 0, 1, 0);
 	update_cstate("gpu rc6", "RC6", 0, rc6_before, 1, 1);
 	update_cstate("gpu rc6p", "RC6p", 0, rc6p_before, 1, 2);
 	update_cstate("gpu rc6pp", "RC6pp", 0, rc6pp_before, 1, 3);

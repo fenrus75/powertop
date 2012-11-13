@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
-"POT-Creation-Date: 2012-05-31 14:03-0700\n"
-"PO-Revision-Date: 2012-08-23 09:25+0000\n"
-"Last-Translator: Simonas Kazlauskas <simonas@kazlauskas.me>\n"
+"POT-Creation-Date: 2012-10-26 09:24-0700\n"
+"PO-Revision-Date: 2012-10-26 22:23+0000\n"
+"Last-Translator: ceferron <chris.e.ferron@linux.intel.com>\n"
 "Language-Team: Lithuanian (http://www.transifex.com/projects/p/PowerTOP/language/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,71 +19,86 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: src/parameters/persistent.cpp:46 src/parameters/persistent.cpp:140
-msgid "Cannot save to file "
-msgstr "Nepavyko išsaugoti į failą"
+msgid "Cannot save to file"
+msgstr ""
 
 #: src/parameters/persistent.cpp:78 src/parameters/persistent.cpp:165
-msgid "Cannot load from file "
-msgstr "Nepavyko įkelti iš failo"
+msgid "Cannot load from file"
+msgstr ""
 
 #: src/parameters/persistent.cpp:123
 #, c-format
 msgid "Loaded %i prior measurements\n"
 msgstr "Įkelti %i ankstesni matavimai\\n"
 
-#: src/display.cpp:71
+#: src/display.cpp:70
 msgid "Overview"
 msgstr "Apžvalga"
 
-#: src/display.cpp:72
+#: src/display.cpp:71
 msgid "Idle stats"
 msgstr "Neveikos statistika"
 
-#: src/display.cpp:73
+#: src/display.cpp:72
 msgid "Frequency stats"
 msgstr "Dažnių statistika"
 
-#: src/display.cpp:74
+#: src/display.cpp:73
 msgid "Device stats"
 msgstr "Įrenginių statistika"
 
-#: src/display.cpp:131
+#: src/display.cpp:130
 msgid "Exit"
 msgstr "Išeiti"
 
-#: src/cpu/cpu_core.cpp:46 src/cpu/cpu_core.cpp:190 src/cpu/intel_cpus.cpp:296
-#, c-format
-msgid "  Core"
-msgstr "Branduolys"
-
-#: src/cpu/cpu_core.cpp:116 src/cpu/cpu_linux.cpp:329
-#: src/cpu/cpu_package.cpp:145 src/cpu/intel_cpus.cpp:222
-#: src/cpu/intel_cpus.cpp:457 src/cpu/intel_cpus.cpp:658
+#: src/cpu/cpu_core.cpp:111 src/cpu/cpu_linux.cpp:360
+#: src/cpu/cpu_package.cpp:133 src/cpu/intel_cpus.cpp:222
+#: src/cpu/intel_cpus.cpp:444 src/cpu/intel_cpus.cpp:639
 msgid "Idle"
 msgstr "Neveika"
 
-#: src/cpu/cpu_core.cpp:118 src/cpu/cpu_linux.cpp:331
-#: src/cpu/cpu_package.cpp:147 src/cpu/intel_cpus.cpp:224
-#: src/cpu/intel_cpus.cpp:459
+#: src/cpu/cpu_core.cpp:113 src/cpu/cpu_linux.cpp:362
+#: src/cpu/cpu_package.cpp:135 src/cpu/intel_cpus.cpp:224
+#: src/cpu/intel_cpus.cpp:446
 #, c-format
 msgid "Turbo Mode"
 msgstr "Turbo režimas"
 
-#: src/cpu/cpu.cpp:90
+#: src/cpu/cpu.cpp:93
 #, c-format
 msgid "cpu package %i"
 msgstr "%i procesorių paketas"
 
-#: src/cpu/cpu.cpp:91
+#: src/cpu/cpu.cpp:94
 msgid "cpu package"
 msgstr "procesorių paketas"
 
-#: src/cpu/cpu.cpp:925
+#: src/cpu/cpu.cpp:437 src/cpu/cpu.cpp:563
+#, c-format
+msgid "Package %i"
+msgstr ""
+
+#: src/cpu/cpu.cpp:469 src/cpu/cpu.cpp:583
+#, c-format
+msgid "Core %i"
+msgstr ""
+
+#: src/cpu/cpu.cpp:471
+#, c-format
+msgid "GPU %i"
+msgstr ""
+
+#: src/cpu/cpu.cpp:493 src/cpu/cpu.cpp:604
+#, c-format
+msgid "CPU %i"
+msgstr ""
+
+#: src/cpu/cpu.cpp:772
 #, c-format
 msgid "cpu_idle event returned no state?\n"
 msgstr "cpu_idle įvykis negrąžino būsenos?\\n"
 
-#: src/cpu/cpu.cpp:940
+#: src/cpu/cpu.cpp:787
 #, c-format
 msgid "power or cpu_frequecny event returned no state?\n"
 msgstr "power arba cpu_frequency įvykis negrąžino būsenos?\\n"
@@ -91,22 +106,6 @@ msgstr "power arba cpu_frequency įvykis negrąžino būsenos?\\n"
 #: src/cpu/cpu_linux.cpp:92
 msgid "C0 polling"
 msgstr "C0 laukia"
-
-#: src/cpu/cpu_linux.cpp:231 src/cpu/cpu_linux.cpp:289
-#: src/cpu/intel_cpus.cpp:605
-#, c-format
-msgid " CPU %i"
-msgstr "%i procesorius"
-
-#: src/cpu/cpu_package.cpp:46
-#, c-format
-msgid "Package"
-msgstr "Paketas"
-
-#: src/cpu/cpu_package.cpp:104 src/cpu/intel_cpus.cpp:322
-#, c-format
-msgid "  Package"
-msgstr "Paketas"
 
 #: src/cpu/intel_cpus.cpp:69
 #, c-format
@@ -118,11 +117,11 @@ msgstr "msr reg nerastas"
 msgid "pread cpu%d 0x%llx : "
 msgstr "pread cpu%d 0x%llx:"
 
-#: src/cpu/intel_cpus.cpp:529
+#: src/cpu/intel_cpus.cpp:516
 msgid "C0 active"
 msgstr "C0 aktyvus"
 
-#: src/cpu/intel_cpus.cpp:588
+#: src/cpu/intel_cpus.cpp:575
 #, c-format
 msgid "Actual"
 msgstr "Tikrasis"
@@ -137,125 +136,122 @@ msgstr "%7sW"
 msgid "    0 mW"
 msgstr "0 mW"
 
-#: src/lib.cpp:369
+#: src/lib.cpp:381
 msgid "PS/2 Touchpad / Keyboard / Mouse"
 msgstr "PS/2 Jutiklinis kilimėlis / Klaviatūra / Pėlė"
 
-#: src/lib.cpp:370
+#: src/lib.cpp:382
 msgid "SATA controller"
 msgstr "SATA kontroleris"
 
-#: src/lib.cpp:371
+#: src/lib.cpp:383
 msgid "Intel built in USB hub"
 msgstr "Integruotas Intel USB centras"
 
-#: src/process/do_process.cpp:818
+#: src/process/do_process.cpp:830
 #, c-format
 msgid ""
 "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n"
 "\n"
 msgstr "Apytikrė energija: %5.1f Pamatuota energija: %5.1f  Suma: %5.1f\\n\\n"
 
-#: src/process/do_process.cpp:829 src/devices/device.cpp:171
+#: src/process/do_process.cpp:841 src/devices/device.cpp:171
 #, c-format
 msgid "The battery reports a discharge rate of %sW\n"
 msgstr "Akumuliatorius praneša %sW išsikrovimo greitį\\n"
 
-#: src/process/do_process.cpp:834
+#: src/process/do_process.cpp:846
 #, c-format
 msgid "The estimated remaining time is %i hours, %i minutes\n"
 msgstr "Apskaičiuotas likęs laikas – %i valandos ir %i minutės\\n"
 
-#: src/process/do_process.cpp:842
+#: src/process/do_process.cpp:854
 msgid "Summary"
 msgstr "Santrauka"
 
-#: src/process/do_process.cpp:842 src/process/do_process.cpp:1029
+#: src/process/do_process.cpp:854 src/process/do_process.cpp:1024
 msgid "wakeups/second"
 msgstr "pabudimai/sekundę"
 
-#: src/process/do_process.cpp:842
+#: src/process/do_process.cpp:854
 msgid "GPU ops/seconds"
 msgstr "Grafikos posistemės operacijos/sekundes"
 
-#: src/process/do_process.cpp:842
+#: src/process/do_process.cpp:854
 msgid "VFS ops/sec and"
 msgstr "Virtualios failų sistemos operacijos/sek ir"
 
-#: src/process/do_process.cpp:842 src/process/do_process.cpp:1030
+#: src/process/do_process.cpp:854 src/process/do_process.cpp:1028
 msgid "CPU use"
 msgstr "Procesoriaus naudojimas"
 
-#: src/process/do_process.cpp:846 src/process/do_process.cpp:914
+#: src/process/do_process.cpp:858 src/process/do_process.cpp:915
 #: src/process/do_process.cpp:1034
 msgid "Power est."
 msgstr "Energijos įvertis"
 
-#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
-#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
-#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+#: src/process/do_process.cpp:858 src/process/do_process.cpp:860
+#: src/process/do_process.cpp:919 src/process/do_process.cpp:1038
 msgid "Usage"
 msgstr "Naudojimas"
 
-#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
-#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+#: src/process/do_process.cpp:858 src/process/do_process.cpp:860
+#: src/process/do_process.cpp:1040
 msgid "Events/s"
 msgstr "Įvykiai/s"
 
-#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
-#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
-#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+#: src/process/do_process.cpp:858 src/process/do_process.cpp:860
+#: src/process/do_process.cpp:929 src/process/do_process.cpp:1042
 msgid "Category"
 msgstr "Kategorija"
 
-#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
-#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
-#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+#: src/process/do_process.cpp:858 src/process/do_process.cpp:860
+#: src/process/do_process.cpp:931 src/process/do_process.cpp:1044
 msgid "Description"
 msgstr "Aprašymas"
 
-#: src/process/do_process.cpp:911
+#: src/process/do_process.cpp:910
 msgid "Overview of Software Power Consumers"
 msgstr "Programinės įrangos energijos naudojimo apžvalga"
 
-#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+#: src/process/do_process.cpp:921
 msgid "Wakeups/s"
 msgstr "Pabudimai/s"
 
-#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+#: src/process/do_process.cpp:923
 msgid "GPU ops/s"
 msgstr "Grafikos posistemės operacijos/s"
 
-#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+#: src/process/do_process.cpp:925
 msgid "Disk IO/s"
 msgstr "Disko operacijos/s"
 
-#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+#: src/process/do_process.cpp:927
 msgid "GFX Wakeups/s"
 msgstr "GFX pabudimai/s"
 
-#: src/process/do_process.cpp:1026
+#: src/process/do_process.cpp:1021
 msgid "Power Consumption Summary"
 msgstr "Energijos sąnaudų aprašymas"
 
-#: src/process/do_process.cpp:1029
+#: src/process/do_process.cpp:1025
 msgid "GPU ops/second"
 msgstr "Grafikos posistemės operacijos/sekundę"
 
-#: src/process/do_process.cpp:1030
+#: src/process/do_process.cpp:1026
 msgid "VFS ops/sec"
 msgstr "Virtualios failų sistemos operacijos/sek"
 
-#: src/process/do_process.cpp:1030
+#: src/process/do_process.cpp:1027
 msgid "GFX wakes/sec and"
 msgstr "GFX pabudimai/sek ir"
 
-#: src/perf/perf.cpp:121
+#: src/perf/perf.cpp:111
 #, c-format
 msgid "PowerTOP %s needs the kernel to support the 'perf' subsystem\n"
 msgstr "PowerTOP %s reikalingas 'perf' posistemės\\n"
 
-#: src/perf/perf.cpp:122
+#: src/perf/perf.cpp:112
 #, c-format
 msgid "as well as support for trace points in the kernel:\n"
 msgstr "ir sekimo taškų palaikymas branduolyje:\\n"
@@ -325,19 +321,19 @@ msgstr "Bluetooth įrenginio sąsajos būsena"
 
 #: src/tuning/cpufreq.cpp:43 src/tuning/ethernet.cpp:53
 #: src/tuning/tunable.cpp:48 src/tuning/wifi.cpp:45 src/tuning/runtime.cpp:41
-#: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:37
+#: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:44
 msgid "Good"
 msgstr "Gerai"
 
 #: src/tuning/cpufreq.cpp:43 src/tuning/ethernet.cpp:53
 #: src/tuning/tunable.cpp:49 src/tuning/wifi.cpp:45 src/tuning/runtime.cpp:41
-#: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:37
+#: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:44
 msgid "Bad"
 msgstr "Blogai"
 
 #: src/tuning/cpufreq.cpp:43 src/tuning/ethernet.cpp:53
 #: src/tuning/tunable.cpp:50 src/tuning/wifi.cpp:45 src/tuning/runtime.cpp:41
-#: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:37
+#: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:44
 msgid "Unknown"
 msgstr "Nežinoma"
 
@@ -346,31 +342,27 @@ msgstr "Nežinoma"
 msgid "Using 'ondemand' cpufreq governor"
 msgstr "Naudojamas 'ondemand' cpufreq valdytojas"
 
-#: src/tuning/tuning.cpp:60
+#: src/tuning/tuning.cpp:59
 msgid "Enable Audio codec power management"
 msgstr "Įjungti garso kodekų energijos valdymą"
 
-#: src/tuning/tuning.cpp:61
-msgid "Enable SATA link power management for /dev/sda"
-msgstr "Įjungti SATA sąsajos energijos valdymą /dev/sda įrenginiui "
-
-#: src/tuning/tuning.cpp:62
+#: src/tuning/tuning.cpp:60
 msgid "NMI watchdog should be turned off"
 msgstr "NMI kontrolierius turėtų būti išjungtas"
 
-#: src/tuning/tuning.cpp:63
+#: src/tuning/tuning.cpp:61
 msgid "Power Aware CPU scheduler"
 msgstr "Energijos sąnaudas suprantantis procesoriaus valdytojas"
 
-#: src/tuning/tuning.cpp:64
+#: src/tuning/tuning.cpp:62
 msgid "VM writeback timeout"
 msgstr "Laikas iki virtualiosios mašinos kešo išrašymo"
 
-#: src/tuning/tuning.cpp:82
+#: src/tuning/tuning.cpp:79
 msgid "Tunables"
 msgstr "Deriniai"
 
-#: src/tuning/tuning.cpp:82
+#: src/tuning/tuning.cpp:79
 msgid " <ESC> Exit | <Enter> Toggle tunable | <r> Window refresh"
 msgstr "<ESC> Išeiti | <Enter> Perjungti derinį | <r> Perkrauti langą"
 
@@ -414,6 +406,11 @@ msgstr "Automatinis nežinomo USB įrenginio %s (%s:%s) užmigdymas"
 #, c-format
 msgid "Autosuspend for USB device %s [%s]"
 msgstr "Automatinis USB įrenginio %s [%s] užmigdymas"
+
+#: src/tuning/tuningsysfs.cpp:142
+#, c-format
+msgid "Enable SATA link power Managmenet for %s"
+msgstr ""
 
 #: src/calibrate/calibrate.cpp:291
 #, c-format
@@ -474,102 +471,117 @@ msgstr "Užbaigiama PowerTOP energijos vertinimo kalibracija\\n"
 msgid "Parameters after calibration:\n"
 msgstr "Parametrai po kalibracijos:\\n"
 
-#: src/main.cpp:84
+#: src/main.cpp:86
 #, c-format
 msgid "PowerTOP version"
 msgstr "PowerTOP versija"
 
-#: src/main.cpp:90
+#: src/main.cpp:92
 msgid "Set refresh time out"
 msgstr "Nustatyti atnaujimui skirtą laiką"
 
-#: src/main.cpp:103
+#: src/main.cpp:105
 msgid "Usage: powertop [OPTIONS]"
 msgstr "Naudojimas: powertop [NUOSTATOS]"
 
-#: src/main.cpp:104
+#: src/main.cpp:106
 msgid "run in \"debug\" mode"
 msgstr "paleisti derinimo režimu"
 
-#: src/main.cpp:105
+#: src/main.cpp:107
 msgid "print version information"
 msgstr "spausdinti informaciją apie versiją"
 
-#: src/main.cpp:106
+#: src/main.cpp:108
 msgid "runs powertop in calibration mode"
 msgstr "leidžia powertop kalibravimo režimu"
 
-#: src/main.cpp:107
+#: src/main.cpp:109
 msgid "[=devnode]"
 msgstr "[=įrenginio mazgas]"
 
-#: src/main.cpp:107
+#: src/main.cpp:109
 msgid "uses an Extech Power Analyzer for measurements"
 msgstr "Matavimams naudojamas Extech energijos analizatorius"
 
-#: src/main.cpp:108 src/main.cpp:109
+#: src/main.cpp:110 src/main.cpp:111
 msgid "[=FILENAME]"
 msgstr "[=FAILO VARDAS]"
 
-#: src/main.cpp:108
+#: src/main.cpp:110
 msgid "generate a html report"
 msgstr "generuoti raportą html formatu"
 
-#: src/main.cpp:109
+#: src/main.cpp:111
 msgid "generate a csv report"
 msgstr "generuoti raportą csv formatu"
 
-#: src/main.cpp:110
+#: src/main.cpp:112
 msgid "[=seconds]"
 msgstr "[=sekundės]"
 
-#: src/main.cpp:110
+#: src/main.cpp:112
 msgid "generate a report for 'x' seconds"
 msgstr "generuoti x sekundžių raportą"
 
-#: src/main.cpp:111
+#: src/main.cpp:113
 msgid "[=iterations] number of times to run each test"
 msgstr "[=iteracijos] kiekvieno testo atlikimų skaičius"
 
-#: src/main.cpp:112
+#: src/main.cpp:114
+msgid "[=workload]"
+msgstr ""
+
+#: src/main.cpp:114
+msgid "file to execute for workload"
+msgstr ""
+
+#: src/main.cpp:115
+msgid "suppress stderr output"
+msgstr ""
+
+#: src/main.cpp:116
 msgid "print this help menu"
 msgstr "spausdina šį pagalbos pranešimą"
 
-#: src/main.cpp:114
+#: src/main.cpp:118
 msgid "For more help please refer to the README"
 msgstr "Daugiau pagalbos ieškokite README faile"
 
-#: src/main.cpp:224
-#, c-format
+#: src/main.cpp:235
 msgid "PowerTOP is out of memory. PowerTOP is Aborting"
 msgstr "PowerTOP neužtenka atminties. PowerTOP išjungiamas"
 
-#: src/main.cpp:252
+#: src/main.cpp:243
 #, c-format
 msgid "Preparing to take measurements\n"
 msgstr "Ruošiamasi matavimams\\n"
 
-#: src/main.cpp:255
+#: src/main.cpp:248
 #, c-format
 msgid "Taking %d measurement(s) for a duration of %d second(s) each.\n"
 msgstr "Imami %d matavimas(–ai) kas %d sekundę(–es).\\n"
 
-#: src/main.cpp:278
+#: src/main.cpp:250
+#, c-format
+msgid "Measuring workload %s.\n"
+msgstr ""
+
+#: src/main.cpp:273
 #, c-format
 msgid "PowerTOP "
 msgstr "PowerTOP"
 
-#: src/main.cpp:279 src/main.cpp:307
+#: src/main.cpp:274 src/main.cpp:302
 #, c-format
 msgid "exiting...\n"
 msgstr "išjungiama...\\n"
 
-#: src/main.cpp:306
+#: src/main.cpp:301
 #, c-format
 msgid "Failed to mount debugfs!\n"
 msgstr "Nepavyko prijungti debugfs!\\n"
 
-#: src/main.cpp:443
-#, c-format
+#: src/main.cpp:438
 msgid "Leaving PowerTOP"
 msgstr "PowerTOP išjungiamas"

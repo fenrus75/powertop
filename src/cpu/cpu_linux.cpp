@@ -227,6 +227,11 @@ char * cpu_linux::fill_cstate_line(int line_nr, char *buffer, const char *separa
 	unsigned int i;
 	buffer[0] = 0;
 
+	if (line_nr == LEVEL_HEADER) {
+		sprintf(buffer,_(" CPU %i"), number);
+		return buffer;
+	}
+
 	for (i = 0; i < cstates.size(); i++) {
 		if (cstates[i]->line_level != line_nr)
 			continue;
@@ -319,6 +324,11 @@ char * cpu_linux::fill_pstate_line(int line_nr, char *buffer)
 			total_stamp += pstates[i]->time_after;
 		if (total_stamp == 0)
 			total_stamp = 1;
+	}
+
+	if (line_nr == LEVEL_HEADER) {
+		sprintf(buffer,_(" CPU %i"), number);
+		return buffer;
 	}
 
 	if (line_nr >= (int)pstates.size() || line_nr < 0)

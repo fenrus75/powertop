@@ -292,6 +292,11 @@ char * nhm_core::fill_pstate_line(int line_nr, char *buffer)
 			total_stamp = 1;
 	}
 
+	if (line_nr == LEVEL_HEADER) {
+		sprintf(buffer,_("  Core"));
+		return buffer;
+	}
+
 	if (line_nr >= (int)pstates.size() || line_nr < 0)
 		return buffer;
 
@@ -309,6 +314,12 @@ char * nhm_package::fill_pstate_line(int line_nr, char *buffer)
 			total_stamp += pstates[i]->time_after;
 		if (total_stamp == 0)
 			total_stamp = 1;
+	}
+
+
+	if (line_nr == LEVEL_HEADER) {
+		sprintf(buffer,_("  Package"));
+		return buffer;
 	}
 
 	if (line_nr >= (int)pstates.size() || line_nr < 0)
@@ -460,7 +471,7 @@ void nhm_package::calculate_freq(uint64_t time)
 
 	/* calculate the maximum frequency of all children */
 	for (i = 0; i < children.size(); i++)
-		if (children[i]) {
+		if (children[i] && children[i]->has_pstates()) {
 			uint64_t f = 0;
 			if (!children[i]->idle) {
 				f = children[i]->current_frequency;
@@ -586,6 +597,11 @@ char * nhm_cpu::fill_pstate_line(int line_nr, char *buffer)
 			total_stamp += pstates[i]->time_after;
 		if (total_stamp == 0)
 			total_stamp = 1;
+	}
+
+	if (line_nr == LEVEL_HEADER) {
+		sprintf(buffer,_(" CPU %i"), number);
+		return buffer;
 	}
 
 	if (line_nr == LEVEL_C0) {

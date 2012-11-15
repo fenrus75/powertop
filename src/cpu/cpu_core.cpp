@@ -131,10 +131,9 @@ void cpu_core::calculate_freq(uint64_t time)
 	bool is_idle = true;
 	unsigned int i;
 
-
 	/* calculate the maximum frequency of all children */
 	for (i = 0; i < children.size(); i++)
-		if (children[i]) {
+		if (children[i] && children[i]->has_pstates()) {
 			uint64_t f = 0;
 			if (!children[i]->idle) {
 				f = children[i]->current_frequency;

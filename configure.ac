@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([powertop], [2.1], [powertop@lists.01.org])
+AC_INIT([powertop], [2.2], [powertop@lists.01.org])
 AM_INIT_AUTOMAKE([-Wall foreign ])
 AC_LANG([C++])
 AC_CONFIG_FILES([Makefile src/Makefile traceevent/Makefile po/Makefile.in doc/Makefile])

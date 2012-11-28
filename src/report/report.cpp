@@ -183,13 +183,16 @@ void init_report_output(char *filename_str, int iterations)
 
 void finish_report_output(void)
 {
-	fprintf(stderr, _("PowerTOP outputing using base filename %s\n"), reportout.filename);
 	if (reporttype == REPORT_OFF)
 		return;
 
 	report.finish_report();
-	fputs(report.get_result(), reportout.report_file);
-	fdatasync(fileno(reportout.report_file));
-	fclose(reportout.report_file);
+	if (reportout.report_file)
+	{
+		fprintf(stderr, _("PowerTOP outputing using base filename %s\n"), reportout.filename);
+		fputs(report.get_result(), reportout.report_file);
+		fdatasync(fileno(reportout.report_file));
+		fclose(reportout.report_file);
+	}
 	report.clear_result();
 }

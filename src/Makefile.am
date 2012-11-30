@@ -1,9 +1,6 @@
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = -I ../m4 
 
-noinst_PROGRAMS = csstoh
-csstoh_SOURCES = csstoh.c 
-
 sbin_PROGRAMS = powertop
 nodist_powertop_SOURCES = css.h
 
@@ -48,6 +45,7 @@ AM_LDFLAGS = $(LIBS) $(NCURSES_LIBS) $(PCIUTILS_LIBS) $(LIBNL_LIBS) $(LIBZ_LIBS)
 
 BUILT_SOURCES = css.h
 CLEANFILES = css.h
-css.h: csstoh powertop.css
-	./csstoh "$(srcdir)"/powertop.css css.h
+css.h: powertop.css
+	chmod +x ./csstoh.sh
+	./csstoh.sh "$(srcdir)"/powertop.css css.h
 

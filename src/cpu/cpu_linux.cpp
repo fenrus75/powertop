@@ -47,17 +47,13 @@ static int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo)
 	return 1;
 }
 
-void cpu_linux::measurement_start(void)
+void cpu_linux::parse_cstates_start(void)
 {
 	ifstream file;
-
 	DIR *dir;
 	struct dirent *entry;
 	char filename[256];
 	int len;
-	unsigned int i;
-
-	abstract_cpu::measurement_start();
 
 	len = sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpuidle", number);
 
@@ -111,9 +107,16 @@ void cpu_linux::measurement_start(void)
 
 	}
 	closedir(dir);
+}
+
+
+void cpu_linux::parse_pstates_start(void)
+{
+	ifstream file;
+	char filename[256];
+	unsigned int i;
 
 	last_stamp = 0;
-
 	for (i = 0; i < children.size(); i++)
 		if (children[i])
 			children[i]->wiggle();
@@ -136,8 +139,14 @@ void cpu_linux::measurement_start(void)
 	account_freq(0, 0);
 }
 
+void cpu_linux::measurement_start(void)
+{
+	abstract_cpu::measurement_start();
+	parse_cstates_start();
+	parse_pstates_start();
+}
 
-void cpu_linux::measurement_end(void)
+void cpu_linux::parse_cstates_end(void)
 {
 	DIR *dir;
 	struct dirent *entry;
@@ -187,6 +196,12 @@ void cpu_linux::measurement_end(void)
 
 	}
 	closedir(dir);
+}
+
+void cpu_linux::parse_pstates_end(void)
+{
+	char filename[256];
+	ifstream file;
 
 	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", number);
 
@@ -216,11 +231,14 @@ void cpu_linux::measurement_end(void)
 		}
 		file.close();
 	}
-
-
-	abstract_cpu::measurement_end();
 }
 
+void cpu_linux::measurement_end(void)
+{
+	parse_cstates_end();
+	parse_pstates_end();
+	abstract_cpu::measurement_end();
+}
 
 char * cpu_linux::fill_cstate_line(int line_nr, char *buffer, const char *separator)
 {

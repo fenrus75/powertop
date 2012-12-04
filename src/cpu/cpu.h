@@ -159,7 +159,12 @@ extern vector<class abstract_cpu *> all_cpus;
 class cpu_linux: public abstract_cpu
 {
 
-	void		account_freq(uint64_t frequency, uint64_t duration);
+	void	account_freq(uint64_t frequency, uint64_t duration);
+	void 	parse_pstates_start(void);
+	void 	parse_cstates_start(void);
+	void 	parse_pstates_end(void);
+	void 	parse_cstates_end(void);
+
 public:
 	virtual void	measurement_start(void);
 	virtual void	measurement_end(void);

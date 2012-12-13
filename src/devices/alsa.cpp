@@ -167,7 +167,7 @@ void create_all_alsa(void)
 		entry = readdir(dir);
 		if (!entry)
 			break;
-		if (entry->d_name[0] == '.')
+		if (strncmp(entry->d_name, "hwC", 3) != 0)
 			continue;
 		sprintf(filename, "/sys/class/sound/card0/%s/power_on_acct", entry->d_name);
 

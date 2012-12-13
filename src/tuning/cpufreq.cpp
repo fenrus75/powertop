@@ -36,6 +36,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <sys/stat.h>
+#include <ctype.h>
 
 #include "../lib.h"
 #include "cpufreq.h"
@@ -72,7 +73,7 @@ int cpufreq_tunable::good_bad(void)
 		return ret;
 
 	while ((dirent = readdir(dir))) {
-		if (dirent->d_name[0]=='.')
+		if (strncmp(dirent->d_name, "cpu", 3) != 0 || !isdigit(dirent->d_name[3]))
 			continue;
 		sprintf(filename, "/sys/devices/system/cpu/%s/cpufreq/scaling_governor", dirent->d_name);
 		file = fopen(filename, "r");
@@ -123,7 +124,7 @@ void cpufreq_tunable::toggle(void)
 			return;
 
 		while ((dirent = readdir(dir))) {
-			if (dirent->d_name[0]=='.')
+			if (strncmp(dirent->d_name, "cpu", 3) != 0 || !isdigit(dirent->d_name[3]))
 				continue;
 			sprintf(filename, "/sys/devices/system/cpu/%s/cpufreq/scaling_governor", dirent->d_name);
 			file = fopen(filename, "w");
@@ -141,7 +142,7 @@ void cpufreq_tunable::toggle(void)
 		return;
 
 	while ((dirent = readdir(dir))) {
-		if (dirent->d_name[0]=='.')
+		if (strncmp(dirent->d_name, "cpu", 3) != 0 || !isdigit(dirent->d_name[3]))
 			continue;
 		sprintf(filename, "/sys/devices/system/cpu/%s/cpufreq/scaling_governor", dirent->d_name);
 		file = fopen(filename, "w");
@@ -171,7 +172,7 @@ const char *cpufreq_tunable::toggle_script(void) {
 			return NULL;
 
 		while ((dirent = readdir(dir))) {
-			if (dirent->d_name[0]=='.')
+			if (strncmp(dirent->d_name, "cpu", 3) != 0 || !isdigit(dirent->d_name[3]))
 				continue;
 			sprintf(filename, "/sys/devices/system/cpu/%s/cpufreq/scaling_governor", dirent->d_name);
 			if (stat(filename, &statbuf) == -1)
@@ -189,7 +190,7 @@ const char *cpufreq_tunable::toggle_script(void) {
 		return NULL;
 
 	while ((dirent = readdir(dir))) {
-		if (dirent->d_name[0]=='.')
+		if (strncmp(dirent->d_name, "cpu", 3) != 0 || !isdigit(dirent->d_name[3]))
 			continue;
 		sprintf(filename, "/sys/devices/system/cpu/%s/cpufreq/scaling_governor", dirent->d_name);
 		if (stat(filename, &statbuf) == -1)

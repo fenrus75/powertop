@@ -131,10 +131,7 @@ void add_sata_tunables(void)
 		if (!entry)
 			break;
 
-                if (strcmp(entry->d_name, ".") == 0)
-                        continue;
-
-		if (strcmp(entry->d_name, "..") == 0)
+		if (entry->d_name[0] == '.')
 			continue;
 
 		sprintf(filename, "/sys/class/scsi_host/%s/link_power_management_policy", entry->d_name);

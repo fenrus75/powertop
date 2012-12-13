@@ -90,6 +90,8 @@ static int dpms_screen_on(void)
 		if (!entry)
 			break;
 
+		if (strncmp(entry->d_name, "card", 4) != 0)
+			continue;
 		sprintf(filename, "/sys/class/drm/card0/%s/enabled", entry->d_name);
 		file.open(filename, ios::in);
 		if (!file)

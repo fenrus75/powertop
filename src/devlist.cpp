@@ -37,6 +37,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <string.h>
+#include <ctype.h>
 
 using namespace std;
 
@@ -117,7 +118,7 @@ void collect_open_devices(void)
 			entry2 = readdir(dir2);
 			if (!entry2)
 				break;
-			if (entry2->d_name[0] == '.')
+			if (!isdigit(entry2->d_name[0]))
 				continue;
 			sprintf(filename, "/proc/%s/fd/%s", entry->d_name, entry2->d_name);
 			memset(link, 0, 4096);

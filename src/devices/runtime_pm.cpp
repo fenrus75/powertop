@@ -49,11 +49,11 @@ runtime_pmdevice::runtime_pmdevice(const char *_name, const char *path) : device
 
 	before_suspended_time = 0;
 	before_active_time = 0;
-        after_suspended_time = 0;
+	after_suspended_time = 0;
 	after_active_time = 0;
+
+	register_parameter(humanname);
 }
-
-
 
 void runtime_pmdevice::start_measurement(void)
 {

@@ -44,11 +44,15 @@ static int maxresindex = 1;
 
 int get_param_index(const char *name)
 {
-	int index;
-	index = param_index[name];
-	if (index == 0) {
-		index = param_index[name] = ++maxindex;
-	}
+	std::map<string, int>::iterator it;
+	int index = 0;
+
+	it = param_index.find(name);
+	if (it == param_index.end()) {
+		param_index[name] = ++maxindex;
+		index = maxindex;
+	} else
+		index = it->second;
 
 	if (index == 0)
 		printf("OH BLA\n");
@@ -57,11 +61,15 @@ int get_param_index(const char *name)
 
 int get_result_index(const char *name)
 {
-	int index;
-	index = result_index[name];
-	if (index == 0) {
-		index = result_index[name] = ++maxresindex;
-	}
+	std::map<string, int>::iterator it;
+	int index = 0;
+
+	it = result_index.find(name);
+	if (it == result_index.end()) {
+		result_index[name] = ++maxresindex;
+		index = maxresindex;
+	} else
+		index = it->second;
 
 	return index;
 }
@@ -101,16 +109,16 @@ void set_parameter_value(const char *name, double value, struct parameter_bundle
 double get_parameter_value(const char *name, struct parameter_bundle *the_bundle)
 {
 	unsigned int index;
-
 	index = get_param_index(name);
-	if (index >= the_bundle->parameters.size()) {
-		fprintf(stderr, "BUG: requesting unregistered parameter %s\n", name);
-	}
-	return the_bundle->parameters[index];
+	return get_parameter_value(index, the_bundle);
 }
 
-double get_parameter_value(int index, struct parameter_bundle *the_bundle)
+double get_parameter_value(unsigned int index, struct parameter_bundle *the_bundle)
 {
+	if (index >= the_bundle->parameters.size()) {
+		fprintf(stderr, "BUG: requesting unregistered parameter %d\n", index);
+		return 0;
+	}
 	return the_bundle->parameters[index];
 }
 

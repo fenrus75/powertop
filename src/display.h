@@ -53,6 +53,14 @@ public:
 	short int xpad_pos, ypad_pos; 
 	WINDOW *win;
 
+	tab_window() {
+		cursor_pos = 0;
+		cursor_max = 0;
+		xpad_pos =0;
+		ypad_pos = 0;
+		win = NULL;
+	}
+
 	virtual void cursor_down(void) { 
 		if (cursor_pos < cursor_max ) cursor_pos++; repaint(); 
 	} ;

@@ -25,6 +25,8 @@
 #include <stdint.h>
 #include <sys/time.h>
 
+#include "cpu.h"
+
 
 #define MSR_TSC				0x10
 #define MSR_NEHALEM_PLATFORM_INFO	0xCE

@@ -215,8 +215,6 @@ public:
 
 };
 
-#include "intel_cpus.h"
-
 extern void enumerate_cpus(void);
 
 extern void report_display_cpu_pstates(void);

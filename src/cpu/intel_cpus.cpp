@@ -22,7 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#include "cpu.h"
+#include "intel_cpus.h"
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>

@@ -31,6 +31,7 @@
 #include <unistd.h>
 #include "cpu.h"
 #include "cpudevice.h"
+#include "intel_cpus.h"
 #include "../parameters/parameters.h"
 
 #include "../perf/perf_bundle.h"

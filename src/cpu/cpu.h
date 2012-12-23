@@ -85,6 +85,7 @@ protected:
 	uint64_t max_minus_one_frequency;
 
 	virtual void	account_freq(uint64_t frequency, uint64_t duration);
+	virtual void	freq_updated(uint64_t time);
 public:
 	uint64_t	last_stamp;
 	uint64_t	total_stamp;
@@ -197,6 +198,8 @@ public:
 
 class cpu_package: public abstract_cpu
 {
+protected:
+	virtual void	freq_updated(uint64_t time);
 public:
 	virtual char *  fill_cstate_line(int line_nr, char *buffer, const char *separator="");
 	virtual char *  fill_cstate_name(int line_nr, char *buffer);
@@ -204,8 +207,6 @@ public:
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
 	virtual char *  fill_pstate_name(int line_nr, char *buffer);
 	virtual int     can_collapse(void) { return childcount == 1;};
-
-	virtual void    calculate_freq(uint64_t time);
 };
 
 extern void enumerate_cpus(void);

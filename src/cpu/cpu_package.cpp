@@ -27,6 +27,17 @@
 #include "../lib.h"
 #include "../parameters/parameters.h"
 
+void cpu_package::freq_updated(uint64_t time)
+{
+	if (parent)
+		parent->calculate_freq(time);
+	/*
+	 * Make the frequency changes to propagate to all cores in a package.
+	 */
+	change_effective_frequency(time, current_frequency);
+	old_idle = idle;
+}
+
 char * cpu_package::fill_cstate_line(int line_nr, char *buffer, const char *separator)
 {
 	unsigned int i;
@@ -101,30 +112,3 @@ char * cpu_package::fill_pstate_line(int line_nr, char *buffer)
 	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
 	return buffer;
 }
-
-void cpu_package::calculate_freq(uint64_t time)
-{
-	uint64_t freq = 0;
-	bool is_idle = true;
-	unsigned int i;
-
-	/* calculate the maximum frequency of all children */
-	for (i = 0; i < children.size(); i++)
-		if (children[i] && children[i]->has_pstates()) {
-			uint64_t f = 0;
-			if (!children[i]->idle) {
-				f = children[i]->current_frequency;
-				is_idle = false;
-			}
-			if (f > freq)
-				freq = f;
-		}
-
-	current_frequency = freq;
-	idle = is_idle;
-	if (parent)
-		parent->calculate_freq(time);
-	change_effective_frequency(time, current_frequency);
-	old_idle = idle;
-}
-

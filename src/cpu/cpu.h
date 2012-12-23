@@ -193,7 +193,6 @@ public:
 	virtual char *  fill_pstate_name(int line_nr, char *buffer);
 
 	virtual int     can_collapse(void) { return childcount == 1;};
-	virtual void    calculate_freq(uint64_t time);
 };
 
 class cpu_package: public abstract_cpu

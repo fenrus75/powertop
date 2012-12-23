@@ -77,31 +77,6 @@ char * cpu_core::fill_pstate_name(int line_nr, char *buffer)
 	return buffer;
 }
 
-void cpu_core::calculate_freq(uint64_t time)
-{
-	uint64_t freq = 0;
-	bool is_idle = true;
-	unsigned int i;
-
-	/* calculate the maximum frequency of all children */
-	for (i = 0; i < children.size(); i++)
-		if (children[i] && children[i]->has_pstates()) {
-			uint64_t f = 0;
-			if (!children[i]->idle) {
-				f = children[i]->current_frequency;
-				is_idle = false;
-			}
-			if (f > freq)
-				freq = f;
-		}
-
-	current_frequency = freq;
-	idle = is_idle;
-	if (parent)
-		parent->calculate_freq(time);
-	old_idle = idle;
-}
-
 char * cpu_core::fill_pstate_line(int line_nr, char *buffer)
 {
 	buffer[0] = 0;

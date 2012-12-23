@@ -59,9 +59,6 @@ public:
 	virtual int     can_collapse(void) { return 0;};
 
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
-
-	virtual void    calculate_freq(uint64_t time);
-
 };
 
 class nhm_core: public cpu_core

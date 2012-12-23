@@ -178,7 +178,6 @@ public:
 	virtual char *  fill_pstate_name(int line_nr, char *buffer);
 
 	virtual void    change_freq(uint64_t time, int freq);
-	virtual void	change_effective_frequency(uint64_t time, uint64_t freq);
 	virtual void    go_idle(uint64_t time);
 	virtual void    go_unidle(uint64_t time);
 
@@ -195,7 +194,6 @@ public:
 
 	virtual int     can_collapse(void) { return childcount == 1;};
 	virtual void    calculate_freq(uint64_t time);
-	virtual void	change_effective_frequency(uint64_t time, uint64_t freq);
 };
 
 class cpu_package: public abstract_cpu
@@ -209,8 +207,6 @@ public:
 	virtual int     can_collapse(void) { return childcount == 1;};
 
 	virtual void    calculate_freq(uint64_t time);
-	virtual void	change_effective_frequency(uint64_t time, uint64_t freq);
-
 };
 
 extern void enumerate_cpus(void);

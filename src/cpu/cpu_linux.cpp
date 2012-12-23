@@ -359,25 +359,6 @@ void cpu_linux::change_freq(uint64_t time, int frequency)
 	old_idle = idle;
 }
 
-void cpu_linux::change_effective_frequency(uint64_t time, uint64_t frequency)
-{
-	uint64_t time_delta, fr;
-
-	if (last_stamp)
-		time_delta = time - last_stamp;
-	else
-		time_delta = 1;
-
-	fr = effective_frequency;
-	if (old_idle)
-		fr = 0;
-
-	account_freq(fr, time_delta);
-
-	effective_frequency = frequency;
-	last_stamp = time;
-}
-
 void cpu_linux::go_idle(uint64_t time)
 {
 

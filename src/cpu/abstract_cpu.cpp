@@ -393,14 +393,27 @@ void abstract_cpu::calculate_freq(uint64_t time)
 void abstract_cpu::change_effective_frequency(uint64_t time, uint64_t frequency)
 {
 	unsigned int i;
+	uint64_t time_delta, fr;
+
+	if (last_stamp)
+		time_delta = time - last_stamp;
+	else
+		time_delta = 1;
+
+	fr = effective_frequency;
+	if (old_idle)
+		fr = 0;
+
+	account_freq(fr, time_delta);
+
+	effective_frequency = frequency;
+	last_stamp = time;
 
 	/* propagate to all children */
 	for (i = 0; i < children.size(); i++)
 		if (children[i]) {
 			children[i]->change_effective_frequency(time, frequency);
 		}
-
-	effective_frequency = frequency;
 }
 
 

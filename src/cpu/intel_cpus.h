@@ -98,11 +98,6 @@ public:
 	virtual char *  fill_pstate_name(int line_nr, char *buffer);
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
 	virtual int	has_pstate_level(int level);
-
-	virtual void    change_freq(uint64_t time, int freq);
-	virtual void    go_idle(uint64_t time);
-	virtual void    go_unidle(uint64_t time);
-
 };
 
 class atom_package: public cpu_package

@@ -445,31 +445,3 @@ int nhm_cpu::has_pstate_level(int level)
 		return 1;
 	return cpu_linux::has_pstate_level(level);
 }
-
-void nhm_cpu::change_freq(uint64_t time, int frequency)
-{
-	current_frequency = frequency;
-
-	if (parent)
-		parent->calculate_freq(time);
-	old_idle = idle;
-}
-
-void nhm_cpu::go_idle(uint64_t time)
-{
-
-	idle = true;
-
-	if (parent)
-		parent->calculate_freq(time);
-	old_idle = idle;
-}
-
-
-void nhm_cpu::go_unidle(uint64_t time)
-{
-	idle = false;
-	if (parent)
-		parent->calculate_freq(time);
-	old_idle = idle;
-}

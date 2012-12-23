@@ -143,9 +143,9 @@ public:
 
 	/* Frequency micro accounting methods */
 	virtual void    calculate_freq(uint64_t time);
-	virtual void    go_idle(uint64_t time) { idle = true; if (parent) parent->calculate_freq(time);};
-	virtual void    go_unidle(uint64_t time) { idle = false; if (parent) parent->calculate_freq(time);};;
-	virtual void    change_freq(uint64_t time, int freq) { current_frequency = freq; if (parent) parent->calculate_freq(time);};
+	virtual void    go_idle(uint64_t time) { idle = true; freq_updated(time); }
+	virtual void    go_unidle(uint64_t time) { idle = false; freq_updated(time); }
+	virtual void    change_freq(uint64_t time, int freq) { current_frequency = freq; freq_updated(time); }
 
 	virtual void	change_effective_frequency(uint64_t time, uint64_t freq);
 
@@ -177,11 +177,6 @@ public:
 
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
 	virtual char *  fill_pstate_name(int line_nr, char *buffer);
-
-	virtual void    change_freq(uint64_t time, int freq);
-	virtual void    go_idle(uint64_t time);
-	virtual void    go_unidle(uint64_t time);
-
 };
 
 class cpu_core: public abstract_cpu

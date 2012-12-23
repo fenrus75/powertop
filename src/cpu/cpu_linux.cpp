@@ -346,34 +346,3 @@ char * cpu_linux::fill_pstate_line(int line_nr, char *buffer)
 	sprintf(buffer," %5.1f%% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
 	return buffer;
 }
-
-
-
-
-void cpu_linux::change_freq(uint64_t time, int frequency)
-{
-	current_frequency = frequency;
-
-	if (parent)
-		parent->calculate_freq(time);
-	old_idle = idle;
-}
-
-void cpu_linux::go_idle(uint64_t time)
-{
-
-	idle = true;
-
-	if (parent)
-		parent->calculate_freq(time);
-	old_idle = idle;
-}
-
-
-void cpu_linux::go_unidle(uint64_t time)
-{
-	idle = false;
-	if (parent)
-		parent->calculate_freq(time);
-	old_idle = idle;
-}

@@ -544,42 +544,6 @@ int nhm_cpu::has_pstate_level(int level)
 	return cpu_linux::has_pstate_level(level);
 }
 
-void nhm_cpu::account_freq(uint64_t freq, uint64_t duration)
-{
-	struct frequency *state = NULL;
-	unsigned int i;
-
-
-	for (i = 0; i < pstates.size(); i++) {
-		if (freq == pstates[i]->freq) {
-			state = pstates[i];
-			break;
-		}
-	}
-
-	if (!state) {
-		state = new(std::nothrow) struct frequency;
-
-		if (!state)
-			return;
-
-		memset(state, 0, sizeof(*state));
-
-		pstates.push_back(state);
-
-		state->freq = freq;
-		hz_to_human(freq, state->human_name);
-		if (freq == 0)
-			strcpy(state->human_name, _("Idle"));
-		state->after_count = 1;
-	}
-
-
-	state->time_after += duration;
-
-
-}
-
 void nhm_cpu::change_freq(uint64_t time, int frequency)
 {
 	current_frequency = frequency;

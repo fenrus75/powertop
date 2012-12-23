@@ -211,29 +211,6 @@ void nhm_core::calculate_freq(uint64_t time)
 	old_idle = idle;
 }
 
-void nhm_core::change_effective_frequency(uint64_t time, uint64_t frequency)
-{
-	uint64_t freq = 0;
-	uint64_t time_delta, fr;
-
-
-	if (last_stamp)
-		time_delta = time - last_stamp;
-	else
-		time_delta = 1;
-
-	fr = effective_frequency;
-
-	if (old_idle)
-		fr = 0;
-
-	account_freq(fr, time_delta);
-
-	effective_frequency = freq;
-	last_stamp = time;
-	abstract_cpu::change_effective_frequency(time, frequency);
-}
-
 char * nhm_core::fill_pstate_line(int line_nr, char *buffer)
 {
 	buffer[0] = 0;
@@ -407,28 +384,6 @@ void nhm_package::calculate_freq(uint64_t time)
 	old_idle = idle;
 }
 
-void nhm_package::change_effective_frequency(uint64_t time, uint64_t frequency)
-{
-	uint64_t time_delta, fr;
-
-	if (last_stamp)
-		time_delta = time - last_stamp;
-	else
-		time_delta = 1;
-
-	fr = effective_frequency;
-	if (old_idle)
-		fr = 0;
-
-	account_freq(fr, time_delta);
-
-	effective_frequency = frequency;
-	last_stamp = time;
-
-	abstract_cpu::change_effective_frequency(time, frequency);
-}
-
-
 void nhm_cpu::measurement_start(void)
 {
 	ifstream file;
@@ -551,25 +506,6 @@ void nhm_cpu::change_freq(uint64_t time, int frequency)
 	if (parent)
 		parent->calculate_freq(time);
 	old_idle = idle;
-}
-
-void nhm_cpu::change_effective_frequency(uint64_t time, uint64_t frequency)
-{
-	uint64_t time_delta, fr;
-
-	if (last_stamp)
-		time_delta = time - last_stamp;
-	else
-		time_delta = 1;
-
-	fr = effective_frequency;
-	if (old_idle)
-		fr = 0;
-
-	account_freq(fr, time_delta);
-
-	effective_frequency = frequency;
-	last_stamp = time;
 }
 
 void nhm_cpu::go_idle(uint64_t time)

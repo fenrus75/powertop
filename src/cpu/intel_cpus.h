@@ -53,9 +53,6 @@ private:
 
 	uint64_t	last_stamp;
 	uint64_t	total_stamp;
-
-	void		account_freq(uint64_t frequency, uint64_t duration);
-
 public:
 	virtual void	measurement_start(void);
 	virtual void	measurement_end(void);
@@ -78,8 +75,6 @@ private:
 
 	uint64_t	last_stamp;
 	uint64_t	total_stamp;
-
-	void		account_freq(uint64_t frequency, uint64_t duration);
 public:
 	virtual void	measurement_start(void);
 	virtual void	measurement_end(void);

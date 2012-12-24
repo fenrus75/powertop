@@ -185,44 +185,6 @@ void nhm_core::measurement_end(void)
 	total_stamp = 0;
 }
 
-void nhm_core::account_freq(uint64_t freq, uint64_t duration)
-{
-	struct frequency *state = NULL;
-	unsigned int i;
-
-	for (i = 0; i < pstates.size(); i++) {
-		if (freq == pstates[i]->freq) {
-			state = pstates[i];
-			break;
-		}
-	}
-
-
-	if (!state) {
-		state = new(std::nothrow) struct frequency;
-
-		if (!state)
-			return;
-
-		memset(state, 0, sizeof(*state));
-
-		pstates.push_back(state);
-
-		state->freq = freq;
-		hz_to_human(freq, state->human_name);
-		if (freq == 0)
-			strcpy(state->human_name, _("Idle"));
-		if (is_turbo(freq, max_frequency, max_minus_one_frequency))
-			sprintf(state->human_name, _("Turbo Mode"));
-
-		state->after_count = 1;
-	}
-
-
-	state->time_after += duration;
-}
-
-
 void nhm_core::calculate_freq(uint64_t time)
 {
 	uint64_t freq = 0;
@@ -415,42 +377,6 @@ void nhm_package::measurement_end(void)
 			}
 		}
 	total_stamp = 0;
-
-}
-
-void nhm_package::account_freq(uint64_t freq, uint64_t duration)
-{
-	struct frequency *state = NULL;
-	unsigned int i;
-
-	for (i = 0; i < pstates.size(); i++) {
-		if (freq == pstates[i]->freq) {
-			state = pstates[i];
-			break;
-		}
-	}
-
-
-	if (!state) {
-		state = new(std::nothrow) struct frequency;
-
-		if (!state)
-			return;
-
-		memset(state, 0, sizeof(*state));
-
-		pstates.push_back(state);
-
-		state->freq = freq;
-		hz_to_human(freq, state->human_name);
-		if (freq == 0)
-			strcpy(state->human_name, _("Idle"));
-		if (is_turbo(freq, max_frequency, max_minus_one_frequency))
-			sprintf(state->human_name, _("Turbo Mode"));
-		state->after_count = 1;
-	}
-
-	state->time_after += duration;
 
 }
 

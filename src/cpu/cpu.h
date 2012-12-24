@@ -83,6 +83,8 @@ protected:
 	double  time_factor;
 	uint64_t max_frequency;
 	uint64_t max_minus_one_frequency;
+
+	virtual void	account_freq(uint64_t frequency, uint64_t duration);
 public:
 	uint64_t	last_stamp;
 	uint64_t	total_stamp;
@@ -158,8 +160,6 @@ extern vector<class abstract_cpu *> all_cpus;
 
 class cpu_linux: public abstract_cpu
 {
-
-	void	account_freq(uint64_t frequency, uint64_t duration);
 	void 	parse_pstates_start(void);
 	void 	parse_cstates_start(void);
 	void 	parse_pstates_end(void);
@@ -186,7 +186,6 @@ public:
 
 class cpu_core: public abstract_cpu
 {
-	void		account_freq(uint64_t frequency, uint64_t duration);
 public:
 	virtual char *  fill_cstate_line(int line_nr, char *buffer, const char *separator="");
 	virtual char *  fill_cstate_name(int line_nr, char *buffer);
@@ -201,7 +200,6 @@ public:
 
 class cpu_package: public abstract_cpu
 {
-	void		account_freq(uint64_t frequency, uint64_t duration);
 public:
 	virtual char *  fill_cstate_line(int line_nr, char *buffer, const char *separator="");
 	virtual char *  fill_cstate_name(int line_nr, char *buffer);

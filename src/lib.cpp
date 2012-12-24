@@ -59,6 +59,15 @@ extern "C" {
 
 static int kallsyms_read = 0;
 
+int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo)
+{
+	if (freq != max)
+		return 0;
+	if (maxmo + 1000 != max)
+		return 0;
+	return 1;
+}
+
 double percentage(double F)
 {
 	F = F * 100.0;

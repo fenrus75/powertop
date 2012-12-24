@@ -40,14 +40,6 @@
 #include "../parameters/parameters.h"
 #include "../display.h"
 
-static int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo)
-{
-	if (freq != max)
-		return 0;
-	if (maxmo + 1000 != max)
-		return 0;
-	return 1;
-}
 
 int has_c2c7_res;
 

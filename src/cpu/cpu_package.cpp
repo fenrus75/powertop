@@ -27,16 +27,6 @@
 #include "../lib.h"
 #include "../parameters/parameters.h"
 
-static int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo)
-{
-	if (freq != max)
-		return 0;
-	if (maxmo + 1000 != max)
-		return 0;
-	return 1;
-}
-
-
 char * cpu_package::fill_cstate_line(int line_nr, char *buffer, const char *separator)
 {
 	unsigned int i;

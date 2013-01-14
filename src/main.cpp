@@ -77,7 +77,7 @@ static const struct option long_options[] =
 	{"time", optional_argument, NULL, 't'},
 	{"iteration", optional_argument, NULL, 'i'},
 	{"workload", optional_argument, NULL, 'w'},
-	{"quiet", optional_argument, NULL, 'q'},
+	{"quiet", no_argument, NULL, 'q'},
 	{NULL, 0, NULL, 0}
 };
 

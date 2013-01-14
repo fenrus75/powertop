@@ -139,5 +139,6 @@ public:
 	virtual char *  fill_cstate_line(int line_nr, char *buffer, const char *separator);
 	virtual int	has_pstate_level(int level) { return 0; };
 	virtual int	has_pstates(void) { return 0; };
+	virtual void	wiggle(void) { };
 
 };

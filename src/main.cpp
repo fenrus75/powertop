@@ -191,7 +191,7 @@ void one_measurement(int seconds, char *workload)
 	start_cpu_measurement();
 
 	if (workload && workload[0]) {
-		if (!system(workload))
+		if (system(workload))
 			fprintf(stderr, _("Unknown issue running workload!\n"));
 	} else {
 		do_sleep(seconds);

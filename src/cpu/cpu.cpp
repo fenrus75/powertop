@@ -403,8 +403,16 @@ void report_display_cpu_cstates(void)
 {
 	char buffer[512], buffer2[512];
 	unsigned int package, core, cpu;
-	int line;
+	int line, cstates_num;
 	class abstract_cpu *_package, * _core, * _cpu;
+	unsigned int i, j;
+
+	for (i = 0, cstates_num = 0; i < all_cpus.size(); i++) {
+		if (all_cpus[i])
+			for (j = 0; j < all_cpus[i]->cstates.size(); j++)
+				cstates_num = std::max(cstates_num,
+						(all_cpus[i]->cstates[j])->line_level);
+	}
 
 	report.begin_section(SECTION_CPUIDLE);
 	report.add_header("Processor Idle state report");
@@ -422,7 +430,7 @@ void report_display_cpu_cstates(void)
 			if (!_core)
 				continue;
 
-			for (line = LEVEL_HEADER; line < 10; line++) {
+			for (line = LEVEL_HEADER; line <= cstates_num; line++) {
 				bool first_cpu = true;
 
 				if (!_package->has_cstate_level(line))
@@ -629,14 +637,29 @@ void impl_w_display_cpu_states(int state)
 	char buffer[128];
 	char linebuf[1024];
 	unsigned int package, core, cpu;
-	int line;
+	int line, loop, cstates_num, pstates_num;
 	class abstract_cpu *_package, * _core, * _cpu;
 	int ctr = 0;
+	unsigned int i, j;
 
-	if (state == PSTATE)
+	for (i = 0, cstates_num = 0, pstates_num = 0; i < all_cpus.size(); i++) {
+		if (!all_cpus[i])
+			continue;
+
+		pstates_num = std::max<int>(pstates_num, all_cpus[i]->pstates.size());
+
+		for (j = 0; j < all_cpus[i]->cstates.size(); j++)
+			cstates_num = std::max(cstates_num,
+						(all_cpus[i]->cstates[j])->line_level);
+	}
+
+	if (state == PSTATE) {
 		win = get_ncurses_win("Frequency stats");
-	else
+		loop = pstates_num;
+	} else {
 		win = get_ncurses_win("Idle stats");
+		loop = cstates_num;
+	}
 
 	if (!win)
 		return;
@@ -657,8 +680,7 @@ void impl_w_display_cpu_states(int state)
 			if (!_core->has_pstates() && state == PSTATE)
 				continue;
 
-
-			for (line = LEVEL_HEADER; line < 10; line++) {
+			for (line = LEVEL_HEADER; line <= loop; line++) {
 				int first = 1;
 				ctr = 0;
 				linebuf[0] = 0;

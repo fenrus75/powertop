@@ -534,8 +534,9 @@ void report_display_cpu_pstates(void)
 	unsigned int i, pstates_num;
 
 	for (i = 0, pstates_num = 0; i < all_cpus.size(); i++)
-		if (all_cpus[i] && all_cpus[i]->pstates.size() > pstates_num)
-			pstates_num = all_cpus[i]->pstates.size();
+		if (all_cpus[i])
+			pstates_num = std::max<unsigned int>(pstates_num,
+								all_cpus[i]->pstates.size());
 
 	report.begin_section(SECTION_CPUFREQ);
 	report.add_header("Processor Frequency Report");

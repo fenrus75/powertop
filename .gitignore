@@ -39,7 +39,6 @@ po/*.gmo
 po/stamp-po
 src/powertop
 src/css.h
-src/csstoh
 src/Makefile.in
 src/.deps/
 src/Makefile

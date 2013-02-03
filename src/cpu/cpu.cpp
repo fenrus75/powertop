@@ -808,7 +808,7 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 
 		ret = pevent_get_field_val(NULL, event, "state", &rec, &val, 0);
 		if (ret < 0) {
-			fprintf(stderr, _("power or cpu_frequecny event returned no state?\n"));
+			fprintf(stderr, _("power or cpu_frequency event returned no state?\n"));
 			exit(-1);
 		}
 

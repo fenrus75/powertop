@@ -57,7 +57,6 @@ double power_meter::joules_consumed(void)
 double power_meter::time_left(void)
 {
 	double cap, rate;
-	double left;
 
 	cap = dev_capacity();
 	rate = joules_consumed();
@@ -65,11 +64,12 @@ double power_meter::time_left(void)
 	if (cap < 0.001)
 		return 0.0;
 
-	left = cap / rate;
+	/* return 0.0 instead of INF+ */
+	if (rate < 0.001)
+		return 0.0;
 
-	return left;
+	return cap / rate;
 }
-
 
 vector<class power_meter *> power_meters;
 
@@ -101,12 +101,17 @@ double global_joules_consumed(void)
 
 double global_time_left(void)
 {
-	double total = 0.0;
+	double total_capacity = 0.0;
+	double total_rate = 0.0;
 	unsigned int i;
-	for (i = 0; i < power_meters.size(); i++)
-		total += power_meters[i]->time_left();
-
-	return total;
+	for (i = 0; i < power_meters.size(); i++) {
+		total_capacity += power_meters[i]->dev_capacity();
+		total_rate += power_meters[i]->joules_consumed();
+	}
+	/* return 0.0 instead of INF+ */
+	if (total_rate < 0.001)
+		return 0.0;
+	return total_capacity / total_rate;
 }
 
 void sysfs_power_meters_callback(const char *d_name)

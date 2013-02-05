@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # This program file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -16,8 +16,7 @@
 # Boston, MA 02110-1301 USA
 # or just google for it.
 #
-# Written by Igor Zhbanov<i.zhbanov at samsung.com>
-
+# Written by Igor Zhbanov <i.zhbanov at samsung.com>
 
 if [ $# -lt 2 ]; then
 	echo "Usage: csstoh.sh cssfile header.h"
@@ -29,17 +28,17 @@ if [ ! -r $1 ]; then
 	exit 1
 fi
 
-if ! echo -n>$2; then
+if ! echo -n >$2; then
 	echo "Can't open file $2 for writing."
 	exit 1
 fi
 
-echo "#ifndef __INCLUDE_GUARD_CCS_H">>  $2
-echo "#define __INCLUDE_GUARD_CCS_H">>  $2
-echo>>  $2
-echo "const char css[] = ">>  $2
+echo "#ifndef __INCLUDE_GUARD_CCS_H" >> $2
+echo "#define __INCLUDE_GUARD_CCS_H" >> $2
+echo >> $2
+echo "const char css[] = " >> $2
 
-sed -r 's/^(.*)$/\t\"\1\\n\"/' $1>>  $2
+sed -r 's/^(.*)$/\t\"\1\\n\"/' $1 >> $2
 
-echo ";">>  $2
-echo "#endif">>  $2
+echo ";" >> $2
+echo "#endif" >> $2

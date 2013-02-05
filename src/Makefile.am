@@ -46,6 +46,5 @@ AM_LDFLAGS = $(LIBS) $(NCURSES_LIBS) $(PCIUTILS_LIBS) $(LIBNL_LIBS) $(LIBZ_LIBS)
 BUILT_SOURCES = css.h
 CLEANFILES = css.h
 css.h: powertop.css
-	chmod +x ./csstoh.sh
-	./csstoh.sh "$(srcdir)"/powertop.css css.h
+	$(SHELL) ./csstoh.sh powertop.css css.h
 

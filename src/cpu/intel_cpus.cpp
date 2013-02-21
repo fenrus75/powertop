@@ -58,7 +58,7 @@ static uint64_t get_msr(int cpu, uint64_t offset)
 		fd = sprintf(msr_path, "/dev/msr%d", cpu);
 
 		if (access(msr_path, R_OK) != 0){
-			fprintf(stderr, _("msr reg not found"));
+			fprintf(stderr, _("Model-specific registers (MSR) not found (try enabling CONFIG_X86_MSR).\n"));
 			exit(-2);
 		}
 	}

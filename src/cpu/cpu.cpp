@@ -402,20 +402,64 @@ static const char * fill_state_line(class abstract_cpu *acpu, int state, int lin
 	return "-EINVAL";
 }
 
+static int get_cstates_num(void)
+{
+	unsigned int package, core, cpu;
+	class abstract_cpu *_package, * _core, * _cpu;
+	unsigned int i;
+	int cstates_num;
+
+	for (package = 0, cstates_num = 0;
+			package < system_level.children.size(); package++) {
+		_package = system_level.children[package];
+		if (_package == NULL)
+			continue;
+
+		/* walk package cstates and get largest cstates number */
+		for (i = 0; i < _package->cstates.size(); i++)
+			cstates_num = std::max(cstates_num,
+						(_package->cstates[i])->line_level);
+
+		/*
+		 * for each core in this package, walk core cstates and get
+		 * largest cstates number
+		 */
+		for (core = 0; core < _package->children.size(); core++) {
+			_core = _package->children[core];
+			if (_core == NULL)
+				continue;
+
+			for (i = 0; i <  _core->cstates.size(); i++)
+				cstates_num = std::max(cstates_num,
+						(_core->cstates[i])->line_level);
+
+			/*
+			 * for each core, walk the logical cpus in case
+			 * there is are more linux cstates than hw cstates
+			 */
+			 for (cpu = 0; cpu < _core->children.size(); cpu++) {
+				_cpu = _core->children[cpu];
+				if (_cpu == NULL)
+					continue;
+
+				for (i = 0; i < _cpu->cstates.size(); i++)
+					cstates_num = std::max(cstates_num,
+						(_cpu->cstates[i])->line_level);
+			}
+		}
+	}
+
+	return cstates_num;
+}
+
 void report_display_cpu_cstates(void)
 {
 	char buffer[512], buffer2[512];
 	unsigned int package, core, cpu;
 	int line, cstates_num;
 	class abstract_cpu *_package, * _core, * _cpu;
-	unsigned int i, j;
 
-	for (i = 0, cstates_num = 0; i < all_cpus.size(); i++) {
-		if (all_cpus[i])
-			for (j = 0; j < all_cpus[i]->cstates.size(); j++)
-				cstates_num = std::max(cstates_num,
-						(all_cpus[i]->cstates[j])->line_level);
-	}
+	cstates_num = get_cstates_num();
 
 	report.begin_section(SECTION_CPUIDLE);
 	report.add_header("Processor Idle state report");
@@ -644,17 +688,15 @@ void impl_w_display_cpu_states(int state)
 	int line, loop, cstates_num, pstates_num;
 	class abstract_cpu *_package, * _core, * _cpu;
 	int ctr = 0;
-	unsigned int i, j;
+	unsigned int i;
 
-	for (i = 0, cstates_num = 0, pstates_num = 0; i < all_cpus.size(); i++) {
+	cstates_num = get_cstates_num();
+
+	for (i = 0, pstates_num = 0; i < all_cpus.size(); i++) {
 		if (!all_cpus[i])
 			continue;
 
 		pstates_num = std::max<int>(pstates_num, all_cpus[i]->pstates.size());
-
-		for (j = 0; j < all_cpus[i]->cstates.size(); j++)
-			cstates_num = std::max(cstates_num,
-						(all_cpus[i]->cstates[j])->line_level);
 	}
 
 	if (state == PSTATE) {

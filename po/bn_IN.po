@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
-"POT-Creation-Date: 2012-10-26 09:24-0700\n"
-"PO-Revision-Date: 2012-10-26 22:23+0000\n"
+"POT-Creation-Date: 2013-02-25 10:05-0800\n"
+"PO-Revision-Date: 2013-02-26 19:08+0000\n"
 "Last-Translator: ceferron <chris.e.ferron@linux.intel.com>\n"
 "Language-Team: Bengali (India) (http://www.transifex.com/projects/p/PowerTOP/language/bn_IN/)\n"
 "MIME-Version: 1.0\n"
@@ -51,198 +51,206 @@ msgstr "ডিভাইস পরিসংখ্যান"
 msgid "Exit"
 msgstr "প্রস্থান"
 
-#: src/cpu/cpu_core.cpp:111 src/cpu/cpu_linux.cpp:360
-#: src/cpu/cpu_package.cpp:133 src/cpu/intel_cpus.cpp:222
-#: src/cpu/intel_cpus.cpp:444 src/cpu/intel_cpus.cpp:639
-msgid "Idle"
-msgstr "নিষ্ক্রিয়"
-
-#: src/cpu/cpu_core.cpp:113 src/cpu/cpu_linux.cpp:362
-#: src/cpu/cpu_package.cpp:135 src/cpu/intel_cpus.cpp:224
-#: src/cpu/intel_cpus.cpp:446
+#: src/cpu/cpu_core.cpp:37 src/cpu/cpu_core.cpp:93 src/cpu/intel_cpus.cpp:201
 #, c-format
-msgid "Turbo Mode"
-msgstr "Turbo Mode"
+msgid "  Core"
+msgstr ""
 
-#: src/cpu/cpu.cpp:93
+#: src/cpu/cpu.cpp:94
 #, c-format
 msgid "cpu package %i"
 msgstr "সিপিইউ প্যাকেজ %i"
 
-#: src/cpu/cpu.cpp:94
+#: src/cpu/cpu.cpp:95
 msgid "cpu package"
 msgstr "cpu 'র প্যাকেজ"
 
-#: src/cpu/cpu.cpp:437 src/cpu/cpu.cpp:563
+#: src/cpu/cpu.cpp:446 src/cpu/cpu.cpp:573
 #, c-format
 msgid "Package %i"
 msgstr ""
 
-#: src/cpu/cpu.cpp:469 src/cpu/cpu.cpp:583
+#: src/cpu/cpu.cpp:478 src/cpu/cpu.cpp:593
 #, c-format
 msgid "Core %i"
 msgstr ""
 
-#: src/cpu/cpu.cpp:471
+#: src/cpu/cpu.cpp:480
 #, c-format
 msgid "GPU %i"
 msgstr ""
 
-#: src/cpu/cpu.cpp:493 src/cpu/cpu.cpp:604
+#: src/cpu/cpu.cpp:502 src/cpu/cpu.cpp:614
 #, c-format
 msgid "CPU %i"
 msgstr ""
 
-#: src/cpu/cpu.cpp:772
+#: src/cpu/cpu.cpp:796
 #, c-format
 msgid "cpu_idle event returned no state?\n"
 msgstr "cpu_idle ইভেন্ট  কোনও অবস্থাষ় ফিরে আসেনি?\n\n"
 
-#: src/cpu/cpu.cpp:787
+#: src/cpu/cpu.cpp:811
 #, c-format
-msgid "power or cpu_frequecny event returned no state?\n"
-msgstr "ক্ষমতা বা cpu_frequecny ইভেন্ট কোনও অবস্থাষ় ফিরে আসেনি?\n"
+msgid "power or cpu_frequency event returned no state?\n"
+msgstr ""
 
-#: src/cpu/cpu_linux.cpp:92
+#: src/cpu/cpu_linux.cpp:79
 msgid "C0 polling"
 msgstr "C0 polling"
 
-#: src/cpu/intel_cpus.cpp:69
+#: src/cpu/cpu_linux.cpp:240 src/cpu/cpu_linux.cpp:339
+#: src/cpu/intel_cpus.cpp:423
+#, c-format
+msgid " CPU %i"
+msgstr ""
+
+#: src/cpu/cpu_package.cpp:47
+#, c-format
+msgid "Package"
+msgstr ""
+
+#: src/cpu/cpu_package.cpp:105 src/cpu/intel_cpus.cpp:226
+#, c-format
+msgid "  Package"
+msgstr ""
+
+#: src/cpu/intel_cpus.cpp:61
 #, c-format
 msgid "msr reg not found"
 msgstr "msr reg খুঁজে পাষ় নি"
 
-#: src/cpu/intel_cpus.cpp:79
+#: src/cpu/intel_cpus.cpp:71
 #, c-format
 msgid "pread cpu%d 0x%llx : "
 msgstr "pread cpu 'র%d 0x%llx :"
 
-#: src/cpu/intel_cpus.cpp:516
+#: src/cpu/intel_cpus.cpp:347
 msgid "C0 active"
 msgstr "C0 সক্রিয়"
 
-#: src/cpu/intel_cpus.cpp:575
+#: src/cpu/intel_cpus.cpp:406
 #, c-format
 msgid "Actual"
 msgstr "প্রকৃত"
 
-#: src/lib.cpp:257
+#: src/lib.cpp:266
 #, c-format
 msgid "%7sW"
 msgstr "%7sW"
 
-#: src/lib.cpp:260
+#: src/lib.cpp:269
 #, c-format
 msgid "    0 mW"
 msgstr "      0 mW"
 
-#: src/lib.cpp:381
+#: src/lib.cpp:390
 msgid "PS/2 Touchpad / Keyboard / Mouse"
 msgstr "PS / 2, টাচপ্যাড / কীবোর্ড / মাউস"
 
-#: src/lib.cpp:382
+#: src/lib.cpp:391
 msgid "SATA controller"
 msgstr "SATA নিয়ন্ত্রণ"
 
-#: src/lib.cpp:383
+#: src/lib.cpp:392
 msgid "Intel built in USB hub"
 msgstr "ইন্টেল নির্মিত USB হাব"
 
-#: src/process/do_process.cpp:830
+#: src/process/do_process.cpp:817
 #, c-format
 msgid ""
 "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n"
 "\n"
 msgstr "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n\n"
 
-#: src/process/do_process.cpp:841 src/devices/device.cpp:171
+#: src/process/do_process.cpp:828 src/devices/device.cpp:171
 #, c-format
 msgid "The battery reports a discharge rate of %sW\n"
 msgstr "The battery reports a discharge rate of %sW\n"
 
-#: src/process/do_process.cpp:846
+#: src/process/do_process.cpp:833
 #, c-format
 msgid "The estimated remaining time is %i hours, %i minutes\n"
 msgstr "আনুমানিক অবশিষ্ট সময় হল %i ঘন্টা, %i মিনিট\n\n\n"
 
-#: src/process/do_process.cpp:854
+#: src/process/do_process.cpp:841
 msgid "Summary"
 msgstr "সারাংশ"
 
-#: src/process/do_process.cpp:854 src/process/do_process.cpp:1024
+#: src/process/do_process.cpp:841 src/process/do_process.cpp:1011
 msgid "wakeups/second"
 msgstr "ওষ়েকআপস/সেকেন্ড"
 
-#: src/process/do_process.cpp:854
+#: src/process/do_process.cpp:841
 msgid "GPU ops/seconds"
 msgstr "জিপিইউ ops/সেকেন্ড"
 
-#: src/process/do_process.cpp:854
+#: src/process/do_process.cpp:841
 msgid "VFS ops/sec and"
 msgstr "ভিএফএস OPS / সেকেন্ড এবং"
 
-#: src/process/do_process.cpp:854 src/process/do_process.cpp:1028
+#: src/process/do_process.cpp:841 src/process/do_process.cpp:1015
 msgid "CPU use"
 msgstr "সিপিইউ-র ব্যবহার"
 
-#: src/process/do_process.cpp:858 src/process/do_process.cpp:915
-#: src/process/do_process.cpp:1034
+#: src/process/do_process.cpp:845 src/process/do_process.cpp:902
+#: src/process/do_process.cpp:1021
 msgid "Power est."
 msgstr "শক্তি অনুমান"
 
-#: src/process/do_process.cpp:858 src/process/do_process.cpp:860
-#: src/process/do_process.cpp:919 src/process/do_process.cpp:1038
+#: src/process/do_process.cpp:845 src/process/do_process.cpp:847
+#: src/process/do_process.cpp:906 src/process/do_process.cpp:1025
 msgid "Usage"
 msgstr "ব্যবহার"
 
-#: src/process/do_process.cpp:858 src/process/do_process.cpp:860
-#: src/process/do_process.cpp:1040
+#: src/process/do_process.cpp:845 src/process/do_process.cpp:847
+#: src/process/do_process.cpp:1027
 msgid "Events/s"
 msgstr "ইভেন্টস / গুলি"
 
-#: src/process/do_process.cpp:858 src/process/do_process.cpp:860
-#: src/process/do_process.cpp:929 src/process/do_process.cpp:1042
+#: src/process/do_process.cpp:845 src/process/do_process.cpp:847
+#: src/process/do_process.cpp:916 src/process/do_process.cpp:1029
 msgid "Category"
 msgstr "বিভাগ"
 
-#: src/process/do_process.cpp:858 src/process/do_process.cpp:860
-#: src/process/do_process.cpp:931 src/process/do_process.cpp:1044
+#: src/process/do_process.cpp:845 src/process/do_process.cpp:847
+#: src/process/do_process.cpp:918 src/process/do_process.cpp:1031
 msgid "Description"
 msgstr "বিবরণ"
 
-#: src/process/do_process.cpp:910
+#: src/process/do_process.cpp:897
 msgid "Overview of Software Power Consumers"
 msgstr "সফ্টওয়্যার পাওয়ার কনজিউমার্স রূপরেখা"
 
-#: src/process/do_process.cpp:921
+#: src/process/do_process.cpp:908
 msgid "Wakeups/s"
 msgstr "ওষ়েকআপস/ গুলি"
 
-#: src/process/do_process.cpp:923
+#: src/process/do_process.cpp:910
 msgid "GPU ops/s"
 msgstr "জিপিইউ ops/ গুলি"
 
-#: src/process/do_process.cpp:925
+#: src/process/do_process.cpp:912
 msgid "Disk IO/s"
 msgstr "ডিস্ক IO / গুলি"
 
-#: src/process/do_process.cpp:927
+#: src/process/do_process.cpp:914
 msgid "GFX Wakeups/s"
 msgstr "GFX ওষ়েকআপস/ গুলি"
 
-#: src/process/do_process.cpp:1021
+#: src/process/do_process.cpp:1008
 msgid "Power Consumption Summary"
 msgstr "বিদ্যুত ব্যবহার সারাংশ"
 
-#: src/process/do_process.cpp:1025
+#: src/process/do_process.cpp:1012
 msgid "GPU ops/second"
 msgstr "জিপিইউ ops/সেকেন্ড"
 
-#: src/process/do_process.cpp:1026
+#: src/process/do_process.cpp:1013
 msgid "VFS ops/sec"
 msgstr "VFS ops/sec"
 
-#: src/process/do_process.cpp:1027
+#: src/process/do_process.cpp:1014
 msgid "GFX wakes/sec and"
 msgstr "ভিএফএস OPS / সেকেন্ড "
 
@@ -319,25 +327,25 @@ msgstr "নেটওয়ার্ক ইন্টারফেস: %s (%s)"
 msgid "Bluetooth device interface status"
 msgstr "ব্লুটুথ ডিভাইসের ইন্টারফেস অবস্থা"
 
-#: src/tuning/cpufreq.cpp:43 src/tuning/ethernet.cpp:53
+#: src/tuning/cpufreq.cpp:44 src/tuning/ethernet.cpp:53
 #: src/tuning/tunable.cpp:48 src/tuning/wifi.cpp:45 src/tuning/runtime.cpp:41
 #: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:44
 msgid "Good"
 msgstr "ভাল"
 
-#: src/tuning/cpufreq.cpp:43 src/tuning/ethernet.cpp:53
+#: src/tuning/cpufreq.cpp:44 src/tuning/ethernet.cpp:53
 #: src/tuning/tunable.cpp:49 src/tuning/wifi.cpp:45 src/tuning/runtime.cpp:41
 #: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:44
 msgid "Bad"
 msgstr "খারাপ"
 
-#: src/tuning/cpufreq.cpp:43 src/tuning/ethernet.cpp:53
+#: src/tuning/cpufreq.cpp:44 src/tuning/ethernet.cpp:53
 #: src/tuning/tunable.cpp:50 src/tuning/wifi.cpp:45 src/tuning/runtime.cpp:41
 #: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:44
 msgid "Unknown"
 msgstr "অজানা"
 
-#: src/tuning/cpufreq.cpp:46
+#: src/tuning/cpufreq.cpp:47
 #, c-format
 msgid "Using 'ondemand' cpufreq governor"
 msgstr "'ondemand' cpufreq গভর্নর ব্যবহার করছে"
@@ -407,7 +415,7 @@ msgstr "অজানা ইউএসবি ডিভাইস %s.(%s: %s) এর
 msgid "Autosuspend for USB device %s [%s]"
 msgstr "ইউএসবি ডিভাইস %s[%s] এর জন্য Autosuspend "
 
-#: src/tuning/tuningsysfs.cpp:142
+#: src/tuning/tuningsysfs.cpp:139
 #, c-format
 msgid "Enable SATA link power Managmenet for %s"
 msgstr ""
@@ -548,40 +556,50 @@ msgstr "এই সাহায্য মেনু মুদ্রণ কর"
 msgid "For more help please refer to the README"
 msgstr "আরও সাহায্যের জন্য README পড়ুন দয়া করে"
 
-#: src/main.cpp:235
+#: src/main.cpp:195
+#, c-format
+msgid "Unknown issue running workload!\n"
+msgstr ""
+
+#: src/main.cpp:236
 msgid "PowerTOP is out of memory. PowerTOP is Aborting"
 msgstr "পাওষ়ারটপ মেমরি হয়ে গেছে । পাওষ়ারটপ বাতিল করছে"
 
-#: src/main.cpp:243
+#: src/main.cpp:244
 #, c-format
 msgid "Preparing to take measurements\n"
 msgstr "পরিমাপ গ্রহণ করতে প্রস্তুত \n\n"
 
-#: src/main.cpp:248
+#: src/main.cpp:249
 #, c-format
 msgid "Taking %d measurement(s) for a duration of %d second(s) each.\n"
 msgstr "প্রতিটি %d সেকেন্ড(গুলি) এর একটি সময়কালের জন্য %d পরিমাপ(গুলি) গ্রহণ করছে\n"
 
-#: src/main.cpp:250
+#: src/main.cpp:251
 #, c-format
 msgid "Measuring workload %s.\n"
 msgstr ""
 
-#: src/main.cpp:273
+#: src/main.cpp:274
 #, c-format
 msgid "PowerTOP "
 msgstr "পাওষ়ারটপ "
 
-#: src/main.cpp:274 src/main.cpp:302
+#: src/main.cpp:275 src/main.cpp:303
 #, c-format
 msgid "exiting...\n"
 msgstr "প্রস্থান করছে...\n\n"
 
-#: src/main.cpp:301
+#: src/main.cpp:302
 #, c-format
 msgid "Failed to mount debugfs!\n"
 msgstr "debugfs মাউন্ট করতে ব্যর্থ!\n\n"
 
-#: src/main.cpp:438
+#: src/main.cpp:394
+#, c-format
+msgid "Quite mode failed!\n"
+msgstr ""
+
+#: src/main.cpp:440
 msgid "Leaving PowerTOP"
 msgstr "পাওষ়ারটপ বন্ধ হচেছ"

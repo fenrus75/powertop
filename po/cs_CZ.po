@@ -1,269 +1,268 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Intel Corporation
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Otto Bříza <otto.briza@gmail.com>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
-"POT-Creation-Date: 2012-05-31 14:03-0700\n"
-"PO-Revision-Date: 2012-07-12 15:01+0000\n"
-"Last-Translator: Otto Bříza <otto.briza@gmail.com>\n"
-"Language-Team: Czech (Czech Republic) (http://www.transifex.com/projects/p/"
-"PowerTOP/language/cs_CZ/)\n"
-"Language: cs_CZ\n"
+"POT-Creation-Date: 2013-02-25 10:05-0800\n"
+"PO-Revision-Date: 2013-02-26 19:08+0000\n"
+"Last-Translator: Alois Nešpor <info@aloisnespor.info>\n"
+"Language-Team: Czech (Czech Republic) (http://www.transifex.com/projects/p/PowerTOP/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
+"Language: cs_CZ\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: src/parameters/persistent.cpp:46 src/parameters/persistent.cpp:140
-msgid "Cannot save to file "
-msgstr "Nelze uložit do souboru"
+msgid "Cannot save to file"
+msgstr "Nelze uložit soubor"
 
 #: src/parameters/persistent.cpp:78 src/parameters/persistent.cpp:165
-msgid "Cannot load from file "
-msgstr "Nelze nahrát ze souboru"
+msgid "Cannot load from file"
+msgstr "Nelze načíst ze souboru"
 
 #: src/parameters/persistent.cpp:123
 #, c-format
 msgid "Loaded %i prior measurements\n"
 msgstr "Nahráno %i měření\n"
 
-#: src/display.cpp:71
+#: src/display.cpp:70
 msgid "Overview"
 msgstr "Přehled"
 
-#: src/display.cpp:72
+#: src/display.cpp:71
 msgid "Idle stats"
 msgstr "Nečinné"
 
-#: src/display.cpp:73
+#: src/display.cpp:72
 msgid "Frequency stats"
 msgstr "Frekvence"
 
-#: src/display.cpp:74
+#: src/display.cpp:73
 msgid "Device stats"
 msgstr "Zařízení"
 
-#: src/display.cpp:131
+#: src/display.cpp:130
 msgid "Exit"
 msgstr "Konec"
 
-#: src/cpu/cpu_core.cpp:46 src/cpu/cpu_core.cpp:190 src/cpu/intel_cpus.cpp:296
+#: src/cpu/cpu_core.cpp:37 src/cpu/cpu_core.cpp:93 src/cpu/intel_cpus.cpp:201
 #, c-format
 msgid "  Core"
-msgstr "  Jádro"
+msgstr ""
 
-#: src/cpu/cpu_core.cpp:116 src/cpu/cpu_linux.cpp:329
-#: src/cpu/cpu_package.cpp:145 src/cpu/intel_cpus.cpp:222
-#: src/cpu/intel_cpus.cpp:457 src/cpu/intel_cpus.cpp:658
-msgid "Idle"
-msgstr "Nečinné"
-
-#: src/cpu/cpu_core.cpp:118 src/cpu/cpu_linux.cpp:331
-#: src/cpu/cpu_package.cpp:147 src/cpu/intel_cpus.cpp:224
-#: src/cpu/intel_cpus.cpp:459
-#, c-format
-msgid "Turbo Mode"
-msgstr "Turbo režim"
-
-#: src/cpu/cpu.cpp:90
+#: src/cpu/cpu.cpp:94
 #, c-format
 msgid "cpu package %i"
 msgstr "cpu svazek %i"
 
-#: src/cpu/cpu.cpp:91
+#: src/cpu/cpu.cpp:95
 msgid "cpu package"
 msgstr "cpu svazek"
 
-#: src/cpu/cpu.cpp:925
+#: src/cpu/cpu.cpp:446 src/cpu/cpu.cpp:573
+#, c-format
+msgid "Package %i"
+msgstr "Balíček %i"
+
+#: src/cpu/cpu.cpp:478 src/cpu/cpu.cpp:593
+#, c-format
+msgid "Core %i"
+msgstr "Jádro %i"
+
+#: src/cpu/cpu.cpp:480
+#, c-format
+msgid "GPU %i"
+msgstr "GPU %i"
+
+#: src/cpu/cpu.cpp:502 src/cpu/cpu.cpp:614
+#, c-format
+msgid "CPU %i"
+msgstr "GPU %i"
+
+#: src/cpu/cpu.cpp:796
 #, c-format
 msgid "cpu_idle event returned no state?\n"
 msgstr "cpu_idle událost nevrátila stav?\n"
 
-#: src/cpu/cpu.cpp:940
+#: src/cpu/cpu.cpp:811
 #, c-format
-msgid "power or cpu_frequecny event returned no state?\n"
+msgid "power or cpu_frequency event returned no state?\n"
 msgstr ""
-"power nebo cpu_frequecny událost nevrátila stav?\n"
-"\n"
 
-#: src/cpu/cpu_linux.cpp:92
+#: src/cpu/cpu_linux.cpp:79
 msgid "C0 polling"
 msgstr "C0 sdílení"
 
-#: src/cpu/cpu_linux.cpp:231 src/cpu/cpu_linux.cpp:289
-#: src/cpu/intel_cpus.cpp:605
+#: src/cpu/cpu_linux.cpp:240 src/cpu/cpu_linux.cpp:339
+#: src/cpu/intel_cpus.cpp:423
 #, c-format
 msgid " CPU %i"
-msgstr " CPU %i"
+msgstr ""
 
-#: src/cpu/cpu_package.cpp:46
+#: src/cpu/cpu_package.cpp:47
 #, c-format
 msgid "Package"
-msgstr "Balíček"
+msgstr ""
 
-#: src/cpu/cpu_package.cpp:104 src/cpu/intel_cpus.cpp:322
+#: src/cpu/cpu_package.cpp:105 src/cpu/intel_cpus.cpp:226
 #, c-format
 msgid "  Package"
-msgstr "  Balíček"
+msgstr ""
 
-#: src/cpu/intel_cpus.cpp:69
+#: src/cpu/intel_cpus.cpp:61
 #, c-format
 msgid "msr reg not found"
 msgstr "msr reg nenalezen"
 
-#: src/cpu/intel_cpus.cpp:79
+#: src/cpu/intel_cpus.cpp:71
 #, c-format
 msgid "pread cpu%d 0x%llx : "
 msgstr "pread cpu%d 0x%llx : "
 
-#: src/cpu/intel_cpus.cpp:529
+#: src/cpu/intel_cpus.cpp:347
 msgid "C0 active"
 msgstr "C0 aktivní"
 
-#: src/cpu/intel_cpus.cpp:588
+#: src/cpu/intel_cpus.cpp:406
 #, c-format
 msgid "Actual"
 msgstr "Aktuální"
 
-#: src/lib.cpp:257
+#: src/lib.cpp:266
 #, c-format
 msgid "%7sW"
 msgstr "%7sW"
 
-#: src/lib.cpp:260
+#: src/lib.cpp:269
 #, c-format
 msgid "    0 mW"
 msgstr "    0 mW"
 
-#: src/lib.cpp:369
+#: src/lib.cpp:390
 msgid "PS/2 Touchpad / Keyboard / Mouse"
 msgstr "PS/2 Touchpad / Klávesnice / Myš"
 
-#: src/lib.cpp:370
+#: src/lib.cpp:391
 msgid "SATA controller"
 msgstr "SATA ovladač"
 
-#: src/lib.cpp:371
+#: src/lib.cpp:392
 msgid "Intel built in USB hub"
-msgstr "Intel vestavěn v USB hubu"
+msgstr "Intel vestavěný v USB hubu"
 
-#: src/process/do_process.cpp:818
+#: src/process/do_process.cpp:817
 #, c-format
 msgid ""
 "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n"
 "\n"
-msgstr ""
-"Odhad energie: %5.1f    Změřená energie: %5.1f    Součet: %5.1f\n"
-"\n"
+msgstr "Odhad energie: %5.1f    Změřená energie: %5.1f    Součet: %5.1f\n\n"
 
-#: src/process/do_process.cpp:829 src/devices/device.cpp:171
+#: src/process/do_process.cpp:828 src/devices/device.cpp:171
 #, c-format
 msgid "The battery reports a discharge rate of %sW\n"
-msgstr "Hlášení stavu baterie %sW\n"
+msgstr "Spotřeba při chodu na baterii: %sW\n"
 
-#: src/process/do_process.cpp:834
+#: src/process/do_process.cpp:833
 #, c-format
 msgid "The estimated remaining time is %i hours, %i minutes\n"
-msgstr "Odhadovaný zbývající čas je %i hodin, %i minut\n"
+msgstr "Odhadovaný zbývající čas do vybití baterie je %i hodin, %i minut\n"
 
-#: src/process/do_process.cpp:842
+#: src/process/do_process.cpp:841
 msgid "Summary"
 msgstr "Souhrn"
 
-#: src/process/do_process.cpp:842 src/process/do_process.cpp:1029
+#: src/process/do_process.cpp:841 src/process/do_process.cpp:1011
 msgid "wakeups/second"
 msgstr "probuzení/sekund"
 
-#: src/process/do_process.cpp:842
+#: src/process/do_process.cpp:841
 msgid "GPU ops/seconds"
 msgstr "GPU ops/sekund"
 
-#: src/process/do_process.cpp:842
+#: src/process/do_process.cpp:841
 msgid "VFS ops/sec and"
 msgstr "VFS ops/sec a"
 
-#: src/process/do_process.cpp:842 src/process/do_process.cpp:1030
+#: src/process/do_process.cpp:841 src/process/do_process.cpp:1015
 msgid "CPU use"
 msgstr "využití CPU"
 
-#: src/process/do_process.cpp:846 src/process/do_process.cpp:914
-#: src/process/do_process.cpp:1034
+#: src/process/do_process.cpp:845 src/process/do_process.cpp:902
+#: src/process/do_process.cpp:1021
 msgid "Power est."
 msgstr "Energie zbývá"
 
-#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
-#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
-#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+#: src/process/do_process.cpp:845 src/process/do_process.cpp:847
+#: src/process/do_process.cpp:906 src/process/do_process.cpp:1025
 msgid "Usage"
 msgstr "Využití"
 
-#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
-#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+#: src/process/do_process.cpp:845 src/process/do_process.cpp:847
+#: src/process/do_process.cpp:1027
 msgid "Events/s"
 msgstr "Událost/i"
 
-#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
-#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
-#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+#: src/process/do_process.cpp:845 src/process/do_process.cpp:847
+#: src/process/do_process.cpp:916 src/process/do_process.cpp:1029
 msgid "Category"
 msgstr "Kategorie"
 
-#: src/process/do_process.cpp:846 src/process/do_process.cpp:848
-#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
-#: src/process/do_process.cpp:1034 src/process/do_process.cpp:1038
+#: src/process/do_process.cpp:845 src/process/do_process.cpp:847
+#: src/process/do_process.cpp:918 src/process/do_process.cpp:1031
 msgid "Description"
 msgstr "Popis"
 
-#: src/process/do_process.cpp:911
+#: src/process/do_process.cpp:897
 msgid "Overview of Software Power Consumers"
-msgstr "Přehled uživatelů Software Power"
+msgstr "Přehled Software Power uživatelů"
 
-#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+#: src/process/do_process.cpp:908
 msgid "Wakeups/s"
 msgstr "Probuzení/s"
 
-#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+#: src/process/do_process.cpp:910
 msgid "GPU ops/s"
 msgstr "GPU ops/s"
 
-#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+#: src/process/do_process.cpp:912
 msgid "Disk IO/s"
 msgstr "Disk IO/s"
 
-#: src/process/do_process.cpp:914 src/process/do_process.cpp:917
+#: src/process/do_process.cpp:914
 msgid "GFX Wakeups/s"
 msgstr "GFX Probuzení/s"
 
-#: src/process/do_process.cpp:1026
+#: src/process/do_process.cpp:1008
 msgid "Power Consumption Summary"
 msgstr "Souhrn spotřeby energie"
 
-#: src/process/do_process.cpp:1029
+#: src/process/do_process.cpp:1012
 msgid "GPU ops/second"
 msgstr "GPU ops/sekund"
 
-#: src/process/do_process.cpp:1030
+#: src/process/do_process.cpp:1013
 msgid "VFS ops/sec"
 msgstr "VFS ops/sekund"
 
-#: src/process/do_process.cpp:1030
+#: src/process/do_process.cpp:1014
 msgid "GFX wakes/sec and"
 msgstr "GFX probuzení/sek a"
 
-#: src/perf/perf.cpp:121
+#: src/perf/perf.cpp:111
 #, c-format
 msgid "PowerTOP %s needs the kernel to support the 'perf' subsystem\n"
-msgstr "PowerTOP %s potřebuje kernel k podpoře 'perf' subsystému\n"
+msgstr "PowerTOP %s potřebuje jádro k podpoře 'perf' subsystému\n"
 
-#: src/perf/perf.cpp:122
+#: src/perf/perf.cpp:112
 #, c-format
 msgid "as well as support for trace points in the kernel:\n"
-msgstr "stejně jako podpora pro sledované body v kernelu:\n"
+msgstr "stejně jako podpora pro sledované body v jádru:\n"
 
 #: src/devices/device.cpp:177
 #, c-format
@@ -272,7 +271,7 @@ msgstr "Systém základního napájení je odhadován na %sW\n"
 
 #: src/devices/device.cpp:184
 msgid "Power est.    Usage     Device name\n"
-msgstr "Odhadovaná energie.    Použití     Jméno zařízení\n"
+msgstr "Energie zbývá   Použití     Jméno zařízení\n"
 
 #: src/devices/device.cpp:186
 msgid "              Usage     Device name\n"
@@ -326,56 +325,52 @@ msgstr "Síťové rozhraní: %s (%s)"
 #: src/tuning/bluetooth.cpp:48
 #, c-format
 msgid "Bluetooth device interface status"
-msgstr "Status rozhraní bluetooth zařízení"
+msgstr "Status rozhraní zařízení Bluetooth"
 
-#: src/tuning/cpufreq.cpp:43 src/tuning/ethernet.cpp:53
+#: src/tuning/cpufreq.cpp:44 src/tuning/ethernet.cpp:53
 #: src/tuning/tunable.cpp:48 src/tuning/wifi.cpp:45 src/tuning/runtime.cpp:41
-#: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:37
+#: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:44
 msgid "Good"
 msgstr "Dobré"
 
-#: src/tuning/cpufreq.cpp:43 src/tuning/ethernet.cpp:53
+#: src/tuning/cpufreq.cpp:44 src/tuning/ethernet.cpp:53
 #: src/tuning/tunable.cpp:49 src/tuning/wifi.cpp:45 src/tuning/runtime.cpp:41
-#: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:37
+#: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:44
 msgid "Bad"
 msgstr "Špatné"
 
-#: src/tuning/cpufreq.cpp:43 src/tuning/ethernet.cpp:53
+#: src/tuning/cpufreq.cpp:44 src/tuning/ethernet.cpp:53
 #: src/tuning/tunable.cpp:50 src/tuning/wifi.cpp:45 src/tuning/runtime.cpp:41
-#: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:37
+#: src/tuning/tuningusb.cpp:40 src/tuning/tuningsysfs.cpp:44
 msgid "Unknown"
 msgstr "Neznámé"
 
-#: src/tuning/cpufreq.cpp:46
+#: src/tuning/cpufreq.cpp:47
 #, c-format
 msgid "Using 'ondemand' cpufreq governor"
 msgstr "Užití 'ondemand' cpufreq regulátoru"
 
-#: src/tuning/tuning.cpp:60
+#: src/tuning/tuning.cpp:59
 msgid "Enable Audio codec power management"
-msgstr "Zapnutí správy napájení audio kodeku"
+msgstr "Zapnout správu napájení audio kodeku"
 
-#: src/tuning/tuning.cpp:61
-msgid "Enable SATA link power management for /dev/sda"
-msgstr "Zapnutí správy napájení SATA linku pro /dev/sda"
-
-#: src/tuning/tuning.cpp:62
+#: src/tuning/tuning.cpp:60
 msgid "NMI watchdog should be turned off"
 msgstr "Hlídací pes NMI by měl být vypnutý"
 
-#: src/tuning/tuning.cpp:63
+#: src/tuning/tuning.cpp:61
 msgid "Power Aware CPU scheduler"
 msgstr "Power Aware CPU plánovač"
 
-#: src/tuning/tuning.cpp:64
+#: src/tuning/tuning.cpp:62
 msgid "VM writeback timeout"
-msgstr "Vypršel čas VM writeback"
+msgstr "VM writeback timeout"
 
-#: src/tuning/tuning.cpp:82
+#: src/tuning/tuning.cpp:79
 msgid "Tunables"
-msgstr "Měnitelné"
+msgstr "Možnosti vyladění"
 
-#: src/tuning/tuning.cpp:82
+#: src/tuning/tuning.cpp:79
 msgid " <ESC> Exit | <Enter> Toggle tunable | <r> Window refresh"
 msgstr " <ESC> Konec | <Enter> Přepnout změnitelné | <r> Obnovit okno"
 
@@ -392,7 +387,7 @@ msgstr "Úspora energie bezdrátových zařízení %s"
 #: src/tuning/runtime.cpp:47
 #, c-format
 msgid "Runtime PM for %s device %s"
-msgstr "Trvání PM pro %s zařízení %s"
+msgstr "Runtime PM pro %s zařízení %s"
 
 #: src/tuning/runtime.cpp:49
 #, c-format
@@ -419,6 +414,11 @@ msgstr "Automatické uspání pro neznámé USB zařízení %s (%s:%s)"
 #, c-format
 msgid "Autosuspend for USB device %s [%s]"
 msgstr "Automatické uspání pro USB zařízení %s [%s]"
+
+#: src/tuning/tuningsysfs.cpp:139
+#, c-format
+msgid "Enable SATA link power Managmenet for %s"
+msgstr "Zapnout správu napájení SATA linku pro %s"
 
 #: src/calibrate/calibrate.cpp:291
 #, c-format
@@ -479,102 +479,127 @@ msgstr "Ukončování kalibrace odhadování energie PowerTOP\n"
 msgid "Parameters after calibration:\n"
 msgstr "Parametry po kalibraci:\n"
 
-#: src/main.cpp:84
+#: src/main.cpp:86
 #, c-format
 msgid "PowerTOP version"
 msgstr "PowerTOP verze"
 
-#: src/main.cpp:90
+#: src/main.cpp:92
 msgid "Set refresh time out"
 msgstr "Nastavit čas obnovení"
 
-#: src/main.cpp:103
+#: src/main.cpp:105
 msgid "Usage: powertop [OPTIONS]"
 msgstr "Použití: powertop [VOLBY]"
 
-#: src/main.cpp:104
+#: src/main.cpp:106
 msgid "run in \"debug\" mode"
-msgstr "běh v \"debug\" módu"
+msgstr "spustit v \"debug\" módu"
 
-#: src/main.cpp:105
+#: src/main.cpp:107
 msgid "print version information"
 msgstr "vypíše informace o verzi"
 
-#: src/main.cpp:106
+#: src/main.cpp:108
 msgid "runs powertop in calibration mode"
-msgstr "běh powertopu v kalibračním režimu"
+msgstr "spustit powertop v kalibračním režimu"
 
-#: src/main.cpp:107
+#: src/main.cpp:109
 msgid "[=devnode]"
 msgstr "[=devnode]"
 
-#: src/main.cpp:107
+#: src/main.cpp:109
 msgid "uses an Extech Power Analyzer for measurements"
 msgstr "využití Extech Power Analyzéru pro měření"
 
-#: src/main.cpp:108 src/main.cpp:109
+#: src/main.cpp:110 src/main.cpp:111
 msgid "[=FILENAME]"
 msgstr "[=JMENOSOUBORU]"
 
-#: src/main.cpp:108
+#: src/main.cpp:110
 msgid "generate a html report"
 msgstr "vytvoření html hlášení"
 
-#: src/main.cpp:109
+#: src/main.cpp:111
 msgid "generate a csv report"
 msgstr "vytvoření csv hlášení"
 
-#: src/main.cpp:110
+#: src/main.cpp:112
 msgid "[=seconds]"
 msgstr "[=sekundy]"
 
-#: src/main.cpp:110
+#: src/main.cpp:112
 msgid "generate a report for 'x' seconds"
 msgstr "vytvoření hlášení pro \"x\" sekund"
 
-#: src/main.cpp:111
+#: src/main.cpp:113
 msgid "[=iterations] number of times to run each test"
 msgstr "[=iterace] počet spuštění každého testu"
 
-#: src/main.cpp:112
-msgid "print this help menu"
-msgstr "vypiš tuto nápovědu"
+#: src/main.cpp:114
+msgid "[=workload]"
+msgstr ""
 
 #: src/main.cpp:114
+msgid "file to execute for workload"
+msgstr ""
+
+#: src/main.cpp:115
+msgid "suppress stderr output"
+msgstr ""
+
+#: src/main.cpp:116
+msgid "print this help menu"
+msgstr "vypíše tuto nápovědu"
+
+#: src/main.cpp:118
 msgid "For more help please refer to the README"
 msgstr "Pro více nápovědy přejděte prosím do README"
 
-#: src/main.cpp:224
+#: src/main.cpp:195
 #, c-format
+msgid "Unknown issue running workload!\n"
+msgstr ""
+
+#: src/main.cpp:236
 msgid "PowerTOP is out of memory. PowerTOP is Aborting"
 msgstr "PowerTOPu došla paměť. Power TOP je přerušen."
 
-#: src/main.cpp:252
+#: src/main.cpp:244
 #, c-format
 msgid "Preparing to take measurements\n"
 msgstr "Příprava k měření\n"
 
-#: src/main.cpp:255
+#: src/main.cpp:249
 #, c-format
 msgid "Taking %d measurement(s) for a duration of %d second(s) each.\n"
 msgstr "Změřeno %d výsledků za dobu trvání %d vteřin každý.\n"
 
-#: src/main.cpp:278
+#: src/main.cpp:251
+#, c-format
+msgid "Measuring workload %s.\n"
+msgstr ""
+
+#: src/main.cpp:274
 #, c-format
 msgid "PowerTOP "
 msgstr "PowerTOP "
 
-#: src/main.cpp:279 src/main.cpp:307
+#: src/main.cpp:275 src/main.cpp:303
 #, c-format
 msgid "exiting...\n"
 msgstr "ukončuji...\n"
 
-#: src/main.cpp:306
+#: src/main.cpp:302
 #, c-format
 msgid "Failed to mount debugfs!\n"
 msgstr "Selhalo připojení debugfs!\n"
 
-#: src/main.cpp:443
+#: src/main.cpp:394
 #, c-format
+msgid "Quite mode failed!\n"
+msgstr ""
+
+#: src/main.cpp:440
 msgid "Leaving PowerTOP"
-msgstr "Ukončuji PowerTOP. Přeji hezký den"
+msgstr "Ukončuji PowerTOP"

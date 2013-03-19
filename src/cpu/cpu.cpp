@@ -78,6 +78,7 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 			case 0x3A:      /* IVB */
 			case 0x3C:
 			case 0x3D:      /* IVB Xeon */
+			case 0x45:	/* Next Gen Intel Core Processor */
 				has_c2c7_res = 1;
 				ret = new class nhm_package;
 				break;
@@ -116,6 +117,7 @@ static class abstract_cpu * new_core(int core, int cpu, char * vendor, int famil
 			case 0x3A:      /* IVB */
 			case 0x3C:
 			case 0x3D:      /* IVB Xeon */
+			case 0x45:	/* Next Gen Intel Core Processor */
 				ret = new class nhm_core;
 			}
 	}
@@ -159,6 +161,7 @@ static class abstract_cpu * new_cpu(int number, char * vendor, int family, int m
 			case 0x3A:      /* IVB */
 			case 0x3C:
 			case 0x3D:      /* IVB Xeon */
+			case 0x45:	/* Next Gen Intel Core Processor */
 				ret = new class nhm_cpu;
 			}
 	}

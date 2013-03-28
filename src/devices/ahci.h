@@ -35,6 +35,7 @@ class ahci: public device {
 	uint64_t start_active, end_active;
 	uint64_t start_partial, end_partial;
 	uint64_t start_slumber, end_slumber;
+	uint64_t start_devslp, end_devslp;
 	char sysfs_path[4096];
 	char name[4096];
 	int partial_rindex;

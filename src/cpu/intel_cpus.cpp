@@ -42,6 +42,7 @@
 
 
 int has_c2c7_res;
+int has_c8c9c10_res;
 
 
 
@@ -248,6 +249,11 @@ void nhm_package::measurement_start(void)
 	c6_before    = get_msr(number, MSR_PKG_C6_RESIDENCY);
 	if (has_c2c7_res)
 		c7_before    = get_msr(number, MSR_PKG_C7_RESIDENCY);
+	if (has_c8c9c10_res) {
+		c8_before    = get_msr(number, MSR_PKG_C8_RESIDENCY);
+		c9_before    = get_msr(number, MSR_PKG_C9_RESIDENCY);
+		c10_before    = get_msr(number, MSR_PKG_C10_RESIDENCY);
+	}
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
 	if (has_c2c7_res)
@@ -257,6 +263,11 @@ void nhm_package::measurement_start(void)
 	insert_cstate("pkg c6", "C6 (pc6)", 0, c6_before, 1);
 	if (has_c2c7_res)
 		insert_cstate("pkg c7", "C7 (pc7)", 0, c7_before, 1);
+	if (has_c8c9c10_res) {
+		insert_cstate("pkg c8", "C8 (pc8)", 0, c8_before, 1);
+		insert_cstate("pkg c9", "C9 (pc9)", 0, c9_before, 1);
+		insert_cstate("pkg c10", "C10 (pc10)", 0, c10_before, 1);
+	}
 }
 
 void nhm_package::measurement_end(void)
@@ -276,6 +287,11 @@ void nhm_package::measurement_end(void)
 	c6_after    = get_msr(number, MSR_PKG_C6_RESIDENCY);
 	if (has_c2c7_res)
 		c7_after    = get_msr(number, MSR_PKG_C7_RESIDENCY);
+	if (has_c8c9c10_res) {
+		c8_after = get_msr(number, MSR_PKG_C8_RESIDENCY);
+		c9_after = get_msr(number, MSR_PKG_C9_RESIDENCY);
+		c10_after = get_msr(number, MSR_PKG_C10_RESIDENCY);
+	}
 	tsc_after   = get_msr(first_cpu, MSR_TSC);
 
 	gettimeofday(&stamp_after, NULL);
@@ -289,6 +305,11 @@ void nhm_package::measurement_end(void)
 	finalize_cstate("pkg c6", 0, c6_after, 1);
 	if (has_c2c7_res)
 		finalize_cstate("pkg c7", 0, c7_after, 1);
+	if (has_c8c9c10_res) {
+		finalize_cstate("pkg c8", 0, c8_after, 1);
+		finalize_cstate("pkg c9", 0, c9_after, 1);
+		finalize_cstate("pkg c10", 0, c10_after, 1);
+	}
 
 	for (i = 0; i < children.size(); i++)
 		if (children[i])

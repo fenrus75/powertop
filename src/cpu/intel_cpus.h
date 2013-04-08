@@ -37,6 +37,9 @@
 #define MSR_PKG_C3_RESIDENCY		0x3F8
 #define MSR_PKG_C6_RESIDENCY		0x3F9
 #define MSR_PKG_C7_RESIDENCY		0x3FA
+#define MSR_PKG_C8_RESIDENCY		0x630
+#define MSR_PKG_C9_RESIDENCY		0x631
+#define MSR_PKG_C10_RESIDENCY		0x632
 #define MSR_CORE_C3_RESIDENCY		0x3FC
 #define MSR_CORE_C6_RESIDENCY		0x3FD
 #define MSR_CORE_C7_RESIDENCY		0x3FE
@@ -49,6 +52,9 @@ private:
 	uint64_t	c3_before, c3_after;
 	uint64_t	c6_before, c6_after;
 	uint64_t	c7_before, c7_after;
+	uint64_t	c8_before, c8_after;
+	uint64_t	c9_before, c9_after;
+	uint64_t	c10_before, c10_after;
 	uint64_t	tsc_before, tsc_after;
 
 	uint64_t	last_stamp;
@@ -118,6 +124,7 @@ public:
 
 
 extern int has_c2c7_res;
+extern int has_c8c9c10_res;
 
 class i965_core: public cpu_core
 {

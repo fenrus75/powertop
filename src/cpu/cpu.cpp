@@ -78,7 +78,11 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 			case 0x3A:      /* IVB */
 			case 0x3C:
 			case 0x3D:      /* IVB Xeon */
+				has_c2c7_res = 1;
+				ret = new class nhm_package;
+				break;
 			case 0x45:	/* Next Gen Intel Core Processor */
+				has_c8c9c10_res = 1;
 				has_c2c7_res = 1;
 				ret = new class nhm_package;
 				break;

@@ -74,5 +74,6 @@ typedef void (*callback)(const char*);
 extern void process_directory(const char *d_name, callback fn);
 extern int utf_ok;
 extern int get_user_input(char *buf, unsigned sz);
-
+extern int read_msr(int cpu, uint64_t offset, uint64_t *value);
+extern int write_msr(int cpu, uint64_t offset, uint64_t value);
 #endif

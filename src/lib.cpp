@@ -56,6 +56,7 @@ extern "C" {
 #include <limits>
 #include <math.h>
 #include <ncurses.h>
+#include <fcntl.h>
 
 static int kallsyms_read = 0;
 
@@ -449,4 +450,68 @@ int get_user_input(char *buf, unsigned sz)
 	fflush(stdout);
 	/* to distinguish between getnstr error and empty line */
 	return ret || strlen(buf);
+}
+
+int read_msr(int cpu, uint64_t offset, uint64_t *value)
+{
+	ssize_t retval;
+	uint64_t msr;
+	int fd;
+	char msr_path[256];
+
+	fd = sprintf(msr_path, "/dev/cpu/%d/msr", cpu);
+
+	if (access(msr_path, R_OK) != 0){
+		fd = sprintf(msr_path, "/dev/msr%d", cpu);
+
+		if (access(msr_path, R_OK) != 0){
+			fprintf(stderr,
+			 _("Model-specific registers (MSR)\
+			 not found (try enabling CONFIG_X86_MSR).\n"));
+			return -1;
+		}
+	}
+
+	fd = open(msr_path, O_RDONLY);
+	if (fd < 0)
+		return -1;
+	retval = pread(fd, &msr, sizeof msr, offset);
+	close(fd);
+	if (retval != sizeof msr) {
+		return -1;
+	}
+	*value = msr;
+
+	return retval;
+}
+
+int write_msr(int cpu, uint64_t offset, uint64_t value)
+{
+	ssize_t retval;
+	int fd;
+	char msr_path[256];
+
+	fd = sprintf(msr_path, "/dev/cpu/%d/msr", cpu);
+
+	if (access(msr_path, R_OK) != 0){
+		fd = sprintf(msr_path, "/dev/msr%d", cpu);
+
+		if (access(msr_path, R_OK) != 0){
+			fprintf(stderr,
+			 _("Model-specific registers (MSR)\
+			 not found (try enabling CONFIG_X86_MSR).\n"));
+			return -1;
+		}
+	}
+
+	fd = open(msr_path, O_WRONLY);
+	if (fd < 0)
+		return -1;
+	retval = pwrite(fd, &value, sizeof value, offset);
+	close(fd);
+	if (retval != sizeof value) {
+		return -1;
+	}
+
+	return retval;
 }

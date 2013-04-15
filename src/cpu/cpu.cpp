@@ -32,6 +32,7 @@
 #include "cpu.h"
 #include "cpudevice.h"
 #include "cpu_rapl_device.h"
+#include "dram_rapl_device.h"
 #include "intel_cpus.h"
 #include "../parameters/parameters.h"
 
@@ -61,6 +62,7 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 	class abstract_cpu *ret = NULL;
 	class cpudevice *cpudev;
 	class cpu_rapl_device *cpu_rapl_dev;
+	class dram_rapl_device *dram_rapl_dev;
 
 	char packagename[128];
 	if (strcmp(vendor, "GenuineIntel") == 0) {
@@ -107,6 +109,11 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 	cpu_rapl_dev = new class cpu_rapl_device(cpudev, _("cpu rapl package"), packagename, ret);
 	if (cpu_rapl_dev->device_present())
 		all_devices.push_back(cpu_rapl_dev);
+
+	sprintf(packagename, _("dram rapl package %i"), cpu);
+	dram_rapl_dev = new class dram_rapl_device(cpudev, _("dram rapl package"), packagename, ret);
+	if (dram_rapl_dev->device_present())
+		all_devices.push_back(dram_rapl_dev);
 
 	return ret;
 }

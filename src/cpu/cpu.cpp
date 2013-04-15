@@ -31,6 +31,7 @@
 #include <unistd.h>
 #include "cpu.h"
 #include "cpudevice.h"
+#include "cpu_rapl_device.h"
 #include "intel_cpus.h"
 #include "../parameters/parameters.h"
 
@@ -59,6 +60,8 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 {
 	class abstract_cpu *ret = NULL;
 	class cpudevice *cpudev;
+	class cpu_rapl_device *cpu_rapl_dev;
+
 	char packagename[128];
 	if (strcmp(vendor, "GenuineIntel") == 0) {
 		if (family == 6)
@@ -99,6 +102,12 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 	sprintf(packagename, _("cpu package %i"), cpu);
 	cpudev = new class cpudevice(_("cpu package"), packagename, ret);
 	all_devices.push_back(cpudev);
+
+	sprintf(packagename, _("cpu rapl package %i"), cpu);
+	cpu_rapl_dev = new class cpu_rapl_device(cpudev, _("cpu rapl package"), packagename, ret);
+	if (cpu_rapl_dev->device_present())
+		all_devices.push_back(cpu_rapl_dev);
+
 	return ret;
 }
 

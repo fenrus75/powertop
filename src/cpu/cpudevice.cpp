@@ -40,12 +40,20 @@ cpudevice::cpudevice(const char *classname, const char *dev_name, class abstract
 	r_consumption_index = get_result_index("cpu-consumption");;
 }
 
+const char * cpudevice::device_name(void)
+{
+	if (child_devices.size())
+		return "CPU misc";
+	else
+		return "CPU use";
+}
 
 double cpudevice::power_usage(struct result_bundle *result, struct parameter_bundle *bundle)
 {
 	double power;
 	double factor;
 	double _utilization;
+	double child_power;
 
 	power = 0;
 	factor = get_parameter_value(wake_index, bundle);
@@ -57,6 +65,12 @@ double cpudevice::power_usage(struct result_bundle *result, struct parameter_bun
 	_utilization = get_result_value(r_consumption_index, result);
 
 	power += _utilization * factor;
+
+	for (unsigned int i = 0; i < child_devices.size(); ++i) {
+		child_power = child_devices[i]->power_usage(result, bundle);
+		if ((power - child_power) > 0.0)
+			power -= child_power;
+	}
 
 	return power;
 }

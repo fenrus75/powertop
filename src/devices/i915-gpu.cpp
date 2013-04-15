@@ -37,6 +37,7 @@ using namespace std;
 #include "i915-gpu.h"
 #include "../parameters/parameters.h"
 #include "../process/powerconsumer.h"
+#include "gpu_rapl_device.h"
 
 #include <string.h>
 #include <unistd.h>
@@ -45,6 +46,14 @@ i915gpu::i915gpu(): device()
 {
 	index = get_param_index("gpu-operations");
 	rindex = get_result_index("gpu-operations");
+}
+
+const char * i915gpu::device_name(void)
+{
+	if (child_devices.size())
+		return "GPU misc";
+	else
+		return "GPU";
 }
 
 void i915gpu::start_measurement(void)
@@ -66,6 +75,7 @@ void create_i915_gpu(void)
 {
 	char filename[4096];
 	class i915gpu *gpu;
+	gpu_rapl_device *rapl_dev;
 
 	strcpy(filename, "/sys/kernel/debug/tracing/events/i915/i915_gem_ring_dispatch/format");
 
@@ -80,6 +90,10 @@ void create_i915_gpu(void)
 
 	gpu = new class i915gpu();
 	all_devices.push_back(gpu);
+
+	rapl_dev = new class gpu_rapl_device(gpu);
+	if (rapl_dev->device_present())
+		all_devices.push_back(rapl_dev);
 }
 
 
@@ -89,11 +103,18 @@ double i915gpu::power_usage(struct result_bundle *result, struct parameter_bundl
 	double power;
 	double factor;
 	double util;
+	double child_power;
 
 	power = 0;
 	factor = get_parameter_value(index, bundle);
 	util = get_result_value(rindex, result);
 
 	power += util * factor / 100.0;
+	for (unsigned int i = 0; i < child_devices.size(); ++i) {
+		child_power = child_devices[i]->power_usage(result, bundle);
+		if ((power - child_power) > 0.0)
+			power -= child_power;
+	}
+
 	return power;
 }

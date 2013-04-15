@@ -31,7 +31,8 @@ powertop_SOURCES = parameters/persistent.cpp parameters/learn.cpp parameters/par
 		report/report-formatter-base.cpp report/report-formatter-base.h \
 		report/report-formatter-csv.cpp report/report-formatter-csv.h \
 		report/report-formatter-html.cpp report/report-formatter-html.h \
-		main.cpp css.h powertop.css cpu/intel_gpu.cpp
+		main.cpp css.h powertop.css cpu/intel_gpu.cpp \
+		cpu/rapl/rapl_interface.cpp
 
 
 powertop_CXXFLAGS = -fno-omit-frame-pointer -fstack-protector -Wall -Wshadow -Wformat $(NCURSES_CFLAGS) $(PCIUTILS_CFLAGS) $(LIBNL_CFLAGS) $(GLIB2_CFLAGS)

@@ -105,6 +105,7 @@ public:
 	class abstract_cpu *parent;
 
 
+	int	get_first_cpu() { return first_cpu; }
 	void	set_number(int _number, int cpu) {this->number = _number; this->first_cpu = cpu;};
 	void	set_type(const char* _name) {this->name = _name;};
 	int	get_number(void) { return number; };

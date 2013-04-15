@@ -50,30 +50,15 @@ static uint64_t get_msr(int cpu, uint64_t offset)
 {
 	ssize_t retval;
 	uint64_t msr;
-	int fd;
-	char msr_path[256];
 
-	fd = sprintf(msr_path, "/dev/cpu/%d/msr", cpu);
-
-	if (access(msr_path, R_OK) != 0){
-		fd = sprintf(msr_path, "/dev/msr%d", cpu);
-
-		if (access(msr_path, R_OK) != 0){
-			fprintf(stderr, _("Model-specific registers (MSR) not found (try enabling CONFIG_X86_MSR).\n"));
-			exit(-2);
-		}
-	}
-
-	fd = open(msr_path, O_RDONLY);
-
-	retval = pread(fd, &msr, sizeof msr, offset);
-	if (retval != sizeof msr) {
+	retval = read_msr(cpu, offset, &msr);
+	if (retval < 0) {
 		reset_display();
-		fprintf(stderr, _("pread cpu%d 0x%llx : "), cpu, (unsigned long long)offset);
+		fprintf(stderr, _("read_msr cpu%d 0x%llx : "), cpu, (unsigned long long)offset);
 		fprintf(stderr, "%s\n", strerror(errno));
 		exit(-2);
 	}
-	close(fd);
+
 	return msr;
 }
 

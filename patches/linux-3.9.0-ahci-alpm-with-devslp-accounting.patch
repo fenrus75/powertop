@@ -1,0 +1,334 @@
+commit 1caeadb62f68b2f7c0e2cfc2b6de1f11b0314752
+Author: David Woodhouse <dwmw2@infradead.org>
+Date:   Mon Apr 1 20:53:07 2013 +0100
+
+    Updated PowerTOP AHCI ALPM accounting for Device Sleep.
+    
+    This patch applies to v3.7 onwards (including 3.9-rc4), and adds devslp
+    support to the AHCI state accounting. It's based on the patch at
+    https://raw.github.com/fenrus75/powertop/master/patches/linux-3.3.0-ahci-alpm-accounting.patch
+    
+    From: Arjan van de Ven <arjan@linux.intel.com>
+    Subject: libata: Add ALPM power state accounting to the AHCI driver
+    
+    PowerTOP wants to be able to show the user how effective the ALPM link
+    power management is for the user. ALPM is worth around 0.5W on a quiet
+    link; PowerTOP wants to be able to find cases where the "quiet link" isn't
+    actually quiet.
+    
+    This patch adds state accounting functionality to the AHCI driver for
+    PowerTOP to use.
+    The parts of the patch are
+    1) the sysfs logic of exposing the stats for each state in sysfs
+    2) the basic accounting logic that gets update on link change interrupts
+       (or when the user accesses the info from sysfs)
+    3) a "accounting enable" flag; in order to get the accounting to work,
+       the driver needs to get phyrdy interrupts on link status changes.
+       Normally and currently this is disabled by the driver when ALPM is
+       on (to reduce overhead); when PowerTOP is running this will need
+       to be on to get usable statistics... hence the sysfs tunable.
+    
+    The PowerTOP output currently looks like this:
+    
+    Recent SATA AHCI link activity statistics
+    Active	Partial	Slumber	Device name
+      0.5%	 99.5%	  0.0%	host0
+    
+    (work to resolve "host0" to a more human readable name is in progress)
+    
+    Signed-off-by: Arjan van de Ven <arjan@linux.intel.com>
+    Signed-off-by: David Woodhouse <David.Woodhouse@intel.com>
+
+diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
+index b830e6c..981976b 100644
+--- a/drivers/ata/ahci.h
++++ b/drivers/ata/ahci.h
+@@ -286,6 +286,14 @@ struct ahci_em_priv {
+ 	unsigned long led_state;
+ };
+ 
++enum ahci_port_states {
++	AHCI_PORT_NOLINK = 0,
++	AHCI_PORT_ACTIVE = 1,
++	AHCI_PORT_PARTIAL = 2,
++	AHCI_PORT_SLUMBER = 3,
++	AHCI_PORT_DEVSLP = 4
++};
++
+ struct ahci_port_priv {
+ 	struct ata_link		*active_link;
+ 	struct ahci_cmd_hdr	*cmd_slot;
+@@ -306,6 +314,15 @@ struct ahci_port_priv {
+ 	int			fbs_last_dev;	/* save FBS.DEV of last FIS */
+ 	/* enclosure management info per PM slot */
+ 	struct ahci_em_priv	em_priv[EM_MAX_SLOTS];
++
++	/* ALPM accounting state and stats */
++	unsigned int 		accounting_active:1;
++	u64			active_jiffies;
++	u64			partial_jiffies;
++	u64			slumber_jiffies;
++	u64			devslp_jiffies;
++	int			previous_state;
++	int			previous_jiffies;
+ };
+ 
+ struct ahci_host_priv {
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index 34c8216..3c7331b 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -100,6 +100,19 @@ static ssize_t ahci_activity_store(struct ata_device *dev,
+ 				   enum sw_activity val);
+ static void ahci_init_sw_activity(struct ata_link *link);
+ 
++static ssize_t ahci_alpm_show_active(struct device *dev,
++				  struct device_attribute *attr, char *buf);
++static ssize_t ahci_alpm_show_slumber(struct device *dev,
++				  struct device_attribute *attr, char *buf);
++static ssize_t ahci_alpm_show_devslp(struct device *dev,
++				  struct device_attribute *attr, char *buf);
++static ssize_t ahci_alpm_show_partial(struct device *dev,
++				  struct device_attribute *attr, char *buf);
++static ssize_t ahci_alpm_show_accounting(struct device *dev,
++				  struct device_attribute *attr, char *buf);
++static ssize_t ahci_alpm_set_accounting(struct device *dev,
++				  struct device_attribute *attr,
++				  const char *buf, size_t count);
+ static ssize_t ahci_show_host_caps(struct device *dev,
+ 				   struct device_attribute *attr, char *buf);
+ static ssize_t ahci_show_host_cap2(struct device *dev,
+@@ -120,6 +133,13 @@ static DEVICE_ATTR(ahci_host_caps, S_IRUGO, ahci_show_host_caps, NULL);
+ static DEVICE_ATTR(ahci_host_cap2, S_IRUGO, ahci_show_host_cap2, NULL);
+ static DEVICE_ATTR(ahci_host_version, S_IRUGO, ahci_show_host_version, NULL);
+ static DEVICE_ATTR(ahci_port_cmd, S_IRUGO, ahci_show_port_cmd, NULL);
++static DEVICE_ATTR(ahci_alpm_active, S_IRUGO, ahci_alpm_show_active, NULL);
++static DEVICE_ATTR(ahci_alpm_partial, S_IRUGO, ahci_alpm_show_partial, NULL);
++static DEVICE_ATTR(ahci_alpm_slumber, S_IRUGO, ahci_alpm_show_slumber, NULL);
++static DEVICE_ATTR(ahci_alpm_devslp, S_IRUGO, ahci_alpm_show_devslp, NULL);
++static DEVICE_ATTR(ahci_alpm_accounting, S_IRUGO | S_IWUSR,
++		ahci_alpm_show_accounting, ahci_alpm_set_accounting);
++
+ static DEVICE_ATTR(em_buffer, S_IWUSR | S_IRUGO,
+ 		   ahci_read_em_buffer, ahci_store_em_buffer);
+ static DEVICE_ATTR(em_message_supported, S_IRUGO, ahci_show_em_supported, NULL);
+@@ -132,6 +152,11 @@ struct device_attribute *ahci_shost_attrs[] = {
+ 	&dev_attr_ahci_host_cap2,
+ 	&dev_attr_ahci_host_version,
+ 	&dev_attr_ahci_port_cmd,
++	&dev_attr_ahci_alpm_active,
++	&dev_attr_ahci_alpm_partial,
++	&dev_attr_ahci_alpm_slumber,
++	&dev_attr_ahci_alpm_devslp,
++	&dev_attr_ahci_alpm_accounting,
+ 	&dev_attr_em_buffer,
+ 	&dev_attr_em_message_supported,
+ 	NULL
+@@ -224,6 +249,182 @@ static void ahci_enable_ahci(void __iomem *mmio)
+ 	WARN_ON(1);
+ }
+ 
++static int get_current_alpm_state(struct ata_port *ap)
++{
++	u32 status = 0;
++
++	ahci_scr_read(&ap->link, SCR_STATUS, &status);
++
++	/* link status is in bits 11-8 */
++	status = status >> 8;
++	status = status & 0xf;
++
++	if (status == 8)
++		return AHCI_PORT_DEVSLP;
++	if (status == 6)
++		return AHCI_PORT_SLUMBER;
++	if (status == 2)
++		return AHCI_PORT_PARTIAL;
++	if (status == 1)
++		return AHCI_PORT_ACTIVE;
++	return AHCI_PORT_NOLINK;
++}
++
++static void account_alpm_stats(struct ata_port *ap)
++{
++	struct ahci_port_priv *pp;
++
++	int new_state;
++	u64 new_jiffies, jiffies_delta;
++
++	if (ap == NULL)
++		return;
++	pp = ap->private_data;
++
++	if (!pp) return;
++
++	new_state = get_current_alpm_state(ap);
++	new_jiffies = jiffies;
++
++	jiffies_delta = new_jiffies - pp->previous_jiffies;
++
++	switch (pp->previous_state) {
++	case AHCI_PORT_NOLINK:
++		pp->active_jiffies = 0;
++		pp->partial_jiffies = 0;
++		pp->slumber_jiffies = 0;
++		break;
++	case AHCI_PORT_ACTIVE:
++		pp->active_jiffies += jiffies_delta;
++		break;
++	case AHCI_PORT_PARTIAL:
++		pp->partial_jiffies += jiffies_delta;
++		break;
++	case AHCI_PORT_SLUMBER:
++		pp->slumber_jiffies += jiffies_delta;
++		break;
++	case AHCI_PORT_DEVSLP:
++		pp->devslp_jiffies += jiffies_delta;
++		break;
++	default:
++		break;
++	}
++	pp->previous_state = new_state;
++	pp->previous_jiffies = new_jiffies;
++}
++
++static ssize_t ahci_alpm_show_active(struct device *dev,
++				   struct device_attribute *attr, char *buf)
++{
++	struct Scsi_Host *shost = class_to_shost(dev);
++	struct ata_port *ap = ata_shost_to_port(shost);
++	struct ahci_port_priv *pp;
++
++	if (!ap || ata_port_is_dummy(ap))
++		return -EINVAL;
++
++	pp = ap->private_data;
++	account_alpm_stats(ap);
++
++	return sprintf(buf, "%u\n", jiffies_to_msecs(pp->active_jiffies));
++}
++
++static ssize_t ahci_alpm_show_partial(struct device *dev,
++				   struct device_attribute *attr, char *buf)
++{
++	struct Scsi_Host *shost = class_to_shost(dev);
++	struct ata_port *ap = ata_shost_to_port(shost);
++	struct ahci_port_priv *pp;
++
++	if (!ap || ata_port_is_dummy(ap))
++		return -EINVAL;
++
++	pp = ap->private_data;
++	account_alpm_stats(ap);
++
++	return sprintf(buf, "%u\n", jiffies_to_msecs(pp->partial_jiffies));
++}
++
++static ssize_t ahci_alpm_show_slumber(struct device *dev,
++				   struct device_attribute *attr, char *buf)
++{
++	struct Scsi_Host *shost = class_to_shost(dev);
++	struct ata_port *ap = ata_shost_to_port(shost);
++	struct ahci_port_priv *pp;
++
++	if (!ap || ata_port_is_dummy(ap))
++		return -EINVAL;
++
++	pp = ap->private_data;
++	account_alpm_stats(ap);
++
++	return sprintf(buf, "%u\n", jiffies_to_msecs(pp->slumber_jiffies));
++}
++
++static ssize_t ahci_alpm_show_devslp(struct device *dev,
++				   struct device_attribute *attr, char *buf)
++{
++	struct Scsi_Host *shost = class_to_shost(dev);
++	struct ata_port *ap = ata_shost_to_port(shost);
++	struct ahci_port_priv *pp;
++
++	if (!ap || ata_port_is_dummy(ap))
++		return -EINVAL;
++
++	pp = ap->private_data;
++	account_alpm_stats(ap);
++
++	return sprintf(buf, "%u\n", jiffies_to_msecs(pp->devslp_jiffies));
++}
++
++static ssize_t ahci_alpm_show_accounting(struct device *dev,
++				  struct device_attribute *attr, char *buf)
++{
++	struct Scsi_Host *shost = class_to_shost(dev);
++	struct ata_port *ap = ata_shost_to_port(shost);
++	struct ahci_port_priv *pp;
++
++	if (!ap || ata_port_is_dummy(ap))
++		return -EINVAL;
++
++	pp = ap->private_data;
++
++	return sprintf(buf, "%u\n", pp->accounting_active);
++}
++
++static ssize_t ahci_alpm_set_accounting(struct device *dev,
++				  struct device_attribute *attr,
++				  const char *buf, size_t count)
++{
++	unsigned long flags;
++	struct Scsi_Host *shost = class_to_shost(dev);
++	struct ata_port *ap = ata_shost_to_port(shost);
++	struct ahci_port_priv *pp;
++	void __iomem *port_mmio;
++
++	if (!ap || ata_port_is_dummy(ap))
++		return 1;
++
++	pp = ap->private_data;
++	port_mmio = ahci_port_base(ap);
++
++	if (!pp)
++		return 1;
++	if (buf[0] == '0')
++		pp->accounting_active = 0;
++	if (buf[0] == '1')
++		pp->accounting_active = 1;
++
++	/* we need to enable the PHYRDY interrupt when we want accounting */
++	if (pp->accounting_active) {
++		spin_lock_irqsave(ap->lock, flags);
++		pp->intr_mask |= PORT_IRQ_PHYRDY;
++		writel(pp->intr_mask, port_mmio + PORT_IRQ_MASK);
++		spin_unlock_irqrestore(ap->lock, flags);
++	}
++	return count;
++}
++
+ static ssize_t ahci_show_host_caps(struct device *dev,
+ 				   struct device_attribute *attr, char *buf)
+ {
+@@ -679,9 +880,14 @@ static int ahci_set_lpm(struct ata_link *link, enum ata_lpm_policy policy,
+ 		 * Disable interrupts on Phy Ready. This keeps us from
+ 		 * getting woken up due to spurious phy ready
+ 		 * interrupts.
++		 *
++		 * However, when accounting_active is set, we do want
++		 * the interrupts for accounting purposes.
+ 		 */
+-		pp->intr_mask &= ~PORT_IRQ_PHYRDY;
+-		writel(pp->intr_mask, port_mmio + PORT_IRQ_MASK);
++		if (!pp->accounting_active) {
++			pp->intr_mask &= ~PORT_IRQ_PHYRDY;
++			writel(pp->intr_mask, port_mmio + PORT_IRQ_MASK);
++		}
+ 
+ 		sata_link_scr_lpm(link, policy, false);
+ 	}
+@@ -1672,6 +1878,7 @@ static void ahci_handle_port_interrupt(struct ata_port *ap,
+ 	/* if LPM is enabled, PHYRDY doesn't mean anything */
+ 	if (ap->link.lpm_policy > ATA_LPM_MAX_POWER) {
+ 		status &= ~PORT_IRQ_PHYRDY;
++		account_alpm_stats(ap);
+ 		ahci_scr_write(&ap->link, SCR_ERROR, SERR_PHYRDY_CHG);
+ 	}
+ 

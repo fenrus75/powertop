@@ -136,10 +136,10 @@ static void do_sleep(int seconds)
 
 		c = getch();
 		switch (c) {
-		case 353: 
+		case KEY_BTAB:
 			show_prev_tab();
 			break;
-		case 9:
+		case '\t':
 			show_next_tab(); 
 			break;
 		case KEY_RIGHT:
@@ -156,8 +156,8 @@ static void do_sleep(int seconds)
 		case KEY_UP:
 			cursor_up();
 			break;
-		case 32:
-		case 10:
+		case ' ':
+		case '\n':
 			cursor_enter();
 			break;
 		case 's':
@@ -169,7 +169,7 @@ static void do_sleep(int seconds)
 			return;
 		case KEY_EXIT:
 		case 'q':
-		case 27:
+		case 27:	// Escape
 			leave_powertop = 1;
 			return;
 		}

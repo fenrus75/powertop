@@ -36,6 +36,7 @@
 #include <getopt.h>
 #include <unistd.h>
 #include <locale.h>
+#include <sys/resource.h>
 
 #include "cpu/cpu.h"
 #include "process/process.h"
@@ -283,11 +284,17 @@ static void powertop_init(void)
 	static char initialized = 0;
 	int ret;
 	struct statfs st_fs;
+	struct rlimit rlmt;
 
 	if (initialized)
 		return;
 
 	checkroot();
+
+	getrlimit (RLIMIT_NOFILE, &rlmt);
+	rlmt.rlim_cur = rlmt.rlim_max;
+	setrlimit (RLIMIT_NOFILE, &rlmt);
+
 	ret = system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
 	ret = system("/sbin/modprobe msr > /dev/null 2>&1");
 	statfs("/sys/kernel/debug", &st_fs);

@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Yuan CHAO <yuanchao@gmail.com>, 2012.
+# Yuan CHAO <yuanchao@gmail.com>, 2012-2013
 msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
 "POT-Creation-Date: 2013-02-25 10:05-0800\n"
-"PO-Revision-Date: 2013-02-26 19:08+0000\n"
-"Last-Translator: Yuan CHAO <yuanchao@gmail.com>\n"
+"PO-Revision-Date: 2013-04-29 09:02+0000\n"
+"Last-Translator: ceferron <chris.e.ferron@linux.intel.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/PowerTOP/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgstr "無法讀取檔案"
 #: src/parameters/persistent.cpp:123
 #, c-format
 msgid "Loaded %i prior measurements\n"
-msgstr "載入 %i 先前量測數據\n"
+msgstr "已載入 %i 筆先前量測數據\n"
 
 #: src/display.cpp:70
 msgid "Overview"
@@ -54,7 +54,7 @@ msgstr "離開"
 #: src/cpu/cpu_core.cpp:37 src/cpu/cpu_core.cpp:93 src/cpu/intel_cpus.cpp:201
 #, c-format
 msgid "  Core"
-msgstr ""
+msgstr "  核心"
 
 #: src/cpu/cpu.cpp:94
 #, c-format
@@ -93,7 +93,7 @@ msgstr "cpu_idle 事件沒有傳回狀態？\n"
 #: src/cpu/cpu.cpp:811
 #, c-format
 msgid "power or cpu_frequency event returned no state?\n"
-msgstr ""
+msgstr "power 或 cpu_frequecny 事件沒有傳回狀態？\n"
 
 #: src/cpu/cpu_linux.cpp:79
 msgid "C0 polling"
@@ -103,17 +103,17 @@ msgstr "C0 輪巡"
 #: src/cpu/intel_cpus.cpp:423
 #, c-format
 msgid " CPU %i"
-msgstr ""
+msgstr " CPU %i"
 
 #: src/cpu/cpu_package.cpp:47
 #, c-format
 msgid "Package"
-msgstr ""
+msgstr "代號"
 
 #: src/cpu/cpu_package.cpp:105 src/cpu/intel_cpus.cpp:226
 #, c-format
 msgid "  Package"
-msgstr ""
+msgstr "代號"
 
 #: src/cpu/intel_cpus.cpp:61
 #, c-format
@@ -559,7 +559,7 @@ msgstr "更多的輔助說明請參閱 README"
 #: src/main.cpp:195
 #, c-format
 msgid "Unknown issue running workload!\n"
-msgstr ""
+msgstr "執行工作負載發生未知問題！\n"
 
 #: src/main.cpp:236
 msgid "PowerTOP is out of memory. PowerTOP is Aborting"
@@ -598,7 +598,7 @@ msgstr "debugfs 掛載失敗!\n"
 #: src/main.cpp:394
 #, c-format
 msgid "Quite mode failed!\n"
-msgstr ""
+msgstr "進入安靜模式失敗！\n"
 
 #: src/main.cpp:440
 msgid "Leaving PowerTOP"

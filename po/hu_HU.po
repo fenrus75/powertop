@@ -3,17 +3,17 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-#   <chris.e.ferron@linux.intel.com>, 2012.
-# Márton Németh <nemeth.marton@gmail.com>, 2012.
-# Márton Németh <nm127@freemail.hu>, 2012.
-# Zoltan Hoppár <hopparz@gmail.com>, 2012.
+# ceferron <chris.e.ferron@linux.intel.com>, 2012
+# Márton Németh <nemeth.marton@gmail.com>, 2012
+# Márton Németh <nm127@freemail.hu>, 2012
+# Zoltan Hoppár <hopparz@gmail.com>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
 "POT-Creation-Date: 2013-02-25 10:05-0800\n"
-"PO-Revision-Date: 2013-02-26 19:08+0000\n"
-"Last-Translator: Zoltan Hoppár <hopparz@gmail.com>\n"
+"PO-Revision-Date: 2013-04-29 09:02+0000\n"
+"Last-Translator: ceferron <chris.e.ferron@linux.intel.com>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/projects/p/PowerTOP/language/hu_HU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -576,7 +576,7 @@ msgstr "Előkészülés a mérések elvégzéséhez\n"
 #: src/main.cpp:249
 #, c-format
 msgid "Taking %d measurement(s) for a duration of %d second(s) each.\n"
-msgstr "%d darab, egyenként %d másodperces mérés készítése.\n"
+msgstr "%d darab, egyenként %d másodperces mérés készítése.\\n"
 
 #: src/main.cpp:251
 #, c-format

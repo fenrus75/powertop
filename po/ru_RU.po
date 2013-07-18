@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-#   <jightuse@gmail.com>, 2012.
+# JIghtuse <jightuse@gmail.com>, 2013
+# JIghtuse <jightuse@gmail.com>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
 "POT-Creation-Date: 2013-02-25 10:05-0800\n"
-"PO-Revision-Date: 2013-02-26 19:08+0000\n"
-"Last-Translator: JIghtuse <jightuse@gmail.com>\n"
+"PO-Revision-Date: 2013-04-29 09:02+0000\n"
+"Last-Translator: ceferron <chris.e.ferron@linux.intel.com>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/projects/p/PowerTOP/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +55,7 @@ msgstr "Выход"
 #: src/cpu/cpu_core.cpp:37 src/cpu/cpu_core.cpp:93 src/cpu/intel_cpus.cpp:201
 #, c-format
 msgid "  Core"
-msgstr ""
+msgstr "Ядро"
 
 #: src/cpu/cpu.cpp:94
 #, c-format
@@ -93,7 +94,7 @@ msgstr "событие cpu_idle не вернуло состояния?\\n"
 #: src/cpu/cpu.cpp:811
 #, c-format
 msgid "power or cpu_frequency event returned no state?\n"
-msgstr ""
+msgstr "события power или cpu_frequency не вернули состояния?\\n"
 
 #: src/cpu/cpu_linux.cpp:79
 msgid "C0 polling"
@@ -103,17 +104,17 @@ msgstr "опрос C0"
 #: src/cpu/intel_cpus.cpp:423
 #, c-format
 msgid " CPU %i"
-msgstr ""
+msgstr "CPU %i"
 
 #: src/cpu/cpu_package.cpp:47
 #, c-format
 msgid "Package"
-msgstr ""
+msgstr "Упаковка"
 
 #: src/cpu/cpu_package.cpp:105 src/cpu/intel_cpus.cpp:226
 #, c-format
 msgid "  Package"
-msgstr ""
+msgstr "Упаковка"
 
 #: src/cpu/intel_cpus.cpp:61
 #, c-format
@@ -559,7 +560,7 @@ msgstr "Для более подробной информации обратит
 #: src/main.cpp:195
 #, c-format
 msgid "Unknown issue running workload!\n"
-msgstr ""
+msgstr "В процессе работы возникла неизвестная ошибка!\\n"
 
 #: src/main.cpp:236
 msgid "PowerTOP is out of memory. PowerTOP is Aborting"
@@ -598,7 +599,7 @@ msgstr "Не удалось подмонтировать debugfs!\\n"
 #: src/main.cpp:394
 #, c-format
 msgid "Quite mode failed!\n"
-msgstr ""
+msgstr "Ошибка режима \"quite\"!\\n"
 
 #: src/main.cpp:440
 msgid "Leaving PowerTOP"

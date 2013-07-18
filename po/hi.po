@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-#   <piyushkumarchauhan@live.in>, 2012.
+# piyushkumarchauhan <piyushkumarchauhan@live.in>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
 "POT-Creation-Date: 2013-02-25 10:05-0800\n"
-"PO-Revision-Date: 2013-02-26 19:08+0000\n"
+"PO-Revision-Date: 2013-04-29 09:02+0000\n"
 "Last-Translator: ceferron <chris.e.ferron@linux.intel.com>\n"
 "Language-Team: Hindi (http://www.transifex.com/projects/p/PowerTOP/language/hi/)\n"
 "MIME-Version: 1.0\n"

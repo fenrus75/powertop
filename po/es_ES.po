@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Andres  <andreshko9@hotmail.com>, 2011.
-# Patrick McCarty <patrick.mccarty@linux.intel.com>, 2013.
+# Andres <andreshko9@hotmail.com>, 2011
+# Patrick McCarty <patrick.mccarty@linux.intel.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
 "POT-Creation-Date: 2013-02-25 10:05-0800\n"
-"PO-Revision-Date: 2013-02-26 19:08+0000\n"
-"Last-Translator: Patrick McCarty <patrick.mccarty@linux.intel.com>\n"
+"PO-Revision-Date: 2013-04-29 09:02+0000\n"
+"Last-Translator: ceferron <chris.e.ferron@linux.intel.com>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/projects/p/PowerTOP/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"

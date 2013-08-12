@@ -598,8 +598,8 @@ msgstr "Не удалось подмонтировать debugfs!\\n"
 
 #: src/main.cpp:394
 #, c-format
-msgid "Quite mode failed!\n"
-msgstr "Ошибка режима \"quite\"!\\n"
+msgid "Quiet mode failed!\n"
+msgstr "Ошибка в тихом режиме!\\n"
 
 #: src/main.cpp:440
 msgid "Leaving PowerTOP"

@@ -597,7 +597,7 @@ msgstr "Nepavyko prijungti debugfs!\\n"
 
 #: src/main.cpp:394
 #, c-format
-msgid "Quite mode failed!\n"
+msgid "Quiet mode failed!\n"
 msgstr ""
 
 #: src/main.cpp:440

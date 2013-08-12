@@ -391,7 +391,7 @@ int main(int argc, char **argv)
 				break;
 			case 'q':
 				if(freopen("/dev/null", "a", stderr))
-					fprintf(stderr, _("Quite mode failed!\n"));
+					fprintf(stderr, _("Quiet mode failed!\n"));
 				break;
 
 			case 'C': /* csv report*/

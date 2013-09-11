@@ -40,11 +40,34 @@
 #include "../parameters/parameters.h"
 #include "../display.h"
 
+static int intel_cpu_models[] = {
+	0x1A,	/* Core i7, Xeon 5500 series */
+	0x1E,	/* Core i7 and i5 Processor - Lynnfield Jasper Forest */
+	0x1F,	/* Core i7 and i5 Processor - Nehalem */
+	0x2E,	/* Nehalem-EX Xeon */
+	0x2F,	/* Westmere-EX Xeon */
+	0x25,	/* Westmere */
+	0x27,	/* Medfield Atom*/
+	0x2C,	/* Westmere */
+	0x2A,	/* SNB */
+	0x37,	/* Silvermont Baytrail */
+	0x2D,	/* SNB Xeon */
+	0x3A,   /* IVB */
+	0x3C,
+	0x3D,	/* IVB Xeon */
+	0	/* last entry must be zero */
+};
 
-int has_c2c7_res;
-int has_c8c9c10_res;
+int is_supported_intel_cpu(int model)
+{
+	int i;
 
+	for (i = 0; intel_cpu_models[i] != 0; i++)
+		if (model == intel_cpu_models[i])
+			return 1;
 
+	return 0;
+}	 
 
 static uint64_t get_msr(int cpu, uint64_t offset)
 {
@@ -62,6 +85,26 @@ static uint64_t get_msr(int cpu, uint64_t offset)
 	return msr;
 }
 
+nhm_core::nhm_core(int model)
+{
+	switch(model) {
+		case 0x2A:	/* SNB */
+		case 0x2D:	/* SNB Xeon */
+		case 0x3A:      /* IVB */
+		case 0x3C:
+		case 0x3D:      /* IVB Xeon */
+		case 0x45:	/* Next Gen Intel Core Processor */
+			has_c2c7_res = 1;
+	}
+
+	/* Baytrail does not support C3/C4 */	
+	if (model == 0x37) {
+		has_c3_res = 0;
+		has_c1_res = 1;
+	} else
+		has_c3_res = 1;
+}
+
 void nhm_core::measurement_start(void)
 {
 	ifstream file;
@@ -72,15 +115,22 @@ void nhm_core::measurement_start(void)
 
 	last_stamp = 0;
 
-	c3_before    = get_msr(first_cpu, MSR_CORE_C3_RESIDENCY);
+	if (this->has_c1_res)
+		c1_before = get_msr(first_cpu, MSR_CORE_C1_RESIDENCY);
+	if (this->has_c3_res)
+		c3_before    = get_msr(first_cpu, MSR_CORE_C3_RESIDENCY);
 	c6_before    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
-	if (has_c2c7_res)
+	if (this->has_c2c7_res)
 		c7_before    = get_msr(first_cpu, MSR_CORE_C7_RESIDENCY);
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
-	insert_cstate("core c3", "C3 (cc3)", 0, c3_before, 1);
+	if (this->has_c1_res)
+		insert_cstate("core c1", "C1 (cc1)", 0, c1_before, 1);
+
+	if (this->has_c3_res)
+		insert_cstate("core c3", "C3 (cc3)", 0, c3_before, 1);
 	insert_cstate("core c6", "C6 (cc6)", 0, c6_before, 1);
-	if (has_c2c7_res) {
+	if (this->has_c2c7_res) {
 		insert_cstate("core c7", "C7 (cc7)", 0, c7_before, 1);
 	}
 
@@ -110,17 +160,22 @@ void nhm_core::measurement_end(void)
 	uint64_t time_delta;
 	double ratio;
 
-	c3_after    = get_msr(first_cpu, MSR_CORE_C3_RESIDENCY);
+	if (this->has_c1_res)
+		c1_after = get_msr(first_cpu, MSR_CORE_C1_RESIDENCY);
+
+	if (this->has_c3_res)
+		c3_after    = get_msr(first_cpu, MSR_CORE_C3_RESIDENCY);
 	c6_after    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
-	if (has_c2c7_res)
+	if (this->has_c2c7_res)
 		c7_after    = get_msr(first_cpu, MSR_CORE_C7_RESIDENCY);
 	tsc_after   = get_msr(first_cpu, MSR_TSC);
 
-
-
-	finalize_cstate("core c3", 0, c3_after, 1);
+	if (this->has_c1_res)
+		finalize_cstate("core c1", 0, c1_after, 1);
+	if (this->has_c3_res)
+		finalize_cstate("core c3", 0, c3_after, 1);
 	finalize_cstate("core c6", 0, c6_after, 1);
-	if (has_c2c7_res)
+	if (this->has_c2c7_res)
 		finalize_cstate("core c7", 0, c7_after, 1);
 
 	gettimeofday(&stamp_after, NULL);
@@ -195,6 +250,30 @@ char * nhm_core::fill_pstate_line(int line_nr, char *buffer)
 	return buffer;
 }
 
+nhm_package::nhm_package(int model)
+{
+	switch(model) {
+		case 0x2A:	/* SNB */
+		case 0x37:	/* Silvermont */
+		case 0x2D:	/* SNB Xeon */
+		case 0x3A:      /* IVB */
+		case 0x3C:
+		case 0x3D:      /* IVB Xeon */
+		case 0x45:
+			has_c2c7_res = 1;
+	}
+
+	/* Baytrail doesn't have C3 */	
+	if (model == 0x37)
+		has_c3_res = 0;
+	else
+		has_c3_res = 1;
+
+	/* Haswell-ULT has C8/9/10*/
+	if (model == 0x45)
+		has_c8c9c10_res = 1;
+}
+
 char * nhm_package::fill_pstate_line(int line_nr, char *buffer)
 {
 	buffer[0] = 0;
@@ -228,27 +307,30 @@ void nhm_package::measurement_start(void)
 
 	last_stamp = 0;
 
-	if (has_c2c7_res)
+	if (this->has_c2c7_res)
 		c2_before    = get_msr(number, MSR_PKG_C2_RESIDENCY);
-	c3_before    = get_msr(number, MSR_PKG_C3_RESIDENCY);
+
+	if (this->has_c3_res)
+		c3_before    = get_msr(number, MSR_PKG_C3_RESIDENCY);
 	c6_before    = get_msr(number, MSR_PKG_C6_RESIDENCY);
-	if (has_c2c7_res)
+	if (this->has_c2c7_res)
 		c7_before    = get_msr(number, MSR_PKG_C7_RESIDENCY);
-	if (has_c8c9c10_res) {
+	if (this->has_c8c9c10_res) {
 		c8_before    = get_msr(number, MSR_PKG_C8_RESIDENCY);
 		c9_before    = get_msr(number, MSR_PKG_C9_RESIDENCY);
 		c10_before    = get_msr(number, MSR_PKG_C10_RESIDENCY);
 	}
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
-	if (has_c2c7_res)
+	if (this->has_c2c7_res)
 		insert_cstate("pkg c2", "C2 (pc2)", 0, c2_before, 1);
 
-	insert_cstate("pkg c3", "C3 (pc3)", 0, c3_before, 1);
+	if (this->has_c3_res)
+		insert_cstate("pkg c3", "C3 (pc3)", 0, c3_before, 1);
 	insert_cstate("pkg c6", "C6 (pc6)", 0, c6_before, 1);
-	if (has_c2c7_res)
+	if (this->has_c2c7_res)
 		insert_cstate("pkg c7", "C7 (pc7)", 0, c7_before, 1);
-	if (has_c8c9c10_res) {
+	if (this->has_c8c9c10_res) {
 		insert_cstate("pkg c8", "C8 (pc8)", 0, c8_before, 1);
 		insert_cstate("pkg c9", "C9 (pc9)", 0, c9_before, 1);
 		insert_cstate("pkg c10", "C10 (pc10)", 0, c10_before, 1);
@@ -266,11 +348,13 @@ void nhm_package::measurement_end(void)
 			children[i]->wiggle();
 
 
-	if (has_c2c7_res)
+	if (this->has_c2c7_res)
 		c2_after    = get_msr(number, MSR_PKG_C2_RESIDENCY);
-	c3_after    = get_msr(number, MSR_PKG_C3_RESIDENCY);
+
+	if (this->has_c3_res)
+		c3_after    = get_msr(number, MSR_PKG_C3_RESIDENCY);
 	c6_after    = get_msr(number, MSR_PKG_C6_RESIDENCY);
-	if (has_c2c7_res)
+	if (this->has_c2c7_res)
 		c7_after    = get_msr(number, MSR_PKG_C7_RESIDENCY);
 	if (has_c8c9c10_res) {
 		c8_after = get_msr(number, MSR_PKG_C8_RESIDENCY);
@@ -284,11 +368,13 @@ void nhm_package::measurement_end(void)
 	time_factor = 1000000.0 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
 
 
-	if (has_c2c7_res)
+	if (this->has_c2c7_res)
 		finalize_cstate("pkg c2", 0, c2_after, 1);
-	finalize_cstate("pkg c3", 0, c3_after, 1);
+
+	if (this->has_c3_res)
+		finalize_cstate("pkg c3", 0, c3_after, 1);
 	finalize_cstate("pkg c6", 0, c6_after, 1);
-	if (has_c2c7_res)
+	if (this->has_c2c7_res)
 		finalize_cstate("pkg c7", 0, c7_after, 1);
 	if (has_c8c9c10_res) {
 		finalize_cstate("pkg c8", 0, c8_after, 1);

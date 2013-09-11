@@ -40,10 +40,10 @@
 #define MSR_PKG_C8_RESIDENCY		0x630
 #define MSR_PKG_C9_RESIDENCY		0x631
 #define MSR_PKG_C10_RESIDENCY		0x632
+#define MSR_CORE_C1_RESIDENCY		0x660
 #define MSR_CORE_C3_RESIDENCY		0x3FC
 #define MSR_CORE_C6_RESIDENCY		0x3FD
 #define MSR_CORE_C7_RESIDENCY		0x3FE
-
 
 class nhm_package: public cpu_package
 {
@@ -60,6 +60,10 @@ private:
 	uint64_t	last_stamp;
 	uint64_t	total_stamp;
 public:
+	int		has_c2c7_res;
+	int		has_c3_res;
+	int		has_c8c9c10_res;
+	nhm_package(int model);
 	virtual void	measurement_start(void);
 	virtual void	measurement_end(void);
 	virtual int     can_collapse(void) { return 0;};
@@ -70,6 +74,7 @@ public:
 class nhm_core: public cpu_core
 {
 private:
+	uint64_t	c1_before, c1_after;
 	uint64_t	c3_before, c3_after;
 	uint64_t	c6_before, c6_after;
 	uint64_t	c7_before, c7_after;
@@ -78,6 +83,10 @@ private:
 	uint64_t	last_stamp;
 	uint64_t	total_stamp;
 public:
+	int		has_c1_res;
+	int		has_c2c7_res;
+	int		has_c3_res;
+	nhm_core(int model);
 	virtual void	measurement_start(void);
 	virtual void	measurement_end(void);
 	virtual int     can_collapse(void) { return 0;};
@@ -123,9 +132,6 @@ public:
 };
 
 
-extern int has_c2c7_res;
-extern int has_c8c9c10_res;
-
 class i965_core: public cpu_core
 {
 private:
@@ -149,3 +155,5 @@ public:
 	virtual void	wiggle(void) { };
 
 };
+
+int is_supported_intel_cpu(int model);

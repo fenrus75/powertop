@@ -44,7 +44,6 @@
 #define MSR_CORE_C6_RESIDENCY		0x3FD
 #define MSR_CORE_C7_RESIDENCY		0x3FE
 
-
 class nhm_package: public cpu_package
 {
 private:
@@ -60,6 +59,10 @@ private:
 	uint64_t	last_stamp;
 	uint64_t	total_stamp;
 public:
+	int		has_c2c7_res;
+	int		has_c3_res;
+	int		has_c8c9c10_res;
+	nhm_package(int model);
 	virtual void	measurement_start(void);
 	virtual void	measurement_end(void);
 	virtual int     can_collapse(void) { return 0;};
@@ -78,6 +81,9 @@ private:
 	uint64_t	last_stamp;
 	uint64_t	total_stamp;
 public:
+	int		has_c2c7_res;
+	int		has_c3_res;
+	nhm_core(int model);
 	virtual void	measurement_start(void);
 	virtual void	measurement_end(void);
 	virtual int     can_collapse(void) { return 0;};
@@ -123,9 +129,6 @@ public:
 };
 
 
-extern int has_c2c7_res;
-extern int has_c8c9c10_res;
-
 class i965_core: public cpu_core
 {
 private:
@@ -149,3 +152,5 @@ public:
 	virtual void	wiggle(void) { };
 
 };
+
+int is_supported_intel_cpu(int model);

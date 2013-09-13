@@ -65,34 +65,10 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 	class dram_rapl_device *dram_rapl_dev;
 
 	char packagename[128];
-	if (strcmp(vendor, "GenuineIntel") == 0) {
+	if (strcmp(vendor, "GenuineIntel") == 0)
 		if (family == 6)
-			switch (model) {
-			case 0x1A:	/* Core i7, Xeon 5500 series */
-			case 0x1E:	/* Core i7 and i5 Processor - Lynnfield Jasper Forest */
-			case 0x1F:	/* Core i7 and i5 Processor - Nehalem */
-			case 0x2E:	/* Nehalem-EX Xeon */
-			case 0x2F:	/* Westmere-EX Xeon */
-			case 0x25:	/* Westmere */
-			case 0x27:	/* Medfield Atom*/
-			case 0x2C:	/* Westmere */
-				ret = new class nhm_package;
-				break;
-			case 0x2A:	/* SNB */
-			case 0x2D:	/* SNB Xeon */
-			case 0x3A:      /* IVB */
-			case 0x3C:
-			case 0x3D:      /* IVB Xeon */
-				has_c2c7_res = 1;
-				ret = new class nhm_package;
-				break;
-			case 0x45:	/* Next Gen Intel Core Processor */
-				has_c8c9c10_res = 1;
-				has_c2c7_res = 1;
-				ret = new class nhm_package;
-				break;
-			}
-	}
+			if (is_supported_intel_cpu(model))
+				ret = new class nhm_package(model);
 
 	if (!ret)
 		ret = new class cpu_package;
@@ -122,25 +98,10 @@ static class abstract_cpu * new_core(int core, int cpu, char * vendor, int famil
 {
 	class abstract_cpu *ret = NULL;
 
-	if (strcmp(vendor, "GenuineIntel") == 0) {
+	if (strcmp(vendor, "GenuineIntel") == 0)
 		if (family == 6)
-			switch (model) {
-			case 0x1A:	/* Core i7, Xeon 5500 series */
-			case 0x1E:	/* Core i7 and i5 Processor - Lynnfield Jasper Forest */
-			case 0x1F:	/* Core i7 and i5 Processor - Nehalem */
-			case 0x2E:	/* Nehalem-EX Xeon */
-			case 0x2F:	/* Westmere-EX Xeon */
-			case 0x25:	/* Westmere */
-			case 0x2C:	/* Westmere */
-			case 0x2A:	/* SNB */
-			case 0x2D:	/* SNB Xeon */
-			case 0x3A:      /* IVB */
-			case 0x3C:
-			case 0x3D:      /* IVB Xeon */
-			case 0x45:	/* Next Gen Intel Core Processor */
-				ret = new class nhm_core;
-			}
-	}
+			if (is_supported_intel_cpu(model))
+				ret = new class nhm_core(model);
 
 	if (!ret)
 		ret = new class cpu_core;
@@ -166,25 +127,10 @@ static class abstract_cpu * new_cpu(int number, char * vendor, int family, int m
 {
 	class abstract_cpu * ret = NULL;
 
-	if (strcmp(vendor, "GenuineIntel") == 0) {
+	if (strcmp(vendor, "GenuineIntel") == 0)
 		if (family == 6)
-			switch (model) {
-			case 0x1A:	/* Core i7, Xeon 5500 series */
-			case 0x1E:	/* Core i7 and i5 Processor - Lynnfield Jasper Forest */
-			case 0x1F:	/* Core i7 and i5 Processor - Nehalem */
-			case 0x2E:	/* Nehalem-EX Xeon */
-			case 0x2F:	/* Westmere-EX Xeon */
-			case 0x25:	/* Westmere */
-			case 0x2C:	/* Westmere */
-			case 0x2A:	/* SNB */
-			case 0x2D:	/* SNB Xeon */
-			case 0x3A:      /* IVB */
-			case 0x3C:
-			case 0x3D:      /* IVB Xeon */
-			case 0x45:	/* Next Gen Intel Core Processor */
+			if (is_supported_intel_cpu(model))
 				ret = new class nhm_cpu;
-			}
-	}
 
 	if (!ret)
 		ret = new class cpu_linux;

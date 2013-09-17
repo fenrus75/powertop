@@ -76,4 +76,6 @@ extern int utf_ok;
 extern int get_user_input(char *buf, unsigned sz);
 extern int read_msr(int cpu, uint64_t offset, uint64_t *value);
 extern int write_msr(int cpu, uint64_t offset, uint64_t value);
+
+extern void align_string(char *buffer, size_t min_sz, size_t max_sz);
 #endif

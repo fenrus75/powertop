@@ -579,7 +579,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 	}
 	else if (strcmp(event->name, "cpu_idle") == 0) {
 		ret = pevent_get_field_val(NULL, event, "state", &rec, &val, 0);
-		if (val == 4294967295)
+		if (val == (unsigned int)-1)
 			consume_blame(cpu);
 		else
 			set_wakeup_pending(cpu);

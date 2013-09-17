@@ -123,6 +123,7 @@ static char * read_file(const char *file)
 		buffer[len] = '\0';
 	}
 out:
+	close(fd);
 	return buffer;
 }
 

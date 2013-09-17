@@ -273,3 +273,11 @@ void clear_tuning()
 	}
 	all_untunables.clear();
 }
+
+void auto_toggle_tuning()
+{
+	for (unsigned int i = 0; i < all_tunables.size(); i++) {
+		if (all_tunables[i]->good_bad() == TUNE_BAD)
+			all_tunables[i]->toggle();
+	}
+}

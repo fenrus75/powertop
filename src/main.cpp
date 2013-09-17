@@ -72,6 +72,7 @@ static const struct option long_options[] =
 	{"version", no_argument, NULL, 'V'},
 	{"help",no_argument, NULL, 'u'}, /* u for usage */
 	{"calibrate",no_argument, NULL, 'c'},
+	{"auto-tune",no_argument, NULL, 'a'},
 	{"html", optional_argument, NULL, 'h'},
 	{"csv", optional_argument, NULL, 'C'},
 	{"extech", optional_argument, NULL, 'e'},
@@ -107,6 +108,7 @@ static void print_usage()
 	printf("--debug \t\t %s\n",_("run in \"debug\" mode"));
 	printf("--version \t\t %s\n",_("print version information"));
 	printf("--calibrate \t\t %s\n",_("runs powertop in calibration mode"));
+	printf("--auto-tune \t\t %s\n",_("Sets all tunable options to their GOOD setting"));
 	printf("--extech%s \t %s\n",_("[=devnode]"),_("uses an Extech Power Analyzer for measurements"));
 	printf("--html%s \t %s\n",_("[=FILENAME]"),_("generate a html report"));
 	printf("--csv%s \t %s\n",_("[=FILENAME]"),_("generate a csv report"));
@@ -346,7 +348,7 @@ int main(int argc, char **argv)
 	int c;
 	char filename[4096];
 	char workload[4096] = {0,};
-	int  iterations = 1;
+	int  iterations = 1, auto_tune = 0;
 
 	set_new_handler(out_of_memory);
 
@@ -374,7 +376,10 @@ int main(int argc, char **argv)
 				print_usage();
 				exit(0);
 				break;
-
+			case 'a':
+				auto_tune = 1;
+				leave_powertop = 1;
+				break;
 			case 'c':
 				powertop_init();
 				calibrate();
@@ -430,13 +435,17 @@ int main(int argc, char **argv)
 		end_pci_access();
 		exit(0);
 	}
-
-	/* first one is short to not let the user wait too long */
 	init_display();
-	one_measurement(1, NULL);
 	initialize_tuning();
-	tuning_update_display();
-	show_tab(0);
+	/* first one is short to not let the user wait too long */
+	one_measurement(1, NULL);
+
+	if (!auto_tune) {
+		tuning_update_display();
+		show_tab(0);
+	} else {
+		auto_toggle_tuning();
+	}
 
 	while (!leave_powertop) {
 		show_cur_tab();

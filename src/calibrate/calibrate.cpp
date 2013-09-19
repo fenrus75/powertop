@@ -33,7 +33,6 @@
 #include <pthread.h>
 #include <math.h>
 #include <sys/types.h>
-#include <dirent.h>
 
 #include "../parameters/parameters.h"
 extern "C" {
@@ -85,45 +84,32 @@ static void restore_all_sysfs(void)
 	set_wifi_power_saving("wlan0", wireless_PS);
 }
 
+static void find_all_usb_callback(const char *d_name)
+{
+	char filename[4096];
+	ifstream file;
+
+	sprintf(filename, "/sys/bus/usb/devices/%s/power/active_duration", d_name);
+	if (access(filename, R_OK) != 0)
+		return;
+
+	sprintf(filename, "/sys/bus/usb/devices/%s/power/idVendor", d_name);
+	file.open(filename, ios::in);
+	if (file) {
+		file.getline(filename, 4096);
+		file.close();
+		if (strcmp(filename, "1d6b") == 0)
+			return;
+	}
+
+	sprintf(filename, "/sys/bus/usb/devices/%s/power/control", d_name);
+	save_sysfs(filename);
+	usb_devices.push_back(filename);
+}
+
 static void find_all_usb(void)
 {
-	struct dirent *entry;
-	DIR *dir;
-	char filename[4096];
-
-	dir = opendir("/sys/bus/usb/devices/");
-	if (!dir)
-		return;
-	while (1) {
-		ifstream file;
-
-		entry = readdir(dir);
-
-		if (!entry)
-			break;
-		if (entry->d_name[0] == '.')
-			continue;
-
-		sprintf(filename, "/sys/bus/usb/devices/%s/power/active_duration", entry->d_name);
-		if (access(filename, R_OK)!=0)
-			continue;
-
-		sprintf(filename, "/sys/bus/usb/devices/%s/power/idVendor", entry->d_name);
-		file.open(filename, ios::in);
-		if (file) {
-			file.getline(filename, 4096);
-			file.close();
-			if (strcmp(filename, "1d6b")==0)
-				continue;
-		}
-
-		sprintf(filename, "/sys/bus/usb/devices/%s/power/control", entry->d_name);
-
-		save_sysfs(filename);
-
-		usb_devices.push_back(filename);
-	}
-	closedir(dir);
+	process_directory("/sys/bus/usb/devices/", find_all_usb_callback);
 }
 
 static void suspend_all_usb_devices(void)
@@ -134,33 +120,19 @@ static void suspend_all_usb_devices(void)
 		write_sysfs(usb_devices[i], "auto\n");
 }
 
+static void find_all_rfkill_callback(const char *d_name)
+{
+	char filename[4096];
+	sprintf(filename, "/sys/class/rfkill/%s/soft", d_name);
+	if (access(filename, R_OK) != 0)
+		return;
+	save_sysfs(filename);
+	rfkill_devices.push_back(filename);
+}
 
 static void find_all_rfkill(void)
 {
-	struct dirent *entry;
-	DIR *dir;
-	char filename[4096];
-
-	dir = opendir("/sys/class/rfkill/");
-	if (!dir)
-		return;
-	while (1) {
-		entry = readdir(dir);
-
-		if (!entry)
-			break;
-		if (entry->d_name[0] == '.')
-			continue;
-
-		sprintf(filename, "/sys/class/rfkill/%s/soft", entry->d_name);
-		if (access(filename, R_OK)!=0)
-			continue;
-
-		save_sysfs(filename);
-
-		rfkill_devices.push_back(filename);
-	}
-	closedir(dir);
+	process_directory("/sys/class/rfkill/", find_all_rfkill_callback);
 }
 
 static void rfkill_all_radios(void)
@@ -178,35 +150,22 @@ static void unrfkill_all_radios(void)
 		write_sysfs(rfkill_devices[i], "0\n");
 }
 
+static void find_backlight_callback(const char *d_name)
+{
+	char filename[4096];
+	sprintf(filename, "/sys/class/backlight/%s/brightness", d_name);
+	if (access(filename, R_OK) != 0)
+		return;
+
+	save_sysfs(filename);
+	backlight_devices.push_back(filename);
+	sprintf(filename, "/sys/class/backlight/%s/max_brightness", d_name);
+	blmax = read_sysfs(filename);
+}
+
 static void find_backlight(void)
 {
-	struct dirent *entry;
-	DIR *dir;
-	char filename[4096];
-
-	dir = opendir("/sys/class/backlight/");
-	if (!dir)
-		return;
-	while (1) {
-		entry = readdir(dir);
-
-		if (!entry)
-			break;
-		if (entry->d_name[0] == '.')
-			continue;
-
-		sprintf(filename, "/sys/class/backlight/%s/brightness", entry->d_name);
-		if (access(filename, R_OK)!=0)
-			continue;
-
-		save_sysfs(filename);
-
-		backlight_devices.push_back(filename);
-
-		sprintf(filename, "/sys/class/backlight/%s/max_brightness", entry->d_name);
-		blmax = read_sysfs(filename);
-	}
-	closedir(dir);
+	process_directory("/sys/class/backlight/", find_backlight_callback);
 }
 
 static void lower_backlight(void)
@@ -217,34 +176,20 @@ static void lower_backlight(void)
 		write_sysfs(backlight_devices[i], "0\n");
 }
 
+static void find_scsi_link_callback(const char *d_name)
+{
+	char filename[4096];
+	sprintf(filename, "/sys/class/scsi_host/%s/link_power_management_policy", d_name);
+	if (access(filename, R_OK)!=0)
+		return;
+
+	save_sysfs(filename);
+	scsi_link_devices.push_back(filename);
+}
 
 static void find_scsi_link(void)
 {
-	struct dirent *entry;
-	DIR *dir;
-	char filename[4096];
-
-	dir = opendir("/sys/class/scsi_host/");
-	if (!dir)
-		return;
-	while (1) {
-		entry = readdir(dir);
-
-		if (!entry)
-			break;
-		if (entry->d_name[0] == '.')
-			continue;
-
-		sprintf(filename, "/sys/class/scsi_host/%s/link_power_management_policy", entry->d_name);
-		if (access(filename, R_OK)!=0)
-			continue;
-
-		save_sysfs(filename);
-
-		scsi_link_devices.push_back(filename);
-
-	}
-	closedir(dir);
+	process_directory("/sys/class/scsi_host/", find_scsi_link_callback);
 }
 
 static void set_scsi_link(const char *state)

@@ -30,7 +30,6 @@
 
 #include <stdio.h>
 #include <sys/types.h>
-#include <dirent.h>
 #include <libgen.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -344,18 +343,19 @@ const char * network::device_name(void)
 	return name;
 }
 
-void netdev_callback(const char *d_name)
+static void netdev_callback(const char *d_name)
 {
 	std::string f_name("/sys/class/net/");
-	f_name.append(d_name);
+	if (strcmp(d_name, "lo") == 0)
+		return;
 
+	f_name.append(d_name);
 	network *bl = new(std::nothrow) class network(d_name, f_name.c_str());
 	if (bl) {
 		all_devices.push_back(bl);
 		nics[d_name] = bl;
 	}
 }
-
 
 void create_all_nics(callback fn)
 {

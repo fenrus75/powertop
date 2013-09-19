@@ -63,6 +63,7 @@ int cpufreq_tunable::good_bad(void)
 
 	char gov[1024];
 	int ret = TUNE_GOOD;
+	unsigned long int ld;
 
 
 	gov[0] = 0;
@@ -90,6 +91,30 @@ int cpufreq_tunable::good_bad(void)
 			/* if the governors are inconsistent, warn */
 			if (strcmp(gov, line))
 				ret = TUNE_BAD;
+		fclose(file);
+
+		/* check if ondemand governor is available */
+		sprintf(filename, "/sys/devices/system/cpu/%s/cpufreq/scaling_available_governors", dirent->d_name);
+		file = fopen(filename, "r");
+		if (!file)
+			continue;
+		memset(line, 0, 1024);
+		if (fgets(line, 1023,file)==NULL || strstr(line, "ondemand")==NULL) {
+			fclose(file);
+			continue;
+		}
+		fclose(file);
+
+		/* check if cpu transition latency is not higher than ondemand governor max_transition_latency */
+		sprintf(filename, "/sys/devices/system/cpu/%s/cpufreq/cpuinfo_transition_latency", dirent->d_name);
+		file = fopen(filename, "r");
+		if (!file)
+			continue;
+		if (fscanf(file, "%lu", &ld) != 1 || ld > 10000000)
+		{
+			fclose(file);
+			continue;
+		}
 		fclose(file);
 	}
 

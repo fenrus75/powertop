@@ -448,12 +448,8 @@ void process_directory(const char *d_name, callback fn)
 			break;
 		if (entry->d_name[0] == '.')
 			continue;
-		if (strcmp(entry->d_name, "lo")==0)
-			continue;
-
 		fn(entry->d_name);
 	}
-
 	closedir(dir);
 }
 

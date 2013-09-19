@@ -41,7 +41,7 @@ class alsa: public device {
 	int rindex;
 public:
 
-	alsa(char *_name, char *path);
+	alsa(const char *_name, const char *path);
 
 	virtual void start_measurement(void);
 	virtual void end_measurement(void);

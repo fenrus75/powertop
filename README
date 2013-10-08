@@ -45,6 +45,7 @@ CONFIG_TRACING
 CONFIG_EVENT_POWER_TRACING_DEPRECATED
 CONFIG_X86_MSR
 ACPI_PROCFS_POWER
+CONFIG_DEBUG_FS
 
 The patches in the patches/ sub-directory are required for PowerTOP to function
 fully.

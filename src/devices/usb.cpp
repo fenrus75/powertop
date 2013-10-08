@@ -25,11 +25,9 @@
 #include "usb.h"
 
 #include <string.h>
-
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include <dirent.h>
 
 #include "../lib.h"
 #include "../parameters/parameters.h"
@@ -186,57 +184,42 @@ double usbdevice::power_usage(struct result_bundle *result, struct parameter_bun
 	return power;
 }
 
+static void create_all_usb_devices_callback(const char *d_name)
+{
+	char filename[4096];
+	ifstream file;
+	class usbdevice *usb;
+	char device_name[4096];
+	char vendorid[64], devid[64];
+	char devid_name[4096];
+
+	sprintf(filename, "/sys/bus/usb/devices/%s", d_name);
+	sprintf(device_name, "%s/power/active_duration", filename);
+	if (access(device_name, R_OK) != 0)
+		return;
+
+	sprintf(device_name, "%s/idVendor", filename);
+	file.open(device_name, ios::in);
+	if (file)
+		file.getline(vendorid, 64);
+	file.close();
+	sprintf(device_name, "%s/idProduct", filename);
+	file.open(device_name, ios::in);
+	if (file)
+		file.getline(devid, 64);
+	file.close();
+
+	sprintf(devid_name, "usb-device-%s-%s", vendorid, devid);
+	sprintf(device_name, "usb-device-%s-%s-%s", d_name, vendorid, devid);
+	if (result_device_exists(device_name))
+		return;
+
+	usb = new class usbdevice(device_name, filename, devid_name);
+	all_devices.push_back(usb);
+	register_parameter(devid_name, 0.1);
+}
 
 void create_all_usb_devices(void)
 {
-	struct dirent *entry;
-	DIR *dir;
-	char filename[4096];
-
-	dir = opendir("/sys/bus/usb/devices/");
-	if (!dir)
-		return;
-	while (1) {
-		ifstream file;
-		class usbdevice *usb;
-		char device_name[4096];
-		char vendorid[64], devid[64];
-		char devid_name[4096];
-		entry = readdir(dir);
-
-		if (!entry)
-			break;
-		if (entry->d_name[0] == '.')
-			continue;
-
-		sprintf(filename, "/sys/bus/usb/devices/%s", entry->d_name);
-
-		sprintf(device_name, "%s/power/active_duration", filename);
-		if (access(device_name, R_OK)!=0)
-			continue;
-
-		sprintf(device_name, "%s/idVendor", filename);
-		file.open(device_name, ios::in);
-		if (file)
-			file.getline(vendorid, 64);
-		file.close();
-		sprintf(device_name, "%s/idProduct", filename);
-		file.open(device_name, ios::in);
-		if (file)
-			file.getline(devid, 64);
-		file.close();
-
-		sprintf(devid_name, "usb-device-%s-%s", vendorid, devid);
-
-		sprintf(device_name, "usb-device-%s-%s-%s", entry->d_name, vendorid, devid);
-
-		if (result_device_exists(device_name))
-			continue;
-
-		usb = new class usbdevice(device_name, filename, devid_name);
-		all_devices.push_back(usb);
-
-		register_parameter(devid_name, 0.1);
-	}
-	closedir(dir);
+	process_directory("/sys/bus/usb/devices/", create_all_usb_devices_callback);
 }

@@ -123,6 +123,7 @@ static char * read_file(const char *file)
 		buffer[len] = '\0';
 	}
 out:
+	close(fd);
 	return buffer;
 }
 
@@ -284,6 +285,31 @@ static bool event_sort_function (void *i, void *j)
 	return (timestamp(I)<timestamp(J));
 }
 
+/*
+ * sample's PERF_SAMPLE_CPU cpu nr is a raw_smp_processor_id() by the
+ * time of perf_event_output(), which may differ from struct perf_event
+ * cpu, thus we need to fix sample->trace.cpu.
+ */
+static void fixup_sample_trace_cpu(struct perf_sample *sample)
+{
+	struct event_format *event;
+	struct pevent_record rec;
+	unsigned long long cpu_nr;
+	int type;
+	int ret;
+
+	rec.data = &sample->data;
+	type = pevent_data_type(perf_event::pevent, &rec);
+	event = pevent_find_event(perf_event::pevent, type);
+	if (!event)
+		return;
+	/** don't touch trace if event does not contain cpu_id field*/
+	ret = pevent_get_field_val(NULL, event, "cpu_id", &rec, &cpu_nr, 0);
+	if (ret < 0)
+		return;
+	sample->trace.cpu = cpu_nr;
+}
+
 void perf_bundle::process(void)
 {
 	unsigned int i;
@@ -308,6 +334,7 @@ void perf_bundle::process(void)
 		if (sample->header.type != PERF_RECORD_SAMPLE)
 			continue;
 
+		fixup_sample_trace_cpu(sample);
 		handle_trace_point(&sample->data, sample->trace.cpu, sample->trace.time);
 	}
 }

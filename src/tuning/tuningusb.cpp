@@ -31,9 +31,6 @@
 #include <utility>
 #include <iostream>
 #include <fstream>
-#include <unistd.h>
-#include <sys/types.h>
-#include <dirent.h>
 
 #include "../lib.h"
 
@@ -116,40 +113,25 @@ const char *usb_tunable::toggle_script(void)
 	return toggle_good;
 }
 
-void add_usb_tunables(void)
+static void add_usb_callback(const char *d_name)
 {
-	struct dirent *entry;
-	DIR *dir;
+	class usb_tunable *usb;
 	char filename[4096];
 
-	dir = opendir("/sys/bus/usb/devices/");
-	if (!dir)
+	sprintf(filename, "/sys/bus/usb/devices/%s/power/control", d_name);
+	if (access(filename, R_OK) != 0)
 		return;
-	while (1) {
-		class usb_tunable *usb;
 
-		entry = readdir(dir);
+	sprintf(filename, "/sys/bus/usb/devices/%s/power/active_duration", d_name);
+	if (access(filename, R_OK)!=0)
+		return;
 
-		if (!entry)
-			break;
-		if (entry->d_name[0] == '.')
-			continue;
+	sprintf(filename, "/sys/bus/usb/devices/%s", d_name);
+	usb = new class usb_tunable(filename, d_name);
+	all_tunables.push_back(usb);
+}
 
-		sprintf(filename, "/sys/bus/usb/devices/%s/power/control", entry->d_name);
-
-		if (access(filename, R_OK) != 0)
-			continue;
-
-		sprintf(filename, "/sys/bus/usb/devices/%s/power/active_duration", entry->d_name);
-		if (access(filename, R_OK)!=0)
-			continue;
-
-		sprintf(filename, "/sys/bus/usb/devices/%s", entry->d_name);
-
-		usb = new class usb_tunable(filename, entry->d_name);
-
-		all_tunables.push_back(usb);
-
-	}
-	closedir(dir);
+void add_usb_tunables(void)
+{
+	process_directory("/sys/bus/usb/devices/", add_usb_callback);
 }

@@ -27,7 +27,6 @@
 
 #include <stdio.h>
 #include <sys/types.h>
-#include <dirent.h>
 #include <libgen.h>
 #include <unistd.h>
 
@@ -136,41 +135,30 @@ const char * rfkill::device_name(void)
 	return name;
 }
 
-void create_all_rfkills(void)
+static void create_all_rfkills_callback(const char *d_name)
 {
-	struct dirent *entry;
-	DIR *dir;
 	char filename[4096];
 	char name[4096];
+	class rfkill *bl;
+	ifstream file;
 
-	dir = opendir("/sys/class/rfkill/");
-	if (!dir)
-		return;
-	while (1) {
-		class rfkill *bl;
-		ifstream file;
-		entry = readdir(dir);
-		if (!entry)
-			break;
-		if (entry->d_name[0] == '.')
-			continue;
-		sprintf(filename, "/sys/class/rfkill/%s/name", entry->d_name);
-		strcpy(name, entry->d_name);
-		file.open(filename, ios::in);
-		if (file) {
-			file.getline(name, 100);
-			file.close();
-		}
-
-		sprintf(filename, "/sys/class/rfkill/%s", entry->d_name);
-		bl = new class rfkill(name, filename);
-		all_devices.push_back(bl);
+	sprintf(filename, "/sys/class/rfkill/%s/name", d_name);
+	strcpy(name, d_name);
+	file.open(filename, ios::in);
+	if (file) {
+		file.getline(name, 100);
+		file.close();
 	}
-	closedir(dir);
 
+	sprintf(filename, "/sys/class/rfkill/%s", d_name);
+	bl = new class rfkill(name, filename);
+	all_devices.push_back(bl);
 }
 
-
+void create_all_rfkills(void)
+{
+	process_directory("/sys/class/rfkill/", create_all_rfkills_callback);
+}
 
 double rfkill::power_usage(struct result_bundle *result, struct parameter_bundle *bundle)
 {

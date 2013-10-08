@@ -808,7 +808,7 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
                         exit(-1);
                 }
 
-		if (val == 4294967295)
+		if (val == (unsigned int)-1)
 			cpu->go_unidle(time);
 		else
 			cpu->go_idle(time);

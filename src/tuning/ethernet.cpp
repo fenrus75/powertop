@@ -25,6 +25,7 @@
 
 #include "tuning.h"
 #include "tunable.h"
+#include <sys/types.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,12 +33,8 @@
 #include <utility>
 #include <iostream>
 #include <fstream>
-#include <unistd.h>
-#include <dirent.h>
 #include <sys/socket.h>
 #include <errno.h>
-#include <sys/types.h>
-#include <dirent.h>
 #include <linux/types.h>
 #include <net/if.h>
 #include <linux/sockios.h>
@@ -146,7 +143,10 @@ const char *ethernet_tunable::toggle_script(void)
 
 void ethtunable_callback(const char *d_name)
 {
-	class ethernet_tunable *eth = new(std::nothrow) class ethernet_tunable(d_name);
+	class ethernet_tunable *eth;
+	if (strcmp(d_name, "lo") == 0)
+		return;
+	eth = new(std::nothrow) class ethernet_tunable(d_name);
 	if (eth)
 		all_tunables.push_back(eth);
 }

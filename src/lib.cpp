@@ -258,21 +258,38 @@ string read_sysfs_string(const char *format, const char *param)
 	return content;
 }
 
+void align_string(char *buffer, size_t min_sz, size_t max_sz)
+{
+	size_t sz;
+
+	/** mbsrtowcs() allows NULL dst and zero sz,
+	 * comparing to mbstowcs(), which causes undefined
+	 * behaviour under given circumstances*/
+
+	/* start with mbsrtowcs() local mbstate_t * and
+	 * NULL dst pointer*/
+	sz = mbsrtowcs(NULL, (const char **)&buffer, max_sz, NULL);
+	if (sz == (size_t)-1) {
+		buffer[min_sz] = 0x00;
+		return;
+	}
+	while (sz < min_sz) {
+		strcat(buffer, " ");
+		sz++;
+	}
+}
 
 void format_watts(double W, char *buffer, unsigned int len)
 {
 	buffer[0] = 0;
 	char buf[32];
-
 	sprintf(buffer, _("%7sW"), fmt_prefix(W, buf));
 
 	if (W < 0.0001)
 		sprintf(buffer, _("    0 mW"));
 
-	while (mbstowcs(NULL,buffer,0) < len)
-		strcat(buffer, " ");
+	align_string(buffer, len, len);
 }
-
 
 #ifndef HAVE_NO_PCI
 static struct pci_access *pci_access;
@@ -431,12 +448,8 @@ void process_directory(const char *d_name, callback fn)
 			break;
 		if (entry->d_name[0] == '.')
 			continue;
-		if (strcmp(entry->d_name, "lo")==0)
-			continue;
-
 		fn(entry->d_name);
 	}
-
 	closedir(dir);
 }
 

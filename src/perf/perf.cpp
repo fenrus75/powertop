@@ -167,6 +167,7 @@ perf_event::~perf_event(void)
 	if (perf_event::pevent->ref_count == 1) {
 		pevent_free(perf_event::pevent);
 		perf_event::pevent = NULL;
+		clear();
 	} else
 		pevent_unref(perf_event::pevent);
 }

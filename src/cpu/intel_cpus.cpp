@@ -54,6 +54,7 @@ static int intel_cpu_models[] = {
 	0x3A,   /* IVB */
 	0x3C,
 	0x3D,	/* IVB Xeon */
+	0x37,	/* BYT-M */
 	0	/* last entry must be zero */
 };
 
@@ -96,7 +97,12 @@ nhm_core::nhm_core(int model)
 			has_c2c7_res = 1;
 	}
 
-	has_c3_res = 1;
+	/* BYT-M does not support C3/C4 */
+	if (model == 0x37) {
+		has_c3_res = 0;
+		has_c1_res = 1;
+	} else
+		has_c3_res = 1;
 }
 
 void nhm_core::measurement_start(void)
@@ -109,6 +115,8 @@ void nhm_core::measurement_start(void)
 
 	last_stamp = 0;
 
+	if (this->has_c1_res)
+		c1_before = get_msr(first_cpu, MSR_CORE_C1_RESIDENCY);
 	if (this->has_c3_res)
 		c3_before    = get_msr(first_cpu, MSR_CORE_C3_RESIDENCY);
 	c6_before    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
@@ -116,6 +124,8 @@ void nhm_core::measurement_start(void)
 		c7_before    = get_msr(first_cpu, MSR_CORE_C7_RESIDENCY);
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
+	if (this->has_c1_res)
+		insert_cstate("core c1", "C1 (cc1)", 0, c1_before, 1);
 	if (this->has_c3_res)
 		insert_cstate("core c3", "C3 (cc3)", 0, c3_before, 1);
 	insert_cstate("core c6", "C6 (cc6)", 0, c6_before, 1);
@@ -149,6 +159,8 @@ void nhm_core::measurement_end(void)
 	uint64_t time_delta;
 	double ratio;
 
+	if (this->has_c1_res)
+		c1_after = get_msr(first_cpu, MSR_CORE_C1_RESIDENCY);
 	if (this->has_c3_res)
 		c3_after    = get_msr(first_cpu, MSR_CORE_C3_RESIDENCY);
 	c6_after    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
@@ -156,6 +168,8 @@ void nhm_core::measurement_end(void)
 		c7_after    = get_msr(first_cpu, MSR_CORE_C7_RESIDENCY);
 	tsc_after   = get_msr(first_cpu, MSR_TSC);
 
+	if (this->has_c1_res)
+		finalize_cstate("core c1", 0, c1_after, 1);
 	if (this->has_c3_res)
 		finalize_cstate("core c3", 0, c3_after, 1);
 	finalize_cstate("core c6", 0, c6_after, 1);
@@ -241,12 +255,18 @@ nhm_package::nhm_package(int model)
 		case 0x2D:	/* SNB Xeon */
 		case 0x3A:      /* IVB */
 		case 0x3C:
+		case 0x37:
 		case 0x3D:      /* IVB Xeon */
 		case 0x45:
 			has_c2c7_res = 1;
 	}
 
-	has_c3_res = 1;
+	/* BYT-M doesn't have C3 */
+	if (model == 0x37)
+		has_c3_res = 0;
+	else
+		has_c3_res = 1;
+
 
 	/* Haswell-ULT has C8/9/10*/
 	if (model == 0x45)

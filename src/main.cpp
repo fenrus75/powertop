@@ -28,6 +28,7 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 #include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -60,6 +61,8 @@
 #include "report/report.h"
 
 #define DEBUGFS_MAGIC          0x64626720
+
+#define NR_OPEN_DEF 1024 * 1024
 
 int debug_learning = 0;
 unsigned time_out = 20;
@@ -281,6 +284,20 @@ static void checkroot() {
 
 }
 
+static int get_nr_open(void) {
+	int nr_open = NR_OPEN_DEF;
+	ifstream file;
+
+	file.open("/proc/sys/fs/nr_open", ios::in);
+	if (file) {
+		file >> nr_open;
+		if (!file)
+			nr_open = NR_OPEN_DEF;
+		file.close();
+	}
+	return nr_open;
+}
+
 static void powertop_init(void)
 {
 	static char initialized = 0;
@@ -293,8 +310,7 @@ static void powertop_init(void)
 
 	checkroot();
 
-	getrlimit (RLIMIT_NOFILE, &rlmt);
-	rlmt.rlim_cur = rlmt.rlim_max;
+	rlmt.rlim_cur = rlmt.rlim_max = get_nr_open();
 	setrlimit (RLIMIT_NOFILE, &rlmt);
 
 	ret = system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");

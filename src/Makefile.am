@@ -24,9 +24,9 @@ powertop_SOURCES = parameters/persistent.cpp parameters/learn.cpp parameters/par
 		tuning/tunable.cpp tuning/nl80211.h tuning/iw.c tuning/wifi.cpp tuning/tuningsysfs.h \
 		tuning/tuningsysfs.cpp tuning/wifi.h tuning/runtime.cpp tuning/tunable.h \
 		tuning/runtime.h tuning/tuningusb.h tuning/iw.h calibrate/calibrate.cpp \
-		calibrate/calibrate.h measurement/measurement.cpp measurement/power_supply.cpp \
+		calibrate/calibrate.h measurement/measurement.cpp \
 		measurement/measurement.h measurement/acpi.cpp measurement/sysfs.h measurement/sysfs.cpp \
-		measurement/acpi.h measurement/extech.cpp measurement/power_supply.h measurement/extech.h \
+		measurement/acpi.h measurement/extech.cpp measurement/extech.h \
 		report/report-maker.cpp report/report-maker.h report/report-formatter.h \
 		report/report-formatter-base.cpp report/report-formatter-base.h \
 		report/report-formatter-csv.cpp report/report-formatter-csv.h \

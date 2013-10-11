@@ -25,7 +25,6 @@
 #include "measurement.h"
 #include "acpi.h"
 #include "extech.h"
-#include "power_supply.h"
 #include "sysfs.h"
 #include "../parameters/parameters.h"
 #include "../lib.h"
@@ -129,35 +128,6 @@ void acpi_power_meters_callback(const char *d_name)
 	meter = new(std::nothrow) class acpi_power_meter(d_name);
 	if (meter)
 		power_meters.push_back(meter);
-}
-
-void power_supply_callback(const char *d_name)
-{
-	char filename[4096];
-	char line[4096];
-	ifstream file;
-	bool discharging = false;
-
-	sprintf(filename, "/sys/class/power_supply/%s/uevent", d_name);
-	file.open(filename, ios::in);
-	if (!file)
-		return;
-
-	while (file) {
-		file.getline(line, 4096);
-
-		if (strstr(line, "POWER_SUPPLY_STATUS") && strstr(line, "Discharging"))
-		      discharging = true;
-	}
-	file.close();
-
-	if (!discharging)
-	    return;
-
-	class power_supply *power;
-	power = new(std::nothrow) class power_supply(d_name);
-	if (power)
-		power_meters.push_back(power);
 }
 
 void detect_power_meters(void)

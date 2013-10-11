@@ -126,11 +126,13 @@ void sysfs_power_meter::measure()
 
 	rate = 0.0;
 	capacity = 0.0;
+	this->set_discharging(false);
 
 	if (!is_present())
 		return;
-	if (read_sysfs_string("/sys/class/power_supply/%s/status", name) != "Discharging")
-		return;
+	/** do not jump over. we may have discharging battery */
+	if (read_sysfs_string("/sys/class/power_supply/%s/status", name) == "Discharging")
+		this->set_discharging(true);
 
 	got_rate = set_rate_from_power();
 	got_capacity = set_capacity_from_energy();
@@ -145,7 +147,6 @@ void sysfs_power_meter::measure()
 			set_capacity_from_charge(voltage);
 	}
 }
-
 
 void sysfs_power_meter::end_measurement(void)
 {

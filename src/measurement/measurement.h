@@ -30,18 +30,29 @@
 using namespace std;
 
 class power_meter {
+	bool discharging;
 public:
+	virtual ~power_meter() {};
+
 	virtual void start_measurement(void);
 	virtual void end_measurement(void);
-
 	virtual double joules_consumed(void);
-	virtual double dev_capacity(void) { return 0.0;};  /* in Joules */
 
-	virtual double time_left(void);
+	virtual double dev_capacity(void)
+	{
+		return 0.0; /* in Joules */
+	}
 
-	virtual ~power_meter() {};
+	virtual void set_discharging(bool d)
+	{
+		discharging = d;
+	}
+
+	virtual bool is_discharging()
+	{
+		return discharging;
+	}
 };
-
 
 extern vector<class power_meter *> power_meters;
 
@@ -52,7 +63,6 @@ extern double global_time_left(void);
 
 extern void detect_power_meters(void);
 extern void extech_power_meter(const char *devnode);
-
 
 extern double min_power;
 

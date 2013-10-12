@@ -188,18 +188,14 @@ double compute_bundle(struct parameter_bundle *parameters, struct result_bundle 
 	if (!bpi)
 		bpi = get_param_index("base power");
 
-	power = parameters->parameters[bpi];
-
-	for (i = 0; i < all_devices.size(); i++) {
-
+	for (i = 0; i < all_devices.size(); i++)
 		power += all_devices[i]->power_usage(results, parameters);
-	}
-//	printf("result power is %6.2f  guessed is %6.2f\n", results->power, power);
+
 	parameters->actual_power = results->power;
 	parameters->guessed_power = power;
 	/* scale the squared error by the actual power so that non-idle data points weigh heavier */
 	parameters->score += results->power * (power - results->power) * (power - results->power);
-
+	parameters->parameters[bpi] = power;
 	return power;
 }
 

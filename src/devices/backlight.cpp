@@ -39,7 +39,7 @@ using namespace std;
 #include <string.h>
 
 
-backlight::backlight(char *_name, char *path): device()
+backlight::backlight(const char *_name, const char *path): device()
 {
 	char devname[128];
 	min_level = 0;
@@ -156,36 +156,24 @@ const char * backlight::device_name(void)
 	return name;
 }
 
-void create_all_backlights(void)
+static void create_all_backlights_callback(const char *d_name)
 {
-	struct dirent *entry;
-	DIR *dir;
+	class backlight *bl;
 	char filename[4096];
-
-	dir = opendir("/sys/class/backlight/");
-	if (!dir)
-		return;
-	while (1) {
-		class backlight *bl;
-		entry = readdir(dir);
-		if (!entry)
-			break;
-		if (entry->d_name[0] == '.')
-			continue;
-		sprintf(filename, "/sys/class/backlight/%s", entry->d_name);
-		bl = new class backlight(entry->d_name, filename);
-		all_devices.push_back(bl);
-		register_parameter("backlight");
-		register_parameter("backlight-power");
-		register_parameter("backlight-boost-40", 0, 0.5);
-		register_parameter("backlight-boost-80", 0, 0.5);
-		register_parameter("backlight-boost-100", 0, 0.5);
-	}
-	closedir(dir);
-
+	sprintf(filename, "/sys/class/backlight/%s", d_name);
+	bl = new class backlight(d_name, filename);
+	all_devices.push_back(bl);
 }
 
-
+void create_all_backlights(void)
+{
+	process_directory("/sys/class/backlight/", create_all_backlights_callback);
+	register_parameter("backlight");
+	register_parameter("backlight-power");
+	register_parameter("backlight-boost-40", 0, 0.5);
+	register_parameter("backlight-boost-80", 0, 0.5);
+	register_parameter("backlight-boost-100", 0, 0.5);
+}
 
 double backlight::power_usage(struct result_bundle *result, struct parameter_bundle *bundle)
 {

@@ -101,8 +101,10 @@ nhm_core::nhm_core(int model)
 	if (model == 0x37) {
 		has_c3_res = 0;
 		has_c1_res = 1;
-	} else
+	} else {
 		has_c3_res = 1;
+		has_c1_res = 0;
+	}
 }
 
 void nhm_core::measurement_start(void)

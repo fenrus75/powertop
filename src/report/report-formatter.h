@@ -60,6 +60,11 @@ public:
 
 	/* For quad-colouring CPU tables in HTML */
 	virtual void set_cpu_number(int nr) {}
+
+	/* *** Report Style *** */
+	virtual void add_logo() {}
+	virtual void add_header() {}
+	virtual void end_hheader() {}
 };
 
 #endif /* _REPORT_FORMATTER_H_ */

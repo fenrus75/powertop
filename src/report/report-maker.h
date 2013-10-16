@@ -192,6 +192,11 @@ public:
 
 	void set_cpu_number(int nr);
 
+	/* *** Report Style *** */
+	void add_header();
+	void end_hheader();
+	void add_logo();
+
 private:
 	void setup_report_formatter();
 

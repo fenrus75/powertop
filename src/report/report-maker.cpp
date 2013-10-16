@@ -329,3 +329,24 @@ report_maker::end_paragraph()
 	paragraph_opened = false;
 	formatter->end_paragraph();
 }
+
+
+/* *** Report Style *** */
+void
+report_maker::add_logo()
+{
+	formatter->add_logo();
+}
+
+void
+report_maker::add_header()
+{
+	formatter->add_header();
+}
+
+void
+report_maker::end_hheader()
+{
+	formatter->end_hheader();
+}
+

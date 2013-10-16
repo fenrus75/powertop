@@ -222,3 +222,42 @@ report_formatter_csv::set_cpu_number(int nr UNUSED)
 {
 	/* Do nothing */
 }
+
+/* Report Style */
+void
+report_formatter_csv::add_header()
+{
+	add_exact("\n====================================================================\n");
+}
+
+void
+report_formatter_csv::end_hheader()
+{
+	/* Do nothing */
+}
+
+void
+report_formatter_csv::add_logo()
+{
+	add_exact("\t\t\tP o w e r T o p\n");
+}
+
+
+void
+report_formatter_csv::add_div(struct tag_attr * div_attr)
+{
+	add_exact("\n");
+}
+
+void
+report_formatter_csv::end_div()
+{
+	/*Do nothing*/
+}
+
+void
+report_formatter_csv::add_title(struct tag_attr *title_att, const char *title)
+{
+	add_exact("____________________________________________________________________\n");
+	addf_exact(" *  *  *   %s   *  *  *\n", title);
+}

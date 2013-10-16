@@ -71,6 +71,14 @@ public:
 
 	void set_cpu_number(int nr);
 
+	/* Report Style */
+	void add_logo();
+	void add_header();
+	void end_hheader();
+	void add_div(struct tag_attr *div_attr);
+	void end_div();
+	void add_title(struct tag_attr *title_att, const char *title);
+
 private:
 	void add_doc_header();
 

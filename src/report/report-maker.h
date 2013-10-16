@@ -196,6 +196,9 @@ public:
 	void add_header();
 	void end_hheader();
 	void add_logo();
+	void add_div(struct tag_attr *div_attr);
+	void end_div();
+	void add_title(struct tag_attr *att_title, const char *title);
 
 private:
 	void setup_report_formatter();

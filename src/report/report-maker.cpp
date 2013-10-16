@@ -350,3 +350,21 @@ report_maker::end_hheader()
 	formatter->end_hheader();
 }
 
+void
+report_maker::add_title(struct tag_attr *att_title, const char *title)
+{
+	formatter->add_title(att_title, title);
+}
+
+void
+report_maker::add_div(struct tag_attr * div_attr)
+{
+	formatter->add_div(div_attr);
+}
+
+void
+report_maker::end_div()
+{
+	formatter->end_div();
+}
+

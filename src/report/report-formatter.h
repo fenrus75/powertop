@@ -65,6 +65,9 @@ public:
 	virtual void add_logo() {}
 	virtual void add_header() {}
 	virtual void end_hheader() {}
+	virtual void add_div(struct tag_attr *div_attr) {}
+	virtual void end_div() {}
+	virtual void add_title(struct tag_attr *att_title, const char *title) {}
 };
 
 #endif /* _REPORT_FORMATTER_H_ */

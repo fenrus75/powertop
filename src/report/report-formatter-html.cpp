@@ -463,3 +463,21 @@ report_formatter_html::set_cpu_number(int nr)
 
 	cpu_nr = nr;
 }
+
+void
+report_formatter_html::add_logo()
+{
+	add_exact("<img alt=\"PowerTop\" class=\"pwtop_logo\" src=\"./PowerTop.png\">");
+}
+
+void
+report_formatter_html::add_header()
+{
+	add_exact("<header id=\"main_header\">\n");
+}
+
+void
+report_formatter_html::end_hheader()
+{
+	add_exact("</header>\n\n");
+}

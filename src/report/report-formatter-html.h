@@ -82,6 +82,11 @@ public:
 
 	void set_cpu_number(int nr);
 
+	/* Report Style */
+	void add_logo();
+	void add_header();
+	void end_hheader();
+
 private:
 	/* Document structure related functions */
 	void init_markup();

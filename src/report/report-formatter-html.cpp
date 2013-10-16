@@ -464,6 +464,8 @@ report_formatter_html::set_cpu_number(int nr)
 	cpu_nr = nr;
 }
 
+
+/* Report Style */
 void
 report_formatter_html::add_logo()
 {
@@ -481,3 +483,36 @@ report_formatter_html::end_hheader()
 {
 	add_exact("</header>\n\n");
 }
+
+void
+report_formatter_html::add_div(struct tag_attr * div_attr)
+{
+	std::string empty="";
+	std::string tmp_str;
+
+	if (div_attr->css_class == empty && div_attr->css_id == empty)
+		add_exact("<div>\n");
+
+	else if (div_attr->css_class == empty && div_attr->css_id != empty)
+		addf_exact("<div id=\"%s\">\n", div_attr->css_id);
+
+	else if (div_attr->css_class != empty && div_attr->css_id == empty)
+		addf_exact("<div class=\"%s\">\n", div_attr->css_class);
+
+	else if (div_attr->css_class != empty && div_attr->css_id != empty)
+		addf_exact("<div class=\"%s\" id=\"%s\">\n",
+				div_attr->css_class, div_attr->css_id);
+}
+
+void
+report_formatter_html::end_div()
+{
+	add_exact("</div>\n");
+}
+
+void
+report_formatter_html::add_title(struct tag_attr *title_att, const char *title)
+{
+	addf_exact("<h2 class=\"%s\"> %s </h2>\n", title_att->css_class, title);
+}
+

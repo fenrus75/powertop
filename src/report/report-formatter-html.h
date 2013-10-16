@@ -29,7 +29,7 @@
 #include <string>
 
 #include "report-formatter-base.h"
-
+#include "report-data-html.h"
 /* Whether to replace " and ' in HTML by &quot; and &apos; respectively */
 /*#define REPORT_HTML_ESCAPE_QUOTES*/
 
@@ -86,6 +86,9 @@ public:
 	void add_logo();
 	void add_header();
 	void end_hheader();
+	void add_div(struct tag_attr *div_attr);
+	void end_div();
+	void add_title(struct tag_attr *title_att, const char *title);
 
 private:
 	/* Document structure related functions */

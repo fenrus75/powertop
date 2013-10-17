@@ -42,6 +42,8 @@
 /* Whether to escape with quotes empty cell values with spaces */
 /*#define REPORT_CSV_SPACE_NEED_QUOTES*/
 
+using namespace std;
+
 /* ************************************************************************ */
 
 class report_formatter_csv: public report_formatter_string_base
@@ -78,13 +80,15 @@ public:
 	void add_div(struct tag_attr *div_attr);
 	void end_div();
 	void add_title(struct tag_attr *title_att, const char *title);
+	void add_navigation();
+	void add_summary_list(string *list, int size);
 
 private:
 	void add_doc_header();
 
 	void add_quotes();
 
-	std::string escape_string(const char *str);
+	string escape_string(const char *str);
 
 	bool csv_need_quotes;
 	size_t table_cell_number, text_start;

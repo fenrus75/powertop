@@ -189,10 +189,10 @@ report_formatter_csv::end_paragraph()
 
 /* ************************************************************************ */
 
-std::string
+string
 report_formatter_csv::escape_string(const char *str)
 {
-	std::string res;
+	string res;
 
 	assert(str);
 
@@ -261,3 +261,21 @@ report_formatter_csv::add_title(struct tag_attr *title_att, const char *title)
 	add_exact("____________________________________________________________________\n");
 	addf_exact(" *  *  *   %s   *  *  *\n", title);
 }
+
+void
+report_formatter_csv::add_navigation()
+{
+	/* No nav in csv - thinking on table of contents */
+}
+
+void
+report_formatter_csv::add_summary_list(string *list, int size)
+{
+	int i;
+	add_exact("\n");
+	for (i=0; i < size; i+=2){
+		addf_exact("%s %s,", list[i].c_str(), list[i+1].c_str());
+	}
+	add_exact("\n");
+}
+

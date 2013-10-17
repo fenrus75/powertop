@@ -89,6 +89,8 @@ public:
 	void add_div(struct tag_attr *div_attr);
 	void end_div();
 	void add_title(struct tag_attr *title_att, const char *title);
+	void add_navigation();
+	void add_summary_list(std::string *list, int size);
 
 private:
 	/* Document structure related functions */

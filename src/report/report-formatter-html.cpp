@@ -516,3 +516,21 @@ report_formatter_html::add_title(struct tag_attr *title_att, const char *title)
 	addf_exact("<h2 class=\"%s\"> %s </h2>\n", title_att->css_class, title);
 }
 
+void
+report_formatter_html::add_navigation()
+{
+	add_exact("<br/><nav id=\"main_menu\"> </nav>\n");
+}
+
+void
+report_formatter_html::add_summary_list(std::string *list, int size)
+{
+	int i;
+	add_exact("<div><br/> <ul>\n");
+	for (i=0; i < size; i+=2){
+		addf_exact("<li class=\"summary_list\"> <b> %s </b> %s </li>",
+				list[i].c_str(), list[i+1].c_str());
+	}
+	add_exact("</ul> </div> <br />\n");
+}
+

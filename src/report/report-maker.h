@@ -73,7 +73,7 @@
 #include <stdarg.h>
 
 #include <string>
-
+using namespace std;
 /* Conditional gettext. We need original strings for CSV. */
 #define __(STRING) \
 	((report.get_type() == REPORT_CSV) ? (STRING) : gettext(STRING))
@@ -199,6 +199,8 @@ public:
 	void add_div(struct tag_attr *div_attr);
 	void end_div();
 	void add_title(struct tag_attr *att_title, const char *title);
+	void add_navigation();
+	void add_summary_list(string *list, int size);
 
 private:
 	void setup_report_formatter();

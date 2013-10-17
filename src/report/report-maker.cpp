@@ -368,3 +368,15 @@ report_maker::end_div()
 	formatter->end_div();
 }
 
+void
+report_maker::add_navigation()
+{
+	formatter->add_navigation();
+}
+
+void
+report_maker::add_summary_list(string *list, int size)
+{
+	formatter->add_summary_list(list, size);
+}
+

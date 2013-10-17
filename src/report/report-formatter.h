@@ -27,6 +27,7 @@
 #define _REPORT_FORMATTER_H_
 
 #include "report-maker.h"
+using namespace std;
 
 class report_formatter
 {
@@ -68,6 +69,8 @@ public:
 	virtual void add_div(struct tag_attr *div_attr) {}
 	virtual void end_div() {}
 	virtual void add_title(struct tag_attr *att_title, const char *title) {}
+	virtual void add_navigation() {}
+	virtual void add_summary_list(string *list, int size) {}
 };
 
 #endif /* _REPORT_FORMATTER_H_ */

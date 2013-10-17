@@ -380,3 +380,10 @@ report_maker::add_summary_list(string *list, int size)
 	formatter->add_summary_list(list, size);
 }
 
+void
+report_maker::add_table(string *system_data, struct table_size *size,
+		struct table_attributes *tb_attr)
+{
+	formatter->add_table(system_data, size, tb_attr);
+}
+

@@ -71,6 +71,9 @@ public:
 	virtual void add_title(struct tag_attr *att_title, const char *title) {}
 	virtual void add_navigation() {}
 	virtual void add_summary_list(string *list, int size) {}
+	virtual void add_table(string *system_data,
+			struct table_size *size,
+			struct table_attributes *tb_attr)     {}
 };
 
 #endif /* _REPORT_FORMATTER_H_ */

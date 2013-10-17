@@ -30,6 +30,9 @@
 
 #include "report-formatter-base.h"
 #include "report-data-html.h"
+
+using namespace std;
+
 /* Whether to replace " and ' in HTML by &quot; and &apos; respectively */
 /*#define REPORT_HTML_ESCAPE_QUOTES*/
 
@@ -90,7 +93,9 @@ public:
 	void end_div();
 	void add_title(struct tag_attr *title_att, const char *title);
 	void add_navigation();
-	void add_summary_list(std::string *list, int size);
+	void add_summary_list(string *list, int size);
+	void add_table(string *system_data, struct table_size *size,
+			struct table_attributes *tb_attr);
 
 private:
 	/* Document structure related functions */
@@ -113,7 +118,7 @@ private:
 	void add_doc_header();
 	void add_doc_footer();
 
-	std::string escape_string(const char *str);
+	string escape_string(const char *str);
 
 	html_section sections[SECTION_MAX];
 	html_table tables[TABLE_MAX];

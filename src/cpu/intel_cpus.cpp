@@ -87,6 +87,8 @@ static uint64_t get_msr(int cpu, uint64_t offset)
 
 nhm_core::nhm_core(int model)
 {
+	has_c2c7_res = 0;
+
 	switch(model) {
 		case 0x2A:	/* SNB */
 		case 0x2D:	/* SNB Xeon */
@@ -252,6 +254,9 @@ char * nhm_core::fill_pstate_line(int line_nr, char *buffer)
 
 nhm_package::nhm_package(int model)
 {
+	has_c8c9c10_res = 0;
+	has_c2c7_res = 0;
+
 	switch(model) {
 		case 0x2A:	/* SNB */
 		case 0x2D:	/* SNB Xeon */
@@ -268,7 +273,6 @@ nhm_package::nhm_package(int model)
 		has_c3_res = 0;
 	else
 		has_c3_res = 1;
-
 
 	/* Haswell-ULT has C8/9/10*/
 	if (model == 0x45)

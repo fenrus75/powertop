@@ -1,13 +1,13 @@
-<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
-<html>
+<!DOCTYPE html>
+<html lang='en'>
 <head>
 <title>PowerTOP report</title>
-<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">
+<meta http-equiv='content-type' content='text/html;charset=utf-8'>
+
 <script type='text/javascript'>
 
 var powertop = {
  blocks: {
-  system: 'System Info',
   summary: 'Summary',
   cpuidle: 'CPU Idle',
   cpufreq: 'CPU Frequency',
@@ -76,190 +76,146 @@ var powertop = {
    powertop.toggle('summary');
  }
 }
-
 </script>
+
 <style type='text/css'>
-table
-{
-	background-color: #F8F8F8;
-	color: black;
+/* General CSS */
+*{
+	margin:0px;
+	padding:0px;
 }
 
-th
-{
-	text-align: right;
+#main_container{
+	width: 960px;
+	margin: 2px auto;
 }
-th.device
+
+/* Top logo & system table css */
+#main_header{
+	min-width: 960px;
+	display:block;
+}
+
+img.pwtop_logo{
+	float:left;
+	height:90px;
+	width: 400px;
+}
+
+.sys_info
 {
+	float: left;
+	height:116px;
+	width:450px;
+	font-size: 12px;
+	display: inline;
+	position relative;
 	text-align: left;
 }
-th.process
-{
+
+th{
 	text-align: left;
 }
 
-th.tunable
+/* CSS Main Content */
+
+.content_title
 {
-	text-align: left;
+	color: #296629;
+	padding:0px;
+	margin:2px;
 }
 
-td.package_odd
-{
-	background-color: #E0ffE0;
-	color: black;
-	text-align: right;
-}
-td.package_even
-{
-	background-color: #F0ffF0;
-	color: black;
-	text-align: right;
+#chart_div{
+	float: left;
 }
 
-td.core_even
+.small
 {
-	background-color: #F0ffF0;
-	color: black;
-	text-align: right;
+	font-size: 10px;
 }
 
-td.core_odd
+table.emphasis2
 {
-	background-color: #E0E0ff;
-	color: black;
-	text-align: right;
+	font-size: 13px;
+	max-width:95%;
 }
 
-td.cpu_even_freq
-{
-	background-color: #E2E2E2;
-	color: black;
+
+th.emph_title {
+	padding:5px;
 }
 
-td.cpu_odd_freq
-{
-	background-color: #F4f4F4;
-	color: black;
+tr.emph1:nth-child(odd) {
+	background: #ffffff;
 }
 
-td.cpu_even_even
-{
-	background-color: #E0E0f0;
-	color: black;
-	text-align: right;
+tr.emph1:nth-child(even) {
+	background: #ebebeb;
 }
 
-td.cpu_even_odd
-{
-	background-color: #F0f0F0;
-	color: black;
-	text-align: right;
+tr.tune:nth-child(odd) {
+	background: #fffcfc;
 }
-td.cpu_odd_even
-{
-	background-color: #E0E0ff;
-	color: black;
-	text-align: right;
+tr.tune:nth-child(even) {
+	background: #fff0f0;
 }
 
-td.cpu_odd_odd
-{
-	background-color: #F0ffF0;
-	color: black;
-	text-align: right;
+td.no_wrap:first-child {
+	white-space:nowrap;
 }
 
-tr.device_odd
-{
-	background-color: #E0E0E0;
-	color: black;
+.side_by_side_left{
+	float:left;
 }
-tr.device_even
-{
-	background-color: #F0f0F0;
-	color: black;
+.side_by_side_right{
+	float:right;
 }
 
-tr.process_odd
-{
-	background-color: #E0E0E0;
-	color: black;
+#device{
+	display: inline-block;
 }
-tr.process_even
-{
-	background-color: #F0f0F0;
-	color: black;
+.clear_block{
+	clear:both;
 }
 
-td.device_power
-{
-	text-align: right;
+td.package{
+	background-color: #e0ddfa; /*purple*/
 }
 
-td.process_power
-{
-	text-align: right;
+td.core{
+	background-color: #d1ddff; /*ccebff; /*blue*/
 }
 
-td.device_util
-{
-	text-align: right;
+td.cpu{
+	background-color: #ffffeb; /* yellow */
 }
 
-tr.tunable_odd
-{
-	background-color: #E0E0E0;
-	color: black;
-}
-tr.tunable_even
-{
-	background-color: #F0f0F0;
-	color: black;
+th.title{
+	text-align: center;
+	/*border-bottom: 1px solid #666;*/
 }
 
-tr.tunable_odd_bad
+
+li.summary_list
 {
-	background-color: #FFE0E0;
-	color: black;
-}
-tr.tunable_even_bad
-{
-	background-color: #FFf0F0;
-	color: black;
+	display: inline;
+	padding: 5px;
+	background-color: #f6f6f9;
+	font-size: 12px;
 }
 
-tr.system_odd
-{
-	background-color: #E0E0E0;
-	color: black;
-}
-tr.system_even
-{
-	background-color: #F0f0F0;
-	color: black;
-}
 
-tr.device_odd
-{
-	background-color: #E0E0E0;
-	color: black;
-}
-tr.device_even
-{
-	background-color: #F0f0F0;
-	color: black;
-}
+
+/*menu css*/
 
 body {
 	background-color: #eee; /* Background color */
-	color: #222;            /* Foreground color used for text */
+	color: #222;            /* Font color */
 	font-family: Helvetica;
 	font-size: 14px;
-	margin: 0;              /* Amount of negative space around the
-                                   outside of the body */
-	padding: 0;             /* Amount of negative space around the
-                                   inside of the body */
 }
+
 #top {
 	background-color: #ccc;
 	border-bottom: 1px solid #666;

@@ -44,7 +44,7 @@ var powertop = {
   return x;
  },
  setupbuttons: function() {
-   var t = document.getElementById('top');
+   var t = document.getElementById('main_menu');
    if (t) {
      for (var b in powertop.blocks) {
        t.appendChild(powertop.newbutton(b, powertop.blocks[b]));
@@ -216,51 +216,50 @@ body {
 	font-size: 14px;
 }
 
-#top {
-	background-color: #ccc;
-	border-bottom: 1px solid #666;
-	color: #222;
-	display: block;
-	font-size: 20px;
+#main_menu {
+	display: inline-block;
 	font-weight: bold;
-	padding: 10px 0;
+	padding: 5px 0;
+	text-align: center;
+	background-image: -webkit-gradient(linear, left top, left bottom,
+		from(#aaa), to(#eee));
+	background: -moz-linear-gradient(top,  #aaa,  #eee);
+}
+
+
+#main_menu div {
+	font-size: 12px;
+	font-weight: bold;
+	color: white;
+}
+
+#main_menu div.nav_button {
+	margin: 0 0.2em;
+	display: inline;
+	cursor: pointer;
+	color: #223232;
+	font-size: 13px;
+	font-weight: bold;
+	padding: 5px;
 	text-align: center;
 	text-decoration: none;
-	text-shadow: 0px 1px 1px #fff;
-	background-image: -webkit-gradient(linear, left top, left bottom,
-						from(#ccc), to(#999));
-}
-
-
-#top div {
-	height: 30px;
-	font-weight: bold;
-	text-align: center;
-	color: white;
-	text-shadow: rgba(0,0,0,0.6) 0px -1px 1px;
-	line-height: 28px;
-	border-width:0px 8px 0px 8px;
-}
-#top div.nav_button {
- display: inline;
- cursor: pointer;
- padding: 0.3em 0.5em;
- margin: 0 0.2em;
 }
 
 div.pressed {
-	background-color: #000000;
-	border: 1px solid #000000;
-	color: #000000;
-	border-radius: 8px;
+	border: -webkit-gradient(linear, left top, left bottom,
+		from(#b2ffb2), to(#e0ffe0));
+	border-width:0px 8px 0px 8px;
+	background: #999;
+	background-image: -webkit-gradient(linear, left top, left bottom,
+		from(#b2ffb2), to(#e0ffe0));
+	background: -moz-linear-gradient(top,  #b2ffb2,  #e0ffe0);
 }
+
 div.hide {
- display: none;
+	display: none;
 }
 </style>
 </head>
 
 <body onload='powertop.onload();'>
-<div id='top'>
-</div>
 

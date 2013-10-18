@@ -1,3 +1,8 @@
+#include <string>
+#include <sstream>
+
+using namespace std;
+
 struct tag_attr {
 	const char *css_class;
 	const char *css_id;
@@ -28,3 +33,11 @@ init_top_table_attr(struct table_attributes *table_css, int rows, int cols);
 
 void
 init_title_attr(struct tag_attr *title_attr);
+
+void
+init_std_table_attr(struct table_attributes *table_css, int rows, int cols);
+
+/* Other helper functions */
+string
+double_to_string(double dval);
+

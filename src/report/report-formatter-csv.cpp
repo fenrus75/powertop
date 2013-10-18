@@ -275,7 +275,9 @@ report_formatter_csv::add_summary_list(string *list, int size)
 	int i;
 	add_exact("\n");
 	for (i=0; i < size; i+=2){
-		addf_exact("%s %s,", list[i].c_str(), list[i+1].c_str());
+		addf_exact("%s %s", list[i].c_str(), list[i+1].c_str());
+		if(i < (size - 1))
+			add_exact(",");
 	}
 	add_exact("\n");
 }

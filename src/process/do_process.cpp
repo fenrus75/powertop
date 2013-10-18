@@ -29,6 +29,7 @@
 #include "processdevice.h"
 #include "../lib.h"
 #include "../report/report.h"
+#include "../report/report-data-html.h"
 #include "../report/report-maker.h"
 #include "../devlist.h"
 
@@ -235,7 +236,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		field = pevent_find_any_field(event, "next_comm");
 		if (!field || !(field->flags & FIELD_IS_STRING))
 			return; /* ?? */
-	
+
 		next_comm = get_pevent_field_str(trace, event, field);
 
 		ret = pevent_get_field_val(NULL, event, "next_pid", &rec, &val, 0);
@@ -294,8 +295,8 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 	}
 	else if (strcmp(event->name, "sched_wakeup") == 0) {
 		class power_consumer *from = NULL;
-		class process *dest_proc = NULL;  
-		class process *from_proc = NULL; 
+		class process *dest_proc = NULL;
+		class process *from_proc = NULL;
 		const char *comm;
 		int flags;
 		int pid;
@@ -324,7 +325,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		field = pevent_find_any_field(event, "comm");
 
 		if (!field || !(field->flags & FIELD_IS_STRING))
- 			return; 
+ 			return;
 
 		comm = get_pevent_field_str(trace, event, field);
 
@@ -633,7 +634,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 		ret = pevent_get_field_val(NULL, event, "dev", &rec, &val, 0);
 		if (ret < 0)
-			
+
 			return;
 		dev = (int)val;
 
@@ -787,7 +788,7 @@ void process_update_display(void)
 	WINDOW *win;
 	double pw;
 	int tl;
-	int tlt; 
+	int tlt;
 	int tlr;
 
 	int show_power;
@@ -979,7 +980,7 @@ void report_process_update_display(void)
 			report.begin_cell(CELL_SOFTWARE_POWER);
 			report.add(power);
 		}
-		
+
 		report.begin_cell(CELL_SOFTWARE_POWER);
 		report.add(usage);
 		report.begin_cell(CELL_SOFTWARE_POWER);
@@ -1002,39 +1003,61 @@ void report_summary(void)
 	unsigned int i;
 	unsigned int total;
 	int show_power;
+	int rows, cols, idx;
 
 	sort(all_power.begin(), all_power.end(), power_cpu_sort);
 	show_power = global_power_valid();
 
-	report.begin_section(SECTION_SUMMARY);
-	report.add_header(__("Power Consumption Summary"));
-	report.begin_paragraph();
-	report.addf("%.1f %s, %.1f %s, %.1f %s, %.1f %s %.1f%% %s",
-		    total_wakeups(),	 __("wakeups/second"),
-		    total_gpu_ops(),	 __("GPU ops/second"),
-		    total_disk_hits(),	 __("VFS ops/sec"),
-		    total_xwakes(),	 __("GFX wakes/sec and"),
-		    total_cpu_time() * 100, __("CPU use"));
+	/* div attr css_class and css_id */
+	tag_attr div_attr;
+	init_div(&div_attr, "summary", "");
 
-	report.begin_table(TABLE_WIDE);
-	report.begin_row();
-	if (show_power) {
-		report.begin_cell(CELL_SUMMARY_HEADER);
-		report.add(__("Power est."));
-	}
 
-	report.begin_cell(CELL_SUMMARY_HEADER);
-	report.add(__("Usage"));
-	report.begin_cell(CELL_SUMMARY_HEADER);
-	report.add(__("Events/s"));
-	report.begin_cell(CELL_SUMMARY_CATEGORY);
-	report.add(__("Category"));
-	report.begin_cell(CELL_SUMMARY_DESCRIPTION);
-	report.add(__("Description"));
-
+	/* Set table attributes, rows, and cols */
+	cols=4;
+	if (show_power)
+		cols=5;
+	idx=cols;
 	total = all_power.size();
 	if (total > 10)
 		total = 10;
+	rows=total+1;
+	table_attributes std_table_css;
+	init_std_table_attr(&std_table_css, rows, cols);
+
+	/* Set title attributes */
+	tag_attr title_attr;
+	init_title_attr(&title_attr);
+
+	/* Set array for summary */
+	int summary_size =12;
+	string summary[summary_size];
+	summary[0]=__("Target:");
+	summary[1]=__("1 units/s");
+	summary[2]=__("System: ");
+	summary[3]= double_to_string(total_wakeups());
+	summary[3].append(__(" wakeup/s"));
+	summary[4]=__("CPU: ");
+	summary[5]= double_to_string(total_cpu_time()*100);
+	summary[5].append(__("\% usage"));
+	summary[6]=__("GPU:");
+	summary[7]=double_to_string(total_gpu_ops());
+	summary[7].append(__(" ops/s"));
+	summary[8]=__("GFX:");
+	summary[9]=double_to_string(total_xwakes());
+	summary[9].append(__(" wakeups/s"));
+	summary[10]=__("VFS:");
+	summary[11]= double_to_string(total_disk_hits());
+	summary[11].append(__(" ops/s"));
+
+	/* Set array of data in row Major order */
+	string summary_data[cols * (rows+1)];
+	summary_data[0]=__("Usage");
+	summary_data[1]=__("Events/s");
+	summary_data[2]=__("Category");
+	summary_data[3]=__("Description");
+	if (show_power)
+		summary_data[4]=__("PW Estimate");
 
 	for (i = 0; i < all_power.size(); i++) {
 		char power[16];
@@ -1052,7 +1075,7 @@ void report_summary(void)
 			break;
 
 		if (all_power[i]->events() == 0 && all_power[i]->usage() == 0 &&
-		    all_power[i]->Witts() == 0)
+				all_power[i]->Witts() == 0)
 			break;
 
 		usage[0] = 0;
@@ -1070,21 +1093,30 @@ void report_summary(void)
 		else if (all_power[i]->events() <= 0.3)
 			sprintf(events, "%5.2f", all_power[i]->events());
 
-		report.begin_row(ROW_SUMMARY);
-		if (show_power) {
-			report.begin_cell(CELL_SUMMARY_ITEM);
-			report.add(power);
-		}
+		summary_data[idx]=string(usage);
+		idx+=1;
 
-		report.begin_cell(CELL_SUMMARY_ITEM);
-		report.add(usage);
-		report.begin_cell(CELL_SUMMARY_ITEM);
-		report.add(events);
-		report.begin_cell();
-		report.add(name);
-		report.begin_cell();
-		report.add(pretty_print(all_power[i]->description(), descr, 128));
+		summary_data[idx]=string(events);
+		idx+=1;
+
+		summary_data[idx]=string(name);
+		idx+=1;
+
+		summary_data[idx]=string(pretty_print(all_power[i]->description(), descr, 128));
+		idx+=1;
+
+		if (show_power){
+			summary_data[idx]=power;
+			idx+=1;
+		}
 	}
+
+	/* Report Summary for all */
+	report.add_summary_list(summary, summary_size);
+	report.add_div(&div_attr);
+	report.add_title(&title_attr, __("Top 10 Power Consumers"));
+	report.add_table(summary_data, &std_table_css);
+	report.end_div();
 }
 
 

@@ -45,6 +45,7 @@ using namespace std;
 #include "lib.h"
 #include "report/report.h"
 #include "report/report-maker.h"
+#include "report/report-data-html.h"
 
 #include "process/process.h"
 #include "devices/device.h"
@@ -284,9 +285,9 @@ void report_show_open_devices(void)
 	vector<struct devuser *> *target;
 	unsigned int i;
 	char prev[128], proc[128];
+	int idx, cols, rows;
 
 	prev[0] = 0;
-
 	if (phase == 1)
 		target = &one;
 	else
@@ -295,27 +296,42 @@ void report_show_open_devices(void)
 	if (target->size() == 0)
 		return;
 
-	sort(target->begin(), target->end(), devlist_sort);
+	/* div attr css_class and css_id */
+	tag_attr div_attr;
+	init_div(&div_attr, "", "device");
 
-	report.add_header("Process device activity");
-	report.begin_table(TABLE_WIDE);
-	report.begin_row();
-	report.begin_cell(CELL_DEVACTIVITY_PROCESS);
-	report.add("Process");
-	report.begin_cell(CELL_DEVACTIVITY_DEVICE);
-	report.add("Device");
+	/* Set Table attributes, rows, and cols */
+	table_attributes std_table_css;
+	cols = 2;
+	idx = cols;
+	rows= target->size() + 1;
+	init_std_table_attr(&std_table_css, rows, cols);
+
+	/* Set Title attributes */
+	tag_attr title_attr;
+	init_title_attr(&title_attr);
+
+	/* Set array of data in row Major order */
+	string process_data[cols * rows];
+
+	sort(target->begin(), target->end(), devlist_sort);
+	process_data[0]=__("Process");
+	process_data[1]=__("Device");
 
 	for (i = 0; i < target->size(); i++) {
 		proc[0] = 0;
-
 		if (strcmp(prev, (*target)[i]->comm) != 0)
 			sprintf(proc, "%s", (*target)[i]->comm);
 
-		report.begin_row(ROW_DEVPOWER);
-		report.begin_cell();
-		report.add(proc);
-		report.begin_cell();
-		report.add((*target)[i]->device);
+		process_data[idx]=string(proc);
+		idx+=1;
+		process_data[idx]=string((*target)[i]->device);
+		idx+=1;
 		sprintf(prev, "%s", (*target)[i]->comm);
 	}
+
+	/* Report Output */
+	report.add_title(&title_attr, __("Process Device Activity"));
+	report.add_table(process_data, &std_table_css);
+	report.end_div();
 }

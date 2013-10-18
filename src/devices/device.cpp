@@ -286,7 +286,6 @@ void show_report_devices(void)
 	report.add_div(&div_attr);
 	report.add_title(&title_attr, __("Device Power Report"));
 	report.add_table(device_data, &std_table_css);
-	report.end_div();
 }
 
 

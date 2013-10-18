@@ -82,8 +82,7 @@ public:
 	void add_title(struct tag_attr *title_att, const char *title);
 	void add_navigation();
 	void add_summary_list(string *list, int size);
-	void add_table(string *system_data, struct table_size *size,
-			struct table_attributes *tb_attr);
+	void add_table(string *system_data, struct table_attributes *tb_attr);
 
 private:
 	void add_doc_header();

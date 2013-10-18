@@ -281,28 +281,27 @@ report_formatter_csv::add_summary_list(string *list, int size)
 }
 
 void
-report_formatter_csv::add_table(string *system_data, struct table_size *size,
-		struct table_attributes* tb_attr)
+report_formatter_csv::add_table(string *system_data, struct table_attributes* tb_attr)
 {
 	int i, j;
 	int offset=0;
 	string tmp_str="";
 	int empty_row=0;
 	add_exact("\n");
-	for (i=0; i < size->rows; i++){
-		for (j=0; j < size->cols; j++){
-			offset = i * (size->cols) + j;
+	for (i=0; i < tb_attr->rows; i++){
+		for (j=0; j < tb_attr->cols; j++){
+			offset = i * (tb_attr->cols) + j;
 			tmp_str=system_data[offset];
 
 			if(tmp_str == "&nbsp;")
 				empty_row+=1;
 			else{
 				addf_exact("%s", system_data[offset].c_str());
-				if(j < (size->cols - 1))
+				if(j < (tb_attr->cols - 1))
 					add_exact(",");
 			}
 		}
-		if(empty_row < size->cols)
+		if(empty_row < tb_attr->cols)
 		add_exact("\n");
 		empty_row=0;
 	}

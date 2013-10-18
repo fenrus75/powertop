@@ -72,7 +72,6 @@ public:
 	virtual void add_navigation() {}
 	virtual void add_summary_list(string *list, int size) {}
 	virtual void add_table(string *system_data,
-			struct table_size *size,
 			struct table_attributes *tb_attr)     {}
 };
 

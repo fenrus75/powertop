@@ -536,7 +536,7 @@ report_formatter_html::add_summary_list(string *list, int size)
 
 
 void
-report_formatter_html::add_table(string *system_data, struct table_size *size, struct table_attributes* tb_attr)
+report_formatter_html::add_table(string *system_data, struct table_attributes* tb_attr)
 {
 	int i, j;
 	int offset=0;
@@ -547,14 +547,14 @@ report_formatter_html::add_table(string *system_data, struct table_size *size, s
 	else
 		addf_exact("<table class=\"%s\">\n", tb_attr->table_class);
 
-	for (i=0; i < size->rows; i++){
+	for (i=0; i < tb_attr->rows; i++){
 		if (tb_attr->tr_class == empty)
 			add_exact("<tr> ");
 		else
 			addf_exact("<tr class=\"%s\"> ", tb_attr->tr_class);
 
-		for (j=0; j < size->cols; j++){
-			offset = i * (size->cols) + j;
+		for (j=0; j < tb_attr->cols; j++){
+			offset = i * (tb_attr->cols) + j;
 
 			if (tb_attr->pos_table_title == T &&  i==0)
 				addf_exact("<th class=\"%s\"> %s </th> ",

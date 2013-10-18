@@ -49,6 +49,7 @@ using namespace std;
 #include "../lib.h"
 #include "../report/report.h"
 #include "../report/report-maker.h"
+#include "../report/report-data-html.h"
 #include "../measurement/measurement.h"
 #include "../devlist.h"
 #include <unistd.h>
@@ -217,43 +218,35 @@ void report_devices(void)
 void show_report_devices(void)
 {
 	unsigned int i;
-	int show_power;
-	double pw;
+	int show_power, cols, rows, idx;
 
 	show_power = global_power_valid();
 	sort(all_devices.begin(), all_devices.end(), power_device_sort);
 
-	report.begin_section(SECTION_DEVPOWER);
-	report.add_header("Device Power Report");
+	/* div attr css_class and css_id */
+        tag_attr div_attr;
+        init_div(&div_attr, "", "device");
 
-	pw = global_joules_consumed();
-	if (pw > 0.0001) {
-		char buf[32];
+        /* Set Table attributes, rows, and cols */
+        table_attributes std_table_css;
+	cols=2;
+        if (show_power)
+                cols=3;
 
-		report.begin_paragraph();
-		report.addf("The battery reports a discharge rate of %sW",
-			    fmt_prefix(pw, buf));
-	}
+	idx = cols;
+ 	rows= all_devices.size() + 1;
+        init_std_table_attr(&std_table_css, rows, cols);
 
-	if (show_power) {
-		char buf[32];
+        /* Set Title attributes */
+        tag_attr title_attr;
+        init_title_attr(&title_attr);
 
-		report.begin_paragraph();
-		report.addf("System baseline power is estimated at %sW",
-			    fmt_prefix(get_parameter_value("base power"), buf));
-	}
-
-	report.begin_table(TABLE_WIDE);
-	report.begin_row();
-	if (show_power) {
-		report.begin_cell(CELL_DEVPOWER_HEADER);
-		report.add("Power est.");
-	}
-
-	report.begin_cell(CELL_DEVPOWER_HEADER);
-	report.add("Usage");
-	report.begin_cell(CELL_DEVPOWER_DEV_NAME);
-	report.add("Device name");
+        /* Set array of data in row Major order */
+	string device_data[cols * rows];
+	device_data[0]= __("Usage");
+	device_data[1]= __("Device Name");
+	if (show_power)
+		device_data[2]= __("PW Estimate");
 
 	for (i = 0; i < all_devices.size(); i++) {
 		double P;
@@ -278,17 +271,22 @@ void show_report_devices(void)
 		if (!show_power || !all_devices[i]->power_valid())
 			strcpy(power, "           ");
 
-		report.begin_row(ROW_DEVPOWER);
-		if (show_power) {
-			report.begin_cell(CELL_DEVPOWER_POWER);
-			report.add(power);
-		}
+		device_data[idx]= string(util);
+		idx+=1;
 
-		report.begin_cell(CELL_DEVPOWER_UTIL);
-		report.add(util);
-		report.begin_cell();
-		report.add(all_devices[i]->human_name());
+		device_data[idx]= string(all_devices[i]->human_name());
+		idx+=1;
+
+		if (show_power) {
+			device_data[idx]= string(power);
+			idx+=1;
+		}
 	}
+	/* Report Output */
+	report.add_div(&div_attr);
+	report.add_title(&title_attr, __("Device Power Report"));
+	report.add_table(device_data, &std_table_css);
+	report.end_div();
 }
 
 

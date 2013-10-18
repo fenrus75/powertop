@@ -57,7 +57,7 @@ report_formatter_csv::finish_report()
 void
 report_formatter_csv::add_doc_header()
 {
-	add_header(report_csv_header, 1);
+	/*add_header(report_csv_header, 1);*/
 }
 
 /* ************************************************************************ */

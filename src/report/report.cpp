@@ -100,7 +100,7 @@ static string read_os_release(const string &filename)
 
 static void system_info(void)
 {
-	string str, str2, str3;
+	string str;
 
 	/* div attr css_class and css_id */
 	tag_attr div_attr;

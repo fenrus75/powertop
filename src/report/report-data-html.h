@@ -53,6 +53,8 @@ init_core_table_attr(struct table_attributes *table_css, int title_mod,
 void
 init_cpu_table_attr(struct table_attributes *table_css, int title_mod,
 		int rows, int cols);
+void
+init_nowarp_table_attr(struct table_attributes *table_css, int rows, int cols);
 
 
 /* Other helper functions */

@@ -71,7 +71,16 @@ void init_cpu_table_attr(struct table_attributes *table_css, int title_mod,
 }
 
 
-
+void init_nowarp_table_attr(struct table_attributes *table_css, int rows, int cols){
+	table_css->table_class="emphasis2";
+	table_css->tr_class="emph1";
+	table_css->th_class="emph_title";
+	table_css->td_class="no_wrap";
+	table_css->pos_table_title=T;
+	table_css->title_mod=0;
+	table_css->rows=rows;
+	table_css->cols=cols;
+}
 
 
 /* Other Helper Functions */

@@ -35,6 +35,45 @@ void init_std_table_attr(struct table_attributes *table_css, int rows, int cols)
 	table_css->cols=cols;
 }
 
+void init_pkg_table_attr(struct table_attributes *table_css, int rows, int cols){
+	table_css->table_class="emphasis2 side_by_side_left";
+	table_css->tr_class="";
+	table_css->th_class="title";
+	table_css->td_class="package";
+	table_css->pos_table_title=T;
+	table_css->title_mod=0;
+	table_css->rows=rows;
+	table_css->cols=cols;
+}
+
+void init_core_table_attr(struct table_attributes *table_css, int title_mod,
+		int rows, int cols){
+	table_css->table_class="emphasis2 side_by_side_left";
+	table_css->tr_class="";
+	table_css->th_class="title";
+	table_css->td_class="core";
+	table_css->pos_table_title=TC;
+	table_css->title_mod=title_mod;
+	table_css->rows=rows;
+	table_css->cols=cols;
+}
+
+void init_cpu_table_attr(struct table_attributes *table_css, int title_mod,
+		int rows, int cols){
+	table_css->table_class="emphasis2 side_by_side_left";
+	table_css->tr_class="";
+	table_css->th_class="title";
+	table_css->td_class="cpu";
+	table_css->pos_table_title=TLC;
+	table_css->title_mod=title_mod;
+	table_css->rows=rows;
+	table_css->cols=cols;
+}
+
+
+
+
+
 /* Other Helper Functions */
 string
 double_to_string(double dval)

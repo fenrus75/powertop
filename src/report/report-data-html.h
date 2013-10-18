@@ -21,6 +21,12 @@ struct table_attributes {
 	int cols;
 };
 
+struct table_size {
+	int rows;
+	int cols;
+};
+
+
 /* Definition of css atributes for the cases that apply to powertop
  * html report
  * */
@@ -36,6 +42,18 @@ init_title_attr(struct tag_attr *title_attr);
 
 void
 init_std_table_attr(struct table_attributes *table_css, int rows, int cols);
+
+void
+init_pkg_table_attr(struct table_attributes *table_css, int rows, int cols);
+
+void
+init_core_table_attr(struct table_attributes *table_css, int title_mod,
+		int rows, int cols);
+
+void
+init_cpu_table_attr(struct table_attributes *table_css, int title_mod,
+		int rows, int cols);
+
 
 /* Other helper functions */
 string

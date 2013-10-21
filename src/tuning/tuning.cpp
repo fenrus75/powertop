@@ -209,39 +209,49 @@ void report_show_tunables(void)
         tag_attr div_attr;
         init_div(&div_attr, "clear_block", "tuning");
 
+	/* Set Title attributes */
+       	tag_attr title_attr;
+        init_title_attr(&title_attr);
+
 	/* Set Table attributes, rows, and cols */
 	table_attributes tune_table_css;
 	cols=2;
 	idx = cols;
-	rows= all_tunables.size() + 1;
-	init_tune_table_attr(&tune_table_css, rows, cols);
-
-	/* Set Title attributes */
-        tag_attr title_attr;
-        init_title_attr(&title_attr);
-
-	/* Set array of data in row Major order */
-	string tunable_data[cols * rows];
-
-	tunable_data[0]=__("Description");
-	tunable_data[1]=__("Script");
-
 
 	for (i = 0; i < all_tunables.size(); i++) {
-		int gb;
-		gb = all_tunables[i]->good_bad();
-		if (gb != TUNE_BAD)
-			continue;
-		tunable_data[idx]=string(all_tunables[i]->description());
-		idx+=1;
-		tunable_data[idx]=string(all_tunables[i]->toggle_script());
-		idx+=1;
+		int tgb;
+		tgb = all_tunables[i]->good_bad();
+		if (tgb == TUNE_BAD)
+			rows+=1;
 	}
-
-	/* Report Output */
+	/* add section */
 	report.add_div(&div_attr);
-	report.add_title(&title_attr,__("Software Settings in Need of Tuning"));
-	report.add_table(tunable_data, &tune_table_css);
+
+	if (rows > 0){
+		rows= rows + 1;
+		init_tune_table_attr(&tune_table_css, rows, cols);
+
+		/* Set array of data in row Major order */
+		string tunable_data[cols * rows];
+
+		tunable_data[0]=__("Description");
+		tunable_data[1]=__("Script");
+
+		for (i = 0; i < all_tunables.size(); i++) {
+			int gb;
+			gb = all_tunables[i]->good_bad();
+			if (gb != TUNE_BAD)
+				continue;
+			tunable_data[idx]=string(all_tunables[i]->description());
+			idx+=1;
+			tunable_data[idx]=string(all_tunables[i]->toggle_script());
+			idx+=1;
+		}
+
+		/* Report Output */
+		report.add_title(&title_attr,__("Software Settings in Need of Tuning"));
+		report.add_table(tunable_data, &tune_table_css);
+	}
 
 	/* Second Table */
 	/* Set Table attributes, rows, and cols */

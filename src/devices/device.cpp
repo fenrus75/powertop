@@ -219,6 +219,7 @@ void show_report_devices(void)
 {
 	unsigned int i;
 	int show_power, cols, rows, idx;
+	double pw;
 
 	show_power = global_power_valid();
 	sort(all_devices.begin(), all_devices.end(), power_device_sort);
@@ -240,6 +241,28 @@ void show_report_devices(void)
         /* Set Title attributes */
         tag_attr title_attr;
         init_title_attr(&title_attr);
+
+	/* Add section */
+	report.add_div(&div_attr);
+
+	/* Device Summary */
+	int summary_size=2;
+        string summary[summary_size];
+	pw = global_joules_consumed();
+	char buf[32];
+	if (pw > 0.0001) {
+		summary[0]= __("The battery reports a discharge rate of: ");
+		summary[1]=string(fmt_prefix(pw, buf));
+		summary[1].append(" W");
+		report.add_summary_list(summary, summary_size);
+	}
+
+	if (show_power) {
+		summary[0]=__("The system baseline power is estimated at: ");
+		summary[1]=string(fmt_prefix(get_parameter_value("base power"), buf));
+		summary[1].append(" W");
+		report.add_summary_list(summary, summary_size);
+	}
 
         /* Set array of data in row Major order */
 	string device_data[cols * rows];
@@ -283,7 +306,6 @@ void show_report_devices(void)
 		}
 	}
 	/* Report Output */
-	report.add_div(&div_attr);
 	report.add_title(&title_attr, __("Device Power Report"));
 	report.add_table(device_data, &std_table_css);
 }

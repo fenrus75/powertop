@@ -225,7 +225,7 @@ void show_report_devices(void)
 
 	/* div attr css_class and css_id */
         tag_attr div_attr;
-        init_div(&div_attr, "", "device");
+        init_div(&div_attr, "", "devinfo");
 
         /* Set Table attributes, rows, and cols */
         table_attributes std_table_css;
@@ -235,7 +235,7 @@ void show_report_devices(void)
 
 	idx = cols;
  	rows= all_devices.size() + 1;
-        init_std_table_attr(&std_table_css, rows, cols);
+        init_std_side_table_attr(&std_table_css, rows, cols);
 
         /* Set Title attributes */
         tag_attr title_attr;

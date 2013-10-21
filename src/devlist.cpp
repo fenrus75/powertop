@@ -296,9 +296,6 @@ void report_show_open_devices(void)
 	if (target->size() == 0)
 		return;
 
-	/* div attr css_class and css_id */
-	tag_attr div_attr;
-	init_div(&div_attr, "", "device");
 
 	/* Set Table attributes, rows, and cols */
 	table_attributes std_table_css;
@@ -331,6 +328,7 @@ void report_show_open_devices(void)
 	}
 
 	/* Report Output */
+	/* No div attribute here inherits from device power report */
 	report.add_title(&title_attr, __("Process Device Activity"));
 	report.add_table(process_data, &std_table_css);
 	report.end_div();

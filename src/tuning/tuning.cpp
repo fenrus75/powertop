@@ -207,7 +207,7 @@ void report_show_tunables(void)
 
 	 /* div attr css_class and css_id */
         tag_attr div_attr;
-        init_div(&div_attr, "", "tuning");
+        init_div(&div_attr, "clear_block", "tuning");
 
 	/* Set Table attributes, rows, and cols */
 	table_attributes tune_table_css;
@@ -242,7 +242,6 @@ void report_show_tunables(void)
 	report.add_div(&div_attr);
 	report.add_title(&title_attr,__("Software Settings in Need of Tuning"));
 	report.add_table(tunable_data, &tune_table_css);
-	report.end_div();
 
 	/* Second Table */
 	/* Set Table attributes, rows, and cols */
@@ -258,10 +257,8 @@ void report_show_tunables(void)
 		untunable_data[i+1]= string(all_untunables[i]->description());
 
 	/* Report Output */
-	report.add_div(&div_attr);
 	report.add_title(&title_attr,__("Untunable Software Issues"));
 	report.add_table(untunable_data, &tune_table_css);
-	report.end_div();
 
 	/* Third Table */
 	/* Set Table attributes, rows, and cols */
@@ -283,7 +280,6 @@ void report_show_tunables(void)
 		idx+=1;
         }
 	/* Report Output */
-	report.add_div(&div_attr);
 	report.add_title(&title_attr,__("Optimal Tuned Software Settings"));
         report.add_table(tuned_data, &tune_table_css);
         report.end_div();

@@ -12,7 +12,7 @@ var powertop = {
   cpuidle: 'CPU Idle',
   cpufreq: 'CPU Frequency',
   software: 'Software Info',
-  device: 'Device Info',
+  devinfo: 'Device Info',
   tuning: 'Tuning'
  },
  cadd: function(idx, c){
@@ -83,6 +83,13 @@ var powertop = {
 *{
 	margin:0px;
 	padding:0px;
+}
+
+body {
+	background-color: #eee; /* Background color */
+	color: #222;            /* Font color */
+	font-family: Helvetica;
+	font-size: 14px;
 }
 
 #main_container{
@@ -207,15 +214,7 @@ li.summary_list
 
 
 
-/*menu css*/
-
-body {
-	background-color: #eee; /* Background color */
-	color: #222;            /* Font color */
-	font-family: Helvetica;
-	font-size: 14px;
-}
-
+/* main menu css*/
 #main_menu {
 	display: inline-block;
 	font-weight: bold;

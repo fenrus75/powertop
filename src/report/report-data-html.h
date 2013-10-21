@@ -44,6 +44,10 @@ void
 init_std_table_attr(struct table_attributes *table_css, int rows, int cols);
 
 void
+init_std_side_table_attr(struct table_attributes *table_css, int rows,
+		int cols);
+
+void
 init_pkg_table_attr(struct table_attributes *table_css, int rows, int cols);
 
 void

@@ -31,6 +31,9 @@ LOCAL_SRC_FILES += \
 	src/cpu/cpu_core.cpp \
 	src/cpu/cpu_package.cpp \
 	src/cpu/abstract_cpu.cpp \
+	src/cpu/cpu_rapl_device.cpp \
+	src/cpu/dram_rapl_device.cpp \
+	src/cpu/rapl/rapl_interface.cpp \
 	src/measurement/measurement.cpp \
 	src/measurement/acpi.cpp \
 	src/measurement/extech.cpp \
@@ -62,6 +65,7 @@ LOCAL_SRC_FILES += \
 	src/devices/backlight.cpp \
 	src/devices/network.cpp \
 	src/devices/device.cpp \
+	src/devices/gpu_rapl_device.cpp \
 	src/devlist.cpp \
 	src/calibrate/calibrate.cpp \
 	src/lib.cpp \

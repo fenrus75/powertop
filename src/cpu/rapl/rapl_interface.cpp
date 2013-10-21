@@ -192,7 +192,7 @@ double c_rapl_interface::get_power_unit()
 		return ret;
 	}
 
-	return (double) 1/pow(2, value & 0xf);
+	return (double) 1/pow((double)2, (double)(value & 0xf));
 }
 
 double c_rapl_interface::get_energy_status_unit()
@@ -206,7 +206,7 @@ double c_rapl_interface::get_energy_status_unit()
 		return ret;
 	}
 
-	return (double)1/ pow(2, (value & 0x1f00) >> 8);
+	return (double)1/ pow((double)2, (double)((value & 0x1f00) >> 8));
 }
 
 double c_rapl_interface::get_time_unit()
@@ -220,7 +220,7 @@ double c_rapl_interface::get_time_unit()
 		return ret;
 	}
 
-	return (double)1 / pow(2, (value & 0xf0000) >> 16);
+	return (double)1 / pow((double)2, (double)((value & 0xf0000) >> 16));
 }
 
 int c_rapl_interface::get_pkg_energy_status(double *status)

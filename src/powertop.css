@@ -17,20 +17,29 @@ var powertop = {
  },
  cadd: function(idx, c){
    var el = document.getElementById(idx);
-   if (el)
-     el.classList.add(c);
-
+   if (el) {
+      var cn = el.className;
+      if (cn.indexOf(c) != -1)
+         return;
+      cn += ' ' + c;
+      el.className = cn;
+   }
  },
  crm: function(id, c){
    var el = document.getElementById(id);
-   if (el)
-     el.classList.remove(c);
+   if (el) {
+      var cn = el.className
+      while (cn.indexOf(' ' + c) != -1)
+         cn = cn.replace(' ' + c,'');
+      el.className = cn;
+   }
  },
  newbutton: function(id, txt) {
   var x = document.createElement('div');
   x.id = id + '_button';
   x.className = 'nav_button';
   x.textContent = txt;
+  x.innerText = txt;
   x.onclick = function() { powertop.toggle(id); };
   return x;
  },

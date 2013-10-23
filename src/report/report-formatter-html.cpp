@@ -520,7 +520,7 @@ report_formatter_html::add_title(struct tag_attr *title_att, const char *title)
 void
 report_formatter_html::add_navigation()
 {
-	add_exact("<br/><nav id=\"main_menu\"> </nav>\n");
+	add_exact("<br/><div id=\"main_menu\"> </div>\n");
 }
 
 void

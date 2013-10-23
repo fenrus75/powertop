@@ -105,8 +105,9 @@ body {
 
 img.pwtop_logo{
 	float:left;
-	height:90px;
-	width: 400px;
+	height:40%;
+	width: 40%;
+	padding:20px;
 }
 
 .sys_info

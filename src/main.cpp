@@ -216,10 +216,11 @@ void one_measurement(int seconds, char *workload)
 	report_summary();
 	w_display_cpu_cstates();
 	w_display_cpu_pstates();
-	report_display_cpu_cstates();
-	report_display_cpu_pstates();
+	if (reporttype != REPORT_OFF) {
+		report_display_cpu_cstates();
+		report_display_cpu_pstates();
+	}
 	report_process_update_display();
-
 	tuning_update_display();
 
 	end_process_data();

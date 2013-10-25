@@ -55,6 +55,7 @@ static int intel_cpu_models[] = {
 	0x3C,
 	0x3D,	/* IVB Xeon */
 	0x37,	/* BYT-M */
+	0x45,	/* HSW-ULT */
 	0	/* last entry must be zero */
 };
 

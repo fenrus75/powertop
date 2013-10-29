@@ -345,11 +345,32 @@ const char * network::device_name(void)
 
 static void netdev_callback(const char *d_name)
 {
+	char devname[128];
+
 	std::string f_name("/sys/class/net/");
 	if (strcmp(d_name, "lo") == 0)
 		return;
 
 	f_name.append(d_name);
+
+	sprintf(devname, "%s-up", d_name);
+	register_parameter(devname);
+
+	sprintf(devname, "%s-powerunsave", d_name);
+	register_parameter(devname);
+
+	sprintf(devname, "%s-link-100", d_name);
+	register_parameter(devname);
+
+	sprintf(devname, "%s-link-1000", d_name);
+	register_parameter(devname);
+
+	sprintf(devname, "%s-link-high", d_name);
+	register_parameter(devname);
+
+	sprintf(devname, "%s-packets", d_name);
+	register_parameter(devname);
+
 	network *bl = new(std::nothrow) class network(d_name, f_name.c_str());
 	if (bl) {
 		all_devices.push_back(bl);

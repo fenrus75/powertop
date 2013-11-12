@@ -41,21 +41,10 @@ public:
 	virtual void add(const char *str) {}
 	virtual void addv(const char *fmt, va_list ap) {}
 
-	virtual void add_header(const char *header, int level) {}
-
-	virtual void begin_section(section_type stype) {}
-	virtual void end_section() {}
-
-	virtual void begin_paragraph() {}
-	virtual void end_paragraph() {}
-
-	/* For quad-colouring CPU tables in HTML */
-	virtual void set_cpu_number(int nr) {}
-
 	/* *** Report Style *** */
 	virtual void add_logo() {}
 	virtual void add_header() {}
-	virtual void end_hheader() {}
+	virtual void end_header() {}
 	virtual void add_div(struct tag_attr *div_attr) {}
 	virtual void end_div() {}
 	virtual void add_title(struct tag_attr *att_title, const char *title) {}

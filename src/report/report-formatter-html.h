@@ -48,23 +48,12 @@ class report_formatter_html: public report_formatter_string_base
 {
 public:
 	report_formatter_html();
-
 	void finish_report();
-
-	void add_header(const char *header, int level);
-
-	void begin_section(section_type stype);
-	void end_section();
-
-	void begin_paragraph();
-	void end_paragraph();
-
-	void set_cpu_number(int nr);
 
 	/* Report Style */
 	void add_logo();
 	void add_header();
-	void end_hheader();
+	void end_header();
 	void add_div(struct tag_attr *div_attr);
 	void end_div();
 	void add_title(struct tag_attr *title_att, const char *title);
@@ -75,14 +64,10 @@ public:
 private:
 	/* Document structure related functions */
 	void init_markup();
-	void set_section(section_type stype, const char *id = "");
 	void add_doc_header();
 	void add_doc_footer();
-
 	string escape_string(const char *str);
 
-	html_section sections[SECTION_MAX];
-	int cpu_nr;
 };
 
 #endif /* _REPORT_FORMATTER_HTML_H_ */

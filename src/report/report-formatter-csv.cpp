@@ -35,94 +35,20 @@
 #include "report-formatter-csv.h"
 #include "report-data-html.h"
 
-static const char report_csv_header[] = "PowerTOP Report";
 
 /* ************************************************************************ */
-
 report_formatter_csv::report_formatter_csv()
 {
-	add_doc_header();
+	/* Do nothing special  */
 }
 
 /* ************************************************************************ */
-
 void
 report_formatter_csv::finish_report()
 {
 	/* Do nothing special */
 }
 
-/* ************************************************************************ */
-
-void
-report_formatter_csv::add_doc_header()
-{
-	/*add_header(report_csv_header, 1);*/
-}
-
-/* ************************************************************************ */
-
-void
-report_formatter_csv::add_header(const char *header, int level)
-{
-	assert(header);
-
-	text_start = result.length();
-	csv_need_quotes = false;
-	addf("%.*s%s%.*s", 4 - level, "***", header, 4 - level, "***");
-	add_quotes();
-	add_exact("\n");
-}
-
-/* ************************************************************************ */
-
-void
-report_formatter_csv::begin_section(section_type stype)
-{
-	/* Do nothing special */
-}
-
-/* ************************************************************************ */
-
-void
-report_formatter_csv::end_section()
-{
-	/* Do nothing special */
-}
-
-/* ************************************************************************ */
-void
-report_formatter_csv::add_quotes()
-{
-#ifdef REPORT_CSV_ESCAPE_EMPTY
-	if (csv_need_quotes || result.length() == text_start) {
-#else /* !REPORT_CSV_ESCAPE_EMPTY */
-	if (csv_need_quotes) {
-#endif /* !REPORT_CSV_ESCAPE_EMPTY */
-		result.insert(text_start, "\"");
-		add_exact("\"");
-	}
-}
-
-/* ************************************************************************ */
-
-void
-report_formatter_csv::begin_paragraph()
-{
-	text_start = result.length();
-	csv_need_quotes = false;
-}
-
-/* ************************************************************************ */
-
-void
-report_formatter_csv::end_paragraph()
-{
-	add_quotes();
-	add_exact("\n");
-}
-
-/* ************************************************************************ */
 
 string
 report_formatter_csv::escape_string(const char *str)
@@ -150,13 +76,8 @@ report_formatter_csv::escape_string(const char *str)
 	return res;
 }
 
-/* ************************************************************************ */
 
-void
-report_formatter_csv::set_cpu_number(int nr UNUSED)
-{
-	/* Do nothing */
-}
+
 
 /* Report Style */
 void
@@ -166,7 +87,7 @@ report_formatter_csv::add_header()
 }
 
 void
-report_formatter_csv::end_hheader()
+report_formatter_csv::end_header()
 {
 	/* Do nothing */
 }
@@ -174,7 +95,7 @@ report_formatter_csv::end_hheader()
 void
 report_formatter_csv::add_logo()
 {
-	add_exact("\t\t\tP o w e r T o p\n");
+	add_exact("\t\t\tP o w e r T O P\n");
 }
 
 

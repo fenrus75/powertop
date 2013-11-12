@@ -56,9 +56,6 @@ report_maker::~report_maker()
 void
 report_maker::finish_report()
 {
-	if (section_opened)
-		end_section();
-
 	formatter->finish_report();
 }
 
@@ -76,8 +73,6 @@ void
 report_maker::clear_result()
 {
 	formatter->clear_result();
-	section_opened	 = false;
-	paragraph_opened = false;
 }
 
 /* ************************************************************************ */
@@ -122,8 +117,6 @@ void
 report_maker::add(const char *str)
 {
 	assert(str);
-	assert(section_opened);
-
 	formatter->add(str);
 }
 
@@ -133,91 +126,11 @@ void
 report_maker::addf(const char *fmt, ...)
 {
 	va_list ap;
-
 	assert(fmt);
-	assert(section_opened);
-
 	va_start(ap, fmt);
 	formatter->addv(fmt, ap);
 	va_end(ap);
 }
-
-/* ************************************************************************ */
-
-void
-report_maker::add_header(const char *header, int level)
-{
-	assert(header);
-	assert(section_opened);
-	assert(level > 0 && level < 4);
-
-	if (paragraph_opened)
-		end_paragraph();
-
-	formatter->add_header(header, level);
-}
-
-/* ************************************************************************ */
-
-void
-report_maker::begin_section(section_type stype)
-{
-	assert(stype >= 0 && stype < SECTION_MAX);
-
-	if (section_opened)
-		end_section(); /* Close previous */
-
-	section_opened = true;
-	formatter->begin_section(stype);
-}
-
-/* ************************************************************************ */
-
-void
-report_maker::end_section()
-{
-	assert(section_opened);
-
-	if (paragraph_opened)
-		end_paragraph();
-
-	section_opened = false;
-	formatter->end_section();
-}
-
-/* ************************************************************************ */
-
-void
-report_maker::set_cpu_number(int nr)
-{
-	formatter->set_cpu_number(nr);
-}
-
-/* ************************************************************************ */
-
-void
-report_maker::begin_paragraph()
-{
-	assert(section_opened);
-
-	if (paragraph_opened)
-		end_paragraph(); /* Close previous */
-
-	paragraph_opened = true;
-	formatter->begin_paragraph();
-}
-
-/* ************************************************************************ */
-
-void
-report_maker::end_paragraph()
-{
-	assert(paragraph_opened);
-
-	paragraph_opened = false;
-	formatter->end_paragraph();
-}
-
 
 /* *** Report Style *** */
 void
@@ -233,9 +146,9 @@ report_maker::add_header()
 }
 
 void
-report_maker::end_hheader()
+report_maker::end_header()
 {
-	formatter->end_hheader();
+	formatter->end_header();
 }
 
 void

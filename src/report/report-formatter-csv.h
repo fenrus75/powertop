@@ -31,7 +31,7 @@
 #include "report-formatter-base.h"
 
 /* Offices like semicolon separated values instead of comma */
-#define REPORT_CSV_DELIMITER ';'
+#define REPORT_CSV_DELIMITER ','
 
 /* "a,b,c" vs "a, b, c" */
 /*#define REPORT_CSV_ADD_SPACE*/
@@ -50,23 +50,12 @@ class report_formatter_csv: public report_formatter_string_base
 {
 public:
 	report_formatter_csv();
-
 	void finish_report();
-
-	void add_header(const char *header, int level);
-
-	void begin_section(section_type stype);
-	void end_section();
-
-	void begin_paragraph();
-	void end_paragraph();
-
-	void set_cpu_number(int nr);
 
 	/* Report Style */
 	void add_logo();
 	void add_header();
-	void end_hheader();
+	void end_header();
 	void add_div(struct tag_attr *div_attr);
 	void end_div();
 	void add_title(struct tag_attr *title_att, const char *title);
@@ -75,12 +64,8 @@ public:
 	void add_table(string *system_data, struct table_attributes *tb_attr);
 
 private:
-	void add_doc_header();
-
 	void add_quotes();
-
 	string escape_string(const char *str);
-
 	bool csv_need_quotes;
 	size_t text_start;
 };

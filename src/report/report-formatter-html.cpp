@@ -83,14 +83,6 @@ report_formatter_html::finish_report()
 /* ************************************************************************ */
 
 void
-report_formatter_html::set_section(section_type stype, const char *id)
-{
-	sections[stype].id = id;
-}
-
-/* ************************************************************************ */
-
-void
 report_formatter_html::add_doc_header()
 {
 #ifdef EXTERNAL_CSS_FILE /* Where is it defined? */
@@ -109,50 +101,6 @@ report_formatter_html::add_doc_footer()
 }
 
 /* ************************************************************************ */
-
-void
-report_formatter_html::add_header(const char *header, int level)
-{
-	addf_exact("<h%d>", level);
-	add(header);
-	addf_exact("</h%d>\n", level);
-}
-
-/* ************************************************************************ */
-
-void
-report_formatter_html::begin_section(section_type stype)
-{
-	if (sections[stype].id[0])
-		addf_exact("<div id=\"%s\">", sections[stype].id);
-	else
-		add_exact("<div>");
-}
-
-/* ************************************************************************ */
-
-void
-report_formatter_html::end_section()
-{
-	add_exact("</div>\n\n");
-}
-
-void
-report_formatter_html::begin_paragraph()
-{
-	add_exact("<p>");
-}
-
-/* ************************************************************************ */
-
-void
-report_formatter_html::end_paragraph()
-{
-	add_exact("</p>\n");
-}
-
-/* ************************************************************************ */
-
 string
 report_formatter_html::escape_string(const char *str)
 {
@@ -187,16 +135,6 @@ report_formatter_html::escape_string(const char *str)
 	return res;
 }
 
-/* ************************************************************************ */
-
-void
-report_formatter_html::set_cpu_number(int nr)
-{
-	assert(nr >= 0);
-
-	cpu_nr = nr;
-}
-
 
 /* Report Style */
 void
@@ -212,7 +150,7 @@ report_formatter_html::add_header()
 }
 
 void
-report_formatter_html::end_hheader()
+report_formatter_html::end_header()
 {
 	add_exact("</header>\n\n");
 }

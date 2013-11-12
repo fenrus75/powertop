@@ -155,7 +155,7 @@ static void system_info(void)
 	report.add_title(&title_attr, __("System Information"));
 	report.add_table(system_data, &sys_table);
 	report.end_div();
-	report.end_hheader();
+	report.end_header();
 	report.add_navigation();
 }
 

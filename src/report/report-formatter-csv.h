@@ -58,16 +58,6 @@ public:
 	void begin_section(section_type stype);
 	void end_section();
 
-	void begin_table(table_type ttype);
-	void end_table();
-
-	void begin_row(row_type rtype);
-	void end_row();
-
-	void begin_cell(cell_type ctype);
-	void end_cell();
-	void add_empty_cell();
-
 	void begin_paragraph();
 	void end_paragraph();
 
@@ -92,7 +82,7 @@ private:
 	string escape_string(const char *str);
 
 	bool csv_need_quotes;
-	size_t table_cell_number, text_start;
+	size_t text_start;
 };
 
 #endif /* _REPORT_FORMATTER_CSV_H_ */

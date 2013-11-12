@@ -77,9 +77,6 @@ report_maker::clear_result()
 {
 	formatter->clear_result();
 	section_opened	 = false;
-	table_opened	 = false;
-	cell_opened	 = false;
-	row_opened	 = false;
 	paragraph_opened = false;
 }
 
@@ -154,9 +151,7 @@ report_maker::add_header(const char *header, int level)
 	assert(section_opened);
 	assert(level > 0 && level < 4);
 
-	if (table_opened)
-		end_table();
-	else if (paragraph_opened)
+	if (paragraph_opened)
 		end_paragraph();
 
 	formatter->add_header(header, level);
@@ -183,116 +178,11 @@ report_maker::end_section()
 {
 	assert(section_opened);
 
-	if (table_opened)
-		end_table();
-	else if (paragraph_opened)
+	if (paragraph_opened)
 		end_paragraph();
 
 	section_opened = false;
 	formatter->end_section();
-}
-
-/* ************************************************************************ */
-
-void
-report_maker::begin_table(table_type ttype)
-{
-	assert(ttype >= 0 && ttype < TABLE_MAX);
-	assert(section_opened);
-
-	if (table_opened)
-		end_table(); /* Close previous */
-	else if (paragraph_opened)
-		end_paragraph();
-
-	table_opened = true;
-	formatter->begin_table(ttype);
-}
-
-/* ************************************************************************ */
-
-void
-report_maker::end_table()
-{
-	assert(section_opened);
-	assert(table_opened);
-
-	if (row_opened)
-		end_row();
-
-	table_opened = false;
-	formatter->end_table();
-}
-
-/* ************************************************************************ */
-
-void
-report_maker::begin_row(row_type rtype)
-{
-	assert(section_opened);
-	assert(table_opened);
-	assert(rtype >= 0 && rtype < ROW_MAX);
-
-	if (row_opened)
-		end_row(); /* Close previous */
-
-	row_opened = true;
-	formatter->begin_row(rtype);
-}
-
-/* ************************************************************************ */
-
-void
-report_maker::end_row()
-{
-	assert(section_opened);
-	assert(table_opened);
-	assert(row_opened);
-
-	if (cell_opened)
-		end_cell();
-
-	row_opened = false;
-	formatter->end_row();
-}
-
-/* ************************************************************************ */
-
-void
-report_maker::begin_cell(cell_type ctype)
-{
-	assert(section_opened);
-	assert(table_opened);
-	assert(row_opened);
-	assert(ctype >= 0 && ctype < CELL_MAX);
-
-	if (cell_opened)
-		end_cell(); /* Close previous */
-
-	cell_opened = true;
-	formatter->begin_cell(ctype);
-}
-
-/* ************************************************************************ */
-
-void
-report_maker::end_cell()
-{
-	assert(section_opened);
-	assert(table_opened);
-	assert(row_opened);
-	assert(cell_opened);
-
-	cell_opened = false;
-	formatter->end_cell();
-}
-
-/* ************************************************************************ */
-
-void
-report_maker::add_empty_cell()
-{
-	formatter->add_empty_cell();
 }
 
 /* ************************************************************************ */
@@ -310,9 +200,7 @@ report_maker::begin_paragraph()
 {
 	assert(section_opened);
 
-	if (table_opened)
-		end_table();
-	else if (paragraph_opened)
+	if (paragraph_opened)
 		end_paragraph(); /* Close previous */
 
 	paragraph_opened = true;

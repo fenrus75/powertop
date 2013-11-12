@@ -184,10 +184,6 @@ public:
 
 	void add_header(const char *header, int level = 2);
 	void begin_section(section_type stype = SECTION_DEFAULT);
-	void begin_table(table_type ttype = TABLE_DEFAULT);
-	void begin_row(row_type rtype = ROW_DEFAULT);
-	void begin_cell(cell_type ctype = CELL_DEFAULT);
-	void add_empty_cell();
 	void begin_paragraph();
 
 	void set_cpu_number(int nr);
@@ -207,15 +203,11 @@ private:
 	void setup_report_formatter();
 
 	void end_section();
-	void end_table();
-	void end_row();
-	void end_cell();
 	void end_paragraph();
 
 	report_type type;
 	report_formatter *formatter;
-	bool cell_opened, row_opened, table_opened, section_opened,
-	     paragraph_opened;
+	bool section_opened, paragraph_opened;
 };
 
 #endif /* _REPORT_MAKER_H_ */

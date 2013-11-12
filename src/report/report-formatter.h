@@ -46,16 +46,6 @@ public:
 	virtual void begin_section(section_type stype) {}
 	virtual void end_section() {}
 
-	virtual void begin_table(table_type ttype) {}
-	virtual void end_table() {}
-
-	virtual void begin_row(row_type rtype) {}
-	virtual void end_row() {}
-
-	virtual void begin_cell(cell_type ctype) {}
-	virtual void end_cell() {}
-	virtual void add_empty_cell() {}
-
 	virtual void begin_paragraph() {}
 	virtual void end_paragraph() {}
 

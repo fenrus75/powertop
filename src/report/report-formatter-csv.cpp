@@ -91,55 +91,6 @@ report_formatter_csv::end_section()
 }
 
 /* ************************************************************************ */
-
-void
-report_formatter_csv::begin_table(table_type ttype)
-{
-	add_exact("\n");
-}
-
-/* ************************************************************************ */
-
-void
-report_formatter_csv::end_table()
-{
-	add_exact("\n");
-}
-
-/* ************************************************************************ */
-
-void
-report_formatter_csv::begin_row(row_type rtype)
-{
-	table_cell_number = 0;
-}
-
-/* ************************************************************************ */
-
-void
-report_formatter_csv::end_row()
-{
-	add_exact("\n");
-}
-
-/* ************************************************************************ */
-
-void
-report_formatter_csv::begin_cell(cell_type ctype)
-{
-	if (table_cell_number > 0) {
-		addf_exact("%c", REPORT_CSV_DELIMITER);
-#ifdef REPORT_CSV_ADD_SPACE
-		add_exact(" ");
-#endif /* !REPORT_CSV_ADD_SPACE */
-	}
-
-	text_start = result.length();
-	csv_need_quotes = false;
-}
-
-/* ************************************************************************ */
-
 void
 report_formatter_csv::add_quotes()
 {
@@ -151,23 +102,6 @@ report_formatter_csv::add_quotes()
 		result.insert(text_start, "\"");
 		add_exact("\"");
 	}
-}
-
-/* ************************************************************************ */
-
-void
-report_formatter_csv::end_cell()
-{
-	add_quotes();
-	table_cell_number++;
-}
-
-/* ************************************************************************ */
-
-void
-report_formatter_csv::add_empty_cell()
-{
-	/* Do nothing special */
 }
 
 /* ************************************************************************ */

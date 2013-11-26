@@ -113,34 +113,17 @@ void add_sysfs_tunable(const char *str, const char *_sysfs_path, const char *_ta
 	all_tunables.push_back(tunable);
 }
 
-void add_sata_tunables(void)
+static void add_sata_tunables_callback(const char *d_name)
 {
-	struct dirent *entry;
-	DIR *dir;
 	char filename[4096];
 	char msg[4096];
 
-	dir = opendir("/sys/class/scsi_host");
+	sprintf(filename, "/sys/class/scsi_host/%s/link_power_management_policy", d_name);
+	sprintf(msg, _("Enable SATA link power management for %s"), d_name);
+	add_sysfs_tunable(msg, filename,"min_power");
+}
 
-	if (!dir)
-		return;
-
-        while (1) {
-		entry = readdir(dir);
-
-		if (!entry)
-			break;
-
-		if (entry->d_name[0] == '.')
-			continue;
-
-		sprintf(filename, "/sys/class/scsi_host/%s/link_power_management_policy", entry->d_name);
-
-	        sprintf(msg, _("Enable SATA link power management for %s"),entry->d_name);
-
-		add_sysfs_tunable(msg, filename,"min_power");
-
-        }
-
-        closedir(dir);
+void add_sata_tunables(void)
+{
+	process_directory("/sys/class/scsi_host", add_sata_tunables_callback);
 }

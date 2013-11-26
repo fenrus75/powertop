@@ -136,7 +136,7 @@ void add_sata_tunables(void)
 
 		sprintf(filename, "/sys/class/scsi_host/%s/link_power_management_policy", entry->d_name);
 
-	        sprintf(msg, _("Enable SATA link power Managmenet for %s"),entry->d_name);
+	        sprintf(msg, _("Enable SATA link power management for %s"),entry->d_name);
 
 		add_sysfs_tunable(msg, filename,"min_power");
 

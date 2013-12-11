@@ -474,7 +474,9 @@ void report_display_cpu_cstates(void)
 			_core = _package->children[core];
 			if (!_core)
 				continue;
+
 			for (cpu = 0; cpu < _core->children.size(); cpu++) {
+				_cpu = _core->children[cpu];
 				if (!_cpu)
 					continue;
 				_cpu = _core->children[cpu];
@@ -673,8 +675,9 @@ void report_display_cpu_pstates(void)
 			if (!_core)
 				continue;
 			for (cpu = 0; cpu < _core->children.size(); cpu++) {
+				_cpu = _core->children[cpu];
 				if (!_cpu)
-				continue;
+					continue;
 				_cpu = _core->children[cpu];
 				num_cpus+=1;
 			}
@@ -698,7 +701,7 @@ void report_display_cpu_pstates(void)
 				bool first_cpu = true;
 
 				if (!_package->has_pstate_level(line))
-				continue;
+					continue;
 
 				buffer[0] = 0;
 				buffer2[0] = 0;

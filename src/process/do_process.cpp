@@ -897,6 +897,8 @@ void report_process_update_display(void)
 
 	/* Set Table attributes, rows, and cols */
 	cols=7;
+	sort(all_power.begin(), all_power.end(), power_cpu_sort);
+	show_power = global_power_valid();
 	if (show_power)
 		cols=8;
 
@@ -928,8 +930,6 @@ void report_process_update_display(void)
 	if (show_power)
 		software_data[7]=__("PW Estimate");
 
-	sort(all_power.begin(), all_power.end(), power_cpu_sort);
-	show_power = global_power_valid();
 
 	for (i = 0; i < total; i++) {
 		char power[16];

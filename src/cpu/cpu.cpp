@@ -484,8 +484,9 @@ void report_display_cpu_cstates(void)
 			}
 		}
 
-		cpu_tbl_size.cols=((2 * num_cpus)+1) ;
+		cpu_tbl_size.cols=(2 * ( num_cpus/_package->children.size()) + 1) ;
 		cpu_tbl_size.rows= cstates_num * _package->children.size();
+				+ _package->children.size();
 
 		string cpu_data[cpu_tbl_size.cols * cpu_tbl_size.rows];
 
@@ -682,8 +683,8 @@ void report_display_cpu_pstates(void)
 				num_cpus+=1;
 			}
 		}
-		cpu_tbl_size.cols= num_cpus+1;
-		cpu_tbl_size.rows= (pstates_num+2)* _package->children.size();
+		cpu_tbl_size.cols= (num_cpus/_package->children.size()) + 1;
+		cpu_tbl_size.rows= (pstates_num + 2) * _package->children.size();
 		string cpu_data[cpu_tbl_size.cols * cpu_tbl_size.rows];
 
 		/* Core */

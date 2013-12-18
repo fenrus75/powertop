@@ -40,6 +40,8 @@ class ahci: public device {
 	char name[4096];
 	int partial_rindex;
 	int active_rindex;
+	int slumber_rindex;
+	int devslp_rindex;
 	int partial_index;
 	int active_index;
 	char humanname[4096];
@@ -59,9 +61,11 @@ public:
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
 	virtual int power_valid(void) { return utilization_power_valid(partial_rindex) + utilization_power_valid(active_rindex);};
 	virtual int grouping_prio(void) { return 1; };
+	virtual void report_device_stats(string *ahci_data, int idx);
 };
 
 extern void create_all_ahcis(void);
+extern void ahci_create_device_stats_table(void);
 
 
 #endif

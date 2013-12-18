@@ -49,6 +49,7 @@
 
 #include "devices/device.h"
 #include "devices/usb.h"
+#include "devices/ahci.h"
 #include "measurement/measurement.h"
 #include "parameters/parameters.h"
 #include "calibrate/calibrate.h"
@@ -232,7 +233,7 @@ void one_measurement(int seconds, char *workload)
 	report_show_open_devices();
 
 	report_devices();
-
+	ahci_create_device_stats_table();
 	store_results(measurement_time);
 	end_cpu_data();
 }

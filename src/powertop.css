@@ -13,7 +13,8 @@ var powertop = {
   cpufreq: 'CPU Frequency',
   software: 'Software Info',
   devinfo: 'Device Info',
-  tuning: 'Tuning'
+  tuning: 'Tuning',
+  ahci: 'AHCI'
  },
  cadd: function(idx, c){
    var el = document.getElementById(idx);

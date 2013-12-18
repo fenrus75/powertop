@@ -33,11 +33,14 @@
 using namespace std;
 
 #include "device.h"
+#include "report/report.h"
+#include "report/report-maker.h"
 #include "ahci.h"
 #include "../parameters/parameters.h"
-
+#include "report/report-data-html.h"
 #include <string.h>
 
+vector <class ahci *> links;
 
 static string disk_name(char *path, char *target, char *shortname)
 {
@@ -136,13 +139,18 @@ ahci::ahci(char *_name, char *path): device()
 	sprintf(buffer, "%s-partial", name);
 	partial_rindex = get_result_index(buffer);
 
+	sprintf(buffer, "%s-slumber", name);
+	slumber_rindex = get_result_index(buffer);
+
+	sprintf(buffer, "%s-devslp", name);
+	devslp_rindex = get_result_index(buffer);
+
 	diskname = model_name(path, _name);
 
 	if (strlen(diskname.c_str()) == 0)
 		sprintf(humanname, _("SATA link: %s"), _name);
 	else
 		sprintf(humanname, _("SATA disk: %s"), diskname.c_str());
-
 }
 
 void ahci::start_measurement(void)
@@ -189,6 +197,7 @@ void ahci::end_measurement(void)
 	char powername[4096];
 	ifstream file;
 	double p;
+	double total;
 
 	try {
 		sprintf(filename, "%s/ahci_alpm_active", sysfs_path);
@@ -221,20 +230,40 @@ void ahci::end_measurement(void)
 	}
 	if (end_active < start_active)
 		end_active = start_active;
+	if (end_partial < start_partial)
+		end_partial = start_partial;
+	if (end_slumber < start_slumber)
+		end_slumber = start_slumber;
 
-	p = (end_active - start_active) / (0.001 + end_active + end_partial + end_slumber + end_devslp - start_active - start_partial - start_slumber - start_devslp) * 100.0;
+	total = 0.001 + end_active + end_partial + end_slumber + end_devslp -
+		start_active - start_partial - start_slumber - start_devslp;
+
+	/* percent in active */
+	p = (end_active - start_active) / total * 100.0;
 	if (p < 0)
 		 p = 0;
 	sprintf(powername, "%s-active", name);
 	report_utilization(powername, p);
 
-	if (end_partial < start_partial)
-		end_partial = start_partial;
-
-	p = (end_partial - start_partial) / (0.001 + end_active + end_partial + end_slumber + end_devslp - start_active - start_partial - start_slumber - start_devslp) * 100.0;
+	/* percent in partial */
+	p = (end_partial - start_partial) / total * 100.0;
 	if (p < 0)
 		 p = 0;
 	sprintf(powername, "%s-partial", name);
+	report_utilization(powername, p);
+
+	/* percent in slumber */
+	p = (end_slumber - start_slumber) / total * 100.0;
+	if (p < 0)
+		 p = 0;
+	sprintf(powername, "%s-slumber", name);
+	report_utilization(powername, p);
+
+	/* percent in devslp */
+	p = (end_devslp - start_devslp) / total * 100.0;
+	if (p < 0)
+		 p = 0;
+	sprintf(powername, "%s-devslp", name);
 	report_utilization(powername, p);
 }
 
@@ -281,7 +310,7 @@ void create_all_ahcis(void)
 		check_file.close();
 		if (check_file.bad())
 			continue;
-		
+
 		file.open(filename, ios::in);
 		if (!file)
 			continue;
@@ -293,6 +322,7 @@ void create_all_ahcis(void)
 		all_devices.push_back(bl);
 		register_parameter("ahci-link-power-active", 0.6);  /* active sata link takes about 0.6 W */
 		register_parameter("ahci-link-power-partial");
+		links.push_back(bl);
 	}
 	closedir(dir);
 
@@ -318,4 +348,81 @@ double ahci::power_usage(struct result_bundle *result, struct parameter_bundle *
 	power += util * factor / 100.0;
 
 	return power;
+}
+
+void ahci_create_device_stats_table(void)
+{
+	unsigned int i;
+	int cols=0;
+	int rows=0;
+
+	/* div attr css_class and css_id */
+	tag_attr div_attr;
+	init_div(&div_attr, "", "ahci");
+
+	/* Set Title attributes */
+	tag_attr title_attr;
+	init_title_attr(&title_attr);
+
+	/* Add section */
+	report.add_div(&div_attr);
+
+	if (links.size() == 0) {
+		report.add_title(&title_attr, __("AHCI ALPM Residency Statistics - Not supported on this macine"));
+		report.end_div();
+		return;
+	}
+
+	/* Set Table attributes, rows, and cols */
+	table_attributes std_table_css;
+	cols=5;
+	rows=links.size()+1;
+	init_std_side_table_attr(&std_table_css, rows, cols);
+
+
+
+	/* Set array of data in row Major order */
+	string ahci_data[cols * rows];
+	ahci_data[0]=__("Link");
+	ahci_data[1]=__("Active");
+	ahci_data[2]=__("Partial");
+	ahci_data[3]=__("Slumber");
+	ahci_data[4]=__("Devslp");
+
+	/* traverse list of all devices and put their residency in the table */
+	for (i = 0; i < links.size(); i++){
+		links[i]->report_device_stats(ahci_data, i);
+	}
+	report.add_title(&title_attr, __("AHCI ALPM Residency Statistics"));
+	report.add_table(ahci_data, &std_table_css);
+	report.end_div();
+}
+
+void ahci::report_device_stats(string *ahci_data, int idx)
+{
+	int offset=(idx*5+5);
+	char util[128];
+	double active_util = get_result_value(active_rindex, &all_results);
+	double partial_util = get_result_value(partial_rindex, &all_results);
+	double slumber_util = get_result_value(slumber_rindex, &all_results);
+	double devslp_util = get_result_value(devslp_rindex, &all_results);
+
+	ahci_data[offset]=humanname;
+	printf("\nData from ahci %s\n",ahci_data[offset].c_str());
+	offset +=1;
+
+	sprintf(util, "%5.1f",  active_util);
+	ahci_data[offset]= util;
+	offset +=1;
+
+	sprintf(util, "%5.1f",  partial_util);
+	ahci_data[offset]= util;
+	offset +=1;
+
+	sprintf(util, "%5.1f",  slumber_util);
+	ahci_data[offset]= util;
+	offset +=1;
+
+	sprintf(util, "%5.1f",  devslp_util);
+	ahci_data[offset]= util;
 }

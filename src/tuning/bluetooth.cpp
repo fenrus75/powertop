@@ -43,7 +43,7 @@
 #include "../lib.h"
 #include "bluetooth.h"
 
-bt_tunable::bt_tunable(void) : tunable("", 1.0, "Good", "Bad", "Unknown")
+bt_tunable::bt_tunable(void) : tunable("", 1.0, _("Good"), _("Bad"), _("Unknown"))
 {
 	sprintf(desc, _("Bluetooth device interface status"));
 	strcpy(toggle_bad, "/usr/sbin/hciconfig hci0 up &> /dev/null &");

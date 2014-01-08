@@ -624,6 +624,7 @@ void report_display_cpu_pstates(void)
 	int line;
 	class abstract_cpu *_package, * _core, * _cpu;
 	unsigned int i, pstates_num;
+	const char* core_type = NULL;
 
 	/* div attr css_class and css_id */
 	tag_attr div_attr;
@@ -645,7 +646,7 @@ void report_display_cpu_pstates(void)
         report.add_title(&title_attr, __("Processor Frequency Report"));
 
         /* Set array of data in row Major order */
-	int idx1, idx2, idx3, num_cpus=0;
+	int idx1, idx2, idx3, num_cpus=0, num_cores=0;
         string tmp_str;
 
 	for (i = 0, pstates_num = 0; i < all_cpus.size(); i++) {
@@ -675,20 +676,27 @@ void report_display_cpu_pstates(void)
 
 		/* PKG */
 		num_cpus=0;
+		num_cores=0;
 		for (core = 0; core < _package->children.size(); core++) {
 			_core = _package->children[core];
 			if (!_core)
 				continue;
+
+			core_type = _core->get_type();
+			if (core_type != NULL)
+				if (strcmp(core_type, "Core") == 0 )
+					num_cores+=1;
+
 			for (cpu = 0; cpu < _core->children.size(); cpu++) {
 				_cpu = _core->children[cpu];
 				if (!_cpu)
 					continue;
-				_cpu = _core->children[cpu];
 				num_cpus+=1;
 			}
 		}
-		cpu_tbl_size.cols= (num_cpus/_package->children.size()) + 1;
-		cpu_tbl_size.rows= (pstates_num + 2) * _package->children.size();
+		cpu_tbl_size.cols= (num_cpus/ num_cores) + 1;
+		cpu_tbl_size.rows= (pstates_num+2) * _package->children.size()
+				+ _package->children.size();
 		string cpu_data[cpu_tbl_size.cols * cpu_tbl_size.rows];
 
 		/* Core */

@@ -425,6 +425,7 @@ void report_display_cpu_cstates(void)
 	unsigned int package, core, cpu;
 	int line, cstates_num, title=0, core_num=0;
 	class abstract_cpu *_package, * _core, * _cpu;
+	const char* core_type = NULL;
 
 	cstates_num = get_cstates_num();
 	/* div attr css_class and css_id */
@@ -468,23 +469,26 @@ void report_display_cpu_cstates(void)
 		core_tbl_size.rows=(cstates_num *_package->children.size())
 				+ _package->children.size();
 		string core_data[core_tbl_size.cols * core_tbl_size.rows];
-		int num_cpus=0;
+		int num_cpus=0, num_cores=0;
 
 		for (core = 0; core < _package->children.size(); core++) {
 			_core = _package->children[core];
 			if (!_core)
 				continue;
+			core_type = _core->get_type();
+			if (core_type != NULL)
+				if (strcmp(core_type, "Core") == 0 )
+					num_cores+=1;
 
 			for (cpu = 0; cpu < _core->children.size(); cpu++) {
 				_cpu = _core->children[cpu];
 				if (!_cpu)
 					continue;
-				_cpu = _core->children[cpu];
 				num_cpus+=1;
 			}
 		}
 
-		cpu_tbl_size.cols=(2 * ( num_cpus/_package->children.size()) + 1) ;
+		cpu_tbl_size.cols=(2 * (num_cpus / num_cores)) + 1;
 		cpu_tbl_size.rows = (cstates_num * _package->children.size())
 				+ _package->children.size();
 
@@ -533,7 +537,7 @@ void report_display_cpu_cstates(void)
 						* report.addf as it breaks an important macro use
 						* for translation decision making for the reports.
 						* */
-						const char* core_type = _core->get_type();
+						core_type = _core->get_type();
 						if (core_type != NULL) {
 							if (strcmp(core_type, "Core") == 0 ) {
 								core_data[idx2]="";

@@ -95,7 +95,11 @@ void sysfs_tunable::toggle(void)
 		return;
 	}
 
-	write_sysfs(sysfs_path, target_value);
+	if (strncmp(target_value, ">=", 2) == 0) {
+		write_sysfs(sysfs_path, target_value + 2);
+	} else {
+		write_sysfs(sysfs_path, target_value);
+	}
 }
 
 const char *sysfs_tunable::toggle_script(void) {

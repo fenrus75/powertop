@@ -2351,7 +2351,7 @@ process_flags(struct event_format *event, struct print_arg *arg, char **tok)
 	field = alloc_arg();
 	if (!field) {
 		do_warning("%s: not enough memory!", __func__);
-		goto out_free;
+		goto out;
 	}
 
 	type = process_arg(event, field, &token);
@@ -2387,6 +2387,7 @@ out_free_field:
 	free_arg(field);
 out_free:
 	free_token(token);
+out:
 	*tok = NULL;
 	return EVENT_ERROR;
 }
@@ -2404,7 +2405,7 @@ process_symbols(struct event_format *event, struct print_arg *arg, char **tok)
 	field = alloc_arg();
 	if (!field) {
 		do_warning("%s: not enough memory!", __func__);
-		goto out_free;
+		goto out;
 	}
 
 	type = process_arg(event, field, &token);
@@ -2425,6 +2426,7 @@ out_free_field:
 	free_arg(field);
 out_free:
 	free_token(token);
+out:
 	*tok = NULL;
 	return EVENT_ERROR;
 }
@@ -2442,7 +2444,7 @@ process_hex(struct event_format *event, struct print_arg *arg, char **tok)
 	field = alloc_arg();
 	if (!field) {
 		do_warning("%s: not enough memory!", __func__);
-		goto out_free;
+		goto out;
 	}
 
 	type = process_arg(event, field, &token);
@@ -2475,6 +2477,7 @@ process_hex(struct event_format *event, struct print_arg *arg, char **tok)
  out_free:
 	free_arg(field);
 	free_token(token);
+out:
 	*tok = NULL;
 	return EVENT_ERROR;
 }

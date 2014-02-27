@@ -5161,7 +5161,7 @@ int get_field_val(struct trace_seq *s, struct format_field *field,
 {
 	if (!field) {
 		if (err)
-			trace_seq_printf(s, "<CANT FIND FIELD %s>", name);
+			trace_seq_printf(s, "<CAN'T FIND FIELD %s>", name);
 		return -1;
 	}
 
@@ -5204,7 +5204,7 @@ void *pevent_get_field_raw(struct trace_seq *s, struct event_format *event,
 
 	if (!field) {
 		if (err)
-			trace_seq_printf(s, "<CANT FIND FIELD %s>", name);
+			trace_seq_printf(s, "<CAN'T FIND FIELD %s>", name);
 		return NULL;
 	}
 

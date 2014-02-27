@@ -277,7 +277,7 @@ static unsigned int ts4host(struct kbuffer *kbuf,
 }
 
 /*
- * Linux 2.6.30 and earlier (not much ealier) had a different
+ * Linux 2.6.30 and earlier (not much earlier) had a different
  * ring buffer format. It should be obsolete, but we handle it anyway.
  */
 enum old_ring_buffer_type {

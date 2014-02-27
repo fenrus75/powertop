@@ -63,7 +63,7 @@ powertop --html
 
 which will create a "powertop.html" file which is static and can be sent to
 others to help diagnose power issues. Additionally has the feature of showing 
-the tunables executions withing the report as a reference. 
+the tunables executions within the report as a reference. 
 
 Note for the developers: If you make changes on the report format please
 make sure that the output can be cleanly validated by the W3C Markup

@@ -27,7 +27,7 @@ struct table_size {
 };
 
 
-/* Definition of css atributes for the cases that apply to powertop
+/* Definition of css attributes for the cases that apply to powertop
  * html report
  * */
 

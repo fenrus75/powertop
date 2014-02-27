@@ -230,7 +230,7 @@ int pevent_pid_is_registered(struct pevent *pevent, int pid)
  */
 static int add_new_comm(struct pevent *pevent, const char *comm, int pid)
 {
-	struct cmdline *cmdlines = pevent->cmdlines;
+	struct cmdline *newcmdlines, *cmdlines = pevent->cmdlines;
 	const struct cmdline *cmdline;
 	struct cmdline key;
 
@@ -247,11 +247,13 @@ static int add_new_comm(struct pevent *pevent, const char *comm, int pid)
 		return -1;
 	}
 
-	cmdlines = realloc(cmdlines, sizeof(*cmdlines) * (pevent->cmdline_count + 1));
-	if (!cmdlines) {
+	newcmdlines = realloc(cmdlines, sizeof(*cmdlines) * (pevent->cmdline_count + 1));
+	if (!newcmdlines) {
+		free(cmdlines);
 		errno = ENOMEM;
 		return -1;
 	}
+	cmdlines = newcmdlines;
 
 	cmdlines[pevent->cmdline_count].comm = strdup(comm);
 	if (!cmdlines[pevent->cmdline_count].comm) {

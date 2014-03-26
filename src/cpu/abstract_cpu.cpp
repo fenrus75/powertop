@@ -30,6 +30,22 @@
 #include "cpu.h"
 #include "../lib.h"
 
+abstract_cpu::~abstract_cpu()
+{
+	unsigned int i=0;
+	for (i=0; i < cstates.size(); i++){
+		if(cstates[i])
+			delete cstates[i];
+	}
+	cstates.clear();
+
+	for (i=0; i < pstates.size(); i++){
+		if(pstates[i])
+			delete pstates[i];
+	}
+	pstates.clear();
+}
+
 void abstract_cpu::account_freq(uint64_t freq, uint64_t duration)
 {
 	struct frequency *state = NULL;
@@ -194,7 +210,7 @@ void abstract_cpu::insert_cstate(const char *linux_name, const char *human_name,
 	strcpy(state->human_name, human_name);
 
 	state->line_level = -1;
-	
+
 	c = human_name;
 	while (*c) {
 		if (strcmp(linux_name, "active")==0) {
@@ -217,7 +233,7 @@ void abstract_cpu::insert_cstate(const char *linux_name, const char *human_name,
 		}
 		c++;
 	}
-	
+
 	if (level >= 0)
 		state->line_level = level;
 

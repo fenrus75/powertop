@@ -86,6 +86,7 @@ protected:
 
 	virtual void	account_freq(uint64_t frequency, uint64_t duration);
 	virtual void	freq_updated(uint64_t time);
+
 public:
 	uint64_t	last_stamp;
 	uint64_t	total_stamp;
@@ -100,7 +101,7 @@ public:
 	vector<struct idle_state *> cstates;
 	vector<struct frequency *> pstates;
 
-	virtual ~abstract_cpu() {};
+	virtual ~abstract_cpu();
 
 	class abstract_cpu *parent;
 

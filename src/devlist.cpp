@@ -71,7 +71,18 @@ static int phase;
  * 1 - one = after,   two = before
  */
 
+void clean_open_devices()
+{
+	unsigned int i=0;
 
+	for (i = 0; i < one.size(); i++) {
+		free(one[i]);
+	}
+
+	for (i = 0; i < two.size(); i++) {
+		free(two[i]);
+	}
+}
 
 void collect_open_devices(void)
 {

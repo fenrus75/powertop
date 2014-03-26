@@ -15,6 +15,7 @@ struct devpower {
 	class device *dev;
 };
 
+extern void clean_open_devices();
 extern void collect_open_devices(void);
 
 extern void clear_devpower(void);

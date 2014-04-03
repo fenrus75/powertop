@@ -64,6 +64,7 @@ using namespace std;
 
 static vector<struct devuser *> one;
 static vector<struct devuser *> two;
+static vector<struct devpower *> devpower;
 
 static int phase;
 /*
@@ -71,7 +72,25 @@ static int phase;
  * 1 - one = after,   two = before
  */
 
+void clean_open_devices()
+{
+	unsigned int i=0;
 
+	for (i = 0; i < one.size(); i++) {
+		if(one[i])
+			free(one[i]);
+	}
+
+	for (i = 0; i < two.size(); i++) {
+		if(two[i])
+			free(two[i]);
+	}
+
+	for (i = 0; i < devpower.size(); i++){
+		if(devpower[i])
+			free(devpower[i]);
+	}
+}
 
 void collect_open_devices(void)
 {
@@ -223,8 +242,6 @@ int charge_device_to_openers(const char *devstring, double power, class device *
 
 	return openers;
 }
-
-static vector<struct devpower *> devpower;
 
 void clear_devpower(void)
 {

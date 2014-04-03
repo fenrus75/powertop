@@ -486,6 +486,7 @@ int main(int argc, char **argv)
 	clear_tuning();
 	reset_display();
 
+	clean_open_devices();
 	clear_all_devices();
 	clear_all_cpus();
 

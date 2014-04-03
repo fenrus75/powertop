@@ -86,11 +86,15 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 	cpu_rapl_dev = new class cpu_rapl_device(cpudev, _("cpu rapl package"), packagename, ret);
 	if (cpu_rapl_dev->device_present())
 		all_devices.push_back(cpu_rapl_dev);
+	else
+		delete cpu_rapl_dev;
 
 	sprintf(packagename, _("dram rapl package %i"), cpu);
 	dram_rapl_dev = new class dram_rapl_device(cpudev, _("dram rapl package"), packagename, ret);
 	if (dram_rapl_dev->device_present())
 		all_devices.push_back(dram_rapl_dev);
+	else
+		delete dram_rapl_dev;
 
 	return ret;
 }

@@ -943,8 +943,8 @@ void report_process_update_display(void)
 		format_watts(all_power[i]->Witts(), power, 10);
 
 		if (!show_power)
-			strcpy(power, "          ");
-		sprintf(name, "%s", all_power[i]->type());
+			strncpy(power, "          ", 16);
+		snprintf(name, 20, "%s", all_power[i]->type());
 
 		if (strcmp(name, "Device") == 0)
 			continue;
@@ -956,17 +956,17 @@ void report_process_update_display(void)
 		usage[0] = 0;
 		if (all_power[i]->usage_units()) {
 			if (all_power[i]->usage() < 1000)
-				sprintf(usage, "%5.1f%s", all_power[i]->usage(), all_power[i]->usage_units());
+				snprintf(usage, 20, "%5.1f%s", all_power[i]->usage(), all_power[i]->usage_units());
 			else
-				sprintf(usage, "%5i%s", (int)all_power[i]->usage(), all_power[i]->usage_units());
+				snprintf(usage, 20, "%5i%s", (int)all_power[i]->usage(), all_power[i]->usage_units());
 		}
-		sprintf(wakes, "%5.1f", all_power[i]->wake_ups / measurement_time);
+		snprintf(wakes, 20, "%5.1f", all_power[i]->wake_ups / measurement_time);
 		if (all_power[i]->wake_ups / measurement_time <= 0.3)
-			sprintf(wakes, "%5.2f", all_power[i]->wake_ups / measurement_time);
-		sprintf(gpus, "%5.1f", all_power[i]->gpu_ops / measurement_time);
-		sprintf(disks, "%5.1f (%5.1f)", all_power[i]->hard_disk_hits / measurement_time,
+			snprintf(wakes, 20, "%5.2f", all_power[i]->wake_ups / measurement_time);
+		snprintf(gpus, 20, "%5.1f", all_power[i]->gpu_ops / measurement_time);
+		snprintf(disks, 20, "%5.1f (%5.1f)", all_power[i]->hard_disk_hits / measurement_time,
 				all_power[i]->disk_hits / measurement_time);
-		sprintf(xwakes, "%5.1f", all_power[i]->xwakes / measurement_time);
+		snprintf(xwakes, 20, "%5.1f", all_power[i]->xwakes / measurement_time);
 		if (!all_power[i]->show_events()) {
 			wakes[0] = 0;
 			gpus[0] = 0;

@@ -87,6 +87,17 @@ void reset_display(void)
 	resetterm();
 }
 
+void close_display(void)
+{
+	for (unsigned int i = 0; i < tab_windows.size(); i++) {
+		if (tab_windows[tab_names[i]])
+			delete tab_windows[tab_names[i]];
+		tab_windows[tab_names[i]] = NULL;
+	}
+
+	tab_names.clear();
+}
+
 
 WINDOW *tab_bar = NULL;
 WINDOW *bottom_line = NULL;

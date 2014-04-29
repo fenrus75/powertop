@@ -359,6 +359,17 @@ static void powertop_init(void)
 	initialized = 1;
 }
 
+void clean_shutdown()
+{
+	close_results();
+	close_display();
+	clean_open_devices();
+	clear_all_devices();
+	clear_all_cpus();
+
+	return;
+}
+
 
 int main(int argc, char **argv)
 {
@@ -486,9 +497,7 @@ int main(int argc, char **argv)
 	clear_tuning();
 	reset_display();
 
-	clean_open_devices();
-	clear_all_devices();
-	clear_all_cpus();
+	clean_shutdown();
 
 	return 0;
 }

@@ -83,7 +83,7 @@ report_formatter_csv::escape_string(const char *str)
 void
 report_formatter_csv::add_header()
 {
-	add_exact("\n====================================================================\n");
+	add_exact("____________________________________________________________________\n");
 }
 
 void

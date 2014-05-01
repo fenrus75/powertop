@@ -11,6 +11,7 @@ src/cpu/intel_cpus.cpp
 src/devlist.cpp
 src/lib.cpp
 src/process/do_process.cpp
+src/process/process.cpp
 src/perf/perf.cpp
 src/perf/perf_bundle.cpp
 src/devices/device.cpp
@@ -33,3 +34,6 @@ src/tuning/tuningusb.cpp
 src/tuning/tuningsysfs.cpp
 src/calibrate/calibrate.cpp
 src/main.cpp
+src/report/report.cpp
+src/report/report-formatter-csv.cpp
+src/report/report-formatter-html.cpp

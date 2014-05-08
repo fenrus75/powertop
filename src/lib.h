@@ -35,7 +35,7 @@
 
 #define _(STRING)    gettext(STRING)
 
-#define POWERTOP_VERSION "v"PACKAGE_VERSION
+#define POWERTOP_VERSION "v" PACKAGE_VERSION
 #define POWERTOP_SHORT_VERSION PACKAGE_VERSION
 
 extern int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo);

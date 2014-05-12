@@ -46,8 +46,6 @@
 static void sort_tunables(void);
 static bool should_clear = false;
 
-class tuning_window *tune_window;
-
 class tuning_window: public tab_window {
 public:
 	virtual void repaint(void);
@@ -82,11 +80,6 @@ void initialize_tuning(void)
 	init_tuning();
 
 	w->cursor_max = all_tunables.size() - 1;
-
-	if (tune_window)
-		delete tune_window;
-
-	tune_window = w;
 }
 
 
@@ -312,10 +305,6 @@ void clear_tuning()
 		delete all_untunables[i];
 	}
 	all_untunables.clear();
-
-	if (tune_window)
-		delete tune_window;
-	tune_window = NULL;
 }
 
 void auto_toggle_tuning()

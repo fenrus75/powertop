@@ -856,8 +856,8 @@ void process_update_display(void)
 
 		format_watts(all_power[i]->Witts(), power, 10);
 		if (!show_power)
-			strncpy(power, "          ", 16);
-		snprintf(name, 20, "%s", all_power[i]->type());
+			strcpy(power, "          ");
+		sprintf(name, "%s", all_power[i]->type());
 
 		align_string(name, 14, 20);
 
@@ -867,9 +867,9 @@ void process_update_display(void)
 		usage[0] = 0;
 		if (all_power[i]->usage_units()) {
 			if (all_power[i]->usage() < 1000)
-				snprintf(usage, 20, "%5.1f%s", all_power[i]->usage(), all_power[i]->usage_units());
+				sprintf(usage, "%5.1f%s", all_power[i]->usage(), all_power[i]->usage_units());
 			else
-				snprintf(usage, 20, "%5i%s", (int)all_power[i]->usage(), all_power[i]->usage_units());
+				sprintf(usage, "%5i%s", (int)all_power[i]->usage(), all_power[i]->usage_units());
 		}
 
 		align_string(usage, 14, 20);
@@ -878,7 +878,7 @@ void process_update_display(void)
 		if (!all_power[i]->show_events())
 			events[0] = 0;
 		else if (all_power[i]->events() <= 0.3)
-			snprintf(events, 20, "%5.2f", all_power[i]->events());
+			sprintf(events, "%5.2f", all_power[i]->events());
 
 		align_string(events, 12, 20);
 		wprintw(win, "%s  %s %s %s %s\n", power, usage, events, name, pretty_print(all_power[i]->description(), descr, 128));

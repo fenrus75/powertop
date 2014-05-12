@@ -472,10 +472,10 @@ int read_msr(int cpu, uint64_t offset, uint64_t *value)
 	int fd;
 	char msr_path[256];
 
-	fd = snprintf(msr_path, 256, "/dev/cpu/%d/msr", cpu);
+	fd = sprintf(msr_path, "/dev/cpu/%d/msr", cpu);
 
 	if (access(msr_path, R_OK) != 0){
-		fd = snprintf(msr_path, 256, "/dev/msr%d", cpu);
+		fd = sprintf(msr_path, "/dev/msr%d", cpu);
 
 		if (access(msr_path, R_OK) != 0){
 			fprintf(stderr,
@@ -504,10 +504,10 @@ int write_msr(int cpu, uint64_t offset, uint64_t value)
 	int fd;
 	char msr_path[256];
 
-	fd = snprintf(msr_path, 256, "/dev/cpu/%d/msr", cpu);
+	fd = sprintf(msr_path, "/dev/cpu/%d/msr", cpu);
 
 	if (access(msr_path, R_OK) != 0){
-		fd = snprintf(msr_path, 256, "/dev/msr%d", cpu);
+		fd = sprintf(msr_path, "/dev/msr%d", cpu);
 
 		if (access(msr_path, R_OK) != 0){
 			fprintf(stderr,

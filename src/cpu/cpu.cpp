@@ -466,7 +466,7 @@ void report_display_cpu_cstates(void)
 			continue;
 		/* Tables for PKG, CORE, CPU */
 		pkg_tbl_size.cols=2;
-		pkg_tbl_size.rows= cstates_num+1;
+		pkg_tbl_size.rows= ((cstates_num+1)-LEVEL_HEADER)+1;
 		string pkg_data[pkg_tbl_size.cols * pkg_tbl_size.rows];
 
 		core_tbl_size.cols=2;
@@ -491,11 +491,9 @@ void report_display_cpu_cstates(void)
 				num_cpus+=1;
 			}
 		}
-
 		cpu_tbl_size.cols=(2 * (num_cpus / num_cores)) + 1;
-		cpu_tbl_size.rows = (cstates_num * _package->children.size())
+		cpu_tbl_size.rows = ((cstates_num+1-LEVEL_HEADER) * _package->children.size())
 				+ _package->children.size();
-
 		string cpu_data[cpu_tbl_size.cols * cpu_tbl_size.rows];
 
 		for (core = 0; core < _package->children.size(); core++) {
@@ -608,12 +606,18 @@ void report_display_cpu_cstates(void)
 		}
 
 		/* Report Output */
-		title=title/core_num;
+		if(core_num > 0)
+			title=title/core_num;
+		else if( _core->children.size() > 0)
+			title=title/_core->children.size();
+
 		init_pkg_table_attr(&std_table_css, pkg_tbl_size.rows,  pkg_tbl_size.cols);
 		report.add_table(pkg_data, &std_table_css);
-		init_core_table_attr(&std_table_css, title+1, core_tbl_size.rows,
+		if (!_core->can_collapse()){
+			init_core_table_attr(&std_table_css, title+1, core_tbl_size.rows,
 				core_tbl_size.cols);
-		report.add_table(core_data, &std_table_css);
+			report.add_table(core_data, &std_table_css);
+		}
 		init_cpu_table_attr(&std_table_css, title+1, cpu_tbl_size.rows,
 				cpu_tbl_size.cols);
 		report.add_table(cpu_data, &std_table_css);
@@ -625,7 +629,7 @@ void report_display_cpu_pstates(void)
 {
 	char buffer[512], buffer2[512], tmp_num[50];
 	unsigned int package, core, cpu;
-	int line;
+	int line, title=0;
 	class abstract_cpu *_package, * _core, * _cpu;
 	unsigned int i, pstates_num;
 	const char* core_type = NULL;
@@ -671,7 +675,7 @@ void report_display_cpu_pstates(void)
 
 		/*  Tables for PKG, CORE, CPU */
 		pkg_tbl_size.cols=2;
-		pkg_tbl_size.rows=pstates_num+2;
+		pkg_tbl_size.rows=((pstates_num+1)-LEVEL_HEADER)+2;
 		string pkg_data[pkg_tbl_size.cols * pkg_tbl_size.rows];
 
 		core_tbl_size.cols=2;
@@ -790,10 +794,16 @@ void report_display_cpu_pstates(void)
 		}
 		init_pkg_table_attr(&std_table_css, pkg_tbl_size.rows, pkg_tbl_size.cols);
 		report.add_table(pkg_data, &std_table_css);
-		init_core_table_attr(&std_table_css, (pstates_num+2),
+		if(!_core->can_collapse()){
+			title=pstates_num+2;
+			init_core_table_attr(&std_table_css, title,
 				core_tbl_size.rows, core_tbl_size.cols);
-		report.add_table(core_data, &std_table_css);
-		init_cpu_table_attr(&std_table_css, (pstates_num+2),
+			report.add_table(core_data, &std_table_css);
+		} else {
+			title=pstates_num+1;
+		}
+
+		init_cpu_table_attr(&std_table_css, title,
 				cpu_tbl_size.rows, cpu_tbl_size.cols);
 		report.add_table(cpu_data, &std_table_css);
 	}

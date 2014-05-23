@@ -23,7 +23,6 @@ src/devices/rfkill.cpp
 src/devices/network.cpp
 src/lib.h
 src/tuning/bluetooth.cpp
-src/tuning/cpufreq.cpp
 src/tuning/tuning.cpp
 src/tuning/ethernet.cpp
 src/tuning/tunable.cpp

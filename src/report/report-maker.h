@@ -63,8 +63,12 @@
 #include <string>
 using namespace std;
 /* Conditional gettext. We need original strings for CSV. */
+#ifdef ENABLE_NLS
 #define __(STRING) \
 	((report.get_type() == REPORT_CSV) ? (STRING) : gettext(STRING))
+#else
+#define __(STRING) (STRING)
+#endif
 
 #ifndef UNUSED
 #define UNUSED __attribute__((unused))

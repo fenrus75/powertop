@@ -33,7 +33,11 @@
 #include "config.h"
 #endif
 
+#ifdef ENABLE_NLS
 #define _(STRING)    gettext(STRING)
+#else
+#define _(STRING)    (STRING)
+#endif
 
 #define POWERTOP_VERSION "v" PACKAGE_VERSION
 #define POWERTOP_SHORT_VERSION PACKAGE_VERSION

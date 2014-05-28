@@ -371,8 +371,11 @@ int main(int argc, char **argv)
 	set_new_handler(out_of_memory);
 
 	setlocale (LC_ALL, "");
+
+#ifdef ENABLE_NLS
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
+#endif
 
 	while (1) { /* parse commandline options */
 		c = getopt_long (argc, argv, "ch:C:i:t:uVw:q", long_options, &option_index);

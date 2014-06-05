@@ -28,6 +28,11 @@ class c_rapl_interface
 {
 private:
 	static const int def_sampling_interval = 1; //In seconds
+	bool powercap_sysfs_present;
+	string powercap_core_path;
+	string powercap_uncore_path;
+	string powercap_dram_path;
+
 	unsigned char rapl_domains;
 	int measurment_interval;
 	int first_cpu;
@@ -45,7 +50,7 @@ private:
 	int write_msr(int cpu, unsigned int idx, uint64_t val);
 
 public:
-	c_rapl_interface(int cpu = 0);
+	c_rapl_interface(const char *dev_name = "package-0", int cpu = 0);
 
 	int get_rapl_power_unit(uint64_t *value);
 	double get_power_unit();

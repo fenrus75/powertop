@@ -440,7 +440,7 @@ void report_display_cpu_cstates(void)
 	char buffer[512], buffer2[512], tmp_num[50];
 	unsigned int package, core, cpu;
 	int line, cstates_num, title=0, core_num=0;
-	class abstract_cpu *_package, * _core, * _cpu;
+	class abstract_cpu *_package, *_core = NULL, * _cpu;
 	const char* core_type = NULL;
 
 	cstates_num = get_cstates_num();
@@ -620,7 +620,7 @@ void report_display_cpu_cstates(void)
 		/* Report Output */
 		if(core_num > 0)
 			title=title/core_num;
-		else if( _core->children.size() > 0)
+		else if(_core && _core->children.size() > 0)
 			title=title/_core->children.size();
 
 		init_pkg_table_attr(&std_table_css, pkg_tbl_size.rows,  pkg_tbl_size.cols);
@@ -642,7 +642,7 @@ void report_display_cpu_pstates(void)
 	char buffer[512], buffer2[512], tmp_num[50];
 	unsigned int package, core, cpu;
 	int line, title=0;
-	class abstract_cpu *_package, * _core, * _cpu;
+	class abstract_cpu *_package, *_core = NULL, * _cpu;
 	unsigned int i, pstates_num;
 	const char* core_type = NULL;
 
@@ -806,7 +806,7 @@ void report_display_cpu_pstates(void)
 		}
 		init_pkg_table_attr(&std_table_css, pkg_tbl_size.rows, pkg_tbl_size.cols);
 		report.add_table(pkg_data, &std_table_css);
-		if(!_core->can_collapse()){
+		if(_core && !_core->can_collapse()){
 			title=pstates_num+2;
 			init_core_table_attr(&std_table_css, title,
 				core_tbl_size.rows, core_tbl_size.cols);

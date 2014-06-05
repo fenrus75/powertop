@@ -82,14 +82,14 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 	cpudev = new class cpudevice(_("cpu package"), packagename, ret);
 	all_devices.push_back(cpudev);
 
-	sprintf(packagename, _("cpu rapl package %i"), cpu);
+	sprintf(packagename, _("package-%i"), cpu);
 	cpu_rapl_dev = new class cpu_rapl_device(cpudev, _("cpu rapl package"), packagename, ret);
 	if (cpu_rapl_dev->device_present())
 		all_devices.push_back(cpu_rapl_dev);
 	else
 		delete cpu_rapl_dev;
 
-	sprintf(packagename, _("dram rapl package %i"), cpu);
+	sprintf(packagename, _("package-%i"), cpu);
 	dram_rapl_dev = new class dram_rapl_device(cpudev, _("dram rapl package"), packagename, ret);
 	if (dram_rapl_dev->device_present())
 		all_devices.push_back(dram_rapl_dev);

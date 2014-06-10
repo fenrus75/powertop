@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
-"POT-Creation-Date: 2014-05-28 10:35-0700\n"
+"POT-Creation-Date: 2014-06-10 10:42-0700\n"
 "PO-Revision-Date: 2013-11-05 19:48+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/projects/p/"
@@ -68,63 +68,58 @@ msgstr "CPU-Paket %i"
 msgid "cpu package"
 msgstr "CPU-Paket"
 
-#: src/cpu/cpu.cpp:85
-#, c-format
-msgid "cpu rapl package %i"
-msgstr ""
+#: src/cpu/cpu.cpp:85 src/cpu/cpu.cpp:92
+#, fuzzy, c-format
+msgid "package-%i"
+msgstr "Paket %i"
 
 #: src/cpu/cpu.cpp:86
 msgid "cpu rapl package"
-msgstr ""
-
-#: src/cpu/cpu.cpp:92
-#, c-format
-msgid "dram rapl package %i"
 msgstr ""
 
 #: src/cpu/cpu.cpp:93
 msgid "dram rapl package"
 msgstr ""
 
-#: src/cpu/cpu.cpp:452
+#: src/cpu/cpu.cpp:464
 msgid "Processor Idle State Report"
 msgstr ""
 
-#: src/cpu/cpu.cpp:516 src/cpu/cpu.cpp:731 src/cpu/cpu_package.cpp:47
+#: src/cpu/cpu.cpp:528 src/cpu/cpu.cpp:743 src/cpu/cpu_package.cpp:47
 #, c-format
 msgid "Package"
 msgstr "Paket"
 
-#: src/cpu/cpu.cpp:547 src/cpu/cpu.cpp:753
+#: src/cpu/cpu.cpp:559 src/cpu/cpu.cpp:765
 #, fuzzy, c-format
 msgid "Core %d"
 msgstr "Kern %i"
 
-#: src/cpu/cpu.cpp:554
+#: src/cpu/cpu.cpp:566
 #, fuzzy, c-format
 msgid "GPU %d"
 msgstr "GPU %i"
 
-#: src/cpu/cpu.cpp:575
+#: src/cpu/cpu.cpp:587
 #, fuzzy
 msgid "CPU"
 msgstr "GPU %i"
 
-#: src/cpu/cpu.cpp:654
+#: src/cpu/cpu.cpp:666
 msgid "Processor Frequency Report"
 msgstr ""
 
-#: src/cpu/cpu.cpp:774
+#: src/cpu/cpu.cpp:786
 #, fuzzy, c-format
 msgid "CPU %d"
 msgstr "GPU %i"
 
-#: src/cpu/cpu.cpp:972
+#: src/cpu/cpu.cpp:984
 #, c-format
 msgid "cpu_idle event returned no state?\n"
 msgstr "cpu_idle-Ereignis gab keinen Status zurück?\n"
 
-#: src/cpu/cpu.cpp:987
+#: src/cpu/cpu.cpp:999
 #, c-format
 msgid "power or cpu_frequency event returned no state?\n"
 msgstr "power- oder cpu_frequency-Ereignis gab kein Status zurück?\n"
@@ -811,9 +806,6 @@ msgstr ""
 
 #~ msgid "Using 'ondemand' cpufreq governor"
 #~ msgstr "CPU-Frequenzregler 'bei Bedarf' verwenden"
-
-#~ msgid "Package %i"
-#~ msgstr "Paket %i"
 
 #~ msgid "Power Consumption Summary"
 #~ msgstr "Zusammenfassung der Leistungsaufnahme"

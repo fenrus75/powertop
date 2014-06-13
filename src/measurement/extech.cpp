@@ -287,13 +287,14 @@ extech_power_meter::extech_power_meter(const char *extech_name)
 void extech_power_meter::measure(void)
 {
 	/* trigger the extech to send data */
-	write(fd, " ", 1);
+	if(write(fd, " ", 1) == -1)
+		 printf("Error: %s\n", strerror(errno));
 
 	rate = extech_read(fd);
 
 }
 
-void extech_power_meter::sample(void) 
+void extech_power_meter::sample(void)
 {
 	ssize_t ret;
 	struct timespec tv;
@@ -306,16 +307,16 @@ void extech_power_meter::sample(void)
 		ret = write(fd, " ", 1);
 		if (ret < 0)
 			continue;
-		
+
 		sum += extech_read(fd);
 		samples++;
-	
+
 	}
 }
 
 extern "C"
 {
-	void* thread_proc(void *arg) 
+	void* thread_proc(void *arg)
 	{
 		class extech_power_meter *parent;
 		parent = (class extech_power_meter*)arg;
@@ -339,7 +340,7 @@ void extech_power_meter::start_measurement(void)
 {
 	end_thread = 0;
 	sum = samples = 0;
-	
+
 	if (pthread_create(&thread, NULL, thread_proc, this))
 		fprintf(stderr, "ERROR: extech measurement thread creation failed\n");
 

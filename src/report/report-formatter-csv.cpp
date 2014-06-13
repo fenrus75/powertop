@@ -132,7 +132,7 @@ report_formatter_csv::add_summary_list(string *list, int size)
 	for (i=0; i < size; i+=2){
 		addf_exact("%s %s", list[i].c_str(), list[i+1].c_str());
 		if(i < (size - 1))
-			add_exact(",");
+			add_exact(";");
 	}
 	add_exact("\n");
 }
@@ -155,7 +155,7 @@ report_formatter_csv::add_table(string *system_data, struct table_attributes* tb
 			else{
 				addf_exact("%s", system_data[offset].c_str());
 				if(j < (tb_attr->cols - 1))
-					add_exact(",");
+					add_exact(";");
 			}
 		}
 		if(empty_row < tb_attr->cols)

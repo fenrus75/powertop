@@ -33,6 +33,7 @@
 #include <pthread.h>
 #include <math.h>
 #include <sys/types.h>
+#include <errno.h>
 
 #include "../parameters/parameters.h"
 extern "C" {
@@ -239,7 +240,8 @@ static void *burn_disk(void *dummy)
 
 	while (!stop_measurement) {
 		lseek(fd, 0, SEEK_SET);
-		write(fd, buffer, 64*1024);
+		if(write(fd, buffer, 64*1024) == -1)
+			printf("Error: %s\n", strerror(errno));
 		fdatasync(fd);
 	}
 	close(fd);
@@ -350,17 +352,21 @@ static void backlight_calibration(void)
 		sleep(1);
 	}
 	printf(_("Calibrating idle\n"));
-	system("DISPLAY=:0 /usr/bin/xset dpms force off");
+	if(!system("DISPLAY=:0 /usr/bin/xset dpms force off"))
+		printf("System is not available\n");
 	one_measurement(15, NULL);
-	system("DISPLAY=:0 /usr/bin/xset dpms force on");
+	if(!system("DISPLAY=:0 /usr/bin/xset dpms force on"))
+		printf("System is not available\n");
 }
 
 static void idle_calibration(void)
 {
 	printf(_("Calibrating idle\n"));
-	system("DISPLAY=:0 /usr/bin/xset dpms force off");
+	if(!system("DISPLAY=:0 /usr/bin/xset dpms force off"))
+		printf("System is not available\n");
 	one_measurement(15, NULL);
-	system("DISPLAY=:0 /usr/bin/xset dpms force on");
+	if(!system("DISPLAY=:0 /usr/bin/xset dpms force on"))
+		printf("System is not available\n");
 }
 
 

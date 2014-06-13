@@ -52,3 +52,4 @@ CLEANFILES = css.h
 css.h: powertop.css
 	$(SHELL) ${srcdir}/csstoh.sh ${srcdir}/powertop.css css.h
 
+EXTRA_DIST = ${srcdir}/csstoh.sh

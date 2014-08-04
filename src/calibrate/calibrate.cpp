@@ -244,7 +244,7 @@ static void *burn_disk(void *dummy)
 			printf("Error: %s\n", strerror(errno));
 		fdatasync(fd);
 	}
-	close(fd);
+	unlink(filename);
 	return NULL;
 }
 

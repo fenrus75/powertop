@@ -142,8 +142,10 @@ static void parse_event_format(const char *event_name)
 
 	buf = read_file(file);
 	free(file);
-	if (!buf)
+	if (!buf) {
+		free(name);
 		return;
+	}
 
 	pevent_parse_event(perf_event::pevent, buf, strlen(buf), sys);
 	free(name);

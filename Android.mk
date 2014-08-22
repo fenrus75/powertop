@@ -5,7 +5,7 @@ LOCAL_MODULE_TAGS := debug
 LOCAL_SHARED_LIBRARIES := libstlport \
 			  libnl \
 			  libpci \
-			  libtraceevnet \
+			  libtraceevnet
 LOCAL_MODULE := powertop  
 
 #LOCAL_CFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector -Wshadow -Wformat -D_FORTIFY_SOURCE=2

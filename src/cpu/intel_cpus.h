@@ -24,6 +24,7 @@
  */
 #include <stdint.h>
 #include <sys/time.h>
+#include <dirent.h>
 
 #include "cpu.h"
 
@@ -45,7 +46,18 @@
 #define MSR_CORE_C6_RESIDENCY		0x3FD
 #define MSR_CORE_C7_RESIDENCY		0x3FE
 
-class nhm_package: public cpu_package
+class intel_util
+{
+protected:
+	int byt_ahci_support;
+        DIR *dir;
+public:
+	intel_util();
+	virtual void byt_has_ahci();
+	virtual int get_byt_ahci_support();
+};
+
+class nhm_package: public cpu_package, public intel_util
 {
 private:
 	uint64_t	c2_before, c2_after;
@@ -60,7 +72,8 @@ private:
 	uint64_t	last_stamp;
 	uint64_t	total_stamp;
 public:
-	int		has_c2c7_res;
+	int		has_c7_res;
+	int		has_c2c6_res;
 	int		has_c3_res;
 	int		has_c8c9c10_res;
 	nhm_package(int model);
@@ -71,7 +84,7 @@ public:
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
 };
 
-class nhm_core: public cpu_core
+class nhm_core: public cpu_core, public intel_util
 {
 private:
 	uint64_t	c1_before, c1_after;
@@ -84,7 +97,7 @@ private:
 	uint64_t	total_stamp;
 public:
 	int		has_c1_res;
-	int		has_c2c7_res;
+	int		has_c7_res;
 	int		has_c3_res;
 	nhm_core(int model);
 	virtual void	measurement_start(void);
@@ -94,7 +107,7 @@ public:
 	virtual char *  fill_pstate_line(int line_nr, char *buffer);
 };
 
-class nhm_cpu: public cpu_linux
+class nhm_cpu: public cpu_linux, public intel_util
 {
 private:
 	uint64_t	aperf_before;
@@ -138,7 +151,7 @@ private:
 	uint64_t	rc6_before, rc6_after;
 	uint64_t	rc6p_before, rc6p_after;
 	uint64_t	rc6pp_before, rc6pp_after;
-	
+
 	struct timeval	before;
 	struct timeval	after;
 
@@ -157,3 +170,4 @@ public:
 };
 
 int is_supported_intel_cpu(int model);
+int byt_has_ahci();

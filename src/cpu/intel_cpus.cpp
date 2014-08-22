@@ -87,9 +87,29 @@ static uint64_t get_msr(int cpu, uint64_t offset)
 	return msr;
 }
 
+intel_util::intel_util()
+{
+	byt_ahci_support=0;
+}
+
+void intel_util::byt_has_ahci()
+{
+	dir = opendir("/sys/bus/pci/devices/0000:00:13.0");
+        if (!dir)
+                byt_ahci_support=0;
+	else
+		byt_ahci_support=1;
+        closedir(dir);
+}
+
+int intel_util::get_byt_ahci_support()
+{
+	return byt_ahci_support;
+}
+
 nhm_core::nhm_core(int model)
 {
-	has_c2c7_res = 0;
+	has_c7_res = 0;
 
 	switch(model) {
 		case 0x2A:	/* SNB */
@@ -99,13 +119,18 @@ nhm_core::nhm_core(int model)
 		case 0x3E:      /* IVB Xeon */
 		case 0x45:	/* HSW-ULT */
 		case 0x3D:	/* Intel Next Generation */
-			has_c2c7_res = 1;
+			has_c7_res = 1;
 	}
 
 	/* BYT-M does not support C3/C4 */
 	if (model == 0x37) {
 		has_c3_res = 0;
 		has_c1_res = 1;
+		this->byt_has_ahci();
+                if ((this->get_byt_ahci_support()) == 0)
+                        has_c7_res = 1;/*BYT-T PC7 <- S0iX*/
+                else
+                        has_c7_res = 0;
 	} else {
 		has_c3_res = 1;
 		has_c1_res = 0;
@@ -127,7 +152,7 @@ void nhm_core::measurement_start(void)
 	if (this->has_c3_res)
 		c3_before    = get_msr(first_cpu, MSR_CORE_C3_RESIDENCY);
 	c6_before    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
-	if (this->has_c2c7_res)
+	if (this->has_c7_res)
 		c7_before    = get_msr(first_cpu, MSR_CORE_C7_RESIDENCY);
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
@@ -136,7 +161,7 @@ void nhm_core::measurement_start(void)
 	if (this->has_c3_res)
 		insert_cstate("core c3", "C3 (cc3)", 0, c3_before, 1);
 	insert_cstate("core c6", "C6 (cc6)", 0, c6_before, 1);
-	if (this->has_c2c7_res) {
+	if (this->has_c7_res) {
 		insert_cstate("core c7", "C7 (cc7)", 0, c7_before, 1);
 	}
 
@@ -171,7 +196,7 @@ void nhm_core::measurement_end(void)
 	if (this->has_c3_res)
 		c3_after    = get_msr(first_cpu, MSR_CORE_C3_RESIDENCY);
 	c6_after    = get_msr(first_cpu, MSR_CORE_C6_RESIDENCY);
-	if (this->has_c2c7_res)
+	if (this->has_c7_res)
 		c7_after    = get_msr(first_cpu, MSR_CORE_C7_RESIDENCY);
 	tsc_after   = get_msr(first_cpu, MSR_TSC);
 
@@ -180,7 +205,7 @@ void nhm_core::measurement_end(void)
 	if (this->has_c3_res)
 		finalize_cstate("core c3", 0, c3_after, 1);
 	finalize_cstate("core c6", 0, c6_after, 1);
-	if (this->has_c2c7_res)
+	if (this->has_c7_res)
 		finalize_cstate("core c7", 0, c7_after, 1);
 
 	gettimeofday(&stamp_after, NULL);
@@ -258,23 +283,32 @@ char * nhm_core::fill_pstate_line(int line_nr, char *buffer)
 nhm_package::nhm_package(int model)
 {
 	has_c8c9c10_res = 0;
-	has_c2c7_res = 0;
+	has_c2c6_res = 0;
+	has_c7_res = 0;
 
 	switch(model) {
 		case 0x2A:	/* SNB */
 		case 0x2D:	/* SNB Xeon */
 		case 0x3A:      /* IVB */
 		case 0x3C:
-		case 0x37:
 		case 0x3E:      /* IVB Xeon */
 		case 0x45:	/* HSW-ULT */
 		case 0x3D:	/* Intel Next Generation */
-			has_c2c7_res = 1;
+			has_c2c6_res=1;
+			has_c7_res = 1;
 	}
 
-	/* BYT-M doesn't have C3 */
-	if (model == 0x37)
+	/* BYT-M doesn't have C3 or C7 */
+	/* BYT-T doesn't have C3 but it has C7 */
+	if (model == 0x37){
+		has_c2c6_res=1;
 		has_c3_res = 0;
+		this->byt_has_ahci();
+		if ((this->get_byt_ahci_support()) == 0)
+			has_c7_res = 1;/*BYT-T PC7 <- S0iX*/
+		else
+			has_c7_res = 0;
+	}
 	else
 		has_c3_res = 1;
 
@@ -316,13 +350,13 @@ void nhm_package::measurement_start(void)
 
 	last_stamp = 0;
 
-	if (this->has_c2c7_res)
+	if (this->has_c2c6_res)
 		c2_before    = get_msr(number, MSR_PKG_C2_RESIDENCY);
 
 	if (this->has_c3_res)
 		c3_before    = get_msr(number, MSR_PKG_C3_RESIDENCY);
 	c6_before    = get_msr(number, MSR_PKG_C6_RESIDENCY);
-	if (this->has_c2c7_res)
+	if (this->has_c7_res)
 		c7_before    = get_msr(number, MSR_PKG_C7_RESIDENCY);
 	if (this->has_c8c9c10_res) {
 		c8_before    = get_msr(number, MSR_PKG_C8_RESIDENCY);
@@ -331,13 +365,13 @@ void nhm_package::measurement_start(void)
 	}
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
-	if (this->has_c2c7_res)
+	if (this->has_c2c6_res)
 		insert_cstate("pkg c2", "C2 (pc2)", 0, c2_before, 1);
 
 	if (this->has_c3_res)
 		insert_cstate("pkg c3", "C3 (pc3)", 0, c3_before, 1);
 	insert_cstate("pkg c6", "C6 (pc6)", 0, c6_before, 1);
-	if (this->has_c2c7_res)
+	if (this->has_c7_res)
 		insert_cstate("pkg c7", "C7 (pc7)", 0, c7_before, 1);
 	if (this->has_c8c9c10_res) {
 		insert_cstate("pkg c8", "C8 (pc8)", 0, c8_before, 1);
@@ -357,13 +391,13 @@ void nhm_package::measurement_end(void)
 			children[i]->wiggle();
 
 
-	if (this->has_c2c7_res)
+	if (this->has_c2c6_res)
 		c2_after    = get_msr(number, MSR_PKG_C2_RESIDENCY);
 
 	if (this->has_c3_res)
 		c3_after    = get_msr(number, MSR_PKG_C3_RESIDENCY);
 	c6_after    = get_msr(number, MSR_PKG_C6_RESIDENCY);
-	if (this->has_c2c7_res)
+	if (this->has_c7_res)
 		c7_after    = get_msr(number, MSR_PKG_C7_RESIDENCY);
 	if (has_c8c9c10_res) {
 		c8_after = get_msr(number, MSR_PKG_C8_RESIDENCY);
@@ -377,13 +411,13 @@ void nhm_package::measurement_end(void)
 	time_factor = 1000000.0 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
 
 
-	if (this->has_c2c7_res)
+	if (this->has_c2c6_res)
 		finalize_cstate("pkg c2", 0, c2_after, 1);
 
 	if (this->has_c3_res)
 		finalize_cstate("pkg c3", 0, c3_after, 1);
 	finalize_cstate("pkg c6", 0, c6_after, 1);
-	if (this->has_c2c7_res)
+	if (this->has_c7_res)
 		finalize_cstate("pkg c7", 0, c7_after, 1);
 	if (has_c8c9c10_res) {
 		finalize_cstate("pkg c8", 0, c8_after, 1);
@@ -499,7 +533,6 @@ void nhm_cpu::measurement_end(void)
 	total_stamp = 0;
 
 }
-
 
 char * nhm_cpu::fill_pstate_name(int line_nr, char *buffer)
 {

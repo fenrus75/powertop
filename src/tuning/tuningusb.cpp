@@ -28,6 +28,7 @@
 #include "unistd.h"
 #include "tuningusb.h"
 #include <string.h>
+#include <dirent.h>
 #include <utility>
 #include <iostream>
 #include <fstream>
@@ -117,6 +118,7 @@ static void add_usb_callback(const char *d_name)
 {
 	class usb_tunable *usb;
 	char filename[4096];
+	DIR *dir;
 
 	sprintf(filename, "/sys/bus/usb/devices/%s/power/control", d_name);
 	if (access(filename, R_OK) != 0)
@@ -125,6 +127,23 @@ static void add_usb_callback(const char *d_name)
 	sprintf(filename, "/sys/bus/usb/devices/%s/power/active_duration", d_name);
 	if (access(filename, R_OK)!=0)
 		return;
+
+	/* every interface of this device should support autosuspend */
+	sprintf(filename, "/sys/bus/usb/devices/%s", d_name);
+	if ((dir = opendir(filename))) {
+		struct dirent *entry;
+		while ((entry = readdir(dir))) {
+			/* dirname: <busnum>-<devnum>...:<config num>-<interface num> */
+			if (!isdigit(entry->d_name[0]))
+				continue;
+			sprintf(filename, "/sys/bus/usb/devices/%s/%s/supports_autosuspend", d_name, entry->d_name);
+			if (access(filename, R_OK) == 0 && read_sysfs(filename) == 0)
+				break;
+		}
+		closedir(dir);
+		if (entry)
+			return;
+	}
 
 	sprintf(filename, "/sys/bus/usb/devices/%s", d_name);
 	usb = new class usb_tunable(filename, d_name);

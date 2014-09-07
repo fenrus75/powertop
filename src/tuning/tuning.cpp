@@ -198,7 +198,6 @@ void report_show_tunables(void)
 	unsigned int i;
 	/* three tables; bad, unfixable, good */
 	sort_tunables();
-	string srt_tmp;
 	int idx, rows = 0, cols;
 
 	/* First Table */

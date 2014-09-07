@@ -139,10 +139,6 @@ void add_runtime_tunables(const char *bus)
 		if (entry->d_name[0] == '.')
 			continue;
 
-		sprintf(filename, "/sys/bus/%s/devices/%s", bus, entry->d_name);
-
-
-
 		sprintf(filename, "/sys/bus/%s/devices/%s/power/control", bus, entry->d_name);
 
 		if (access(filename, R_OK) != 0)

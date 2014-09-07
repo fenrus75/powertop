@@ -647,9 +647,9 @@ void c_rapl_interface::rapl_measure_energy()
 	double pp0_joules = 0;
 	double pp1_joules = 0;
 
-	ret = get_pkg_power_info(&thermal_spec_power, &max_power, &min_power, &max_time_window);
+	get_pkg_power_info(&thermal_spec_power, &max_power, &min_power, &max_time_window);
 	RAPL_DBG_PRINT("Pkg Power Info: Thermal spec %f watts, max %f watts, min %f watts, max time window %f seconds\n", thermal_spec_power, max_power, min_power, max_time_window);
-	ret = get_dram_power_info(&thermal_spec_power, &max_power, &min_power, &max_time_window);
+	get_dram_power_info(&thermal_spec_power, &max_power, &min_power, &max_time_window);
 	RAPL_DBG_PRINT("DRAM Power Info: Thermal spec %f watts, max %f watts, min %f watts, max time window %f seconds\n", thermal_spec_power, max_power, min_power, max_time_window);
 
 	for (;;) {

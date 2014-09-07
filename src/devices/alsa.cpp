@@ -154,7 +154,6 @@ static void create_all_alsa_callback(const char *d_name)
 {
 	char filename[4096];
 	class alsa *bl;
-	ofstream file;
 
 	if (strncmp(d_name, "hwC", 3) != 0)
 		return;

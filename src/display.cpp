@@ -267,13 +267,8 @@ void cursor_up(void)
 	if (w) {
 		w->cursor_up(); 
 		if(w->ypad_pos > 0) {
-			if (tab_names[current_tab] == "Tunables") {
-				prefresh(w->win, --w->ypad_pos, w->xpad_pos, 
-					1, 0, LINES - 3, COLS - 1);
-	                } else {
-				prefresh(w->win, --w->ypad_pos, w->xpad_pos, 
-					1, 0, LINES - 3, COLS - 1);
-			}
+			prefresh(w->win, --w->ypad_pos, w->xpad_pos,
+				 1, 0, LINES - 3, COLS - 1);
 		}
 	}
 	

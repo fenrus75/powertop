@@ -1,94 +1,95 @@
-.TH POWERTOP 8 "June 1, 2012" "Linux" "powertop manual"
+.TH POWERTOP "8" "2014-08-02" "powertop manual" "System Administration"
 .SH NAME
 powertop \- a power consumption and power management diagnosis tool.
 .SH SYNOPSIS
 .B powertop
-.RB [
-.IR options
-.RB ]
+.RI [ options ]
 .SH DESCRIPTION
-.P
-\fBpowertop\fP is a program that helps to diagnose various issues with power consumption
-and power management. It also has an interactive mode allowing one to
-experiment with various power management settings. When invoking powertop
-without arguments powertop starts in interactive mode.
+.B powertop
+is a program that helps to diagnose various issues with power consumption
+and power management.  It also has an interactive mode allowing one to
+experiment with various power management settings.  When invoking
+powertop without arguments powertop starts in interactive mode.
 .SH OPTIONS
 .TP
-\fB\-\-calibrate
-runs powertop in calibration mode. When running on battery, powertop
-can track power consumption as well as system activity. When there
-are enough measurements, powertop can start to report power estimates. One
+.B \-\-calibrate
+Runs powertop in calibration mode.  When running on battery, powertop can
+track power consumption as well as system activity.  When there are
+enough measurements, powertop can start to report power estimates.  One
 can get more accurate estimates by using this option to enable a
-calibration cycle. This will cycle through various display levels and USB
-device activities and workloads.
+calibration cycle.  This will cycle through various display levels and
+USB device activities and workloads.
 .TP
-\fB\-\-csv[\fR=\fIFILENAME\fR]
-generate a CSV report. If a filename is not specified then the
-default name "powertop.csv" is used. The CSV report can be
-used for reporting and data analysis.
+\fB\-\-csv\fR[=\fIfilename\fR]
+Generate a CSV report.  If a
+.I filename
+is not specified then the default name
+.B powertop.csv
+is used.  The CSV report can be used for reporting and data analysis.
 .TP
-\fB\-\-debug
- run in "debug" mode.
+.B \-\-debug
+Run in "debug" mode.
 .TP
 \fB\-\-extech\fR=\fIdevnode\fR
-use the Extech Power Analyzer for measurements. This allows one to
+Use the Extech Power Analyzer for measurements.  This allows one to
 specify the serial device node of the serial to USB adaptor connecting to
-the Extech Power Analyzer, for example /dev/ttyUSB0.
+the Extech Power Analyzer, for example
+.IR /dev/ttyUSB0 .
 .TP
-\fB\-\-help
- show the help message.
+.B \-\-help
+Show the help message.
 .TP
-\fB\-\-html[\fR=\fIFILENAME\fR]
-generate an HTML report. If a filename is not specified then the
-default name "powertop.html" is used. The HTML report can be
-sent to others to help diagnose power issues.
+\fB\-\-html\fR[=\fIfilename\fR]
+Generate an HTML report.  If a
+.I filename
+is not specified then the default name
+.B powertop.html
+is used.  The HTML report can be sent to others to help diagnose power
+issues.
 .TP
-\fB\-\-iteration[\fR=\fIiterations\fR]
-number of times to run each test.
+\fB\-\-iteration\fR[=\fIiterations\fR]
+Number of times to run each test.
 .TP
-\fB\-\-quiet
- suppress stderr output.
+.B \-\-quiet
+Suppress stderr output.
 .TP
-\fB\-\-time[\fR=\fIseconds\fR]
-generate a report for a specified number of seconds.
+\fB\-\-time\fR[=\fIseconds\fR]
+Generate a report for a specified number of
+.IR seconds .
 .TP
-\fB\-\-version
-print version information and exit.
+.B \-\-version
+Print version information and exit.
 .SH COMMANDS
 In interactive mode, the following key bindings are available:
-.TP
-\fBTab
-Show next tab
-.TP
-\fBBackTab
-Show previous tab
-.TP
-\fBRight Arrow
-Scroll to the right
-.TP
-\fBLeft Arrow
-Scroll to the left
-.TP
-\fBUp Arrow, PageUp
-Scroll up or select previous item
-.TP
-\fBDown Arrow, PageDown
-Scroll down or select next item
-.TP
-\fBSpace, Return
-Activate current item
-.TP
-\fBs
-Set refresh timeout
-.TP
-\fBr
-Refresh window
-.TP
-\fBq, Ctrl-C, Escape
-Exit powertop
+.IP
+.TS
+tab(@);
+l l.
+\fBTab\fR@Show next tab
+\fBBackTab\fR@Show previous tab
+\fBRight Arrow\fR@Scroll to the right
+\fBLeft Arrow\fR@Scroll to the left
+\fBUp Arrow\fR, \fBPageUp\fR@Scroll up or select previous item
+\fBDown Arrow\fR, \fBPageDown\fR@Scroll down or select next item
+\fBSpace\fR, \fBReturn\fR@Activate current item
+\fBs\fR@Set refresh timeout
+\fBr\fR@Refresh window
+\fBq\fR, \fBCtrl-C\fR, \fBEscape\fR@Exit powertop
+.TE
 .SH BUGS
-Send bug reports to <powertop@lists.01.org>
+Send bug reports to
+.MT powertop@lists.01.org
+.ME
 .SH SEE ALSO
-The program is more fully described at https://01.org/powertop
+The program is more fully described at
+.UR https://01.org/powertop
+.UE
 .SH AUTHOR
-powertop was written by Arjan van de Ven <arjan@linux.intel.com>, and is currently maintained by Chris E Ferron <chris.e.ferron@linux.intel.com>.
+powertop was written by
+.MT arjan@\:linux.\:intel.\:com
+Arjan van de Ven
+.ME ,
+and is currently maintained by
+.MT chris.\:e.\:ferron@\:linux.\:intel.\:com
+Chris E Ferron
+.ME .

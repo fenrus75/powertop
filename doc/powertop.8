@@ -12,7 +12,10 @@ experiment with various power management settings.  When invoking
 powertop without arguments powertop starts in interactive mode.
 .SH OPTIONS
 .TP
-.B \-\-calibrate
+.B \-\-auto\-tune
+Set all tunable options to their good setting without interaction.
+.TP
+.BR \-c ", " \-\-calibrate
 Runs powertop in calibration mode.  When running on battery, powertop can
 track power consumption as well as system activity.  When there are
 enough measurements, powertop can start to report power estimates.  One
@@ -20,7 +23,7 @@ can get more accurate estimates by using this option to enable a
 calibration cycle.  This will cycle through various display levels and
 USB device activities and workloads.
 .TP
-\fB\-\-csv\fR[=\fIfilename\fR]
+\fB\-C\fR, \fB\-\-csv\fR[=\fIfilename\fR]
 Generate a CSV report.  If a
 .I filename
 is not specified then the default name
@@ -28,7 +31,7 @@ is not specified then the default name
 is used.  The CSV report can be used for reporting and data analysis.
 .TP
 .B \-\-debug
-Run in "debug" mode.
+Run in debug mode.
 .TP
 \fB\-\-extech\fR=\fIdevnode\fR
 Use the Extech Power Analyzer for measurements.  This allows one to
@@ -36,10 +39,7 @@ specify the serial device node of the serial to USB adaptor connecting to
 the Extech Power Analyzer, for example
 .IR /dev/ttyUSB0 .
 .TP
-.B \-\-help
-Show the help message.
-.TP
-\fB\-\-html\fR[=\fIfilename\fR]
+\fB\-r\fR, \fB\-\-html\fR[=\fIfilename\fR]
 Generate an HTML report.  If a
 .I filename
 is not specified then the default name
@@ -47,18 +47,26 @@ is not specified then the default name
 is used.  The HTML report can be sent to others to help diagnose power
 issues.
 .TP
-\fB\-\-iteration\fR[=\fIiterations\fR]
+\fB\-i\fR, \fB\-\-iteration\fR[=\fIiterations\fR]
 Number of times to run each test.
 .TP
-.B \-\-quiet
+.BR \-q ", " \-\-quiet
 Suppress stderr output.
 .TP
-\fB\-\-time\fR[=\fIseconds\fR]
+\fB\-t\fR, \fB\-\-time\fR[=\fIseconds\fR]
 Generate a report for a specified number of
 .IR seconds .
 .TP
-.B \-\-version
+\fB\-w\fR, \fB\-\-workload\fR[=\fIworkload\fR]
+Execute
+.I workload
+file as a part of calibration before making a report.
+.TP
+.BR \-V ", " \-\-version
 Print version information and exit.
+.TP
+.BR \-h ", " \-\-help
+Show the help message and exit.
 .SH COMMANDS
 In interactive mode, the following key bindings are available:
 .IP

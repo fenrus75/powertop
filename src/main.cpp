@@ -69,22 +69,28 @@ int debug_learning = 0;
 unsigned time_out = 20;
 int leave_powertop = 0;
 
+enum {
+	OPT_AUTO_TUNE = CHAR_MAX + 1,
+	OPT_EXTECH,
+	OPT_DEBUG
+};
+
 static const struct option long_options[] =
 {
 	/* These options set a flag. */
-	{"debug", no_argument, &debug_learning, 'd'},
-	{"version", no_argument, NULL, 'V'},
-	{"help",no_argument, NULL, 'u'}, /* u for usage */
-	{"calibrate",no_argument, NULL, 'c'},
-	{"auto-tune",no_argument, NULL, 'a'},
-	{"html", optional_argument, NULL, 'h'},
-	{"csv", optional_argument, NULL, 'C'},
-	{"extech", optional_argument, NULL, 'e'},
-	{"time", optional_argument, NULL, 't'},
-	{"iteration", optional_argument, NULL, 'i'},
-	{"workload", optional_argument, NULL, 'w'},
-	{"quiet", no_argument, NULL, 'q'},
-	{NULL, 0, NULL, 0}
+	{"auto-tune",	no_argument,		NULL,		 OPT_AUTO_TUNE},
+	{"calibrate",	no_argument,		NULL,		 'c'},
+	{"csv",		optional_argument,	NULL,		 'C'},
+	{"debug",	no_argument,		&debug_learning, OPT_DEBUG},
+	{"extech",	optional_argument,	NULL,		 OPT_EXTECH},
+	{"html",	optional_argument,	NULL,		 'r'},
+	{"iteration",	optional_argument,	NULL,		 'i'},
+	{"quiet",	no_argument,		NULL,		 'q'},
+	{"time",	optional_argument,	NULL,		 't'},
+	{"workload",	optional_argument,	NULL,		 'w'},
+	{"version",	no_argument,		NULL,		 'V'},
+	{"help",	no_argument,		NULL,		 'h'},
+	{NULL,		0,			NULL,		 0}
 };
 
 static void print_version()
@@ -108,21 +114,21 @@ static bool set_refresh_timeout()
 
 static void print_usage()
 {
-	printf("%s\n\n",_("Usage: powertop [OPTIONS]"));
-	printf("--debug \t\t %s\n",_("run in \"debug\" mode"));
-	printf("--version \t\t %s\n",_("print version information"));
-	printf("--calibrate \t\t %s\n",_("runs powertop in calibration mode"));
-	printf("--auto-tune \t\t %s\n",_("Sets all tunable options to their GOOD setting"));
-	printf("--extech%s \t %s\n",_("[=devnode]"),_("uses an Extech Power Analyzer for measurements"));
-	printf("--html%s \t %s\n",_("[=FILENAME]"),_("generate a html report"));
-	printf("--csv%s \t %s\n",_("[=FILENAME]"),_("generate a csv report"));
-	printf("--time%s \t %s\n",_("[=seconds]"), _("generate a report for 'x' seconds"));
-	printf("--iteration%s\n", _("[=iterations] number of times to run each test"));
-	printf("--workload%s \t %s\n", _("[=workload]"), _("file to execute for workload"));
-	printf("--quiet \t\t %s\n", _("suppress stderr output"));
-	printf("--help \t\t\t %s\n",_("print this help menu"));
+	printf("%s\n\n", _("Usage: powertop [OPTIONS]"));
+	printf("     --auto-tune\t %s\n", _("sets all tunable options to their GOOD setting"));
+	printf(" -c, --calibrate\t %s\n", _("runs powertop in calibration mode"));
+	printf(" -C, --csv%s\t %s\n", _("[=filename]"), _("generate a csv report"));
+	printf("     --debug\t\t %s\n", _("run in \"debug\" mode"));
+	printf("     --extech%s\t %s\n", _("[=devnode]"), _("uses an Extech Power Analyzer for measurements"));
+	printf(" -r, --html%s\t %s\n", _("[=filename]"), _("generate a html report"));
+	printf(" -i, --iteration%s\n", _("[=iterations] number of times to run each test"));
+	printf(" -q, --quiet\t\t %s\n", _("suppress stderr output"));
+	printf(" -t, --time%s\t %s\n", _("[=seconds]"), _("generate a report for 'x' seconds"));
+	printf(" -w, --workload%s %s\n", _("[=workload]"), _("file to execute for workload"));
+	printf(" -V, --version\t\t %s\n", _("print version information"));
+	printf(" -h, --help\t\t %s\n", _("print this help menu"));
 	printf("\n");
-	printf("%s\n\n",_("For more help please refer to the README"));
+	printf("%s\n\n", _("For more help please refer to the 'man 8 powertop'"));
 }
 
 static void do_sleep(int seconds)
@@ -380,63 +386,59 @@ int main(int argc, char **argv)
 #endif
 
 	while (1) { /* parse commandline options */
-		c = getopt_long (argc, argv, "ch:C:i:t:uVw:q", long_options, &option_index);
+		c = getopt_long(argc, argv, "cC:r:i:qt:w:Vh", long_options, &option_index);
 		/* Detect the end of the options. */
 		if (c == -1)
 			break;
-
 		switch (c) {
-			case 'V':
-				print_version();
-				exit(0);
-				break;
-
-			case 'e': /* Extech power analyzer support */
-				checkroot();
-				extech_power_meter(optarg ? optarg : "/dev/ttyUSB0");
-				break;
-			case 'u':
-				print_usage();
-				exit(0);
-				break;
-			case 'a':
-				auto_tune = 1;
-				leave_powertop = 1;
-				break;
-			case 'c':
-				powertop_init();
-				calibrate();
-				break;
-
-			case 'h': /* html report */
-				reporttype = REPORT_HTML;
-				sprintf(filename, "%s", optarg ? optarg : "powertop.html" );
-				break;
-
-			case 't':
-				time_out = (optarg ? atoi(optarg) : 20);
-				break;
-
-			case 'i':
-				iterations = (optarg ? atoi(optarg) : 1);
-				break;
-
-			case 'w': /* measure workload */
-				sprintf(workload, "%s", optarg ? optarg :'\0' );
-				break;
-			case 'q':
-				if(freopen("/dev/null", "a", stderr))
-					fprintf(stderr, _("Quite mode failed!\n"));
-				break;
-
-			case 'C': /* csv report*/
-				reporttype = REPORT_CSV;
-				sprintf(filename, "%s", optarg ? optarg : "powertop.csv");
-				break;
-			case '?': /* Unknown option */
-				/* getopt_long already printed an error message. */
-				exit(0);
-				break;
+		case OPT_AUTO_TUNE:
+			auto_tune = 1;
+			leave_powertop = 1;
+			break;
+		case 'c':
+			powertop_init();
+			calibrate();
+			break;
+		case 'C':		/* csv report */
+			reporttype = REPORT_CSV;
+			sprintf(filename, "%s", optarg ? optarg : "powertop.csv");
+			break;
+		case OPT_DEBUG:
+			/* implemented using getopt_long(3) flag */
+			break;
+		case OPT_EXTECH:	/* Extech power analyzer support */
+			checkroot();
+			extech_power_meter(optarg ? optarg : "/dev/ttyUSB0");
+			break;
+		case 'r':		/* html report */
+			reporttype = REPORT_HTML;
+			sprintf(filename, "%s", optarg ? optarg : "powertop.html");
+			break;
+		case 'i':
+			iterations = (optarg ? atoi(optarg) : 1);
+			break;
+		case 'q':
+			if (freopen("/dev/null", "a", stderr))
+				fprintf(stderr, _("Quite mode failed!\n"));
+			break;
+		case 't':
+			time_out = (optarg ? atoi(optarg) : 20);
+			break;
+		case 'w':		/* measure workload */
+			sprintf(workload, "%s", optarg ? optarg : '\0');
+			break;
+		case 'V':
+			print_version();
+			exit(0);
+			break;
+		case 'h':
+			print_usage();
+			exit(0);
+			break;
+		case '?':		/* Unknown option */
+			/* getopt_long already printed an error message. */
+			exit(1);
+			break;
 		}
 	}
 

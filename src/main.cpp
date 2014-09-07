@@ -460,7 +460,8 @@ int main(int argc, char **argv)
 		end_pci_access();
 		exit(0);
 	}
-	init_display();
+	if (!auto_tune)
+		init_display();
 	initialize_tuning();
 	/* first one is short to not let the user wait too long */
 	one_measurement(1, NULL);
@@ -473,11 +474,13 @@ int main(int argc, char **argv)
 	}
 
 	while (!leave_powertop) {
-		show_cur_tab();
+		if (!auto_tune)
+			show_cur_tab();
 		one_measurement(time_out, NULL);
 		learn_parameters(15, 0);
 	}
-	endwin();
+	if (!auto_tune)
+		endwin();
 	printf("%s\n", _("Leaving PowerTOP"));
 
 	end_process_data();

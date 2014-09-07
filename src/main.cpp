@@ -315,8 +315,10 @@ static void powertop_init(void)
 	rlmt.rlim_cur = rlmt.rlim_max = get_nr_open();
 	setrlimit (RLIMIT_NOFILE, &rlmt);
 
-	ret = system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1");
-	ret = system("/sbin/modprobe msr > /dev/null 2>&1");
+	if (system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1"))
+		fprintf(stderr, _("modprobe cpufreq_stats failed"));
+	if (system("/sbin/modprobe msr > /dev/null 2>&1"))
+		fprintf(stderr, _("modprobe msr failed"));
 	statfs("/sys/kernel/debug", &st_fs);
 
 	if (st_fs.f_type != (long) DEBUGFS_MAGIC) {

@@ -44,6 +44,7 @@ src/.deps/
 src/Makefile
 src/calibrate/.deps/
 src/cpu/.deps/
+src/cpu/rapl/.deps
 src/devices/.deps/
 src/measurement/.deps/
 src/parameters/.deps/

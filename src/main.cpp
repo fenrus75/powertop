@@ -68,6 +68,7 @@
 int debug_learning = 0;
 unsigned time_out = 20;
 int leave_powertop = 0;
+void (*ui_notify_user) (const char *frmt, ...);
 
 enum {
 	OPT_AUTO_TUNE = CHAR_MAX + 1,
@@ -384,7 +385,7 @@ int main(int argc, char **argv)
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
 #endif
-
+	ui_notify_user = ui_notify_user_ncurses;
 	while (1) { /* parse commandline options */
 		c = getopt_long(argc, argv, "cC:r:i:qt:w:Vh", long_options, &option_index);
 		/* Detect the end of the options. */
@@ -394,6 +395,7 @@ int main(int argc, char **argv)
 		case OPT_AUTO_TUNE:
 			auto_tune = 1;
 			leave_powertop = 1;
+			ui_notify_user = ui_notify_user_console;
 			break;
 		case 'c':
 			powertop_init();

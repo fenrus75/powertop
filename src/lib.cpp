@@ -531,7 +531,7 @@ int write_msr(int cpu, uint64_t offset, uint64_t value)
 
 #define UI_NOTIFY_BUFF_SZ 2048
 
-void ui_notify_user(const char *frmt, ...)
+void ui_notify_user_ncurses(const char *frmt, ...)
 {
 	char notify[UI_NOTIFY_BUFF_SZ];
 	va_list list;
@@ -547,4 +547,13 @@ void ui_notify_user(const char *frmt, ...)
 	va_end(list);
 	mvprintw(1, 0, notify);
 	attroff(COLOR_PAIR(1));
+}
+
+void ui_notify_user_console(const char *frmt, ...)
+{
+	va_list list;
+
+	va_start(list, frmt);
+	vprintf(frmt, list);
+	va_end(list);
 }

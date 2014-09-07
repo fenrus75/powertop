@@ -479,12 +479,12 @@ void report_display_cpu_cstates(void)
 		/* Tables for PKG, CORE, CPU */
 		pkg_tbl_size.cols=2;
 		pkg_tbl_size.rows= ((cstates_num+1)-LEVEL_HEADER)+1;
-		string pkg_data[pkg_tbl_size.cols * pkg_tbl_size.rows];
+		string *pkg_data = new string[pkg_tbl_size.cols * pkg_tbl_size.rows];
 
 		core_tbl_size.cols=2;
 		core_tbl_size.rows=(cstates_num *_package->children.size())
 				+ _package->children.size();
-		string core_data[core_tbl_size.cols * core_tbl_size.rows];
+		string *core_data = new string[core_tbl_size.cols * core_tbl_size.rows];
 		int num_cpus=0, num_cores=0;
 
 		for (core = 0; core < _package->children.size(); core++) {
@@ -506,7 +506,7 @@ void report_display_cpu_cstates(void)
 		cpu_tbl_size.cols=(2 * (num_cpus / num_cores)) + 1;
 		cpu_tbl_size.rows = ((cstates_num+1-LEVEL_HEADER) * _package->children.size())
 				+ _package->children.size();
-		string cpu_data[cpu_tbl_size.cols * cpu_tbl_size.rows];
+		string *cpu_data = new string[cpu_tbl_size.cols * cpu_tbl_size.rows];
 
 		for (core = 0; core < _package->children.size(); core++) {
 			cpu_data[idx3]="&nbsp;";
@@ -633,6 +633,9 @@ void report_display_cpu_cstates(void)
 		init_cpu_table_attr(&std_table_css, title+1, cpu_tbl_size.rows,
 				cpu_tbl_size.cols);
 		report.add_table(cpu_data, &std_table_css);
+		delete [] pkg_data;
+		delete [] core_data;
+		delete [] cpu_data;
 	}
 	report.end_div();
 }
@@ -688,11 +691,11 @@ void report_display_cpu_pstates(void)
 		/*  Tables for PKG, CORE, CPU */
 		pkg_tbl_size.cols=2;
 		pkg_tbl_size.rows=((pstates_num+1)-LEVEL_HEADER)+2;
-		string pkg_data[pkg_tbl_size.cols * pkg_tbl_size.rows];
+		string *pkg_data = new string[pkg_tbl_size.cols * pkg_tbl_size.rows];
 
 		core_tbl_size.cols=2;
 		core_tbl_size.rows=((pstates_num+2) *_package->children.size());
-		string core_data[core_tbl_size.cols * core_tbl_size.rows];
+		string *core_data = new string[core_tbl_size.cols * core_tbl_size.rows];
 
 		/* PKG */
 		num_cpus=0;
@@ -717,7 +720,7 @@ void report_display_cpu_pstates(void)
 		cpu_tbl_size.cols= (num_cpus/ num_cores) + 1;
 		cpu_tbl_size.rows= (pstates_num+2) * _package->children.size()
 				+ _package->children.size();
-		string cpu_data[cpu_tbl_size.cols * cpu_tbl_size.rows];
+		string *cpu_data = new string[cpu_tbl_size.cols * cpu_tbl_size.rows];
 
 		/* Core */
 		for (core = 0; core < _package->children.size(); core++) {
@@ -818,6 +821,9 @@ void report_display_cpu_pstates(void)
 		init_cpu_table_attr(&std_table_css, title,
 				cpu_tbl_size.rows, cpu_tbl_size.cols);
 		report.add_table(cpu_data, &std_table_css);
+		delete [] pkg_data;
+		delete [] core_data;
+		delete [] cpu_data;
 	}
 	report.end_div();
 }

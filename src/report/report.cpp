@@ -115,7 +115,7 @@ static void system_info(void)
         init_title_attr(&title_attr);
 
 	/* Set array of data in row Major order */
-	string system_data[sys_table.rows * sys_table.cols];
+	string *system_data = new string[sys_table.rows * sys_table.cols];
 	system_data[0]=__("PowerTOP Version");
 	system_data[1]=POWERTOP_VERSION;
 
@@ -159,6 +159,7 @@ static void system_info(void)
 	report.end_div();
 	report.end_header();
 	report.add_navigation();
+	delete [] system_data;
 }
 
 void init_report_output(char *filename_str, int iterations)

@@ -918,7 +918,7 @@ void report_process_update_display(void)
 	init_title_attr(&title_attr);
 
 	/* Set array of data in row Major order */
-	string  software_data[cols * rows];
+	string *software_data = new string[cols * rows];
 	software_data[0]=__("Usage");
 	software_data[1]=__("Wakeups/s");
 	software_data[2]=__("GPU ops/s");
@@ -1013,6 +1013,7 @@ void report_process_update_display(void)
 	report.add_title(&title_attr, __("Overview of Software Power Consumers"));
 	report.add_table(software_data, &std_table_css);
         report.end_div();
+	delete [] software_data;
 }
 
 void report_summary(void)
@@ -1048,7 +1049,7 @@ void report_summary(void)
 
 	/* Set array for summary */
 	int summary_size =12;
-	string summary[summary_size];
+	string *summary = new string [summary_size];
 	summary[0]=__("Target:");
 	summary[1]=__("1 units/s");
 	summary[2]=__("System: ");
@@ -1068,7 +1069,7 @@ void report_summary(void)
 	summary[11].append(__(" ops/s"));
 
 	/* Set array of data in row Major order */
-	string summary_data[cols * (rows+1)];
+	string *summary_data = new string[cols * (rows + 1)];
 	summary_data[0]=__("Usage");
 	summary_data[1]=__("Events/s");
 	summary_data[2]=__("Category");
@@ -1134,6 +1135,8 @@ void report_summary(void)
 	report.add_title(&title_attr, __("Top 10 Power Consumers"));
 	report.add_table(summary_data, &std_table_css);
 	report.end_div();
+	delete [] summary;
+	delete [] summary_data;
 }
 
 

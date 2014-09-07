@@ -247,7 +247,7 @@ void show_report_devices(void)
 
 	/* Device Summary */
 	int summary_size=2;
-        string summary[summary_size];
+	string *summary = new string[summary_size];
 	pw = global_joules_consumed();
 	char buf[32];
 	if (pw > 0.0001) {
@@ -263,9 +263,10 @@ void show_report_devices(void)
 		summary[1].append(" W");
 		report.add_summary_list(summary, summary_size);
 	}
+	delete [] summary;
 
         /* Set array of data in row Major order */
-	string device_data[cols * rows];
+	string *device_data = new string[cols * rows];
 	device_data[0]= __("Usage");
 	device_data[1]= __("Device Name");
 	if (show_power)
@@ -308,6 +309,7 @@ void show_report_devices(void)
 	/* Report Output */
 	report.add_title(&title_attr, __("Device Power Report"));
 	report.add_table(device_data, &std_table_css);
+	delete [] device_data;
 }
 
 

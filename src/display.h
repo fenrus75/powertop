@@ -34,6 +34,7 @@ using namespace std;
 
 extern void init_display(void);
 extern void reset_display(void);
+extern void close_display(void);
 extern int ncurses_initialized(void);
 extern void show_tab(unsigned int tab);
 extern void show_next_tab(void);

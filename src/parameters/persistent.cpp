@@ -61,6 +61,16 @@ void save_all_results(const char *filename)
 
 }
 
+void close_results()
+{
+	for (unsigned int i = 0; i < past_results.size(); i++) {
+		delete past_results[i];
+	}
+
+	past_results.clear();
+	return;
+}
+
 void load_results(const char *filename)
 {
 	ifstream file;
@@ -70,6 +80,7 @@ void load_results(const char *filename)
 	int first = 1;
 	unsigned int count = 0;
 	char* pathname;
+	int bundle_saved = 0;
 
 	pathname = get_param_directory(filename);
 
@@ -97,6 +108,7 @@ void load_results(const char *filename)
 		if (strlen(line) < 3) {
 			int overflow_index;
 
+			bundle_saved = 1;
 			overflow_index = 50 + (rand() % MAX_KEEP);
 			if (past_results.size() >= MAX_PARAM) {
 			/* memory leak, must free old one first */
@@ -117,6 +129,9 @@ void load_results(const char *filename)
 		sscanf(c1, "%lf", &d);
 		set_result_value(line, d, bundle);
 	}
+
+	if (bundle_saved == 0)
+		delete bundle;
 
 	file.close();
 	// '%i" is for count, do not translate

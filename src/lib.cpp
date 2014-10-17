@@ -408,6 +408,8 @@ static void init_pretty_print(void)
 	pretty_prints["[12] i8042"] = _("PS/2 Touchpad / Keyboard / Mouse");
 	pretty_prints["ahci"] = _("SATA controller");
 	pretty_prints["usb-device-8087-0020"] = _("Intel built in USB hub");
+
+	pretty_print_init = 1;
 }
 
 

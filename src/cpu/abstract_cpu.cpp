@@ -34,14 +34,12 @@ abstract_cpu::~abstract_cpu()
 {
 	unsigned int i=0;
 	for (i=0; i < cstates.size(); i++){
-		if(cstates[i])
-			delete cstates[i];
+		delete cstates[i];
 	}
 	cstates.clear();
 
 	for (i=0; i < pstates.size(); i++){
-		if(pstates[i])
-			delete pstates[i];
+		delete pstates[i];
 	}
 	pstates.clear();
 }

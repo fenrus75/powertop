@@ -39,7 +39,6 @@ powertop_SOURCES = \
 	devices/alsa.h \
 	devices/backlight.cpp \
 	devices/backlight.h \
-	devices/devfreq.cpp \
 	devices/device.cpp \
 	devices/device.h \
 	devices/gpu_rapl_device.cpp \

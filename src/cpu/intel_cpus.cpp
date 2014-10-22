@@ -59,6 +59,8 @@ static int intel_cpu_models[] = {
 	0x3D,	/* Intel Next Generation */
 	0x3F,	/* HSX */
 	0x46,	/* HSW */
+	0x47,	/* BDW-H */
+	0x4C,	/* BSW */
 	0x4D,	/* AVN */
 	0x4F,	/* BDX */
 	0x56,	/* BDX-DE */

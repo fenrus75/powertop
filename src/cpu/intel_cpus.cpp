@@ -51,12 +51,17 @@ static int intel_cpu_models[] = {
 	0x2C,	/* Westmere */
 	0x2A,	/* SNB */
 	0x2D,	/* SNB Xeon */
-	0x3A,   /* IVB */
+	0x3A,	/* IVB */
 	0x3C,
 	0x3E,	/* IVB Xeon */
 	0x37,	/* BYT-M */
 	0x45,	/* HSW-ULT */
 	0x3D,	/* Intel Next Generation */
+	0x3F,	/* HSX */
+	0x46,	/* HSW */
+	0x4D,	/* AVN */
+	0x4F,	/* BDX */
+	0x56,	/* BDX-DE */
 	0	/* last entry must be zero */
 };
 

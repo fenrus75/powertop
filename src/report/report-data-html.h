@@ -1,3 +1,6 @@
+#ifndef PowerTop_REPORT_DATA_HTML_H_C58C116411234A34AC2EFB8D23A69713
+#define PowerTop_REPORT_DATA_HTML_H_C58C116411234A34AC2EFB8D23A69713
+
 #include <string>
 #include <sstream>
 
@@ -67,3 +70,4 @@ init_tune_table_attr(struct table_attributes *table_css, int rows, int cols);
 string
 double_to_string(double dval);
 
+#endif

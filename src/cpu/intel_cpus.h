@@ -1,3 +1,5 @@
+#ifndef PowerTop_INTEL_CPUS_H_84F09FB4F519470FA914AA9B02453221
+#define PowerTop_INTEL_CPUS_H_84F09FB4F519470FA914AA9B02453221
 /*
  * Copyright 2010, Intel Corporation
  *
@@ -171,3 +173,5 @@ public:
 
 int is_supported_intel_cpu(int model);
 int byt_has_ahci();
+
+#endif

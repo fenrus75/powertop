@@ -1023,7 +1023,8 @@ static enum event_type force_token(const char *str, char **tok)
 
 static void free_token(char *tok)
 {
-	free(tok);
+	if (tok)
+		free(tok);
 }
 
 static enum event_type read_token(char **tok)

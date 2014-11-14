@@ -47,7 +47,8 @@ report_maker::report_maker(report_type t)
 
 report_maker::~report_maker()
 {
-	delete formatter;
+	if (formatter)
+		delete formatter;
 }
 
 /* ************************************************************************ */
@@ -97,7 +98,8 @@ report_maker::set_type(report_type t)
 void
 report_maker::setup_report_formatter()
 {
-	delete formatter;
+	if (formatter)
+		delete formatter;
 
 	if (type == REPORT_HTML)
 		formatter = new report_formatter_html();

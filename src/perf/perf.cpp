@@ -149,7 +149,8 @@ void perf_event::create_perf_event(char *eventname, int _cpu)
 
 void perf_event::set_event_name(const char *event_name)
 {
-	free(name);
+	if (name)
+		free(name);
 	name = strdup(event_name);
 	if (!name) {
 		fprintf(stderr, "failed to allocate event name\n");
@@ -167,7 +168,8 @@ void perf_event::set_event_name(const char *event_name)
 
 perf_event::~perf_event(void)
 {
-	free(name);
+	if (name)
+		free(name);
 
 	if (perf_event::pevent->ref_count == 1) {
 		pevent_free(perf_event::pevent);

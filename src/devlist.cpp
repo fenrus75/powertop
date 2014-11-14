@@ -77,15 +77,18 @@ void clean_open_devices()
 	unsigned int i=0;
 
 	for (i = 0; i < one.size(); i++) {
-		free(one[i]);
+		if(one[i])
+			free(one[i]);
 	}
 
 	for (i = 0; i < two.size(); i++) {
-		free(two[i]);
+		if(two[i])
+			free(two[i]);
 	}
 
 	for (i = 0; i < devpower.size(); i++){
-		free(devpower[i]);
+		if(devpower[i])
+			free(devpower[i]);
 	}
 }
 

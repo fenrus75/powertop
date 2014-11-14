@@ -305,8 +305,6 @@ static int get_nr_open(void) {
 	file.open("/proc/sys/fs/nr_open", ios::in);
 	if (file) {
 		file >> nr_open;
-		if (!file)
-			nr_open = NR_OPEN_DEF;
 		file.close();
 	}
 	return nr_open;

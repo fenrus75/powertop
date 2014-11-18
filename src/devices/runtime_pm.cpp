@@ -171,7 +171,6 @@ int device_has_runtime_pm(const char *sysfs_path)
 	return 0;
 }
 
-
 static void do_bus(const char *bus)
 {
 	/* /sys/bus/pci/devices/0000\:00\:1f.0/power/runtime_suspended_time */
@@ -194,12 +193,21 @@ static void do_bus(const char *bus)
 		if (entry->d_name[0] == '.')
 			continue;
 
-		sprintf(filename, "/sys/bus/%s/devices/%s", bus, entry->d_name);
-
-		if (!device_has_runtime_pm(filename))
-			continue;
-
 		dev = new class runtime_pmdevice(entry->d_name, filename);
+
+		if (strcmp(bus, "i2c") == 0) {
+			char devname[4096];
+			char dev_name[4096];
+			sprintf(filename, "/sys/bus/%s/devices/%s/name", bus, entry->d_name);
+			file.open(filename, ios::in);
+			if (file) {
+				file >> devname;
+				file.close();
+			}
+
+			sprintf(dev_name, _("I2C Device: %s"), devname);
+			dev->set_human_name(dev_name);
+		}
 
 		if (strcmp(bus, "pci") == 0) {
 			uint16_t vendor = 0, device = 0;
@@ -222,7 +230,8 @@ static void do_bus(const char *bus)
 
 			if (vendor && device) {
 				char devname[4096];
-				sprintf(devname, _("PCI Device: %s"), pci_id_to_name(vendor, device, filename, 4095));
+				sprintf(devname, _("PCI Device: %s"),
+					pci_id_to_name(vendor, device, filename, 4095));
 				dev->set_human_name(devname);
 			}
 		}

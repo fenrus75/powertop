@@ -428,7 +428,7 @@ int utilization_power_valid(int index)
 
 /* force power data to be valid to the rest of the system  */
 int global_power_override = 0;
-
+int global_run_times=0;
 /*
  * only report power numbers once we have 3* more measurements than
  * we have parameters; anything less and our model fit is highly suspect
@@ -438,6 +438,11 @@ int global_power_valid(void)
 	if (past_results.size() > 3 * all_parameters.parameters.size())
 		return 1;
 
+	if (past_results.size() > 0 && global_run_times < 1){
+		printf("To show power estimates do %ld measurement(s) connected to battery only",
+			(3 * all_parameters.parameters.size()) - past_results.size());
+		global_run_times += 1; 
+	}
 
 	return global_power_override;
 }

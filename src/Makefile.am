@@ -40,6 +40,7 @@ powertop_SOURCES = \
 	devices/backlight.cpp \
 	devices/backlight.h \
 	devices/devfreq.cpp \
+	devices/devfreq.h \
 	devices/device.cpp \
 	devices/device.h \
 	devices/gpu_rapl_device.cpp \

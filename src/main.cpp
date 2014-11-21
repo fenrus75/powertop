@@ -375,7 +375,6 @@ static void powertop_init(void)
 void clean_shutdown()
 {
 	close_results();
-	close_display();
 	clean_open_devices();
 	clear_all_devices();
 	clear_all_devfreq();

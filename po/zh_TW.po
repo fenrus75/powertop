@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
-"POT-Creation-Date: 2014-11-16 20:25-0800\n"
+"POT-Creation-Date: 2014-11-21 10:37-0800\n"
 "PO-Revision-Date: 2013-11-05 08:40+0000\n"
 "Last-Translator: Margie Foster <margie@linux.intel.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/"
@@ -48,7 +48,7 @@ msgstr "頻率統計"
 msgid "Device stats"
 msgstr "設備統計"
 
-#: src/display.cpp:141
+#: src/display.cpp:130
 msgid "Exit"
 msgstr "離開"
 
@@ -763,12 +763,12 @@ msgstr ""
 msgid "Failed to mount debugfs!\n"
 msgstr "debugfs 掛載失敗!\n"
 
-#: src/main.cpp:440
+#: src/main.cpp:439
 #, c-format
 msgid "Quite mode failed!\n"
 msgstr "進入安靜模式失敗！\n"
 
-#: src/main.cpp:504
+#: src/main.cpp:503
 msgid "Leaving PowerTOP"
 msgstr "離開 PowerTOP"
 

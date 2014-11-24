@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: powertop 2.7\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
-"POT-Creation-Date: 2014-11-16 20:25-0800\n"
+"POT-Creation-Date: 2014-11-21 10:37-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,7 +46,7 @@ msgstr ""
 msgid "Device stats"
 msgstr ""
 
-#: src/display.cpp:141
+#: src/display.cpp:130
 msgid "Exit"
 msgstr ""
 
@@ -748,12 +748,12 @@ msgstr ""
 msgid "Failed to mount debugfs!\n"
 msgstr ""
 
-#: src/main.cpp:440
+#: src/main.cpp:439
 #, c-format
 msgid "Quite mode failed!\n"
 msgstr ""
 
-#: src/main.cpp:504
+#: src/main.cpp:503
 msgid "Leaving PowerTOP"
 msgstr ""
 

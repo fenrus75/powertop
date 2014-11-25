@@ -39,7 +39,7 @@
 #define RAPL_DBG_PRINT(...)	((void) 0)
 #define RAPL_ERROR_PRINT(...) ((void) 0)
 #endif
-#define RAPL_INFO_PRINT printf
+#define RAPL_INFO_PRINT(format, m) fprintf(stderr, format, m)
 
 #define MAX_TEMP_STR_SIZE	20
 
@@ -134,8 +134,7 @@ c_rapl_interface::c_rapl_interface(const char *dev_name, int cpu) :
 			closedir(dir);
 		}
 
-		RAPL_INFO_PRINT("RAPL Using PowerCap Sysfs : Domain Mask %x\n",
-														rapl_domains);
+		RAPL_INFO_PRINT("RAPL Using PowerCap Sysfs : Domain Mask %x\n", rapl_domains);
 		return;
 	}
 

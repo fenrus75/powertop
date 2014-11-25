@@ -500,7 +500,7 @@ int main(int argc, char **argv)
 	}
 	if (!auto_tune)
 		endwin();
-	printf("%s\n", _("Leaving PowerTOP"));
+	fprintf(stderr, "%s\n", _("Leaving PowerTOP"));
 
 	end_process_data();
 	clear_process_data();

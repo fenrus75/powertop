@@ -35,6 +35,14 @@ AC_PROG_INSTALL
 AM_PROG_CC_C_O
 
 # Checks for libraries.
+AX_PTHREAD([
+    LIBS="$PTHREAD_LIBS $LIBS"
+    CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+    CC="$PTHREAD_CC"
+  ], [
+    AC_MSG_ERROR([Could not configure pthreads support])
+])
+
 # Checks for header files.
 AC_CHECK_HEADERS([ \
 	fcntl.h \
@@ -132,9 +140,6 @@ AS_IF([test "$has_libpci" -eq 0], [
 	])
 ])
 
-AC_SEARCH_LIBS([pthread_create], [pthread], [], [
-	AC_MSG_ERROR([libpthread is required but was not found])
-], [])
 AC_SEARCH_LIBS([inet_aton], [resolv], [], [
 	AC_MSG_ERROR([libresolv is required but was not found])
 ], [])

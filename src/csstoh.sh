@@ -37,7 +37,7 @@ cat <<HERE || exit $?
 const char css[] =
 HERE
 # body
-sed -r 's/^(.*)$/\t\"\1\\n\"/' "$1" || exit $?
+sed -r 's/^[ \t]*//; s/^(.*)$/\t\"\1\\n\"/' "$1" || exit $?
 # footer
 cat <<HERE || exit $?
 ;

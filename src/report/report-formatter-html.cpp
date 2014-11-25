@@ -23,8 +23,6 @@
  * Written by Igor Zhbanov <i.zhbanov@samsung.com>
  * 2012.10 */
 
-#define _BSD_SOURCE
-
 /* Uncomment to disable asserts */
 /*#define NDEBUG*/
 

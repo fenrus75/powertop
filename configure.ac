@@ -3,7 +3,11 @@
 
 AC_PREREQ([2.68])
 AC_INIT([powertop], [2.7], [powertop@lists.01.org], [], [https://01.org/powertop])
-AM_INIT_AUTOMAKE([-Wall foreign])
+AM_INIT_AUTOMAKE([
+	-Wall
+	1.12.2
+	foreign
+])
 AC_LANG([C++])
 AC_CONFIG_FILES([
 	Makefile

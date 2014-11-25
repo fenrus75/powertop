@@ -442,7 +442,7 @@ int main(int argc, char **argv)
 			time_out = (optarg ? atoi(optarg) : 20);
 			break;
 		case 'w':		/* measure workload */
-			sprintf(workload, "%s", optarg ? optarg : '\0');
+			sprintf(workload, "%s", optarg ? optarg : "");
 			break;
 		case 'V':
 			print_version();

@@ -34,6 +34,7 @@ AC_PROG_LIBTOOL
 AC_PROG_CC
 AC_PROG_INSTALL
 AM_PROG_CC_C_O
+GCC_FORTIFY_SOURCE_CC
 
 # Checks for libraries.
 AX_PTHREAD([
@@ -144,5 +145,6 @@ AS_IF([test "$has_libpci" -eq 0], [
 AC_SEARCH_LIBS([inet_aton], [resolv], [], [
 	AC_MSG_ERROR([libresolv is required but was not found])
 ], [])
+
 
 AC_OUTPUT

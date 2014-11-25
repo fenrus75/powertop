@@ -35,6 +35,7 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AM_PROG_CC_C_O
 GCC_FORTIFY_SOURCE_CC
+AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
 
 # Checks for libraries.
 AX_PTHREAD([

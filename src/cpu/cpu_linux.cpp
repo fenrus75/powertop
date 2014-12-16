@@ -83,7 +83,8 @@ void cpu_linux::parse_cstates_start(void)
 		if (file) {
 			file >> usage;
 			file.close();
-		}
+		} else
+			continue;
 
 		snprintf(filename + len, 256 - len, "/%s/time", entry->d_name);
 
@@ -172,7 +173,8 @@ void cpu_linux::parse_cstates_end(void)
 		if (file) {
 			file >> usage;
 			file.close();
-		}
+		} else
+			continue;
 
 		snprintf(filename + len, 256 - len, "/%s/time", entry->d_name);
 

@@ -51,18 +51,19 @@ static int intel_cpu_models[] = {
 	0x2C,	/* Westmere */
 	0x2A,	/* SNB */
 	0x2D,	/* SNB Xeon */
+	0x37,	/* BYT-M */
 	0x3A,	/* IVB */
 	0x3C,
+	0x3D,	/* Broadwell */
 	0x3E,	/* IVB Xeon */
-	0x37,	/* BYT-M */
-	0x45,	/* HSW-ULT */
-	0x3D,	/* Intel Next Generation */
 	0x3F,	/* HSX */
+	0x45,	/* HSW-ULT */
 	0x46,	/* HSW */
 	0x47,	/* BDW-H */
 	0x4C,	/* BSW */
 	0x4D,	/* AVN */
 	0x4F,	/* BDX */
+	0x4E,	/* Intel Next Generation */
 	0x56,	/* BDX-DE */
 	0	/* last entry must be zero */
 };
@@ -125,6 +126,7 @@ nhm_core::nhm_core(int model)
 		case 0x3C:
 		case 0x3E:      /* IVB Xeon */
 		case 0x45:	/* HSW-ULT */
+		case 0x4E:	/* SKY */
 		case 0x3D:	/* Intel Next Generation */
 			has_c7_res = 1;
 	}
@@ -300,6 +302,7 @@ nhm_package::nhm_package(int model)
 		case 0x3C:
 		case 0x3E:      /* IVB Xeon */
 		case 0x45:	/* HSW-ULT */
+		case 0x4E:	/* SKY */
 		case 0x3D:	/* Intel Next Generation */
 			has_c2c6_res=1;
 			has_c7_res = 1;

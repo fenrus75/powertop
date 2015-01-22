@@ -34,20 +34,21 @@ private:
 	string powercap_dram_path;
 
 	unsigned char rapl_domains;
-	int measurment_interval;
 	int first_cpu;
 
 	double power_units;
 	double energy_status_units;
 	double time_units;
 
+	int read_msr(int cpu, unsigned int idx, uint64_t *val);
+	int write_msr(int cpu, unsigned int idx, uint64_t val);
+
+protected:
+	int measurment_interval;
 	double last_pkg_energy_status;
 	double last_dram_energy_status;
 	double last_pp0_energy_status;
 	double last_pp1_energy_status;
-
-	int read_msr(int cpu, unsigned int idx, uint64_t *val);
-	int write_msr(int cpu, unsigned int idx, uint64_t val);
 
 public:
 	c_rapl_interface(const char *dev_name = "package-0", int cpu = 0);

@@ -97,7 +97,7 @@ static const struct option long_options[] =
 
 static void print_version()
 {
-	printf(_("PowerTOP version" POWERTOP_VERSION ", compiled on " __DATE__ "\n"));
+	printf(_("PowerTOP version " POWERTOP_VERSION ", compiled on " __DATE__ "\n"));
 }
 
 static bool set_refresh_timeout()
@@ -436,13 +436,13 @@ int main(int argc, char **argv)
 			break;
 		case 'q':
 			if (freopen("/dev/null", "a", stderr))
-				fprintf(stderr, _("Quite mode failed!\n"));
+				fprintf(stderr, _("Quiet mode failed!\n"));
 			break;
 		case 't':
 			time_out = (optarg ? atoi(optarg) : 20);
 			break;
 		case 'w':		/* measure workload */
-			sprintf(workload, "%s", optarg ? optarg : '\0');
+			sprintf(workload, "%s", optarg ? optarg : "");
 			break;
 		case 'V':
 			print_version();
@@ -500,7 +500,7 @@ int main(int argc, char **argv)
 	}
 	if (!auto_tune)
 		endwin();
-	printf("%s\n", _("Leaving PowerTOP"));
+	fprintf(stderr, "%s\n", _("Leaving PowerTOP"));
 
 	end_process_data();
 	clear_process_data();

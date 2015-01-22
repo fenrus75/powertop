@@ -3,7 +3,11 @@
 
 AC_PREREQ([2.68])
 AC_INIT([powertop], [2.7], [powertop@lists.01.org], [], [https://01.org/powertop])
-AM_INIT_AUTOMAKE([-Wall foreign])
+AM_INIT_AUTOMAKE([
+	-Wall
+	1.12.2
+	foreign
+])
 AC_LANG([C++])
 AC_CONFIG_FILES([
 	Makefile
@@ -14,6 +18,7 @@ AC_CONFIG_FILES([
 ])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_MACRO_DIR([m4])
+AC_USE_SYSTEM_EXTENSIONS
 AC_CONFIG_HEADERS([config.h])
 GETTEXT_PACKAGE=powertop
 AC_SUBST([GETTEXT_PACKAGE])
@@ -29,8 +34,18 @@ AC_PROG_LIBTOOL
 AC_PROG_CC
 AC_PROG_INSTALL
 AM_PROG_CC_C_O
+GCC_FORTIFY_SOURCE_CC
+AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
 
 # Checks for libraries.
+AX_PTHREAD([
+    LIBS="$PTHREAD_LIBS $LIBS"
+    CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+    CC="$PTHREAD_CC"
+  ], [
+    AC_MSG_ERROR([Could not configure pthreads support])
+])
+
 # Checks for header files.
 AC_CHECK_HEADERS([ \
 	fcntl.h \
@@ -128,11 +143,9 @@ AS_IF([test "$has_libpci" -eq 0], [
 	])
 ])
 
-AC_SEARCH_LIBS([pthread_create], [pthread], [], [
-	AC_MSG_ERROR([libpthread is required but was not found])
-], [])
 AC_SEARCH_LIBS([inet_aton], [resolv], [], [
 	AC_MSG_ERROR([libresolv is required but was not found])
 ], [])
+
 
 AC_OUTPUT

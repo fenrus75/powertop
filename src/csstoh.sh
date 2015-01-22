@@ -18,27 +18,33 @@
 #
 # Written by Igor Zhbanov <i.zhbanov at samsung.com>
 
-if [ $# -lt 2 ]; then
-	echo "Usage: csstoh.sh cssfile header.h"
+if [ $# -ne 2 ]; then
+	echo "Usage: csstoh.sh cssfile header.h" >&2
 	exit 1
 fi
-
-if [ ! -r $1 ]; then
-	echo "Can't find file $1"
+if [ ! -f "$1" ]; then
+	echo "$1: no such file or directory" >&2
 	exit 1
 fi
+# redirect stdout to a file
+exec 1> "$2" || exit $?
 
-if ! echo -n >$2; then
-	echo "Can't open file $2 for writing."
-	exit 1
-fi
+# header
+cat <<HERE || exit $?
+#ifndef __INCLUDE_GUARD_CCS_H
+#define __INCLUDE_GUARD_CCS_H
 
-echo "#ifndef __INCLUDE_GUARD_CCS_H" >> $2
-echo "#define __INCLUDE_GUARD_CCS_H" >> $2
-echo >> $2
-echo "const char css[] = " >> $2
+const char css[] =
+HERE
+# body
+sed -r 's/^[ \t]*//; s/^(.*)$/\t\"\1\\n\"/' "$1" || exit $?
+# footer
+cat <<HERE || exit $?
+;
+#endif
+HERE
 
-sed -r 's/^(.*)$/\t\"\1\\n\"/' $1 >> $2
-
-echo ";" >> $2
-echo "#endif" >> $2
+# close output file
+exec 1>&-
+# return status of output file write
+exit $?

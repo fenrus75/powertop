@@ -101,6 +101,8 @@ static string read_os_release(const string &filename)
 static void system_info(void)
 {
 	string str;
+	char version_date[64];
+	time_t now = time(NULL);
 
 	/* div attr css_class and css_id */
 	tag_attr div_attr;
@@ -117,7 +119,8 @@ static void system_info(void)
 	/* Set array of data in row Major order */
 	string *system_data = new string[sys_table.rows * sys_table.cols];
 	system_data[0]=__("PowerTOP Version");
-	system_data[1]=POWERTOP_VERSION;
+	snprintf(version_date, sizeof(version_date), "%s ran at %s", POWERTOP_VERSION, ctime(&now));
+	system_data[1]=version_date;
 
 	str = read_sysfs_string("/proc/version");
 	size_t  found = str.find(" ");

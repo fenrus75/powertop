@@ -27,6 +27,7 @@
 
 #include <libintl.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 /* Include only for Automake builds */
 #ifdef HAVE_CONFIG_H

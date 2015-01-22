@@ -136,7 +136,6 @@ powertop_CXXFLAGS = \
 
 powertop_CPPFLAGS = \
 	-DLOCALEDIR=\"$(localedir)\" \
-	-D_FORTIFY_SOURCE=2 \
 	$(GLIB2_CFLAGS) \
 	$(LIBNL_CFLAGS) \
 	$(LIBZ_CFLAGS) \

@@ -127,7 +127,7 @@ void show_tab(unsigned int tab)
 	if (c && strlen(c) > 0)
 		mvwprintw(bottom_line, 0,0, c);
 	else
-		mvwprintw(bottom_line, 0,0,"<ESC> %s | ",_("Exit"));
+		mvwprintw(bottom_line, 0,0, _("<ESC> Exit | <TAB> Navigate |"));
 
 
 	current_tab = tab;

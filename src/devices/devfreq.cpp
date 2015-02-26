@@ -247,6 +247,7 @@ void create_all_devfreq_devices(void)
 		fprintf(stderr, "Devfreq not enabled\n");
 		is_enabled = false;
 		closedir(dir);
+		dir = NULL;
 		return;
 	}
 
@@ -327,6 +328,8 @@ void clear_all_devfreq()
 	}
 	all_devfreq.clear();
 	/* close /sys/class/devfreq */
-	if (dir != NULL)
+	if (dir != NULL) {
 		closedir(dir);
+		dir = NULL;
+	}
 }

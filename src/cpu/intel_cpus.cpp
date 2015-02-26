@@ -135,11 +135,6 @@ nhm_core::nhm_core(int model)
 	if (model == 0x37) {
 		has_c3_res = 0;
 		has_c1_res = 1;
-		this->byt_has_ahci();
-                if ((this->get_byt_ahci_support()) == 0)
-                        has_c7_res = 1;/*BYT-T PC7 <- S0iX*/
-                else
-                        has_c7_res = 0;
 	} else {
 		has_c3_res = 1;
 		has_c1_res = 0;

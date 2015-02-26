@@ -31,6 +31,7 @@
 
 
 #include "tuning.h"
+#include "tuningi2c.h"
 #include "tuningsysfs.h"
 #include "tuningusb.h"
 #include "runtime.h"
@@ -68,6 +69,7 @@ static void init_tuning(void)
 	add_ethernet_tunable();
 	add_bt_tunable();
 	add_wifi_tunables();
+	add_i2c_tunables();
 
 	sort_tunables();
 }

@@ -196,16 +196,22 @@ static void do_bus(const char *bus)
 		dev = new class runtime_pmdevice(entry->d_name, filename);
 
 		if (strcmp(bus, "i2c") == 0) {
-			char devname[4096];
+			string devname;
 			char dev_name[4096];
+			bool is_adapter = false;
+
+			sprintf(filename, "/sys/bus/%s/devices/%s/new_device", bus, entry->d_name);
+			if (access(filename, W_OK) == 0)
+				is_adapter = true;
+
 			sprintf(filename, "/sys/bus/%s/devices/%s/name", bus, entry->d_name);
 			file.open(filename, ios::in);
 			if (file) {
-				file >> devname;
+				getline(file, devname);
 				file.close();
 			}
 
-			sprintf(dev_name, _("I2C Device: %s"), devname);
+			sprintf(dev_name, _("I2C %s (%s): %s"), (is_adapter ? _("Adapter") : _("Device")), entry->d_name, devname.c_str());
 			dev->set_human_name(dev_name);
 		}
 

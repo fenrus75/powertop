@@ -129,7 +129,7 @@ void show_tab(unsigned int tab)
 	else
 		mvwprintw(bottom_line, 0,0,
                   "<ESC> %s | <TAB> / <Shift + TAB> %s |",
-                  _("Exit"), _("Navigate")));
+                  _("Exit"), _("Navigate"));
 
 
 	current_tab = tab;

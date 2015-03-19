@@ -25,6 +25,33 @@ ncurses-devel  (required)
 libnl-devel    (required)
 kernel version => 2.6.38
 
+
+Build PowerTop for Android LollyPop
+------------------------------------
+
+1. Obtain pciutils and ncurses libraries.
+   Skip this step if they are already in the tree.
+
+   pciutils: Clone
+       https://github.com/trevd/android_external_pciutils
+   into external/pciutils
+
+   ncurses: Clone
+       https://github.com/cvpcs/android_external_libncurses
+   into external/ncurses
+
+2. Run
+       ./src/csstoh.sh src/powertop.css src/css.h
+   to generate the css.h header file.
+
+3. Apply patches inside patches/Android
+
+4. PowerTop can be built with top level make,
+   or by doing "mm".
+
+   The resulting binary is under $ANDROID_PRODUCT_OUT/system/bin/powertop
+
+
 Kernel Parameters:
 ------------------
 

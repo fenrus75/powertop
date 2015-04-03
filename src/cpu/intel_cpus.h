@@ -77,6 +77,7 @@ public:
 	int		has_c7_res;
 	int		has_c2c6_res;
 	int		has_c3_res;
+	int		has_c6c_res;		/* BSW */
 	int		has_c8c9c10_res;
 	nhm_package(int model);
 	virtual void	measurement_start(void);

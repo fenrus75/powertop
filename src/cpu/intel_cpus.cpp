@@ -289,6 +289,7 @@ nhm_package::nhm_package(int model)
 	has_c8c9c10_res = 0;
 	has_c2c6_res = 0;
 	has_c7_res = 0;
+	has_c6c_res = 0;
 
 	switch(model) {
 		case 0x2A:	/* SNB */
@@ -314,6 +315,9 @@ nhm_package::nhm_package(int model)
 		else
 			has_c7_res = 0;
 	}
+	/* BSW only exposes package C6 */
+	else if (model == 0x4C)
+		has_c6c_res = 1;
 	else
 		has_c3_res = 1;
 
@@ -360,7 +364,15 @@ void nhm_package::measurement_start(void)
 
 	if (this->has_c3_res)
 		c3_before    = get_msr(number, MSR_PKG_C3_RESIDENCY);
-	c6_before    = get_msr(number, MSR_PKG_C6_RESIDENCY);
+
+	/*
+	 * Hack for Braswell where C7 MSR is actually BSW C6
+	 */
+	if (this->has_c6c_res)
+		c6_before    = get_msr(number, MSR_PKG_C7_RESIDENCY);
+	else
+		c6_before    = get_msr(number, MSR_PKG_C6_RESIDENCY);
+
 	if (this->has_c7_res)
 		c7_before    = get_msr(number, MSR_PKG_C7_RESIDENCY);
 	if (this->has_c8c9c10_res) {
@@ -401,7 +413,12 @@ void nhm_package::measurement_end(void)
 
 	if (this->has_c3_res)
 		c3_after    = get_msr(number, MSR_PKG_C3_RESIDENCY);
-	c6_after    = get_msr(number, MSR_PKG_C6_RESIDENCY);
+
+	if (this->has_c6c_res)
+		c6_after    = get_msr(number, MSR_PKG_C7_RESIDENCY);
+	else
+		c6_after    = get_msr(number, MSR_PKG_C6_RESIDENCY);
+
 	if (this->has_c7_res)
 		c7_after    = get_msr(number, MSR_PKG_C7_RESIDENCY);
 	if (has_c8c9c10_res) {

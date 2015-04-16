@@ -63,7 +63,7 @@ static int intel_cpu_models[] = {
 	0x4C,	/* BSW */
 	0x4D,	/* AVN */
 	0x4F,	/* BDX */
-	0x4E,	/* Intel Next Generation */
+	0x4E,	/* SKY */
 	0x56,	/* BDX-DE */
 	0	/* last entry must be zero */
 };
@@ -318,7 +318,7 @@ nhm_package::nhm_package(int model)
 		has_c3_res = 1;
 
 	/* Haswell-ULT has C8/9/10*/
-	if (model == 0x45 || model ==0x3D)
+	if (model == 0x45 || model == 0x3D || model == 0x4E)
 		has_c8c9c10_res = 1;
 }
 

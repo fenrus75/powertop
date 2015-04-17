@@ -1,0 +1,478 @@
+() Update Android.mk to include source files,
+   and paths to external includes/libraries
+() Do not include libintl.h if NLS is not enabled
+() Workaround missing functions in Android
+
+Based on earlier patches by Ken Lierman <ken.lierman@windriver.com>.
+
+Signed-off-by: Daniel Leung <daniel.leung@linux.intel.com>
+---
+ Android.mk                                         |  41 +++-
+ README.android                                     |  23 +++
+ .../0001-Android-disable-C-exceptions.patch        | 222 +++++++++++++++++++++
+ src/cpu/intel_cpus.h                               |   1 +
+ src/lib.cpp                                        |   2 +
+ src/lib.h                                          |   3 +
+ src/main.cpp                                       |   4 +
+ src/report/report.cpp                              |   5 +
+ src/tuning/tuningusb.cpp                           |   1 +
+ 9 files changed, 293 insertions(+), 9 deletions(-)
+ create mode 100644 README.android
+ create mode 100644 patches/Android/0001-Android-disable-C-exceptions.patch
+
+diff --git a/Android.mk b/Android.mk
+index 2461233..0c95e3a 100644
+--- a/Android.mk
++++ b/Android.mk
+@@ -1,18 +1,37 @@
++# Please run this before building
++# ./src/csstoh.sh src/powertop.css src/css.h
++
+ LOCAL_PATH := $(call my-dir)
+ include $(CLEAR_VARS)
+ 
+ LOCAL_MODULE_TAGS := debug
+ LOCAL_SHARED_LIBRARIES := libstlport \
+ 			  libnl \
+-			  libpci \
+-			  libtraceevnet \
++
+ LOCAL_MODULE := powertop  
+ 
+ #LOCAL_CFLAGS += -Wall -O2 -g -fno-omit-frame-pointer -fstack-protector -Wshadow -Wformat -D_FORTIFY_SOURCE=2
+ #LOCAL_CPPFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
+ 
++LOCAL_CFLAGS += -DHAVE_LIBNL20
++LOCAL_CPPFLAGS += -DPACKAGE_VERSION=\"2.7\" -DPACKAGE=powertop -DHAVE_LIBNL20
++
+ LOCAL_C_INCLUDES += external/stlport/stlport/ external/stlport/stlport/stl external/stlport/stlport/using/h/  bionic external/libnl/include/
+ 
++# ncurses
++LOCAL_C_INCLUDES += external/ncurses/include/
++LOCAL_SHARED_LIBRARIES += libncurses
++
++# pciutils
++LOCAL_C_INCLUDES += external/pciutils/include/
++LOCAL_STATIC_LIBRARIES += libpci_static
++
++# libtraceevent
++LOCAL_C_INCLUDES += $(LOCAL_PATH)/traceevent/
++
++# local includes
++LOCAL_C_INCLUDES += $(LOCAL_PATH)/src/
++
+ LOCAL_SRC_FILES += \
+ 	src/parameters/parameters.cpp \
+ 	src/parameters/persistent.cpp \
+@@ -21,10 +40,11 @@ LOCAL_SRC_FILES += \
+ 	src/process/work.cpp \
+ 	src/process/process.cpp \
+ 	src/process/timer.cpp \
+-	src/process/device.cpp \
++	src/process/processdevice.cpp \
+ 	src/process/interrupt.cpp \
+ 	src/process/do_process.cpp \
+ 	src/cpu/intel_cpus.cpp \
++	src/cpu/intel_gpu.cpp \
+ 	src/cpu/cpu.cpp \
+ 	src/cpu/cpu_linux.cpp \
+ 	src/cpu/cpudevice.cpp \
+@@ -39,19 +59,23 @@ LOCAL_SRC_FILES += \
+ 	src/measurement/extech.cpp \
+ 	src/measurement/sysfs.cpp \
+ 	src/display.cpp \
+-	src/report.cpp \
++	src/report/report.cpp \
++	src/report/report-maker.cpp \
++	src/report/report-formatter-base.cpp \
++	src/report/report-formatter-csv.cpp \
++	src/report/report-formatter-html.cpp \
++	src/report/report-data-html.cpp \
+ 	src/main.cpp \
+ 	src/tuning/tuning.cpp \
+ 	src/tuning/tuningi2c.cpp \
+-	src/tuning/usb.cpp \
++	src/tuning/tuningusb.cpp \
+ 	src/tuning/bluetooth.cpp \
+ 	src/tuning/ethernet.cpp \
+ 	src/tuning/runtime.cpp \
+ 	src/tuning/iw.c \
+ 	src/tuning/iw.h \
+ 	src/tuning/tunable.cpp \
+-	src/tuning/sysfs.cpp \
+-	src/tuning/cpufreq.cpp \
++	src/tuning/tuningsysfs.cpp \
+ 	src/tuning/wifi.cpp \
+ 	src/perf/perf_bundle.cpp \
+ 	src/perf/perf.cpp \
+@@ -67,12 +91,11 @@ LOCAL_SRC_FILES += \
+ 	src/devices/network.cpp \
+ 	src/devices/device.cpp \
+ 	src/devices/gpu_rapl_device.cpp \
++	src/devices/devfreq.cpp \
+ 	src/devlist.cpp \
+ 	src/calibrate/calibrate.cpp \
+ 	src/lib.cpp \
+ 	traceevent/event-parse.c \
+-	traceevent/event-parse.h \
+-	traceevent/event-utils.h \
+ 	traceevent/parse-filter.c \
+ 	traceevent/parse-utils.c \
+ 	traceevent/trace-seq.c
+diff --git a/README.android b/README.android
+new file mode 100644
+index 0000000..0765b01
+--- /dev/null
++++ b/README.android
+@@ -0,0 +1,23 @@
++To build PowerTop for Android:
++
++1. Obtain pciutils and ncurses libraries.
++   Skip this step if they are already in the tree.
++
++   pciutils: Clone
++       https://github.com/trevd/android_external_pciutils
++   into external/pciutils
++
++   ncurses: Clone
++       https://github.com/cvpcs/android_external_libncurses
++   into external/ncurses
++
++2. Run
++       ./src/csstoh.sh src/powertop.css src/css.h
++   to generate the css.h header file.
++
++3. Apply patches inside patches/Android
++
++4. PowerTop can be built with top level make,
++   or by doing "mm".
++
++   The resulting binary is under $ANDROID_PRODUCT_OUT/system/bin/powertop
+diff --git a/patches/Android/0001-Android-disable-C-exceptions.patch b/patches/Android/0001-Android-disable-C-exceptions.patch
+new file mode 100644
+index 0000000..435cd95
+--- /dev/null
++++ b/patches/Android/0001-Android-disable-C-exceptions.patch
+@@ -0,0 +1,222 @@
++From 604d8f6da54524f0f7bfdd7aea91d353b4f1b612 Mon Sep 17 00:00:00 2001
++From: Daniel Leung <daniel.leung@intel.com>
++Date: Wed, 25 Feb 2015 13:24:14 -0800
++Subject: [PATCH 1/1] Android: disable C++ exceptions
++
++Android native C++ libraries do not support C++
++exceptions.
++
++Signed-off-by: Daniel Leung <daniel.leung@intel.com>
++---
++ Android.mk           |  2 +-
++ src/devices/ahci.cpp |  8 ++++++++
++ src/devices/alsa.cpp |  8 ++++++++
++ src/lib.cpp          | 19 +++++++++++++++++++
++ 4 files changed, 36 insertions(+), 1 deletion(-)
++
++diff --git a/Android.mk b/Android.mk
++index dd98d0f..f6b8689 100644
++--- a/Android.mk
+++++ b/Android.mk
++@@ -14,7 +14,7 @@ LOCAL_MODULE := powertop
++ #LOCAL_CPPFLAGS += -Wall -O2 -g -fno-omit-frame-pointer
++ 
++ LOCAL_CFLAGS += -DHAVE_LIBNL20
++-LOCAL_CPPFLAGS += -DPACKAGE_VERSION=\"2.7\" -DPACKAGE=powertop -DHAVE_LIBNL20
+++LOCAL_CPPFLAGS += -DPACKAGE_VERSION=\"2.7\" -DPACKAGE=powertop -DHAVE_LIBNL20 -DDISABLE_TRYCATCH
++ 
++ LOCAL_C_INCLUDES += external/stlport/stlport/ external/stlport/stlport/stl external/stlport/stlport/using/h/  bionic external/libnl/include/
++ 
++diff --git a/src/devices/ahci.cpp b/src/devices/ahci.cpp
++index 72e889f..ddf20b8 100644
++--- a/src/devices/ahci.cpp
+++++ b/src/devices/ahci.cpp
++@@ -161,7 +161,9 @@ void ahci::start_measurement(void)
++ 	ifstream file;
++ 
++ 	sprintf(filename, "%s/ahci_alpm_active", sysfs_path);
+++#ifndef DISABLE_TRYCATCH
++ 	try {
+++#endif
++ 		file.open(filename, ios::in);
++ 		if (file) {
++ 			file >> start_active;
++@@ -186,10 +188,12 @@ void ahci::start_measurement(void)
++ 			file >> start_devslp;
++ 		}
++ 		file.close();
+++#ifndef DISABLE_TRYCATCH
++ 	}
++ 	catch (std::ios_base::failure &c) {
++ 		fprintf(stderr, "%s\n", c.what());
++ 	}
+++#endif
++ 
++ }
++ 
++@@ -201,7 +205,9 @@ void ahci::end_measurement(void)
++ 	double p;
++ 	double total;
++ 
+++#ifndef DISABLE_TRYCATCH
++ 	try {
+++#endif
++ 		sprintf(filename, "%s/ahci_alpm_active", sysfs_path);
++ 		file.open(filename, ios::in);
++ 		if (file) {
++@@ -226,10 +232,12 @@ void ahci::end_measurement(void)
++ 			file >> end_devslp;
++ 		}
++ 		file.close();
+++#ifndef DISABLE_TRYCATCH
++ 	}
++ 	catch (std::ios_base::failure &c) {
++ 		fprintf(stderr, "%s\n", c.what());
++ 	}
+++#endif
++ 	if (end_active < start_active)
++ 		end_active = start_active;
++ 	if (end_partial < start_partial)
++diff --git a/src/devices/alsa.cpp b/src/devices/alsa.cpp
++index a1fca71..ba3c0b6 100644
++--- a/src/devices/alsa.cpp
+++++ b/src/devices/alsa.cpp
++@@ -87,7 +87,9 @@ void alsa::start_measurement(void)
++ 	ifstream file;
++ 
++ 	sprintf(filename, "%s/power_off_acct", sysfs_path);
+++#ifndef DISABLE_TRYCATCH
++ 	try {
+++#endif
++ 		file.open(filename, ios::in);
++ 		if (file) {
++ 			file >> start_inactive;
++@@ -100,10 +102,12 @@ void alsa::start_measurement(void)
++ 			file >> start_active;
++ 		}
++ 		file.close();
+++#ifndef DISABLE_TRYCATCH
++ 	}
++ 	catch (std::ios_base::failure &c) {
++ 		fprintf(stderr, "%s\n", c.what());
++ 	}
+++#endif
++ }
++ 
++ void alsa::end_measurement(void)
++@@ -113,7 +117,9 @@ void alsa::end_measurement(void)
++ 	double p;
++ 
++ 	sprintf(filename, "%s/power_off_acct", sysfs_path);
+++#ifndef DISABLE_TRYCATCH
++ 	try {
+++#endif
++ 		file.open(filename, ios::in);
++ 		if (file) {
++ 			file >> end_inactive;
++@@ -126,10 +132,12 @@ void alsa::end_measurement(void)
++ 			file >> end_active;
++ 		}
++ 		file.close();
+++#ifndef DISABLE_TRYCATCH
++ 	}
++ 	catch (std::ios_base::failure &c) {
++ 		fprintf(stderr, "%s\n", c.what());
++ 	}
+++#endif
++ 
++ 	p = (end_active - start_active) / (0.001 + end_active + end_inactive - start_active - start_inactive) * 100.0;
++ 	report_utilization(name, p);
++diff --git a/src/lib.cpp b/src/lib.cpp
++index 0dec0b7..91dac7a 100644
++--- a/src/lib.cpp
+++++ b/src/lib.cpp
++@@ -176,13 +176,17 @@ void write_sysfs(const string &filename, const string &value)
++ 	file.open(filename.c_str(), ios::out);
++ 	if (!file)
++ 		return;
+++#ifndef DISABLE_TRYCATCH
++ 	try
++ 	{
+++#endif
++ 		file << value;
++ 		file.close();
+++#ifndef DISABLE_TRYCATCH
++ 	} catch (std::exception &exc) {
++ 		return;
++ 	}
+++#endif
++ }
++ 
++ int read_sysfs(const string &filename, bool *ok)
++@@ -196,16 +200,23 @@ int read_sysfs(const string &filename, bool *ok)
++ 			*ok = false;
++ 		return 0;
++ 	}
+++#ifndef DISABLE_TRYCATCH
++ 	try
++ 	{
+++#else
+++		if (ok)
+++			*ok = false;
+++#endif
++ 		file >> i;
++ 		if (ok)
++ 			*ok = true;
+++#ifndef DISABLE_TRYCATCH
++ 	} catch (std::exception &exc) {
++ 		if (ok)
++ 			*ok = false;
++ 		i = 0;
++ 	}
+++#endif
++ 	file.close();
++ 	return i;
++ }
++@@ -219,17 +230,21 @@ string read_sysfs_string(const string &filename)
++ 	file.open(filename.c_str(), ios::in);
++ 	if (!file)
++ 		return "";
+++#ifndef DISABLE_TRYCATCH
++ 	try
++ 	{
+++#endif
++ 		file.getline(content, 4096);
++ 		file.close();
++ 		c = strchr(content, '\n');
++ 		if (c)
++ 			*c = 0;
+++#ifndef DISABLE_TRYCATCH
++ 	} catch (std::exception &exc) {
++ 		file.close();
++ 		return "";
++ 	}
+++#endif
++ 	return content;
++ }
++ 
++@@ -246,17 +261,21 @@ string read_sysfs_string(const char *format, const char *param)
++ 	file.open(filename, ios::in);
++ 	if (!file)
++ 		return "";
+++#ifndef DISABLE_TRYCATCH
++ 	try
++ 	{
+++#endif
++ 		file.getline(content, 4096);
++ 		file.close();
++ 		c = strchr(content, '\n');
++ 		if (c)
++ 			*c = 0;
+++#ifndef DISABLE_TRYCATCH
++ 	} catch (std::exception &exc) {
++ 		file.close();
++ 		return "";
++ 	}
+++#endif
++ 	return content;
++ }
++ 
++-- 
++1.8.3.2
++
+diff --git a/src/cpu/intel_cpus.h b/src/cpu/intel_cpus.h
+index 810a243..26971d7 100644
+--- a/src/cpu/intel_cpus.h
++++ b/src/cpu/intel_cpus.h
+@@ -55,6 +55,7 @@ protected:
+         DIR *dir;
+ public:
+ 	intel_util();
++	virtual ~intel_util() {};
+ 	virtual void byt_has_ahci();
+ 	virtual int get_byt_ahci_support();
+ };
+diff --git a/src/lib.cpp b/src/lib.cpp
+index 437803b..0dec0b7 100644
+--- a/src/lib.cpp
++++ b/src/lib.cpp
+@@ -52,7 +52,9 @@ extern "C" {
+ #include <sys/stat.h>
+ #include <dirent.h>
+ #include <locale.h>
++#ifdef ENABLE_NLS
+ #include <libintl.h>
++#endif
+ #include <limits>
+ #include <math.h>
+ #include <ncurses.h>
+diff --git a/src/lib.h b/src/lib.h
+index ec50946..4ef9595 100644
+--- a/src/lib.h
++++ b/src/lib.h
+@@ -25,7 +25,10 @@
+ #ifndef INCLUDE_GUARD_LIB_H
+ #define INCLUDE_GUARD_LIB_H
+ 
++#ifdef ENABLE_NLS
+ #include <libintl.h>
++#endif
++
+ #include <stdint.h>
+ 
+ /* Include only for Automake builds */
+diff --git a/src/main.cpp b/src/main.cpp
+index 642ac24..6019683 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -44,7 +44,9 @@
+ #include "perf/perf.h"
+ #include "perf/perf_bundle.h"
+ #include "lib.h"
++#ifndef ANDROID
+ #include "../config.h"
++#endif
+ 
+ 
+ #include "devices/device.h"
+@@ -392,7 +394,9 @@ int main(int argc, char **argv)
+ 	char workload[4096] = {0,};
+ 	int  iterations = 1, auto_tune = 0;
+ 
++#ifndef ANDROID
+ 	set_new_handler(out_of_memory);
++#endif
+ 
+ 	setlocale (LC_ALL, "");
+ 
+diff --git a/src/report/report.cpp b/src/report/report.cpp
+index 981e984..71983b2 100644
+--- a/src/report/report.cpp
++++ b/src/report/report.cpp
+@@ -37,6 +37,11 @@
+ #include <unistd.h>
+ #include "report-data-html.h"
+ 
++// not in Android c-lib
++#ifdef ANDROID
++#define strchrnul strchr
++#endif
++
+ using namespace std;
+ 
+ struct reportstream reportout;
+diff --git a/src/tuning/tuningusb.cpp b/src/tuning/tuningusb.cpp
+index d2a0c11..a0476de 100644
+--- a/src/tuning/tuningusb.cpp
++++ b/src/tuning/tuningusb.cpp
+@@ -32,6 +32,7 @@
+ #include <utility>
+ #include <iostream>
+ #include <fstream>
++#include <ctype.h>
+ 
+ #include "../lib.h"
+ 
+-- 
+1.8.3.2
+
+_______________________________________________
+PowerTop mailing list
+PowerTop@lists.01.org
+https://lists.01.org/mailman/listinfo/powertop

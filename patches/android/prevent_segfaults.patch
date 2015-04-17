@@ -1,0 +1,39 @@
+The mbsrtowcs() in Android seems to change the content of
+source pointer to 0x00. So save a copy of the source
+string so we can manipulate it later, preventing segfaults.
+
+Signed-off-by: Daniel Leung <daniel.leung@linux.intel.com>
+---
+ src/lib.cpp | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/lib.cpp b/src/lib.cpp
+index 0dec0b7..6b1bc0a 100644
+--- a/src/lib.cpp
++++ b/src/lib.cpp
+@@ -263,6 +263,7 @@ string read_sysfs_string(const char *format, const char *param)
+ void align_string(char *buffer, size_t min_sz, size_t max_sz)
+ {
+ 	size_t sz;
++	char *buf = buffer;
+ 
+ 	/** mbsrtowcs() allows NULL dst and zero sz,
+ 	 * comparing to mbstowcs(), which causes undefined
+@@ -275,8 +276,9 @@ void align_string(char *buffer, size_t min_sz, size_t max_sz)
+ 		buffer[min_sz] = 0x00;
+ 		return;
+ 	}
++
+ 	while (sz < min_sz) {
+-		strcat(buffer, " ");
++		strcat(buf, " ");
+ 		sz++;
+ 	}
+ }
+-- 
+1.8.3.2
+
+_______________________________________________
+PowerTop mailing list
+PowerTop@lists.01.org
+https://lists.01.org/mailman/listinfo/powertop

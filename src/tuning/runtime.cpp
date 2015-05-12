@@ -50,10 +50,10 @@ runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *
 		sprintf(desc, _("%s device %s has no runtime power management"), bus, dev);
 
 	if (strcmp(bus, "pci") == 0) {
-		char filename[4096];
+		char filename[PATH_MAX];
 		uint16_t vendor = 0, device = 0;
 
-		sprintf(filename, "/sys/bus/%s/devices/%s/vendor", bus, dev);
+		snprintf(filename, PATH_MAX, "/sys/bus/%s/devices/%s/vendor", bus, dev);
 
 		file.open(filename, ios::in);
 		if (file) {
@@ -62,7 +62,7 @@ runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *
 		}
 
 
-		sprintf(filename, "/sys/bus/%s/devices/%s/device", bus, dev);
+		snprintf(filename, PATH_MAX, "/sys/bus/%s/devices/%s/device", bus, dev);
 		file.open(filename, ios::in);
 		if (file) {
 			file >> hex >> device;
@@ -78,8 +78,8 @@ runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *
 
 
 	}
-	sprintf(toggle_good, "echo 'auto' > '%s';", runtime_path);
-	sprintf(toggle_bad, "echo 'on' > '%s';", runtime_path);
+	snprintf(toggle_good, 4096, "echo 'auto' > '%s';", runtime_path);
+	snprintf(toggle_bad, 4096, "echo 'on' > '%s';", runtime_path);
 }
 
 int runtime_tunable::good_bad(void)

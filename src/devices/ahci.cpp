@@ -51,7 +51,7 @@ static string disk_name(char *path, char *target, char *shortname)
 	char pathname[PATH_MAX];
 	string diskname = "";
 
-	sprintf(pathname, "%s/%s", path, target);
+	snprintf(pathname, PATH_MAX, "%s/%s", path, target);
 	dir = opendir(pathname);
 	if (!dir)
 		return diskname;
@@ -65,7 +65,7 @@ static string disk_name(char *path, char *target, char *shortname)
 		if (!strchr(dirent->d_name, ':'))
 			continue;
 
-		sprintf(line, "%s/%s/model", pathname, dirent->d_name);
+		snprintf(line, PATH_MAX, "%s/%s/model", pathname, dirent->d_name);
 		file = fopen(line, "r");
 		if (file) {
 			if (fgets(line, 4096, file) == NULL) {
@@ -92,7 +92,7 @@ static string model_name(char *path, char *shortname)
 	struct dirent *dirent;
 	char pathname[PATH_MAX];
 
-	sprintf(pathname, "%s/device", path);
+	snprintf(pathname, PATH_MAX, "%s/device", path);
 
 	dir = opendir(pathname);
 	if (!dir)
@@ -168,20 +168,20 @@ void ahci::start_measurement(void)
 			file >> start_active;
 		}
 		file.close();
-		sprintf(filename, "%s/ahci_alpm_partial", sysfs_path);
+		snprintf(filename, PATH_MAX, "%s/ahci_alpm_partial", sysfs_path);
 		file.open(filename, ios::in);
 
 		if (file) {
 			file >> start_partial;
 		}
 		file.close();
-		sprintf(filename, "%s/ahci_alpm_slumber", sysfs_path);
+		snprintf(filename, PATH_MAX, "%s/ahci_alpm_slumber", sysfs_path);
 		file.open(filename, ios::in);
 		if (file) {
 			file >> start_slumber;
 		}
 		file.close();
-		sprintf(filename, "%s/ahci_alpm_devslp", sysfs_path);
+		snprintf(filename, PATH_MAX, "%s/ahci_alpm_devslp", sysfs_path);
 		file.open(filename, ios::in);
 		if (file) {
 			file >> start_devslp;

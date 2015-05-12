@@ -151,20 +151,20 @@ static class abstract_cpu * new_cpu(int number, char * vendor, int family, int m
 
 static void handle_one_cpu(unsigned int number, char *vendor, int family, int model)
 {
-	char filename[1024];
+	char filename[PATH_MAX];
 	ifstream file;
 	unsigned int package_number = 0;
 	unsigned int core_number = 0;
 	class abstract_cpu *package, *core, *cpu;
 
-	sprintf(filename, "/sys/devices/system/cpu/cpu%i/topology/core_id", number);
+	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/topology/core_id", number);
 	file.open(filename, ios::in);
 	if (file) {
 		file >> core_number;
 		file.close();
 	}
 
-	sprintf(filename, "/sys/devices/system/cpu/cpu%i/topology/physical_package_id", number);
+	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/topology/physical_package_id", number);
 	file.open(filename, ios::in);
 	if (file) {
 		file >> package_number;

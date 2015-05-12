@@ -125,7 +125,7 @@ void collect_open_devices(void)
 		if (strcmp(entry->d_name, "self") == 0)
 			continue;
 
-		sprintf(filename, "/proc/%s/fd/", entry->d_name);
+		snprintf(filename, PATH_MAX, "/proc/%s/fd/", entry->d_name);
 
 		dir2 = opendir(filename);
 		if (!dir2)

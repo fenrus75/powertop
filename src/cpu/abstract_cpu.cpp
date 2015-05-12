@@ -112,7 +112,7 @@ void abstract_cpu::measurement_start(void)
 	old_idle = true;
 
 
-	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_available_frequencies", number);
+	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_available_frequencies", number);
 	file.open(filename, ios::in);
 	if (file) {
 		file >> max_frequency;

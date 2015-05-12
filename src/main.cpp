@@ -420,6 +420,11 @@ int main(int argc, char **argv)
 		case 'C':		/* csv report */
 			reporttype = REPORT_CSV;
 			sprintf(filename, "%s", optarg ? optarg : "powertop.csv");
+			if (!strlen(filename))
+			{
+				fprintf(stderr, _("Invalid CSV filename\n"));
+				exit(1);
+			}
 			break;
 		case OPT_DEBUG:
 			/* implemented using getopt_long(3) flag */
@@ -431,6 +436,11 @@ int main(int argc, char **argv)
 		case 'r':		/* html report */
 			reporttype = REPORT_HTML;
 			sprintf(filename, "%s", optarg ? optarg : "powertop.html");
+			if (!strlen(filename))
+			{
+				fprintf(stderr, _("Invalid HTML filename\n"));
+				exit(1);
+			}
 			break;
 		case 'i':
 			iterations = (optarg ? atoi(optarg) : 1);

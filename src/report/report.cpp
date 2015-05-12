@@ -169,28 +169,27 @@ static void system_info(void)
 void init_report_output(char *filename_str, int iterations)
 {
 	size_t period;
-	char file_prefix[PATH_MAX];
-	char file_postfix[8];
+	string filename;
 	time_t stamp;
 	char datestr[200];
 
-	string mystring = string(filename_str);
-	sprintf(file_postfix, "%s",
-		(reporttype == REPORT_HTML ? "html" : "csv"));
-	period=mystring.find_last_of(".");
-	snprintf(file_prefix, PATH_MAX, "%s",mystring.substr(0,period).c_str());
-	memset(&datestr, 0, 200);
-	memset(&stamp, 0, sizeof(time_t));
-	stamp=time(NULL);
-	strftime(datestr, sizeof(datestr), "%Y%m%d-%H%M%S", localtime(&stamp));
-
-	if (iterations != 1)
-		snprintf(reportout.filename, PATH_MAX, "%s-%s.%s",
-			file_prefix, datestr,file_postfix);
+	if (iterations == 1)
+		snprintf(reportout.filename, PATH_MAX, "%s", filename_str);
 	else
-		snprintf(reportout.filename, PATH_MAX, "%s.%s",
-			file_prefix, file_postfix);
-
+	{
+		filename = string(filename_str);
+		period = filename.find_last_of(".");
+		if (period > filename.length())
+			period = filename.length();
+		memset(&datestr, 0, 200);
+		memset(&stamp, 0, sizeof(time_t));
+		stamp = time(NULL);
+		strftime(datestr, sizeof(datestr), "%Y%m%d-%H%M%S", localtime(&stamp));
+		snprintf(reportout.filename, PATH_MAX, "%s-%s%s",
+			filename.substr(0, period).c_str(), datestr,
+			filename.substr(period).c_str());
+	}
+	
 	reportout.report_file = fopen(reportout.filename, "wm");
 	if (!reportout.report_file) {
 		fprintf(stderr, _("Cannot open output file %s (%s)\n"),

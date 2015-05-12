@@ -25,6 +25,7 @@
 #ifndef _INCLUDE_GUARD_RUNTIMEPM_H
 #define _INCLUDE_GUARD_RUNTIMEPM_H
 
+#include <limits.h>
 
 #include "device.h"
 #include "../parameters/parameters.h"
@@ -32,7 +33,7 @@
 class runtime_pmdevice: public device {
 	uint64_t before_suspended_time, before_active_time;
 	uint64_t after_suspended_time, after_active_time;
-	char sysfs_path[4096];
+	char sysfs_path[PATH_MAX];
 	char name[4096];
 	char humanname[4096];
 	int index;

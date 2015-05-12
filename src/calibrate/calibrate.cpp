@@ -34,6 +34,7 @@
 #include <math.h>
 #include <sys/types.h>
 #include <errno.h>
+#include <limits.h>
 
 #include "../parameters/parameters.h"
 extern "C" {
@@ -87,14 +88,14 @@ static void restore_all_sysfs(void)
 
 static void find_all_usb_callback(const char *d_name)
 {
-	char filename[4096];
+	char filename[PATH_MAX];
 	ifstream file;
 
-	sprintf(filename, "/sys/bus/usb/devices/%s/power/active_duration", d_name);
+	snprintf(filename, PATH_MAX, "/sys/bus/usb/devices/%s/power/active_duration", d_name);
 	if (access(filename, R_OK) != 0)
 		return;
 
-	sprintf(filename, "/sys/bus/usb/devices/%s/power/idVendor", d_name);
+	snprintf(filename, PATH_MAX, "/sys/bus/usb/devices/%s/power/idVendor", d_name);
 	file.open(filename, ios::in);
 	if (file) {
 		file.getline(filename, 4096);
@@ -103,7 +104,7 @@ static void find_all_usb_callback(const char *d_name)
 			return;
 	}
 
-	sprintf(filename, "/sys/bus/usb/devices/%s/power/control", d_name);
+	snprintf(filename, PATH_MAX, "/sys/bus/usb/devices/%s/power/control", d_name);
 	save_sysfs(filename);
 	usb_devices.push_back(filename);
 }
@@ -123,8 +124,8 @@ static void suspend_all_usb_devices(void)
 
 static void find_all_rfkill_callback(const char *d_name)
 {
-	char filename[4096];
-	sprintf(filename, "/sys/class/rfkill/%s/soft", d_name);
+	char filename[PATH_MAX];
+	snprintf(filename, PATH_MAX, "/sys/class/rfkill/%s/soft", d_name);
 	if (access(filename, R_OK) != 0)
 		return;
 	save_sysfs(filename);
@@ -153,14 +154,14 @@ static void unrfkill_all_radios(void)
 
 static void find_backlight_callback(const char *d_name)
 {
-	char filename[4096];
-	sprintf(filename, "/sys/class/backlight/%s/brightness", d_name);
+	char filename[PATH_MAX];
+	snprintf(filename, PATH_MAX, "/sys/class/backlight/%s/brightness", d_name);
 	if (access(filename, R_OK) != 0)
 		return;
 
 	save_sysfs(filename);
 	backlight_devices.push_back(filename);
-	sprintf(filename, "/sys/class/backlight/%s/max_brightness", d_name);
+	snprintf(filename, PATH_MAX, "/sys/class/backlight/%s/max_brightness", d_name);
 	blmax = read_sysfs(filename);
 }
 
@@ -179,8 +180,8 @@ static void lower_backlight(void)
 
 static void find_scsi_link_callback(const char *d_name)
 {
-	char filename[4096];
-	sprintf(filename, "/sys/class/scsi_host/%s/link_power_management_policy", d_name);
+	char filename[PATH_MAX];
+	snprintf(filename, PATH_MAX, "/sys/class/scsi_host/%s/link_power_management_policy", d_name);
 	if (access(filename, R_OK)!=0)
 		return;
 

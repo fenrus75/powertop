@@ -26,13 +26,14 @@
 #define _INCLUDE_GUARD_SYSFS_TUNE_H
 
 #include <vector>
+#include <limits.h>
 
 #include "tunable.h"
 
 using namespace std;
 
 class sysfs_tunable : public tunable {
-	char sysfs_path[4096];
+	char sysfs_path[PATH_MAX];
 	char target_value[4096];
 	char bad_value[4096];
 public:

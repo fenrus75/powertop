@@ -30,6 +30,7 @@
 #include <dirent.h>
 #include <math.h>
 #include <unistd.h>
+#include <limits.h>
 
 #include "../lib.h"
 
@@ -72,7 +73,7 @@ double thinkpad_light::utilization(void)
 
 void create_thinkpad_light(void)
 {
-	char filename[4096];
+	char filename[PATH_MAX];
 	class thinkpad_light *light;
 
 	strcpy(filename, "/sys/devices/platform/thinkpad_acpi/leds/tpacpi::thinklight/brightness");

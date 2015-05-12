@@ -26,6 +26,7 @@
 #define _INCLUDE_GUARD_NETWORK_H
 
 #include <sys/time.h>
+#include <limits.h>
 
 #include "device.h"
 #include "../parameters/parameters.h"
@@ -38,7 +39,7 @@ class network: public device {
 	int start_speed; /* 0 is "no link" */
 	int end_speed; /* 0 is "no link" */
 
-	char sysfs_path[4096];
+	char sysfs_path[PATH_MAX];
 	char name[4096];
 	char humanname[4096];
 	int index_up;

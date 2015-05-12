@@ -38,6 +38,7 @@
 #include <dirent.h>
 #include <string.h>
 #include <ctype.h>
+#include <limits.h>
 
 using namespace std;
 
@@ -93,8 +94,8 @@ void collect_open_devices(void)
 {
 	struct dirent *entry;
 	DIR *dir;
-	char filename[4096];
-	char link[4096];
+	char filename[PATH_MAX];
+	char link[PATH_MAX];
 	unsigned int i;
 	vector<struct devuser *> *target;
 
@@ -137,9 +138,9 @@ void collect_open_devices(void)
 				break;
 			if (!isdigit(entry2->d_name[0]))
 				continue;
-			sprintf(filename, "/proc/%s/fd/%s", entry->d_name, entry2->d_name);
-			memset(link, 0, 4096);
-			ret = readlink(filename, link, 4095);
+			snprintf(filename, PATH_MAX, "/proc/%s/fd/%s", entry->d_name, entry2->d_name);
+			memset(link, 0, PATH_MAX);
+			ret = readlink(filename, link, PATH_MAX - 1);
 			if (ret < 0)
 				continue;
 

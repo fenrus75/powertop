@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #include "lib.h"
 
@@ -236,10 +237,10 @@ string read_sysfs_string(const char *format, const char *param)
 	ifstream file;
 	char content[4096];
 	char *c;
-	char filename[8192];
+	char filename[PATH_MAX];
 
 
-	snprintf(filename, 8191, format, param);
+	snprintf(filename, PATH_MAX, format, param);
 
 	file.open(filename, ios::in);
 	if (!file)

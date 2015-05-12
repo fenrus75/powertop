@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include <limits.h>
 
 
 using namespace std;
@@ -54,17 +55,17 @@ backlight::backlight(const char *_name, const char *path): device()
 
 void backlight::start_measurement(void)
 {
-	char filename[4096];
+	char filename[PATH_MAX];
 	ifstream file;
 
-	sprintf(filename, "%s/max_brightness", sysfs_path);
+	snprintf(filename, PATH_MAX, "%s/max_brightness", sysfs_path);
 	file.open(filename, ios::in);
 	if (file) {
 		file >> max_level;
 	}
 	file.close();
 
-	sprintf(filename, "%s/actual_brightness", sysfs_path);
+	snprintf(filename, PATH_MAX, "%s/actual_brightness", sysfs_path);
 	file.open(filename, ios::in);
 	if (file) {
 		file >> start_level;
@@ -76,7 +77,7 @@ static int dpms_screen_on(void)
 {
 	DIR *dir;
 	struct dirent *entry;
-	char filename[4096];
+	char filename[PATH_MAX];
 	char line[4096];
 	ifstream file;
 
@@ -90,7 +91,7 @@ static int dpms_screen_on(void)
 
 		if (strncmp(entry->d_name, "card", 4) != 0)
 			continue;
-		sprintf(filename, "/sys/class/drm/card0/%s/enabled", entry->d_name);
+		snprintf(filename, PATH_MAX, "/sys/class/drm/card0/%s/enabled", entry->d_name);
 		file.open(filename, ios::in);
 		if (!file)
 			continue;
@@ -98,7 +99,7 @@ static int dpms_screen_on(void)
 		file.close();
 		if (strcmp(line, "enabled") != 0)
 			continue;
-		sprintf(filename, "/sys/class/drm/card0/%s/dpms", entry->d_name);
+		snprintf(filename, PATH_MAX, "/sys/class/drm/card0/%s/dpms", entry->d_name);
 		file.open(filename, ios::in);
 		if (!file)
 			continue;
@@ -115,13 +116,13 @@ static int dpms_screen_on(void)
 
 void backlight::end_measurement(void)
 {
-	char filename[4096];
+	char filename[PATH_MAX];
 	char powername[4096];
 	ifstream file;
 	double p;
 	int _backlight = 0;
 
-	sprintf(filename, "%s/actual_brightness", sysfs_path);
+	snprintf(filename, PATH_MAX, "%s/actual_brightness", sysfs_path);
 	file.open(filename, ios::in);
 	if (file) {
 		file >> end_level;
@@ -136,7 +137,7 @@ void backlight::end_measurement(void)
 	}
 
 	report_utilization(name, p);
-	sprintf(powername, "%s-power", name);
+	snprintf(powername, 4096, "%s-power", name);
 	report_utilization(powername, _backlight);
 }
 
@@ -157,8 +158,8 @@ const char * backlight::device_name(void)
 static void create_all_backlights_callback(const char *d_name)
 {
 	class backlight *bl;
-	char filename[4096];
-	sprintf(filename, "/sys/class/backlight/%s", d_name);
+	char filename[PATH_MAX];
+	snprintf(filename, PATH_MAX, "/sys/class/backlight/%s", d_name);
 	bl = new class backlight(d_name, filename);
 	all_devices.push_back(bl);
 }

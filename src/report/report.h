@@ -27,6 +27,7 @@
 
 #include <string>
 #include <stdio.h>
+#include <limits.h>
 
 #include "report-maker.h"
 
@@ -34,7 +35,7 @@ using namespace std;
 
 struct reportstream {
 	FILE *report_file;
-	char filename[4096];
+	char filename[PATH_MAX];
 };
 
 extern report_type reporttype;

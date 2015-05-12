@@ -26,13 +26,14 @@
 #define _INCLUDE_GUARD_USB_TUNE_H
 
 #include <vector>
+#include <limits.h>
 
 #include "tunable.h"
 
 using namespace std;
 
 class usb_tunable : public tunable {
-	char usb_path[4096];
+	char usb_path[PATH_MAX];
 public:
 	usb_tunable(const char *usb_path, const char *path);
 

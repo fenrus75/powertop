@@ -30,6 +30,7 @@
 #include <dirent.h>
 #include <math.h>
 #include <unistd.h>
+#include <limits.h>
 
 #include "../lib.h"
 
@@ -74,7 +75,7 @@ double thinkpad_fan::utilization(void)
 
 void create_thinkpad_fan(void)
 {
-	char filename[4096];
+	char filename[PATH_MAX];
 	class thinkpad_fan *fan;
 
 	strcpy(filename, "/sys/devices/platform/thinkpad_hwmon/fan1_input");

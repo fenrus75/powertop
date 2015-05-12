@@ -29,6 +29,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 using namespace std;
 
@@ -51,7 +52,7 @@ present voltage:         12001 mV
 
 void acpi_power_meter::measure(void)
 {
-	char filename[4096];
+	char filename[PATH_MAX];
 	char line[4096];
 	ifstream file;
 
@@ -71,7 +72,7 @@ void acpi_power_meter::measure(void)
 	voltage = 0;
 	capacity = 0;
 
-	sprintf(filename, "/proc/acpi/battery/%s/state", battery_name);
+	snprintf(filename, PATH_MAX, "/proc/acpi/battery/%s/state", battery_name);
 
 	file.open(filename, ios::in);
 	if (!file)

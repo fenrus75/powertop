@@ -27,6 +27,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 #include "cpu.h"
 #include "../lib.h"
 
@@ -438,19 +439,19 @@ void abstract_cpu::change_effective_frequency(uint64_t time, uint64_t frequency)
 
 void abstract_cpu::wiggle(void)
 {
-	char filename[4096];
+	char filename[PATH_MAX];
 	ifstream ifile;
 	ofstream ofile;
 	uint64_t minf,maxf;
 
 	/* wiggle a CPU so that we have a record of it at the start and end of the perf trace */
 
-	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_max_freq", first_cpu);
+	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_max_freq", first_cpu);
 	ifile.open(filename, ios::in);
 	ifile >> maxf;
 	ifile.close();
 
-	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_min_freq", first_cpu);
+	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_min_freq", first_cpu);
 	ifile.open(filename, ios::in);
 	ifile >> minf;
 	ifile.close();
@@ -461,7 +462,7 @@ void abstract_cpu::wiggle(void)
 	ofile.open(filename, ios::out);
 	ofile << minf;
 	ofile.close();
-	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_max_freq", first_cpu);
+	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_max_freq", first_cpu);
 	ofile.open(filename, ios::out);
 	ofile << minf;
 	ofile.close();

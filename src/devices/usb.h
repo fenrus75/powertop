@@ -25,6 +25,7 @@
 #ifndef _INCLUDE_GUARD_USB_H
 #define _INCLUDE_GUARD_USB_H
 
+#include <limits.h>
 
 #include "device.h"
 #include "../parameters/parameters.h"
@@ -32,7 +33,7 @@
 class usbdevice: public device {
 	int active_before, active_after;
 	int connected_before, connected_after;
-	char sysfs_path[4096];
+	char sysfs_path[PATH_MAX];
 	char name[4096];
 	char devname[4096];
 	char humanname[4096];

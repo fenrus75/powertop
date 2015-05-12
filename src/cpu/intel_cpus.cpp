@@ -35,6 +35,7 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
+#include <limits.h>
 
 #include "../lib.h"
 #include "../parameters/parameters.h"
@@ -146,7 +147,7 @@ nhm_core::nhm_core(int model)
 void nhm_core::measurement_start(void)
 {
 	ifstream file;
-	char filename[4096];
+	char filename[PATH_MAX];
 
 	/* the abstract function needs to be first since it clears all state */
 	abstract_cpu::measurement_start();
@@ -172,7 +173,7 @@ void nhm_core::measurement_start(void)
 	}
 
 
-	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", first_cpu);
+	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", first_cpu);
 
 	file.open(filename, ios::in);
 
@@ -494,7 +495,7 @@ void nhm_package::measurement_end(void)
 void nhm_cpu::measurement_start(void)
 {
 	ifstream file;
-	char filename[4096];
+	char filename[PATH_MAX];
 
 	cpu_linux::measurement_start();
 
@@ -506,7 +507,7 @@ void nhm_cpu::measurement_start(void)
 
 	insert_cstate("active", _("C0 active"), 0, aperf_before, 1);
 
-	sprintf(filename, "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", first_cpu);
+	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", first_cpu);
 
 	file.open(filename, ios::in);
 

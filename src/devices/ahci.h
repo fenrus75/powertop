@@ -27,6 +27,7 @@
 
 
 #include <string>
+#include <limits.h>
 #include "device.h"
 #include "../parameters/parameters.h"
 #include <stdint.h>
@@ -36,7 +37,7 @@ class ahci: public device {
 	uint64_t start_partial, end_partial;
 	uint64_t start_slumber, end_slumber;
 	uint64_t start_devslp, end_devslp;
-	char sysfs_path[4096];
+	char sysfs_path[PATH_MAX];
 	char name[4096];
 	int partial_rindex;
 	int active_rindex;

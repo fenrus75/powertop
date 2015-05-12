@@ -38,6 +38,7 @@
 #include <unistd.h>
 #include <locale.h>
 #include <sys/resource.h>
+#include <limits.h>
 
 #include "cpu/cpu.h"
 #include "process/process.h"
@@ -388,8 +389,8 @@ int main(int argc, char **argv)
 {
 	int option_index;
 	int c;
-	char filename[4096];
-	char workload[4096] = {0,};
+	char filename[PATH_MAX];
+	char workload[PATH_MAX] = {0};
 	int  iterations = 1, auto_tune = 0;
 
 	set_new_handler(out_of_memory);

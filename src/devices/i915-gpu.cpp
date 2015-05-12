@@ -29,6 +29,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <limits.h>
 
 
 using namespace std;
@@ -73,7 +74,7 @@ double i915gpu::utilization(void)
 
 void create_i915_gpu(void)
 {
-	char filename[4096];
+	char filename[PATH_MAX];
 	class i915gpu *gpu;
 	gpu_rapl_device *rapl_dev;
 

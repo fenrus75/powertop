@@ -25,6 +25,7 @@
 #ifndef _INCLUDE_GUARD_RFKILL_H
 #define _INCLUDE_GUARD_RFKILL_H
 
+#include <limits.h>
 
 #include "device.h"
 #include "../parameters/parameters.h"
@@ -32,7 +33,7 @@
 class rfkill: public device {
 	int start_soft, end_soft;
 	int start_hard, end_hard;
-	char sysfs_path[4096];
+	char sysfs_path[PATH_MAX];
 	char name[4096];
 	char humanname[4096];
 	int index;

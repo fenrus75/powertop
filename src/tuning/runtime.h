@@ -26,12 +26,13 @@
 #define _INCLUDE_GUARD_RUNTIME_TUNE_H
 
 #include <vector>
+#include <limits.h>
 
 #include "tunable.h"
 using namespace std;
 
 class runtime_tunable : public tunable {
-	char runtime_path[4096];
+	char runtime_path[PATH_MAX];
 public:
 	runtime_tunable(const char *runtime_path, const char *bus, const char *dev);
 

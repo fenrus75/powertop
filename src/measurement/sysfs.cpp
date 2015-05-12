@@ -27,6 +27,7 @@
 #include "../lib.h"
 #include <string.h>
 #include <stdio.h>
+#include <limits.h>
 
 sysfs_power_meter::sysfs_power_meter(const char *power_supply_name)
 {
@@ -37,10 +38,10 @@ sysfs_power_meter::sysfs_power_meter(const char *power_supply_name)
 
 bool sysfs_power_meter::get_sysfs_attr(const char *attribute, int *value)
 {
-	char filename[4096];
+	char filename[PATH_MAX];
 	bool ok;
 
-	snprintf(filename, sizeof(filename), "/sys/class/power_supply/%s/%s", name, attribute);
+	snprintf(filename, PATH_MAX, "/sys/class/power_supply/%s/%s", name, attribute);
 	*value = read_sysfs(filename, &ok);
 
 	return ok;

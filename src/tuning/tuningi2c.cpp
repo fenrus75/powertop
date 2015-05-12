@@ -27,6 +27,7 @@
 #include <iostream>
 #include <fstream>
 #include <ctype.h>
+#include <limits.h>
 
 #include "../lib.h"
 #include "../devices/runtime_pm.h"
@@ -34,10 +35,10 @@
 i2c_tunable::i2c_tunable(const char *path, const char *name, bool is_adapter) : tunable("", 0.9, _("Good"), _("Bad"), _("Unknown"))
 {
 	ifstream file;
-	char filename[4096];
+	char filename[PATH_MAX];
 	string devname;
 
-	sprintf(filename, "%s/name", path);
+	snprintf(filename, PATH_MAX, "%s/name", path);
 	file.open(filename, ios::in);
 	if (file) {
 		getline(file, devname);
@@ -45,20 +46,20 @@ i2c_tunable::i2c_tunable(const char *path, const char *name, bool is_adapter) : 
 	}
 
 	if (is_adapter) {
-		sprintf(i2c_path, "%s/device/power/control", path);
-		sprintf(filename, "%s/device", path);
+		snprintf(i2c_path, PATH_MAX, "%s/device/power/control", path);
+		snprintf(filename, PATH_MAX, "%s/device", path);
 	} else {
-		sprintf(i2c_path, "%s/power/control", path);
-		sprintf(filename, "%s/device", path);
+		snprintf(i2c_path, PATH_MAX,  "%s/power/control", path);
+		snprintf(filename, PATH_MAX, "%s/device", path);
 	}
 
 	if (device_has_runtime_pm(filename))
-		sprintf(desc, _("Runtime PM for I2C %s %s (%s)"), (is_adapter ? _("Adapter") : _("Device")), name, (devname.empty() ? "" : devname.c_str()));
+		snprintf(desc, 4096, _("Runtime PM for I2C %s %s (%s)"), (is_adapter ? _("Adapter") : _("Device")), name, (devname.empty() ? "" : devname.c_str()));
 	else
-		sprintf(desc, _("I2C %s %s has no runtime power management"), (is_adapter ? _("Adapter") : _("Device")), name);
+		snprintf(desc, 4096, _("I2C %s %s has no runtime power management"), (is_adapter ? _("Adapter") : _("Device")), name);
 
-	sprintf(toggle_good, "echo 'auto' > '%s';", i2c_path);
-	sprintf(toggle_bad, "echo 'on' > '%s';", i2c_path);
+	snprintf(toggle_good, 4096, "echo 'auto' > '%s';", i2c_path);
+	snprintf(toggle_bad, 4096, "echo 'on' > '%s';", i2c_path);
 }
 
 int i2c_tunable::good_bad(void)
@@ -101,20 +102,20 @@ const char *i2c_tunable::toggle_script(void)
 static void add_i2c_callback(const char *d_name)
 {
 	class i2c_tunable *i2c;
-	char filename[4096];
+	char filename[PATH_MAX];
 	bool is_adapter = false;
 
-	sprintf(filename, "/sys/bus/i2c/devices/%s/new_device", d_name);
+	snprintf(filename, PATH_MAX, "/sys/bus/i2c/devices/%s/new_device", d_name);
 	if (access(filename, W_OK) == 0)
 		is_adapter = true;
 
-	sprintf(filename, "/sys/bus/i2c/devices/%s", d_name);
+	snprintf(filename, PATH_MAX, "/sys/bus/i2c/devices/%s", d_name);
 	i2c = new class i2c_tunable(filename, d_name, is_adapter);
 
 	if (is_adapter)
-		sprintf(filename, "/sys/bus/i2c/devices/%s/device", d_name);
+		snprintf(filename, PATH_MAX, "/sys/bus/i2c/devices/%s/device", d_name);
 	else
-		sprintf(filename, "/sys/bus/i2c/devices/%s", d_name);
+		snprintf(filename, PATH_MAX, "/sys/bus/i2c/devices/%s", d_name);
 
 	if (device_has_runtime_pm(filename))
 		all_tunables.push_back(i2c);

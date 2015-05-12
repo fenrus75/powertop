@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <limits.h>
 
 #include "../lib.h"
 #include "../parameters/parameters.h"
@@ -38,7 +39,7 @@
 usbdevice::usbdevice(const char *_name, const char *path, const char *devid): device()
 {
 	ifstream file;
-	char filename[4096];
+	char filename[PATH_MAX];
 	char vendor[4096];
 	char product[4096];
 
@@ -59,7 +60,7 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid): de
 
 
 	/* root ports and hubs should count as 0 power ... their activity is derived */
-	sprintf(filename, "%s/bDeviceClass", path);
+	snprintf(filename, PATH_MAX, "%s/bDeviceClass", path);
 	file.open(filename, ios::in);
 	if (file) {
 		int dclass = 0;
@@ -72,7 +73,7 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid): de
 
 	vendor[0] = 0;
 	product[0] = 0;
-	sprintf(filename, "%s/manufacturer", path);
+	snprintf(filename, PATH_MAX, "%s/manufacturer", path);
 	file.open(filename, ios::in);
 	if (file) {
 		file.getline(vendor, 2047);
@@ -80,18 +81,18 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid): de
 			vendor[0] = 0;
 		file.close();
 	};
-	sprintf(filename, "%s/product", path);
+	snprintf(filename, PATH_MAX, "%s/product", path);
 	file.open(filename, ios::in);
 	if (file) {
 		file.getline(product, 2040);
 		file.close();
 	};
 	if (strlen(vendor) && strlen(product))
-		sprintf(humanname, _("USB device: %s (%s)"), product, vendor);
+		snprintf(humanname, 4096, _("USB device: %s (%s)"), product, vendor);
 	else if (strlen(product))
-		sprintf(humanname, _("USB device: %s"), product);
+		snprintf(humanname, 4096, _("USB device: %s"), product);
 	else if (strlen(vendor))
-		sprintf(humanname, _("USB device: %s"), vendor);
+		snprintf(humanname, 4096, _("USB device: %s"), vendor);
 }
 
 
@@ -99,21 +100,21 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid): de
 void usbdevice::start_measurement(void)
 {
 	ifstream file;
-	char fullpath[4096];
+	char fullpath[PATH_MAX];
 
 	active_before = 0;
 	active_after = 0;
 	connected_before = 0;
 	connected_after = 0;
 
-	sprintf(fullpath, "%s/power/active_duration", sysfs_path);
+	snprintf(fullpath, PATH_MAX, "%s/power/active_duration", sysfs_path);
 	file.open(fullpath, ios::in);
 	if (file) {
 		file >> active_before;
 	}
 	file.close();
 
-	sprintf(fullpath, "%s/power/connected_duration", sysfs_path);
+	snprintf(fullpath, PATH_MAX, "%s/power/connected_duration", sysfs_path);
 	file.open(fullpath, ios::in);
 	if (file) {
 		file >> connected_before;
@@ -124,16 +125,16 @@ void usbdevice::start_measurement(void)
 void usbdevice::end_measurement(void)
 {
 	ifstream file;
-	char fullpath[4096];
+	char fullpath[PATH_MAX];
 
-	sprintf(fullpath, "%s/power/active_duration", sysfs_path);
+	snprintf(fullpath, PATH_MAX, "%s/power/active_duration", sysfs_path);
 	file.open(fullpath, ios::in);
 	if (file) {
 		file >> active_after;
 	}
 	file.close();
 
-	sprintf(fullpath, "%s/power/connected_duration", sysfs_path);
+	snprintf(fullpath, PATH_MAX, "%s/power/connected_duration", sysfs_path);
 	file.open(fullpath, ios::in);
 	if (file) {
 		file >> connected_after;
@@ -186,31 +187,31 @@ double usbdevice::power_usage(struct result_bundle *result, struct parameter_bun
 
 static void create_all_usb_devices_callback(const char *d_name)
 {
-	char filename[4096];
+	char filename[PATH_MAX];
 	ifstream file;
 	class usbdevice *usb;
-	char device_name[4096];
+	char device_name[PATH_MAX];
 	char vendorid[64], devid[64];
 	char devid_name[4096];
 
-	sprintf(filename, "/sys/bus/usb/devices/%s", d_name);
-	sprintf(device_name, "%s/power/active_duration", filename);
+	snprintf(filename, PATH_MAX, "/sys/bus/usb/devices/%s", d_name);
+	snprintf(device_name, PATH_MAX, "%s/power/active_duration", filename);
 	if (access(device_name, R_OK) != 0)
 		return;
 
-	sprintf(device_name, "%s/idVendor", filename);
+	snprintf(device_name, PATH_MAX, "%s/idVendor", filename);
 	file.open(device_name, ios::in);
 	if (file)
 		file.getline(vendorid, 64);
 	file.close();
-	sprintf(device_name, "%s/idProduct", filename);
+	snprintf(device_name, PATH_MAX, "%s/idProduct", filename);
 	file.open(device_name, ios::in);
 	if (file)
 		file.getline(devid, 64);
 	file.close();
 
-	sprintf(devid_name, "usb-device-%s-%s", vendorid, devid);
-	sprintf(device_name, "usb-device-%s-%s-%s", d_name, vendorid, devid);
+	snprintf(devid_name, 4096, "usb-device-%s-%s", vendorid, devid);
+	snprintf(device_name, PATH_MAX, "usb-device-%s-%s-%s", d_name, vendorid, devid);
 	if (result_device_exists(device_name))
 		return;
 

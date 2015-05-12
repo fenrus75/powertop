@@ -21,13 +21,14 @@
 #define _INCLUDE_GUARD_I2C_TUNE_H
 
 #include <vector>
+#include <limits.h>
 
 #include "tunable.h"
 
 using namespace std;
 
 class i2c_tunable : public tunable {
-	char i2c_path[4096];
+	char i2c_path[PATH_MAX];
 public:
 	i2c_tunable(const char *path, const char *name, bool is_adapter);
 

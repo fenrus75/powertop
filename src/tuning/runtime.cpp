@@ -34,6 +34,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include <limits.h>
 
 #include "../lib.h"
 #include "../devices/runtime_pm.h"
@@ -123,9 +124,9 @@ void add_runtime_tunables(const char *bus)
 {
 	struct dirent *entry;
 	DIR *dir;
-	char filename[4096];
+	char filename[PATH_MAX];
 
-	sprintf(filename, "/sys/bus/%s/devices/", bus);
+	snprintf(filename, PATH_MAX, "/sys/bus/%s/devices/", bus);
 	dir = opendir(filename);
 	if (!dir)
 		return;
@@ -139,13 +140,13 @@ void add_runtime_tunables(const char *bus)
 		if (entry->d_name[0] == '.')
 			continue;
 
-		sprintf(filename, "/sys/bus/%s/devices/%s/power/control", bus, entry->d_name);
+		snprintf(filename, PATH_MAX, "/sys/bus/%s/devices/%s/power/control", bus, entry->d_name);
 
 		if (access(filename, R_OK) != 0)
 			continue;
 
 
-		sprintf(filename, "/sys/bus/%s/devices/%s", bus, entry->d_name);
+		snprintf(filename, PATH_MAX, "/sys/bus/%s/devices/%s", bus, entry->d_name);
 
 		runtime = new class runtime_tunable(filename, bus, entry->d_name);
 

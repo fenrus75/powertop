@@ -27,6 +27,7 @@
 
 #include "device.h"
 #include "../parameters/parameters.h"
+#include <sys/time.h>
 
 struct frequency;
 

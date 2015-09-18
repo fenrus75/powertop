@@ -134,14 +134,16 @@ nhm_core::nhm_core(int model)
 			has_c7_res = 1;
 	}
 
-	/* BYT-M does not support C3/C4 */
-	if (model == 0x37) {
-		has_c3_res = 0;
-		has_c1_res = 1;
-	} else {
-		has_c3_res = 1;
-		has_c1_res = 0;
+	has_c3_res = 1;
+	has_c1_res = 0;
+
+	switch (model) {
+		case 0x37:	/* BYT-M does not support C3/C4 */
+		case 0x4C:	/* BSW does not support C3 */
+			has_c3_res = 0;
+			has_c1_res = 1;
 	}
+
 }
 
 void nhm_core::measurement_start(void)
@@ -308,26 +310,33 @@ nhm_package::nhm_package(int model)
 			has_c7_res = 1;
 	}
 
-	/* BYT-M doesn't have C3 or C7 */
-	/* BYT-T doesn't have C3 but it has C7 */
-	if (model == 0x37){
-		has_c2c6_res=1;
-		has_c3_res = 0;
-		this->byt_has_ahci();
-		if ((this->get_byt_ahci_support()) == 0)
-			has_c7_res = 1;/*BYT-T PC7 <- S0iX*/
-		else
-			has_c7_res = 0;
-	}
-	/* BSW only exposes package C6 */
-	else if (model == 0x4C)
-		has_c6c_res = 1;
-	else
-		has_c3_res = 1;
+	has_c3_res = 1;
 
-	/* Haswell-ULT has C8/9/10*/
-	if (model == 0x45 || model == 0x3D || model == 0x4E)
-		has_c8c9c10_res = 1;
+	switch(model) {
+		/* BYT-M doesn't have C3 or C7 */
+		/* BYT-T doesn't have C3 but it has C7 */
+		case 0x37:
+			has_c2c6_res=1;
+			this->byt_has_ahci();
+			if ((this->get_byt_ahci_support()) == 0)
+				has_c7_res = 1;/*BYT-T PC7 <- S0iX*/
+			else
+				has_c7_res = 0;
+			break;
+		case 0x4C: /* BSW doesn't have C3 */
+			has_c3_res = 0;
+			has_c6c_res = 1; /* BSW only exposes package C6 */
+			break;
+	}
+
+	/*Has C8/9/10*/
+	switch(model) {
+		case 0x45: /*HSW*/
+		case 0x3D:
+		case 0x4E:
+			has_c8c9c10_res = 1;
+			break;
+	}
 }
 
 char * nhm_package::fill_pstate_line(int line_nr, char *buffer)

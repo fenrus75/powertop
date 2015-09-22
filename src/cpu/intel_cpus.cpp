@@ -334,6 +334,7 @@ nhm_package::nhm_package(int model)
 		case 0x45: /*HSW*/
 		case 0x3D:
 		case 0x4E:
+		case 0x5E:
 			has_c8c9c10_res = 1;
 			break;
 	}

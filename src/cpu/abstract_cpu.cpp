@@ -210,7 +210,7 @@ void abstract_cpu::insert_cstate(const char *linux_name, const char *human_name,
 
 	state->line_level = -1;
 
-	c = human_name;
+	c = linux_name;
 	while (*c) {
 		if (strcmp(linux_name, "active")==0) {
 			state->line_level = LEVEL_C0;
@@ -223,15 +223,6 @@ void abstract_cpu::insert_cstate(const char *linux_name, const char *human_name,
 		c++;
 	}
 
-	/* some architectures (ARM) don't have good numbers in their human name.. fall back to the linux name for those */
-	c = linux_name;
-	while (*c && state->line_level < 0) {
-		if (*c >= '0' && *c <='9') {
-			state->line_level = strtoull(c, NULL, 10);
-			break;
-		}
-		c++;
-	}
 
 	if (level >= 0)
 		state->line_level = level;

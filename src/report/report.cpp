@@ -160,8 +160,8 @@ static void system_info(void)
 	report.add_div(&div_attr);
 	report.add_title(&title_attr, __("System Information"));
 	report.add_table(system_data, &sys_table);
-	report.end_div();
 	report.end_header();
+	report.end_div();
 	report.add_navigation();
 	delete [] system_data;
 }

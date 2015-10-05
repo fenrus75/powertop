@@ -1028,7 +1028,7 @@ void report_summary(void)
 
 	/* div attr css_class and css_id */
 	tag_attr div_attr;
-	init_div(&div_attr, "", "summary");
+	init_div(&div_attr, "clear_block", "summary");
 
 
 	/* Set table attributes, rows, and cols */

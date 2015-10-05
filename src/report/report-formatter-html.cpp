@@ -50,7 +50,6 @@ static const char report_html_alternative_head[] =
 /* ************************************************************************ */
 
 static const char report_html_footer[] =
-	"</div>\n"
 	"</body>\n"
 	"</html>\n";
 

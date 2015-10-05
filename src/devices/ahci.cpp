@@ -361,7 +361,7 @@ void ahci_create_device_stats_table(void)
 
 	/* div attr css_class and css_id */
 	tag_attr div_attr;
-	init_div(&div_attr, "", "ahci");
+	init_div(&div_attr, "clear_block", "ahci");
 
 	/* Set Title attributes */
 	tag_attr title_attr;

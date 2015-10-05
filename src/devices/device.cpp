@@ -226,7 +226,7 @@ void show_report_devices(void)
 
 	/* div attr css_class and css_id */
         tag_attr div_attr;
-        init_div(&div_attr, "", "devinfo");
+        init_div(&div_attr, "clear_block", "devinfo");
 
         /* Set Table attributes, rows, and cols */
         table_attributes std_table_css;

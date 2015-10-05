@@ -84,6 +84,7 @@ var powertop = {
 *{
 	margin:0px;
 	padding:0px;
+	width: auto;
 }
 
 body {
@@ -94,14 +95,12 @@ body {
 }
 
 #main_container{
-	width: 960px;
 	margin: 2px auto;
 }
 
 /* Top logo & system table css */
 #main_header{
 	min-width: 960px;
-	display:block;
 }
 
 img.pwtop_logo{
@@ -113,12 +112,10 @@ img.pwtop_logo{
 
 .sys_info
 {
-	float: left;
+	float: right;
 	height:116px;
 	width:450px;
 	font-size: 12px;
-	display: inline;
-	position: relative;
 	text-align: left;
 }
 
@@ -218,10 +215,10 @@ li.summary_list
 
 /* main menu css*/
 #main_menu {
-	display: inline-block;
+	clear:both;
 	font-weight: bold;
 	padding: 5px 0;
-	text-align: center;
+	text-align: left;
 	background-image: -webkit-gradient(linear, left top, left bottom,
 		from(#aaa), to(#eee));
 	background: -moz-linear-gradient(top,  #aaa,  #eee);

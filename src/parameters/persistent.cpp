@@ -178,6 +178,7 @@ void load_parameters(const char *filename)
 	file.open(pathname, ios::in);
 	if (!file) {
 		cout << _("Cannot load from file") << " " << pathname << "\n";
+		cout << _("File will be loaded after taking minimum number of measurement(s) with battery only \n");
 		return;
 	}
 

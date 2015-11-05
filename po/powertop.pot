@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: powertop 2.8-rc2\n"
+"Project-Id-Version: powertop 2.8-rc4\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
-"POT-Creation-Date: 2015-10-13 11:01-0700\n"
+"POT-Creation-Date: 2015-10-30 17:22-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,6 +28,12 @@ msgstr ""
 #: src/parameters/persistent.cpp:138
 #, c-format
 msgid "Loaded %i prior measurements\n"
+msgstr ""
+
+#: src/parameters/persistent.cpp:181
+msgid ""
+"File will be loaded after taking minimum number of measurement(s) with "
+"battery only \n"
 msgstr ""
 
 #: src/display.cpp:70

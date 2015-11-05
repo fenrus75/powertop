@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
-"POT-Creation-Date: 2015-10-13 11:01-0700\n"
+"POT-Creation-Date: 2015-10-30 17:22-0700\n"
 "PO-Revision-Date: 2013-11-05 08:40+0000\n"
 "Last-Translator: Margie Foster <margie@linux.intel.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/"
@@ -31,6 +31,12 @@ msgstr "無法讀取檔案"
 #, c-format
 msgid "Loaded %i prior measurements\n"
 msgstr "已載入 %i 筆先前量測數據\n"
+
+#: src/parameters/persistent.cpp:181
+msgid ""
+"File will be loaded after taking minimum number of measurement(s) with "
+"battery only \n"
+msgstr ""
 
 #: src/display.cpp:70
 msgid "Overview"

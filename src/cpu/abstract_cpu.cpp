@@ -71,9 +71,9 @@ void abstract_cpu::account_freq(uint64_t freq, uint64_t duration)
 		state->freq = freq;
 		hz_to_human(freq, state->human_name);
 		if (freq == 0)
-			strcpy(state->human_name, _("Idle"));
+			pt_strcpy(state->human_name, _("Idle"));
 		if (is_turbo(freq, max_frequency, max_minus_one_frequency))
-			sprintf(state->human_name, _("Turbo Mode"));
+			pt_strcpy(state->human_name, _("Turbo Mode"));
 
 		state->after_count = 1;
 	}
@@ -205,8 +205,8 @@ void abstract_cpu::insert_cstate(const char *linux_name, const char *human_name,
 
 	cstates.push_back(state);
 
-	strcpy(state->linux_name, linux_name);
-	strcpy(state->human_name, human_name);
+	pt_strcpy(state->linux_name, linux_name);
+	pt_strcpy(state->human_name, human_name);
 
 	state->line_level = -1;
 
@@ -337,7 +337,7 @@ void abstract_cpu::insert_pstate(uint64_t freq, const char *human_name, uint64_t
 	pstates.push_back(state);
 
 	state->freq = freq;
-	strcpy(state->human_name, human_name);
+	pt_strcpy(state->human_name, human_name);
 
 
 	state->time_before = duration;

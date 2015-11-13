@@ -40,10 +40,10 @@
 
 runtime_pmdevice::runtime_pmdevice(const char *_name, const char *path) : device()
 {
-	strcpy(sysfs_path, path);
+	pt_strcpy(sysfs_path, path);
 	register_sysfs_path(sysfs_path);
-	strcpy(name, _name);
-	sprintf(humanname, "runtime-%s", _name);
+	pt_strcpy(name, _name);
+	snprintf(humanname, sizeof(humanname), "runtime-%s", _name);
 
 	index = get_param_index(humanname);
 	r_index = get_result_index(humanname);
@@ -141,7 +141,7 @@ double runtime_pmdevice::power_usage(struct result_bundle *result, struct parame
 
 void runtime_pmdevice::set_human_name(char *_name)
 {
-	strcpy(humanname, _name);
+	pt_strcpy(humanname, _name);
 }
 
 

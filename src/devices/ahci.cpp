@@ -415,18 +415,18 @@ void ahci::report_device_stats(string *ahci_data, int idx)
 	printf("\nData from ahci %s\n",ahci_data[offset].c_str());
 	offset +=1;
 
-	sprintf(util, "%5.1f",  active_util);
+	snprintf(util, sizeof(util), "%5.1f",  active_util);
 	ahci_data[offset]= util;
 	offset +=1;
 
-	sprintf(util, "%5.1f",  partial_util);
+	snprintf(util, sizeof(util), "%5.1f",  partial_util);
 	ahci_data[offset]= util;
 	offset +=1;
 
-	sprintf(util, "%5.1f",  slumber_util);
+	snprintf(util, sizeof(util), "%5.1f",  slumber_util);
 	ahci_data[offset]= util;
 	offset +=1;
 
-	sprintf(util, "%5.1f",  devslp_util);
+	snprintf(util, sizeof(util), "%5.1f",  devslp_util);
 	ahci_data[offset]= util;
 }

@@ -200,8 +200,8 @@ void alsa::register_power_with_devlist(struct result_bundle *results, struct par
 
 const char * alsa::human_name(void)
 {
-	sprintf(temp_buf, "%s", humanname);
+	pt_strcpy(temp_buf, humanname);
 	if (strlen(guilty) > 0)
-		sprintf(temp_buf, "%s (%s)", humanname, guilty);
+		snprintf(temp_buf, sizeof(temp_buf), "%s (%s)", humanname, guilty);
 	return temp_buf;
 }

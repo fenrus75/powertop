@@ -113,8 +113,8 @@ static void __tuning_update_display(int cursor_pos)
 	for (i = 0; i < all_tunables.size(); i++) {
 		char res[128];
 		char desc[4096];
-		strcpy(res, all_tunables[i]->result_string());
-		strcpy(desc, all_tunables[i]->description());
+		pt_strcpy(res, all_tunables[i]->result_string());
+		pt_strcpy(desc, all_tunables[i]->description());
 		while (strlen(res) < 12)
 			strcat(res, " ");
 

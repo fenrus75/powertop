@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include "../lib.h"
 
 using namespace std;
 
@@ -96,7 +97,7 @@ void acpi_power_meter::measure(void)
 			c = strchr(c, ' ');
 			if (c) {
 				c++;
-				strcpy(rate_units, c);
+				pt_strcpy(rate_units, c);
 			} else {
 				_rate = 0;
 				strcpy(rate_units, "Unknown");
@@ -111,7 +112,7 @@ void acpi_power_meter::measure(void)
 			c = strchr(c, ' ');
 			if (c) {
 				c++;
-				strcpy(capacity_units, c);
+				pt_strcpy(capacity_units, c);
 			} else {
 				_capacity = 0;
 				strcpy(capacity_units, "Unknown");
@@ -125,7 +126,7 @@ void acpi_power_meter::measure(void)
 			c = strchr(c, ' ');
 			if (c) {
 				c++;
-				strcpy(voltage_units, c);
+				pt_strcpy(voltage_units, c);
 			} else {
 				_voltage = 0;
 				strcpy(voltage_units, "Unknown");

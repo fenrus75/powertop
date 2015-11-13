@@ -78,7 +78,7 @@ void create_thinkpad_fan(void)
 	char filename[PATH_MAX];
 	class thinkpad_fan *fan;
 
-	strcpy(filename, "/sys/devices/platform/thinkpad_hwmon/fan1_input");
+	pt_strcpy(filename, "/sys/devices/platform/thinkpad_hwmon/fan1_input");
 
 	if (access(filename, R_OK) !=0)
 		return;

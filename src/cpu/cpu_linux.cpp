@@ -64,8 +64,8 @@ void cpu_linux::parse_cstates_start(void)
 		if (strlen(entry->d_name) < 3)
 			continue;
 
-		strcpy(linux_name, entry->d_name);
-		strcpy(human_name, linux_name);
+		pt_strcpy(linux_name, entry->d_name);
+		pt_strcpy(human_name, linux_name);
 
 		snprintf(filename + len, 256 - len, "/%s/name", entry->d_name);
 
@@ -76,7 +76,7 @@ void cpu_linux::parse_cstates_start(void)
 		}
 
 		if (strcmp(human_name, "C0")==0)
-			strcpy(human_name, _("C0 polling"));
+			pt_strcpy(human_name, _("C0 polling"));
 
 		snprintf(filename + len, 256 - len, "/%s/usage", entry->d_name);
 		file.open(filename, ios::in);
@@ -164,8 +164,8 @@ void cpu_linux::parse_cstates_end(void)
 		if (strlen(entry->d_name) < 3)
 			continue;
 
-		strcpy(linux_name, entry->d_name);
-		strcpy(human_name, linux_name);
+		pt_strcpy(linux_name, entry->d_name);
+		pt_strcpy(human_name, linux_name);
 
 
 		snprintf(filename + len, 256 - len, "/%s/usage", entry->d_name);

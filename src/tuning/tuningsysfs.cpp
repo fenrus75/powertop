@@ -44,8 +44,8 @@
 
 sysfs_tunable::sysfs_tunable(const char *str, const char *_sysfs_path, const char *_target_content) : tunable(str, 1.0, _("Good"), _("Bad"), _("Unknown"))
 {
-	strcpy(sysfs_path, _sysfs_path);
-	strcpy(target_value, _target_content);
+	pt_strcpy(sysfs_path, _sysfs_path);
+	pt_strcpy(target_value, _target_content);
 	bad_value[0] = 0;
 	snprintf(toggle_good, 4096, "echo '%s' > '%s';", target_value, sysfs_path);
 	snprintf(toggle_bad, 4096, "echo '%s' > '%s';", bad_value, sysfs_path);
@@ -69,7 +69,7 @@ int sysfs_tunable::good_bad(void)
 	if (strcmp(current_value, target_value) == 0)
 		return TUNE_GOOD;
 
-	strcpy(bad_value, current_value);
+	pt_strcpy(bad_value, current_value);
 	return TUNE_BAD;
 }
 

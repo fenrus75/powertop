@@ -40,6 +40,7 @@ using namespace std;
 
 #include "device.h"
 #include "network.h"
+#include "../lib.h"
 #include "../parameters/parameters.h"
 #include "../process/process.h"
 extern "C" {
@@ -142,38 +143,38 @@ network::network(const char *_name, const char *path): device()
 
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
 	register_sysfs_path(sysfs_path);
-	sprintf(devname, "%s", _name);
+	pt_strcpy(devname, _name);
 	sprintf(humanname, "nic:%s", _name);
 	strncpy(name, devname, sizeof(name));
 
-	sprintf(devname, "%s-up", _name);
+	snprintf(devname, sizeof(devname), "%s-up", _name);
 	index_up = get_param_index(devname);
 	rindex_up = get_result_index(devname);
 
-	sprintf(devname, "%s-powerunsave", _name);
+	snprintf(devname, sizeof(devname), "%s-powerunsave", _name);
 	index_powerunsave = get_param_index(devname);
 	rindex_powerunsave = get_result_index(devname);
 
-	sprintf(devname, "%s-link-100", _name);
+	snprintf(devname, sizeof(devname), "%s-link-100", _name);
 	index_link_100 = get_param_index(devname);
 	rindex_link_100 = get_result_index(devname);
 
-	sprintf(devname, "%s-link-1000", _name);
+	snprintf(devname, sizeof(devname), "%s-link-1000", _name);
 	index_link_1000 = get_param_index(devname);
 	rindex_link_1000 = get_result_index(devname);
 
-	sprintf(devname, "%s-link-high", _name);
+	snprintf(devname, sizeof(devname), "%s-link-high", _name);
 	index_link_high = get_param_index(devname);
 	rindex_link_high = get_result_index(devname);
 
-	sprintf(devname, "%s-packets", _name);
+	snprintf(devname, sizeof(devname), "%s-packets", _name);
 	index_pkts = get_param_index(devname);
 	rindex_pkts = get_result_index(devname);
 
 	memset(line, 0, 4096);
 	filename.append("/device/driver");
 	if (readlink(filename.c_str(), line, 4096) > 0) {
-		sprintf(humanname, _("Network interface: %s (%s)"), _name,  basename(line));
+		snprintf(humanname, sizeof(humanname), _("Network interface: %s (%s)"), _name,  basename(line));
 	};
 }
 
@@ -189,7 +190,7 @@ static int net_iface_up(const char *iface)
 	if (sock<0)
 		return 0;
 
-	strcpy(ifr.ifr_name, iface);
+	pt_strcpy(ifr.ifr_name, iface);
 
 	/* Check if the interface is up */
 	ret = ioctl(sock, SIOCGIFFLAGS, &ifr);
@@ -221,7 +222,7 @@ static int iface_link(const char *name)
 	if (sock<0)
 		return 0;
 
-	strcpy(ifr.ifr_name, name);
+	pt_strcpy(ifr.ifr_name, name);
 
 	memset(&cmd, 0, sizeof(cmd));
 
@@ -249,7 +250,7 @@ static int iface_speed(const char *name)
 	if (sock<0)
 		return 0;
 
-	strcpy(ifr.ifr_name, name);
+	pt_strcpy(ifr.ifr_name, name);
 
 	memset(&cmd, 0, sizeof(cmd));
 
@@ -353,22 +354,22 @@ static void netdev_callback(const char *d_name)
 
 	f_name.append(d_name);
 
-	sprintf(devname, "%s-up", d_name);
+	snprintf(devname, sizeof(devname), "%s-up", d_name);
 	register_parameter(devname);
 
-	sprintf(devname, "%s-powerunsave", d_name);
+	snprintf(devname, sizeof(devname), "%s-powerunsave", d_name);
 	register_parameter(devname);
 
-	sprintf(devname, "%s-link-100", d_name);
+	snprintf(devname, sizeof(devname), "%s-link-100", d_name);
 	register_parameter(devname);
 
-	sprintf(devname, "%s-link-1000", d_name);
+	snprintf(devname, sizeof(devname), "%s-link-1000", d_name);
 	register_parameter(devname);
 
-	sprintf(devname, "%s-link-high", d_name);
+	snprintf(devname, sizeof(devname), "%s-link-high", d_name);
 	register_parameter(devname);
 
-	sprintf(devname, "%s-packets", d_name);
+	snprintf(devname, sizeof(devname), "%s-packets", d_name);
 	register_parameter(devname);
 
 	network *bl = new(std::nothrow) class network(d_name, f_name.c_str());

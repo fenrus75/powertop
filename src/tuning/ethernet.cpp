@@ -71,7 +71,7 @@ int ethernet_tunable::good_bad(void)
 	if (sock<0)
 		return result;
 
-	strcpy(ifr.ifr_name, interf);
+	pt_strcpy(ifr.ifr_name, interf);
 
 	/* Check if the interf is up */
 	ret = ioctl(sock, SIOCGIFFLAGS, &ifr);
@@ -107,7 +107,7 @@ void ethernet_tunable::toggle(void)
 	if (sock<0)
 		return;
 
-	strcpy(ifr.ifr_name, interf);
+	pt_strcpy(ifr.ifr_name, interf);
 
 	/* Check if the interface is up */
 	ret = ioctl(sock, SIOCGIFFLAGS, &ifr);

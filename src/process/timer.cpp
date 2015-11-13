@@ -125,7 +125,7 @@ const char * timer::description(void)
 	if (child_runtime > accumulated_runtime)
 		child_runtime = 0;
 
-	sprintf(desc, "%s", handler);
+	snprintf(desc, sizeof(desc), "%s", handler);
 	return desc;
 }
 

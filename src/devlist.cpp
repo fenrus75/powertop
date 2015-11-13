@@ -125,7 +125,7 @@ void collect_open_devices(void)
 		if (strcmp(entry->d_name, "self") == 0)
 			continue;
 
-		snprintf(filename, PATH_MAX, "/proc/%s/fd/", entry->d_name);
+		snprintf(filename, sizeof(filename), "/proc/%s/fd/", entry->d_name);
 
 		dir2 = opendir(filename);
 		if (!dir2)
@@ -138,9 +138,9 @@ void collect_open_devices(void)
 				break;
 			if (!isdigit(entry2->d_name[0]))
 				continue;
-			snprintf(filename, PATH_MAX, "/proc/%s/fd/%s", entry->d_name, entry2->d_name);
-			memset(link, 0, PATH_MAX);
-			ret = readlink(filename, link, PATH_MAX - 1);
+			snprintf(filename, sizeof(filename), "/proc/%s/fd/%s", entry->d_name, entry2->d_name);
+			memset(link, 0, sizeof(link));
+			ret = readlink(filename, link, sizeof(link) - 1);
 			if (ret < 0)
 				continue;
 

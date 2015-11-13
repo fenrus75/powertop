@@ -73,7 +73,7 @@ void acpi_power_meter::measure(void)
 	voltage = 0;
 	capacity = 0;
 
-	snprintf(filename, PATH_MAX, "/proc/acpi/battery/%s/state", battery_name);
+	snprintf(filename, sizeof(filename), "/proc/acpi/battery/%s/state", battery_name);
 
 	file.open(filename, ios::in);
 	if (!file)
@@ -81,7 +81,7 @@ void acpi_power_meter::measure(void)
 
 	while (file) {
 		char *c;
-		file.getline(line, 4096);
+		file.getline(line, sizeof(line));
 
 		if (strstr(line, "present:") && (strstr(line, "yes") == NULL)) {
 			return;

@@ -175,7 +175,7 @@ void nhm_core::measurement_start(void)
 	}
 
 
-	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", first_cpu);
+	snprintf(filename, sizeof(filename), "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", first_cpu);
 
 	file.open(filename, ios::in);
 
@@ -517,7 +517,7 @@ void nhm_cpu::measurement_start(void)
 
 	insert_cstate("active", _("C0 active"), 0, aperf_before, 1);
 
-	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", first_cpu);
+	snprintf(filename, sizeof(filename), "/sys/devices/system/cpu/cpu%i/cpufreq/stats/time_in_state", first_cpu);
 
 	file.open(filename, ios::in);
 
@@ -526,7 +526,7 @@ void nhm_cpu::measurement_start(void)
 
 		while (file) {
 			uint64_t f;
-			file.getline(line, 1024);
+			file.getline(line, sizeof(line));
 			f = strtoull(line, NULL, 10);
 			account_freq(f, 0);
 		}

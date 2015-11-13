@@ -157,14 +157,14 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 	unsigned int core_number = 0;
 	class abstract_cpu *package, *core, *cpu;
 
-	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/topology/core_id", number);
+	snprintf(filename, sizeof(filename), "/sys/devices/system/cpu/cpu%i/topology/core_id", number);
 	file.open(filename, ios::in);
 	if (file) {
 		file >> core_number;
 		file.close();
 	}
 
-	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/topology/physical_package_id", number);
+	snprintf(filename, sizeof(filename), "/sys/devices/system/cpu/cpu%i/topology/physical_package_id", number);
 	file.open(filename, ios::in);
 	if (file) {
 		file >> package_number;

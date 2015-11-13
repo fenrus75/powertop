@@ -112,7 +112,7 @@ void abstract_cpu::measurement_start(void)
 	old_idle = true;
 
 
-	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_available_frequencies", number);
+	snprintf(filename, sizeof(filename), "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_available_frequencies", number);
 	file.open(filename, ios::in);
 	if (file) {
 		file >> max_frequency;
@@ -446,12 +446,12 @@ void abstract_cpu::wiggle(void)
 
 	/* wiggle a CPU so that we have a record of it at the start and end of the perf trace */
 
-	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_max_freq", first_cpu);
+	snprintf(filename, sizeof(filename), "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_max_freq", first_cpu);
 	ifile.open(filename, ios::in);
 	ifile >> maxf;
 	ifile.close();
 
-	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_min_freq", first_cpu);
+	snprintf(filename, sizeof(filename), "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_min_freq", first_cpu);
 	ifile.open(filename, ios::in);
 	ifile >> minf;
 	ifile.close();
@@ -462,7 +462,7 @@ void abstract_cpu::wiggle(void)
 	ofile.open(filename, ios::out);
 	ofile << minf;
 	ofile.close();
-	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_max_freq", first_cpu);
+	snprintf(filename, sizeof(filename), "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_max_freq", first_cpu);
 	ofile.open(filename, ios::out);
 	ofile << minf;
 	ofile.close();

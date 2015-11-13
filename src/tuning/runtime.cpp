@@ -53,7 +53,7 @@ runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *
 		char filename[PATH_MAX];
 		uint16_t vendor = 0, device = 0;
 
-		snprintf(filename, PATH_MAX, "/sys/bus/%s/devices/%s/vendor", bus, dev);
+		snprintf(filename, sizeof(filename), "/sys/bus/%s/devices/%s/vendor", bus, dev);
 
 		file.open(filename, ios::in);
 		if (file) {
@@ -62,7 +62,7 @@ runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *
 		}
 
 
-		snprintf(filename, PATH_MAX, "/sys/bus/%s/devices/%s/device", bus, dev);
+		snprintf(filename, sizeof(filename), "/sys/bus/%s/devices/%s/device", bus, dev);
 		file.open(filename, ios::in);
 		if (file) {
 			file >> hex >> device;
@@ -78,8 +78,8 @@ runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *
 
 
 	}
-	snprintf(toggle_good, 4096, "echo 'auto' > '%s';", runtime_path);
-	snprintf(toggle_bad, 4096, "echo 'on' > '%s';", runtime_path);
+	snprintf(toggle_good, sizeof(toggle_good), "echo 'auto' > '%s';", runtime_path);
+	snprintf(toggle_bad, sizeof(toggle_bad), "echo 'on' > '%s';", runtime_path);
 }
 
 int runtime_tunable::good_bad(void)
@@ -126,7 +126,7 @@ void add_runtime_tunables(const char *bus)
 	DIR *dir;
 	char filename[PATH_MAX];
 
-	snprintf(filename, PATH_MAX, "/sys/bus/%s/devices/", bus);
+	snprintf(filename, sizeof(filename), "/sys/bus/%s/devices/", bus);
 	dir = opendir(filename);
 	if (!dir)
 		return;
@@ -140,13 +140,13 @@ void add_runtime_tunables(const char *bus)
 		if (entry->d_name[0] == '.')
 			continue;
 
-		snprintf(filename, PATH_MAX, "/sys/bus/%s/devices/%s/power/control", bus, entry->d_name);
+		snprintf(filename, sizeof(filename), "/sys/bus/%s/devices/%s/power/control", bus, entry->d_name);
 
 		if (access(filename, R_OK) != 0)
 			continue;
 
 
-		snprintf(filename, PATH_MAX, "/sys/bus/%s/devices/%s", bus, entry->d_name);
+		snprintf(filename, sizeof(filename), "/sys/bus/%s/devices/%s", bus, entry->d_name);
 
 		runtime = new class runtime_tunable(filename, bus, entry->d_name);
 

@@ -133,7 +133,8 @@ powertop_CXXFLAGS = \
 	$(GLIB2_CFLAGS) \
 	$(LIBNL_CFLAGS) \
 	$(NCURSES_CFLAGS) \
-	$(PCIUTILS_CFLAGS)
+	$(PCIUTILS_CFLAGS) \
+	$(PTHREAD_CFLAGS)
 
 
 powertop_CPPFLAGS = \
@@ -142,7 +143,8 @@ powertop_CPPFLAGS = \
 	$(LIBNL_CFLAGS) \
 	$(LIBZ_CFLAGS) \
 	$(NCURSES_CFLAGS) \
-	$(PCIUTILS_CFLAGS)
+	$(PCIUTILS_CFLAGS) \
+	$(PTHREAD_CFLAGS)
 
 powertop_LDADD = \
 	../traceevent/libtraceevnet.la

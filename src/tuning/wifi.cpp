@@ -44,11 +44,11 @@ extern "C" {
 
 wifi_tunable::wifi_tunable(const char *_iface) : tunable("", 1.5, _("Good"), _("Bad"), _("Unknown"))
 {
-	strcpy(iface, _iface);
+	pt_strcpy(iface, _iface);
 	sprintf(desc, _("Wireless Power Saving for interface %s"), iface);
 
-	snprintf(toggle_good, 4096, "iw dev %s set power_save on", iface);
-	snprintf(toggle_bad, 4096, "iw dev %s set power_save off", iface);
+	snprintf(toggle_good, sizeof(toggle_good), "iw dev %s set power_save on", iface);
+	snprintf(toggle_bad, sizeof(toggle_bad), "iw dev %s set power_save off", iface);
 }
 
 int wifi_tunable::good_bad(void)

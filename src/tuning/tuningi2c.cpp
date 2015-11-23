@@ -38,7 +38,7 @@ i2c_tunable::i2c_tunable(const char *path, const char *name, bool is_adapter) : 
 	char filename[PATH_MAX];
 	string devname;
 
-	snprintf(filename, PATH_MAX, "%s/name", path);
+	snprintf(filename, sizeof(filename), "%s/name", path);
 	file.open(filename, ios::in);
 	if (file) {
 		getline(file, devname);
@@ -46,20 +46,20 @@ i2c_tunable::i2c_tunable(const char *path, const char *name, bool is_adapter) : 
 	}
 
 	if (is_adapter) {
-		snprintf(i2c_path, PATH_MAX, "%s/device/power/control", path);
-		snprintf(filename, PATH_MAX, "%s/device", path);
+		snprintf(i2c_path, sizeof(i2c_path), "%s/device/power/control", path);
+		snprintf(filename, sizeof(filename), "%s/device", path);
 	} else {
-		snprintf(i2c_path, PATH_MAX,  "%s/power/control", path);
-		snprintf(filename, PATH_MAX, "%s/device", path);
+		snprintf(i2c_path, sizeof(i2c_path),  "%s/power/control", path);
+		snprintf(filename, sizeof(filename), "%s/device", path);
 	}
 
 	if (device_has_runtime_pm(filename))
-		snprintf(desc, 4096, _("Runtime PM for I2C %s %s (%s)"), (is_adapter ? _("Adapter") : _("Device")), name, (devname.empty() ? "" : devname.c_str()));
+		snprintf(desc, sizeof(desc), _("Runtime PM for I2C %s %s (%s)"), (is_adapter ? _("Adapter") : _("Device")), name, (devname.empty() ? "" : devname.c_str()));
 	else
-		snprintf(desc, 4096, _("I2C %s %s has no runtime power management"), (is_adapter ? _("Adapter") : _("Device")), name);
+		snprintf(desc, sizeof(desc), _("I2C %s %s has no runtime power management"), (is_adapter ? _("Adapter") : _("Device")), name);
 
-	snprintf(toggle_good, 4096, "echo 'auto' > '%s';", i2c_path);
-	snprintf(toggle_bad, 4096, "echo 'on' > '%s';", i2c_path);
+	snprintf(toggle_good, sizeof(toggle_good), "echo 'auto' > '%s';", i2c_path);
+	snprintf(toggle_bad, sizeof(toggle_bad), "echo 'on' > '%s';", i2c_path);
 }
 
 int i2c_tunable::good_bad(void)

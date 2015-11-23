@@ -53,32 +53,32 @@ alsa::alsa(const char *_name, const char *path): device()
 	start_inactive = 0;
 	strncpy(sysfs_path, path, sizeof(sysfs_path));
 
-	snprintf(devname, 4096, "alsa:%s", _name);
-	snprintf(humanname, 4096, "alsa:%s", _name);
+	snprintf(devname, sizeof(devname), "alsa:%s", _name);
+	snprintf(humanname, sizeof(humanname), "alsa:%s", _name);
 	strncpy(name, devname, sizeof(name));
 	rindex = get_result_index(name);
 
 	guilty[0] = 0;
 	model[0] = 0;
 	vendor[0] = 0;
-	snprintf(devname, 4096, "%s/modelname", path);
+	snprintf(devname, sizeof(devname), "%s/modelname", path);
 	file.open(devname);
 	if (file) {
-		file.getline(model, 4096);
+		file.getline(model, sizeof(model));
 		file.close();
 	}
-	snprintf(devname, 4096, "%s/vendor_name", path);
+	snprintf(devname, sizeof(devname), "%s/vendor_name", path);
 	file.open(devname);
 	if (file) {
-		file.getline(vendor, 4096);
+		file.getline(vendor, sizeof(vendor));
 		file.close();
 	}
 	if (strlen(model) && strlen(vendor))
-		snprintf(humanname, 4096, _("Audio codec %s: %s (%s)"), name, model, vendor);
+		snprintf(humanname, sizeof(humanname), _("Audio codec %s: %s (%s)"), name, model, vendor);
 	else if (strlen(model))
-		snprintf(humanname, 4096, _("Audio codec %s: %s"), _name, model);
+		snprintf(humanname, sizeof(humanname), _("Audio codec %s: %s"), _name, model);
 	else if (strlen(vendor))
-		snprintf(humanname, 4096, _("Audio codec %s: %s"), _name, vendor);
+		snprintf(humanname, sizeof(humanname), _("Audio codec %s: %s"), _name, vendor);
 }
 
 void alsa::start_measurement(void)
@@ -86,14 +86,14 @@ void alsa::start_measurement(void)
 	char filename[PATH_MAX];
 	ifstream file;
 
-	snprintf(filename, PATH_MAX, "%s/power_off_acct", sysfs_path);
+	snprintf(filename, sizeof(filename), "%s/power_off_acct", sysfs_path);
 	try {
 		file.open(filename, ios::in);
 		if (file) {
 			file >> start_inactive;
 		}
 		file.close();
-		snprintf(filename, PATH_MAX, "%s/power_on_acct", sysfs_path);
+		snprintf(filename, sizeof(filename), "%s/power_on_acct", sysfs_path);
 		file.open(filename, ios::in);
 
 		if (file) {
@@ -112,14 +112,14 @@ void alsa::end_measurement(void)
 	ifstream file;
 	double p;
 
-	snprintf(filename, PATH_MAX, "%s/power_off_acct", sysfs_path);
+	snprintf(filename, sizeof(filename), "%s/power_off_acct", sysfs_path);
 	try {
 		file.open(filename, ios::in);
 		if (file) {
 			file >> end_inactive;
 		}
 		file.close();
-		snprintf(filename, PATH_MAX, "%s/power_on_acct", sysfs_path);
+		snprintf(filename, sizeof(filename), "%s/power_on_acct", sysfs_path);
 		file.open(filename, ios::in);
 
 		if (file) {
@@ -158,11 +158,11 @@ static void create_all_alsa_callback(const char *d_name)
 	if (strncmp(d_name, "hwC", 3) != 0)
 		return;
 
-	snprintf(filename, PATH_MAX, "/sys/class/sound/card0/%s/power_on_acct", d_name);
+	snprintf(filename, sizeof(filename), "/sys/class/sound/card0/%s/power_on_acct", d_name);
 	if (access(filename, R_OK) != 0)
 		return;
 
-	snprintf(filename, PATH_MAX, "/sys/class/sound/card0/%s", d_name);
+	snprintf(filename, sizeof(filename), "/sys/class/sound/card0/%s", d_name);
 	bl = new class alsa(d_name, filename);
 	all_devices.push_back(bl);
 	register_parameter("alsa-codec-power", 0.5);
@@ -200,8 +200,8 @@ void alsa::register_power_with_devlist(struct result_bundle *results, struct par
 
 const char * alsa::human_name(void)
 {
-	sprintf(temp_buf, "%s", humanname);
+	pt_strcpy(temp_buf, humanname);
 	if (strlen(guilty) > 0)
-		sprintf(temp_buf, "%s (%s)", humanname, guilty);
+		snprintf(temp_buf, sizeof(temp_buf), "%s (%s)", humanname, guilty);
 	return temp_buf;
 }

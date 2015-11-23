@@ -44,11 +44,11 @@
 
 sysfs_tunable::sysfs_tunable(const char *str, const char *_sysfs_path, const char *_target_content) : tunable(str, 1.0, _("Good"), _("Bad"), _("Unknown"))
 {
-	strcpy(sysfs_path, _sysfs_path);
-	strcpy(target_value, _target_content);
+	pt_strcpy(sysfs_path, _sysfs_path);
+	pt_strcpy(target_value, _target_content);
 	bad_value[0] = 0;
-	snprintf(toggle_good, 4096, "echo '%s' > '%s';", target_value, sysfs_path);
-	snprintf(toggle_bad, 4096, "echo '%s' > '%s';", bad_value, sysfs_path);
+	snprintf(toggle_good, sizeof(toggle_good), "echo '%s' > '%s';", target_value, sysfs_path);
+	snprintf(toggle_bad, sizeof(toggle_bad), "echo '%s' > '%s';", bad_value, sysfs_path);
 }
 
 int sysfs_tunable::good_bad(void)
@@ -69,7 +69,7 @@ int sysfs_tunable::good_bad(void)
 	if (strcmp(current_value, target_value) == 0)
 		return TUNE_GOOD;
 
-	strcpy(bad_value, current_value);
+	pt_strcpy(bad_value, current_value);
 	return TUNE_BAD;
 }
 
@@ -119,8 +119,8 @@ static void add_sata_tunables_callback(const char *d_name)
 	char filename[PATH_MAX];
 	char msg[4096];
 
-	snprintf(filename, PATH_MAX, "/sys/class/scsi_host/%s/link_power_management_policy", d_name);
-	snprintf(msg, 4096, _("Enable SATA link power management for %s"), d_name);
+	snprintf(filename, sizeof(filename), "/sys/class/scsi_host/%s/link_power_management_policy", d_name);
+	snprintf(msg, sizeof(msg), _("Enable SATA link power management for %s"), d_name);
 	add_sysfs_tunable(msg, filename,"min_power");
 }
 

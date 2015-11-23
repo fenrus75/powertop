@@ -30,7 +30,7 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <limits.h>
-
+#include "../lib.h"
 
 using namespace std;
 
@@ -78,11 +78,11 @@ void create_i915_gpu(void)
 	class i915gpu *gpu;
 	gpu_rapl_device *rapl_dev;
 
-	strcpy(filename, "/sys/kernel/debug/tracing/events/i915/i915_gem_ring_dispatch/format");
+	pt_strcpy(filename, "/sys/kernel/debug/tracing/events/i915/i915_gem_ring_dispatch/format");
 
 	if (access(filename, R_OK) !=0) {
 		/* try an older tracepoint */
-		strcpy(filename, "/sys/kernel/debug/tracing/events/i915/i915_gem_request_submit/format");
+		pt_strcpy(filename, "/sys/kernel/debug/tracing/events/i915/i915_gem_request_submit/format");
 		if (access(filename, R_OK) != 0)
 			return;
 	}

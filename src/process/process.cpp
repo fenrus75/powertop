@@ -33,6 +33,7 @@
 
 #include <iostream>
 #include <fstream>
+#include "../lib.h"
 
 
 vector <class process *> all_processes;
@@ -89,7 +90,7 @@ process::process(const char *_comm, int _pid, int _tid) : power_consumer()
 	char line[4097];
 	ifstream file;
 
-	strcpy(comm, _comm);
+	pt_strcpy(comm, _comm);
 	pid = _pid;
 	is_idle = 0;
 	running = 0;
@@ -120,7 +121,7 @@ process::process(const char *_comm, int _pid, int _tid) : power_consumer()
 	if (strncmp(_comm, "kondemand/", 10) == 0)
 		is_idle = 1;
 
-	strcpy(desc, comm);
+	pt_strcpy(desc, comm);
 
 	sprintf(line, "/proc/%i/cmdline", _pid);
 	file.open(line, ios::binary);
@@ -130,7 +131,7 @@ process::process(const char *_comm, int _pid, int _tid) : power_consumer()
 		file.close();
 		if (strlen(line) < 1) {
 			is_kernel = 1;
-			sprintf(desc, "[%s]", comm);
+			snprintf(desc, sizeof(desc), "[%s]", comm);
 		} else {
 			int sz = sizeof(desc) - 1;
 			cmdline_to_string(line);

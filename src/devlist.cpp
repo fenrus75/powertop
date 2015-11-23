@@ -125,7 +125,7 @@ void collect_open_devices(void)
 		if (strcmp(entry->d_name, "self") == 0)
 			continue;
 
-		snprintf(filename, PATH_MAX, "/proc/%s/fd/", entry->d_name);
+		snprintf(filename, sizeof(filename), "/proc/%s/fd/", entry->d_name);
 
 		dir2 = opendir(filename);
 		if (!dir2)
@@ -138,9 +138,9 @@ void collect_open_devices(void)
 				break;
 			if (!isdigit(entry2->d_name[0]))
 				continue;
-			snprintf(filename, PATH_MAX, "/proc/%s/fd/%s", entry->d_name, entry2->d_name);
-			memset(link, 0, PATH_MAX);
-			ret = readlink(filename, link, PATH_MAX - 1);
+			snprintf(filename, sizeof(filename), "/proc/%s/fd/%s", entry->d_name, entry2->d_name);
+			memset(link, 0, sizeof(link));
+			ret = readlink(filename, link, sizeof(link) - 1);
 			if (ret < 0)
 				continue;
 
@@ -263,7 +263,7 @@ void register_devpower(const char *devstring, double power, class device *_dev)
 
 	if (!dev) {
 		dev = (struct devpower *)malloc(sizeof (struct devpower));
-		strcpy(dev->device, devstring);
+		pt_strcpy(dev->device, devstring);
 		dev->power = 0.0;
 		devpower.push_back(dev);
 	}
@@ -333,13 +333,13 @@ void report_show_open_devices(void)
 	for (i = 0; i < target->size(); i++) {
 		proc[0] = 0;
 		if (strcmp(prev, (*target)[i]->comm) != 0)
-			sprintf(proc, "%s", (*target)[i]->comm);
+			snprintf(proc, sizeof(proc), "%s", (*target)[i]->comm);
 
 		process_data[idx]=string(proc);
 		idx+=1;
 		process_data[idx]=string((*target)[i]->device);
 		idx+=1;
-		sprintf(prev, "%s", (*target)[i]->comm);
+		snprintf(prev, sizeof(prev), "%s", (*target)[i]->comm);
 	}
 
 	/* Report Output */

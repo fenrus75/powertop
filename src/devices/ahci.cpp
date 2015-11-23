@@ -51,7 +51,7 @@ static string disk_name(char *path, char *target, char *shortname)
 	char pathname[PATH_MAX];
 	string diskname = "";
 
-	snprintf(pathname, PATH_MAX, "%s/%s", path, target);
+	snprintf(pathname, sizeof(pathname), "%s/%s", path, target);
 	dir = opendir(pathname);
 	if (!dir)
 		return diskname;
@@ -65,10 +65,10 @@ static string disk_name(char *path, char *target, char *shortname)
 		if (!strchr(dirent->d_name, ':'))
 			continue;
 
-		snprintf(line, PATH_MAX, "%s/%s/model", pathname, dirent->d_name);
+		snprintf(line, sizeof(line), "%s/%s/model", pathname, dirent->d_name);
 		file = fopen(line, "r");
 		if (file) {
-			if (fgets(line, 4096, file) == NULL) {
+			if (fgets(line, sizeof(line), file) == NULL) {
 				fclose(file);
 				break;
 			}
@@ -92,7 +92,7 @@ static string model_name(char *path, char *shortname)
 	struct dirent *dirent;
 	char pathname[PATH_MAX];
 
-	snprintf(pathname, PATH_MAX, "%s/device", path);
+	snprintf(pathname, sizeof(pathname), "%s/device", path);
 
 	dir = opendir(pathname);
 	if (!dir)
@@ -131,29 +131,29 @@ ahci::ahci(char *_name, char *path): device()
 
 	register_sysfs_path(sysfs_path);
 
-	snprintf(devname, 128, "ahci:%s", _name);
+	snprintf(devname, sizeof(devname), "ahci:%s", _name);
 	strncpy(name, devname, sizeof(name));
 	active_index = get_param_index("ahci-link-power-active");
 	partial_index = get_param_index("ahci-link-power-partial");
 
-	snprintf(buffer, 4096, "%s-active", name);
+	snprintf(buffer, sizeof(buffer), "%s-active", name);
 	active_rindex = get_result_index(buffer);
 
-	snprintf(buffer, 4096, "%s-partial", name);
+	snprintf(buffer, sizeof(buffer), "%s-partial", name);
 	partial_rindex = get_result_index(buffer);
 
-	snprintf(buffer, 4096, "%s-slumber", name);
+	snprintf(buffer, sizeof(buffer), "%s-slumber", name);
 	slumber_rindex = get_result_index(buffer);
 
-	snprintf(buffer, 4096, "%s-devslp", name);
+	snprintf(buffer, sizeof(buffer), "%s-devslp", name);
 	devslp_rindex = get_result_index(buffer);
 
 	diskname = model_name(path, _name);
 
 	if (strlen(diskname.c_str()) == 0)
-		snprintf(humanname, 4096, _("SATA link: %s"), _name);
+		snprintf(humanname, sizeof(humanname), _("SATA link: %s"), _name);
 	else
-		snprintf(humanname, 4096, _("SATA disk: %s"), diskname.c_str());
+		snprintf(humanname, sizeof(humanname), _("SATA disk: %s"), diskname.c_str());
 }
 
 void ahci::start_measurement(void)
@@ -161,27 +161,27 @@ void ahci::start_measurement(void)
 	char filename[PATH_MAX];
 	ifstream file;
 
-	snprintf(filename, PATH_MAX, "%s/ahci_alpm_active", sysfs_path);
+	snprintf(filename, sizeof(filename), "%s/ahci_alpm_active", sysfs_path);
 	try {
 		file.open(filename, ios::in);
 		if (file) {
 			file >> start_active;
 		}
 		file.close();
-		snprintf(filename, PATH_MAX, "%s/ahci_alpm_partial", sysfs_path);
+		snprintf(filename, sizeof(filename), "%s/ahci_alpm_partial", sysfs_path);
 		file.open(filename, ios::in);
 
 		if (file) {
 			file >> start_partial;
 		}
 		file.close();
-		snprintf(filename, PATH_MAX, "%s/ahci_alpm_slumber", sysfs_path);
+		snprintf(filename, sizeof(filename), "%s/ahci_alpm_slumber", sysfs_path);
 		file.open(filename, ios::in);
 		if (file) {
 			file >> start_slumber;
 		}
 		file.close();
-		snprintf(filename, PATH_MAX, "%s/ahci_alpm_devslp", sysfs_path);
+		snprintf(filename, sizeof(filename), "%s/ahci_alpm_devslp", sysfs_path);
 		file.open(filename, ios::in);
 		if (file) {
 			file >> start_devslp;
@@ -203,25 +203,25 @@ void ahci::end_measurement(void)
 	double total;
 
 	try {
-		snprintf(filename, 4096, "%s/ahci_alpm_active", sysfs_path);
+		snprintf(filename, sizeof(filename), "%s/ahci_alpm_active", sysfs_path);
 		file.open(filename, ios::in);
 		if (file) {
 			file >> end_active;
 		}
 		file.close();
-		snprintf(filename, 4096, "%s/ahci_alpm_partial", sysfs_path);
+		snprintf(filename, sizeof(filename), "%s/ahci_alpm_partial", sysfs_path);
 		file.open(filename, ios::in);
 		if (file) {
 			file >> end_partial;
 		}
 		file.close();
-		snprintf(filename, 4096, "%s/ahci_alpm_slumber", sysfs_path);
+		snprintf(filename, sizeof(filename), "%s/ahci_alpm_slumber", sysfs_path);
 		file.open(filename, ios::in);
 		if (file) {
 			file >> end_slumber;
 		}
 		file.close();
-		snprintf(filename, 4096, "%s/ahci_alpm_devslp", sysfs_path);
+		snprintf(filename, sizeof(filename), "%s/ahci_alpm_devslp", sysfs_path);
 		file.open(filename, ios::in);
 		if (file) {
 			file >> end_devslp;
@@ -245,28 +245,28 @@ void ahci::end_measurement(void)
 	p = (end_active - start_active) / total * 100.0;
 	if (p < 0)
 		 p = 0;
-	snprintf(powername, 4096, "%s-active", name);
+	snprintf(powername, sizeof(powername), "%s-active", name);
 	report_utilization(powername, p);
 
 	/* percent in partial */
 	p = (end_partial - start_partial) / total * 100.0;
 	if (p < 0)
 		 p = 0;
-	snprintf(powername, 4096, "%s-partial", name);
+	snprintf(powername, sizeof(powername), "%s-partial", name);
 	report_utilization(powername, p);
 
 	/* percent in slumber */
 	p = (end_slumber - start_slumber) / total * 100.0;
 	if (p < 0)
 		 p = 0;
-	snprintf(powername, 4096, "%s-slumber", name);
+	snprintf(powername, sizeof(powername), "%s-slumber", name);
 	report_utilization(powername, p);
 
 	/* percent in devslp */
 	p = (end_devslp - start_devslp) / total * 100.0;
 	if (p < 0)
 		 p = 0;
-	snprintf(powername, 4096, "%s-devslp", name);
+	snprintf(powername, sizeof(powername), "%s-devslp", name);
 	report_utilization(powername, p);
 }
 
@@ -306,7 +306,7 @@ void create_all_ahcis(void)
 			break;
 		if (entry->d_name[0] == '.')
 			continue;
-		snprintf(filename, PATH_MAX, "/sys/class/scsi_host/%s/ahci_alpm_accounting", entry->d_name);
+		snprintf(filename, sizeof(filename), "/sys/class/scsi_host/%s/ahci_alpm_accounting", entry->d_name);
 
 		check_file.open(filename, ios::in);
 		check_file.get();
@@ -319,7 +319,7 @@ void create_all_ahcis(void)
 			continue;
 		file << 1 ;
 		file.close();
-		snprintf(filename, PATH_MAX, "/sys/class/scsi_host/%s", entry->d_name);
+		snprintf(filename, sizeof(filename), "/sys/class/scsi_host/%s", entry->d_name);
 
 		bl = new class ahci(entry->d_name, filename);
 		all_devices.push_back(bl);
@@ -415,18 +415,18 @@ void ahci::report_device_stats(string *ahci_data, int idx)
 	printf("\nData from ahci %s\n",ahci_data[offset].c_str());
 	offset +=1;
 
-	sprintf(util, "%5.1f",  active_util);
+	snprintf(util, sizeof(util), "%5.1f",  active_util);
 	ahci_data[offset]= util;
 	offset +=1;
 
-	sprintf(util, "%5.1f",  partial_util);
+	snprintf(util, sizeof(util), "%5.1f",  partial_util);
 	ahci_data[offset]= util;
 	offset +=1;
 
-	sprintf(util, "%5.1f",  slumber_util);
+	snprintf(util, sizeof(util), "%5.1f",  slumber_util);
 	ahci_data[offset]= util;
 	offset +=1;
 
-	sprintf(util, "%5.1f",  devslp_util);
+	snprintf(util, sizeof(util), "%5.1f",  devslp_util);
 	ahci_data[offset]= util;
 }

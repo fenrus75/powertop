@@ -26,6 +26,7 @@
 #include "acpi.h"
 #include "extech.h"
 #include "sysfs.h"
+#include "opal-sensors.h"
 #include "../parameters/parameters.h"
 #include "../lib.h"
 
@@ -130,9 +131,22 @@ void acpi_power_meters_callback(const char *d_name)
 		power_meters.push_back(meter);
 }
 
+void sysfs_opal_sensors_callback(const char *d_name)
+{
+	class opal_sensors_power_meter *meter;
+
+	if (strncmp(d_name, "power", 5) != 0)
+		return;
+
+	meter = new(std::nothrow) class opal_sensors_power_meter(d_name);
+	if (meter)
+		power_meters.push_back(meter);
+}
+
 void detect_power_meters(void)
 {
 	process_directory("/sys/class/power_supply", sysfs_power_meters_callback);
+	process_directory("/sys/devices/platform/opal-sensor/hwmon/hwmon0", sysfs_opal_sensors_callback);
 	if (power_meters.size() == 0) {
 		process_directory("/proc/acpi/battery", acpi_power_meters_callback);
 	}

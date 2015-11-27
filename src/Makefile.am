@@ -67,6 +67,8 @@ powertop_SOURCES = \
 	measurement/measurement.h \
 	measurement/sysfs.cpp \
 	measurement/sysfs.h \
+	measurement/opal-sensors.cpp \
+	measurement/opal-sensors.h \
 	parameters/learn.cpp \
 	parameters/parameters.cpp \
 	parameters/parameters.h \

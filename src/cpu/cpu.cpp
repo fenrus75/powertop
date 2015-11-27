@@ -285,19 +285,13 @@ void enumerate_cpus(void)
 				model = strtoull(c, NULL, 10);
 			}
 		}
-		if (strncasecmp(line, "bogomips\t", 9) == 0) {
-			if (number == -1) {
-				/* Not all /proc/cpuinfo include "processor\t". */
-				number = 0;
-			}
-			if (number >= 0) {
-				handle_one_cpu(number, vendor, family, model);
-				set_max_cpu(number);
-				number = -2;
-			}
-		}
-		/* bogomips is removed in ARM, using CPU revision to enumerate */
-		if (strncasecmp(line, "CPU revision\t", 13) == 0) {
+		/* on x86 and others 'bogomips' is last
+		 * on ARM it *can* be bogomips, or 'CPU revision'
+		 * on POWER, it's revision
+		 */
+		if (strncasecmp(line, "bogomips\t", 9) == 0
+		    || strncasecmp(line, "CPU revision\t", 13) == 0
+		    || strncmp(line, "revision", 7) == 0) {
 			if (number == -1) {
 				/* Not all /proc/cpuinfo include "processor\t". */
 				number = 0;

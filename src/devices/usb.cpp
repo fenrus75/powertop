@@ -43,11 +43,11 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid): de
 	char vendor[4096];
 	char product[4096];
 
-	pt_strcpy(sysfs_path, path);
+	strcpy(sysfs_path, path);
 	register_sysfs_path(sysfs_path);
-	pt_strcpy(name, _name);
-	pt_strcpy(devname, devid);
-	snprintf(humanname, sizeof(humanname), _("USB device: %s"), pretty_print(devid, vendor, 4096));
+	strcpy(name, _name);
+	strcpy(devname, devid);
+	sprintf(humanname, _("USB device: %s"), pretty_print(devid, vendor, 4096));
 	active_before = 0;
 	active_after = 0;
 	connected_before = 0;
@@ -60,7 +60,7 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid): de
 
 
 	/* root ports and hubs should count as 0 power ... their activity is derived */
-	snprintf(filename, sizeof(filename), "%s/bDeviceClass", path);
+	snprintf(filename, PATH_MAX, "%s/bDeviceClass", path);
 	file.open(filename, ios::in);
 	if (file) {
 		int dclass = 0;
@@ -73,7 +73,7 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid): de
 
 	vendor[0] = 0;
 	product[0] = 0;
-	snprintf(filename, sizeof(filename), "%s/manufacturer", path);
+	snprintf(filename, PATH_MAX, "%s/manufacturer", path);
 	file.open(filename, ios::in);
 	if (file) {
 		file.getline(vendor, 2047);
@@ -81,18 +81,18 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid): de
 			vendor[0] = 0;
 		file.close();
 	};
-	snprintf(filename, sizeof(filename), "%s/product", path);
+	snprintf(filename, PATH_MAX, "%s/product", path);
 	file.open(filename, ios::in);
 	if (file) {
 		file.getline(product, 2040);
 		file.close();
 	};
 	if (strlen(vendor) && strlen(product))
-		snprintf(humanname, sizeof(humanname), _("USB device: %s (%s)"), product, vendor);
+		snprintf(humanname, 4096, _("USB device: %s (%s)"), product, vendor);
 	else if (strlen(product))
-		snprintf(humanname, sizeof(humanname), _("USB device: %s"), product);
+		snprintf(humanname, 4096, _("USB device: %s"), product);
 	else if (strlen(vendor))
-		snprintf(humanname, sizeof(humanname), _("USB device: %s"), vendor);
+		snprintf(humanname, 4096, _("USB device: %s"), vendor);
 }
 
 
@@ -107,14 +107,14 @@ void usbdevice::start_measurement(void)
 	connected_before = 0;
 	connected_after = 0;
 
-	snprintf(fullpath, sizeof(fullpath), "%s/power/active_duration", sysfs_path);
+	snprintf(fullpath, PATH_MAX, "%s/power/active_duration", sysfs_path);
 	file.open(fullpath, ios::in);
 	if (file) {
 		file >> active_before;
 	}
 	file.close();
 
-	snprintf(fullpath, sizeof(fullpath), "%s/power/connected_duration", sysfs_path);
+	snprintf(fullpath, PATH_MAX, "%s/power/connected_duration", sysfs_path);
 	file.open(fullpath, ios::in);
 	if (file) {
 		file >> connected_before;
@@ -127,14 +127,14 @@ void usbdevice::end_measurement(void)
 	ifstream file;
 	char fullpath[PATH_MAX];
 
-	snprintf(fullpath, sizeof(fullpath), "%s/power/active_duration", sysfs_path);
+	snprintf(fullpath, PATH_MAX, "%s/power/active_duration", sysfs_path);
 	file.open(fullpath, ios::in);
 	if (file) {
 		file >> active_after;
 	}
 	file.close();
 
-	snprintf(fullpath, sizeof(fullpath), "%s/power/connected_duration", sysfs_path);
+	snprintf(fullpath, PATH_MAX, "%s/power/connected_duration", sysfs_path);
 	file.open(fullpath, ios::in);
 	if (file) {
 		file >> connected_after;
@@ -194,24 +194,24 @@ static void create_all_usb_devices_callback(const char *d_name)
 	char vendorid[64], devid[64];
 	char devid_name[4096];
 
-	snprintf(filename, sizeof(filename), "/sys/bus/usb/devices/%s", d_name);
-	snprintf(device_name, sizeof(device_name), "%s/power/active_duration", filename);
+	snprintf(filename, PATH_MAX, "/sys/bus/usb/devices/%s", d_name);
+	snprintf(device_name, PATH_MAX, "%s/power/active_duration", filename);
 	if (access(device_name, R_OK) != 0)
 		return;
 
-	snprintf(device_name, sizeof(device_name), "%s/idVendor", filename);
+	snprintf(device_name, PATH_MAX, "%s/idVendor", filename);
 	file.open(device_name, ios::in);
 	if (file)
 		file.getline(vendorid, 64);
 	file.close();
-	snprintf(device_name, sizeof(device_name), "%s/idProduct", filename);
+	snprintf(device_name, PATH_MAX, "%s/idProduct", filename);
 	file.open(device_name, ios::in);
 	if (file)
 		file.getline(devid, 64);
 	file.close();
 
-	snprintf(devid_name, sizeof(devid_name), "usb-device-%s-%s", vendorid, devid);
-	snprintf(device_name, sizeof(device_name), "usb-device-%s-%s-%s", d_name, vendorid, devid);
+	snprintf(devid_name, 4096, "usb-device-%s-%s", vendorid, devid);
+	snprintf(device_name, PATH_MAX, "usb-device-%s-%s-%s", d_name, vendorid, devid);
 	if (result_device_exists(device_name))
 		return;
 

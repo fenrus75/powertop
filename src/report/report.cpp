@@ -174,7 +174,7 @@ void init_report_output(char *filename_str, int iterations)
 	char datestr[200];
 
 	if (iterations == 1)
-		snprintf(reportout.filename, sizeof(reportout.filename), "%s", filename_str);
+		snprintf(reportout.filename, PATH_MAX, "%s", filename_str);
 	else
 	{
 		filename = string(filename_str);
@@ -185,7 +185,7 @@ void init_report_output(char *filename_str, int iterations)
 		memset(&stamp, 0, sizeof(time_t));
 		stamp = time(NULL);
 		strftime(datestr, sizeof(datestr), "%Y%m%d-%H%M%S", localtime(&stamp));
-		snprintf(reportout.filename, sizeof(reportout.filename), "%s-%s%s",
+		snprintf(reportout.filename, PATH_MAX, "%s-%s%s",
 			filename.substr(0, period).c_str(), datestr,
 			filename.substr(period).c_str());
 	}

@@ -454,9 +454,9 @@ char* get_param_directory(const char *filename)
 	static char tempfilename[PATH_MAX];
 
 	if (access("/var/cache/powertop", W_OK ) == 0)
-		snprintf(tempfilename, sizeof(tempfilename), "/var/cache/powertop/%s", filename);
+		snprintf(tempfilename, PATH_MAX, "/var/cache/powertop/%s", filename);
 	if (access("/data/local/powertop", W_OK ) == 0)
-		snprintf(tempfilename, sizeof(tempfilename), "/data/local/powertop/%s", filename);
+		snprintf(tempfilename, PATH_MAX, "/data/local/powertop/%s", filename);
 
 	return tempfilename;
 };

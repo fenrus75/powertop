@@ -58,14 +58,14 @@ void backlight::start_measurement(void)
 	char filename[PATH_MAX];
 	ifstream file;
 
-	snprintf(filename, sizeof(filename), "%s/max_brightness", sysfs_path);
+	snprintf(filename, PATH_MAX, "%s/max_brightness", sysfs_path);
 	file.open(filename, ios::in);
 	if (file) {
 		file >> max_level;
 	}
 	file.close();
 
-	snprintf(filename, sizeof(filename), "%s/actual_brightness", sysfs_path);
+	snprintf(filename, PATH_MAX, "%s/actual_brightness", sysfs_path);
 	file.open(filename, ios::in);
 	if (file) {
 		file >> start_level;
@@ -91,19 +91,19 @@ static int dpms_screen_on(void)
 
 		if (strncmp(entry->d_name, "card", 4) != 0)
 			continue;
-		snprintf(filename, sizeof(filename), "/sys/class/drm/card0/%s/enabled", entry->d_name);
+		snprintf(filename, PATH_MAX, "/sys/class/drm/card0/%s/enabled", entry->d_name);
 		file.open(filename, ios::in);
 		if (!file)
 			continue;
-		file.getline(line, sizeof(line));
+		file.getline(line, 4096);
 		file.close();
 		if (strcmp(line, "enabled") != 0)
 			continue;
-		snprintf(filename, sizeof(filename), "/sys/class/drm/card0/%s/dpms", entry->d_name);
+		snprintf(filename, PATH_MAX, "/sys/class/drm/card0/%s/dpms", entry->d_name);
 		file.open(filename, ios::in);
 		if (!file)
 			continue;
-		file.getline(line, sizeof(line));
+		file.getline(line, 4096);
 		file.close();
 		if (strcmp(line, "On") == 0) {
 			closedir(dir);
@@ -122,7 +122,7 @@ void backlight::end_measurement(void)
 	double p;
 	int _backlight = 0;
 
-	snprintf(filename, sizeof(filename), "%s/actual_brightness", sysfs_path);
+	snprintf(filename, PATH_MAX, "%s/actual_brightness", sysfs_path);
 	file.open(filename, ios::in);
 	if (file) {
 		file >> end_level;
@@ -137,7 +137,7 @@ void backlight::end_measurement(void)
 	}
 
 	report_utilization(name, p);
-	snprintf(powername, sizeof(powername), "%s-power", name);
+	snprintf(powername, 4096, "%s-power", name);
 	report_utilization(powername, _backlight);
 }
 
@@ -159,7 +159,7 @@ static void create_all_backlights_callback(const char *d_name)
 {
 	class backlight *bl;
 	char filename[PATH_MAX];
-	snprintf(filename, sizeof(filename), "/sys/class/backlight/%s", d_name);
+	snprintf(filename, PATH_MAX, "/sys/class/backlight/%s", d_name);
 	bl = new class backlight(d_name, filename);
 	all_devices.push_back(bl);
 }

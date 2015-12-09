@@ -240,7 +240,7 @@ string read_sysfs_string(const char *format, const char *param)
 	char filename[PATH_MAX];
 
 
-	snprintf(filename, sizeof(filename), format, param);
+	snprintf(filename, PATH_MAX, format, param);
 
 	file.open(filename, ios::in);
 	if (!file)
@@ -475,10 +475,10 @@ int read_msr(int cpu, uint64_t offset, uint64_t *value)
 	int fd;
 	char msr_path[256];
 
-	snprintf(msr_path, sizeof(msr_path), "/dev/cpu/%d/msr", cpu);
+	snprintf(msr_path, 256, "/dev/cpu/%d/msr", cpu);
 
 	if (access(msr_path, R_OK) != 0){
-		snprintf(msr_path, sizeof(msr_path), "/dev/msr%d", cpu);
+		snprintf(msr_path, 256, "/dev/msr%d", cpu);
 
 		if (access(msr_path, R_OK) != 0){
 			fprintf(stderr,
@@ -507,10 +507,10 @@ int write_msr(int cpu, uint64_t offset, uint64_t value)
 	int fd;
 	char msr_path[256];
 
-	snprintf(msr_path, sizeof(msr_path), "/dev/cpu/%d/msr", cpu);
+	snprintf(msr_path, 256, "/dev/cpu/%d/msr", cpu);
 
 	if (access(msr_path, R_OK) != 0){
-		snprintf(msr_path, sizeof(msr_path), "/dev/msr%d", cpu);
+		snprintf(msr_path, 256, "/dev/msr%d", cpu);
 
 		if (access(msr_path, R_OK) != 0){
 			fprintf(stderr,

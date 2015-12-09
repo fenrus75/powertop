@@ -51,7 +51,7 @@ interrupt::interrupt(const char *_handler, int _number) : power_consumer()
 	number = _number;
 	strncpy(handler, _handler, 31);
 	raw_count = 0;
-	snprintf(desc, sizeof(desc), "[%i] %s", number, pretty_print(handler, buf, 128));
+	sprintf(desc, "[%i] %s", number, pretty_print(handler, buf, 128));
 }
 
 
@@ -98,7 +98,7 @@ class interrupt * find_create_interrupt(const char *_handler, int nr, int cpu)
 	unsigned int i;
 	class interrupt *new_irq;
 
-	pt_strcpy(handler, _handler);
+	strcpy(handler, _handler);
 	if (strcmp(handler, "timer")==0)
 		sprintf(handler, "timer/%i", cpu);
 

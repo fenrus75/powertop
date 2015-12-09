@@ -68,11 +68,11 @@ void device::register_sysfs_path(const char *path)
 {
 	char current_path[PATH_MAX + 1];
 	int iter = 0;
-	pt_strcpy(current_path, path);
+	strcpy(current_path, path);
 
 	while (iter++ < 10) {
 		char test_path[PATH_MAX + 1];
-		snprintf(test_path, sizeof(test_path), "%s/device", current_path);
+		sprintf(test_path, "%s/device", current_path);
 		if (access(test_path, R_OK) == 0)
 			strcpy(current_path, test_path);
 		else

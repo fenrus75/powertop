@@ -78,18 +78,18 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 	ret->set_type("Package");
 	ret->childcount = 0;
 
-	snprintf(packagename, sizeof(packagename), _("cpu package %i"), cpu);
+	sprintf(packagename, _("cpu package %i"), cpu);
 	cpudev = new class cpudevice(_("cpu package"), packagename, ret);
 	all_devices.push_back(cpudev);
 
-	snprintf(packagename, sizeof(packagename), _("package-%i"), cpu);
+	sprintf(packagename, _("package-%i"), cpu);
 	cpu_rapl_dev = new class cpu_rapl_device(cpudev, _("cpu rapl package"), packagename, ret);
 	if (cpu_rapl_dev->device_present())
 		all_devices.push_back(cpu_rapl_dev);
 	else
 		delete cpu_rapl_dev;
 
-	snprintf(packagename, sizeof(packagename), _("package-%i"), cpu);
+	sprintf(packagename, _("package-%i"), cpu);
 	dram_rapl_dev = new class dram_rapl_device(cpudev, _("dram rapl package"), packagename, ret);
 	if (dram_rapl_dev->device_present())
 		all_devices.push_back(dram_rapl_dev);
@@ -157,14 +157,14 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 	unsigned int core_number = 0;
 	class abstract_cpu *package, *core, *cpu;
 
-	snprintf(filename, sizeof(filename), "/sys/devices/system/cpu/cpu%i/topology/core_id", number);
+	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/topology/core_id", number);
 	file.open(filename, ios::in);
 	if (file) {
 		file >> core_number;
 		file.close();
 	}
 
-	snprintf(filename, sizeof(filename), "/sys/devices/system/cpu/cpu%i/topology/physical_package_id", number);
+	snprintf(filename, PATH_MAX, "/sys/devices/system/cpu/cpu%i/topology/physical_package_id", number);
 	file.open(filename, ios::in);
 	if (file) {
 		file >> package_number;
@@ -556,14 +556,14 @@ void report_display_cpu_cstates(void)
 							if (strcmp(core_type, "Core") == 0 ) {
 								core_data[idx2]="";
 								idx2+=1;
-								snprintf(tmp_num, sizeof(tmp_num), __("Core %d"), _core->get_number());
+								sprintf(tmp_num, __("Core %d"),_core->get_number());
 								core_data[idx2]=string(tmp_num);
 								idx2+=1;
 								core_num+=1;
 							} else {
 								core_data[idx2]="";
 								idx2+=1;
-								snprintf(tmp_num, sizeof(tmp_num), __("GPU %d"), _core->get_number());
+								sprintf(tmp_num,__("GPU %d"),_core->get_number());
 								core_data[idx2]=string(tmp_num);
 								idx2+=1;
 							}
@@ -765,7 +765,7 @@ void report_display_cpu_pstates(void)
 					if (line == LEVEL_HEADER) {
 						core_data[idx2]="";
 						idx2+=1;
-						snprintf(tmp_num, sizeof(tmp_num), __("Core %d"), _core->get_number());
+						sprintf(tmp_num,__("Core %d"),_core->get_number());
 						core_data[idx2]=string(tmp_num);
 						idx2+=1;
 					} else {
@@ -786,7 +786,7 @@ void report_display_cpu_pstates(void)
 						continue;
 
 					if (line == LEVEL_HEADER) {
-						snprintf(tmp_num, sizeof(tmp_num), __("CPU %d"), _cpu->get_number());
+						sprintf(tmp_num,__("CPU %d"),_cpu->get_number());
 						cpu_data[idx3] = string(tmp_num);
 						idx3+=1;
 						continue;

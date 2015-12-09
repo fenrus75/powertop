@@ -76,7 +76,7 @@ void create_thinkpad_light(void)
 	char filename[PATH_MAX];
 	class thinkpad_light *light;
 
-	pt_strcpy(filename, "/sys/devices/platform/thinkpad_acpi/leds/tpacpi::thinklight/brightness");
+	strcpy(filename, "/sys/devices/platform/thinkpad_acpi/leds/tpacpi::thinklight/brightness");
 
 	if (access(filename, R_OK) !=0)
 		return;

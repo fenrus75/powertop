@@ -28,7 +28,6 @@
 #include <libintl.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <cstring>
 
 /* Include only for Automake builds */
 #ifdef HAVE_CONFIG_H
@@ -75,12 +74,6 @@ extern void end_pci_access(void);
 extern char *fmt_prefix(double n, char *buf);
 extern char *pretty_print(const char *str, char *buf, int len);
 extern int equals(double a, double b);
-
-template<size_t N> void pt_strcpy(char (&d)[N], const char *s)
-{
-	strncpy(d, s, N);
-	d[N-1] = '\0';
-}
 
 typedef void (*callback)(const char*);
 extern void process_directory(const char *d_name, callback fn);

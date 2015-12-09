@@ -26,14 +26,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "../lib.h"
 #include "../parameters/parameters.h"
 
 
 cpudevice::cpudevice(const char *classname, const char *dev_name, class abstract_cpu *_cpu)
 {
-	pt_strcpy(_class, classname);
-	pt_strcpy(_cpuname, dev_name);
+	strcpy(_class, classname);
+	strcpy(_cpuname, dev_name);
 	cpu = _cpu;
 	wake_index = get_param_index("cpu-wakeups");;
 	consumption_index = get_param_index("cpu-consumption");;

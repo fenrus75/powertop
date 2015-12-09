@@ -123,7 +123,7 @@ void devfreq::parse_devfreq_trans_stat(char *dname)
 	ifstream file;
 	char filename[256];
 
-	snprintf(filename, sizeof(filename), "/sys/class/devfreq/%s/trans_stat", dir_name);
+	snprintf(filename, 256, "/sys/class/devfreq/%s/trans_stat", dir_name);
 	file.open(filename);
 
 	if (!file)

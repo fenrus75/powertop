@@ -419,7 +419,7 @@ int main(int argc, char **argv)
 			break;
 		case 'C':		/* csv report */
 			reporttype = REPORT_CSV;
-			snprintf(filename, sizeof(filename), "%s", optarg ? optarg : "powertop.csv");
+			snprintf(filename, PATH_MAX, "%s", optarg ? optarg : "powertop.csv");
 			if (!strlen(filename))
 			{
 				fprintf(stderr, _("Invalid CSV filename\n"));
@@ -435,7 +435,7 @@ int main(int argc, char **argv)
 			break;
 		case 'r':		/* html report */
 			reporttype = REPORT_HTML;
-			snprintf(filename, sizeof(filename), "%s", optarg ? optarg : "powertop.html");
+			snprintf(filename, PATH_MAX, "%s", optarg ? optarg : "powertop.html");
 			if (!strlen(filename))
 			{
 				fprintf(stderr, _("Invalid HTML filename\n"));
@@ -453,7 +453,7 @@ int main(int argc, char **argv)
 			time_out = (optarg ? atoi(optarg) : 20);
 			break;
 		case 'w':		/* measure workload */
-			snprintf(workload, sizeof(workload), "%s", optarg ? optarg : "");
+			snprintf(workload, PATH_MAX, "%s", optarg ? optarg : "");
 			break;
 		case 'V':
 			print_version();

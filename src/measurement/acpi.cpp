@@ -30,7 +30,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#include "../lib.h"
 
 using namespace std;
 
@@ -73,7 +72,7 @@ void acpi_power_meter::measure(void)
 	voltage = 0;
 	capacity = 0;
 
-	snprintf(filename, sizeof(filename), "/proc/acpi/battery/%s/state", battery_name);
+	snprintf(filename, PATH_MAX, "/proc/acpi/battery/%s/state", battery_name);
 
 	file.open(filename, ios::in);
 	if (!file)
@@ -81,7 +80,7 @@ void acpi_power_meter::measure(void)
 
 	while (file) {
 		char *c;
-		file.getline(line, sizeof(line));
+		file.getline(line, 4096);
 
 		if (strstr(line, "present:") && (strstr(line, "yes") == NULL)) {
 			return;
@@ -97,7 +96,7 @@ void acpi_power_meter::measure(void)
 			c = strchr(c, ' ');
 			if (c) {
 				c++;
-				pt_strcpy(rate_units, c);
+				strcpy(rate_units, c);
 			} else {
 				_rate = 0;
 				strcpy(rate_units, "Unknown");
@@ -112,7 +111,7 @@ void acpi_power_meter::measure(void)
 			c = strchr(c, ' ');
 			if (c) {
 				c++;
-				pt_strcpy(capacity_units, c);
+				strcpy(capacity_units, c);
 			} else {
 				_capacity = 0;
 				strcpy(capacity_units, "Unknown");
@@ -126,7 +125,7 @@ void acpi_power_meter::measure(void)
 			c = strchr(c, ' ');
 			if (c) {
 				c++;
-				pt_strcpy(voltage_units, c);
+				strcpy(voltage_units, c);
 			} else {
 				_voltage = 0;
 				strcpy(voltage_units, "Unknown");

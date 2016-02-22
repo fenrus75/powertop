@@ -158,11 +158,11 @@ static void create_all_alsa_callback(const char *d_name)
 	if (strncmp(d_name, "hwC", 3) != 0)
 		return;
 
-	snprintf(filename, sizeof(filename), "/sys/class/sound/card0/%s/power_on_acct", d_name);
+	snprintf(filename, sizeof(filename), "/sys/class/sound/%s/power_on_acct", d_name);
 	if (access(filename, R_OK) != 0)
 		return;
 
-	snprintf(filename, sizeof(filename), "/sys/class/sound/card0/%s", d_name);
+	snprintf(filename, sizeof(filename), "/sys/class/sound/%s", d_name);
 	bl = new class alsa(d_name, filename);
 	all_devices.push_back(bl);
 	register_parameter("alsa-codec-power", 0.5);
@@ -170,7 +170,7 @@ static void create_all_alsa_callback(const char *d_name)
 
 void create_all_alsa(void)
 {
-	process_directory("/sys/class/sound/card0/", create_all_alsa_callback);
+	process_directory("/sys/class/sound/", create_all_alsa_callback);
 }
 
 double alsa::power_usage(struct result_bundle *result, struct parameter_bundle *bundle)

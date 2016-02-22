@@ -194,6 +194,7 @@ static void do_bus(const char *bus)
 		if (entry->d_name[0] == '.')
 			continue;
 
+		snprintf(filename, sizeof(filename), "/sys/bus/%s/devices/%s", bus, entry->d_name);
 		dev = new class runtime_pmdevice(entry->d_name, filename);
 
 		if (strcmp(bus, "i2c") == 0) {

@@ -68,6 +68,8 @@ static int intel_cpu_models[] = {
 	0x5E,	/* SKY */
 	0x56,	/* BDX-DE */
 	0x5c,   /* BXT-P */
+	0x8E,	/* KBL */
+	0x9E,	/* KBL */
 	0	/* last entry must be zero */
 };
 
@@ -163,6 +165,8 @@ nhm_core::nhm_core(int model)
 		case 0x5E:	/* SKY */
 		case 0x3D:	/* Intel Next Generation */
 		case 0x5c:      /* BXT-P */
+		case 0x8E:	/* KBL */
+		case 0x9E:	/* KBL */
 			has_c7_res = 1;
 	}
 
@@ -341,6 +345,8 @@ nhm_package::nhm_package(int model)
 		case 0x5E:	/* SKY */
 		case 0x3D:	/* Intel Next Generation */
 		case 0x5c:      /* BXT-P */
+		case 0x8E:	/* KBL */
+		case 0x9E:	/* KBL */
 			has_c2c6_res=1;
 			has_c7_res = 1;
 	}
@@ -371,6 +377,8 @@ nhm_package::nhm_package(int model)
 		case 0x4E:
 		case 0x5E:
 		case 0x5c: 
+		case 0x8E:	/* KBL */
+		case 0x9E:	/* KBL */
 			has_c8c9c10_res = 1;
 			break;
 	}

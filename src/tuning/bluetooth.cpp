@@ -176,11 +176,11 @@ void bt_tunable::toggle(void)
 	good = good_bad();
 
 	if (good == TUNE_GOOD) {
-		if(!system("/usr/sbin/hciconfig hci0 up &> /dev/null &"))
+		if(system("/usr/sbin/hciconfig hci0 up &> /dev/null &"))
 			printf("System is not available\n");
 		return;
 	}
-	if(!system("/usr/sbin/hciconfig hci0 down &> /dev/null"))
+	if(system("/usr/sbin/hciconfig hci0 down &> /dev/null"))
 		printf("System is not available\n");
 }
 

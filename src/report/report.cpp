@@ -172,28 +172,35 @@ void init_report_output(char *filename_str, int iterations)
 	string filename;
 	time_t stamp;
 	char datestr[200];
+	int len;
 
-	if (iterations == 1)
-		snprintf(reportout.filename, sizeof(reportout.filename), "%s", filename_str);
+	len = strlen(filename_str);
+	if (!len || (len == 1 && filename_str[0] == '-'))
+		reportout.report_file = stdout;
 	else
 	{
-		filename = string(filename_str);
-		period = filename.find_last_of(".");
-		if (period > filename.length())
-			period = filename.length();
-		memset(&datestr, 0, 200);
-		memset(&stamp, 0, sizeof(time_t));
-		stamp = time(NULL);
-		strftime(datestr, sizeof(datestr), "%Y%m%d-%H%M%S", localtime(&stamp));
-		snprintf(reportout.filename, sizeof(reportout.filename), "%s-%s%s",
-			filename.substr(0, period).c_str(), datestr,
-			filename.substr(period).c_str());
-	}
-	
-	reportout.report_file = fopen(reportout.filename, "wm");
-	if (!reportout.report_file) {
-		fprintf(stderr, _("Cannot open output file %s (%s)\n"),
-			reportout.filename, strerror(errno));
+		if (iterations == 1)
+			snprintf(reportout.filename, sizeof(reportout.filename), "%s", filename_str);
+		else
+		{
+			filename = string(filename_str);
+			period = filename.find_last_of(".");
+			if (period > filename.length())
+				period = filename.length();
+			memset(&datestr, 0, 200);
+			memset(&stamp, 0, sizeof(time_t));
+			stamp = time(NULL);
+			strftime(datestr, sizeof(datestr), "%Y%m%d-%H%M%S", localtime(&stamp));
+			snprintf(reportout.filename, sizeof(reportout.filename), "%s-%s%s",
+				filename.substr(0, period).c_str(), datestr,
+				filename.substr(period).c_str());
+		}
+
+		reportout.report_file = fopen(reportout.filename, "wm");
+		if (!reportout.report_file) {
+			fprintf(stderr, _("Cannot open output file %s (%s)\n"),
+				reportout.filename, strerror(errno));
+		}
 	}
 
 	report.set_type(reporttype);
@@ -208,10 +215,14 @@ void finish_report_output(void)
 	report.finish_report();
 	if (reportout.report_file)
 	{
-		fprintf(stderr, _("PowerTOP outputing using base filename %s\n"), reportout.filename);
+		if (reportout.report_file == stdout)
+			fprintf(stderr, _("PowerTOP outputing using standard output\n"));
+		else
+			fprintf(stderr, _("PowerTOP outputing using base filename %s\n"), reportout.filename);
 		fputs(report.get_result(), reportout.report_file);
 		fdatasync(fileno(reportout.report_file));
-		fclose(reportout.report_file);
+		if (reportout.report_file != stdout)
+			fclose(reportout.report_file);
 	}
 	report.clear_result();
 }

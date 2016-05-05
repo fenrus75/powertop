@@ -32,6 +32,7 @@
 #include "report-maker.h"
 #include "report-formatter-csv.h"
 #include "report-formatter-html.h"
+#include "report-formatter-plain.h"
 
 /* ************************************************************************ */
 
@@ -103,6 +104,8 @@ report_maker::setup_report_formatter()
 		formatter = new report_formatter_html();
 	else if (type == REPORT_CSV)
 		formatter = new report_formatter_csv();
+	else if (type == REPORT_PLAIN)
+		formatter = new report_formatter_plain();
 	else if (type == REPORT_OFF)
 		formatter = new report_formatter();
 	else

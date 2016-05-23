@@ -58,6 +58,7 @@ extern "C" {
 #include <math.h>
 #include <ncurses.h>
 #include <fcntl.h>
+#include <glob.h>
 
 static int kallsyms_read = 0;
 
@@ -454,6 +455,32 @@ void process_directory(const char *d_name, callback fn)
 		fn(entry->d_name);
 	}
 	closedir(dir);
+}
+
+void process_glob(const char *d_glob, callback fn)
+{
+	glob_t g;
+	size_t c;
+
+	switch (glob(d_glob, GLOB_ERR | GLOB_MARK | GLOB_NOSORT, NULL, &g)) {
+	case GLOB_NOSPACE:
+		fprintf(stderr,_("glob returned GLOB_NOSPACE\n"));
+		globfree(&g);
+		return;
+	case GLOB_ABORTED:
+		fprintf(stderr,_("glob returned GLOB_ABORTED\n"));
+		globfree(&g);
+		return;
+	case GLOB_NOMATCH:
+		fprintf(stderr,_("glob returned GLOB_NOMATCH\n"));
+		globfree(&g);
+		return;
+	}
+
+	for (c=0; c < g.gl_pathc; c++) {
+		fn(g.gl_pathv[c]);
+	}
+	globfree(&g);
 }
 
 int get_user_input(char *buf, unsigned sz)

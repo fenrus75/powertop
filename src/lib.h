@@ -84,6 +84,7 @@ template<size_t N> void pt_strcpy(char (&d)[N], const char *s)
 
 typedef void (*callback)(const char*);
 extern void process_directory(const char *d_name, callback fn);
+extern void process_glob(const char *glob, callback fn);
 extern int utf_ok;
 extern int get_user_input(char *buf, unsigned sz);
 extern int read_msr(int cpu, uint64_t offset, uint64_t *value);

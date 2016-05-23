@@ -134,8 +134,11 @@ void acpi_power_meters_callback(const char *d_name)
 void sysfs_opal_sensors_callback(const char *d_name)
 {
 	class opal_sensors_power_meter *meter;
+	const char *c;
 
-	if (strncmp(d_name, "power", 5) != 0)
+	/* Those that end in / are directories and we don't want them */
+	c = strrchr(d_name, '/');
+	if (c && *(c+1) == '\0')
 		return;
 
 	meter = new(std::nothrow) class opal_sensors_power_meter(d_name);
@@ -146,7 +149,7 @@ void sysfs_opal_sensors_callback(const char *d_name)
 void detect_power_meters(void)
 {
 	process_directory("/sys/class/power_supply", sysfs_power_meters_callback);
-	process_directory("/sys/devices/platform/opal-sensor/hwmon/hwmon0", sysfs_opal_sensors_callback);
+	process_glob("/sys/devices/platform/opal-sensor/hwmon/hwmon*/power*", sysfs_opal_sensors_callback);
 	if (power_meters.size() == 0) {
 		process_directory("/proc/acpi/battery", acpi_power_meters_callback);
 	}

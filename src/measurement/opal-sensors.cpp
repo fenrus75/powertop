@@ -36,13 +36,11 @@ opal_sensors_power_meter::opal_sensors_power_meter(const char *power_supply_name
 
 double opal_sensors_power_meter::joules_consumed(void)
 {
-	char filename[PATH_MAX];
 	bool ok;
 	int value;
 	double r = 0;
 
-	snprintf(filename, sizeof(filename), "/sys/devices/platform/opal-sensor/hwmon/hwmon0/%s", name);
-	value = read_sysfs(filename, &ok);
+	value = read_sysfs(name, &ok);
 
 	if(ok)
 		r = value / 1000000.0;

@@ -9,7 +9,9 @@
 *.powertop
 *~
 .deps
+.*.swp
 /po/*.gmo
+cscope.*
 Makefile
 Makefile.in
 
@@ -84,3 +86,4 @@ Makefile.in
 /src/powertop
 /stamp-h1
 /stamp-po
+tags

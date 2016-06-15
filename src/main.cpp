@@ -63,7 +63,7 @@
 #include "devlist.h"
 #include "report/report.h"
 
-#define DEBUGFS_MAGIC          0x64626720
+#define DEBUGFS_MAGIC		  0x64626720
 
 #define NR_OPEN_DEF 1024 * 1024
 
@@ -311,7 +311,7 @@ static int get_nr_open(void) {
 	return nr_open;
 }
 
-static void powertop_init(void)
+static void powertop_init(int auto_tune)
 {
 	static char initialized = 0;
 	int ret;
@@ -339,9 +339,14 @@ static void powertop_init(void)
 			ret = system("mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
 		}
 		if (ret != 0) {
-			printf(_("Failed to mount debugfs!\n"));
-			printf(_("exiting...\n"));
-			exit(EXIT_FAILURE);
+			if (!auto_tune) {
+				fprintf(stderr, _("Failed to mount debugfs!\n"));
+				fprintf(stderr, _("exiting...\n"));
+				exit(EXIT_FAILURE);
+			} else {
+				fprintf(stderr, _("Failed to mount debugfs!\n"));
+				fprintf(stderr, _("Should still be able to auto tune...\n"));
+			}
 		}
 	}
 
@@ -368,7 +373,7 @@ static void powertop_init(void)
 	register_parameter("disk-operations", 0.0);
 	register_parameter("xwakes", 0.1);
 
-        load_parameters("saved_parameters.powertop");
+	load_parameters("saved_parameters.powertop");
 
 	initialized = 1;
 }
@@ -414,7 +419,7 @@ int main(int argc, char **argv)
 			ui_notify_user = ui_notify_user_console;
 			break;
 		case 'c':
-			powertop_init();
+			powertop_init(0);
 			calibrate();
 			break;
 		case 'C':		/* csv report */
@@ -470,7 +475,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	powertop_init();
+	powertop_init(auto_tune);
 
 	if (reporttype != REPORT_OFF)
 		make_report(time_out, workload, iterations, filename);
@@ -483,7 +488,7 @@ int main(int argc, char **argv)
 
 
 	if (debug_learning) {
-	        learn_parameters(1000, 1);
+		learn_parameters(1000, 1);
 		dump_parameter_bundle();
 		end_pci_access();
 		exit(0);

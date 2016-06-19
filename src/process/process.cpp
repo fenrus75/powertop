@@ -230,7 +230,8 @@ void all_processes_to_all_power(void)
 {
 	unsigned int i;
 	for (i = 0; i < all_processes.size() ; i++)
-		if (all_processes[i]->accumulated_runtime)
+		if (all_processes[i]->accumulated_runtime ||
+		    all_processes[i]->power_charge)
 			all_power.push_back(all_processes[i]);
 }
 

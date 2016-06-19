@@ -196,7 +196,7 @@ int charge_device_to_openers(const char *devstring, double power, class device *
 	for (i = 0; i < one.size(); i++) {
 		if (strstr(one[i]->device, devstring))
 			openers++;
-		}
+	}
 	for (i = 0; i < two.size(); i++) {
 		if (strstr(two[i]->device, devstring))
 			openers++;

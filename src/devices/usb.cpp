@@ -31,6 +31,7 @@
 #include <limits.h>
 
 #include "../lib.h"
+#include "../devlist.h"
 #include "../parameters/parameters.h"
 
 #include <iostream>
@@ -52,6 +53,8 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid): de
 	active_after = 0;
 	connected_before = 0;
 	connected_after = 0;
+	busnum = 0;
+	devnum = 0;
 
 	index = get_param_index(devname);
 	r_index = get_result_index(name);
@@ -93,6 +96,22 @@ usbdevice::usbdevice(const char *_name, const char *path, const char *devid): de
 		snprintf(humanname, sizeof(humanname), _("USB device: %s"), product);
 	else if (strlen(vendor))
 		snprintf(humanname, sizeof(humanname), _("USB device: %s"), vendor);
+
+	/* For usbdevfs we need bus number and device number */
+	snprintf(filename, sizeof(filename), "%s/busnum", path);
+	file.open(filename, ios::in);
+	if (file) {
+
+		file >> busnum;
+		file.close();
+	};
+	snprintf(filename, sizeof(filename), "%s/devnum", path);
+	file.open(filename, ios::in);
+	if (file) {
+
+		file >> devnum;
+		file.close();
+	};
 }
 
 
@@ -165,6 +184,15 @@ const char * usbdevice::human_name(void)
 	return humanname;
 }
 
+void usbdevice::register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle)
+{
+	char devfs_name[1024];
+
+	snprintf(devfs_name, sizeof(devfs_name), "usb/%03d/%03d", busnum,
+		 devnum);
+
+        register_devpower(devfs_name, power_usage(results, bundle), this);
+}
 
 double usbdevice::power_usage(struct result_bundle *result, struct parameter_bundle *bundle)
 {

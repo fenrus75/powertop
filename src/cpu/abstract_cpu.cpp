@@ -443,6 +443,7 @@ void abstract_cpu::wiggle(void)
 	ifstream ifile;
 	ofstream ofile;
 	uint64_t minf,maxf;
+	uint64_t setspeed = 0;
 
 	/* wiggle a CPU so that we have a record of it at the start and end of the perf trace */
 
@@ -456,6 +457,13 @@ void abstract_cpu::wiggle(void)
 	ifile >> minf;
 	ifile.close();
 
+	/* In case of the userspace governor, remember the old setspeed setting, it will be affected by wiggle */
+	snprintf(filename, sizeof(filename), "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_setspeed", first_cpu);
+	ifile.open(filename, ios::in);
+	/* Note that non-userspace governors report "<unsupported>". In that case ifile will fail and setspeed remains 0 */
+	ifile >> setspeed;
+	ifile.close();
+
 	ofile.open(filename, ios::out);
 	ofile << maxf;
 	ofile.close();
@@ -470,6 +478,12 @@ void abstract_cpu::wiggle(void)
 	ofile << maxf;
 	ofile.close();
 
+	if (setspeed != 0) {
+		snprintf(filename, sizeof(filename), "/sys/devices/system/cpu/cpu%i/cpufreq/scaling_setspeed", first_cpu);
+		ofile.open(filename, ios::out);
+		ofile << setspeed;
+		ofile.close();
+	}
 }
 uint64_t abstract_cpu::total_pstate_time(void)
 {

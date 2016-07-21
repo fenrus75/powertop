@@ -328,8 +328,10 @@ static void powertop_init(int auto_tune)
 
 	if (system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1"))
 		fprintf(stderr, _("modprobe cpufreq_stats failed"));
+#if defined(__i386__) || defined(__x86_64__)
 	if (system("/sbin/modprobe msr > /dev/null 2>&1"))
 		fprintf(stderr, _("modprobe msr failed"));
+#endif
 	statfs("/sys/kernel/debug", &st_fs);
 
 	if (st_fs.f_type != (long) DEBUGFS_MAGIC) {

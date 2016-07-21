@@ -497,6 +497,7 @@ int get_user_input(char *buf, unsigned sz)
 
 int read_msr(int cpu, uint64_t offset, uint64_t *value)
 {
+#if defined(__i386__) || defined(__x86_64__)
 	ssize_t retval;
 	uint64_t msr;
 	int fd;
@@ -526,10 +527,14 @@ int read_msr(int cpu, uint64_t offset, uint64_t *value)
 	*value = msr;
 
 	return retval;
+#else
+	return -1;
+#endif
 }
 
 int write_msr(int cpu, uint64_t offset, uint64_t value)
 {
+#if defined(__i386__) || defined(__x86_64__)
 	ssize_t retval;
 	int fd;
 	char msr_path[256];
@@ -557,6 +562,9 @@ int write_msr(int cpu, uint64_t offset, uint64_t value)
 	}
 
 	return retval;
+#else
+	return -1;
+#endif
 }
 
 #define UI_NOTIFY_BUFF_SZ 2048

@@ -207,7 +207,7 @@ void acpi_power_meter::start_measurement(void)
 }
 
 
-double acpi_power_meter::joules_consumed(void)
+double acpi_power_meter::power(void)
 {
 	return rate;
 }

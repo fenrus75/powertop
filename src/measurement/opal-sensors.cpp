@@ -34,7 +34,7 @@ opal_sensors_power_meter::opal_sensors_power_meter(const char *power_supply_name
 	strncpy(name, power_supply_name, sizeof(name));
 }
 
-double opal_sensors_power_meter::joules_consumed(void)
+double opal_sensors_power_meter::power(void)
 {
 	bool ok;
 	int value;

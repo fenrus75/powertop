@@ -347,7 +347,7 @@ void extech_power_meter::start_measurement(void)
 }
 
 
-double extech_power_meter::joules_consumed(void)
+double extech_power_meter::power(void)
 {
 	return rate;
 }

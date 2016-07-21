@@ -261,7 +261,7 @@ static void cpu_calibration(int threads)
 	for (i = 0; i < threads; i++)
 		pthread_create(&thr, NULL, burn_cpu, NULL);
 
-	one_measurement(15, NULL);
+	one_measurement(15, 15, NULL);
 	stop_measurement = 1;
 	sleep(1);
 }
@@ -276,7 +276,7 @@ static void wakeup_calibration(unsigned long interval)
 
 	pthread_create(&thr, NULL, burn_cpu_wakeups, (void *)interval);
 
-	one_measurement(15, NULL);
+	one_measurement(15, 15, NULL);
 	stop_measurement = 1;
 	sleep(1);
 }
@@ -292,7 +292,7 @@ static void usb_calibration(void)
 		printf(_(".... device %s \n"), usb_devices[i].c_str());
 		suspend_all_usb_devices();
 		write_sysfs(usb_devices[i], "on\n");
-		one_measurement(15, NULL);
+		one_measurement(15, 15, NULL);
 		suspend_all_usb_devices();
 		sleep(3);
 	}
@@ -309,7 +309,7 @@ static void rfkill_calibration(void)
 		printf(_(".... device %s \n"), rfkill_devices[i].c_str());
 		rfkill_all_radios();
 		write_sysfs(rfkill_devices[i], "0\n");
-		one_measurement(15, NULL);
+		one_measurement(15, 15, NULL);
 		rfkill_all_radios();
 		sleep(3);
 	}
@@ -317,7 +317,7 @@ static void rfkill_calibration(void)
 		printf(_(".... device %s \n"), rfkill_devices[i].c_str());
 		unrfkill_all_radios();
 		write_sysfs(rfkill_devices[i], "1\n");
-		one_measurement(15, NULL);
+		one_measurement(15, 15, NULL);
 		unrfkill_all_radios();
 		sleep(3);
 	}
@@ -333,29 +333,29 @@ static void backlight_calibration(void)
 		char str[4096];
 		printf(_(".... device %s \n"), backlight_devices[i].c_str());
 		lower_backlight();
-		one_measurement(15, NULL);
+		one_measurement(15, 15, NULL);
 		sprintf(str, "%i\n", blmax / 4);
 		write_sysfs(backlight_devices[i], str);
-		one_measurement(15, NULL);
+		one_measurement(15, 15, NULL);
 
 		sprintf(str, "%i\n", blmax / 2);
 		write_sysfs(backlight_devices[i], str);
-		one_measurement(15, NULL);
+		one_measurement(15, 15, NULL);
 
 		sprintf(str, "%i\n", 3 * blmax / 4 );
 		write_sysfs(backlight_devices[i], str);
-		one_measurement(15, NULL);
+		one_measurement(15, 15, NULL);
 
 		sprintf(str, "%i\n", blmax);
 		write_sysfs(backlight_devices[i], str);
-		one_measurement(15, NULL);
+		one_measurement(15, 15, NULL);
 		lower_backlight();
 		sleep(1);
 	}
 	printf(_("Calibrating idle\n"));
 	if(!system("DISPLAY=:0 /usr/bin/xset dpms force off"))
 		printf("System is not available\n");
-	one_measurement(15, NULL);
+	one_measurement(15, 15, NULL);
 	if(!system("DISPLAY=:0 /usr/bin/xset dpms force on"))
 		printf("System is not available\n");
 }
@@ -365,7 +365,7 @@ static void idle_calibration(void)
 	printf(_("Calibrating idle\n"));
 	if(!system("DISPLAY=:0 /usr/bin/xset dpms force off"))
 		printf("System is not available\n");
-	one_measurement(15, NULL);
+	one_measurement(15, 15, NULL);
 	if(!system("DISPLAY=:0 /usr/bin/xset dpms force on"))
 		printf("System is not available\n");
 }
@@ -382,7 +382,7 @@ static void disk_calibration(void)
 	stop_measurement = 0;
 	pthread_create(&thr, NULL, burn_disk, NULL);
 
-	one_measurement(15, NULL);
+	one_measurement(15, 15, NULL);
 	stop_measurement = 1;
 	sleep(1);
 

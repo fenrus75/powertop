@@ -787,6 +787,7 @@ void process_update_display(void)
 	unsigned int i;
 	WINDOW *win;
 	double pw;
+	double joules;
 	int tl;
 	int tlt;
 	int tlr;
@@ -816,10 +817,11 @@ void process_update_display(void)
 	}
 
 	wprintw(win, _("Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n\n"),
-				all_parameters.guessed_power, global_joules_consumed(), sum);
+				all_parameters.guessed_power, global_power(), sum);
 #endif
 
-	pw = global_joules_consumed();
+	pw = global_power();
+	joules = global_joules();
 	tl = global_time_left() / 60;
 	tlt = (tl /60);
 	tlr = tl % 60;
@@ -828,6 +830,8 @@ void process_update_display(void)
 		char buf[32];
 		wprintw(win, _("The battery reports a discharge rate of %sW\n"),
 				fmt_prefix(pw, buf));
+		wprintw(win, _("The power consumed was %sJ\n"),
+				fmt_prefix(joules, buf));
 		need_linebreak = 1;
 	}
 	if (tl > 0 && pw > 0.0001) {

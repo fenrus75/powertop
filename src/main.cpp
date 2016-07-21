@@ -89,6 +89,7 @@ static const struct option long_options[] =
 	{"html",	optional_argument,	NULL,		 'r'},
 	{"iteration",	optional_argument,	NULL,		 'i'},
 	{"quiet",	no_argument,		NULL,		 'q'},
+	{"sample",	optional_argument,	NULL,		 's'},
 	{"time",	optional_argument,	NULL,		 't'},
 	{"workload",	optional_argument,	NULL,		 'w'},
 	{"version",	no_argument,		NULL,		 'V'},
@@ -126,6 +127,7 @@ static void print_usage()
 	printf(" -r, --html%s\t %s\n", _("[=filename]"), _("generate a html report"));
 	printf(" -i, --iteration%s\n", _("[=iterations] number of times to run each test"));
 	printf(" -q, --quiet\t\t %s\n", _("suppress stderr output"));
+	printf(" -s, --sample%s\t %s\n", _("[=seconds]"), _("interval for power consumption measurement"));
 	printf(" -t, --time%s\t %s\n", _("[=seconds]"), _("generate a report for 'x' seconds"));
 	printf(" -w, --workload%s %s\n", _("[=workload]"), _("file to execute for workload"));
 	printf(" -V, --version\t\t %s\n", _("print version information"));
@@ -197,8 +199,20 @@ static void do_sleep(int seconds)
 	} while (1);
 }
 
+extern "C" {
+	static volatile bool end_thread;
+	void* measure_background_thread(void *arg)
+	{
+		int sleep_time = *((int *) arg);
+		while (!end_thread) {
+			do_sleep(sleep_time);
+			global_sample_power();
+		}
+		return 0;
+	}
+}
 
-void one_measurement(int seconds, char *workload)
+void one_measurement(int seconds, int sample_interval, char *workload)
 {
 	create_all_usb_devices();
 	start_power_measurement();
@@ -208,10 +222,27 @@ void one_measurement(int seconds, char *workload)
 	start_cpu_measurement();
 
 	if (workload && workload[0]) {
+		pthread_t thread = 0UL;
+		end_thread = false;
+		if (pthread_create(&thread, NULL, measure_background_thread, &sample_interval))
+			fprintf(stderr, "ERROR: workload measurement thread creation failed\n");
+
 		if (system(workload))
 			fprintf(stderr, _("Unknown issue running workload!\n"));
+
+		if (thread)
+		{
+			end_thread = true;
+			pthread_join( thread, NULL);
+		}
+		global_sample_power();
 	} else {
-		do_sleep(seconds);
+		while (seconds > 0)
+		{
+			do_sleep(sample_interval > seconds ? seconds : sample_interval);
+			seconds -= sample_interval;
+			global_sample_power();
+		}
 	}
 	end_cpu_measurement();
 	end_process_measurement();
@@ -237,7 +268,7 @@ void one_measurement(int seconds, char *workload)
 
 	end_process_data();
 
-	global_joules_consumed();
+	global_power();
 	compute_bundle();
 
 	show_report_devices();
@@ -258,13 +289,13 @@ void out_of_memory()
 	abort();
 }
 
-void make_report(int time, char *workload, int iterations, char *file)
+void make_report(int time, char *workload, int iterations, int sample_interval, char *file)
 {
 
 	/* one to warm up everything */
 	fprintf(stderr, _("Preparing to take measurements\n"));
 	utf_ok = 0;
-	one_measurement(1, NULL);
+	one_measurement(1, sample_interval, NULL);
 
 	if (!workload[0])
 	  fprintf(stderr, _("Taking %d measurement(s) for a duration of %d second(s) each.\n"),iterations,time);
@@ -274,7 +305,7 @@ void make_report(int time, char *workload, int iterations, char *file)
 		init_report_output(file, iterations);
 		initialize_tuning();
 		/* and then the real measurement */
-		one_measurement(time, workload);
+		one_measurement(time, sample_interval, workload);
 		report_show_tunables();
 		finish_report_output();
 		clear_tuning();
@@ -398,7 +429,7 @@ int main(int argc, char **argv)
 	int c;
 	char filename[PATH_MAX];
 	char workload[PATH_MAX] = {0};
-	int  iterations = 1, auto_tune = 0;
+	int  iterations = 1, auto_tune = 0, sample_interval = 5;
 
 	set_new_handler(out_of_memory);
 
@@ -456,6 +487,9 @@ int main(int argc, char **argv)
 			if (freopen("/dev/null", "a", stderr))
 				fprintf(stderr, _("Quiet mode failed!\n"));
 			break;
+		case 's':
+			sample_interval = (optarg ? atoi(optarg) : 5);
+			break;
 		case 't':
 			time_out = (optarg ? atoi(optarg) : 20);
 			break;
@@ -480,7 +514,7 @@ int main(int argc, char **argv)
 	powertop_init(auto_tune);
 
 	if (reporttype != REPORT_OFF)
-		make_report(time_out, workload, iterations, filename);
+		make_report(time_out, workload, iterations, sample_interval, filename);
 
 	if (debug_learning)
 		printf("Learning debugging enabled\n");
@@ -501,7 +535,7 @@ int main(int argc, char **argv)
 	initialize_devfreq();
 	initialize_tuning();
 	/* first one is short to not let the user wait too long */
-	one_measurement(1, NULL);
+	one_measurement(1, sample_interval, NULL);
 
 	if (!auto_tune) {
 		tuning_update_display();
@@ -513,7 +547,7 @@ int main(int argc, char **argv)
 	while (!leave_powertop) {
 		if (!auto_tune)
 			show_cur_tab();
-		one_measurement(time_out, NULL);
+		one_measurement(time_out, sample_interval, NULL);
 		learn_parameters(15, 0);
 	}
 	if (!auto_tune)

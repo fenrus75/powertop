@@ -327,7 +327,7 @@ void store_results(double duration)
 {
 	if (duration < 5)
 		return;
-	global_joules_consumed();
+	global_power();
 	if (all_results.power > 0.01) {
 		unsigned int overflow_index;
 		overflow_index = 50 + (rand() % MAX_KEEP);

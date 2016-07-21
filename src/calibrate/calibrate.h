@@ -25,7 +25,7 @@
 #ifndef __INCLUDE_GUARD_CALIBRATE_H
 #define __INCLUDE_GUARD_CALIBRATE_H
 
-extern void one_measurement(int seconds, char *workload);
+extern void one_measurement(int seconds, int sample_interval, char *workload);
 extern void calibrate(void);
 
 

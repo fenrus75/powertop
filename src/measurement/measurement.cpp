@@ -36,6 +36,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <unistd.h>
+#include <time.h>
 
 double min_power = 50000.0;
 
@@ -49,18 +50,22 @@ void power_meter::end_measurement(void)
 }
 
 
-double power_meter::joules_consumed(void)
+double power_meter::power(void)
 {
 	return 0.0;
 }
 
 vector<class power_meter *> power_meters;
 
+static struct timespec tlast;
+
 void start_power_measurement(void)
 {
 	unsigned int i;
+	clock_gettime(CLOCK_REALTIME, &tlast);
 	for (i = 0; i < power_meters.size(); i++)
 		power_meters[i]->start_measurement();
+	all_results.joules = 0.0;
 }
 void end_power_measurement(void)
 {
@@ -69,7 +74,7 @@ void end_power_measurement(void)
 		power_meters[i]->end_measurement();
 }
 
-double global_joules_consumed(void)
+double global_power(void)
 {
 	bool global_discharging = false;
 	double total = 0.0;
@@ -77,8 +82,9 @@ double global_joules_consumed(void)
 
 	for (i = 0; i < power_meters.size(); i++) {
 		global_discharging |= power_meters[i]->is_discharging();
-		total += power_meters[i]->joules_consumed();
+		total += power_meters[i]->power();
 	}
+
 	/* report global time left if at least one battery is discharging */
 	if (!global_discharging)
 		return 0.0;
@@ -87,6 +93,23 @@ double global_joules_consumed(void)
 	if (total < min_power && total > 0.01)
 		min_power = total;
 	return total;
+}
+
+void global_sample_power(void)
+{
+	struct timespec tnow;
+
+	clock_gettime(CLOCK_REALTIME, &tnow);
+	/* power * time = joules */
+	all_results.joules += global_power() * \
+			 ( ((double)tnow.tv_sec + 1.0e-9*tnow.tv_nsec) - \
+			   ((double)tlast.tv_sec + 1.0e-9*tlast.tv_nsec));
+	tlast = tnow;
+}
+
+double global_joules(void)
+{
+	return all_results.joules;
 }
 
 double global_time_left(void)
@@ -98,7 +121,7 @@ double global_time_left(void)
 	for (i = 0; i < power_meters.size(); i++) {
 		global_discharging |= power_meters[i]->is_discharging();
 		total_capacity += power_meters[i]->dev_capacity();
-		total_rate += power_meters[i]->joules_consumed();
+		total_rate += power_meters[i]->power();
 	}
 	/* report global time left if at least one battery is discharging */
 	if (!global_discharging)

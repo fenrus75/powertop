@@ -166,11 +166,13 @@ void report_devices(void)
 
 
 
-	pw = global_joules_consumed();
+	pw = global_power();
 	if (pw > 0.0001) {
 		char buf[32];
 		wprintw(win, _("The battery reports a discharge rate of %sW\n"),
 				fmt_prefix(pw, buf));
+		wprintw(win, _("The power consumed was %sJ\n"),
+				fmt_prefix(global_joules(), buf));
 	}
 
 	if (show_power) {
@@ -248,12 +250,17 @@ void show_report_devices(void)
 	/* Device Summary */
 	int summary_size=2;
 	string *summary = new string[summary_size];
-	pw = global_joules_consumed();
+	pw = global_power();
 	char buf[32];
 	if (pw > 0.0001) {
 		summary[0]= __("The battery reports a discharge rate of: ");
 		summary[1]=string(fmt_prefix(pw, buf));
 		summary[1].append(" W");
+		report.add_summary_list(summary, summary_size);
+
+		summary[0]= __("The power consumed was : ");
+		summary[1]=string(fmt_prefix(global_joules(), buf));
+		summary[1].append(" J");
 		report.add_summary_list(summary, summary_size);
 	}
 

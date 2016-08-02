@@ -89,6 +89,7 @@ process::process(const char *_comm, int _pid, int _tid) : power_consumer()
 {
 	char line[4097];
 	ifstream file;
+	ssize_t pos;
 
 	pt_strcpy(comm, _comm);
 	pid = _pid;
@@ -121,7 +122,15 @@ process::process(const char *_comm, int _pid, int _tid) : power_consumer()
 	if (strncmp(_comm, "kondemand/", 10) == 0)
 		is_idle = 1;
 
-	pt_strcpy(desc, comm);
+	pos = snprintf(desc, sizeof(desc), "[PID %d] ", pid);
+
+	if (pos < 0)
+		pos = 0;
+	if ((size_t)pos > sizeof(desc))
+		return;
+
+	strncpy(desc + pos, comm, sizeof(desc) - pos - 1);
+	desc[sizeof(desc) - 1] = '\0';
 
 	sprintf(line, "/proc/%i/cmdline", _pid);
 	file.open(line, ios::binary);
@@ -131,11 +140,11 @@ process::process(const char *_comm, int _pid, int _tid) : power_consumer()
 		file.close();
 		if (strlen(line) < 1) {
 			is_kernel = 1;
-			snprintf(desc, sizeof(desc), "[%s]", comm);
+			snprintf(desc + pos, sizeof(desc) - pos, "[%s]", comm);
 		} else {
-			int sz = sizeof(desc) - 1;
+			int sz = sizeof(desc) - pos - 1;
 			cmdline_to_string(line);
-			strncpy(desc, line, sz);
+			strncpy(desc + pos, line, sz);
 			desc[sz] = 0x00;
 		}
 	}

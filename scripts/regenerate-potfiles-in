@@ -1,0 +1,15 @@
+#!/bin/sh
+
+echo "INFO: checking for git ..."
+git --version > /dev/null 2>&1 || exit 1
+
+echo "INFO: priming ./POTFILES.in.new ..."
+touch POTFILES.in.new || exit 2
+echo "# List of source files which contain translatable strings." > POTFILES.in.new || exit 3
+echo "" >> POTFILES.in.new || exit 4
+
+echo "INFO: populating ./POTFILES.in.new ..."
+git grep -l -e "__(" -e "_(" | sort >> POTFILES.in.new || exit 5
+
+echo "INFO: contents of ./POTFILES.in.new ..."
+cat POTFILES.in.new

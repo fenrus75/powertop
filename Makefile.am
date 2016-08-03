@@ -8,6 +8,8 @@ SUBDIRS = \
 	doc
 
 EXTRA_DIST = \
+	config.rpath \
+	m4/ChangeLog  \
 	README \
 	TODO \
 	Android.mk \

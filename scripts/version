@@ -1,0 +1,13 @@
+#!/bin/sh
+
+git branch > /dev/null 2>&1
+if [ "$?" = "0" ]; then
+	LONG=$(git describe --abbrev=7 --tags --always --dirty 2> /dev/null)
+	SHORT=\"$(git describe --tags --abbrev=0 2> /dev/null)\"
+else
+	LONG="RUN-VERSION-SCRIPT-IN-GIT-REPOSITORY-ONLY"
+	SHORT=\"$LONG\"
+fi
+
+echo $LONG  > version-long
+echo $SHORT > version-short

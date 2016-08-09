@@ -87,4 +87,5 @@ Makefile.in
 /src/powertop
 /stamp-h1
 /stamp-po
+/version*
 tags

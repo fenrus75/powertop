@@ -117,7 +117,7 @@ void show_tab(unsigned int tab)
 
 	wattrset(tab_bar, A_REVERSE);
 	mvwprintw(tab_bar, 0,0, "%120s", "");
-	mvwprintw(tab_bar, 0,0, "PowerTOP %s", POWERTOP_SHORT_VERSION);
+	mvwprintw(tab_bar, 0,0, "PowerTOP %s", PACKAGE_SHORT_VERSION);
 
 	bottom_line = newwin(1, 0, LINES-1, 0);
 	wattrset(bottom_line, A_REVERSE);

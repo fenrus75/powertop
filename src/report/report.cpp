@@ -120,7 +120,7 @@ static void system_info(void)
 	/* Set array of data in row Major order */
 	string *system_data = new string[sys_table.rows * sys_table.cols];
 	system_data[0]=__("PowerTOP Version");
-	snprintf(version_date, sizeof(version_date), "%s ran at %s", POWERTOP_VERSION, ctime(&now));
+	snprintf(version_date, sizeof(version_date), "%s ran at %s", PACKAGE_VERSION, ctime(&now));
 	system_data[1]=version_date;
 
 	str = read_sysfs_string("/proc/version");

@@ -12,6 +12,7 @@ AM_INIT_AUTOMAKE([
 AC_LANG([C++])
 AC_CONFIG_FILES([
 	Makefile
+	Doxyfile
 	src/Makefile
 	traceevent/Makefile
 	po/Makefile.in

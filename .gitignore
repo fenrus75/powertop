@@ -18,6 +18,7 @@ Makefile.in
 # individual files
 /ABOUT-NLS
 /ChangeLog
+/Doxyfile
 /aclocal.m4
 /ar-lib
 /autom4te.cache
@@ -34,6 +35,7 @@ Makefile.in
 /install-sh
 /libtool
 /ltmain.sh
+/doc/html
 /m4/codeset.m4
 /m4/fcntl-o.m4
 /m4/gettext.m4

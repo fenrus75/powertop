@@ -54,6 +54,7 @@
 
 #include "measurement.h"
 #include "extech.h"
+#include "../lib.h"
 #include <iostream>
 #include <fstream>
 #include <string.h>
@@ -268,7 +269,7 @@ static double extech_read(int fd)
 extech_power_meter::extech_power_meter(const char *extech_name)
 {
 	rate = 0.0;
-	strncpy(dev_name, extech_name, sizeof(dev_name));
+	pt_strcpy(dev_name, extech_name);
 	int ret;
 
 	fd = open_device(dev_name);

@@ -141,11 +141,11 @@ network::network(const char *_name, const char *path): device()
 	valid_high = -1;
 	valid_powerunsave = -1;
 
-	strncpy(sysfs_path, path, sizeof(sysfs_path));
+	pt_strcpy(sysfs_path, path);
 	register_sysfs_path(sysfs_path);
 	pt_strcpy(devname, _name);
 	sprintf(humanname, "nic:%s", _name);
-	strncpy(name, devname, sizeof(name));
+	pt_strcpy(name, devname);
 
 	snprintf(devname, sizeof(devname), "%s-up", _name);
 	index_up = get_param_index(devname);

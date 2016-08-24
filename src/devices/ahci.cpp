@@ -127,12 +127,12 @@ ahci::ahci(char *_name, char *path): device()
 	start_slumber = 0;
 	start_devslp = 0;
 	start_partial = 0;
-	strncpy(sysfs_path, path, sizeof(sysfs_path));
+	pt_strcpy(sysfs_path, path);
 
 	register_sysfs_path(sysfs_path);
 
 	snprintf(devname, sizeof(devname), "ahci:%s", _name);
-	strncpy(name, devname, sizeof(name));
+	pt_strcpy(name, devname);
 	active_index = get_param_index("ahci-link-power-active");
 	partial_index = get_param_index("ahci-link-power-partial");
 

@@ -45,7 +45,7 @@ static vector<class devfreq *> all_devfreq;
 
 devfreq::devfreq(const char* dpath): device()
 {
-	strncpy(dir_name, dpath, sizeof(dir_name));
+	pt_strcpy(dir_name, dpath);
 }
 
 uint64_t devfreq::parse_freq_time(char* pchr)

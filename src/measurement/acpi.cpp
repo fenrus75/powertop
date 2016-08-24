@@ -39,7 +39,7 @@ acpi_power_meter::acpi_power_meter(const char *acpi_name)
 	rate = 0.0;
 	capacity = 0.0;
 	voltage = 0.0;
-	strncpy(battery_name, acpi_name, sizeof(battery_name));
+	pt_strcpy(battery_name, acpi_name);
 }
 
 /*

@@ -49,7 +49,7 @@ interrupt::interrupt(const char *_handler, int _number) : power_consumer()
 	char buf[128];
 	running_since = 0;
 	number = _number;
-	strncpy(handler, _handler, 31);
+	pt_strcpy(handler, _handler);
 	raw_count = 0;
 	snprintf(desc, sizeof(desc), "[%i] %s", number, pretty_print(handler, buf, 128));
 }

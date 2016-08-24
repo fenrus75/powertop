@@ -258,7 +258,7 @@ void enumerate_cpus(void)
 				c++;
 				if (*c == ' ')
 					c++;
-				strncpy(vendor,c, 127);
+				pt_strcpy(vendor,c);
 			}
 		}
 		if (strncmp(line, "processor\t",10) == 0) {

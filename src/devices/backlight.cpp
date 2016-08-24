@@ -46,7 +46,7 @@ backlight::backlight(const char *_name, const char *path): device()
 	max_level = 0;
 	start_level = 0;
 	end_level = 0;
-	strncpy(sysfs_path, path, sizeof(sysfs_path));
+	pt_strcpy(sysfs_path, path);
 	register_sysfs_path(sysfs_path);
 	snprintf(name, sizeof(name) - 1, "backlight:%s", _name);
 	r_index = get_result_index(name);

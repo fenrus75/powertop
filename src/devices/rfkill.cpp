@@ -50,11 +50,11 @@ rfkill::rfkill(char *_name, char *path): device()
 	start_hard = 0;
 	end_soft = 0;
 	end_hard = 0;
-	strncpy(sysfs_path, path, sizeof(sysfs_path));
+	pt_strcpy(sysfs_path, path);
 	register_sysfs_path(sysfs_path);
 	snprintf(devname, sizeof(devname), "radio:%s", _name);
 	snprintf(humanname, sizeof(humanname), "radio:%s", _name);
-	strncpy(name, devname, sizeof(name));
+	pt_strcpy(name, devname);
 	register_parameter(devname);
 	index = get_param_index(devname);
 	rindex = get_result_index(name);

@@ -51,11 +51,11 @@ alsa::alsa(const char *_name, const char *path): device()
 	start_active = 0;
 	end_inactive = 0;
 	start_inactive = 0;
-	strncpy(sysfs_path, path, sizeof(sysfs_path));
+	pt_strcpy(sysfs_path, path);
 
 	snprintf(devname, sizeof(devname), "alsa:%s", _name);
 	snprintf(humanname, sizeof(humanname), "alsa:%s", _name);
-	strncpy(name, devname, sizeof(name));
+	pt_strcpy(name, devname);
 	rindex = get_result_index(name);
 
 	guilty[0] = 0;

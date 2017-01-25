@@ -55,7 +55,7 @@ static int intel_cpu_models[] = {
 	0x37,	/* BYT-M */
 	0x3A,	/* IVB */
 	0x3C,
-	0x3D,	/* Broadwell */
+	0x3D,	/* BDW */
 	0x3E,	/* IVB Xeon */
 	0x3F,	/* HSX */
 	0x45,	/* HSW-ULT */
@@ -163,7 +163,7 @@ nhm_core::nhm_core(int model)
 		case 0x45:	/* HSW-ULT */
 		case 0x4E:	/* SKY */
 		case 0x5E:	/* SKY */
-		case 0x3D:	/* Intel Next Generation */
+		case 0x3D:	/* BDW */
 		case 0x5c:      /* BXT-P */
 		case 0x8E:	/* KBL */
 		case 0x9E:	/* KBL */
@@ -343,7 +343,7 @@ nhm_package::nhm_package(int model)
 		case 0x45:	/* HSW-ULT */
 		case 0x4E:	/* SKY */
 		case 0x5E:	/* SKY */
-		case 0x3D:	/* Intel Next Generation */
+		case 0x3D:	/* BDW */
 		case 0x5c:      /* BXT-P */
 		case 0x8E:	/* KBL */
 		case 0x9E:	/* KBL */
@@ -372,11 +372,11 @@ nhm_package::nhm_package(int model)
 
 	/*Has C8/9/10*/
 	switch(model) {
-		case 0x45: /*HSW*/
-		case 0x3D:
-		case 0x4E:
-		case 0x5E:
-		case 0x5c: 
+		case 0x45:	/* HSW */
+		case 0x3D:	/* BDW */
+		case 0x4E:	/* SKY */
+		case 0x5E:	/* SKY */
+		case 0x5c:	/* BXT-P */ 
 		case 0x8E:	/* KBL */
 		case 0x9E:	/* KBL */
 			has_c8c9c10_res = 1;

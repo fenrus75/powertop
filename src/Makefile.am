@@ -97,6 +97,8 @@ powertop_SOURCES = \
 	report/report-formatter-base.h \
 	report/report-formatter-csv.cpp \
 	report/report-formatter-csv.h \
+	report/report-formatter-plain.cpp \
+	report/report-formatter-plain.h \
 	report/report-formatter-html.cpp \
 	report/report-formatter-html.h \
 	report/report-formatter.h \

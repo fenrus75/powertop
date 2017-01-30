@@ -65,7 +65,7 @@ using namespace std;
 /* Conditional gettext. We need original strings for CSV. */
 #ifdef ENABLE_NLS
 #define __(STRING) \
-	((report.get_type() == REPORT_CSV) ? (STRING) : gettext(STRING))
+	((report.get_type() == REPORT_CSV || report.get_type() == REPORT_PLAIN) ? (STRING) : gettext(STRING))
 #else
 #define __(STRING) (STRING)
 #endif
@@ -79,7 +79,8 @@ using namespace std;
 enum report_type {
 	REPORT_OFF,
 	REPORT_HTML,
-	REPORT_CSV
+	REPORT_CSV,
+	REPORT_PLAIN
 };
 
 /* ************************************************************************ */

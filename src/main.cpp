@@ -84,6 +84,7 @@ static const struct option long_options[] =
 	{"auto-tune",	no_argument,		NULL,		 OPT_AUTO_TUNE},
 	{"calibrate",	no_argument,		NULL,		 'c'},
 	{"csv",		optional_argument,	NULL,		 'C'},
+	{"dump",	optional_argument,	NULL,		 'd'},
 	{"debug",	no_argument,		&debug_learning, OPT_DEBUG},
 	{"extech",	optional_argument,	NULL,		 OPT_EXTECH},
 	{"html",	optional_argument,	NULL,		 'r'},
@@ -122,6 +123,7 @@ static void print_usage()
 	printf("     --auto-tune\t %s\n", _("sets all tunable options to their GOOD setting"));
 	printf(" -c, --calibrate\t %s\n", _("runs powertop in calibration mode"));
 	printf(" -C, --csv%s\t %s\n", _("[=filename]"), _("generate a csv report"));
+	printf(" -d, --dump %s\n", _("generate plain text report"));
 	printf("     --debug\t\t %s\n", _("run in \"debug\" mode"));
 	printf("     --extech%s\t %s\n", _("[=devnode]"), _("uses an Extech Power Analyzer for measurements"));
 	printf(" -r, --html%s\t %s\n", _("[=filename]"), _("generate a html report"));
@@ -441,7 +443,7 @@ int main(int argc, char **argv)
 #endif
 	ui_notify_user = ui_notify_user_ncurses;
 	while (1) { /* parse commandline options */
-		c = getopt_long(argc, argv, "cC:r:i:qt:w:Vh", long_options, &option_index);
+		c = getopt_long(argc, argv, "cC::d::r::i:qt:w:Vh", long_options, &option_index);
 		/* Detect the end of the options. */
 		if (c == -1)
 			break;
@@ -457,12 +459,11 @@ int main(int argc, char **argv)
 			break;
 		case 'C':		/* csv report */
 			reporttype = REPORT_CSV;
-			snprintf(filename, sizeof(filename), "%s", optarg ? optarg : "powertop.csv");
-			if (!strlen(filename))
-			{
-				fprintf(stderr, _("Invalid CSV filename\n"));
-				exit(1);
-			}
+			snprintf(filename, sizeof(filename), "%s", optarg ? optarg : "");
+			break;
+		case 'd':		/* plain text report (dump) */
+			reporttype = REPORT_PLAIN;
+			snprintf(filename, sizeof(filename), "%s", optarg ? optarg : "");
 			break;
 		case OPT_DEBUG:
 			/* implemented using getopt_long(3) flag */
@@ -473,12 +474,7 @@ int main(int argc, char **argv)
 			break;
 		case 'r':		/* html report */
 			reporttype = REPORT_HTML;
-			snprintf(filename, sizeof(filename), "%s", optarg ? optarg : "powertop.html");
-			if (!strlen(filename))
-			{
-				fprintf(stderr, _("Invalid HTML filename\n"));
-				exit(1);
-			}
+			snprintf(filename, sizeof(filename), "%s", optarg ? optarg : "");
 			break;
 		case 'i':
 			iterations = (optarg ? atoi(optarg) : 1);

@@ -66,7 +66,19 @@ int sysfs_tunable::good_bad(void)
 	if (c)
 		*c = 0;
 
-	if (strcmp(current_value, target_value) == 0)
+	if (strncmp(">=", target_value, 2) == 0) {
+		char *endptr;
+		int expected, current;
+
+		expected = strtol(target_value + 2, &endptr, 10);
+		if (*endptr != '\0')
+			return TUNE_NEUTRAL;
+		current = strtol(current_value, &endptr, 10);
+		if (*endptr != '\0')
+			return TUNE_NEUTRAL;
+		if (current >= expected)
+			return TUNE_GOOD;
+	} else if (strcmp(current_value, target_value) == 0)
 		return TUNE_GOOD;
 
 	pt_strcpy(bad_value, current_value);
@@ -84,7 +96,11 @@ void sysfs_tunable::toggle(void)
 		return;
 	}
 
-	write_sysfs(sysfs_path, target_value);
+	if (strncmp(target_value, ">=", 2) == 0) {
+		write_sysfs(sysfs_path, target_value + 2);
+	} else {
+		write_sysfs(sysfs_path, target_value);
+	}
 }
 
 const char *sysfs_tunable::toggle_script(void) {

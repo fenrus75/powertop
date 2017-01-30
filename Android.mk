@@ -35,6 +35,7 @@ LOCAL_SRC_FILES += \
 	src/cpu/dram_rapl_device.cpp \
 	src/cpu/rapl/rapl_interface.cpp \
 	src/measurement/measurement.cpp \
+	src/measurement/opal-sensors.cpp \
 	src/measurement/acpi.cpp \
 	src/measurement/extech.cpp \
 	src/measurement/sysfs.cpp \

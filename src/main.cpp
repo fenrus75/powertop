@@ -63,7 +63,7 @@
 #include "devlist.h"
 #include "report/report.h"
 
-#define DEBUGFS_MAGIC          0x64626720
+#define DEBUGFS_MAGIC		  0x64626720
 
 #define NR_OPEN_DEF 1024 * 1024
 
@@ -406,7 +406,7 @@ static void powertop_init(int auto_tune)
 	register_parameter("disk-operations", 0.0);
 	register_parameter("xwakes", 0.1);
 
-        load_parameters("saved_parameters.powertop");
+	load_parameters("saved_parameters.powertop");
 
 	initialized = 1;
 }
@@ -524,7 +524,7 @@ int main(int argc, char **argv)
 
 
 	if (debug_learning) {
-	        learn_parameters(1000, 1);
+		learn_parameters(1000, 1);
 		dump_parameter_bundle();
 		end_pci_access();
 		exit(0);

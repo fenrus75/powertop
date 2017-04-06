@@ -792,7 +792,7 @@ msgstr "Temporäre Datei konnte nicht erzeugt werden\n"
 
 #: src/report/report.cpp:211
 #, c-format
-msgid "PowerTOP outputing using base filename %s\n"
+msgid "PowerTOP outputting using base filename %s\n"
 msgstr ""
 
 #: src/tuning/bluetooth.cpp:46 src/tuning/ethernet.cpp:50

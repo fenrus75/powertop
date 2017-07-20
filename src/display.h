@@ -62,10 +62,14 @@ public:
 	}
 
 	virtual void cursor_down(void) { 
-		if (cursor_pos < cursor_max ) cursor_pos++; repaint(); 
+		if (cursor_pos < cursor_max)
+			cursor_pos++;
+		repaint();
 	} ;
 	virtual void cursor_up(void) { 
-		if (cursor_pos > 0) cursor_pos--; repaint(); 
+		if (cursor_pos > 0)
+			cursor_pos--;
+		repaint();
 	};
 	virtual void cursor_left(void) { };
 	virtual void cursor_right(void) { };

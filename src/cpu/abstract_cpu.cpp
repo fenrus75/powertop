@@ -218,6 +218,17 @@ void abstract_cpu::insert_cstate(const char *linux_name, const char *human_name,
 		}
 		if (*c >= '0' && *c <='9') {
 			state->line_level = strtoull(c, NULL, 10);
+			if(*(c+1) != '-'){
+				int greater_line_level = strtoull(c, NULL, 10);
+				for(unsigned int pos = 0; pos < cstates.size(); pos++){
+					if(*c == cstates[pos]->human_name[1]){
+						if(*(c+1) != cstates[pos]->human_name[2]){
+							greater_line_level = max(greater_line_level, cstates[pos]->line_level);
+							state->line_level = greater_line_level + 1;
+						}
+					}
+				}
+			}
 			break;
 		}
 		c++;

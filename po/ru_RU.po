@@ -444,7 +444,7 @@ msgstr "Autosuspend для USB-устройства %s [%s]"
 
 #: src/tuning/tuningsysfs.cpp:139
 #, c-format
-msgid "Enable SATA link power Managmenet for %s"
+msgid "Enable SATA link power Management for %s"
 msgstr "Активировать управление питанием линка SATA для %s"
 
 #: src/calibrate/calibrate.cpp:236

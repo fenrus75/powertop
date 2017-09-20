@@ -444,7 +444,7 @@ msgstr "Suspensão automática para dispositivo USB %s [%s]"
 
 #: src/tuning/tuningsysfs.cpp:139
 #, c-format
-msgid "Enable SATA link power Managmenet for %s"
+msgid "Enable SATA link power Management for %s"
 msgstr "Habilitar gerenciamento de energia da conexão SATA para %s"
 
 #: src/calibrate/calibrate.cpp:236

@@ -443,7 +443,7 @@ msgstr "Autosliepstân foar USB apparaat %s [%s]"
 
 #: src/tuning/tuningsysfs.cpp:139
 #, c-format
-msgid "Enable SATA link power Managmenet for %s"
+msgid "Enable SATA link power Management for %s"
 msgstr "Skeakelje SATA link krêft behear yn foar %s"
 
 #: src/calibrate/calibrate.cpp:236

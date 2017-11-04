@@ -54,7 +54,7 @@ extern const char *kernel_function(uint64_t address);
 
 
 
-
+#include <ctime>
 #include <string>
 using namespace std;
 

@@ -258,7 +258,7 @@ msgstr "The battery reports a discharge rate of %sW\n"
 
 #: src/devices/device.cpp:174 src/process/do_process.cpp:833
 #, c-format
-msgid "The power consumed was %sJ\n"
+msgid "The energy consumed was %sJ\n"
 msgstr ""
 
 #: src/devices/device.cpp:180
@@ -280,7 +280,7 @@ msgid "The battery reports a discharge rate of: "
 msgstr "The battery reports a discharge rate of %sW\n"
 
 #: src/devices/device.cpp:261
-msgid "The power consumed was : "
+msgid "The energy consumed was : "
 msgstr ""
 
 #: src/devices/device.cpp:268

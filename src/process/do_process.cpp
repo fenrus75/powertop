@@ -830,7 +830,7 @@ void process_update_display(void)
 		char buf[32];
 		wprintw(win, _("The battery reports a discharge rate of %sW\n"),
 				fmt_prefix(pw, buf));
-		wprintw(win, _("The power consumed was %sJ\n"),
+		wprintw(win, _("The energy consumed was %sJ\n"),
 				fmt_prefix(joules, buf));
 		need_linebreak = 1;
 	}

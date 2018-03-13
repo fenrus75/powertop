@@ -171,7 +171,7 @@ void report_devices(void)
 		char buf[32];
 		wprintw(win, _("The battery reports a discharge rate of %sW\n"),
 				fmt_prefix(pw, buf));
-		wprintw(win, _("The power consumed was %sJ\n"),
+		wprintw(win, _("The energy consumed was %sJ\n"),
 				fmt_prefix(global_joules(), buf));
 	}
 
@@ -258,7 +258,7 @@ void show_report_devices(void)
 		summary[1].append(" W");
 		report.add_summary_list(summary, summary_size);
 
-		summary[0]= __("The power consumed was : ");
+		summary[0]= __("The energy consumed was : ");
 		summary[1]=string(fmt_prefix(global_joules(), buf));
 		summary[1].append(" J");
 		report.add_summary_list(summary, summary_size);

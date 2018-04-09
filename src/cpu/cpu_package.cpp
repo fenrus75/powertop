@@ -44,7 +44,7 @@ char * cpu_package::fill_cstate_line(int line_nr, char *buffer, const char *sepa
 	buffer[0] = 0;
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,_("Package"));
+		sprintf(buffer, this->has_intel_MSR ? _(" Pkg(HW)"): _(" Cores(OS)"));
 		return buffer;
 	}
 

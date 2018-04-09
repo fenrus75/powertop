@@ -34,7 +34,7 @@ char * cpu_core::fill_cstate_line(int line_nr, char *buffer, const char *separat
 	buffer[0] = 0;
 
 	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,_("  Core"));
+		sprintf(buffer, this->has_intel_MSR ? _(" Core(HW)"): _(" Core(OS)"));
 		return buffer;
 	}
 

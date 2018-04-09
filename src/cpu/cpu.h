@@ -93,7 +93,7 @@ public:
 	int	number;
 	int	childcount;
 	const char*    name;
-	bool	idle, old_idle;
+	bool	idle, old_idle, has_intel_MSR;
 	uint64_t	current_frequency;
 	uint64_t	effective_frequency;
 
@@ -108,6 +108,7 @@ public:
 
 	int	get_first_cpu() { return first_cpu; }
 	void	set_number(int _number, int cpu) {this->number = _number; this->first_cpu = cpu;};
+	void	set_intel_MSR(bool _bool_value) {this->has_intel_MSR =  _bool_value;};
 	void	set_type(const char* _name) {this->name = _name;};
 	int	get_number(void) { return number; };
 	const char* get_type(void) { return name; };

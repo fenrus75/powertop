@@ -33,10 +33,8 @@ char * cpu_core::fill_cstate_line(int line_nr, char *buffer, const char *separat
 	unsigned int i;
 	buffer[0] = 0;
 
-	if (line_nr == LEVEL_HEADER) {
-		sprintf(buffer,_("  Core"));
-		return buffer;
-	}
+	if (line_nr == LEVEL_HEADER)
+		sprintf(buffer, this->has_intel_MSR ? _(" Core(HW)"): _(" Core(OS)"));
 
 	for (i = 0; i < cstates.size(); i++) {
 		if (cstates[i]->line_level != line_nr)

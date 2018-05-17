@@ -68,7 +68,7 @@ static class abstract_cpu * new_package(int package, int cpu, char * vendor, int
 	char packagename[128];
 	if (strcmp(vendor, "GenuineIntel") == 0)
 		if (family == 6)
-			if (is_supported_intel_cpu(model)) {
+			if (is_supported_intel_cpu(model, cpu)) {
 				ret = new class nhm_package(model);
 				ret->set_intel_MSR(true);
 			}
@@ -109,7 +109,7 @@ static class abstract_cpu * new_core(int core, int cpu, char * vendor, int famil
 
 	if (strcmp(vendor, "GenuineIntel") == 0)
 		if (family == 6)
-			if (is_supported_intel_cpu(model)) {
+			if (is_supported_intel_cpu(model, cpu)) {
 				ret = new class nhm_core(model);
 				ret->set_intel_MSR(true);
 			}
@@ -143,7 +143,7 @@ static class abstract_cpu * new_cpu(int number, char * vendor, int family, int m
 
 	if (strcmp(vendor, "GenuineIntel") == 0)
 		if (family == 6)
-			if (is_supported_intel_cpu(model)) {
+			if (is_supported_intel_cpu(model, number)) {
 				ret = new class nhm_cpu;
 				ret->set_intel_MSR(true);
 			}

@@ -77,13 +77,15 @@ static int intel_cpu_models[] = {
 
 static int intel_pstate_driver_loaded = -1;
 
-int is_supported_intel_cpu(int model)
+int is_supported_intel_cpu(int model, int cpu)
 {
 	int i;
+	uint64_t msr;
 
 	for (i = 0; intel_cpu_models[i] != 0; i++)
 		if (model == intel_cpu_models[i])
-			return 1;
+			if (cpu < 0 || read_msr(cpu, MSR_APERF, &msr) >= 0)
+				return 1;
 
 	return 0;
 }

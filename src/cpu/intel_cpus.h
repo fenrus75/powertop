@@ -172,7 +172,7 @@ public:
 
 };
 
-int is_supported_intel_cpu(int model);
+int is_supported_intel_cpu(int model, int cpu);
 int byt_has_ahci();
 
 int is_intel_pstate_driver_loaded();

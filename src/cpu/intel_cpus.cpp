@@ -69,7 +69,10 @@ static int intel_cpu_models[] = {
 	0x56,	/* BDX-DE */
 	0x5c,   /* BXT-P */
 	0x66,   /* CNL-U/Y */
+	0x6A,	/* ICL_X*/
 	0x7A,   /* GLK */
+	0x7D,	/* ICL_DESKTOP */
+	0x7E,	/* ICL_MOBILE */
 	0x8E,	/* KBL */
 	0x9E,	/* KBL */
 	0	/* last entry must be zero */
@@ -170,7 +173,10 @@ nhm_core::nhm_core(int model)
 		case 0x3D:	/* BDW */
 		case 0x5c:      /* BXT-P */
 		case 0x66:	/* CNL-U/Y */
+		case 0x6A:    	/* ICL_X*/
 		case 0x7A:	/* GLK */
+		case 0x7D:    	/* ICL_DESKTOP */
+		case 0x7E:	/* ICL_MOBILE */
 		case 0x8E:	/* KBL */
 		case 0x9E:	/* KBL */
 			has_c7_res = 1;
@@ -352,7 +358,10 @@ nhm_package::nhm_package(int model)
 		case 0x3D:	/* BDW */
 		case 0x5c:      /* BXT-P */
 		case 0x66:	/* CNL-U/Y */
+		case 0x6A:  	/* ICL_X*/
 		case 0x7A:	/* GLK */
+		case 0x7D:    	/* ICL_DESKTOP */
+		case 0x7E:	/* ICL_MOBILE */
 		case 0x8E:	/* KBL */
 		case 0x9E:	/* KBL */
 			has_c2c6_res=1;
@@ -386,7 +395,10 @@ nhm_package::nhm_package(int model)
 		case 0x5E:	/* SKY */
 		case 0x5c:	/* BXT-P */ 
 		case 0x66:	/* CNL-U/Y */
+		case 0x6A:	/* ICL_X*/
 		case 0x7A:	/* GLK */
+		case 0x7D:	/* ICL_DESKTOP */
+		case 0x7E:	/* ICL_MOBILE */
 		case 0x8E:	/* KBL */
 		case 0x9E:	/* KBL */
 			has_c8c9c10_res = 1;

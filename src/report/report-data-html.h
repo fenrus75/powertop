@@ -66,6 +66,9 @@ init_nowarp_table_attr(struct table_attributes *table_css, int rows, int cols);
 void
 init_tune_table_attr(struct table_attributes *table_css, int rows, int cols);
 
+void
+init_wakeup_table_attr(struct table_attributes *table_css, int rows, int cols);
+
 /* Other helper functions */
 string
 double_to_string(double dval);

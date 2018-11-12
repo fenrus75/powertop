@@ -103,6 +103,16 @@ void init_tune_table_attr(struct table_attributes *table_css, int rows, int cols
 	table_css->cols=cols;
 }
 
+void init_wakeup_table_attr(struct table_attributes *table_css, int rows, int cols){
+	table_css->table_class="emphasis2";
+	table_css->tr_class="tune";
+	table_css->th_class="emph_title";
+	table_css->td_class="";
+	table_css->pos_table_title=T;
+	table_css->rows=rows;
+	table_css->cols=cols;
+}
+
 /* Other Helper Functions */
 string
 double_to_string(double dval)

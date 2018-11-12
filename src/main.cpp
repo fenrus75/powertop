@@ -58,6 +58,7 @@
 
 
 #include "tuning/tuning.h"
+#include "wakeup/wakeup.h"
 
 #include "display.h"
 #include "devlist.h"
@@ -265,7 +266,7 @@ void one_measurement(int seconds, int sample_interval, char *workload)
 	}
 	report_process_update_display();
 	tuning_update_display();
-
+	wakeup_update_display();
 	end_process_data();
 
 	global_power();
@@ -304,9 +305,11 @@ void make_report(int time, char *workload, int iterations, int sample_interval, 
 	for (int i=0; i != iterations; i++){
 		init_report_output(file, iterations);
 		initialize_tuning();
+		initialize_wakeup();
 		/* and then the real measurement */
 		one_measurement(time, sample_interval, workload);
 		report_show_tunables();
+		report_show_wakeup();
 		finish_report_output();
 		clear_tuning();
 	}
@@ -534,6 +537,7 @@ int main(int argc, char **argv)
 
 	initialize_devfreq();
 	initialize_tuning();
+	initialize_wakeup();
 	/* first one is short to not let the user wait too long */
 	one_measurement(1, sample_interval, NULL);
 

@@ -244,7 +244,7 @@ void cursor_down(void)
 	w = tab_windows[tab_names[current_tab]];
 	if (w) {
 		if (w->ypad_pos < 1000) {
-			if (tab_names[current_tab] == "Tunables") {
+			if (tab_names[current_tab] == "Tunables" || "WakeUp") {
 		                if ((w->cursor_pos + 7) >= LINES) { 
 					prefresh(w->win, ++w->ypad_pos, w->xpad_pos, 
 						1, 0, LINES - 3, COLS - 1);

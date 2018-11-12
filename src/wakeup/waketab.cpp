@@ -11,6 +11,7 @@
 #include "../report/report-maker.h"
 #include "../report/report-data-html.h"
 #include "wakeup_ethernet.h"
+#include "wakeup_usb.h"
 
 using namespace std;
 
@@ -29,6 +30,7 @@ public:
 static void init_wakeup(void)
 {
 	add_ethernet_wakeup();
+	add_usb_wakeup();
 }
 
 void initialize_wakeup(void)

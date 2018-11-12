@@ -128,6 +128,8 @@ powertop_SOURCES = \
 	wakeup/wakeup.cpp \
 	wakeup/waketab.cpp \
 	wakeup/wakeup_ethernet.cpp \
+	wakeup/wakeup_usb.cpp \
+	wakeup/wakeup_usb.h \
 	wakeup/wakeup.h \
 	wakeup/wakeup_ethernet.h
 

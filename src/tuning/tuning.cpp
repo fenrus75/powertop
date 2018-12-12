@@ -66,7 +66,6 @@ static void init_tuning(void)
 	add_sata_tunables();
 	add_usb_tunables();
 	add_runtime_tunables("pci");
-	add_ethernet_tunable();
 	add_bt_tunable();
 	add_wifi_tunables();
 	add_i2c_tunables();

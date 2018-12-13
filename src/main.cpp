@@ -441,7 +441,7 @@ int main(int argc, char **argv)
 #endif
 	ui_notify_user = ui_notify_user_ncurses;
 	while (1) { /* parse commandline options */
-		c = getopt_long(argc, argv, "cC:r:i:qt:w:Vh", long_options, &option_index);
+		c = getopt_long(argc, argv, "cC::r::i:qt:w:Vh", long_options, &option_index);
 		/* Detect the end of the options. */
 		if (c == -1)
 			break;

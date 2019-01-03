@@ -1,30 +1,43 @@
-﻿Building & Installing PowerTOP
-------------------------------
-
-To build and install PowerTOP type the following commands, 
-	./configure 
-	./make
-	./make install
-
-Note: For Android (running Intel Architecture ) there is a Android.mk 
-that was provided by community members, and at this time is supported
- mostly by community members. 
-
-Build dependencies
+﻿Build dependencies
 ------------------
-
-PowerTOP uses C++, and expects g++ and libstdc++ to be functional 
-along with a glibc/pthreadsi, autoconf, automake, and libtool in the 
+PowerTOP uses C++, and expects g++ and libstdc++ to be functional
+along with a glibc/pthreadsi, autoconf, automake, and libtool in the
 development environment.
- 
 
-in addition to that, PowerTOP requires the following components:
+In addition to that, PowerTOP requires the following components:
 
-pciutils-devel (is only required if you have PCI) 
-ncurses-devel  (required) 
+pciutils-devel (is only required if you have PCI)
+ncurses-devel  (required)
 libnl-devel    (required)
 kernel version => 2.6.38
 
+Example packages to install in Ubuntu
+
+sudo apt-get install libpci-dev
+sudo apt-get install libnl-3-dev libnl-genl-3-dev
+sudo apt-get install gettext libgettextpo-dev
+sudo apt-get install autopoint
+sudo apt-get install gettext
+sudo apt-get install libncurses5-dev libncursesw5-dev
+sudo apt-get install libtool-bin
+sudo apt-get install dh-autoreconf
+
+Building & Installing PowerTOP
+------------------------------
+
+To build and install PowerTOP type the following commands,
+       ./autogen.sh
+       ./configure
+       ./make
+       ./make install
+
+The autogen script is required to run only once to generate the configure for
+the build. Rest of the steps are required to run everytime there is a change
+made to the PowerTop.
+
+Note: For Android (running Intel Architecture ) there is a Android.mk
+that was provided by community members, and at this time is supported
+mostly by community members.
 
 Build PowerTop for Android LollyPop
 ------------------------------------

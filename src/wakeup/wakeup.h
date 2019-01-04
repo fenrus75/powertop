@@ -66,7 +66,7 @@ public:
 
 	virtual void wakeup_toggle(void) { };
 
-	virtual const char *wakeup_toggle_script(void) { return NULL; }
+	virtual const char *wakeup_toggle_script(void) { return toggle_enable; }
 
 };
 

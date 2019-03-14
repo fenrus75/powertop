@@ -411,10 +411,6 @@ void ahci::report_device_stats(string *ahci_data, int idx)
 	double slumber_util = get_result_value(slumber_rindex, &all_results);
 	double devslp_util = get_result_value(devslp_rindex, &all_results);
 
-	ahci_data[offset]=humanname;
-	printf("\nData from ahci %s\n",ahci_data[offset].c_str());
-	offset +=1;
-
 	snprintf(util, sizeof(util), "%5.1f",  active_util);
 	ahci_data[offset]= util;
 	offset +=1;

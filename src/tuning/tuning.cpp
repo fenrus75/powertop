@@ -279,9 +279,16 @@ void report_show_tunables(void)
 
 	/* Third Table */
 	/* Set Table attributes, rows, and cols */
-	cols=1;
-	rows= all_tunables.size() + 1;
-	init_std_table_attr(&tune_table_css, rows, cols);
+	rows = 1;
+	for (i = 0; i < all_tunables.size(); i++) {
+                int gb;
+                gb = all_tunables[i]->good_bad();
+                if (gb != TUNE_GOOD)
+                        continue;
+		rows+=1;
+	}
+	cols = 1;
+	init_tune_table_attr(&tune_table_css, rows, cols);
 
 	/* Set array of data in row Major order */
 	string *tuned_data = new string[rows];

@@ -34,7 +34,7 @@ using namespace std;
 class runtime_tunable : public tunable {
 	char runtime_path[PATH_MAX];
 public:
-	runtime_tunable(const char *runtime_path, const char *bus, const char *dev);
+	runtime_tunable(const char *runtime_path, const char *bus, const char *dev, const char *port);
 
 	virtual int good_bad(void);
 

@@ -39,7 +39,7 @@
 #include "../lib.h"
 #include "../devices/runtime_pm.h"
 
-runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *dev) : tunable("", 0.4, _("Good"), _("Bad"), _("Unknown"))
+runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *dev, const char *port) : tunable("", 0.4, _("Good"), _("Bad"), _("Unknown"))
 {
 	ifstream file;
 	sprintf(runtime_path, "%s/power/control", path);
@@ -76,6 +76,11 @@ runtime_tunable::runtime_tunable(const char *path, const char *bus, const char *
 				sprintf(desc, _("Runtime PM for PCI Device %s"), pci_id_to_name(vendor, device, filename, 4095));
 		}
 
+		if (string(path).find("ata") != string::npos)
+			sprintf(desc, _("Runtime PM for port %s of PCI device: %s"), port, pci_id_to_name(vendor, device, filename, 4095));
+
+		if (string(path).find("block") != string::npos)
+			sprintf(desc, _("Runtime PM for disk %s"), port);
 
 	}
 	snprintf(toggle_good, sizeof(toggle_good), "echo 'auto' > '%s';", runtime_path);
@@ -124,14 +129,15 @@ void add_runtime_tunables(const char *bus)
 {
 	struct dirent *entry;
 	DIR *dir;
-	char filename[PATH_MAX];
+	char filename[PATH_MAX], port[PATH_MAX];
+	int max_ports = 32, count=0;
 
 	snprintf(filename, sizeof(filename), "/sys/bus/%s/devices/", bus);
 	dir = opendir(filename);
 	if (!dir)
 		return;
 	while (1) {
-		class runtime_tunable *runtime;
+		class runtime_tunable *runtime, *runtime_ahci_port, *runtime_ahci_disk;
 
 		entry = readdir(dir);
 
@@ -148,12 +154,49 @@ void add_runtime_tunables(const char *bus)
 
 		snprintf(filename, sizeof(filename), "/sys/bus/%s/devices/%s", bus, entry->d_name);
 
-		runtime = new class runtime_tunable(filename, bus, entry->d_name);
+		runtime = new class runtime_tunable(filename, bus, entry->d_name, NULL);
 
 		if (!device_has_runtime_pm(filename))
 			all_untunables.push_back(runtime);
 		else
 			all_tunables.push_back(runtime);
+
+		for (int i=0; i < max_ports; i++) {
+			snprintf(port, sizeof(port), "ata%d", i);
+			snprintf(filename, sizeof(filename), "/sys/bus/%s/devices/%s/%s/power/control", bus, entry->d_name, port);
+
+			if (access(filename, R_OK) != 0)
+				continue;
+
+			snprintf(filename, sizeof(filename), "/sys/bus/%s/devices/%s/%s", bus, entry->d_name, port);
+			runtime_ahci_port = new class runtime_tunable(filename, bus, entry->d_name, port);
+
+			if (!device_has_runtime_pm(filename))
+				all_untunables.push_back(runtime_ahci_port);
+			else
+				all_tunables.push_back(runtime_ahci_port);
+		}
+
+		for (char blk = 'a'; blk <= 'z'; blk++)
+		{
+			if (count != 0)
+				break;
+
+			snprintf(filename, sizeof(filename), "/sys/block/sd%c/device/power/control", blk);
+
+			if (access(filename, R_OK) != 0)
+				continue;
+
+			snprintf(port, sizeof(port), "sd%c", blk);
+			printf (" the port is %s\n", port);
+			snprintf(filename, sizeof(filename), "/sys/block/%s/device", port);
+			runtime_ahci_disk = new class runtime_tunable(filename, bus, entry->d_name, port);
+			if (!device_has_runtime_pm(filename))
+				all_untunables.push_back(runtime_ahci_disk);
+			else
+				all_tunables.push_back(runtime_ahci_disk);
+		}
+		count = 1;
 
 	}
 	closedir(dir);

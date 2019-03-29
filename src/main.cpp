@@ -39,6 +39,7 @@
 #include <locale.h>
 #include <sys/resource.h>
 #include <limits.h>
+#include <pthread.h>
 
 #include "cpu/cpu.h"
 #include "process/process.h"

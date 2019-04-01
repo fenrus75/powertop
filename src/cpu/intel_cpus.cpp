@@ -92,7 +92,7 @@ int is_supported_intel_cpu(int model, int cpu)
 
 int is_intel_pstate_driver_loaded()
 {
-	const string filename("/sys/devices/system/cpu/cpu0/cpufreq/scaling_driver");
+	const char *filename = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_driver";
 	const string intel_pstate("intel_pstate");
 	char line[32] = { '\0' };
 	ifstream file;

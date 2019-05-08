@@ -247,7 +247,7 @@ static void handle_i965_gpu(void)
 void enumerate_cpus(void)
 {
 	ifstream file;
-	char line[1024];
+	char line[4096];
 
 	int number = -1;
 	char vendor[128];
@@ -304,7 +304,7 @@ void enumerate_cpus(void)
 		 */
 		if (strncasecmp(line, "bogomips\t", 9) == 0
 		    || strncasecmp(line, "CPU revision\t", 13) == 0
-		    || strncmp(line, "revision", 7) == 0) {
+		    || strncmp(line, "revision", 8) == 0) {
 			if (number == -1) {
 				/* Not all /proc/cpuinfo include "processor\t". */
 				number = 0;

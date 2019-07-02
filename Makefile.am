@@ -5,7 +5,8 @@ SUBDIRS = \
 	traceevent \
 	src \
 	po \
-	doc
+	doc \
+	scripts/bash-completion
 
 EXTRA_DIST = \
 	config.rpath \

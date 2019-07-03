@@ -17,7 +17,6 @@ AC_CONFIG_FILES([
 	traceevent/Makefile
 	po/Makefile.in
 	doc/Makefile
-	scripts/bash-completion/Makefile
 ])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_MACRO_DIR([m4])
@@ -154,12 +153,5 @@ AC_SEARCH_LIBS([inet_aton], [resolv], [], [
 
 AC_DEFINE([PACKAGE_SHORT_VERSION], m4_esyscmd_s([cat version-short]),
 	[Short package version])
-
-AS_IF([`pkg-config --exists bash-completion`], [
-	bashcompletiondir=`pkg-config --variable=completionsdir --define-variable=prefix=${prefix} bash-completion`
-], [
-	bashcompletiondir=${datadir}/bash-completion/completions
-])
-AC_SUBST([bashcompletiondir], [$bashcompletiondir])
 
 AC_OUTPUT

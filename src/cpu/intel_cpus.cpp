@@ -142,11 +142,12 @@ intel_util::intel_util()
 void intel_util::byt_has_ahci()
 {
 	dir = opendir("/sys/bus/pci/devices/0000:00:13.0");
-        if (!dir)
-                byt_ahci_support=0;
-	else
+	if (!dir)
+		byt_ahci_support=0;
+	else {
 		byt_ahci_support=1;
-        closedir(dir);
+		closedir(dir);
+	}
 }
 
 int intel_util::get_byt_ahci_support()

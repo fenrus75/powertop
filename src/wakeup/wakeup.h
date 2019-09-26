@@ -26,6 +26,7 @@
 #define _INCLUDE_GUARD_WAKEUP_H
 
 #include<vector>
+#include <limits.h>
 
 using namespace std;
 

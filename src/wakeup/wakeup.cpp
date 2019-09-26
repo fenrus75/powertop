@@ -45,8 +45,8 @@ wakeup::wakeup(void)
 {
 	score = 0;
         desc[0] = 0;
-        pt_strcpy(wakeup_enable, _("Enable"));
-        pt_strcpy(wakeup_disable, _("Disable"));
+        pt_strcpy(wakeup_enable, _("Enabled"));
+        pt_strcpy(wakeup_disable, _("Disabled"));
 	pt_strcpy(wakeup_idle, _("Unknown"));
 }
 

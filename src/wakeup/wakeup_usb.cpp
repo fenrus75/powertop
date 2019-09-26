@@ -44,7 +44,7 @@
 #include "../lib.h"
 #include "wakeup_usb.h"
 
-usb_wakeup::usb_wakeup(const char *path, const char *iface) : wakeup("", 0.5, _("Enable"), _("Disable"))
+usb_wakeup::usb_wakeup(const char *path, const char *iface) : wakeup("", 0.5, _("Enabled"), _("Disabled"))
 {
 	memset(interf, 0, sizeof(interf));
 	pt_strcpy(interf, iface);

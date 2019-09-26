@@ -44,7 +44,7 @@
 #include "../lib.h"
 #include "wakeup_ethernet.h"
 
-ethernet_wakeup::ethernet_wakeup(const char *path, const char *iface) : wakeup("", 0.5, _("Enable"), _("Disable"))
+ethernet_wakeup::ethernet_wakeup(const char *path, const char *iface) : wakeup("", 0.5, _("Enabled"), _("Disabled"))
 {
 	memset(interf, 0, sizeof(interf));
 	pt_strcpy(interf, iface);

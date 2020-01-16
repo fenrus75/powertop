@@ -13,27 +13,22 @@ kernel version => 2.6.38
 
 Example packages to install in Ubuntu
 
-sudo apt-get install libpci-dev
-sudo apt-get install libnl-3-dev libnl-genl-3-dev
-sudo apt-get install gettext libgettextpo-dev
-sudo apt-get install autopoint
-sudo apt-get install gettext
-sudo apt-get install libncurses5-dev libncursesw5-dev
-sudo apt-get install libtool-bin
-sudo apt-get install dh-autoreconf
+sudo apt-get install libpci-dev libnl-3-dev libnl-genl-3-dev gettext \
+libgettextpo-dev autopoint gettext libncurses5-dev libncursesw5-dev libtool-bin \
+dh-autoreconf
 
 Building & Installing PowerTOP
 ------------------------------
 
-To build and install PowerTOP type the following commands,
-       ./autogen.sh
-       ./configure
-       ./make
-       ./make install
-
 The autogen script is required to run only once to generate the configure for
 the build. Rest of the steps are required to run everytime there is a change
 made to the PowerTop.
+
+To build and install PowerTOP type the following commands,
+       ./autogen.sh
+       ./configure
+       make
+       sudo make install
 
 Note: For Android (running Intel Architecture ) there is a Android.mk
 that was provided by community members, and at this time is supported

@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.68])
+AC_PREREQ([2.69])
 AC_INIT([powertop], [2.9-pre], [powertop@lists.01.org], [], [https://01.org/powertop])
 AM_INIT_AUTOMAKE([
 	-Wall

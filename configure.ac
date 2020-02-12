@@ -2,8 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([powertop], m4_esyscmd_s([cat version-long]),
-	[powertop@lists.01.org], [], [https://01.org/powertop])
+AC_INIT([powertop], [2.9-pre], [powertop@lists.01.org], [], [https://01.org/powertop])
 AM_INIT_AUTOMAKE([
 	-Wall
 	1.12.2
@@ -152,8 +151,6 @@ AC_SEARCH_LIBS([inet_aton], [resolv], [], [
 	AC_MSG_ERROR([libresolv is required but was not found])
 ], [])
 
-AC_DEFINE([PACKAGE_SHORT_VERSION], m4_esyscmd_s([cat version-short]),
-	[Short package version])
 
 AS_IF([`pkg-config --exists bash-completion`], [
 	bashcompletiondir=`pkg-config --variable=completionsdir --define-variable=prefix=${prefix} bash-completion`

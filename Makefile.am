@@ -15,6 +15,4 @@ EXTRA_DIST = \
 	TODO \
 	Android.mk \
 	COPYING \
-	version-long \
-	version-short \
 	autogen.sh

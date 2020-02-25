@@ -121,7 +121,7 @@ static void add_sata_tunables_callback(const char *d_name)
 
 	snprintf(filename, sizeof(filename), "/sys/class/scsi_host/%s/link_power_management_policy", d_name);
 	snprintf(msg, sizeof(msg), _("Enable SATA link power management for %s"), d_name);
-	add_sysfs_tunable(msg, filename,"min_power");
+	add_sysfs_tunable(msg, filename, "med_power_with_dipm");
 }
 
 void add_sata_tunables(void)

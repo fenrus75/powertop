@@ -1,17 +1,17 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Intel Corporation
+# PowerTOP
+# Copyright (C) 2020 Intel Corporation
 # This file is distributed under the same license as the powertop package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Arjan van de Ven <arjan@linux.intel.com>, 2010.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: powertop v2.11\n"
+"Project-Id-Version: PowerTOP 2.12-rc1\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
-"POT-Creation-Date: 2019-09-26 15:56-0700\n"
+"POT-Creation-Date: 2020-04-02 14:20-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: powertop@lists.01.org\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
@@ -94,7 +94,7 @@ msgstr ""
 msgid " Core(OS)"
 msgstr ""
 
-#: src/cpu/cpu_core.cpp:91 src/cpu/intel_cpus.cpp:336
+#: src/cpu/cpu_core.cpp:91 src/cpu/intel_cpus.cpp:344
 #, c-format
 msgid "  Core"
 msgstr ""
@@ -171,7 +171,7 @@ msgstr ""
 msgid " CPU(OS) %i"
 msgstr ""
 
-#: src/cpu/cpu_linux.cpp:341 src/cpu/intel_cpus.cpp:675
+#: src/cpu/cpu_linux.cpp:341 src/cpu/intel_cpus.cpp:691
 #, c-format
 msgid " CPU %i"
 msgstr ""
@@ -186,21 +186,21 @@ msgstr ""
 msgid " Pkg(OS)"
 msgstr ""
 
-#: src/cpu/cpu_package.cpp:104 src/cpu/intel_cpus.cpp:436
+#: src/cpu/cpu_package.cpp:104 src/cpu/intel_cpus.cpp:452
 #, c-format
 msgid "  Package"
 msgstr ""
 
-#: src/cpu/intel_cpus.cpp:135
+#: src/cpu/intel_cpus.cpp:139
 #, c-format
 msgid "read_msr cpu%d 0x%llx : "
 msgstr ""
 
-#: src/cpu/intel_cpus.cpp:598
+#: src/cpu/intel_cpus.cpp:614
 msgid "C0 active"
 msgstr ""
 
-#: src/cpu/intel_cpus.cpp:656
+#: src/cpu/intel_cpus.cpp:672
 #, c-format
 msgid "Average"
 msgstr ""

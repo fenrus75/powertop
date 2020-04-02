@@ -11,11 +11,11 @@ ncurses-devel  (required)
 libnl-devel    (required)
 kernel version => 2.6.38
 
-Example packages to install in Ubuntu
+Example packages to install in Ubuntu:
 
-sudo apt-get install libpci-dev libnl-3-dev libnl-genl-3-dev gettext \
+sudo apt install libpci-dev libnl-3-dev libnl-genl-3-dev gettext \
 libgettextpo-dev autopoint gettext libncurses5-dev libncursesw5-dev libtool-bin \
-dh-autoreconf
+dh-autoreconf autoconf-archive pkg-config
 
 Building & Installing PowerTOP
 ------------------------------

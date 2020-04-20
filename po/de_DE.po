@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
-"POT-Creation-Date: 2019-09-26 15:56-0700\n"
+"POT-Creation-Date: 2020-04-20 15:43-0700\n"
 "PO-Revision-Date: 2013-11-05 19:48+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/projects/p/"
@@ -98,7 +98,7 @@ msgstr "Kern"
 msgid " Core(OS)"
 msgstr "Kern"
 
-#: src/cpu/cpu_core.cpp:91 src/cpu/intel_cpus.cpp:336
+#: src/cpu/cpu_core.cpp:91 src/cpu/intel_cpus.cpp:344
 #, c-format
 msgid "  Core"
 msgstr "Kern"
@@ -176,7 +176,7 @@ msgstr "C0 sammeln"
 msgid " CPU(OS) %i"
 msgstr "CPU %i"
 
-#: src/cpu/cpu_linux.cpp:341 src/cpu/intel_cpus.cpp:675
+#: src/cpu/cpu_linux.cpp:341 src/cpu/intel_cpus.cpp:691
 #, c-format
 msgid " CPU %i"
 msgstr "CPU %i"
@@ -191,21 +191,21 @@ msgstr ""
 msgid " Pkg(OS)"
 msgstr ""
 
-#: src/cpu/cpu_package.cpp:104 src/cpu/intel_cpus.cpp:436
+#: src/cpu/cpu_package.cpp:104 src/cpu/intel_cpus.cpp:452
 #, c-format
 msgid "  Package"
 msgstr "Paket"
 
-#: src/cpu/intel_cpus.cpp:135
+#: src/cpu/intel_cpus.cpp:139
 #, c-format
 msgid "read_msr cpu%d 0x%llx : "
 msgstr ""
 
-#: src/cpu/intel_cpus.cpp:598
+#: src/cpu/intel_cpus.cpp:614
 msgid "C0 active"
 msgstr "C0 aktiv"
 
-#: src/cpu/intel_cpus.cpp:656
+#: src/cpu/intel_cpus.cpp:672
 #, c-format
 msgid "Average"
 msgstr ""

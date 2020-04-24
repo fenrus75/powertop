@@ -171,7 +171,7 @@ the authors of those projects for their work. Specifically, PowerTOP contains
 code from
 
 ```
-Parse Event Library - Copyright 2009, 2010 Red Hat Inc  Steven Rosted <srostedt@redhat.com>
+Parse Event Library - Copyright 2009, 2010 Red Hat Inc  Steven Rostedt <srostedt@redhat.com>
 nl80211 userspace tool - Copyright 2007, 2008	Johannes Berg <johannes@sipsolutions.net>
 ```
 

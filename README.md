@@ -41,35 +41,6 @@ To build PowerTOP from the cloned source, use the following commands:
     ./configure
     make
 
-**Note:** For Android* (running on Intel® architecture) there is a
-Android.mk that was provided by community members, and at this time is
-supported mostly by community members.
-
-
-## Build PowerTOP for Android Lollipop
-
-1. Obtain pciutils and ncurses libraries. Skip this step if they are already in
-   the tree.
-
-```
-pciutils: Clone
-    https://github.com/trevd/android_external_pciutils
-into external/pciutils
-
-ncurses: Clone
-    https://github.com/cvpcs/android_external_libncurses
-into external/ncurses
-```
-
-2. Run the following command to generate the `css.h` header file:
-    ./src/csstoh.sh src/powertop.css src/css.h
-
-3. Apply patches inside patches/Android
-
-4. PowerTOP can be built with top level make, or by doing `mm`.
-
-* The resulting binary is under `$ANDROID_PRODUCT_OUT/system/bin/powertop`
-
 
 # Kernel parameters
 

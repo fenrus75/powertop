@@ -229,7 +229,6 @@ static void devfreq_dev_callback(const char *d_name)
 
 void create_all_devfreq_devices(void)
 {
-	struct dirent *entry;
 	int num = 0;
 
 	std::string p = "/sys/class/devfreq/";
@@ -240,7 +239,7 @@ void create_all_devfreq_devices(void)
 		return;
 	}
 
-	while((entry = readdir(dir)) != NULL)
+	while(readdir(dir) != NULL)
 		num++;
 
 	if (num == 2) {

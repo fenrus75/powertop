@@ -208,7 +208,7 @@ void finish_report_output(void)
 	report.finish_report();
 	if (reportout.report_file)
 	{
-		fprintf(stderr, _("PowerTOP outputing using base filename %s\n"), reportout.filename);
+		fprintf(stderr, _("PowerTOP outputting using base filename %s\n"), reportout.filename);
 		fputs(report.get_result(), reportout.report_file);
 		fdatasync(fileno(reportout.report_file));
 		fclose(reportout.report_file);

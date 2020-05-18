@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
-"POT-Creation-Date: 2020-04-20 15:43-0700\n"
+"POT-Creation-Date: 2020-05-18 13:01-0700\n"
 "PO-Revision-Date: 2013-11-05 08:40+0000\n"
 "Last-Translator: Margie Foster <margie@linux.intel.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/"
@@ -96,7 +96,7 @@ msgstr "  核心"
 msgid " Core(OS)"
 msgstr "  核心"
 
-#: src/cpu/cpu_core.cpp:91 src/cpu/intel_cpus.cpp:344
+#: src/cpu/cpu_core.cpp:91 src/cpu/intel_cpus.cpp:345
 #, c-format
 msgid "  Core"
 msgstr "  核心"
@@ -174,7 +174,7 @@ msgstr "C0 輪巡"
 msgid " CPU(OS) %i"
 msgstr " CPU %i"
 
-#: src/cpu/cpu_linux.cpp:341 src/cpu/intel_cpus.cpp:691
+#: src/cpu/cpu_linux.cpp:341 src/cpu/intel_cpus.cpp:692
 #, c-format
 msgid " CPU %i"
 msgstr " CPU %i"
@@ -189,7 +189,7 @@ msgstr ""
 msgid " Pkg(OS)"
 msgstr ""
 
-#: src/cpu/cpu_package.cpp:104 src/cpu/intel_cpus.cpp:452
+#: src/cpu/cpu_package.cpp:104 src/cpu/intel_cpus.cpp:453
 #, c-format
 msgid "  Package"
 msgstr "代號"
@@ -199,11 +199,11 @@ msgstr "代號"
 msgid "read_msr cpu%d 0x%llx : "
 msgstr ""
 
-#: src/cpu/intel_cpus.cpp:614
+#: src/cpu/intel_cpus.cpp:615
 msgid "C0 active"
 msgstr "C0 運作中"
 
-#: src/cpu/intel_cpus.cpp:672
+#: src/cpu/intel_cpus.cpp:673
 #, c-format
 msgid "Average"
 msgstr ""
@@ -262,16 +262,16 @@ msgstr "音效設備 %s: %s (%s)"
 msgid "Audio codec %s: %s"
 msgstr "音效設備 %s: %s"
 
-#: src/devices/devfreq.cpp:261
+#: src/devices/devfreq.cpp:260
 #, fuzzy
 msgid "Device Freq stats"
 msgstr "設備統計"
 
-#: src/devices/devfreq.cpp:279
+#: src/devices/devfreq.cpp:278
 msgid " Devfreq is not enabled"
 msgstr ""
 
-#: src/devices/devfreq.cpp:284
+#: src/devices/devfreq.cpp:283
 msgid " No devfreq devices available"
 msgstr ""
 
@@ -805,7 +805,7 @@ msgstr "無法建立暫存檔案\n"
 
 #: src/report/report.cpp:211
 #, c-format
-msgid "PowerTOP outputing using base filename %s\n"
+msgid "PowerTOP outputting using base filename %s\n"
 msgstr ""
 
 #: src/tuning/bluetooth.cpp:46 src/tuning/ethernet.cpp:50

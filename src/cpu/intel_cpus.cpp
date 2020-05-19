@@ -69,6 +69,7 @@ static int intel_cpu_models[] = {
 	0x56,	/* BDX-DE */
 	0x5C,	/* BXT-P */
 	0x5E,	/* SKY */
+	0x5F,   /* DNV */
 	0x66,   /* CNL-U/Y */
 	0x6A,	/* ICL_X*/
 	0x7A,   /* GLK */
@@ -180,6 +181,7 @@ nhm_core::nhm_core(int model)
 		case 0x4E:	/* SKY */
 		case 0x55:	/* SKY-X */
 		case 0x5E:	/* SKY */
+		case 0x5F:	/* DNV */
 		case 0x5C:      /* BXT-P */
 		case 0x66:	/* CNL-U/Y */
 		case 0x6A:    	/* ICL_X*/
@@ -373,6 +375,7 @@ nhm_package::nhm_package(int model)
 		case 0x55:	/* SKY-X */
 		case 0x5C:	/* BXT-P */
 		case 0x5E:	/* SKY */
+		case 0x5F:	/* DNV */
 		case 0x66:	/* CNL-U/Y */
 		case 0x6A:  	/* ICL_X*/
 		case 0x7A:	/* GLK */
@@ -417,6 +420,7 @@ nhm_package::nhm_package(int model)
 		case 0x55:	/* SKY-X */
 		case 0x5C:	/* BXT-P */
 		case 0x5E:	/* SKY */
+		case 0x5F:	/* DNV */
 		case 0x66:	/* CNL-U/Y */
 		case 0x6A:	/* ICL_X*/
 		case 0x7A:	/* GLK */

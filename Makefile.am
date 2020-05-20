@@ -13,6 +13,5 @@ EXTRA_DIST = \
 	m4/ChangeLog  \
 	README \
 	TODO \
-	Android.mk \
 	COPYING \
 	autogen.sh

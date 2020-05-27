@@ -422,7 +422,6 @@ nhm_package::nhm_package(int model)
 		case 0x5E:	/* SKY */
 		case 0x5F:	/* DNV */
 		case 0x66:	/* CNL-U/Y */
-		case 0x6A:	/* ICL_X*/
 		case 0x7A:	/* GLK */
 		case 0x7D:	/* ICL_DESKTOP */
 		case 0x7E:	/* ICL_MOBILE */

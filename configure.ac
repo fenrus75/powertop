@@ -26,7 +26,7 @@ GETTEXT_PACKAGE=powertop
 AC_SUBST([GETTEXT_PACKAGE])
 AM_SILENT_RULES([yes])
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.18.2])
+AM_GNU_GETTEXT_VERSION([0.20.2])
 
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 # Checks for programs.
@@ -82,8 +82,10 @@ AC_TYPE_UINT64_T
 AC_FUNC_MALLOC
 AC_FUNC_MMAP
 AC_FUNC_REALLOC
+AC_FUNC_STRERROR_R
 AC_FUNC_STRTOD
 AC_CHECK_FUNCS([ \
+	clock_gettime \
 	fdatasync \
 	getpagesize \
 	gettimeofday \
@@ -100,6 +102,7 @@ AC_CHECK_FUNCS([ \
 	sqrt \
 	strcasecmp \
 	strchr \
+	strrchr \
 	strdup \
 	strerror \
 	strncasecmp \

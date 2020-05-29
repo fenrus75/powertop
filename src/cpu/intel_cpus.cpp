@@ -417,7 +417,6 @@ nhm_package::nhm_package(int model)
 		case 0x3D:	/* BDW */
 		case 0x45:	/* HSW */
 		case 0x4E:	/* SKY */
-		case 0x55:	/* SKY-X */
 		case 0x5C:	/* BXT-P */
 		case 0x5E:	/* SKY */
 		case 0x5F:	/* DNV */

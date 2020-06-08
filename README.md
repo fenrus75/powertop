@@ -20,6 +20,7 @@ In addition, PowerTOP requires the following:
 * `ncurses-devel` (required)
 * `libnl-devel` (required)
 * `pciutils-devel` (is only required if you have PCI)
+* `autoconf-archive` (for building)
 
 Example packages to install in Ubuntu*:
 
@@ -28,7 +29,7 @@ Example packages to install in Ubuntu*:
     dh-autoreconf autoconf-archive pkg-config
 
 
-# Building PowerTOP
+## Building PowerTOP
 
 The `autogen.sh` script needs to be run only once to generate `configure`.
 You need to re-run it only if the build system configuration files
@@ -42,7 +43,14 @@ To build PowerTOP from the cloned source, use the following commands:
     make
 
 
-# Kernel parameters
+# Running PowerTOP
+
+The following sections go over basic operation of PowerTOP. This includes
+kernel configuration options (or kernel patches) needed for full functionality.
+Run `powertop --help` to see all options.
+
+
+## Kernel parameters and (optional) patches
 
 PowerTOP needs some kernel config options enabled to function
 properly. As of linux-3.3.0, these are (the list probably is incomplete):
@@ -68,11 +76,11 @@ Use these configs from linux-3.13.rc1:
     CONFIG_POWERCAP
     CONFIG_INTEL_RAPL
 
-The patches in the `patches/` sub-directory are required for *full* PowerTOP
-functionality.
+The patches in the `patches/` sub-directory are optional but enable *full*
+PowerTOP functionality.
 
 
-# Outputting a report
+## Outputting a report
 
 When PowerTOP is executed as root and without arguments, it runs in
 interactive mode. In this mode, PowerTOP most resembles `top`.
@@ -111,7 +119,7 @@ Service:
 * http://jigsaw.w3.org/css-validator/#validate_by_upload
 
 
-# Calibrating and power numbers
+## Calibrating and power numbers
 
 PowerTOP, when running on battery, tracks power consumption and activity on
 the system. Once there are sufficient measurements, PowerTOP can start to
@@ -124,7 +132,7 @@ accuracy of the estimation by running a calibration cycle at least once:
 (including "off"), USB device activities, and other workloads.
 
 
-# Extech Power Analyzer / Datalogger support
+## Extech Power Analyzer / Datalogger support
 
 Our analysis teams use the Extech* Power Analyzer/Datalogger (model
 number 380803). PowerTOP supports this device over the serial cable by passing
@@ -133,6 +141,24 @@ the device node on the command line using this command:
     powertop --extech=/dev/ttyUSB0
 
 (where ttyUSB0 is the devicenode of the serial-to-usb adapter on our system)
+
+
+# Contributing to PowerTOP and getting support
+
+There are numerous ways you and your friends can contribute to PowerTOP. See
+the `CONTRIBUTE.md` document for more details. Elevator summary: "fork, and
+send PRs!".
+
+We have a mailing list: `powertop@lists.01.org`:
+* Subscribe at:
+  * https://lists.01.org/postorius/lists/powertop.lists.01.org/
+* Browse archives at:
+  * https://lists.01.org/hyperkitty/list/powertop@lists.01.org/
+
+If you find bugs, you can file an issue-- see `CONTRIBUTE.md` for further
+details:
+* File bugs/wishes at:
+  * https://github.com/fenrus75/powertop/issues
 
 
 # Code from other open source projects

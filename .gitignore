@@ -69,6 +69,7 @@ po/en@quot.header
 po/insert-header.sin
 po/quot.sed
 po/remove-potcdate.sin
+po/remove-potcdate.sed
 
 # gettext build artifacts
 po/ca.gmo

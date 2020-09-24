@@ -38,6 +38,7 @@ AC_PROG_INSTALL
 AM_PROG_CC_C_O
 AX_ADD_FORTIFY_SOURCE
 AX_CXX_COMPILE_STDCXX([11], [noext], [mandatory])
+PKG_PROG_PKG_CONFIG
 
 # Checks for libraries.
 AX_PTHREAD([
@@ -155,8 +156,8 @@ AC_SEARCH_LIBS([inet_aton], [resolv], [], [
 ], [])
 
 
-AS_IF([`pkg-config --exists bash-completion`], [
-	bashcompletiondir=`pkg-config --variable=completionsdir --define-variable=prefix=${prefix} bash-completion`
+AS_IF([`${PKG_CONFIG} --exists bash-completion`], [
+	bashcompletiondir=`${PKG_CONFIG} --variable=completionsdir --define-variable=prefix=${prefix} bash-completion`
 ], [
 	bashcompletiondir=${datadir}/bash-completion/completions
 ])

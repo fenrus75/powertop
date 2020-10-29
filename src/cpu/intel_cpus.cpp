@@ -299,15 +299,11 @@ void nhm_core::measurement_end(void)
 	for (i = 0; i < cstates.size(); i++) {
 		struct idle_state *state = cstates[i];
 
-		if (state->after_count == 0) {
-			cout << "after count is 0\n";
+		if (state->after_count == 0)
 			continue;
-		}
 
-		if (state->after_count != state->before_count) {
-			cout << "count mismatch\n";
+		if (state->after_count != state->before_count)
 			continue;
-		}
 
 		state->usage_delta =    ratio * (state->usage_after    - state->usage_before)    / state->after_count;
 		state->duration_delta = ratio * (state->duration_after - state->duration_before) / state->after_count;
@@ -572,15 +568,11 @@ void nhm_package::measurement_end(void)
 	for (i = 0; i < cstates.size(); i++) {
 		struct idle_state *state = cstates[i];
 
-		if (state->after_count == 0) {
-			cout << "after count is 0\n";
+		if (state->after_count == 0)
 			continue;
-		}
 
-		if (state->after_count != state->before_count) {
-			cout << "count mismatch\n";
+		if (state->after_count != state->before_count)
 			continue;
-		}
 
 		state->usage_delta =    ratio * (state->usage_after    - state->usage_before)    / state->after_count;
 		state->duration_delta = ratio * (state->duration_after - state->duration_before) / state->after_count;

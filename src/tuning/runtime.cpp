@@ -188,7 +188,6 @@ void add_runtime_tunables(const char *bus)
 				continue;
 
 			snprintf(port, sizeof(port), "sd%c", blk);
-			printf (" the port is %s\n", port);
 			snprintf(filename, sizeof(filename), "/sys/block/%s/device", port);
 			runtime_ahci_disk = new class runtime_tunable(filename, bus, entry->d_name, port);
 			if (!device_has_runtime_pm(filename))

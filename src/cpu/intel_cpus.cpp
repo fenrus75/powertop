@@ -83,6 +83,7 @@ static int intel_cpu_models[] = {
 	0x9E,	/* KBL */
 	0xA5,   /* CML_DESKTOP */
 	0xA6,   /* CML_MOBILE */
+	0xA7,	/* RKL_DESKTOP */
 	0	/* last entry must be zero */
 };
 
@@ -196,6 +197,7 @@ nhm_core::nhm_core(int model)
 		case 0x9E:	/* KBL */
 		case 0xA5:      /* CML_DESKTOP */
 		case 0xA6:      /* CML_MOBILE */
+		case 0xA7:	/* RKL_DESKTOP */
 			has_c7_res = 1;
 	}
 
@@ -299,15 +301,11 @@ void nhm_core::measurement_end(void)
 	for (i = 0; i < cstates.size(); i++) {
 		struct idle_state *state = cstates[i];
 
-		if (state->after_count == 0) {
-			cout << "after count is 0\n";
+		if (state->after_count == 0)
 			continue;
-		}
 
-		if (state->after_count != state->before_count) {
-			cout << "count mismatch\n";
+		if (state->after_count != state->before_count)
 			continue;
-		}
 
 		state->usage_delta =    ratio * (state->usage_after    - state->usage_before)    / state->after_count;
 		state->duration_delta = ratio * (state->duration_after - state->duration_before) / state->after_count;
@@ -389,6 +387,7 @@ nhm_package::nhm_package(int model)
 		case 0x9E:	/* KBL */
 		case 0xA5:      /* CML_DESKTOP */
 		case 0xA6:      /* CML_MOBILE */
+		case 0xA7:	/* RKL_DESKTOP */
 			has_c2c6_res=1;
 			has_c7_res = 1;
 	}
@@ -432,6 +431,7 @@ nhm_package::nhm_package(int model)
 		case 0x9E:	/* KBL */
 		case 0xA5:      /* CML_DESKTOP */
 		case 0xA6:      /* CML_MOBILE */
+		case 0xA7:	/* RKL_DESKTOP */
 			has_c8c9c10_res = 1;
 			break;
 	}
@@ -572,15 +572,11 @@ void nhm_package::measurement_end(void)
 	for (i = 0; i < cstates.size(); i++) {
 		struct idle_state *state = cstates[i];
 
-		if (state->after_count == 0) {
-			cout << "after count is 0\n";
+		if (state->after_count == 0)
 			continue;
-		}
 
-		if (state->after_count != state->before_count) {
-			cout << "count mismatch\n";
+		if (state->after_count != state->before_count)
 			continue;
-		}
 
 		state->usage_delta =    ratio * (state->usage_after    - state->usage_before)    / state->after_count;
 		state->duration_delta = ratio * (state->duration_after - state->duration_before) / state->after_count;

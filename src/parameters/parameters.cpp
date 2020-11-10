@@ -428,7 +428,7 @@ int utilization_power_valid(int index)
 
 
 /* force power data to be valid to the rest of the system  */
-int global_power_override = 1;
+int global_power_override = 0;
 int global_run_times=0;
 /*
  * only report power numbers once we have 3* more measurements than

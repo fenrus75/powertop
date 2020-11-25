@@ -78,7 +78,10 @@ static int intel_cpu_models[] = {
 	0x8C,	/* TGL_MOBILE */
 	0x8D,   /* TGL_DESKTOP */
 	0x8E,	/* KBL */
+	0X8F, 	/* SAPPHIRERAPIDS_X */
 	0x96,	/* EHL */
+	0x97,	/* ADL_DESKTOP */
+	0x9A,	/* ADL_MOBILE */
 	0x9C,	/* JSL */
 	0x9E,	/* KBL */
 	0xA5,   /* CML_DESKTOP */
@@ -192,7 +195,10 @@ nhm_core::nhm_core(int model)
 		case 0x8C:	/* TGL_MOBILE */
 		case 0x8D:	/* TGL_DESKTOP */
 		case 0x8E:	/* KBL */
+		case 0x8F:	/* SAPPHIRERAPIDS_X */
 		case 0x96:	/* EHL */
+		case 0x97:	/* ADL_DESKTOP */
+		case 0x9A:	/* ADL_MOBILE */
 		case 0x9C:	/* JSL */
 		case 0x9E:	/* KBL */
 		case 0xA5:      /* CML_DESKTOP */
@@ -382,7 +388,10 @@ nhm_package::nhm_package(int model)
 		case 0x8C:	/* TGL_MOBILE */
 		case 0x8D:	/* TGL_DESKTOP */
 		case 0x8E:	/* KBL */
+		case 0x8F:	/* SAPPHIRERAPIDS_X */
 		case 0x96:      /* EHL */
+		case 0x97:	/* ADL_DESKTOP */
+		case 0X9A:	/* ADL_MOBILE */
 		case 0x9C:	/* JSL */
 		case 0x9E:	/* KBL */
 		case 0xA5:      /* CML_DESKTOP */
@@ -427,6 +436,8 @@ nhm_package::nhm_package(int model)
 		case 0x8D:	/* TGL_DESKTOP */
 		case 0x8E:	/* KBL */
 		case 0x96:      /* EHL */
+		case 0x97:	/* ADL_DESKTOP */
+		case 0x9A:	/* ADL_MOBILE */
 		case 0x9C:	/* JSL */
 		case 0x9E:	/* KBL */
 		case 0xA5:      /* CML_DESKTOP */

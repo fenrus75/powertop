@@ -36,18 +36,9 @@ AC_PROG_LIBTOOL
 AC_PROG_CC
 AC_PROG_INSTALL
 AM_PROG_CC_C_O
-AX_ADD_FORTIFY_SOURCE
-AX_CXX_COMPILE_STDCXX([11], [noext], [mandatory])
 PKG_PROG_PKG_CONFIG
 
 # Checks for libraries.
-AX_PTHREAD([
-    LIBS="$PTHREAD_LIBS $LIBS"
-    CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
-    CC="$PTHREAD_CC"
-  ], [
-    AC_MSG_ERROR([Could not configure pthreads support])
-])
 
 # Checks for header files.
 AC_CHECK_HEADERS([ \

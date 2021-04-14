@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: powertop 2.13\n"
+"Project-Id-Version: powertop 2.14\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
-"POT-Creation-Date: 2020-06-11 12:04-0700\n"
+"POT-Creation-Date: 2021-04-14 16:28-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,7 +94,7 @@ msgstr ""
 msgid " Core(OS)"
 msgstr ""
 
-#: src/cpu/cpu_core.cpp:91 src/cpu/intel_cpus.cpp:347
+#: src/cpu/cpu_core.cpp:91 src/cpu/intel_cpus.cpp:351
 #, c-format
 msgid "  Core"
 msgstr ""
@@ -171,7 +171,7 @@ msgstr ""
 msgid " CPU(OS) %i"
 msgstr ""
 
-#: src/cpu/cpu_linux.cpp:341 src/cpu/intel_cpus.cpp:694
+#: src/cpu/cpu_linux.cpp:341 src/cpu/intel_cpus.cpp:701
 #, c-format
 msgid " CPU %i"
 msgstr ""
@@ -186,21 +186,21 @@ msgstr ""
 msgid " Pkg(OS)"
 msgstr ""
 
-#: src/cpu/cpu_package.cpp:104 src/cpu/intel_cpus.cpp:455
+#: src/cpu/cpu_package.cpp:104 src/cpu/intel_cpus.cpp:466
 #, c-format
 msgid "  Package"
 msgstr ""
 
-#: src/cpu/intel_cpus.cpp:140
+#: src/cpu/intel_cpus.cpp:144
 #, c-format
 msgid "read_msr cpu%d 0x%llx : "
 msgstr ""
 
-#: src/cpu/intel_cpus.cpp:617
+#: src/cpu/intel_cpus.cpp:624
 msgid "C0 active"
 msgstr ""
 
-#: src/cpu/intel_cpus.cpp:675
+#: src/cpu/intel_cpus.cpp:682
 #, c-format
 msgid "Average"
 msgstr ""

@@ -1,0 +1,11 @@
+2016-08-03  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* gettext.m4: New file, from gettext-0.18.2.
+	* iconv.m4: New file, from gettext-0.18.2.
+	* lib-ld.m4: New file, from gettext-0.18.2.
+	* lib-link.m4: New file, from gettext-0.18.2.
+	* lib-prefix.m4: New file, from gettext-0.18.2.
+	* nls.m4: New file, from gettext-0.18.2.
+	* po.m4: New file, from gettext-0.18.2.
+	* progtest.m4: New file, from gettext-0.18.2.
+

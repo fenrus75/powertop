@@ -26,7 +26,7 @@ Example packages to install in Ubuntu*:
 
     sudo apt install libpci-dev libnl-3-dev libnl-genl-3-dev gettext \
     libgettextpo-dev autopoint gettext libncurses5-dev libncursesw5-dev libtool-bin \
-    dh-autoreconf pkg-config
+    dh-autoreconf autoconf-archive pkg-config
 
 
 ## Building PowerTOP
@@ -39,7 +39,7 @@ source files are modified.
 To build PowerTOP from the cloned source, use the following commands:
 
     ./autogen.sh
-    ./configure LDFLAGS='-pthread'
+    ./configure
     make
 
 

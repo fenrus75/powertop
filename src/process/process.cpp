@@ -33,6 +33,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <algorithm>
+#include <iterator>
 #include "../lib.h"
 
 
@@ -71,17 +73,9 @@ uint64_t process::deschedule_thread(uint64_t time, int thread_id)
 	return delta;
 }
 
-static void cmdline_to_string(char *str)
+static void cmdline_to_string(std::string& str)
 {
-	char *c = str;
-	char prev = 0;
-
-	while (prev != 0 || *c  != 0) {
-		prev = *c;
-		if (*c == 0)
-			*c = ' ';
-		c++;
-	}
+	std::replace(str.begin(), str.end(), '\0', ' ');
 }
 
 
@@ -135,17 +129,15 @@ process::process(const char *_comm, int _pid, int _tid) : power_consumer()
 	sprintf(line, "/proc/%i/cmdline", _pid);
 	file.open(line, ios::binary);
 	if (file) {
-		memset(line, 0, sizeof(line));
-		file.read(line, 4096);
+		std::string cmdline(std::istreambuf_iterator<char>(file), (std::istreambuf_iterator<char>()));
 		file.close();
-		if (strlen(line) < 1) {
+		if (cmdline.size() < 1) {
 			is_kernel = 1;
 			snprintf(desc + pos, sizeof(desc) - pos, "[%s]", comm);
 		} else {
-			int sz = sizeof(desc) - pos - 1;
-			cmdline_to_string(line);
-			strncpy(desc + pos, line, sz);
-			desc[sz] = 0x00;
+			cmdline_to_string(cmdline);
+			strncpy(desc + pos, cmdline.c_str(), sizeof(desc) - pos - 1);
+			desc[sizeof(desc) - 1] = '\0';
 		}
 	}
 }

@@ -81,8 +81,8 @@ protected:
 	int	first_cpu;
 	struct timeval	stamp_before, stamp_after;
 	double  time_factor;
-	uint64_t max_frequency;
-	uint64_t max_minus_one_frequency;
+	uint64_t max_frequency = 0;
+	uint64_t max_minus_one_frequency = 0;
 
 	virtual void	account_freq(uint64_t frequency, uint64_t duration);
 	virtual void	freq_updated(uint64_t time);

@@ -3,6 +3,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([powertop], [2.14], [powertop@lists.01.org], [], [https://01.org/powertop])
+AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([
 	-Wall
 	1.12.2
@@ -42,6 +43,7 @@ AM_PROG_CC_C_O
 AX_ADD_FORTIFY_SOURCE
 AX_CXX_COMPILE_STDCXX([11], [noext], [mandatory])
 PKG_PROG_PKG_CONFIG
+AX_PTHREAD
 
 # Checks for libraries.
 AX_PTHREAD([

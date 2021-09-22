@@ -75,6 +75,7 @@ static int intel_cpu_models[] = {
 	0x7A,   /* GLK */
 	0x7D,	/* ICL_DESKTOP */
 	0x7E,	/* ICL_MOBILE */
+	0x8A,	/* LKF */
 	0x8C,	/* TGL_MOBILE */
 	0x8D,   /* TGL_DESKTOP */
 	0x8E,	/* KBL */
@@ -192,6 +193,7 @@ nhm_core::nhm_core(int model)
 		case 0x7A:	/* GLK */
 		case 0x7D:    	/* ICL_DESKTOP */
 		case 0x7E:	/* ICL_MOBILE */
+		case 0x8A:	/* LKF */
 		case 0x8C:	/* TGL_MOBILE */
 		case 0x8D:	/* TGL_DESKTOP */
 		case 0x8E:	/* KBL */
@@ -385,6 +387,7 @@ nhm_package::nhm_package(int model)
 		case 0x7A:	/* GLK */
 		case 0x7D:    	/* ICL_DESKTOP */
 		case 0x7E:	/* ICL_MOBILE */
+		case 0x8A:	/* LKF */
 		case 0x8C:	/* TGL_MOBILE */
 		case 0x8D:	/* TGL_DESKTOP */
 		case 0x8E:	/* KBL */
@@ -432,6 +435,7 @@ nhm_package::nhm_package(int model)
 		case 0x7A:	/* GLK */
 		case 0x7D:	/* ICL_DESKTOP */
 		case 0x7E:	/* ICL_MOBILE */
+		case 0x8A:	/* LKF */
 		case 0x8C:	/* TGL_MOBILE */
 		case 0x8D:	/* TGL_DESKTOP */
 		case 0x8E:	/* KBL */

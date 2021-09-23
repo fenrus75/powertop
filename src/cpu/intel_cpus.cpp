@@ -84,6 +84,7 @@ static int intel_cpu_models[] = {
 	0x97,	/* ADL_DESKTOP */
 	0x9A,	/* ADL_MOBILE */
 	0x9C,	/* JSL */
+	0x9D,	/* ICL_NNPI */
 	0x9E,	/* KBL */
 	0xA5,   /* CML_DESKTOP */
 	0xA6,   /* CML_MOBILE */
@@ -202,6 +203,7 @@ nhm_core::nhm_core(int model)
 		case 0x97:	/* ADL_DESKTOP */
 		case 0x9A:	/* ADL_MOBILE */
 		case 0x9C:	/* JSL */
+		case 0x9D:	/* ICL_NNPI */
 		case 0x9E:	/* KBL */
 		case 0xA5:      /* CML_DESKTOP */
 		case 0xA6:      /* CML_MOBILE */
@@ -396,6 +398,7 @@ nhm_package::nhm_package(int model)
 		case 0x97:	/* ADL_DESKTOP */
 		case 0X9A:	/* ADL_MOBILE */
 		case 0x9C:	/* JSL */
+		case 0x9D:	/* ICL_NNPI */
 		case 0x9E:	/* KBL */
 		case 0xA5:      /* CML_DESKTOP */
 		case 0xA6:      /* CML_MOBILE */
@@ -443,6 +446,7 @@ nhm_package::nhm_package(int model)
 		case 0x97:	/* ADL_DESKTOP */
 		case 0x9A:	/* ADL_MOBILE */
 		case 0x9C:	/* JSL */
+		case 0x9D:	/* ICL_NNPI */
 		case 0x9E:	/* KBL */
 		case 0xA5:      /* CML_DESKTOP */
 		case 0xA6:      /* CML_MOBILE */

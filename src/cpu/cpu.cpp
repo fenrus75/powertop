@@ -576,6 +576,12 @@ void report_display_cpu_cstates(void)
 							}
 						}
 					} else {
+						/*
+						 * Patch for compatibility with Ryzen processors
+						 * See https://github.com/fenrus75/powertop/issues/64
+						*/
+						if(idx2 >= core_tbl_size.cols * core_tbl_size.rows) break;
+						
 						tmp_str=string(_core->fill_cstate_name(line, buffer));
 						core_data[idx2]=(tmp_str=="" ? "&nbsp;" : tmp_str);
 						idx2+=1;

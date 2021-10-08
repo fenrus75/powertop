@@ -78,14 +78,14 @@ static int intel_cpu_models[] = {
 	0x8A,	/* LKF */
 	0x8C,	/* TGL_MOBILE */
 	0x8D,   /* TGL_DESKTOP */
-	0x8E,	/* KBL */
+	0x8E,	/* KBL_MOBILE */
 	0X8F, 	/* SAPPHIRERAPIDS_X */
 	0x96,	/* EHL */
 	0x97,	/* ADL_DESKTOP */
 	0x9A,	/* ADL_MOBILE */
 	0x9C,	/* JSL */
 	0x9D,	/* ICL_NNPI */
-	0x9E,	/* KBL */
+	0x9E,	/* KBL_DESKTOP */
 	0xA5,   /* CML_DESKTOP */
 	0xA6,   /* CML_MOBILE */
 	0xA7,	/* RKL_DESKTOP */
@@ -197,14 +197,14 @@ nhm_core::nhm_core(int model)
 		case 0x8A:	/* LKF */
 		case 0x8C:	/* TGL_MOBILE */
 		case 0x8D:	/* TGL_DESKTOP */
-		case 0x8E:	/* KBL */
+		case 0x8E:	/* KBL_MOBILE */
 		case 0x8F:	/* SAPPHIRERAPIDS_X */
 		case 0x96:	/* EHL */
 		case 0x97:	/* ADL_DESKTOP */
 		case 0x9A:	/* ADL_MOBILE */
 		case 0x9C:	/* JSL */
 		case 0x9D:	/* ICL_NNPI */
-		case 0x9E:	/* KBL */
+		case 0x9E:	/* KBL_DESKTOP */
 		case 0xA5:      /* CML_DESKTOP */
 		case 0xA6:      /* CML_MOBILE */
 		case 0xA7:	/* RKL_DESKTOP */
@@ -392,14 +392,14 @@ nhm_package::nhm_package(int model)
 		case 0x8A:	/* LKF */
 		case 0x8C:	/* TGL_MOBILE */
 		case 0x8D:	/* TGL_DESKTOP */
-		case 0x8E:	/* KBL */
+		case 0x8E:	/* KBL_MOBILE */
 		case 0x8F:	/* SAPPHIRERAPIDS_X */
 		case 0x96:      /* EHL */
 		case 0x97:	/* ADL_DESKTOP */
 		case 0X9A:	/* ADL_MOBILE */
 		case 0x9C:	/* JSL */
 		case 0x9D:	/* ICL_NNPI */
-		case 0x9E:	/* KBL */
+		case 0x9E:	/* KBL_DESKTOP */
 		case 0xA5:      /* CML_DESKTOP */
 		case 0xA6:      /* CML_MOBILE */
 		case 0xA7:	/* RKL_DESKTOP */
@@ -441,13 +441,13 @@ nhm_package::nhm_package(int model)
 		case 0x8A:	/* LKF */
 		case 0x8C:	/* TGL_MOBILE */
 		case 0x8D:	/* TGL_DESKTOP */
-		case 0x8E:	/* KBL */
+		case 0x8E:	/* KBL_MOBILE */
 		case 0x96:      /* EHL */
 		case 0x97:	/* ADL_DESKTOP */
 		case 0x9A:	/* ADL_MOBILE */
 		case 0x9C:	/* JSL */
 		case 0x9D:	/* ICL_NNPI */
-		case 0x9E:	/* KBL */
+		case 0x9E:	/* KBL_DESKTOP */
 		case 0xA5:      /* CML_DESKTOP */
 		case 0xA6:      /* CML_MOBILE */
 		case 0xA7:	/* RKL_DESKTOP */

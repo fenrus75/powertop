@@ -297,7 +297,7 @@ void display_devfreq_devices(void)
 			df->fill_freq_utilization(j, buf);
 			strcat(fline, buf);
 			strcat(fline, "\n");
-			wprintw(win, fline);
+			wprintw(win, "%s", fline);
 		}
 		wprintw(win, "\n");
 	}

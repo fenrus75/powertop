@@ -583,7 +583,7 @@ void ui_notify_user_ncurses(const char *frmt, ...)
 	 * buffer */
 	vsnprintf(notify, UI_NOTIFY_BUFF_SZ - 1, frmt, list);
 	va_end(list);
-	mvprintw(1, 0, notify);
+	mvprintw(1, 0, "%s", notify);
 	attroff(COLOR_PAIR(1));
 }
 

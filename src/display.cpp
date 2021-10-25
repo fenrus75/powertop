@@ -125,7 +125,7 @@ void show_tab(unsigned int tab)
 
 	c = bottom_lines[tab_names[tab]].c_str();
 	if (c && strlen(c) > 0)
-		mvwprintw(bottom_line, 0,0, c);
+		mvwprintw(bottom_line, 0,0, "%s", c);
 	else
 		mvwprintw(bottom_line, 0, 0,
 			"<ESC> %s | <TAB> / <Shift + TAB> %s | ", _("Exit"),

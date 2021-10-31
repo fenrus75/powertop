@@ -138,13 +138,16 @@ powertop_CXXFLAGS = \
 	-Wformat \
 	-Wshadow \
 	-fno-omit-frame-pointer \
-	-fstack-protector \
 	$(GLIB2_CFLAGS) \
 	$(LIBNL_CFLAGS) \
 	$(NCURSES_CFLAGS) \
 	$(PCIUTILS_CFLAGS) \
 	$(PTHREAD_CFLAGS)
 
+if ENABLE_STACK_PROTECTOR
+powertop_CXXFLAGS += \
+	-fstack-protector
+endif
 
 powertop_CPPFLAGS = \
 	-DLOCALEDIR=\"$(localedir)\" \

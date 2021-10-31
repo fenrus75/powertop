@@ -43,6 +43,10 @@ AX_ADD_FORTIFY_SOURCE
 AX_CXX_COMPILE_STDCXX([11], [noext], [mandatory])
 PKG_PROG_PKG_CONFIG
 
+AC_ARG_ENABLE([stack-protector],
+	AS_HELP_STRING([--disable-stack-protector], [Disable stack-protector]))
+AM_CONDITIONAL([ENABLE_STACK_PROTECTOR], [test x$enable_stack_protector != xno])
+
 # Checks for libraries.
 AX_PTHREAD([
     LIBS="$PTHREAD_LIBS $LIBS"

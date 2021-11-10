@@ -30,7 +30,7 @@
 using namespace std;
 
 class power_meter {
-	bool discharging;
+	bool discharging = false;
 public:
 	virtual ~power_meter() {};
 

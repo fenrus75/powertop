@@ -362,10 +362,10 @@ static void powertop_init(int auto_tune)
 	setrlimit (RLIMIT_NOFILE, &rlmt);
 
 	if (system("/sbin/modprobe cpufreq_stats > /dev/null 2>&1"))
-		fprintf(stderr, _("modprobe cpufreq_stats failed"));
+		fprintf(stderr, _("modprobe cpufreq_stats failed\n"));
 #if defined(__i386__) || defined(__x86_64__)
 	if (system("/sbin/modprobe msr > /dev/null 2>&1"))
-		fprintf(stderr, _("modprobe msr failed"));
+		fprintf(stderr, _("modprobe msr failed\n"));
 #endif
 	statfs("/sys/kernel/debug", &st_fs);
 

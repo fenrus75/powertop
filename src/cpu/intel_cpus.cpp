@@ -90,6 +90,7 @@ static int intel_cpu_models[] = {
 	0xA6,   /* CML_MOBILE */
 	0xA7,	/* RKL_DESKTOP */
 	0xB7,	/* RPL_DESKTOP */
+	0xBA,	/* RPL_P */
 	0xBE,	/* ADL_N */
 	0	/* last entry must be zero */
 };
@@ -211,6 +212,7 @@ nhm_core::nhm_core(int model)
 		case 0xA6:      /* CML_MOBILE */
 		case 0xA7:	/* RKL_DESKTOP */
 		case 0xB7:	/* RPL_DESKTOP */
+		case 0xBA:	/* RPL_P */
 		case 0xBE:	/* ADL_N */
 			has_c7_res = 1;
 	}
@@ -408,6 +410,7 @@ nhm_package::nhm_package(int model)
 		case 0xA6:      /* CML_MOBILE */
 		case 0xA7:	/* RKL_DESKTOP */
 		case 0xB7:	/* RPL_DESKTOP */
+		case 0xBA:	/* RPL_P */
 		case 0xBE:	/* ADL_N */
 			has_c2c6_res=1;
 			has_c7_res = 1;
@@ -458,6 +461,7 @@ nhm_package::nhm_package(int model)
 		case 0xA6:      /* CML_MOBILE */
 		case 0xA7:	/* RKL_DESKTOP */
 		case 0xB7:	/* RPL_DESKTOP */
+		case 0xBA:	/* RPL_P */
 		case 0xBE:	/* ADL_N */
 			has_c8c9c10_res = 1;
 			break;

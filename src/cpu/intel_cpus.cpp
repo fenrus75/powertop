@@ -89,6 +89,8 @@ static int intel_cpu_models[] = {
 	0xA5,   /* CML_DESKTOP */
 	0xA6,   /* CML_MOBILE */
 	0xA7,	/* RKL_DESKTOP */
+	0xAA,	/* MTL_MOBILE */
+	0xAC,	/* MTL_DESKTOP */
 	0xB7,	/* RPL_DESKTOP */
 	0xBA,	/* RPL_P */
 	0xBE,	/* ADL_N */
@@ -212,6 +214,8 @@ nhm_core::nhm_core(int model)
 		case 0xA5:      /* CML_DESKTOP */
 		case 0xA6:      /* CML_MOBILE */
 		case 0xA7:	/* RKL_DESKTOP */
+		case 0xAA:	/* MTL_MOBILE */
+		case 0xAC:	/* MTL_DESKTOP */
 		case 0xB7:	/* RPL_DESKTOP */
 		case 0xBA:	/* RPL_P */
 		case 0xBE:	/* ADL_N */
@@ -411,6 +415,8 @@ nhm_package::nhm_package(int model)
 		case 0xA5:      /* CML_DESKTOP */
 		case 0xA6:      /* CML_MOBILE */
 		case 0xA7:	/* RKL_DESKTOP */
+		case 0xAA:	/* MTL_MOBILE */
+		case 0xAC:	/* MTL_DESKTOP */
 		case 0xB7:	/* RPL_DESKTOP */
 		case 0xBA:	/* RPL_P */
 		case 0xBE:	/* ADL_N */
@@ -463,6 +469,8 @@ nhm_package::nhm_package(int model)
 		case 0xA5:      /* CML_DESKTOP */
 		case 0xA6:      /* CML_MOBILE */
 		case 0xA7:	/* RKL_DESKTOP */
+		case 0xAA:	/* MTL_MOBILE */
+		case 0xAC:	/* MTL_DESKTOP */
 		case 0xB7:	/* RPL_DESKTOP */
 		case 0xBA:	/* RPL_P */
 		case 0xBE:	/* ADL_N */

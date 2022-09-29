@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([powertop], [2.14], [powertop@lists.01.org], [], [https://01.org/powertop])
+AC_INIT([powertop], [2.15], [powertop@lists.01.org], [], [https://github.com/fenrus75/powertop])
 AM_INIT_AUTOMAKE([
 	-Wall
 	1.12.2

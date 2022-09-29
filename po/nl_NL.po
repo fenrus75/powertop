@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PowerTOP\n"
 "Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
-"POT-Creation-Date: 2020-06-11 12:04-0700\n"
+"POT-Creation-Date: 2022-09-29 04:45-0700\n"
 "PO-Revision-Date: 2013-11-05 08:40+0000\n"
 "Last-Translator: Margie Foster <margie@linux.intel.com>\n"
 "Language-Team: Dutch (Netherlands) (http://www.transifex.com/projects/p/"
@@ -97,7 +97,7 @@ msgstr ""
 msgid " Core(OS)"
 msgstr ""
 
-#: src/cpu/cpu_core.cpp:91 src/cpu/intel_cpus.cpp:347
+#: src/cpu/cpu_core.cpp:91 src/cpu/intel_cpus.cpp:367
 #, c-format
 msgid "  Core"
 msgstr ""
@@ -128,39 +128,39 @@ msgstr ""
 msgid "Processor Idle State Report"
 msgstr ""
 
-#: src/cpu/cpu.cpp:535 src/cpu/cpu.cpp:753
+#: src/cpu/cpu.cpp:535 src/cpu/cpu.cpp:761
 msgid "Package"
 msgstr ""
 
-#: src/cpu/cpu.cpp:566 src/cpu/cpu.cpp:775
+#: src/cpu/cpu.cpp:572 src/cpu/cpu.cpp:783
 #, c-format
 msgid "Core %d"
 msgstr ""
 
-#: src/cpu/cpu.cpp:573
+#: src/cpu/cpu.cpp:579
 #, c-format
 msgid "GPU %d"
 msgstr ""
 
-#: src/cpu/cpu.cpp:594
+#: src/cpu/cpu.cpp:602
 msgid "CPU"
 msgstr ""
 
-#: src/cpu/cpu.cpp:676
+#: src/cpu/cpu.cpp:684
 msgid "Processor Frequency Report"
 msgstr ""
 
-#: src/cpu/cpu.cpp:796
+#: src/cpu/cpu.cpp:804
 #, c-format
 msgid "CPU %d"
 msgstr ""
 
-#: src/cpu/cpu.cpp:997
+#: src/cpu/cpu.cpp:1005
 #, c-format
 msgid "cpu_idle event returned no state?\n"
 msgstr ""
 
-#: src/cpu/cpu.cpp:1012
+#: src/cpu/cpu.cpp:1020
 #, c-format
 msgid "power or cpu_frequency event returned no state?\n"
 msgstr ""
@@ -174,7 +174,7 @@ msgstr "C0 polling"
 msgid " CPU(OS) %i"
 msgstr ""
 
-#: src/cpu/cpu_linux.cpp:341 src/cpu/intel_cpus.cpp:694
+#: src/cpu/cpu_linux.cpp:341 src/cpu/intel_cpus.cpp:733
 #, c-format
 msgid " CPU %i"
 msgstr ""
@@ -189,21 +189,21 @@ msgstr ""
 msgid " Pkg(OS)"
 msgstr ""
 
-#: src/cpu/cpu_package.cpp:104 src/cpu/intel_cpus.cpp:455
+#: src/cpu/cpu_package.cpp:104 src/cpu/intel_cpus.cpp:498
 #, c-format
 msgid "  Package"
 msgstr ""
 
-#: src/cpu/intel_cpus.cpp:140
+#: src/cpu/intel_cpus.cpp:152
 #, c-format
 msgid "read_msr cpu%d 0x%llx : "
 msgstr ""
 
-#: src/cpu/intel_cpus.cpp:617
+#: src/cpu/intel_cpus.cpp:656
 msgid "C0 active"
 msgstr "C0 active"
 
-#: src/cpu/intel_cpus.cpp:675
+#: src/cpu/intel_cpus.cpp:714
 #, c-format
 msgid "Average"
 msgstr ""
@@ -568,12 +568,12 @@ msgstr "afsluiten...\n"
 
 #: src/main.cpp:365
 #, c-format
-msgid "modprobe cpufreq_stats failed"
+msgid "modprobe cpufreq_stats failed\n"
 msgstr ""
 
 #: src/main.cpp:368
 #, c-format
-msgid "modprobe msr failed"
+msgid "modprobe msr failed\n"
 msgstr ""
 
 #: src/main.cpp:380 src/main.cpp:384

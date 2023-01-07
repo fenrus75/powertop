@@ -76,6 +76,7 @@ void (*ui_notify_user) (const char *frmt, ...);
 
 enum {
 	OPT_AUTO_TUNE = CHAR_MAX + 1,
+	OPT_AUTO_TUNE_DUMP,
 	OPT_EXTECH,
 	OPT_DEBUG
 };
@@ -84,6 +85,7 @@ static const struct option long_options[] =
 {
 	/* These options set a flag. */
 	{"auto-tune",	no_argument,		NULL,		 OPT_AUTO_TUNE},
+	{"auto-tune-dump",	no_argument,	NULL,		 OPT_AUTO_TUNE_DUMP},
 	{"calibrate",	no_argument,		NULL,		 'c'},
 	{"csv",		optional_argument,	NULL,		 'C'},
 	{"debug",	no_argument,		&debug_learning, OPT_DEBUG},
@@ -122,6 +124,7 @@ static void print_usage()
 {
 	printf("%s\n\n", _("Usage: powertop [OPTIONS]"));
 	printf("     --auto-tune\t %s\n", _("sets all tunable options to their GOOD setting"));
+	printf("     --auto-tune-dump\t %s\n", _("print auto-tune commands to STDOUT *instead* of executing them"));
 	printf(" -c, --calibrate\t %s\n", _("runs powertop in calibration mode"));
 	printf(" -C, --csv%s\t %s\n", _("[=filename]"), _("generate a csv report"));
 	printf("     --debug\t\t %s\n", _("run in \"debug\" mode"));
@@ -434,6 +437,7 @@ int main(int argc, char **argv)
 	char filename[PATH_MAX];
 	char workload[PATH_MAX] = {0};
 	int  iterations = 1, auto_tune = 0, sample_interval = 5;
+	bool auto_tune_dump = false;
 
 	set_new_handler(out_of_memory);
 
@@ -450,6 +454,8 @@ int main(int argc, char **argv)
 		if (c == -1)
 			break;
 		switch (c) {
+		case OPT_AUTO_TUNE_DUMP:
+			auto_tune_dump = true; // do NOT `break;` here!
 		case OPT_AUTO_TUNE:
 			auto_tune = 1;
 			leave_powertop = 1;
@@ -546,7 +552,7 @@ int main(int argc, char **argv)
 		tuning_update_display();
 		show_tab(0);
 	} else {
-		auto_toggle_tuning();
+		auto_toggle_tuning(auto_tune_dump);
 	}
 
 	while (!leave_powertop) {

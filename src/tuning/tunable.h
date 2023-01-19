@@ -51,6 +51,11 @@ public:
 
 	tunable(void);
 	tunable(const char *str, double _score, const char *good = "", const char *bad = "", const char *neutral ="");
+
+	void dump_cmd_good(FILE *fp) {
+		(void) fprintf(fp, "\n### %s\n# %s\n", desc, toggle_good);
+	}
+
 	virtual ~tunable() {};
 
 	virtual int good_bad(void) { return TUNE_NEUTRAL; }

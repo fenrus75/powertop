@@ -323,10 +323,17 @@ void clear_tuning()
 	all_untunables.clear();
 }
 
-void auto_toggle_tuning()
+void auto_toggle_tuning(bool dump_only)
 {
+	if (dump_only) fprintf(stdout, "### auto-tune-dump commands BEGIN\n\n");
 	for (unsigned int i = 0; i < all_tunables.size(); i++) {
-		if (all_tunables[i]->good_bad() == TUNE_BAD)
-			all_tunables[i]->toggle();
+		if (all_tunables[i]->good_bad() == TUNE_BAD) {
+			if (dump_only) {
+				all_tunables[i]->dump_cmd_good(stdout);
+			} else {
+				all_tunables[i]->toggle();
+			}
+		}
 	}
+	if (dump_only) fprintf(stdout, "\n### auto-tune-dump commands END\n\n");
 }

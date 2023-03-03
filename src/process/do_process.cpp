@@ -656,25 +656,25 @@ void start_process_measurement(void)
 {
 	if (!perf_events) {
 		perf_events = new perf_process_bundle();
-		perf_events->add_event("sched:sched_switch");
-		perf_events->add_event("sched:sched_wakeup");
-		perf_events->add_event("irq:irq_handler_entry");
-		perf_events->add_event("irq:irq_handler_exit");
-		perf_events->add_event("irq:softirq_entry");
-		perf_events->add_event("irq:softirq_exit");
-		perf_events->add_event("timer:timer_expire_entry");
-		perf_events->add_event("timer:timer_expire_exit");
-		perf_events->add_event("timer:hrtimer_expire_entry");
-		perf_events->add_event("timer:hrtimer_expire_exit");
-		if (!perf_events->add_event("power:cpu_idle")){
-			perf_events->add_event("power:power_start");
-			perf_events->add_event("power:power_end");
+		perf_events->add_event("sched","sched_switch");
+		perf_events->add_event("sched","sched_wakeup");
+		perf_events->add_event("irq","irq_handler_entry");
+		perf_events->add_event("irq","irq_handler_exit");
+		perf_events->add_event("irq","softirq_entry");
+		perf_events->add_event("irq","softirq_exit");
+		perf_events->add_event("timer","timer_expire_entry");
+		perf_events->add_event("timer","timer_expire_exit");
+		perf_events->add_event("timer","hrtimer_expire_entry");
+		perf_events->add_event("timer","hrtimer_expire_exit");
+		if (!perf_events->add_event("power","cpu_idle")){
+			perf_events->add_event("power","power_start");
+			perf_events->add_event("power","power_end");
 		}
-		perf_events->add_event("workqueue:workqueue_execute_start");
-		perf_events->add_event("workqueue:workqueue_execute_end");
-		perf_events->add_event("i915:i915_gem_ring_dispatch");
-		perf_events->add_event("i915:i915_gem_request_submit");
-		perf_events->add_event("writeback:writeback_inode_dirty");
+		perf_events->add_event("workqueue","workqueue_execute_start");
+		perf_events->add_event("workqueue","workqueue_execute_end");
+		perf_events->add_event("i915","i915_gem_ring_dispatch");
+		perf_events->add_event("i915","i915_gem_request_submit");
+		perf_events->add_event("writeback","writeback_inode_dirty");
 	}
 
 	first_stamp = ~0ULL;

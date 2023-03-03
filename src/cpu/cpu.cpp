@@ -325,12 +325,12 @@ void enumerate_cpus(void)
 
 	perf_events = new perf_power_bundle();
 
-	if (!perf_events->add_event("power:cpu_idle")){
-		perf_events->add_event("power:power_start");
-		perf_events->add_event("power:power_end");
+	if (!perf_events->add_event("power","cpu_idle")){
+		perf_events->add_event("power","power_start");
+		perf_events->add_event("power","power_end");
 	}
-	if (!perf_events->add_event("power:cpu_frequency"))
-		perf_events->add_event("power:power_frequency");
+	if (!perf_events->add_event("power","cpu_frequency"))
+		perf_events->add_event("power","power_frequency");
 
 }
 

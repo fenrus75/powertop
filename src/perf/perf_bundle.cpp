@@ -86,74 +86,13 @@ void perf_bundle::release(void)
 	}
 	events.clear();
 
-	for (i = 0; i < event_names.size(); i++) {
-		free((void*)event_names[i]);
-	}
-	event_names.clear();
-
 	for(i = 0; i < records.size(); i++) {
 		free(records[i]);
 	}
 	records.clear();
 }
 
-static char * read_file(const char *file)
-{
-	char *buffer = NULL; /* quient gcc */
-	char buf[4096];
-	int len = 0;
-	int fd;
-	int r;
-
-	fd = open(file, O_RDONLY);
-	if (fd < 0)
-		exit(-1);
-
-	while((r = read(fd, buf, 4096)) > 0) {
-		if (len) {
-			char *tmp = (char *)realloc(buffer, len + r + 1);
-			if (!tmp)
-				free(buffer);
-			buffer = tmp;
-		} else
-			buffer = (char *)malloc(r + 1);
-		if (!buffer)
-			goto out;
-		memcpy(buffer + len, buf, r);
-		len += r;
-		buffer[len] = '\0';
-	}
-out:
-	close(fd);
-	return buffer;
-}
-
-static void parse_event_format(const char *event_name)
-{
-	char *tptr;
-	char *name = strdup(event_name);
-	char *sys = strtok_r(name, ":", &tptr);
-	char *event = strtok_r(NULL, ":", &tptr);
-	char *file;
-	char *buf;
-
-	file = (char *)malloc(strlen(sys) + strlen(event) +
-		      strlen("/sys/kernel/debug/tracing/events////format") + 2);
-	sprintf(file, "/sys/kernel/debug/tracing/events/%s/%s/format", sys, event);
-
-	buf = read_file(file);
-	free(file);
-	if (!buf) {
-		free(name);
-		return;
-	}
-
-	tep_parse_event(perf_event::tep, buf, strlen(buf), sys);
-	free(name);
-	free(buf);
-}
-
-bool perf_bundle::add_event(const char *event_name)
+bool perf_bundle::add_event(const char *system_name, const char *event_name)
 {
 	unsigned int i;
 	int event_added = false;
@@ -167,14 +106,10 @@ bool perf_bundle::add_event(const char *event_name)
 
 		ev = new class perf_bundle_event();
 
-		ev->set_event_name(event_name);
+		ev->set_event_name(system_name, event_name);
 		ev->set_cpu(i);
 
 		if ((int)ev->trace_type >= 0) {
-			if (event_names.find(ev->trace_type) == event_names.end()) {
-				event_names[ev->trace_type] = strdup(event_name);
-				parse_event_format(event_name);
-			}
 			events.push_back(ev);
 			event_added = true;
 		} else {

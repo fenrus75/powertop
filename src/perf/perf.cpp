@@ -44,7 +44,7 @@
 #include "../lib.h"
 #include "../display.h"
 
-struct pevent *perf_event::pevent;
+struct tep_handle *perf_event::tep;
 
 static int get_trace_type(const char *eventname)
 {
@@ -169,12 +169,12 @@ perf_event::~perf_event(void)
 {
 	free(name);
 
-	if (perf_event::pevent->ref_count == 1) {
-		pevent_free(perf_event::pevent);
-		perf_event::pevent = NULL;
+	if (tep_get_ref(perf_event::tep) == 1) {
+		tep_free(perf_event::tep);
+		perf_event::tep = NULL;
 		clear();
 	} else
-		pevent_unref(perf_event::pevent);
+		tep_unref(perf_event::tep);
 }
 
 void perf_event::set_cpu(int _cpu)
@@ -182,17 +182,17 @@ void perf_event::set_cpu(int _cpu)
 	cpu = _cpu;
 }
 
-static void allocate_pevent(void)
+static void allocate_tep(void)
 {
-	if (!perf_event::pevent)
-		perf_event::pevent = pevent_alloc();
+	if (!perf_event::tep)
+		perf_event::tep = tep_alloc();
 	else
-		pevent_ref(perf_event::pevent);
+		tep_ref(perf_event::tep);
 }
 
 perf_event::perf_event(const char *event_name, int _cpu, int buffer_size)
 {
-	allocate_pevent();
+	allocate_tep();
 	name = NULL;
 	perf_fd = -1;
 	bufsize = buffer_size;
@@ -204,7 +204,7 @@ perf_event::perf_event(const char *event_name, int _cpu, int buffer_size)
 
 perf_event::perf_event(void)
 {
-	allocate_pevent();
+	allocate_tep();
 	name = NULL;
 	perf_fd = -1;
 	bufsize = 128;

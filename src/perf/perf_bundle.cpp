@@ -148,7 +148,7 @@ static void parse_event_format(const char *event_name)
 		return;
 	}
 
-	pevent_parse_event(perf_event::pevent, buf, strlen(buf), sys);
+	tep_parse_event(perf_event::tep, buf, strlen(buf), sys);
 	free(name);
 	free(buf);
 }
@@ -295,19 +295,19 @@ static bool event_sort_function (void *i, void *j)
  */
 static void fixup_sample_trace_cpu(struct perf_sample *sample)
 {
-	struct event_format *event;
-	struct pevent_record rec;
+	struct tep_event *event;
+	struct tep_record rec;
 	unsigned long long cpu_nr;
 	int type;
 	int ret;
 
 	rec.data = &sample->data;
-	type = pevent_data_type(perf_event::pevent, &rec);
-	event = pevent_find_event(perf_event::pevent, type);
+	type = tep_data_type(perf_event::tep, &rec);
+	event = tep_find_event(perf_event::tep, type);
 	if (!event)
 		return;
 	/** don't touch trace if event does not contain cpu_id field*/
-	ret = pevent_get_field_val(NULL, event, "cpu_id", &rec, &cpu_nr, 0);
+	ret = tep_get_field_val(NULL, event, "cpu_id", &rec, &cpu_nr, 0);
 	if (ret < 0)
 		return;
 	sample->trace.cpu = cpu_nr;

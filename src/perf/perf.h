@@ -29,7 +29,7 @@
 
 
 extern "C" {
-	#include "../traceevent/event-parse.h"
+	#include <tracefs.h>
 }
 
 
@@ -69,7 +69,7 @@ public:
 
 	virtual void handle_event(struct perf_event_header *header, void *cookie) { };
 
-	static struct pevent *pevent;
+	static struct tep_handle *tep;
 
 };
 

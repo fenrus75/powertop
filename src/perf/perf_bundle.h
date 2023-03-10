@@ -38,13 +38,12 @@ class perf_event;
 class  perf_bundle {
 protected:
 	vector<class perf_event *> events;
-	std::map<int, char*> event_names;
 public:
 	vector<void *> records;
 	virtual ~perf_bundle() {};
 
 	virtual void release(void);
-	bool add_event(const char *event_name);
+	bool add_event(const char *system_name, const char *event_name);
 
 	void start(void);
 	void stop(void);

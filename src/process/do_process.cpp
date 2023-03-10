@@ -188,13 +188,13 @@ int dont_blame_me(char *comm)
 	return 0;
 }
 
-static char * get_pevent_field_str(void *trace, struct event_format *event, struct format_field *field)
+static char * get_tep_field_str(void *trace, struct tep_event *event, struct tep_format_field *field)
 {
 	unsigned long long offset, len;
-	if (field->flags & FIELD_IS_DYNAMIC) {
+	if (field->flags & TEP_FIELD_IS_DYNAMIC) {
 		offset = field->offset;
 		len = field->size;
-		offset = pevent_read_number(event->pevent, (char *)trace + offset, len);
+		offset = tep_read_number(event->tep, (char *)trace + offset, len);
 		offset &= 0xffff;
 		return (char *)trace + offset;
 	}
@@ -204,17 +204,17 @@ static char * get_pevent_field_str(void *trace, struct event_format *event, stru
 
 void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time)
 {
-	struct event_format *event;
-	struct pevent_record rec; /* holder */
-	struct format_field *field;
+	struct tep_event *event;
+	struct tep_record rec; /* holder */
+	struct tep_format_field *field;
 	unsigned long long val;
 	int type;
 	int ret;
 
 	rec.data = trace;
 
-	type = pevent_data_type(perf_event::pevent, &rec);
-	event = pevent_find_event(perf_event::pevent, type);
+	type = tep_data_type(perf_event::tep, &rec);
+	event = tep_find_event(perf_event::tep, type);
 	if (!event)
 		return;
 
@@ -233,18 +233,18 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		int next_pid;
 		int prev_pid;
 
-		field = pevent_find_any_field(event, "next_comm");
-		if (!field || !(field->flags & FIELD_IS_STRING))
+		field = tep_find_any_field(event, "next_comm");
+		if (!field || !(field->flags & TEP_FIELD_IS_STRING))
 			return; /* ?? */
 
-		next_comm = get_pevent_field_str(trace, event, field);
+		next_comm = get_tep_field_str(trace, event, field);
 
-		ret = pevent_get_field_val(NULL, event, "next_pid", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "next_pid", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		next_pid = (int)val;
 
-		ret = pevent_get_field_val(NULL, event, "prev_pid", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "prev_pid", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		prev_pid = (int)val;
@@ -301,7 +301,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		int flags;
 		int pid;
 
-		ret = pevent_get_common_field_val(NULL, event, "common_flags", &rec, &val, 0);
+		ret = tep_get_common_field_val(NULL, event, "common_flags", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		flags = (int)val;
@@ -322,14 +322,14 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		}
 
 
-		field = pevent_find_any_field(event, "comm");
+		field = tep_find_any_field(event, "comm");
 
-		if (!field || !(field->flags & FIELD_IS_STRING))
+		if (!field || !(field->flags & TEP_FIELD_IS_STRING))
  			return;
 
-		comm = get_pevent_field_str(trace, event, field);
+		comm = get_tep_field_str(trace, event, field);
 
-		ret = pevent_get_field_val(NULL, event, "pid", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "pid", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		pid = (int)val;
@@ -359,13 +359,13 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		const char *handler;
 		int nr;
 
-		field = pevent_find_any_field(event, "name");
-		if (!field || !(field->flags & FIELD_IS_STRING))
+		field = tep_find_any_field(event, "name");
+		if (!field || !(field->flags & TEP_FIELD_IS_STRING))
 			return; /* ?? */
 
-		handler = get_pevent_field_str(trace, event, field);
+		handler = get_tep_field_str(trace, event, field);
 
-		ret = pevent_get_field_val(NULL, event, "irq", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "irq", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		nr = (int)val;
@@ -401,7 +401,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		const char *handler = NULL;
 		int vec;
 
-		ret = pevent_get_field_val(NULL, event, "vec", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "vec", &rec, &val, 0);
                 if (ret < 0) {
                         fprintf(stderr, "softirq_entry event returned no vector number?\n");
                         return;
@@ -438,7 +438,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		uint64_t function;
 		uint64_t tmr;
 
-		ret = pevent_get_field_val(NULL, event, "function", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "function", &rec, &val, 0);
 		if (ret < 0) {
 			fprintf(stderr, "timer_expire_entry event returned no function value?\n");
 			return;
@@ -450,7 +450,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		if (timer->is_deferred())
 			return;
 
-		ret = pevent_get_field_val(NULL, event, "timer", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "timer", &rec, &val, 0);
 		if (ret < 0) {
 			fprintf(stderr, "softirq_entry event returned no timer ?\n");
 			return;
@@ -468,7 +468,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		uint64_t tmr;
 		uint64_t t;
 
-		ret = pevent_get_field_val(NULL, event, "timer", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "timer", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		tmr = (uint64_t)val;
@@ -490,14 +490,14 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		uint64_t function;
 		uint64_t tmr;
 
-		ret = pevent_get_field_val(NULL, event, "function", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "function", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		function = (uint64_t)val;
 
 		timer = find_create_timer(function);
 
-		ret = pevent_get_field_val(NULL, event, "hrtimer", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "hrtimer", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		tmr = (uint64_t)val;
@@ -518,7 +518,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			return;
 		}
 
-		ret = pevent_get_field_val(NULL, event, "hrtimer", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "hrtimer", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		tmr = (uint64_t)val;
@@ -536,12 +536,12 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		uint64_t function;
 		uint64_t wk;
 
-		ret = pevent_get_field_val(NULL, event, "function", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "function", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		function = (uint64_t)val;
 
-		ret = pevent_get_field_val(NULL, event, "work", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "work", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		wk = (uint64_t)val;
@@ -561,7 +561,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		uint64_t t;
 		uint64_t wk;
 
-		ret = pevent_get_field_val(NULL, event, "work", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "work", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		wk = (uint64_t)val;
@@ -579,7 +579,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		consumer_child_time(cpu, t);
 	}
 	else if (strcmp(event->name, "cpu_idle") == 0) {
-		pevent_get_field_val(NULL, event, "state", &rec, &val, 0);
+		tep_get_field_val(NULL, event, "state", &rec, &val, 0);
 		if (val == (unsigned int)-1)
 			consume_blame(cpu);
 		else
@@ -598,7 +598,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		class power_consumer *consumer = NULL;
 		int flags;
 
-		ret = pevent_get_common_field_val(NULL, event, "common_flags", &rec, &val, 0);
+		ret = tep_get_common_field_val(NULL, event, "common_flags", &rec, &val, 0);
 		if (ret < 0)
 			return;
 		flags = (int)val;
@@ -632,7 +632,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 		consumer = current_consumer(cpu);
 
-		ret = pevent_get_field_val(NULL, event, "dev", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "dev", &rec, &val, 0);
 		if (ret < 0)
 
 			return;
@@ -656,25 +656,25 @@ void start_process_measurement(void)
 {
 	if (!perf_events) {
 		perf_events = new perf_process_bundle();
-		perf_events->add_event("sched:sched_switch");
-		perf_events->add_event("sched:sched_wakeup");
-		perf_events->add_event("irq:irq_handler_entry");
-		perf_events->add_event("irq:irq_handler_exit");
-		perf_events->add_event("irq:softirq_entry");
-		perf_events->add_event("irq:softirq_exit");
-		perf_events->add_event("timer:timer_expire_entry");
-		perf_events->add_event("timer:timer_expire_exit");
-		perf_events->add_event("timer:hrtimer_expire_entry");
-		perf_events->add_event("timer:hrtimer_expire_exit");
-		if (!perf_events->add_event("power:cpu_idle")){
-			perf_events->add_event("power:power_start");
-			perf_events->add_event("power:power_end");
+		perf_events->add_event("sched","sched_switch");
+		perf_events->add_event("sched","sched_wakeup");
+		perf_events->add_event("irq","irq_handler_entry");
+		perf_events->add_event("irq","irq_handler_exit");
+		perf_events->add_event("irq","softirq_entry");
+		perf_events->add_event("irq","softirq_exit");
+		perf_events->add_event("timer","timer_expire_entry");
+		perf_events->add_event("timer","timer_expire_exit");
+		perf_events->add_event("timer","hrtimer_expire_entry");
+		perf_events->add_event("timer","hrtimer_expire_exit");
+		if (!perf_events->add_event("power","cpu_idle")){
+			perf_events->add_event("power","power_start");
+			perf_events->add_event("power","power_end");
 		}
-		perf_events->add_event("workqueue:workqueue_execute_start");
-		perf_events->add_event("workqueue:workqueue_execute_end");
-		perf_events->add_event("i915:i915_gem_ring_dispatch");
-		perf_events->add_event("i915:i915_gem_request_submit");
-		perf_events->add_event("writeback:writeback_inode_dirty");
+		perf_events->add_event("workqueue","workqueue_execute_start");
+		perf_events->add_event("workqueue","workqueue_execute_end");
+		perf_events->add_event("i915","i915_gem_ring_dispatch");
+		perf_events->add_event("i915","i915_gem_request_submit");
+		perf_events->add_event("writeback","writeback_inode_dirty");
 	}
 
 	first_stamp = ~0ULL;

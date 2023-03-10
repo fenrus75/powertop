@@ -44,21 +44,7 @@
 #include "../lib.h"
 #include "../display.h"
 
-struct pevent *perf_event::pevent;
-
-static int get_trace_type(const char *eventname)
-{
-	string str;
-	int this_trace;
-
-	str = read_sysfs_string("/sys/kernel/debug/tracing/events/%s/id",
-					eventname);
-	if (str.length() < 1)
-		return -1;
-
-	this_trace = strtoull(str.c_str(), NULL, 10);
-	return this_trace;
-}
+struct tep_handle *perf_event::tep;
 
 static inline int sys_perf_event_open(struct perf_event_attr *attr,
                       pid_t pid, int cpu, int group_fd,
@@ -147,34 +133,47 @@ void perf_event::create_perf_event(char *eventname, int _cpu)
 
 }
 
-void perf_event::set_event_name(const char *event_name)
+static int parse_event_format(const char *system_name, const char *event_name)
 {
-	free(name);
-	name = strdup(event_name);
-	if (!name) {
-		fprintf(stderr, "failed to allocate event name\n");
-		return;
+	char *buf;
+	int size;
+
+	buf = tracefs_event_file_read(NULL, system_name, event_name, "format", &size);
+	if (!buf)
+		return -1;
+
+	tep_parse_event(perf_event::tep, buf, size, system_name);
+	free(buf);
+	return 0;
+}
+
+void perf_event::set_event_name(const char *system_name, const char *event_name)
+{
+	struct tep_event *event;
+	int ret;
+
+	event = tep_find_event_by_name(perf_event::tep, system_name, event_name);
+	if (!event) {
+		ret = parse_event_format(system_name, event_name);
+		if (ret < 0) {
+			trace_type = -1;
+			return;
+		}
+		event = tep_find_event_by_name(perf_event::tep, system_name, event_name);
 	}
-
-	char *c;
-
-	c = strchr(name, ':');
-	if (c)
-		*c = '/';
-
-	trace_type = get_trace_type(name);
+	trace_type = event->id;
 }
 
 perf_event::~perf_event(void)
 {
 	free(name);
 
-	if (perf_event::pevent->ref_count == 1) {
-		pevent_free(perf_event::pevent);
-		perf_event::pevent = NULL;
+	if (tep_get_ref(perf_event::tep) == 1) {
+		tep_free(perf_event::tep);
+		perf_event::tep = NULL;
 		clear();
 	} else
-		pevent_unref(perf_event::pevent);
+		tep_unref(perf_event::tep);
 }
 
 void perf_event::set_cpu(int _cpu)
@@ -182,29 +181,29 @@ void perf_event::set_cpu(int _cpu)
 	cpu = _cpu;
 }
 
-static void allocate_pevent(void)
+static void allocate_tep(void)
 {
-	if (!perf_event::pevent)
-		perf_event::pevent = pevent_alloc();
+	if (!perf_event::tep)
+		perf_event::tep = tep_alloc();
 	else
-		pevent_ref(perf_event::pevent);
+		tep_ref(perf_event::tep);
 }
 
-perf_event::perf_event(const char *event_name, int _cpu, int buffer_size)
+perf_event::perf_event(const char *system_name, const char *event_name, int _cpu, int buffer_size)
 {
-	allocate_pevent();
+	allocate_tep();
 	name = NULL;
 	perf_fd = -1;
 	bufsize = buffer_size;
 	cpu = _cpu;
 	perf_mmap = NULL;
 	trace_type = 0;
-	set_event_name(event_name);
+	set_event_name(system_name, event_name);
 }
 
 perf_event::perf_event(void)
 {
-	allocate_pevent();
+	allocate_tep();
 	name = NULL;
 	perf_fd = -1;
 	bufsize = 128;

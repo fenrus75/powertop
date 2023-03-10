@@ -13,7 +13,6 @@ AC_CONFIG_FILES([
 	Makefile
 	Doxyfile
 	src/Makefile
-	traceevent/Makefile
 	po/Makefile.in
 	doc/Makefile
 	scripts/bash-completion/Makefile
@@ -128,6 +127,12 @@ PKG_CHECK_MODULES([PCIUTILS], [libpci],[has_libpci=1], [
 	AC_SEARCH_LIBS([pci_get_dev], [pci],[has_libpci=1], [has_libpci=0])
 ])
  
+has_libtracefs=0
+PKG_CHECK_MODULES([LIBTRACEFS], [libtracefs],[has_libtracefs=1], [
+	AC_SEARCH_LIBS([tracefs_local_events], [libtracefs], [], [
+		AC_MSG_ERROR([libtracefs is required but was not found])
+	], [])
+])
 
 has_libnl_ver=0
 dnl libnl-2 provides only libnl-2.0.pc file, so we check for separate

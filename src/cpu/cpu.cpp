@@ -325,12 +325,12 @@ void enumerate_cpus(void)
 
 	perf_events = new perf_power_bundle();
 
-	if (!perf_events->add_event("power:cpu_idle")){
-		perf_events->add_event("power:power_start");
-		perf_events->add_event("power:power_end");
+	if (!perf_events->add_event("power","cpu_idle")){
+		perf_events->add_event("power","power_start");
+		perf_events->add_event("power","power_end");
 	}
-	if (!perf_events->add_event("power:cpu_frequency"))
-		perf_events->add_event("power:power_frequency");
+	if (!perf_events->add_event("power","cpu_frequency"))
+		perf_events->add_event("power","power_frequency");
 
 }
 
@@ -969,15 +969,15 @@ struct power_entry {
 
 void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time)
 {
-	struct event_format *event;
-        struct pevent_record rec; /* holder */
+	struct tep_event *event;
+        struct tep_record rec; /* holder */
 	class abstract_cpu *cpu;
 	int type;
 
 	rec.data = trace;
 
-	type = pevent_data_type(perf_event::pevent, &rec);
-	event = pevent_find_event(perf_event::pevent, type);
+	type = tep_data_type(perf_event::tep, &rec);
+	event = tep_find_event(perf_event::tep, type);
 
 	if (!event)
 		return;
@@ -1000,7 +1000,7 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 	int ret;
 	if (strcmp(event->name, "cpu_idle")==0) {
 
-		ret = pevent_get_field_val(NULL, event, "state", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "state", &rec, &val, 0);
                 if (ret < 0) {
                         fprintf(stderr, _("cpu_idle event returned no state?\n"));
                         exit(-1);
@@ -1015,7 +1015,7 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 	if (strcmp(event->name, "power_frequency") == 0
 	|| strcmp(event->name, "cpu_frequency") == 0){
 
-		ret = pevent_get_field_val(NULL, event, "state", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "state", &rec, &val, 0);
 		if (ret < 0) {
 			fprintf(stderr, _("power or cpu_frequency event returned no state?\n"));
 			exit(-1);

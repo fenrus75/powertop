@@ -139,11 +139,13 @@ powertop_CXXFLAGS = \
 	-Wshadow \
 	-fno-omit-frame-pointer \
 	-fstack-protector \
+	-fpermissive \
 	$(GLIB2_CFLAGS) \
 	$(LIBNL_CFLAGS) \
 	$(NCURSES_CFLAGS) \
 	$(PCIUTILS_CFLAGS) \
-	$(PTHREAD_CFLAGS)
+	$(PTHREAD_CFLAGS) \
+	$(LIBTRACEFS_CFLAGS)
 
 
 powertop_CPPFLAGS = \
@@ -155,9 +157,6 @@ powertop_CPPFLAGS = \
 	$(PCIUTILS_CFLAGS) \
 	$(PTHREAD_CFLAGS)
 
-powertop_LDADD = \
-	../traceevent/libtraceevnet.la
-
 AM_LDFLAGS = \
 	$(LIBNL_LIBS) \
 	$(LIBS) \
@@ -165,7 +164,8 @@ AM_LDFLAGS = \
 	$(NCURSES_LIBS) \
 	$(PCIUTILS_LIBS) \
 	$(PTHREAD_LIBS) \
-	$(RESOLV_LIBS)
+	$(RESOLV_LIBS) \
+	$(LIBTRACEFS_LIBS)
 
 BUILT_SOURCES = css.h
 CLEANFILES = css.h

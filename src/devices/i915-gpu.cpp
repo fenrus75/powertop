@@ -40,8 +40,11 @@ using namespace std;
 #include "../process/powerconsumer.h"
 #include "gpu_rapl_device.h"
 
+extern "C" {
 #include <string.h>
 #include <unistd.h>
+#include <tracefs.h>
+}
 
 i915gpu::i915gpu(): device()
 {
@@ -74,16 +77,12 @@ double i915gpu::utilization(void)
 
 void create_i915_gpu(void)
 {
-	char filename[PATH_MAX];
 	class i915gpu *gpu;
 	gpu_rapl_device *rapl_dev;
 
-	pt_strcpy(filename, "/sys/kernel/debug/tracing/events/i915/i915_gem_ring_dispatch/format");
-
-	if (access(filename, R_OK) !=0) {
+	if (!tracefs_event_file_exists(NULL, "i915", "i915_gem_ring_dispatch", "format")) {
 		/* try an older tracepoint */
-		pt_strcpy(filename, "/sys/kernel/debug/tracing/events/i915/i915_gem_request_submit/format");
-		if (access(filename, R_OK) != 0)
+		if (!tracefs_event_file_exists(NULL, "i915", "i915_gem_request_submit", "format"))
 			return;
 	}
 

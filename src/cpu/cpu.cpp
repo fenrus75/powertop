@@ -301,10 +301,12 @@ void enumerate_cpus(void)
 		/* on x86 and others 'bogomips' is last
 		 * on ARM it *can* be bogomips, or 'CPU revision'
 		 * on POWER, it's revision
+		 * on RISCV, it is uarch
 		 */
 		if (strncasecmp(line, "bogomips\t", 9) == 0
 		    || strncasecmp(line, "CPU revision\t", 13) == 0
-		    || strncmp(line, "revision", 8) == 0) {
+		    || strncmp(line, "revision", 8) == 0
+		    || strncmp(line, "uarch", 5) == 0) {
 			if (number == -1) {
 				/* Not all /proc/cpuinfo include "processor\t". */
 				number = 0;

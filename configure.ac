@@ -116,10 +116,13 @@ AC_CHECK_FUNCS([ \
 
 AC_SEARCH_LIBS([clock_gettime], [rt])
 
-PKG_CHECK_MODULES([NCURSES], [ncursesw ncurses], [LIBS="$LIBS $ncurses_LIBS"], [
-	AC_SEARCH_LIBS([delwin], [ncursesw ncurses], [], [
-		AC_MSG_ERROR([ncurses is required but was not found])
-	], [])
+PKG_CHECK_MODULES([ncursesw], [ncursesw],
+	[NCURSES_CFLAGS="$ncursesw_CFLAGS"; NCURSES_LIBS="$ncursesw_LIBS"], [
+	PKG_CHECK_MODULES([NCURSES], [ncurses], [], [
+		AC_SEARCH_LIBS([delwin], [ncursesw ncurses], [], [
+			AC_MSG_ERROR([ncurses is required but was not found])
+		])
+	])
 ])
 
 has_libpci=0

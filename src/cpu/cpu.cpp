@@ -174,6 +174,8 @@ static void handle_one_cpu(unsigned int number, char *vendor, int family, int mo
 	file.open(filename, ios::in);
 	if (file) {
 		file >> core_number;
+		if (core_number == (unsigned int) -1)
+			core_number = number;
 		file.close();
 	}
 
@@ -300,11 +302,13 @@ void enumerate_cpus(void)
 		}
 		/* on x86 and others 'bogomips' is last
 		 * on ARM it *can* be bogomips, or 'CPU revision'
-		 * on POWER, it's revision
+		 * on POWER, it's 'revision'
+		 * on RISCV64 it's 'isa'
 		 */
 		if (strncasecmp(line, "bogomips\t", 9) == 0
 		    || strncasecmp(line, "CPU revision\t", 13) == 0
-		    || strncmp(line, "revision", 8) == 0) {
+		    || strncmp(line, "revision", 8) == 0
+		    || strncmp(line, "isa\t", 4) == 0) {
 			if (number == -1) {
 				/* Not all /proc/cpuinfo include "processor\t". */
 				number = 0;

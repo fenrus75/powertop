@@ -21,6 +21,13 @@ In addition, PowerTOP requires the following:
 * `libnl-devel` (required)
 * `pciutils-devel` (is only required if you have PCI)
 * `autoconf-archive` (for building)
+* `libtool`
+* `gettext-devel`
+* `autogen`
+* `automake`
+* `autoconf`
+* `gcc-c++`
+* `libtracefs-devel`
 
 Example packages to install in Ubuntu*:
 

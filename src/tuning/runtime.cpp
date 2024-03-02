@@ -95,6 +95,8 @@ int runtime_tunable::good_bad(void)
 
 	if (strcmp(content.c_str(), "auto") == 0)
 		return TUNE_GOOD;
+	if (strcmp(content.c_str(), "on") == 0)
+		return TUNE_GOOD;
 
 	return TUNE_BAD;
 }

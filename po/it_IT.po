@@ -407,7 +407,7 @@ msgstr "Esci"
 
 #: ../src/display.cpp:132
 msgid "Navigate"
-msgstr ""
+msgstr "Naviga"
 
 #: ../src/lib.cpp:288
 #, c-format
@@ -512,7 +512,7 @@ msgstr "[=secondi]"
 
 #: ../src/main.cpp:131
 msgid "interval for power consumption measurement"
-msgstr ""
+msgstr "intervallo di misurazione consumo energetico"
 
 #: ../src/main.cpp:132
 msgid "generate a report for 'x' seconds"

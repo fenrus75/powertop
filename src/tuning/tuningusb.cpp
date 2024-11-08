@@ -28,6 +28,7 @@
 #include "unistd.h"
 #include "tuningusb.h"
 #include <string.h>
+#include <algorithm>
 #include <dirent.h>
 #include <utility>
 #include <iostream>
@@ -73,6 +74,10 @@ usb_tunable::usb_tunable(const char *path, const char *name) : tunable("", 0.9, 
 		snprintf(desc, sizeof(desc), _("Autosuspend for USB device %s [%s]"), product, name);
 	else if (strlen(vendor))
 		snprintf(desc, sizeof(desc), _("Autosuspend for USB device %s [%s]"), vendor, name);
+
+	str1 = product;
+	transform(str1.begin(), str1.end(), str1.begin(), ::tolower);
+	safe = str1.find("mouse") == string::npos && str1.find("keyboard") == string::npos;
 
 	snprintf(toggle_good, sizeof(toggle_good), "echo 'auto' > '%s';", usb_path);
 	snprintf(toggle_bad, sizeof(toggle_bad), "echo 'on' > '%s';", usb_path);

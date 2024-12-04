@@ -24,8 +24,13 @@ AC_CONFIG_HEADERS([config.h])
 GETTEXT_PACKAGE=powertop
 AC_SUBST([GETTEXT_PACKAGE])
 AM_SILENT_RULES([yes])
+
+dnl Support for _REQUIRE_VERSION was added in gettext 0.19.6. If both
+dnl _REQUIRE_VERSION and _VERSION are present, the _VERSION is ignored.
+dnl We use both for compatibility with other programs in the Autotools family.
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.18.2])
+AM_GNU_GETTEXT_REQUIRE_VERSION([0.19.6])
+AM_GNU_GETTEXT_VERSION([0.19.6])
 
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 AX_REQUIRE_DEFINED([AX_ADD_FORTIFY_SOURCE])

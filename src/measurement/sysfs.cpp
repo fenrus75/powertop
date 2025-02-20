@@ -75,8 +75,10 @@ bool sysfs_power_meter::set_rate_from_power()
 	if (!get_sysfs_attr("power_now", &power))
 		return false;
 
-	/* µW to W */
-	rate = power / 1000000.0;
+	/* µW to W
+	 * Some drivers (example: Qualcomm) exposes use a negative value when
+	 * discharging, positive value when charging, so use the absolute value. */
+	rate = std::abs(power) / 1000000.0;
 	return true;
 }
 
@@ -89,8 +91,10 @@ bool sysfs_power_meter::set_rate_from_current(double voltage)
 
 	/* current: µA
 	 * voltage: V
-	 * rate: W */
-	rate = (current / 1000000.0) * voltage;
+	 * rate: W
+	 * Documentation ABI allows a negative value when discharging, positive
+	 * value when charging, so use the absolute value. */
+	rate = (std::abs(current) / 1000000.0) * voltage;
 	return true;
 }
 

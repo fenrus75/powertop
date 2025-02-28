@@ -94,6 +94,8 @@ void create_i915_gpu(void)
 	rapl_dev = new class gpu_rapl_device(gpu);
 	if (rapl_dev->device_present())
 		all_devices.push_back(rapl_dev);
+	else
+		delete rapl_dev;
 }
 
 

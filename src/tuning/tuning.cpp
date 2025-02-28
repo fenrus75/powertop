@@ -331,7 +331,9 @@ void auto_toggle_tuning(bool dump_only)
 			if (dump_only) {
 				all_tunables[i]->dump_cmd_good(stdout);
 			} else {
-				all_tunables[i]->toggle();
+				if (all_tunables[i]->is_safe()) {
+					all_tunables[i]->toggle();
+				}
 			}
 		}
 	}

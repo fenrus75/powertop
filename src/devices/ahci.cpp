@@ -371,7 +371,7 @@ void ahci_create_device_stats_table(void)
 	report.add_div(&div_attr);
 
 	if (links.size() == 0) {
-		report.add_title(&title_attr, __("AHCI ALPM Residency Statistics - Not supported on this macine"));
+		report.add_title(&title_attr, __("AHCI ALPM Residency Statistics - Not supported on this machine"));
 		report.end_div();
 		return;
 	}

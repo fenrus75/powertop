@@ -327,7 +327,7 @@ void make_report(int time, char *workload, int iterations, int sample_interval, 
 
 static void checkroot() {
 	int uid;
-	uid = getuid();
+	uid = geteuid();
 
 	if (uid != 0) {
 		printf(_("PowerTOP " PACKAGE_VERSION " must be run with root privileges.\n"));

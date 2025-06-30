@@ -223,7 +223,7 @@ msgid "SATA disk: %s"
 msgstr "SATA disk: %s"
 
 #: src/devices/ahci.cpp:374
-msgid "AHCI ALPM Residency Statistics - Not supported on this macine"
+msgid "AHCI ALPM Residency Statistics - Not supported on this machine"
 msgstr ""
 
 #: src/devices/ahci.cpp:389

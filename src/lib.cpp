@@ -188,25 +188,19 @@ void write_sysfs(const string &filename, const string &value)
 int read_sysfs(const string &filename, bool *ok)
 {
 	ifstream file;
-	int i;
+	int i = 0;
 
-	file.open(filename.c_str(), ios::in);
-	if (!file) {
-		if (ok)
-			*ok = false;
-		return 0;
-	}
 	try
 	{
+		file.exceptions(ifstream::failbit);
+		file.open(filename.c_str(), ios::in);
 		file >> i;
 		if (ok)
 			*ok = true;
 	} catch (std::exception &exc) {
 		if (ok)
 			*ok = false;
-		i = 0;
 	}
-	file.close();
 	return i;
 }
 

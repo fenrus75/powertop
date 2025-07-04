@@ -199,6 +199,11 @@ int read_sysfs(const string &filename, bool *ok)
 	try
 	{
 		file >> i;
+		if(file.fail()){
+			if(ok)
+				*ok = false;
+			return 0;
+		}
 		if (ok)
 			*ok = true;
 	} catch (std::exception &exc) {

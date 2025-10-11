@@ -202,28 +202,40 @@ void merge_processes(void)
 	class process *one, *two;
 
 	it1 = all_processes.begin();
-	while (it1 != all_processes.end()) {
-		it2 = it1 + 1;
-		one = *it1;
-		while (it2 != all_processes.end()) {
-			two = *it2;
-			/* fold threads */
-			if (one->pid == two->tgid && two->tgid != 0) {
-				merge_process(one, two);
-				delete *it2;
-				it2 = all_processes.erase(it2);
-				continue;
+	for (; it1 != all_processes.end();) {
+		process *one = *it1;
+		bool flag = false;
+		if (one->pid == one->tgid) {
+			for (auto it2 = all_processes.begin(); it2 != all_processes.end();) {
+				process *two = *it2;
+				if (one == two) {
+					++it2;
+					continue;
+				}
+				if (one->pid == two->tgid) {
+					merge_process(one, two);
+					delete *it2;
+					it2 = all_processes.erase(it2);
+					flag = true;
+					continue;
+				}
+
+				/* find dupes and add up */
+				if (!strcmp(one->desc, two->desc)) {
+					merge_process(one, two);
+					delete *it2;
+					it2 = all_processes.erase(it2);
+					flag = true;
+					continue;
+				}
+				++it2;
 			}
-			/* find dupes and add up */
-			if (!strcmp(one->desc, two->desc)) {
-				merge_process(one, two);
-				delete *it2;
-				it2 = all_processes.erase(it2);
-				continue;
-			}
-			++it2;
 		}
-		++it1;
+		if (flag) {
+			it1 = all_processes.begin();
+		} else {
+			++it1;
+		}
 	}
 }
 

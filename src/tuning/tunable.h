@@ -45,6 +45,7 @@ class tunable {
 protected:
 	char toggle_good[4096];
 	char toggle_bad[4096];
+	bool safe = true;
 public:
 	char desc[4096];
 	double score;
@@ -78,6 +79,8 @@ public:
 	virtual void toggle(void) { };
 
 	virtual const char *toggle_script(void) { return NULL; }
+
+	virtual bool is_safe(void) { return safe; }
 };
 
 extern vector<class tunable *> all_tunables;

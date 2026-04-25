@@ -21,13 +21,15 @@ In addition, PowerTOP requires the following:
 * `libnl-devel` (required)
 * `pciutils-devel` (is only required if you have PCI)
 * `autoconf-archive` (for building)
+* `libtracefs` version => 1.3
 
 Example packages to install in Ubuntu*:
 
     sudo apt install libpci-dev libnl-3-dev libnl-genl-3-dev gettext \
     libgettextpo-dev autopoint gettext libncurses5-dev libncursesw5-dev libtool-bin \
-    dh-autoreconf autoconf-archive pkg-config
-
+    dh-autoreconf autoconf-archive pkg-config libtraceevent-dev libtracefs-dev
+    
+Debian Bullseye can be updated from libtracefs 1.0 to libtracefs 1.5 using [backports](https://packages.debian.org/source/bullseye-backports/libtracefs). Newer Debian versions support a later version.
 
 ## Building PowerTOP
 

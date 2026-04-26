@@ -265,29 +265,18 @@ std::string format_watts(double W, unsigned int len)
 #ifndef HAVE_NO_PCI
 static struct pci_access *pci_access;
 
-char *pci_id_to_name(uint16_t vendor, uint16_t device, char *buffer, int len)
+std::string pci_id_to_name(uint16_t vendor, uint16_t device)
 {
-	char *ret;
-
-	buffer[0] = 0;
+	const int len = 4096;
+	std::vector<char> buf(len);
 
 	if (!pci_access) {
 		pci_access = pci_alloc();
 		pci_init(pci_access);
 	}
 
-	ret = pci_lookup_name(pci_access, buffer, len, PCI_LOOKUP_VENDOR | PCI_LOOKUP_DEVICE, vendor, device);
-
-	return ret;
-}
-
-char *pci_id_to_name(uint16_t vendor, uint16_t device, std::string &buffer, int len)
-{
-	std::vector<char> buf(len);
-	char *ret;
-	ret = pci_id_to_name(vendor, device, buf.data(), len);
-	if (ret) buffer = ret;
-	return ret ? (char *)buffer.c_str() : NULL;
+	char *ret = pci_lookup_name(pci_access, buf.data(), len, PCI_LOOKUP_VENDOR | PCI_LOOKUP_DEVICE, vendor, device);
+	return ret ? std::string(ret) : std::string();
 }
 
 void end_pci_access(void)
@@ -298,14 +287,9 @@ void end_pci_access(void)
 
 #else
 
-char *pci_id_to_name(uint16_t vendor, uint16_t device, char *buffer, int len)
+std::string pci_id_to_name(uint16_t vendor, uint16_t device)
 {
-	return NULL;
-}
-
-char *pci_id_to_name(uint16_t vendor, uint16_t device, std::string &buffer, int len)
-{
-	return NULL;
+	return std::string();
 }
 
 void end_pci_access(void)

@@ -74,7 +74,7 @@ extern string read_sysfs_string(const string &filename);
 
 extern std::string format_watts(double W, unsigned int len);
 
-extern char *pci_id_to_name(uint16_t vendor, uint16_t device, std::string &buffer, int len);
+extern std::string pci_id_to_name(uint16_t vendor, uint16_t device);
 extern void end_pci_access(void);
 
 

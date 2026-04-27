@@ -35,14 +35,9 @@ public:
 	virtual void clear_result();
 
 	virtual void add(const std::string &str);
-	virtual void addv(const char *fmt, va_list ap);
 
 protected:
 	void add_exact(const std::string &str);
-	void addf(const char *fmt, ...)
-				__attribute__ ((format (printf, 2, 3)));
-	void addf_exact(const char *fmt, ...)
-				__attribute__ ((format (printf, 2, 3)));
 
 	virtual std::string escape_string(const std::string &str) = 0;
 

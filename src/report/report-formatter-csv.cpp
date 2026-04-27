@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdarg.h>
+#include <format>
 
 #include "report-formatter-csv.h"
 #include "report-data-html.h"
@@ -111,7 +112,7 @@ void
 report_formatter_csv::add_title(struct tag_attr *title_att, const string &title)
 {
 	add_exact("____________________________________________________________________\n");
-	addf_exact(" *  *  *   %s   *  *  *\n", title.c_str());
+	add_exact(std::format(" *  *  *   {}   *  *  *\n", title));
 }
 
 void
@@ -125,7 +126,7 @@ report_formatter_csv::add_summary_list(const std::vector<std::string> &list)
 {
 	add_exact("\n");
 	for (size_t i=0; i < list.size(); i+=2){
-		addf_exact("%s %s", list[i].c_str(), list[i+1].c_str());
+		add_exact(std::format("{} {}", list[i], list[i+1]));
 		if(i < (list.size() - 1))
 			add_exact(";");
 	}
@@ -153,7 +154,7 @@ report_formatter_csv::add_table(const std::vector<std::string> &system_data, str
 			if(tmp_str == "&nbsp;")
 				empty_row+=1;
 			else{
-				addf_exact("%s", system_data[offset].c_str());
+				add_exact(system_data[offset]);
 				if(j < (tb_attr->cols - 1))
 					add_exact(";");
 			}

@@ -117,18 +117,6 @@ report_maker::add(const string &str)
 	formatter->add(str);
 }
 
-/* ************************************************************************ */
-
-void
-report_maker::addf(const char *fmt, ...)
-{
-	va_list ap;
-	assert(fmt);
-	va_start(ap, fmt);
-	formatter->addv(fmt, ap);
-	va_end(ap);
-}
-
 /* *** Report Style *** */
 void
 report_maker::add_logo()

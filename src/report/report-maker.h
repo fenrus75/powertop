@@ -112,9 +112,6 @@ public:
 	report_type get_type();
 	void set_type(report_type t);
 
-	void addf(const char *fmt, ...)
-				__attribute__ ((format (printf, 2, 3)));
-
 	void finish_report();
 	std::string get_result();
 	void clear_result();

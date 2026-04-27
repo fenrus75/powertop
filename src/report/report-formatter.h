@@ -40,7 +40,6 @@ public:
 	virtual void clear_result() {}
 
 	virtual void add(const std::string &str) {}
-	virtual void addv(const char *fmt, va_list ap) {}
 
 	/* *** Report Style *** */
 	virtual void add_logo() {}

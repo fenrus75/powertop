@@ -216,7 +216,7 @@ extern "C" {
 	}
 }
 
-void one_measurement(int seconds, int sample_interval, const char *workload)
+void one_measurement(int seconds, int sample_interval, const std::string &workload)
 {
 	create_all_usb_devices();
 	start_power_measurement();
@@ -225,13 +225,13 @@ void one_measurement(int seconds, int sample_interval, const char *workload)
 	start_process_measurement();
 	start_cpu_measurement();
 
-	if (workload && workload[0]) {
+	if (!workload.empty()) {
 		pthread_t thread = 0UL;
 		end_thread = false;
 		if (pthread_create(&thread, NULL, measure_background_thread, &sample_interval))
 			fprintf(stderr, "ERROR: workload measurement thread creation failed\n");
 
-		if (system(workload))
+		if (system(workload.c_str()))
 			fprintf(stderr, _("Unknown issue running workload!\n"));
 
 		if (thread)

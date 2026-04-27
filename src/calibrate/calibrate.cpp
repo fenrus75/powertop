@@ -62,18 +62,9 @@ static volatile int stop_measurement;
 static int wireless_PS;
 
 
-static void save_sysfs(const char *filename)
+static void save_sysfs(const std::string &filename)
 {
-	char line[4096];
-	ifstream file;
-
-	file.open(filename, ios::in);
-	if (!file)
-		return;
-	file.getline(line, 4096);
-	file.close();
-
-	saved_sysfs[filename] = line;
+	saved_sysfs[filename] = read_sysfs_string(filename);
 }
 
 static void restore_all_sysfs(void)
@@ -86,27 +77,23 @@ static void restore_all_sysfs(void)
 	set_wifi_power_saving("wlan0", wireless_PS);
 }
 
-static void find_all_usb_callback(const char *d_name)
+static void find_all_usb_callback(const std::string &d_name)
 {
 	std::string filename;
-	ifstream file;
 
 	filename = std::format("/sys/bus/usb/devices/{}/power/active_duration", d_name);
 	if (access(filename.c_str(), R_OK) != 0)
 		return;
 
-	filename = std::format("/sys/bus/usb/devices/{}/idVendor", d_name);
-	file.open(filename.c_str(), ios::in);
-	if (file) {
-		std::string vendor_id;
-		getline(file, vendor_id);
-		file.close();
+	std::string vendor_id = read_file_content(std::format("/sys/bus/usb/devices/{}/idVendor", d_name));
+	if (!vendor_id.empty()) {
+		vendor_id.erase(std::remove(vendor_id.begin(), vendor_id.end(), '\n'), vendor_id.end());
 		if (vendor_id == "1d6b")
 			return;
 	}
 
 	filename = std::format("/sys/bus/usb/devices/{}/power/control", d_name);
-	save_sysfs(filename.c_str());
+	save_sysfs(filename);
 	usb_devices.push_back(filename);
 }
 
@@ -123,13 +110,13 @@ static void suspend_all_usb_devices(void)
 		write_sysfs(usb_devices[i], "auto\n");
 }
 
-static void find_all_rfkill_callback(const char *d_name)
+static void find_all_rfkill_callback(const std::string &d_name)
 {
 	std::string filename;
 	filename = std::format("/sys/class/rfkill/{}/soft", d_name);
 	if (access(filename.c_str(), R_OK) != 0)
 		return;
-	save_sysfs(filename.c_str());
+	save_sysfs(filename);
 	rfkill_devices.push_back(filename);
 }
 
@@ -153,17 +140,17 @@ static void unrfkill_all_radios(void)
 		write_sysfs(rfkill_devices[i], "0\n");
 }
 
-static void find_backlight_callback(const char *d_name)
+static void find_backlight_callback(const std::string &d_name)
 {
 	std::string filename;
 	filename = std::format("/sys/class/backlight/{}/brightness", d_name);
 	if (access(filename.c_str(), R_OK) != 0)
 		return;
 
-	save_sysfs(filename.c_str());
+	save_sysfs(filename);
 	backlight_devices.push_back(filename);
 	filename = std::format("/sys/class/backlight/{}/max_brightness", d_name);
-	blmax = read_sysfs(filename.c_str());
+	blmax = read_sysfs(filename);
 }
 
 static void find_backlight(void)
@@ -179,14 +166,14 @@ static void lower_backlight(void)
 		write_sysfs(backlight_devices[i], "0\n");
 }
 
-static void find_scsi_link_callback(const char *d_name)
+static void find_scsi_link_callback(const std::string &d_name)
 {
 	std::string filename;
 	filename = std::format("/sys/class/scsi_host/{}/link_power_management_policy", d_name);
 	if (access(filename.c_str(), R_OK)!=0)
 		return;
 
-	save_sysfs(filename.c_str());
+	save_sysfs(filename);
 	scsi_link_devices.push_back(filename);
 }
 
@@ -195,7 +182,7 @@ static void find_scsi_link(void)
 	process_directory("/sys/class/scsi_host/", find_scsi_link_callback);
 }
 
-static void set_scsi_link(const char *state)
+static void set_scsi_link(const std::string &state)
 {
 	unsigned int i;
 
@@ -261,7 +248,7 @@ static void cpu_calibration(int threads)
 	for (i = 0; i < threads; i++)
 		pthread_create(&thr, NULL, burn_cpu, NULL);
 
-	one_measurement(15, 15, NULL);
+	one_measurement(15, 15, "");
 	stop_measurement = 1;
 	sleep(1);
 }
@@ -276,7 +263,7 @@ static void wakeup_calibration(unsigned long interval)
 
 	pthread_create(&thr, NULL, burn_cpu_wakeups, (void *)interval);
 
-	one_measurement(15, 15, NULL);
+	one_measurement(15, 15, "");
 	stop_measurement = 1;
 	sleep(1);
 }
@@ -292,7 +279,7 @@ static void usb_calibration(void)
 		printf(_(".... device %s \n"), usb_devices[i].c_str());
 		suspend_all_usb_devices();
 		write_sysfs(usb_devices[i], "on\n");
-		one_measurement(15, 15, NULL);
+		one_measurement(15, 15, "");
 		suspend_all_usb_devices();
 		sleep(3);
 	}
@@ -309,7 +296,7 @@ static void rfkill_calibration(void)
 		printf(_(".... device %s \n"), rfkill_devices[i].c_str());
 		rfkill_all_radios();
 		write_sysfs(rfkill_devices[i], "0\n");
-		one_measurement(15, 15, NULL);
+		one_measurement(15, 15, "");
 		rfkill_all_radios();
 		sleep(3);
 	}
@@ -317,7 +304,7 @@ static void rfkill_calibration(void)
 		printf(_(".... device %s \n"), rfkill_devices[i].c_str());
 		unrfkill_all_radios();
 		write_sysfs(rfkill_devices[i], "1\n");
-		one_measurement(15, 15, NULL);
+		one_measurement(15, 15, "");
 		unrfkill_all_radios();
 		sleep(3);
 	}
@@ -332,29 +319,29 @@ static void backlight_calibration(void)
 		std::string str;
 		printf(_(".... device %s \n"), backlight_devices[i].c_str());
 		lower_backlight();
-		one_measurement(15, 15, NULL);
+		one_measurement(15, 15, "");
 		str = std::format("{}\n", blmax / 4);
 		write_sysfs(backlight_devices[i], str);
-		one_measurement(15, 15, NULL);
+		one_measurement(15, 15, "");
 
 		str = std::format("{}\n", blmax / 2);
 		write_sysfs(backlight_devices[i], str);
-		one_measurement(15, 15, NULL);
+		one_measurement(15, 15, "");
 
 		str = std::format("{}\n", 3 * blmax / 4 );
 		write_sysfs(backlight_devices[i], str);
-		one_measurement(15, 15, NULL);
+		one_measurement(15, 15, "");
 
 		str = std::format("{}\n", blmax);
 		write_sysfs(backlight_devices[i], str);
-		one_measurement(15, 15, NULL);
+		one_measurement(15, 15, "");
 		lower_backlight();
 		sleep(1);
 	}
 	printf(_("Calibrating idle\n"));
 	if(!system("DISPLAY=:0 /usr/bin/xset dpms force off"))
 		printf("System is not available\n");
-	one_measurement(15, 15, NULL);
+	one_measurement(15, 15, "");
 	if(!system("DISPLAY=:0 /usr/bin/xset dpms force on"))
 		printf("System is not available\n");
 }
@@ -364,7 +351,7 @@ static void idle_calibration(void)
 	printf(_("Calibrating idle\n"));
 	if(!system("DISPLAY=:0 /usr/bin/xset dpms force off"))
 		printf("System is not available\n");
-	one_measurement(15, 15, NULL);
+	one_measurement(15, 15, "");
 	if(!system("DISPLAY=:0 /usr/bin/xset dpms force on"))
 		printf("System is not available\n");
 }
@@ -381,7 +368,7 @@ static void disk_calibration(void)
 	stop_measurement = 0;
 	pthread_create(&thr, NULL, burn_disk, NULL);
 
-	one_measurement(15, 15, NULL);
+	one_measurement(15, 15, "");
 	stop_measurement = 1;
 	sleep(1);
 

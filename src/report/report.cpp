@@ -99,11 +99,19 @@ static string read_os_release(const string &filename)
 	return os;
 }
 
+static string get_time_string(const char *fmt, time_t t)
+{
+	char buf[128];
+	struct tm *tm_info = localtime(&t);
+	if (strftime(buf, sizeof(buf), fmt, tm_info))
+		return buf;
+	return "";
+}
+
 static void system_info(void)
 {
 	string str;
 	time_t now = time(NULL);
-	char datestr[128];
 
 	/* div attr css_class and css_id */
 	tag_attr div_attr;
@@ -120,8 +128,7 @@ static void system_info(void)
 	/* Set array of data in row Major order */
 	std::vector<std::string> system_data(sys_table.rows * sys_table.cols);
 	system_data[0]=__("PowerTOP Version");
-	strftime(datestr, sizeof(datestr), "%c", localtime(&now));
-	system_data[1]=std::format("{} ran at {}", PACKAGE_VERSION, datestr);
+	system_data[1]=std::format("{} ran at {}", PACKAGE_VERSION, get_time_string("%c", now));
 
 	str = read_sysfs_string("/proc/version");
 	size_t  found = str.find(" ");
@@ -170,15 +177,14 @@ void init_report_output(const std::string &filename_str, int iterations)
 		reportout.filename = filename_str;
 	else
 	{
-		char datestr[200];
 		period = filename_str.find_last_of(".");
 		if (period == string::npos)
 			period = filename_str.length();
 
 		stamp = time(NULL);
-		strftime(datestr, sizeof(datestr), "%Y%m%d-%H%M%S", localtime(&stamp));
 		reportout.filename = std::format("{}-{}{}",
-			filename_str.substr(0, period), datestr,
+			filename_str.substr(0, period),
+			get_time_string("%Y%m%d-%H%M%S", stamp),
 			filename_str.substr(period));
 	}
 

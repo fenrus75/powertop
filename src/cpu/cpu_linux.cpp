@@ -24,6 +24,7 @@
  */
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include "cpu.h"
 #include "../lib.h"
@@ -100,7 +101,6 @@ void cpu_linux::parse_cstates_start(void)
 
 void cpu_linux::parse_pstates_start(void)
 {
-	ifstream file;
 	std::string filename;
 	unsigned int i;
 
@@ -111,18 +111,16 @@ void cpu_linux::parse_pstates_start(void)
 
 	filename = std::format("/sys/devices/system/cpu/cpu{}/cpufreq/stats/time_in_state", first_cpu);
 
-	file.open(filename.c_str(), ios::in);
-
-	if (file) {
-		char line[1024];
-
-		while (file) {
+	std::string content = read_file_content(filename);
+	if (!content.empty()) {
+		std::istringstream stream(content);
+		std::string line;
+		while (std::getline(stream, line)) {
 			uint64_t f;
-			file.getline(line, 1024);
-			f = strtoull(line, NULL, 10);
-			account_freq(f, 0);
+			std::istringstream iss(line);
+			if (iss >> f)
+				account_freq(f, 0);
 		}
-		file.close();
 	}
 	account_freq(0, 0);
 }
@@ -187,35 +185,23 @@ void cpu_linux::parse_cstates_end(void)
 void cpu_linux::parse_pstates_end(void)
 {
 	std::string filename;
-	ifstream file;
 
 	filename = std::format("/sys/devices/system/cpu/cpu{}/cpufreq/stats/time_in_state", number);
 
-	file.open(filename.c_str(), ios::in);
+	std::string content = read_file_content(filename);
+	if (!content.empty()) {
+		std::istringstream stream(content);
+		std::string line;
 
-	if (file) {
-		char line[1024];
+		while (std::getline(stream, line)) {
+			uint64_t f, count;
+			std::istringstream iss(line);
 
-		while (file) {
-			uint64_t f,count;
-			char *c;
-
-			memset(line, 0, sizeof(line));
-
-			file.getline(line, sizeof(line));
-
-			f = strtoull(line, &c, 10);
-			if (!c)
-				break;
-
-			count = strtoull(c, NULL, 10);
-
-			if (f > 0)
-				finalize_pstate(f, count, 1);
-
-
+			if (iss >> f >> count) {
+				if (f > 0)
+					finalize_pstate(f, count, 1);
+			}
 		}
-		file.close();
 	}
 }
 

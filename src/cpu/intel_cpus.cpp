@@ -25,6 +25,7 @@
 #include "intel_cpus.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -243,7 +244,6 @@ nhm_core::nhm_core(int model)
 
 void nhm_core::measurement_start(void)
 {
-	ifstream file;
 	std::string filename;
 
 	/* the abstract function needs to be first since it clears all state */
@@ -272,18 +272,16 @@ void nhm_core::measurement_start(void)
 
 	filename = std::format("/sys/devices/system/cpu/cpu{}/cpufreq/stats/time_in_state", first_cpu);
 
-	file.open(filename.c_str(), ios::in);
-
-	if (file) {
-		char line[1024];
-
-		while (file) {
+	std::string content = read_file_content(filename);
+	if (!content.empty()) {
+		std::istringstream stream(content);
+		std::string line;
+		while (std::getline(stream, line)) {
 			uint64_t f;
-			file.getline(line, 1024);
-			f = strtoull(line, NULL, 10);
-			account_freq(f, 0);
+			std::istringstream iss(line);
+			if (iss >> f)
+				account_freq(f, 0);
 		}
-		file.close();
 	}
 	account_freq(0, 0);
 
@@ -648,7 +646,6 @@ void nhm_package::measurement_end(void)
 
 void nhm_cpu::measurement_start(void)
 {
-	ifstream file;
 	std::string filename;
 
 	cpu_linux::measurement_start();
@@ -663,18 +660,16 @@ void nhm_cpu::measurement_start(void)
 
 	filename = std::format("/sys/devices/system/cpu/cpu{}/cpufreq/stats/time_in_state", first_cpu);
 
-	file.open(filename.c_str(), ios::in);
-
-	if (file) {
-		char line[1024];
-
-		while (file) {
+	std::string content = read_file_content(filename);
+	if (!content.empty()) {
+		std::istringstream stream(content);
+		std::string line;
+		while (std::getline(stream, line)) {
 			uint64_t f;
-			file.getline(line, sizeof(line));
-			f = strtoull(line, NULL, 10);
-			account_freq(f, 0);
+			std::istringstream iss(line);
+			if (iss >> f)
+				account_freq(f, 0);
 		}
-		file.close();
 	}
 	account_freq(0, 0);
 }

@@ -58,41 +58,17 @@ runtime_pmdevice::runtime_pmdevice(const string &_name, const string &path) : de
 
 void runtime_pmdevice::start_measurement(void)
 {
-	ifstream file;
+	before_suspended_time = read_sysfs(std::format("{}/power/runtime_suspended_time", sysfs_path));
+	before_active_time = read_sysfs(std::format("{}/power/runtime_active_time", sysfs_path));
 
-	before_suspended_time = 0;
-	before_active_time = 0;
         after_suspended_time = 0;
 	after_active_time = 0;
-
-	file.open(std::format("{}/power/runtime_suspended_time", sysfs_path), ios::in);
-	if (!file)
-		return;
-	file >> before_suspended_time;
-	file.close();
-
-	file.open(std::format("{}/power/runtime_active_time", sysfs_path), ios::in);
-	if (!file)
-		return;
-	file >> before_active_time;
-	file.close();
 }
 
 void runtime_pmdevice::end_measurement(void)
 {
-	ifstream file;
-
-	file.open(std::format("{}/power/runtime_suspended_time", sysfs_path), ios::in);
-	if (!file)
-		return;
-	file >> after_suspended_time;
-	file.close();
-
-	file.open(std::format("{}/power/runtime_active_time", sysfs_path), ios::in);
-	if (!file)
-		return;
-	file >> after_active_time;
-	file.close();
+	after_suspended_time = read_sysfs(std::format("{}/power/runtime_suspended_time", sysfs_path));
+	after_active_time = read_sysfs(std::format("{}/power/runtime_active_time", sysfs_path));
 }
 
 double runtime_pmdevice::utilization(void) /* percentage */
@@ -131,24 +107,11 @@ void runtime_pmdevice::set_human_name(const string &_name)
 
 bool device_has_runtime_pm(const string &sysfs_path)
 {
-	ifstream file;
-	unsigned long value;
+	if (read_sysfs(std::format("{}/power/runtime_suspended_time", sysfs_path)))
+		return true;
 
-	file.open(std::format("{}/power/runtime_suspended_time", sysfs_path), ios::in);
-	if (file) {
-		file >> value;
-		file.close();
-		if (value)
-			return true;
-	}
-
-	file.open(std::format("{}/power/runtime_active_time", sysfs_path), ios::in);
-	if (file) {
-		file >> value;
-		file.close();
-		if (value)
-			return true;
-	}
+	if (read_sysfs(std::format("{}/power/runtime_active_time", sysfs_path)))
+		return true;
 
 	return false;
 }
@@ -164,7 +127,6 @@ static void do_bus(const std::string &bus)
 	if (!dir)
 		return;
 	while (1) {
-		ifstream file;
 		class runtime_pmdevice *dev;
 		entry = readdir(dir);
 
@@ -181,29 +143,27 @@ static void do_bus(const std::string &bus)
 			if (access(std::format("/sys/bus/{}/devices/{}/new_device", bus, entry->d_name).c_str(), W_OK) == 0)
 				is_adapter = true;
 
-			file.open(std::format("/sys/bus/{}/devices/{}/name", bus, entry->d_name), ios::in);
-			if (file) {
-				getline(file, devname);
-				file.close();
-			}
+			devname = read_sysfs_string(std::format("/sys/bus/{}/devices/{}/name", bus, entry->d_name));
 
 			dev->set_human_name(pt_format(_("I2C {} ({}): {}"), (is_adapter ? _("Adapter") : _("Device")), entry->d_name, devname));
 		}
 
 		if (bus == "pci") {
 			uint16_t vendor = 0, device = 0;
+			std::string content;
 
-			file.open(std::format("/sys/bus/{}/devices/{}/vendor", bus, entry->d_name), ios::in);
-			if (file) {
-				file >> hex >> vendor;
-				file.close();
+			content = read_sysfs_string(std::format("/sys/bus/{}/devices/{}/vendor", bus, entry->d_name));
+			if (!content.empty()) {
+				try {
+					vendor = std::stoul(content, nullptr, 16);
+				} catch (...) {}
 			}
 
-
-			file.open(std::format("/sys/bus/{}/devices/{}/device", bus, entry->d_name), ios::in);
-			if (file) {
-				file >> hex >> device;
-				file.close();
+			content = read_sysfs_string(std::format("/sys/bus/{}/devices/{}/device", bus, entry->d_name));
+			if (!content.empty()) {
+				try {
+					device = std::stoul(content, nullptr, 16);
+				} catch (...) {}
 			}
 
 			if (vendor && device) {

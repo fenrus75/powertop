@@ -102,8 +102,8 @@ static string read_os_release(const string &filename)
 static void system_info(void)
 {
 	string str;
-	char version_date[64];
 	time_t now = time(NULL);
+	char datestr[128];
 
 	/* div attr css_class and css_id */
 	tag_attr div_attr;
@@ -120,8 +120,8 @@ static void system_info(void)
 	/* Set array of data in row Major order */
 	std::vector<std::string> system_data(sys_table.rows * sys_table.cols);
 	system_data[0]=__("PowerTOP Version");
-	snprintf(version_date, sizeof(version_date), "%s ran at %s", PACKAGE_VERSION, ctime(&now));
-	system_data[1]=version_date;
+	strftime(datestr, sizeof(datestr), "%c", localtime(&now));
+	system_data[1]=std::format("{} ran at {}", PACKAGE_VERSION, datestr);
 
 	str = read_sysfs_string("/proc/version");
 	size_t  found = str.find(" ");
@@ -134,16 +134,12 @@ static void system_info(void)
 	str  = read_sysfs_string("/sys/devices/virtual/dmi/id/board_vendor");
 	system_data[4]=__("System Name");
 	system_data[5]= str;
-	str = read_sysfs_string("/sys/devices/virtual/dmi/id/board_name");
-	system_data[5].append(str);
-	str = read_sysfs_string("/sys/devices/virtual/dmi/id/product_version");
-	system_data[5].append(str);
-	str = cpu_model();
+	system_data[5] += read_sysfs_string("/sys/devices/virtual/dmi/id/board_name");
+	system_data[5] += read_sysfs_string("/sys/devices/virtual/dmi/id/product_version");
+
 	system_data[6]=__("CPU Information");
-	stringstream n_proc;
-	n_proc << sysconf(_SC_NPROCESSORS_ONLN);
-	system_data[7]= n_proc.str();
-	system_data[7].append(str);
+	system_data[7] = std::to_string(sysconf(_SC_NPROCESSORS_ONLN));
+	system_data[7] += cpu_model();
 
 	str = read_sysfs_string("/etc/system-release");
 	if (str.length() < 1)
@@ -165,10 +161,9 @@ static void system_info(void)
 	report.add_navigation();
 }
 
-void init_report_output(const char *filename_str, int iterations)
+void init_report_output(const std::string &filename_str, int iterations)
 {
 	size_t period;
-	string filename;
 	time_t stamp;
 	char datestr[200];
 
@@ -176,17 +171,15 @@ void init_report_output(const char *filename_str, int iterations)
 		reportout.filename = filename_str;
 	else
 	{
-		filename = string(filename_str);
-		period = filename.find_last_of(".");
-		if (period > filename.length())
-			period = filename.length();
-		memset(&datestr, 0, 200);
-		memset(&stamp, 0, sizeof(time_t));
+		period = filename_str.find_last_of(".");
+		if (period == string::npos)
+			period = filename_str.length();
+
 		stamp = time(NULL);
 		strftime(datestr, sizeof(datestr), "%Y%m%d-%H%M%S", localtime(&stamp));
 		reportout.filename = std::format("{}-{}{}",
-			filename.substr(0, period), datestr,
-			filename.substr(period));
+			filename_str.substr(0, period), datestr,
+			filename_str.substr(period));
 	}
 
 	reportout.report_file = fopen(reportout.filename.c_str(), "wm");
@@ -211,6 +204,7 @@ void finish_report_output(void)
 		fputs(report.get_result().c_str(), reportout.report_file);
 		fdatasync(fileno(reportout.report_file));
 		fclose(reportout.report_file);
+		reportout.report_file = NULL;
 	}
 	report.clear_result();
 }

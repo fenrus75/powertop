@@ -41,7 +41,7 @@ struct reportstream {
 extern report_type reporttype;
 extern report_maker report;
 extern struct reportstream reportout;
-extern void init_report_output(const char *filename_str, int iterations);
+extern void init_report_output(const std::string &filename_str, int iterations);
 extern void finish_report_output(void);
 
 #endif

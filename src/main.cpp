@@ -306,7 +306,7 @@ void make_report(int time, const std::string &workload, int iterations, int samp
 	else
 	   fprintf(stderr, _("Measuring workload %s.\n"), workload.c_str());
 	for (int i=0; i != iterations; i++){
-		init_report_output(file.c_str(), iterations);
+		init_report_output(file, iterations);
 		initialize_tuning();
 		initialize_wakeup();
 		/* and then the real measurement */

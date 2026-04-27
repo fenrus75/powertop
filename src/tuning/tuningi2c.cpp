@@ -75,11 +75,11 @@ void i2c_tunable::toggle(void)
 	good = good_bad();
 
 	if (good == TUNE_GOOD) {
-		write_sysfs(i2c_path.c_str(), "on");
+		write_sysfs(i2c_path, "on");
 		return;
 	}
 
-	write_sysfs(i2c_path.c_str(), "auto");
+	write_sysfs(i2c_path, "auto");
 }
 
 static void add_i2c_callback(const std::string &d_name)

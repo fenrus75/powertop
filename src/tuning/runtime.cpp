@@ -111,11 +111,11 @@ void runtime_tunable::toggle(void)
 	good = good_bad();
 
 	if (good == TUNE_GOOD) {
-		write_sysfs(runtime_path.c_str(), "on");
+		write_sysfs(runtime_path, "on");
 		return;
 	}
 
-	write_sysfs(runtime_path.c_str(), "auto");
+	write_sysfs(runtime_path, "auto");
 }
 
 

@@ -65,11 +65,11 @@ void sysfs_tunable::toggle(void)
 
 	if (good == TUNE_GOOD) {
 		if (bad_value.length() > 0)
-			write_sysfs(sysfs_path.c_str(), bad_value.c_str());
+			write_sysfs(sysfs_path, bad_value);
 		return;
 	}
 
-	write_sysfs(sysfs_path.c_str(), target_value.c_str());
+	write_sysfs(sysfs_path, target_value);
 }
 
 

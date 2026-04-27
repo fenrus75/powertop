@@ -86,11 +86,11 @@ void usb_tunable::toggle(void)
 	good = good_bad();
 
 	if (good == TUNE_GOOD) {
-		write_sysfs(usb_path.c_str(), "on");
+		write_sysfs(usb_path, "on");
 		return;
 	}
 
-	write_sysfs(usb_path.c_str(), "auto");
+	write_sysfs(usb_path, "auto");
 }
 
 static void add_usb_callback(const std::string &d_name)
@@ -116,7 +116,7 @@ static void add_usb_callback(const std::string &d_name)
 			if (!isdigit(entry->d_name[0]))
 				continue;
 			filename = std::format("/sys/bus/usb/devices/{}/{}/supports_autosuspend", d_name, entry->d_name);
-			if (access(filename.c_str(), R_OK) == 0 && read_sysfs(filename.c_str()) == 0)
+			if (access(filename.c_str(), R_OK) == 0 && read_sysfs(filename) == 0)
 				break;
 		}
 		closedir(dir);

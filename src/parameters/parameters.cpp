@@ -276,7 +276,7 @@ void dump_result_bundle(struct result_bundle *res)
 	printf("----------------------------------\n");
 	printf("Value\t\tName\n");
 	for (it = result_index.begin(); it != result_index.end(); it++) {
-		index = get_result_index(it->first.c_str());
+		index = get_result_index(it->first);
 		printf("%5.2f%%\t\t%s(%i)\n", res->utilization[index], it->first.c_str(), index);
 	}
 

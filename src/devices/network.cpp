@@ -331,10 +331,10 @@ double network::utilization(void)
 	return (end_pkts - start_pkts) / (duration + 0.001);
 }
 
-static void netdev_callback(const char *d_name)
+static void netdev_callback(const std::string &d_name)
 {
 	std::string f_name("/sys/class/net/");
-	if (strcmp(d_name, "lo") == 0)
+	if (d_name == "lo")
 		return;
 
 	f_name.append(d_name);
@@ -355,13 +355,17 @@ static void netdev_callback(const char *d_name)
 
 void create_all_nics(callback fn)
 {
-	if (!fn)
-		fn = &netdev_callback;
+	if (!fn) {
+		process_directory("/sys/class/net/", (callback_str)&netdev_callback);
+		return;
+	}
 	process_directory("/sys/class/net/", fn);
 }
 
 void create_all_nics(callback_str fn)
 {
+	if (!fn)
+		fn = &netdev_callback;
 	process_directory("/sys/class/net/", fn);
 }
 

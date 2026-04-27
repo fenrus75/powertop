@@ -135,11 +135,11 @@ double alsa::utilization(void)
 	return p;
 }
 
-static void create_all_alsa_callback(const char *d_name)
+static void create_all_alsa_callback(const std::string &d_name)
 {
 	class alsa *bl;
 
-	if (strncmp(d_name, "hwC", 3) != 0)
+	if (!d_name.starts_with("hwC"))
 		return;
 
 	if (access(std::format("/sys/class/sound/{}/power_on_acct", d_name).c_str(), R_OK) != 0)

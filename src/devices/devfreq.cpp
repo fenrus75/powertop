@@ -220,7 +220,7 @@ void end_devfreq_measurement(void)
 		all_devfreq[i]->end_measurement();
 }
 
-static void devfreq_dev_callback(const char *d_name)
+static void devfreq_dev_callback(const std::string &d_name)
 {
 	devfreq *df = new(std::nothrow) class devfreq(d_name);
 	if (df)
@@ -250,8 +250,8 @@ void create_all_devfreq_devices(void)
 		return;
 	}
 
-	callback fn = &devfreq_dev_callback;
-	process_directory(p.c_str(), fn);
+	callback_str fn = &devfreq_dev_callback;
+	process_directory(p, fn);
 }
 
 void initialize_devfreq(void)

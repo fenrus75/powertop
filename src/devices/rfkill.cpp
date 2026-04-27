@@ -121,7 +121,7 @@ double rfkill::utilization(void)
 	return p;
 }
 
-static void create_all_rfkills_callback(const char *d_name)
+static void create_all_rfkills_callback(const std::string &d_name)
 {
 	std::string name(d_name);
 	class rfkill *bl;

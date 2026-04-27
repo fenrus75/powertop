@@ -192,27 +192,20 @@ double usbdevice::power_usage(struct result_bundle *result, struct parameter_bun
 	return power;
 }
 
-static void create_all_usb_devices_callback(const char *d_name)
+static void create_all_usb_devices_callback(const std::string &d_name)
 {
-	ifstream file;
 	class usbdevice *usb;
-	char vendorid[64], devid[64];
+	std::string vendorid, devid;
 
 	if (access(std::format("/sys/bus/usb/devices/{}/power/active_duration", d_name).c_str(), R_OK) != 0)
 		return;
 
-	file.open(std::format("/sys/bus/usb/devices/{}/idVendor", d_name), ios::in);
-	if (file)
-		file.getline(vendorid, 64);
-	file.close();
-	file.open(std::format("/sys/bus/usb/devices/{}/idProduct", d_name), ios::in);
-	if (file)
-		file.getline(devid, 64);
-	file.close();
+	vendorid = read_sysfs_string(std::format("/sys/bus/usb/devices/{}/idVendor", d_name));
+	devid = read_sysfs_string(std::format("/sys/bus/usb/devices/{}/idProduct", d_name));
 
 	std::string devid_name = std::format("usb-device-{}-{}", vendorid, devid);
 	std::string device_name = std::format("usb-device-{}-{}-{}", d_name, vendorid, devid);
-	if (result_device_exists(device_name.c_str()))
+	if (result_device_exists(device_name))
 		return;
 
 	usb = new class usbdevice(device_name, std::format("/sys/bus/usb/devices/{}", d_name), devid_name);

@@ -153,7 +153,7 @@ bool device_has_runtime_pm(const string &sysfs_path)
 	return false;
 }
 
-static void do_bus(const char *bus)
+static void do_bus(const std::string &bus)
 {
 	/* /sys/bus/pci/devices/0000\:00\:1f.0/power/runtime_suspended_time */
 
@@ -174,7 +174,7 @@ static void do_bus(const char *bus)
 			continue;
 
 		dev = new class runtime_pmdevice(entry->d_name, std::format("/sys/bus/{}/devices/{}", bus, entry->d_name));
-		if (strcmp(bus, "i2c") == 0) {
+		if (bus == "i2c") {
 			std::string devname;
 			bool is_adapter = false;
 
@@ -190,7 +190,7 @@ static void do_bus(const char *bus)
 			dev->set_human_name(pt_format(_("I2C {} ({}): {}"), (is_adapter ? _("Adapter") : _("Device")), entry->d_name, devname));
 		}
 
-		if (strcmp(bus, "pci") == 0) {
+		if (bus == "pci") {
 			uint16_t vendor = 0, device = 0;
 
 			file.open(std::format("/sys/bus/{}/devices/{}/vendor", bus, entry->d_name), ios::in);

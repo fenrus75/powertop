@@ -141,7 +141,7 @@ double backlight::utilization(void)
 	return p;
 }
 
-static void create_all_backlights_callback(const char *d_name)
+static void create_all_backlights_callback(const std::string &d_name)
 {
 	class backlight *bl;
 	bl = new class backlight(d_name, std::format("/sys/class/backlight/{}", d_name));

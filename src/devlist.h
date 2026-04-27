@@ -21,7 +21,6 @@ extern void clean_open_devices();
 extern void collect_open_devices(void);
 
 extern void clear_devpower(void);
-extern void register_devpower(const char *devstring, double power, class device *dev);
 extern void register_devpower(const std::string &devstring, double power, class device *dev);
 extern void run_devpower_list(void);
 

@@ -184,7 +184,7 @@ void collect_open_devices(void)
 
 
 /* returns 0 if no process is identified as having the device open and a value > 0 otherwise */
-int charge_device_to_openers(const char *devstring, double power, class device *_dev)
+int charge_device_to_openers(const std::string &devstring, double power, class device *_dev)
 {
 	unsigned int i;
 	int openers = 0;
@@ -212,7 +212,7 @@ int charge_device_to_openers(const char *devstring, double power, class device *
 
 	for (i = 0; i < one.size(); i++)
 		if (one[i]->device.find(devstring) != std::string::npos) {
-			proc = find_create_process(one[i]->comm.c_str(), one[i]->pid);
+			proc = find_create_process(one[i]->comm, one[i]->pid);
 			if (proc) {
 				proc->power_charge += power;
 				if (_dev->guilty.find(one[i]->comm) == std::string::npos) {
@@ -271,18 +271,13 @@ void register_devpower(const std::string &devstring, double power, class device 
 	dev->power = power;
 }
 
-void register_devpower(const char *devstring, double power, class device *_dev)
-{
-	register_devpower(std::string(devstring), power, _dev);
-}
-
 void run_devpower_list(void)
 {
 	unsigned int i;
 
 	for (i = 0; i < devpower.size(); i++) {
 		int ret;
-		ret = charge_device_to_openers(devpower[i]->device.c_str(), devpower[i]->power, devpower[i]->dev);
+		ret = charge_device_to_openers(devpower[i]->device, devpower[i]->power, devpower[i]->dev);
 		if (ret)
 			devpower[i]->dev->hide = true;
 		else

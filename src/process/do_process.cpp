@@ -854,7 +854,6 @@ void process_update_display(void)
 		std::string name;
 		std::string usage;
 		std::string events;
-		char descr[128];
 		power = format_watts(all_power[i]->Witts(), 10);
 
 		if (!show_power)
@@ -887,7 +886,7 @@ void process_update_display(void)
 			usage.c_str(), 
 			events.c_str(), 
 			name.c_str(), 
-			pretty_print(all_power[i]->description(), descr, 128));
+			pretty_print(all_power[i]->description()).c_str());
 	}
 }
 
@@ -939,7 +938,6 @@ void report_process_update_display(void)
 
 	for (i = 0; i < total; i++) {
 		std::string power, name, usage, wakes, gpus, disks, xwakes;
-		char descr[128];
 		power = format_watts(all_power[i]->Witts(), 10);
 
 		if (!show_power)
@@ -1005,7 +1003,7 @@ void report_process_update_display(void)
 		software_data[idx]=name;
 		idx+=1;
 
-		software_data[idx]=pretty_print(all_power[i]->description(), descr, 128);
+		software_data[idx]=pretty_print(all_power[i]->description());
 		idx+=1;
 		if (show_power) {
 			software_data[idx]=power;
@@ -1084,7 +1082,6 @@ void report_summary(void)
 
 	for (i = 0; i < all_power.size(); i++) {
 		std::string power, name, usage, events;
-		char descr[128];
 		power = format_watts(all_power[i]->Witts(), 10);
 
 		if (!show_power)
@@ -1122,7 +1119,7 @@ void report_summary(void)
 		summary_data[idx]=name;
 		idx+=1;
 
-		summary_data[idx]=pretty_print(all_power[i]->description(), descr, 128);
+		summary_data[idx]=pretty_print(all_power[i]->description());
 		idx+=1;
 
 		if (show_power){

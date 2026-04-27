@@ -48,7 +48,7 @@ usbdevice::usbdevice(const string &_name, const string &path, const string &devi
 	register_sysfs_path(sysfs_path);
 	name = _name;
 	devname = devid;
-	humanname = pt_format(_("USB device: {}"), pretty_print(devid, vendor, 4096));
+	humanname = pt_format(_("USB device: {}"), pretty_print(devid));
 	active_before = 0;
 	active_after = 0;
 	connected_before = 0;

@@ -80,7 +80,7 @@ extern void end_pci_access(void);
 
 
 extern std::string fmt_prefix(double n);
-extern char *pretty_print(const std::string &str, char *buf, int len);
+extern std::string pretty_print(const std::string &str);
 extern int equals(double a, double b);
 
 template<size_t N> void pt_strcpy(char (&d)[N], const char *s)

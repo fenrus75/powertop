@@ -46,12 +46,11 @@ const char* softirqs[] = {
 
 interrupt::interrupt(const string &_handler, int _number) : power_consumer()
 {
-	char buf[128];
 	running_since = 0;
 	number = _number;
 	handler = _handler;
 	raw_count = 0;
-	desc = std::format("[{}] {}", number, pretty_print(handler, buf, 128));
+	desc = std::format("[{}] {}", number, pretty_print(handler));
 }
 
 

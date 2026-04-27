@@ -400,25 +400,15 @@ static void init_pretty_print(void)
 	pretty_print_init = 1;
 }
 
-
-char *pretty_print(const std::string &str, char *buf, int len)
+std::string pretty_print(const std::string &str)
 {
-	const char *p = NULL;
-
 	if (!pretty_print_init)
 		init_pretty_print();
 
 	if (pretty_prints.count(str))
-		p = pretty_prints[str].c_str();
+		return pretty_prints[str];
 
-	if (!p || strlen(p) == 0)
-		p = str.c_str();
-
-	snprintf(buf, len,  "%s", p);
-
-	if (len)
-		buf[len - 1] = 0;
-	return buf;
+	return str;
 }
 
 void process_directory(const std::string &d_name, callback fn)

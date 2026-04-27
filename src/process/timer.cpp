@@ -28,6 +28,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
+#include <sstream>
 
 #include "timer.h"
 #include "../lib.h"
@@ -39,25 +40,23 @@ using namespace std;
 
 static bool timer_is_deferred(string_view handler)
 {
-	FILE    *file;
-	bool    ret = false;
-	char    line[4096];
-
-	file = fopen("/proc/timer_stats", "r");	
-	if (!file) {
+	bool ret = false;
+	std::string content = read_file_content("/proc/timer_stats");
+	if (content.empty()) {
 		return ret;
 	}
 
-	while (!feof(file)) {
-		if (fgets(line, 4096, file) == NULL)
-			break;
-		if (strstr(line, string(handler).c_str())) {
-			ret = (strstr(line, "D,") != NULL);
-			if (ret == true)
+	std::istringstream stream(content);
+	std::string line;
+	std::string handler_str(handler);
+
+	while (std::getline(stream, line)) {
+		if (line.find(handler_str) != std::string::npos) {
+			ret = (line.find("D,") != std::string::npos);
+			if (ret)
 				break;
 		}
 	}
-	fclose(file);
 	return ret;
 }
 

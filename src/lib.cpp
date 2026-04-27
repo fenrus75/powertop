@@ -313,11 +313,9 @@ int utf_ok = -1;
 string fmt_prefix(double n)
 {
 	static const char prefixes[] = "yzafpnum kMGTPEZY";
-	char tmpbuf[16];
 	int omag, npfx;
-	char buf[32];
-	char *p, *q, pfx, *c;
-	int i;
+	char pfx;
+	std::string res;
 
 	if (utf_ok == -1) {
 		char *g;
@@ -328,52 +326,55 @@ string fmt_prefix(double n)
 			utf_ok = 0;
 	}
 
-	p = buf;
-
-	*p = ' ';
 	if (n < 0.0) {
-		*p = '-';
+		res = "-";
 		n = -n;
-		p++;
+	} else {
+		res = " ";
 	}
 
-	snprintf(tmpbuf, sizeof tmpbuf, "%.2e", n);
-	c = strchr(tmpbuf, 'e');
-	if (!c) {
+	std::string tmpbuf = std::format("{:.2e}", n);
+	size_t e_pos = tmpbuf.find('e');
+	if (e_pos == string::npos) {
 		return "NaN";
 	}
-	omag = atoi(c + 1);
+	
+	try {
+		omag = std::stoi(tmpbuf.substr(e_pos + 1));
+	} catch (...) {
+		return "NaN";
+	}
 
 	npfx = ((omag + 27) / 3) - (27/3);
 	omag = (omag + 27) % 3;
 
-	q = tmpbuf;
 	if (omag == 2)
 		omag = -1;
 
-	for (i = 0; i < 3; i++) {
-		while (!isdigit(*q))
-			q++;
-		*p++ = *q++;
-		if (i == omag)
-			*p++ = '.';
+	int digits_found = 0;
+	for (char c : tmpbuf) {
+		if (isdigit(c)) {
+			res += c;
+			if (digits_found == omag)
+				res += '.';
+			digits_found++;
+		}
+		if (digits_found >= 3)
+			break;
 	}
-	*p++ = ' ';
+	res += ' ';
 
 	pfx = prefixes[npfx + 8];
 
 	if (pfx == ' ') {
 		/* do nothing */
 	} else if (pfx == 'u' && utf_ok > 0) {
-		strcpy(p, "µ");		/* Mu is a multibyte sequence */
-		while (*p)
-			p++;
+		res += "µ";
 	} else {
-		*p++ = pfx;
+		res += pfx;
 	}
-	*p = '\0';
 
-	return buf;
+	return res;
 }
 
 static map<string, string> pretty_prints;

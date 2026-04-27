@@ -71,23 +71,23 @@ struct packet {
 };
 
 
-static int open_device(const char *device_name)
+static int open_device(const std::string &device_name)
 {
 	struct stat s;
 	int ret;
 
-	ret = stat(device_name, &s);
+	ret = stat(device_name.c_str(), &s);
 	if (ret < 0)
 		return -1;
 
 	if (!S_ISCHR(s.st_mode))
 		return -1;
 
-	ret = access(device_name, R_OK | W_OK);
+	ret = access(device_name.c_str(), R_OK | W_OK);
 	if (ret)
 		return -1;
 
-	ret = open(device_name, O_RDWR | O_NONBLOCK | O_NOCTTY);
+	ret = open(device_name.c_str(), O_RDWR | O_NONBLOCK | O_NOCTTY);
 	if (ret < 0)
 		return -1;
 
@@ -271,7 +271,7 @@ extech_power_meter::extech_power_meter(const string &extech_name) : power_meter(
 	rate = 0.0;
 	int ret;
 
-	fd = open_device(name.c_str());
+	fd = open_device(name);
 	if (fd < 0)
 		return;
 

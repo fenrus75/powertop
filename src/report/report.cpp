@@ -32,10 +32,12 @@
 #include <utility>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string.h>
 #include <malloc.h>
 #include <unistd.h>
 #include <limits.h>
+#include <format>
 #include "report-data-html.h"
 
 using namespace std;
@@ -46,52 +48,50 @@ report_maker report(REPORT_OFF);
 
 string cpu_model(void)
 {
-	ifstream file;
-
-	file.open("/proc/cpuinfo", ios::in);
-
-	if (!file)
+	std::string content = read_file_content("/proc/cpuinfo");
+	if (content.empty())
 		return "";
 
-	while (file) {
-		char line[4096];
-		file.getline(line, 4096);
-		if (strstr(line, "model name")) {
-			char *c;
-			c = strchr(line, ':');
-			if (c) {
-				file.close();
-				c++;
-				return c;
+	std::istringstream stream(content);
+	std::string line;
+
+	while (std::getline(stream, line)) {
+		if (line.find("model name") != std::string::npos) {
+			size_t pos = line.find(':');
+			if (pos != std::string::npos) {
+				std::string model = line.substr(pos + 1);
+				/* Trim leading space if any */
+				if (!model.empty() && model[0] == ' ')
+					model.erase(0, 1);
+				return model;
 			}
 		}
 	}
-	file.close();
 	return "";
 }
 
 static string read_os_release(const string &filename)
 {
 	ifstream file;
-	char content[4096];
-	char *c;
-	const char *pname = "PRETTY_NAME=";
+	string line;
+	const string pname = "PRETTY_NAME=";
 	string os("");
 
-	file.open(filename.c_str(), ios::in);
+	file.open(filename, ios::in);
 	if (!file)
 		return "";
-	while (file.getline(content, 4096)) {
-		if (strncasecmp(pname, content, strlen(pname)) == 0) {
-			c = strchr(content, '=');
-			if (!c)
+	while (getline(file, line)) {
+		if (line.starts_with(pname)) {
+			size_t pos = line.find('=');
+			if (pos == string::npos)
 				break;
-			c += 1;
-			if (*c == '"' || *c == '\'')
-				c += 1;
-			*strchrnul(c, '"') = 0;
-			*strchrnul(c, '\'') = 0;
-			os = c;
+			os = line.substr(pos + 1);
+			if (os.length() >= 2 && (os.front() == '"' || os.front() == '\'')) {
+				os.erase(0, 1);
+				size_t end_pos = os.find_first_of("\"\'");
+				if (end_pos != string::npos)
+					os.erase(end_pos);
+			}
 			break;
 		}
 	}

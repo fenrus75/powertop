@@ -137,68 +137,22 @@ ahci::ahci(const string &_name, const string &path): device()
 
 void ahci::start_measurement(void)
 {
-	ifstream file;
-
-	try {
-		file.open(std::format("{}/ahci_alpm_active", sysfs_path), ios::in);
-		if (file) {
-			file >> start_active;
-		}
-		file.close();
-		file.open(std::format("{}/ahci_alpm_partial", sysfs_path), ios::in);
-
-		if (file) {
-			file >> start_partial;
-		}
-		file.close();
-		file.open(std::format("{}/ahci_alpm_slumber", sysfs_path), ios::in);
-		if (file) {
-			file >> start_slumber;
-		}
-		file.close();
-		file.open(std::format("{}/ahci_alpm_devslp", sysfs_path), ios::in);
-		if (file) {
-			file >> start_devslp;
-		}
-		file.close();
-	}
-	catch (std::ios_base::failure &c) {
-		fprintf(stderr, "%s\n", c.what());
-	}
-
+	start_active = read_sysfs(std::format("{}/ahci_alpm_active", sysfs_path));
+	start_partial = read_sysfs(std::format("{}/ahci_alpm_partial", sysfs_path));
+	start_slumber = read_sysfs(std::format("{}/ahci_alpm_slumber", sysfs_path));
+	start_devslp = read_sysfs(std::format("{}/ahci_alpm_devslp", sysfs_path));
 }
 
 void ahci::end_measurement(void)
 {
-	ifstream file;
 	double p;
 	double total;
 
-	try {
-		file.open(std::format("{}/ahci_alpm_active", sysfs_path), ios::in);
-		if (file) {
-			file >> end_active;
-		}
-		file.close();
-		file.open(std::format("{}/ahci_alpm_partial", sysfs_path), ios::in);
-		if (file) {
-			file >> end_partial;
-		}
-		file.close();
-		file.open(std::format("{}/ahci_alpm_slumber", sysfs_path), ios::in);
-		if (file) {
-			file >> end_slumber;
-		}
-		file.close();
-		file.open(std::format("{}/ahci_alpm_devslp", sysfs_path), ios::in);
-		if (file) {
-			file >> end_devslp;
-		}
-		file.close();
-	}
-	catch (std::ios_base::failure &c) {
-		fprintf(stderr, "%s\n", c.what());
-	}
+	end_active = read_sysfs(std::format("{}/ahci_alpm_active", sysfs_path));
+	end_partial = read_sysfs(std::format("{}/ahci_alpm_partial", sysfs_path));
+	end_slumber = read_sysfs(std::format("{}/ahci_alpm_slumber", sysfs_path));
+	end_devslp = read_sysfs(std::format("{}/ahci_alpm_devslp", sysfs_path));
+
 	if (end_active < start_active)
 		end_active = start_active;
 	if (end_partial < start_partial)
@@ -257,25 +211,18 @@ void create_all_ahcis(void)
 		return;
 	while (1) {
 		class ahci *bl;
-		ofstream file;
-		ifstream check_file;
 		entry = readdir(dir);
 		if (!entry)
 			break;
 		if (entry->d_name[0] == '.')
 			continue;
 
-		check_file.open(std::format("/sys/class/scsi_host/{}/ahci_alpm_accounting", entry->d_name), ios::in);
-		check_file.get();
-		check_file.close();
-		if (check_file.bad())
+		bool ok = false;
+		read_sysfs(std::format("/sys/class/scsi_host/{}/ahci_alpm_accounting", entry->d_name), &ok);
+		if (!ok)
 			continue;
 
-		file.open(std::format("/sys/class/scsi_host/{}/ahci_alpm_accounting", entry->d_name), ios::in);
-		if (!file)
-			continue;
-		file << 1 ;
-		file.close();
+		write_sysfs(std::format("/sys/class/scsi_host/{}/ahci_alpm_accounting", entry->d_name), "1");
 
 		bl = new class ahci(entry->d_name, std::format("/sys/class/scsi_host/{}", entry->d_name));
 		all_devices.push_back(bl);

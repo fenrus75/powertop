@@ -58,10 +58,6 @@ int get_param_index(const std::string &name)
 	return index;
 }
 
-int get_param_index(const char *name)
-{
-	return get_param_index(std::string(name));
-}
 
 int get_result_index(const std::string &name)
 {
@@ -78,10 +74,6 @@ int get_result_index(const std::string &name)
 	return index;
 }
 
-int get_result_index(const char *name)
-{
-	return get_result_index(std::string(name));
-}
 
 
 void register_parameter(const std::string &name, double default_value, double weight)
@@ -101,10 +93,6 @@ void register_parameter(const std::string &name, double default_value, double we
 	all_parameters.weights[index] = weight;
 }
 
-void register_parameter(const char *name, double default_value, double weight)
-{
-	register_parameter(std::string(name), default_value, weight);
-}
 
 void set_parameter_value(const std::string &name, double value, struct parameter_bundle *bundle)
 {
@@ -120,10 +108,6 @@ void set_parameter_value(const std::string &name, double value, struct parameter
 	bundle->parameters[index] = value;
 }
 
-void set_parameter_value(const char *name, double value, struct parameter_bundle *bundle)
-{
-	set_parameter_value(std::string(name), value, bundle);
-}
 
 double get_parameter_value(const std::string &name, struct parameter_bundle *the_bundle)
 {
@@ -132,10 +116,6 @@ double get_parameter_value(const std::string &name, struct parameter_bundle *the
 	return get_parameter_value(index, the_bundle);
 }
 
-double get_parameter_value(const char *name, struct parameter_bundle *the_bundle)
-{
-	return get_parameter_value(std::string(name), the_bundle);
-}
 
 double get_parameter_value(unsigned int index, struct parameter_bundle *the_bundle)
 {
@@ -156,10 +136,6 @@ double get_result_value(const std::string &name, struct result_bundle *the_bundl
 	return get_result_value(get_result_index(name), the_bundle);
 }
 
-double get_result_value(const char *name, struct result_bundle *the_bundle)
-{
-	return get_result_value(std::string(name), the_bundle);
-}
 
 void set_result_value(const std::string &name, double value, struct result_bundle *the_bundle)
 {
@@ -169,10 +145,6 @@ void set_result_value(const std::string &name, double value, struct result_bundl
 	the_bundle->utilization[index] = value;
 }
 
-void set_result_value(const char *name, double value, struct result_bundle *the_bundle)
-{
-	set_result_value(std::string(name), value, the_bundle);
-}
 
 void set_result_value(unsigned int index, double value, struct result_bundle *the_bundle)
 {
@@ -191,7 +163,7 @@ double get_result_value(int index, struct result_bundle *the_bundle)
 }
 
 
-int result_device_exists(const char *name)
+int result_device_exists(const std::string &name)
 {
 	unsigned int i;
 	for (i = 0; i < all_devices.size(); i++) {
@@ -206,14 +178,11 @@ void report_utilization(const std::string &name, double value, struct result_bun
 	set_result_value(name, value, bundle);
 }
 
-void report_utilization(const char *name, double value, struct result_bundle *bundle)
-{
-	report_utilization(std::string(name), value, bundle);
-}
 void report_utilization(int index, double value, struct result_bundle *bundle)
 {
 	set_result_value(index, value, bundle);
 }
+
 
 
 
@@ -419,7 +388,7 @@ double average_power(void)
 	return sum;
 }
 
-int utilization_power_valid(const char *u)
+int utilization_power_valid(const std::string &u)
 {
 	unsigned int i;
 	unsigned int index;
@@ -487,7 +456,7 @@ int global_power_valid(void)
 }
 
 /* find the directory to store powertop results/parameters based on distribution*/
-std::string get_param_directory(const char *filename)
+std::string get_param_directory(const std::string &filename)
 {
 	std::string tempfilename;
 

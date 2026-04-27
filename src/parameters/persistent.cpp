@@ -32,7 +32,7 @@
 
 using namespace std;
 
-void save_all_results(const char *filename)
+void save_all_results(const std::string &filename)
 {
 	ofstream file;
 	unsigned int i;
@@ -41,7 +41,7 @@ void save_all_results(const char *filename)
 
 	pathname = get_param_directory(filename);
 
-	file.open(pathname.c_str(), ios::out);
+	file.open(pathname, ios::out);
 	if (!file) {
 		cout << _("Cannot save to file") << " " << pathname << "\n";
 		return;
@@ -71,11 +71,10 @@ void close_results()
 	return;
 }
 
-void load_results(const char *filename)
+void load_results(const std::string &filename)
 {
 	ifstream file;
-	char line[4096];
-	char *c1;
+	string line;
 	struct result_bundle *bundle;
 	int first = 1;
 	unsigned int count = 0;
@@ -84,7 +83,7 @@ void load_results(const char *filename)
 
 	pathname = get_param_directory(filename);
 
-	file.open(pathname.c_str(), ios::in);
+	file.open(pathname, ios::in);
 	if (!file) {
 		cout << _("Cannot load from file") << " " << pathname << "\n";
 		return;
@@ -92,20 +91,21 @@ void load_results(const char *filename)
 
 	bundle = new struct result_bundle;
 
-	while (file) {
+	while (getline(file, line)) {
 		double d;
 		if (first) {
-			file.getline(line, 4096);
-			if (strlen(line)>0) {
-				sscanf(line, "%lf", &bundle->power);
-				if (bundle->power < min_power)
-					min_power = bundle->power;
+			if (line.length() > 0) {
+				try {
+					bundle->power = stod(line);
+					if (bundle->power < min_power)
+						min_power = bundle->power;
+				} catch (...) {}
 			}
 			first = 0;
 			continue;
 		}
-		file.getline(line, 4096);
-		if (strlen(line) < 3) {
+
+		if (line.length() < 3) {
 			int overflow_index;
 
 			bundle_saved = 1;
@@ -121,13 +121,17 @@ void load_results(const char *filename)
 			count++;
 			continue;
 		}
-		c1 = strchr(line, '\t');
-		if (!c1)
+
+		size_t pos = line.find('\t');
+		if (pos == string::npos)
 			continue;
-		*c1 = 0;
-		c1++;
-		sscanf(c1, "%lf", &d);
-		set_result_value(line, d, bundle);
+
+		string name = line.substr(0, pos);
+		string value_str = line.substr(pos + 1);
+		try {
+			d = stod(value_str);
+			set_result_value(name, d, bundle);
+		} catch (...) {}
 	}
 
 	if (bundle_saved == 0)
@@ -135,10 +139,10 @@ void load_results(const char *filename)
 
 	file.close();
 	// '%i" is for count, do not translate
-	fprintf(stderr, _("Loaded %i prior measurements\n"), count);
+	fprintf(stderr, _("Loaded %i prior measurements\n"), (int)count);
 }
 
-void save_parameters(const char *filename)
+void save_parameters(const std::string &filename)
 {
 	ofstream file;
 	std::string pathname;
@@ -150,7 +154,7 @@ void save_parameters(const char *filename)
 
 	pathname = get_param_directory(filename);
 
-	file.open(pathname.c_str(), ios::out);
+	file.open(pathname, ios::out);
 	if (!file) {
 		cout << _("Cannot save to file") << " " << pathname << "\n";
 		return;
@@ -166,36 +170,33 @@ void save_parameters(const char *filename)
 	file.close();
 }
 
-void load_parameters(const char *filename)
+void load_parameters(const std::string &filename)
 {
 	ifstream file;
-	char line[4096];
-	char *c1;
+	string line;
 	std::string pathname;
 
 	pathname = get_param_directory(filename);
 
-	file.open(pathname.c_str(), ios::in);
+	file.open(pathname, ios::in);
 	if (!file) {
 		cout << _("Cannot load from file") << " " << pathname << "\n";
 		cout << _("File will be loaded after taking minimum number of measurement(s) with battery only \n");
 		return;
 	}
 
-	while (file) {
+	while (getline(file, line)) {
 		double d;
-		memset(line, 0, 4096);
-		file.getline(line, 4095);
-
-		c1 = strchr(line, '\t');
-		if (!c1)
+		size_t pos = line.find('\t');
+		if (pos == string::npos)
 			continue;
-		*c1 = 0;
-		c1++;
-		sscanf(c1, "%lf", &d);
 
-
-		set_parameter_value(line, d);
+		string name = line.substr(0, pos);
+		string value_str = line.substr(pos + 1);
+		try {
+			d = stod(value_str);
+			set_parameter_value(name, d);
+		} catch (...) {}
 	}
 
 	file.close();

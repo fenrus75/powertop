@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <format>
 
 #include <dirent.h>
@@ -51,19 +52,16 @@ devfreq::devfreq(const string &dpath): device()
 
 uint64_t devfreq::parse_freq_time(const string &pchr_s)
 {
-	char *cptr, *pptr;
-	std::string pchr = pchr_s;
 	uint64_t ctime = 0;
+	size_t pos;
 
-	pptr = pchr.data();
-	cptr = strtok(pchr.data(), " :");
-	while (cptr != NULL) {
-		cptr = strtok(NULL, " :");
-		if (cptr )
-			pptr = cptr;
+	pos = pchr_s.find_last_of(" :");
+	if (pos != string::npos) {
+		try {
+			ctime = std::stoull(pchr_s.substr(pos + 1));
+		} catch (...) {}
 	}
 
-	ctime = strtoull(pptr, NULL, 10);
 	return ctime;
 }
 
@@ -122,37 +120,41 @@ void devfreq::update_devfreq_freq_state(uint64_t freq, uint64_t time)
 
 void devfreq::parse_devfreq_trans_stat(const string &dname)
 {
-	ifstream file;
 	std::string filename;
+	std::string content;
 
 	filename = std::format("/sys/class/devfreq/{}/trans_stat", dir_name);
-	file.open(filename.c_str());
+	content = read_file_content(filename);
 
-	if (!file)
+	if (content.empty())
 		return;
 
-	char line[1024];
-	char *c;
+	std::istringstream stream(content);
+	std::string line;
 
-	while (file) {
+	while (std::getline(stream, line)) {
 		uint64_t freq;
 		uint64_t time;
-		char *pchr;
+		std::string pchr;
 
-		memset(line, 0, sizeof(line));
-		file.getline(line, sizeof(line));
-
-		pchr = strchr(line, '*');
-		pchr = (pchr != NULL) ? pchr+1 : line;
-
-		freq = strtoull(pchr, &c, 10);
-		if (!freq)
+		if (line.empty())
 			continue;
 
-		time = parse_freq_time(pchr);
-		update_devfreq_freq_state(freq, time);
+		size_t pos = line.find('*');
+		if (pos != std::string::npos)
+			pchr = line.substr(pos + 1);
+		else
+			pchr = line;
+
+		std::istringstream iss(pchr);
+		if (iss >> freq) {
+			if (!freq)
+				continue;
+
+			time = parse_freq_time(pchr);
+			update_devfreq_freq_state(freq, time);
+		}
 	}
-	file.close();
 }
 
 void devfreq::start_measurement(void)

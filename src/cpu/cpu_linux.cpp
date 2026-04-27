@@ -42,7 +42,6 @@
 
 void cpu_linux::parse_cstates_start(void)
 {
-	ifstream file;
 	DIR *dir;
 	struct dirent *entry;
 	std::string filename;
@@ -66,33 +65,22 @@ void cpu_linux::parse_cstates_start(void)
 			continue;
 
 		linux_name = entry->d_name;
-		human_name = linux_name;
-
-		file.open(std::format("{}/{}/name", filename, entry->d_name), ios::in);
-		if (file) {
-			getline(file, human_name);
-			file.close();
-		}
+		human_name = read_sysfs_string(std::format("{}/{}/name", filename, entry->d_name));
+		if (human_name.empty())
+			human_name = linux_name;
 
 		if (human_name == "C0")
 			human_name = _("C0 polling");
 
-		file.open(std::format("{}/{}/usage", filename, entry->d_name), ios::in);
-		if (file) {
-			file >> usage;
-			file.close();
-		} else
+		bool ok = false;
+		usage = read_sysfs(std::format("{}/{}/usage", filename, entry->d_name), &ok);
+		if (!ok)
 			continue;
 
-		file.open(std::format("{}/{}/time", filename, entry->d_name), ios::in);
-
-		if (file) {
-			file >> duration;
-			file.close();
-		}
+		duration = read_sysfs(std::format("{}/{}/time", filename, entry->d_name));
 
 
-		update_cstate(linux_name.c_str(), human_name.c_str(), usage, duration, 1);
+		update_cstate(linux_name, human_name, usage, duration, 1);
 
 	}
 	closedir(dir);
@@ -134,7 +122,6 @@ void cpu_linux::measurement_start(void)
 
 void cpu_linux::parse_cstates_end(void)
 {
-	ifstream file;
 	DIR *dir;
 	struct dirent *entry;
 	std::string filename;
@@ -149,7 +136,6 @@ void cpu_linux::parse_cstates_end(void)
 	 * contains a 'usage' and a 'time' (duration) file */
 	while ((entry = readdir(dir))) {
 		std::string linux_name;
-		std::string human_name;
 		uint64_t usage = 0;
 		uint64_t duration = 0;
 
@@ -158,25 +144,17 @@ void cpu_linux::parse_cstates_end(void)
 			continue;
 
 		linux_name = entry->d_name;
-		human_name = linux_name;
 
 
-		file.open(std::format("{}/{}/usage", filename, entry->d_name), ios::in);
-		if (file) {
-			file >> usage;
-			file.close();
-		} else
+		bool ok = false;
+		usage = read_sysfs(std::format("{}/{}/usage", filename, entry->d_name), &ok);
+		if (!ok)
 			continue;
 
-		file.open(std::format("{}/{}/time", filename, entry->d_name), ios::in);
-
-		if (file) {
-			file >> duration;
-			file.close();
-		}
+		duration = read_sysfs(std::format("{}/{}/time", filename, entry->d_name));
 
 
-		finalize_cstate(linux_name.c_str(), usage, duration, 1);
+		finalize_cstate(linux_name, usage, duration, 1);
 
 	}
 	closedir(dir);

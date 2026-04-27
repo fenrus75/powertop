@@ -43,8 +43,6 @@
 
 void i965_core::measurement_start(void)
 {
-	ifstream file;
-
 	gettimeofday(&before, NULL);
 	rc6_before = read_sysfs("/sys/class/drm/card0/power/rc6_residency_ms", NULL);
 	rc6p_before = read_sysfs("/sys/class/drm/card0/power/rc6p_residency_ms", NULL);

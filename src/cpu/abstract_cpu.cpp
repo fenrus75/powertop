@@ -24,6 +24,7 @@
  */
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -92,7 +93,6 @@ void abstract_cpu::freq_updated(uint64_t time)
 void abstract_cpu::measurement_start(void)
 {
 	unsigned int i;
-	ifstream file;
 	std::string filename;
 
 	last_stamp = 0;
@@ -111,11 +111,11 @@ void abstract_cpu::measurement_start(void)
 
 
 	filename = std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_available_frequencies", number);
-	file.open(filename.c_str(), ios::in);
-	if (file) {
-		file >> max_frequency;
-		file >> max_minus_one_frequency;
-		file.close();
+	std::string content = read_file_content(filename);
+	if (!content.empty()) {
+		std::istringstream stream(content);
+		stream >> max_frequency;
+		stream >> max_minus_one_frequency;
 	}
 
 	for (i = 0; i < children.size(); i++)
@@ -188,7 +188,6 @@ void abstract_cpu::measurement_end(void)
 void abstract_cpu::insert_cstate(const std::string &linux_name, const std::string &human_name, uint64_t usage, uint64_t duration, int count, int level)
 {
 	struct idle_state *state;
-	const char *c;
 
 	state = new(std::nothrow) struct idle_state;
 
@@ -211,40 +210,45 @@ void abstract_cpu::insert_cstate(const std::string &linux_name, const std::strin
 
 	state->line_level = -1;
 
-	c = human_name.c_str();
-	while (*c) {
-		if (state->linux_name == "active") {
-			state->line_level = LEVEL_C0;
-			break;
-		}
-		if (*c >= '0' && *c <='9') {
-			state->line_level = strtoull(c, NULL, 10);
-			if(*(c+1) != '-'){
-				int greater_line_level = strtoull(c, NULL, 10);
-				for(unsigned int pos = 0; pos < cstates.size(); pos++){
-					if (cstates[pos]->human_name.length() > 2) {
-						if(*c == cstates[pos]->human_name[1]){
-							if(*(c+1) != cstates[pos]->human_name[2]){
-								greater_line_level = max(greater_line_level, cstates[pos]->line_level);
-								state->line_level = greater_line_level + 1;
+	if (state->linux_name == "active") {
+		state->line_level = LEVEL_C0;
+	} else {
+		for (size_t i = 0; i < human_name.length(); i++) {
+			char c = human_name[i];
+			if (c >= '0' && c <= '9') {
+				try {
+					state->line_level = std::stoull(human_name.substr(i));
+				} catch (...) {}
+
+				if (i + 1 < human_name.length() && human_name[i+1] != '-') {
+					int greater_line_level = state->line_level;
+					for(unsigned int pos = 0; pos < cstates.size(); pos++){
+						if (cstates[pos]->human_name.length() > 2) {
+							if(c == cstates[pos]->human_name[1]){
+								if(i + 1 < human_name.length() && human_name[i+1] != cstates[pos]->human_name[2]){
+									greater_line_level = max(greater_line_level, cstates[pos]->line_level);
+									state->line_level = greater_line_level + 1;
+								}
 							}
 						}
 					}
 				}
+				break;
 			}
-			break;
 		}
-		c++;
 	}
 
 	/* some architectures (ARM) don't have good numbers in their human name.. fall back to the linux name for those */
-	c = linux_name.c_str();
-	while (*c && state->line_level < 0) {
-		if (*c >= '0' && *c <='9') {
-			state->line_level = strtoull(c, NULL, 10);
-			break;
+	if (state->line_level < 0) {
+		for (size_t i = 0; i < linux_name.length(); i++) {
+			char c = linux_name[i];
+			if (c >= '0' && c <= '9') {
+				try {
+					state->line_level = std::stoull(linux_name.substr(i));
+				} catch (...) {}
+				break;
+			}
 		}
-		c++;
 	}
 
 	if (level >= 0)
@@ -450,51 +454,25 @@ void abstract_cpu::change_effective_frequency(uint64_t time, uint64_t frequency)
 
 void abstract_cpu::wiggle(void)
 {
-	std::string filename;
-	ifstream ifile;
-	ofstream ofile;
-	uint64_t minf,maxf;
+	uint64_t minf, maxf;
 	uint64_t setspeed = 0;
 
 	/* wiggle a CPU so that we have a record of it at the start and end of the perf trace */
 
-	filename = std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_max_freq", first_cpu);
-	ifile.open(filename.c_str(), ios::in);
-	ifile >> maxf;
-	ifile.close();
-
-	filename = std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_min_freq", first_cpu);
-	ifile.open(filename.c_str(), ios::in);
-	ifile >> minf;
-	ifile.close();
+	maxf = read_sysfs(std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_max_freq", first_cpu));
+	minf = read_sysfs(std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_min_freq", first_cpu));
 
 	/* In case of the userspace governor, remember the old setspeed setting, it will be affected by wiggle */
-	filename = std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_setspeed", first_cpu);
-	ifile.open(filename.c_str(), ios::in);
-	/* Note that non-userspace governors report "<unsupported>". In that case ifile will fail and setspeed remains 0 */
-	ifile >> setspeed;
-	ifile.close();
+	/* Note that non-userspace governors report "<unsupported>". In that case read_sysfs will return 0 */
+	setspeed = read_sysfs(std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_setspeed", first_cpu));
 
-	ofile.open(filename.c_str(), ios::out);
-	ofile << maxf;
-	ofile.close();
-	filename = std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_min_freq", first_cpu);
-	ofile.open(filename.c_str(), ios::out);
-	ofile << minf;
-	ofile.close();
-	filename = std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_max_freq", first_cpu);
-	ofile.open(filename.c_str(), ios::out);
-	ofile << minf;
-	ofile.close();
-	ofile.open(filename.c_str(), ios::out);
-	ofile << maxf;
-	ofile.close();
+	write_sysfs(std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_setspeed", first_cpu), std::to_string(maxf));
+	write_sysfs(std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_min_freq", first_cpu), std::to_string(minf));
+	write_sysfs(std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_max_freq", first_cpu), std::to_string(minf));
+	write_sysfs(std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_max_freq", first_cpu), std::to_string(maxf));
 
 	if (setspeed != 0) {
-		filename = std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_setspeed", first_cpu);
-		ofile.open(filename.c_str(), ios::out);
-		ofile << setspeed;
-		ofile.close();
+		write_sysfs(std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_setspeed", first_cpu), std::to_string(setspeed));
 	}
 }
 uint64_t abstract_cpu::total_pstate_time(void)

@@ -40,9 +40,8 @@
 
 usbdevice::usbdevice(const string &_name, const string &path, const string &devid): device()
 {
-	ifstream file;
-	char vendor[4096];
-	char product[4096];
+	std::string vendor;
+	std::string product;
 
 	sysfs_path = path;
 	register_sysfs_path(sysfs_path);
@@ -63,93 +62,41 @@ usbdevice::usbdevice(const string &_name, const string &path, const string &devi
 
 
 	/* root ports and hubs should count as 0 power ... their activity is derived */
-	file.open(std::format("{}/bDeviceClass", path), ios::in);
-	if (file) {
-		int dclass = 0;
+	if (read_sysfs(std::format("{}/bDeviceClass", path)) == 9)
+		rootport = 1;
 
-		file >> dclass;
-		file.close();
-		if (dclass == 9)
-			rootport = 1;
-	};
+	vendor = read_sysfs_string(std::format("{}/manufacturer", path));
+	if (vendor.find("Linux ") != std::string::npos)
+		vendor = "";
 
-	vendor[0] = 0;
-	product[0] = 0;
-	file.open(std::format("{}/manufacturer", path), ios::in);
-	if (file) {
-		file.getline(vendor, 2047);
-		if (strstr(vendor, "Linux "))
-			vendor[0] = 0;
-		file.close();
-	};
-	file.open(std::format("{}/product", path), ios::in);
-	if (file) {
-		file.getline(product, 2040);
-		file.close();
-	};
-	if (strlen(vendor) && strlen(product))
+	product = read_sysfs_string(std::format("{}/product", path));
+
+	if (!vendor.empty() && !product.empty())
 		humanname = pt_format(_("USB device: {} ({})"), product, vendor);
-	else if (strlen(product))
+	else if (!product.empty())
 		humanname = pt_format(_("USB device: {}"), product);
-	else if (strlen(vendor))
+	else if (!vendor.empty())
 		humanname = pt_format(_("USB device: {}"), vendor);
 
 	/* For usbdevfs we need bus number and device number */
-	file.open(std::format("{}/busnum", path), ios::in);
-	if (file) {
-
-		file >> busnum;
-		file.close();
-	};
-	file.open(std::format("{}/devnum", path), ios::in);
-	if (file) {
-
-		file >> devnum;
-		file.close();
-	};
+	busnum = read_sysfs(std::format("{}/busnum", path));
+	devnum = read_sysfs(std::format("{}/devnum", path));
 }
 
 
 
 void usbdevice::start_measurement(void)
 {
-	ifstream file;
-
-	active_before = 0;
-	active_after = 0;
-	connected_before = 0;
-	connected_after = 0;
-
-	file.open(std::format("{}/power/active_duration", sysfs_path), ios::in);
-	if (file) {
-		file >> active_before;
-	}
-	file.close();
-
-	file.open(std::format("{}/power/connected_duration", sysfs_path), ios::in);
-	if (file) {
-		file >> connected_before;
-	}
-	file.close();
+	active_before = read_sysfs(std::format("{}/power/active_duration", sysfs_path));
+	connected_before = read_sysfs(std::format("{}/power/connected_duration", sysfs_path));
 }
 
 void usbdevice::end_measurement(void)
 {
-	ifstream file;
+	active_after = read_sysfs(std::format("{}/power/active_duration", sysfs_path));
+	connected_after = read_sysfs(std::format("{}/power/connected_duration", sysfs_path));
 
-	file.open(std::format("{}/power/active_duration", sysfs_path), ios::in);
-	if (file) {
-		file >> active_after;
-	}
-	file.close();
-
-	file.open(std::format("{}/power/connected_duration", sysfs_path), ios::in);
-	if (file) {
-		file >> connected_after;
-	}
-	file.close();
 	report_utilization(name, utilization());
-
 }
 
 double usbdevice::utilization(void) /* percentage */

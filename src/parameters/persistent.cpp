@@ -24,6 +24,7 @@
  */
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <iomanip>
 #include <stdlib.h>
 
@@ -73,7 +74,6 @@ void close_results()
 
 void load_results(const std::string &filename)
 {
-	ifstream file;
 	string line;
 	struct result_bundle *bundle;
 	int first = 1;
@@ -83,15 +83,17 @@ void load_results(const std::string &filename)
 
 	pathname = get_param_directory(filename);
 
-	file.open(pathname, ios::in);
-	if (!file) {
+	std::string content = read_file_content(pathname);
+	if (content.empty()) {
 		cout << _("Cannot load from file") << " " << pathname << "\n";
 		return;
 	}
 
+	std::istringstream stream(content);
+
 	bundle = new struct result_bundle;
 
-	while (getline(file, line)) {
+	while (getline(stream, line)) {
 		double d;
 		if (first) {
 			if (line.length() > 0) {
@@ -137,7 +139,6 @@ void load_results(const std::string &filename)
 	if (bundle_saved == 0)
 		delete bundle;
 
-	file.close();
 	// '%i" is for count, do not translate
 	fprintf(stderr, _("Loaded %i prior measurements\n"), (int)count);
 }
@@ -172,20 +173,21 @@ void save_parameters(const std::string &filename)
 
 void load_parameters(const std::string &filename)
 {
-	ifstream file;
 	string line;
 	std::string pathname;
 
 	pathname = get_param_directory(filename);
 
-	file.open(pathname, ios::in);
-	if (!file) {
+	std::string content = read_file_content(pathname);
+	if (content.empty()) {
 		cout << _("Cannot load from file") << " " << pathname << "\n";
 		cout << _("File will be loaded after taking minimum number of measurement(s) with battery only \n");
 		return;
 	}
 
-	while (getline(file, line)) {
+	std::istringstream stream(content);
+
+	while (getline(stream, line)) {
 		double d;
 		size_t pos = line.find('\t');
 		if (pos == string::npos)
@@ -198,6 +200,4 @@ void load_parameters(const std::string &filename)
 			set_parameter_value(name, d);
 		} catch (...) {}
 	}
-
-	file.close();
 }

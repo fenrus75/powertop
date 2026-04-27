@@ -43,10 +43,8 @@ using namespace std;
 
 alsa::alsa(const string &_name, const string &path): device()
 {
-	ifstream file;
-
-	char model[4096];
-	char vendor[4096];
+	std::string model;
+	std::string vendor;
 	end_active = 0;
 	start_active = 0;
 	end_inactive = 0;
@@ -57,68 +55,53 @@ alsa::alsa(const string &_name, const string &path): device()
 	humanname = std::format("alsa:{}", _name);
 	rindex = get_result_index(name);
 
-	model[0] = 0;
-	vendor[0] = 0;
-	file.open(std::format("{}/modelname", path));
-	if (file) {
-		file.getline(model, sizeof(model));
-		file.close();
-	}
-	file.open(std::format("{}/vendor_name", path));
-	if (file) {
-		file.getline(vendor, sizeof(vendor));
-		file.close();
-	}
-	if (strlen(model) && strlen(vendor))
+	model = read_sysfs_string(std::format("{}/modelname", path));
+	vendor = read_sysfs_string(std::format("{}/vendor_name", path));
+
+	if (!model.empty() && !vendor.empty())
 		humanname = pt_format(_("Audio codec {}: {} ({})"), name, model, vendor);
-	else if (strlen(model))
+	else if (!model.empty())
 		humanname = pt_format(_("Audio codec {}: {}"), _name, model);
-	else if (strlen(vendor))
+	else if (!vendor.empty())
 		humanname = pt_format(_("Audio codec {}: {}"), _name, vendor);
 }
 
 void alsa::start_measurement(void)
 {
-	ifstream file;
+	std::string content;
 
-	try {
-		file.open(std::format("{}/power_off_acct", sysfs_path));
-		if (file) {
-			file >> start_inactive;
-		}
-		file.close();
-		file.open(std::format("{}/power_on_acct", sysfs_path));
-
-		if (file) {
-			file >> start_active;
-		}
-		file.close();
+	content = read_sysfs_string(std::format("{}/power_off_acct", sysfs_path));
+	if (!content.empty()) {
+		try {
+			start_inactive = std::stoull(content);
+		} catch (...) {}
 	}
-	catch (std::ios_base::failure &c) {
-		fprintf(stderr, "%s\n", c.what());
+
+	content = read_sysfs_string(std::format("{}/power_on_acct", sysfs_path));
+	if (!content.empty()) {
+		try {
+			start_active = std::stoull(content);
+		} catch (...) {}
 	}
 }
 
 void alsa::end_measurement(void)
 {
-	ifstream file;
+	std::string content;
 	double p;
 
-	try {
-		file.open(std::format("{}/power_off_acct", sysfs_path));
-		if (file) {
-			file >> end_inactive;
-		}
-		file.close();
-		file.open(std::format("{}/power_on_acct", sysfs_path));
-
-		if (file) {
-			file >> end_active;
-		}
-		file.close();
+	content = read_sysfs_string(std::format("{}/power_off_acct", sysfs_path));
+	if (!content.empty()) {
+		try {
+			end_inactive = std::stoull(content);
+		} catch (...) {}
 	}
-	catch (std::ios_base::failure &c) {
-		fprintf(stderr, "%s\n", c.what());
+
+	content = read_sysfs_string(std::format("{}/power_on_acct", sysfs_path));
+	if (!content.empty()) {
+		try {
+			end_active = std::stoull(content);
+		} catch (...) {}
 	}
 
 	p = (end_active - start_active) / (0.001 + end_active + end_inactive - start_active - start_inactive) * 100.0;

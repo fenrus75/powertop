@@ -56,19 +56,8 @@ backlight::backlight(const string &_name, const string &path): device()
 
 void backlight::start_measurement(void)
 {
-	ifstream file;
-
-	file.open(std::format("{}/max_brightness", sysfs_path));
-	if (file) {
-		file >> max_level;
-	}
-	file.close();
-
-	file.open(std::format("{}/actual_brightness", sysfs_path));
-	if (file) {
-		file >> start_level;
-		file.close();
-	}
+	max_level = read_sysfs(std::format("{}/max_brightness", sysfs_path));
+	start_level = read_sysfs(std::format("{}/actual_brightness", sysfs_path));
 }
 
 static int dpms_screen_on(void)
@@ -76,7 +65,6 @@ static int dpms_screen_on(void)
 	DIR *dir;
 	struct dirent *entry;
 	std::string line;
-	ifstream file;
 
 	dir = opendir("/sys/class/drm/card0");
 	if (!dir)
@@ -86,20 +74,14 @@ static int dpms_screen_on(void)
 		if (!entry)
 			break;
 
-		if (strncmp(entry->d_name, "card", 4) != 0)
+		if (!std::string_view(entry->d_name).starts_with("card"))
 			continue;
-		file.open(std::format("/sys/class/drm/card0/{}/enabled", entry->d_name));
-		if (!file)
-			continue;
-		getline(file, line);
-		file.close();
+
+		line = read_sysfs_string(std::format("/sys/class/drm/card0/{}/enabled", entry->d_name));
 		if (line != "enabled")
 			continue;
-		file.open(std::format("/sys/class/drm/card0/{}/dpms", entry->d_name));
-		if (!file)
-			continue;
-		getline(file, line);
-		file.close();
+
+		line = read_sysfs_string(std::format("/sys/class/drm/card0/{}/dpms", entry->d_name));
 		if (line == "On") {
 			closedir(dir);
 			return 1;
@@ -111,15 +93,10 @@ static int dpms_screen_on(void)
 
 void backlight::end_measurement(void)
 {
-	ifstream file;
 	double p;
 	int _backlight = 0;
 
-	file.open(std::format("{}/actual_brightness", sysfs_path));
-	if (file) {
-		file >> end_level;
-	}
-	file.close();
+	end_level = read_sysfs(std::format("{}/actual_brightness", sysfs_path));
 
 	if (dpms_screen_on()) {
 		p = 100.0 * (end_level + start_level) / 2 / max_level;

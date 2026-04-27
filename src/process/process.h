@@ -80,9 +80,7 @@ extern void end_process_data(void);
 extern void clear_process_data(void);
 extern void merge_processes(void);
 
-extern class process * find_create_process(const char *comm, int pid);
 extern class process * find_create_process(const std::string &comm, int pid);
-extern class process * find_create_process(char *comm, int pid);
 extern void all_processes_to_all_power(void);
 
 extern void clear_processes(void);

@@ -92,7 +92,7 @@ std::string interrupt::usage_units_summary(void)
 }
 
 
-class interrupt * find_create_interrupt(const char *_handler, int nr, int cpu)
+class interrupt * find_create_interrupt(const std::string &_handler, int nr, int cpu)
 {
 	std::string handler_s;
 	unsigned int i;
@@ -108,7 +108,7 @@ class interrupt * find_create_interrupt(const char *_handler, int nr, int cpu)
 			return all_interrupts[i];
 	}
 
-	new_irq = new class interrupt(handler_s.c_str(), nr);
+	new_irq = new class interrupt(handler_s, nr);
 	all_interrupts.push_back(new_irq);
 	return new_irq;
 }

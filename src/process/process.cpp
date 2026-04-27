@@ -33,6 +33,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <algorithm>
 #include <iterator>
 #include "../lib.h"
@@ -93,22 +94,22 @@ process::process(const string &_comm, int _pid, int _tid) : power_consumer()
 	tgid = _tid;
 
 	if (_tid == 0) {
-		file.open(std::format("/proc/{}/status", _pid));
-		while (file) {
-			char line[4097];
-			file.getline(line, 4096);
-			line[4096] = '\0';
-			if (strstr(line, "Tgid")) {
-				char *c;
-				c = strchr(line, ':');
-				if (!c)
-					continue;
-				c++;
-				tgid = strtoull(c, NULL, 10);
-				break;
+		std::string content = read_file_content(std::format("/proc/{}/status", _pid));
+		if (!content.empty()) {
+			std::istringstream stream(content);
+			std::string line;
+			while (std::getline(stream, line)) {
+				if (line.starts_with("Tgid:")) {
+					size_t pos = line.find(':');
+					if (pos != std::string::npos) {
+						try {
+							tgid = std::stoull(line.substr(pos + 1));
+						} catch (...) {}
+						break;
+					}
+				}
 			}
 		}
-		file.close();
 	}
 
 	if (comm.starts_with("kondemand/"))
@@ -161,19 +162,9 @@ class process * find_create_process(const std::string &comm, int pid)
 			return all_processes[i];
 	}
 
-	new_proc = new class process(comm.c_str(), pid);
+	new_proc = new class process(comm, pid);
 	all_processes.push_back(new_proc);
 	return new_proc;
-}
-
-class process * find_create_process(const char *_comm, int pid)
-{
-	return find_create_process(string(_comm ? _comm : ""), pid);
-}
-
-class process * find_create_process(char *comm, int pid)
-{
-	return find_create_process((const char*)comm, pid);
 }
 
 static void merge_process(class process *one, class process *two)

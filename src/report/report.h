@@ -28,13 +28,14 @@
 #include <string>
 #include <stdio.h>
 #include <limits.h>
+#include <fstream>
 
 #include "report-maker.h"
 
 using namespace std;
 
 struct reportstream {
-	FILE *report_file;
+	std::ofstream report_file;
 	std::string filename;
 };
 

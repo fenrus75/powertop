@@ -165,12 +165,12 @@ void init_report_output(const std::string &filename_str, int iterations)
 {
 	size_t period;
 	time_t stamp;
-	char datestr[200];
 
 	if (iterations == 1)
 		reportout.filename = filename_str;
 	else
 	{
+		char datestr[200];
 		period = filename_str.find_last_of(".");
 		if (period == string::npos)
 			period = filename_str.length();
@@ -182,7 +182,7 @@ void init_report_output(const std::string &filename_str, int iterations)
 			filename_str.substr(period));
 	}
 
-	reportout.report_file = fopen(reportout.filename.c_str(), "wm");
+	reportout.report_file.open(reportout.filename, ios::out);
 	if (!reportout.report_file) {
 		fprintf(stderr, _("Cannot open output file %s (%s)\n"),
 			reportout.filename.c_str(), strerror(errno));
@@ -198,13 +198,12 @@ void finish_report_output(void)
 		return;
 
 	report.finish_report();
-	if (reportout.report_file)
+	if (reportout.report_file.is_open())
 	{
 		fprintf(stderr, _("PowerTOP outputting using base filename %s\n"), reportout.filename.c_str());
-		fputs(report.get_result().c_str(), reportout.report_file);
-		fdatasync(fileno(reportout.report_file));
-		fclose(reportout.report_file);
-		reportout.report_file = NULL;
+		reportout.report_file << report.get_result();
+		reportout.report_file.flush();
+		reportout.report_file.close();
 	}
 	report.clear_result();
 }

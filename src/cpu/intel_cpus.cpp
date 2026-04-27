@@ -119,24 +119,12 @@ int is_supported_intel_cpu(int model, int cpu)
 
 int is_intel_pstate_driver_loaded()
 {
-	const char *filename = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_driver";
-	const string intel_pstate("intel_pstate");
-	char line[32] = { '\0' };
-	ifstream file;
-
 	if (intel_pstate_driver_loaded > -1)
 		return intel_pstate_driver_loaded;
 
-	file.open(filename, ios::in);
+	std::string scaling_driver = read_sysfs_string("/sys/devices/system/cpu/cpu0/cpufreq/scaling_driver");
 
-	if (!file)
-		return -1;
-
-	file.getline(line, sizeof(line)-1);
-	file.close();
-
-	const string scaling_driver(line);
-	if (scaling_driver == intel_pstate) {
+	if (scaling_driver == "intel_pstate") {
 		intel_pstate_driver_loaded = 1;
 	} else {
 		intel_pstate_driver_loaded = 0;

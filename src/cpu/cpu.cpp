@@ -349,12 +349,6 @@ void end_cpu_measurement(void)
 	perf_events->stop();
 }
 
-static void expand_string(char *string, unsigned int newlen)
-{
-	while (strlen(string) < newlen)
-		strcat(string, " ");
-}
-
 static int has_state_level(class abstract_cpu *acpu, int state, int line)
 {
 	switch (state) {
@@ -828,7 +822,6 @@ void report_display_cpu_pstates(void)
 void impl_w_display_cpu_states(int state)
 {
 	WINDOW *win;
-	char linebuf[1024];
 	unsigned int package, core, cpu;
 	int line, loop, cstates_num, pstates_num;
 	class abstract_cpu *_package, * _core, * _cpu;
@@ -874,31 +867,35 @@ void impl_w_display_cpu_states(int state)
 			for (line = LEVEL_HEADER; line <= loop; line++) {
 				int first = 1;
 				ctr = 0;
-				linebuf[0] = 0;
+				std::string linebuf;
 
 				if (!has_state_level(_package, state, line))
 					continue;
 
 				if (first_pkg == 0) {
-					strcat(linebuf, fill_state_name(_package, state, line).c_str());
-					expand_string(linebuf, ctr + 10);
-					strcat(linebuf, fill_state_line(_package, state, line).c_str());
+					linebuf += fill_state_name(_package, state, line);
+					if (linebuf.length() < (unsigned int)ctr + 10)
+						linebuf.append(ctr + 10 - linebuf.length(), ' ');
+					linebuf += fill_state_line(_package, state, line);
 				}
 				ctr += 20;
-				expand_string(linebuf, ctr);
+				if (linebuf.length() < (unsigned int)ctr)
+					linebuf.append(ctr - linebuf.length(), ' ');
 
-				strcat(linebuf, "| ");
-				ctr += strlen("| ");
+				linebuf += "| ";
+				ctr += 2;
 
 				if (!_core->can_collapse()) {
-					strcat(linebuf, fill_state_name(_core, state, line).c_str());
-					expand_string(linebuf, ctr + 10);
-					strcat(linebuf, fill_state_line(_core, state, line).c_str());
+					linebuf += fill_state_name(_core, state, line);
+					if (linebuf.length() < (unsigned int)ctr + 10)
+						linebuf.append(ctr + 10 - linebuf.length(), ' ');
+					linebuf += fill_state_line(_core, state, line);
 					ctr += 20;
-					expand_string(linebuf, ctr);
+					if (linebuf.length() < (unsigned int)ctr)
+						linebuf.append(ctr - linebuf.length(), ' ');
 
-					strcat(linebuf, "| ");
-					ctr += strlen("| ");
+					linebuf += "| ";
+					ctr += 2;
 				}
 
 				for (cpu = 0; cpu < _core->children.size(); cpu++) {
@@ -908,18 +905,20 @@ void impl_w_display_cpu_states(int state)
 
 					if (first == 1) {
 						std::string str = fill_state_name(_cpu, state, line);
-						strcat(linebuf, str.c_str());
-						expand_string(linebuf, ctr + 10);
+						linebuf += str;
+						if (linebuf.length() < (unsigned int)ctr + 10)
+							linebuf.append(ctr + 10 - linebuf.length(), ' ');
 						first = 0;
 						ctr += 12;
 					}
-					strcat(linebuf, fill_state_line(_cpu, state, line).c_str());
+					linebuf += fill_state_line(_cpu, state, line);
 					ctr += 10;
-					expand_string(linebuf, ctr);
+					if (linebuf.length() < (unsigned int)ctr)
+						linebuf.append(ctr - linebuf.length(), ' ');
 
 				}
-				strcat(linebuf, "\n");
-				wprintw(win, "%s", linebuf);
+				linebuf += "\n";
+				wprintw(win, "%s", linebuf.c_str());
 			}
 			wprintw(win, "\n");
 			first_pkg++;

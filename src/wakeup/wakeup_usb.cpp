@@ -91,7 +91,7 @@ std::string usb_wakeup::wakeup_toggle_script(void)
 	return toggle_enable;
 }
 
-static void wakeup_usb_callback(const char *d_name)
+static void wakeup_usb_callback(const std::string &d_name)
 {
 	class usb_wakeup *usb;
 	std::string filename;
@@ -101,7 +101,7 @@ static void wakeup_usb_callback(const char *d_name)
 		return;
 
 	filename = std::format("/sys/bus/usb/devices/{}/power/wakeup", d_name);
-	usb = new class usb_wakeup(filename.c_str(), d_name);
+	usb = new class usb_wakeup(filename, d_name);
 	wakeup_all.push_back(usb);
 }
 

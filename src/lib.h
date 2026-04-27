@@ -60,7 +60,7 @@ extern double percentage(double F);
 extern std::string hz_to_human(unsigned long hz, int digits = 2);
 
 
-extern const char *kernel_function(uint64_t address);
+extern std::string kernel_function(uint64_t address);
 
 
 
@@ -89,12 +89,9 @@ template<size_t N> void pt_strcpy(char (&d)[N], const char *s)
 	d[N-1] = '\0';
 }
 
-typedef void (*callback)(const char*);
-typedef void (*callback_str)(const std::string&);
+typedef void (*callback)(const std::string&);
 extern void process_directory(const std::string &d_name, callback fn);
 extern void process_glob(const std::string &glob, callback fn);
-extern void process_directory(const std::string &d_name, callback_str fn);
-extern void process_glob(const std::string &glob, callback_str fn);
 extern int utf_ok;
 extern std::string get_user_input(unsigned sz);
 extern int read_msr(int cpu, uint64_t offset, uint64_t *value);

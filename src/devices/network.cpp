@@ -359,15 +359,6 @@ static void netdev_callback(const std::string &d_name)
 
 void create_all_nics(callback fn)
 {
-	if (!fn) {
-		process_directory("/sys/class/net/", (callback_str)&netdev_callback);
-		return;
-	}
-	process_directory("/sys/class/net/", fn);
-}
-
-void create_all_nics(callback_str fn)
-{
 	if (!fn)
 		fn = &netdev_callback;
 	process_directory("/sys/class/net/", fn);

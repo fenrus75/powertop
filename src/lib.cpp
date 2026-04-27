@@ -145,16 +145,15 @@ static void read_kallsyms(void)
 	}
 }
 
-const char *kernel_function(uint64_t address)
+std::string kernel_function(uint64_t address)
 {
-	const char *c;
 	if (!kallsyms_read)
 		read_kallsyms();
 
-	c = kallsyms[address].c_str();
-	if (!c)
-		return "";
-	return c;
+	if (kallsyms.count(address))
+		return kallsyms[address];
+
+	return "";
 }
 
 static int _max_cpu;
@@ -413,24 +412,6 @@ void process_directory(const std::string &d_name, callback fn)
 			break;
 		if (entry->d_name[0] == '.')
 			continue;
-		fn(entry->d_name);
-	}
-	closedir(dir);
-}
-
-void process_directory(const std::string &d_name, callback_str fn)
-{
-	struct dirent *entry;
-	DIR *dir;
-	dir = opendir(d_name.c_str());
-	if (!dir)
-		return;
-	while (1) {
-		entry = readdir(dir);
-		if (!entry)
-			break;
-		if (entry->d_name[0] == '.')
-			continue;
 		fn(std::string(entry->d_name));
 	}
 	closedir(dir);
@@ -442,32 +423,6 @@ int equals(double a, double b)
 }
 
 void process_glob(const std::string &d_glob, callback fn)
-{
-	glob_t g;
-	size_t c;
-
-	switch (glob(d_glob.c_str(), GLOB_ERR | GLOB_MARK | GLOB_NOSORT, NULL, &g)) {
-	case GLOB_NOSPACE:
-		fprintf(stderr,_("glob returned GLOB_NOSPACE\n"));
-		globfree(&g);
-		return;
-	case GLOB_ABORTED:
-		fprintf(stderr,_("glob returned GLOB_ABORTED\n"));
-		globfree(&g);
-		return;
-	case GLOB_NOMATCH:
-		fprintf(stderr,_("glob returned GLOB_NOMATCH\n"));
-		globfree(&g);
-		return;
-	}
-
-	for (c=0; c < g.gl_pathc; c++) {
-		fn(g.gl_pathv[c]);
-	}
-	globfree(&g);
-}
-
-void process_glob(const std::string &d_glob, callback_str fn)
 {
 	glob_t g;
 	size_t c;

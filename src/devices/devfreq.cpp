@@ -252,7 +252,7 @@ void create_all_devfreq_devices(void)
 		return;
 	}
 
-	callback_str fn = &devfreq_dev_callback;
+	callback fn = &devfreq_dev_callback;
 	process_directory(p, fn);
 }
 

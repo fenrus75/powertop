@@ -46,7 +46,7 @@
 #include "../lib.h"
 #include "ethernet.h"
 
-extern void create_all_nics(callback_str fn);
+extern void create_all_nics(callback fn);
 
 ethernet_tunable::ethernet_tunable(const string &iface) : tunable("", 0.3, _("Good"), _("Bad"), _("Unknown"))
 {

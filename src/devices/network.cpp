@@ -54,8 +54,62 @@ extern "C" {
 #include <linux/sockios.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <sstream>
 
 static map<string, class network *> nics;
+
+static void do_proc_net_dev(void)
+{
+	static time_t last_time;
+	class network *dev;
+
+	if (time(NULL) == last_time)
+		return;
+
+	last_time = time(NULL);
+
+	std::string content = read_file_content("/proc/net/dev");
+	if (content.empty())
+		return;
+
+	std::istringstream stream(content);
+	std::string line;
+
+	/* Skip first two header lines */
+	if (!std::getline(stream, line)) return;
+	if (!std::getline(stream, line)) return;
+
+	while (std::getline(stream, line)) {
+		int i = 0;
+		uint64_t pkt = 0;
+
+		size_t pos = line.find(':');
+		if (pos == string::npos)
+			continue;
+
+		std::string name = line.substr(0, pos);
+		/* Trim leading spaces */
+		name.erase(0, name.find_first_not_of(' '));
+
+		dev = nics[name];
+		if (!dev)
+			continue;
+
+		std::istringstream iss(line.substr(pos + 1));
+		std::string val_s;
+		while (iss >> val_s) {
+			unsigned long long val = 0;
+			try {
+				val = std::stoull(val_s);
+			} catch (...) {}
+			i++;
+			if (i == 2 || i == 10)
+				pkt += val;
+
+		}
+		dev->pkts = pkt;
+	}
+}
 
 #ifdef DISABLE_TRYCATCH
 
@@ -74,61 +128,9 @@ static inline __u32 ethtool_cmd_speed(struct ethtool_cmd *ep)
 
 #endif
 
-static void do_proc_net_dev(void)
-{
-	static time_t last_time;
-	class network *dev;
-	ifstream file;
-	char line[4096];
-	char *c, *c2;
-
-	if (time(NULL) == last_time)
-		return;
-
-	last_time = time(NULL);
-
-	file.open("/proc/net/dev", ios::in);
-	if (!file)
-		return;
-
-	file.getline(line, 4096);
-	file.getline(line, 4096);
-
-	while (file) {
-		int i = 0;
-		unsigned long val = 0;
-		uint64_t pkt = 0;
-		file.getline(line, 4096);
-		c = strchr(line, ':');
-		if (!c)
-			continue;
-		*c = 0;
-		c2 = c +1;
-		c = line; while (c && *c == ' ') c++;
-		/* c now points to the name of the nic */
-
-		dev = nics[c];
-		if (!dev)
-			continue;
-
-		c = c2++;
-		while (c != c2 && strlen(c) > 0) {
-			c2 = c;
-			val = strtoull(c, &c, 10);
-			i++;
-			if (i == 2 || i == 10)
-				pkt += val;
-
-		}
-		dev->pkts = pkt;
-	}
-	file.close();
-}
-
 
 network::network(const string &_name, const string &path): device()
 {
-	char line[4096];
 	start_up = 0;
 	end_up = 0;
 	start_speed = 0;
@@ -164,13 +166,15 @@ network::network(const string &_name, const string &path): device()
 	index_pkts = get_param_index(std::format("{}-packets", _name));
 	rindex_pkts = get_result_index(std::format("{}-packets", _name));
 
-	memset(line, 0, 4096);
-	if (readlink(std::format("{}/device/driver", path).c_str(), line, 4096) > 0) {
-		humanname = pt_format(_("Network interface: {} ({})"), _name,  basename(line));
+	char buf[4096];
+	ssize_t len = readlink(std::format("{}/device/driver", path).c_str(), buf, sizeof(buf) - 1);
+	if (len != -1) {
+		buf[len] = '\0';
+		humanname = pt_format(_("Network interface: {} ({})"), _name, basename(buf));
 	};
 }
 
-static int net_iface_up(const char *iface)
+static int net_iface_up(const std::string &iface)
 {
 	int sock;
 	struct ifreq ifr;
@@ -182,7 +186,7 @@ static int net_iface_up(const char *iface)
 	if (sock<0)
 		return 0;
 
-	pt_strcpy(ifr.ifr_name, iface);
+	pt_strcpy(ifr.ifr_name, iface.c_str());
 
 	/* Check if the interface is up */
 	ret = ioctl(sock, SIOCGIFFLAGS, &ifr);
@@ -201,7 +205,7 @@ static int net_iface_up(const char *iface)
 	return 0;
 }
 
-static int iface_link(const char *name)
+static int iface_link(const std::string &name)
 {
 	int sock;
 	struct ifreq ifr;
@@ -214,7 +218,7 @@ static int iface_link(const char *name)
 	if (sock<0)
 		return 0;
 
-	pt_strcpy(ifr.ifr_name, name);
+	pt_strcpy(ifr.ifr_name, name.c_str());
 
 	memset(&cmd, 0, sizeof(cmd));
 
@@ -229,7 +233,7 @@ static int iface_link(const char *name)
 }
 
 
-static int iface_speed(const char *name)
+static int iface_speed(const std::string &name)
 {
 	int sock;
 	struct ifreq ifr;
@@ -242,7 +246,7 @@ static int iface_speed(const char *name)
 	if (sock<0)
 		return 0;
 
-	pt_strcpy(ifr.ifr_name, name);
+	pt_strcpy(ifr.ifr_name, name.c_str());
 
 	memset(&cmd, 0, sizeof(cmd));
 

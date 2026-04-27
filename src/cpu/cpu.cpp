@@ -27,6 +27,7 @@
 #include <vector>
 #include <string.h>
 #include <stdlib.h>
+#include <sstream>
 #include <ncurses.h>
 #include <unistd.h>
 #include "cpu.h"
@@ -247,55 +248,54 @@ static void handle_i965_gpu(void)
 
 void enumerate_cpus(void)
 {
-	ifstream file;
-	char line[4096];
+	std::string content = read_file_content("/proc/cpuinfo");
+
+	if (content.empty())
+		return;
 
 	int number = -1;
 	std::string vendor;
 	int family = 0;
 	int model = 0;
 
-	file.open("/proc/cpuinfo",  ios::in);
+	std::istringstream stream(content);
+	std::string line;
 
-	if (!file)
-		return;
 	/* Not all /proc/cpuinfo include "vendor_id\t". */
 
-	while (file) {
+	while (std::getline(stream, line)) {
 
-		file.getline(line, sizeof(line));
-		if (strncmp(line, "vendor_id\t",10) == 0) {
-			char *c;
-			c = strchr(line, ':');
-			if (c) {
-				c++;
-				if (*c == ' ')
-					c++;
-				vendor = c;
+		if (line.starts_with("vendor_id\t")) {
+			size_t pos = line.find(':');
+			if (pos != std::string::npos) {
+				pos++;
+				if (pos < line.length() && line[pos] == ' ')
+					pos++;
+				vendor = line.substr(pos);
 			}
 		}
-		if (strncmp(line, "processor\t",10) == 0) {
-			char *c;
-			c = strchr(line, ':');
-			if (c) {
-				c++;
-				number = strtoull(c, NULL, 10);
+		if (line.starts_with("processor\t")) {
+			size_t pos = line.find(':');
+			if (pos != std::string::npos) {
+				try {
+					number = std::stoull(line.substr(pos + 1));
+				} catch (...) {}
 			}
 		}
-		if (strncmp(line, "cpu family\t",11) == 0) {
-			char *c;
-			c = strchr(line, ':');
-			if (c) {
-				c++;
-				family = strtoull(c, NULL, 10);
+		if (line.starts_with("cpu family\t")) {
+			size_t pos = line.find(':');
+			if (pos != std::string::npos) {
+				try {
+					family = std::stoull(line.substr(pos + 1));
+				} catch (...) {}
 			}
 		}
-		if (strncmp(line, "model\t",6) == 0) {
-			char *c;
-			c = strchr(line, ':');
-			if (c) {
-				c++;
-				model = strtoull(c, NULL, 10);
+		if (line.starts_with("model\t")) {
+			size_t pos = line.find(':');
+			if (pos != std::string::npos) {
+				try {
+					model = std::stoull(line.substr(pos + 1));
+				} catch (...) {}
 			}
 		}
 		/* on x86 and others 'bogomips' is last
@@ -303,10 +303,14 @@ void enumerate_cpus(void)
 		 * on POWER, it's 'revision'
 		 * on RISCV64 it's 'isa'
 		 */
-		if (strncasecmp(line, "bogomips\t", 9) == 0
-		    || strncasecmp(line, "CPU revision\t", 13) == 0
-		    || strncmp(line, "revision", 8) == 0
-		    || strncmp(line, "isa\t", 4) == 0) {
+		
+		std::string lower_line = line;
+		std::transform(lower_line.begin(), lower_line.end(), lower_line.begin(), ::tolower);
+
+		if (lower_line.starts_with("bogomips\t")
+		    || lower_line.starts_with("cpu revision\t")
+		    || line.starts_with("revision")
+		    || line.starts_with("isa\t")) {
 			if (number == -1) {
 				/* Not all /proc/cpuinfo include "processor\t". */
 				number = 0;
@@ -318,9 +322,6 @@ void enumerate_cpus(void)
 			}
 		}
 	}
-
-
-	file.close();
 
 	if (access("/sys/class/drm/card0/power/rc6_residency_ms", R_OK) == 0)
 		handle_i965_gpu();

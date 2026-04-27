@@ -82,8 +82,6 @@ static void cmdline_to_string(std::string& str)
 
 process::process(const string &_comm, int _pid, int _tid) : power_consumer()
 {
-	ifstream file;
-
 	comm = _comm;
 	pid = _pid;
 	is_idle = 0;
@@ -117,10 +115,8 @@ process::process(const string &_comm, int _pid, int _tid) : power_consumer()
 
 	desc = std::format("[PID {}] {}", pid, comm);
 
-	file.open(std::format("/proc/{}/cmdline", _pid), ios::binary);
-	if (file) {
-		std::string cmdline(std::istreambuf_iterator<char>(file), (std::istreambuf_iterator<char>()));
-		file.close();
+	std::string cmdline = read_file_content(std::format("/proc/{}/cmdline", _pid));
+	if (!cmdline.empty()) {
 		if (cmdline.size() < 1) {
 			is_kernel = 1;
 			desc = std::format("[PID {}] [{}]", pid, comm);

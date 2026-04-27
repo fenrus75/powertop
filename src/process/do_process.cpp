@@ -410,8 +410,8 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
                 }
 		vec = (int)val;
 
-		if (vec <= 9)
-			handler = softirqs[vec];
+		if (vec >= 0 && vec < (int)softirqs.size())
+			handler = softirqs[vec].c_str();
 
 		if (!handler)
 			return;

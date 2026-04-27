@@ -52,7 +52,7 @@ public:
 };
 
 extern vector <class interrupt *> all_interrupts;
-extern const char* softirqs[];
+extern const vector<std::string> softirqs;
 
 
 extern class interrupt * find_create_interrupt(const std::string &_handler, int nr, int cpu);

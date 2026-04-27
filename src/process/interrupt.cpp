@@ -29,7 +29,7 @@
 #include "interrupt.h"
 #include "../lib.h"
 
-const char* softirqs[] = {
+const vector<std::string> softirqs = {
 	"HI_SOFTIRQ",
 	"timer(softirq)",
 	"net tx(softirq)",
@@ -39,8 +39,7 @@ const char* softirqs[] = {
 	"tasklet(softirq)",
 	"sched(softirq)",
 	"hrtimer(softirq)",
-	"RCU(softirq)",
-	NULL
+	"RCU(softirq)"
 };
 
 

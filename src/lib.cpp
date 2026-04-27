@@ -28,8 +28,8 @@
 #include <string.h>
 #include <iostream>
 #include <utility>
-#include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <ctype.h>
 #include <stdio.h>
@@ -110,33 +110,39 @@ map<unsigned long, string> kallsyms;
 
 static void read_kallsyms(void)
 {
-	ifstream file;
-	char line[1024];
+	std::string content = read_file_content("/proc/kallsyms");
 	kallsyms_read = 1;
 
-	file.open("/proc/kallsyms", ios::in);
+	if (content.empty())
+		return;
 
-	while (file) {
-		char *c = NULL, *c2 = NULL;
-		unsigned long address = 0;
-		memset(line, 0, 1024);
-		file.getline(line, 1024);
-		c = strchr(line, ' ');
-		if (!c)
+	std::istringstream stream(content);
+	std::string line;
+
+	while (std::getline(stream, line)) {
+		size_t pos = line.find(' ');
+		if (pos == string::npos)
 			continue;
-		*c = 0;
-		c2 = c + 1;
-		if (*c2) c2++;
-		if (*c2) c2++;
 
-		address = strtoull(line, NULL, 16);
-		c = strchr(c2, '\t');
-		if (c)
-			*c = 0;
-		if (address != 0)
-			kallsyms[address] = c2;
+		unsigned long address = 0;
+		try {
+			address = std::stoull(line.substr(0, pos), nullptr, 16);
+		} catch (...) {}
+
+		if (address == 0)
+			continue;
+
+		std::string rest = line.substr(pos + 1);
+		/* skip type character and spaces */
+		size_t pos2 = rest.find_first_not_of(" \t");
+		if (pos2 != string::npos) {
+			/* skip the type char (e.g. 'T') and next spaces */
+			size_t pos3 = rest.find_first_not_of(" \t", pos2 + 1);
+			if (pos3 != string::npos) {
+				kallsyms[address] = rest.substr(pos3);
+			}
+		}
 	}
-	file.close();
 }
 
 const char *kernel_function(uint64_t address)
@@ -182,48 +188,31 @@ void write_sysfs(const string &filename, const string &value)
 
 int read_sysfs(const string &filename, bool *ok)
 {
-	ifstream file;
-	int i;
-
-	file.open(filename.c_str(), ios::in);
-	if (!file) {
+	std::string content = read_file_content(filename);
+	if (content.empty()) {
 		if (ok)
 			*ok = false;
 		return 0;
 	}
 	try
 	{
-		file >> i;
+		int i = std::stoi(content);
 		if (ok)
 			*ok = true;
-	} catch (std::exception &exc) {
+		return i;
+	} catch (...) {
 		if (ok)
 			*ok = false;
-		i = 0;
+		return 0;
 	}
-	file.close();
-	return i;
 }
 
 string read_sysfs_string(const string &filename)
 {
-	ifstream file;
-	string content;
-
-	file.open(filename.c_str(), ios::in);
-	if (!file)
-		return "";
-	try
-	{
-		getline(file, content);
-		file.close();
-		size_t pos = content.find('\n');
-		if (pos != string::npos)
-			content.erase(pos);
-	} catch (std::exception &exc) {
-		file.close();
-		return "";
-	}
+	string content = read_file_content(filename);
+	size_t pos = content.find('\n');
+	if (pos != string::npos)
+		content.erase(pos);
 	return content;
 }
 

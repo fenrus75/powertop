@@ -44,7 +44,7 @@ using namespace std;
 
 vector <class ahci *> links;
 
-static string disk_name(char *path, char *target, char *shortname)
+static string disk_name(const string &path, const string &target, const string &shortname)
 {
 
 	DIR *dir;
@@ -58,34 +58,22 @@ static string disk_name(char *path, char *target, char *shortname)
 		return diskname;
 
 	while ((dirent = readdir(dir))) {
-		char line[4096], *c;
-		FILE *file;
 		if (dirent->d_name[0]=='.')
 			continue;
 
-		if (!strchr(dirent->d_name, ':'))
+		if (std::string(dirent->d_name).find(':') == std::string::npos)
 			continue;
 
-		file = fopen(std::format("{}/{}/model", pathname, dirent->d_name).c_str(), "r");
-		if (file) {
-			if (fgets(line, sizeof(line), file) == NULL) {
-				fclose(file);
-				break;
-			}
-			fclose(file);
-			c = strchr(line, '\n');
-			if (c)
-				*c = 0;
-			diskname = line;
+		diskname = read_sysfs_string(std::format("{}/{}/model", pathname, dirent->d_name));
+		if (!diskname.empty())
 			break;
-		}
 	}
 	closedir(dir);
 
 	return diskname;
 }
 
-static string model_name(char *path, char *shortname)
+static string model_name(const string &path, const string &shortname)
 {
 
 	DIR *dir;
@@ -96,17 +84,18 @@ static string model_name(char *path, char *shortname)
 
 	dir = opendir(pathname.c_str());
 	if (!dir)
-		return strdup(shortname);
+		return shortname;
 
 	while ((dirent = readdir(dir))) {
-		if (dirent->d_name[0]=='.')
+		std::string d_name(dirent->d_name);
+		if (d_name[0]=='.')
 			continue;
 
-		if (!strchr(dirent->d_name, ':'))
+		if (d_name.find(':') == std::string::npos)
 			continue;
-		if (!strstr(dirent->d_name, "target"))
+		if (d_name.find("target") == std::string::npos)
 			continue;
-		return disk_name((char *)pathname.c_str(), dirent->d_name, shortname);
+		return disk_name(pathname, d_name, shortname);
 	}
 	closedir(dir);
 
@@ -138,7 +127,7 @@ ahci::ahci(const string &_name, const string &path): device()
 	slumber_rindex = get_result_index(std::format("{}-slumber", name));
 	devslp_rindex = get_result_index(std::format("{}-devslp", name));
 
-	diskname = model_name((char *)sysfs_path.c_str(), (char *)_name.c_str());
+	diskname = model_name(sysfs_path, _name);
 
 	if (diskname.empty())
 		humanname = pt_format(_("SATA link: {}"), _name);
@@ -224,25 +213,25 @@ void ahci::end_measurement(void)
 	p = (end_active - start_active) / total * 100.0;
 	if (p < 0)
 		 p = 0;
-	report_utilization(std::format("{}-active", name).c_str(), p);
+	report_utilization(std::format("{}-active", name), p);
 
 	/* percent in partial */
 	p = (end_partial - start_partial) / total * 100.0;
 	if (p < 0)
 		 p = 0;
-	report_utilization(std::format("{}-partial", name).c_str(), p);
+	report_utilization(std::format("{}-partial", name), p);
 
 	/* percent in slumber */
 	p = (end_slumber - start_slumber) / total * 100.0;
 	if (p < 0)
 		 p = 0;
-	report_utilization(std::format("{}-slumber", name).c_str(), p);
+	report_utilization(std::format("{}-slumber", name), p);
 
 	/* percent in devslp */
 	p = (end_devslp - start_devslp) / total * 100.0;
 	if (p < 0)
 		 p = 0;
-	report_utilization(std::format("{}-devslp", name).c_str(), p);
+	report_utilization(std::format("{}-devslp", name), p);
 }
 
 
@@ -352,7 +341,7 @@ void ahci_create_device_stats_table(void)
 
 
 	/* Set array of data in row Major order */
-	string *ahci_data = new string[cols * rows];
+	std::vector<std::string> ahci_data(cols * rows);
 	ahci_data[0]=__("Link");
 	ahci_data[1]=__("Active");
 	ahci_data[2]=__("Partial");
@@ -364,12 +353,11 @@ void ahci_create_device_stats_table(void)
 		links[i]->report_device_stats(ahci_data, i);
 	}
 	report.add_title(&title_attr, __("AHCI ALPM Residency Statistics"));
-	report.add_table(ahci_data, &std_table_css);
+	report.add_table(ahci_data.data(), &std_table_css);
 	report.end_div();
-	delete [] ahci_data;
 }
 
-void ahci::report_device_stats(std::string *ahci_data, int idx)
+void ahci::report_device_stats(std::vector<std::string> &ahci_data, int idx)
 {
 	int offset=(idx*5+5);
 	double active_util = get_result_value(active_rindex, &all_results);

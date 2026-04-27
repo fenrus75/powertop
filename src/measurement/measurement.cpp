@@ -133,7 +133,7 @@ double global_time_left(void)
 	return total_capacity / total_rate;
 }
 
-void sysfs_power_meters_callback(const char *d_name)
+void sysfs_power_meters_callback(const std::string &d_name)
 {
 	std::string type = read_sysfs_string(std::format("/sys/class/power_supply/{}/type", d_name));
 
@@ -146,7 +146,7 @@ void sysfs_power_meters_callback(const char *d_name)
 		power_meters.push_back(meter);
 }
 
-void acpi_power_meters_callback(const char *d_name)
+void acpi_power_meters_callback(const std::string &d_name)
 {
 	class acpi_power_meter *meter;
 	meter = new(std::nothrow) class acpi_power_meter(d_name);
@@ -154,14 +154,12 @@ void acpi_power_meters_callback(const char *d_name)
 		power_meters.push_back(meter);
 }
 
-void sysfs_opal_sensors_callback(const char *d_name)
+void sysfs_opal_sensors_callback(const std::string &d_name)
 {
 	class opal_sensors_power_meter *meter;
-	const char *c;
 
 	/* Those that end in / are directories and we don't want them */
-	c = strrchr(d_name, '/');
-	if (c && *(c+1) == '\0')
+	if (!d_name.empty() && d_name.back() == '/')
 		return;
 
 	meter = new(std::nothrow) class opal_sensors_power_meter(d_name);
@@ -178,7 +176,7 @@ void detect_power_meters(void)
 	}
 }
 
-void extech_power_meter(const char *devnode)
+void extech_power_meter(const std::string &devnode)
 {
 	class extech_power_meter *meter;
 

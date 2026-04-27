@@ -44,7 +44,8 @@ using namespace std;
 
 rfkill::rfkill(const string &_name, const string &path): device()
 {
-	char line[4096];
+	char buf[4096];
+	ssize_t len;
 	start_soft = 0;
 	start_hard = 0;
 	end_soft = 0;
@@ -57,51 +58,31 @@ rfkill::rfkill(const string &_name, const string &path): device()
 	index = get_param_index(name);
 	rindex = get_result_index(name);
 
-	memset(line, 0, 4096);
-	if (readlink(std::format("{}/device/driver", path).c_str(), line, sizeof(line)) > 0) {
-		humanname = pt_format(_("Radio device: {}"), basename(line));
+	len = readlink(std::format("{}/device/driver", path).c_str(), buf, sizeof(buf) - 1);
+	if (len != -1) {
+		buf[len] = '\0';
+		humanname = pt_format(_("Radio device: {}"), basename(buf));
 	}
-	if (readlink(std::format("{}/device/device/driver", path).c_str(), line, sizeof(line)) > 0) {
-		humanname = pt_format(_("Radio device: {}"), basename(line));
+	len = readlink(std::format("{}/device/device/driver", path).c_str(), buf, sizeof(buf) - 1);
+	if (len != -1) {
+		buf[len] = '\0';
+		humanname = pt_format(_("Radio device: {}"), basename(buf));
 	}
 }
 
 void rfkill::start_measurement(void)
 {
-	ifstream file;
+	start_hard = read_sysfs(std::format("{}/hard", sysfs_path));
+	start_soft = read_sysfs(std::format("{}/soft", sysfs_path));
 
-	start_hard = 1;
-	start_soft = 1;
 	end_hard = 1;
 	end_soft = 1;
-
-	file.open(std::format("{}/hard", sysfs_path), ios::in);
-	if (file) {
-		file >> start_hard;
-	}
-	file.close();
-
-	file.open(std::format("{}/soft", sysfs_path), ios::in);
-	if (file) {
-		file >> start_soft;
-	}
-	file.close();
 }
 
 void rfkill::end_measurement(void)
 {
-	ifstream file;
-
-	file.open(std::format("{}/hard", sysfs_path), ios::in);
-	if (file) {
-		file >> end_hard;
-	}
-	file.close();
-	file.open(std::format("{}/soft", sysfs_path), ios::in);
-	if (file) {
-		file >> end_soft;
-	}
-	file.close();
+	end_hard = read_sysfs(std::format("{}/hard", sysfs_path));
+	end_soft = read_sysfs(std::format("{}/soft", sysfs_path));
 
 	report_utilization(name, utilization());
 }
@@ -123,17 +104,12 @@ double rfkill::utilization(void)
 
 static void create_all_rfkills_callback(const std::string &d_name)
 {
-	std::string name(d_name);
-	class rfkill *bl;
-	ifstream file;
+	std::string name = read_sysfs_string(std::format("/sys/class/rfkill/{}/name", d_name));
 
-	file.open(std::format("/sys/class/rfkill/{}/name", d_name), ios::in);
-	if (file) {
-		getline(file, name);
-		file.close();
-	}
+	if (name.empty())
+		name = d_name;
 
-	bl = new class rfkill(name, std::format("/sys/class/rfkill/{}", d_name));
+	class rfkill *bl = new class rfkill(name, std::format("/sys/class/rfkill/{}", d_name));
 	all_devices.push_back(bl);
 }
 

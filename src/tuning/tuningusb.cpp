@@ -39,7 +39,6 @@
 
 usb_tunable::usb_tunable(const string &path, const string &name) : tunable("", 0.9, _("Good"), _("Bad"), _("Unknown"))
 {
-	ifstream file;
 	std::string vendor;
 	std::string product;
 	std::string str1, str2;
@@ -51,18 +50,12 @@ usb_tunable::usb_tunable(const string &path, const string &name) : tunable("", 0
 
 	desc = pt_format(_("Autosuspend for unknown USB device {} ({}:{})"), name, str1, str2);
 
-	file.open(std::format("{}/manufacturer", path), ios::in);
-	if (file) {
-		getline(file, vendor);
-		if (vendor.starts_with("Linux "))
-			vendor = "";
-		file.close();
-	};
-	file.open(std::format("{}/product", path), ios::in);
-	if (file) {
-		getline(file, product);
-		file.close();
-	};
+	vendor = read_sysfs_string(std::format("{}/manufacturer", path));
+	if (vendor.starts_with("Linux "))
+		vendor = "";
+
+	product = read_sysfs_string(std::format("{}/product", path));
+
 	if (!vendor.empty() && !product.empty()) {
 		desc = pt_format(_("Autosuspend for USB device {} [{}]"), product, vendor);
 	} else if (!product.empty()) {

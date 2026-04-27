@@ -32,19 +32,12 @@
 
 #include "../lib.h"
 #include "../devices/runtime_pm.h"
-
 i2c_tunable::i2c_tunable(const string &path, const string &name, bool is_adapter) : tunable("", 0.9, _("Good"), _("Bad"), _("Unknown"))
 {
-	ifstream file;
 	std::string filename;
 	std::string devname;
 
-	filename = std::format("{}/name", path);
-	file.open(filename.c_str(), ios::in);
-	if (file) {
-		getline(file, devname);
-		file.close();
-	}
+	devname = read_sysfs_string(std::format("{}/name", path));
 
 	if (is_adapter) {
 		i2c_path = std::format("{}/device/power/control", path);

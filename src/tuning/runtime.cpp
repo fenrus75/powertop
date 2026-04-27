@@ -42,7 +42,6 @@
 
 runtime_tunable::runtime_tunable(const string &path, const string &bus, const string &dev, const string &port) : tunable("", 0.4, _("Good"), _("Bad"), _("Unknown"))
 {
-	ifstream file;
 	runtime_path = std::format("{}/power/control", path);
 
 
@@ -54,21 +53,21 @@ runtime_tunable::runtime_tunable(const string &path, const string &bus, const st
 	if (bus == "pci") {
 		std::string filename;
 		uint16_t vendor = 0, device = 0;
+		std::string content;
 
-		filename = std::format("/sys/bus/{}/devices/{}/vendor", bus, dev);
-
-		file.open(filename.c_str(), ios::in);
-		if (file) {
-			file >> hex >> vendor;
-			file.close();
+		content = read_sysfs_string(std::format("/sys/bus/{}/devices/{}/vendor", bus, dev));
+		if (!content.empty()) {
+			try {
+				vendor = std::stoul(content, nullptr, 16);
+			} catch (...) {}
 		}
 
 
-		filename = std::format("/sys/bus/{}/devices/{}/device", bus, dev);
-		file.open(filename.c_str(), ios::in);
-		if (file) {
-			file >> hex >> device;
-			file.close();
+		content = read_sysfs_string(std::format("/sys/bus/{}/devices/{}/device", bus, dev));
+		if (!content.empty()) {
+			try {
+				device = std::stoul(content, nullptr, 16);
+			} catch (...) {}
 		}
 
 		if (vendor && device) {

@@ -400,7 +400,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 	else if (event_name == "softirq_entry") {
 		class interrupt *irq = NULL;
-		const char *handler = NULL;
+		std::string handler;
 		int vec;
 
 		ret = tep_get_field_val(NULL, event, "vec", &rec, &val, 0);
@@ -411,9 +411,9 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		vec = (int)val;
 
 		if (vec >= 0 && vec < (int)softirqs.size())
-			handler = softirqs[vec].c_str();
+			handler = softirqs[vec];
 
-		if (!handler)
+		if (handler.empty())
 			return;
 
 		irq = find_create_interrupt(handler, vec, cpu);

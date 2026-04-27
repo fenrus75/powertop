@@ -98,7 +98,6 @@ void show_tab(unsigned int tab)
 	class tab_window *win;
 	unsigned int i;
 	int tab_pos = 17;
-	const char *c;
 
 	if (!display)
 		return;
@@ -123,9 +122,9 @@ void show_tab(unsigned int tab)
 	wattrset(bottom_line, A_REVERSE);
 	mvwprintw(bottom_line, 0,0, "%120s", "");
 
-	c = bottom_lines[tab_names[tab]].c_str();
-	if (c && strlen(c) > 0)
-		mvwprintw(bottom_line, 0,0, "%s", c);
+	std::string bottom = bottom_lines[tab_names[tab]];
+	if (!bottom.empty())
+		mvwprintw(bottom_line, 0,0, "%s", bottom.c_str());
 	else
 		mvwprintw(bottom_line, 0, 0,
 			"<ESC> %s | <TAB> / <Shift + TAB> %s | ", _("Exit"),

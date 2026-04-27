@@ -165,26 +165,17 @@ static class abstract_cpu * new_cpu(int number, const std::string &vendor, int f
 
 static void handle_one_cpu(unsigned int number, const std::string &vendor, int family, int model)
 {
-	ifstream file;
 	unsigned int package_number = 0;
 	unsigned int core_number = 0;
 	class abstract_cpu *package, *core, *cpu;
 
-	file.open(std::format("/sys/devices/system/cpu/cpu{}/topology/core_id", number), ios::in);
-	if (file) {
-		file >> core_number;
-		if (core_number == (unsigned int) -1)
-			core_number = number;
-		file.close();
-	}
+	core_number = read_sysfs(std::format("/sys/devices/system/cpu/cpu{}/topology/core_id", number));
+	if (core_number == (unsigned int) -1)
+		core_number = number;
 
-	file.open(std::format("/sys/devices/system/cpu/cpu{}/topology/physical_package_id", number), ios::in);
-	if (file) {
-		file >> package_number;
-		if (package_number == (unsigned int) -1)
-			package_number = 0;
-		file.close();
-	}
+	package_number = read_sysfs(std::format("/sys/devices/system/cpu/cpu{}/topology/physical_package_id", number));
+	if (package_number == (unsigned int) -1)
+		package_number = 0;
 
 
 	if (system_level.children.size() <= package_number)

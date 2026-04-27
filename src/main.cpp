@@ -337,14 +337,9 @@ static void checkroot() {
 }
 
 static int get_nr_open(void) {
-	int nr_open = NR_OPEN_DEF;
-	ifstream file;
-
-	file.open("/proc/sys/fs/nr_open", ios::in);
-	if (file) {
-		file >> nr_open;
-		file.close();
-	}
+	int nr_open = read_sysfs("/proc/sys/fs/nr_open");
+	if (nr_open <= 0)
+		nr_open = NR_OPEN_DEF;
 	return nr_open;
 }
 

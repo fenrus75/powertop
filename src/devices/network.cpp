@@ -360,6 +360,11 @@ void create_all_nics(callback fn)
 	process_directory("/sys/class/net/", fn);
 }
 
+void create_all_nics(callback_str fn)
+{
+	process_directory("/sys/class/net/", fn);
+}
+
 double network::power_usage(struct result_bundle *result, struct parameter_bundle *bundle)
 {
 	double power;

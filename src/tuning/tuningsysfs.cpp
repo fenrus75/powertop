@@ -73,9 +73,9 @@ void sysfs_tunable::toggle(void)
 }
 
 
-void add_sysfs_tunable(const char *str, const char *_sysfs_path, const char *_target_content)
+void add_sysfs_tunable(const std::string &str, const std::string &_sysfs_path, const std::string &_target_content)
 {
-	if (access(_sysfs_path, R_OK) != 0)
+	if (access(_sysfs_path.c_str(), R_OK) != 0)
 		return;
 	class sysfs_tunable *st;
 
@@ -83,14 +83,14 @@ void add_sysfs_tunable(const char *str, const char *_sysfs_path, const char *_ta
 	all_tunables.push_back(st);
 }
 
-static void add_sata_callback(const char *d_name)
+static void add_sata_callback(const std::string &d_name)
 {
 	std::string filename;
 	filename = std::format("/sys/class/scsi_host/{}/link_power_management_policy", d_name);
 	if (access(filename.c_str(), R_OK) != 0)
 		return;
 
-	add_sysfs_tunable(pt_format(_("Enable SATA link power management for {}"), d_name).c_str(), filename.c_str(), "med_power_with_dipm");
+	add_sysfs_tunable(pt_format(_("Enable SATA link power management for {}"), d_name), filename, "med_power_with_dipm");
 }
 
 void add_sata_tunables(void)

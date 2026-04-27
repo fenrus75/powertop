@@ -100,7 +100,7 @@ void usb_tunable::toggle(void)
 	write_sysfs(usb_path.c_str(), "auto");
 }
 
-static void add_usb_callback(const char *d_name)
+static void add_usb_callback(const std::string &d_name)
 {
 	class usb_tunable *usb;
 	std::string filename;
@@ -132,7 +132,7 @@ static void add_usb_callback(const char *d_name)
 	}
 
 	filename = std::format("/sys/bus/usb/devices/{}", d_name);
-	usb = new class usb_tunable(filename.c_str(), d_name);
+	usb = new class usb_tunable(filename, d_name);
 	all_tunables.push_back(usb);
 }
 

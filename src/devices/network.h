@@ -82,5 +82,6 @@ public:
 };
 
 extern void create_all_nics(callback fn = NULL);
+extern void create_all_nics(callback_str fn);
 
 #endif

@@ -45,7 +45,7 @@ public:
 
 };
 
-extern void add_sysfs_tunable(const char *str, const char *_sysfs_path, const char *_target_content);
+extern void add_sysfs_tunable(const std::string &str, const std::string &_sysfs_path, const std::string &_target_content);
 extern void add_sata_tunables(void);
 
 #endif

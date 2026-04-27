@@ -42,7 +42,7 @@ public:
 
 };
 
-extern void add_runtime_tunables(const char *bus);
+extern void add_runtime_tunables(const std::string &bus);
 
 
 #endif

@@ -89,7 +89,7 @@ void i2c_tunable::toggle(void)
 	write_sysfs(i2c_path.c_str(), "auto");
 }
 
-static void add_i2c_callback(const char *d_name)
+static void add_i2c_callback(const std::string &d_name)
 {
 	class i2c_tunable *i2c;
 	std::string filename;
@@ -100,7 +100,7 @@ static void add_i2c_callback(const char *d_name)
 		is_adapter = true;
 
 	filename = std::format("/sys/bus/i2c/devices/{}", d_name);
-	i2c = new class i2c_tunable(filename.c_str(), d_name, is_adapter);
+	i2c = new class i2c_tunable(filename, d_name, is_adapter);
 
 	if (is_adapter)
 		filename = std::format("/sys/bus/i2c/devices/{}/device", d_name);

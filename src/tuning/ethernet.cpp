@@ -46,7 +46,7 @@
 #include "../lib.h"
 #include "ethernet.h"
 
-extern void create_all_nics(callback fn);
+extern void create_all_nics(callback_str fn);
 
 ethernet_tunable::ethernet_tunable(const string &iface) : tunable("", 0.3, _("Good"), _("Bad"), _("Unknown"))
 {
@@ -129,10 +129,10 @@ void ethernet_tunable::toggle(void)
 }
 
 
-void ethtunable_callback(const char *d_name)
+void ethtunable_callback(const std::string &d_name)
 {
 	class ethernet_tunable *eth;
-	if (strcmp(d_name, "lo") == 0)
+	if (d_name == "lo")
 		return;
 	eth = new(std::nothrow) class ethernet_tunable(d_name);
 	if (eth)

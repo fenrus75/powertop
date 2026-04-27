@@ -120,7 +120,7 @@ void runtime_tunable::toggle(void)
 }
 
 
-void add_runtime_tunables(const char *bus)
+void add_runtime_tunables(const std::string &bus)
 {
 	struct dirent *entry;
 	DIR *dir;

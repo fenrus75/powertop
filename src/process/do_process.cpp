@@ -218,6 +218,8 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 	if (!event)
 		return;
 
+	std::string_view event_name(event->name);
+
 	if (time < first_stamp)
 		first_stamp = time;
 
@@ -226,7 +228,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		measurement_time = (0.0001 + last_stamp - first_stamp) / 1000000000 ;
 	}
 
-	if (strcmp(event->name, "sched_switch") == 0) {
+	if (event_name == "sched_switch") {
 		class process *old_proc = NULL;
 		class process *new_proc  = NULL;
 		const char *next_comm;
@@ -279,7 +281,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		/* start new process */
 		new_proc->schedule_thread(time, next_pid);
 
-		if (strncmp(next_comm,"migration/", 10) && strncmp(next_comm,"kworker/", 8) && strncmp(next_comm, "kondemand/",10)) {
+		if (!std::string_view(next_comm).starts_with("migration/") && !std::string_view(next_comm).starts_with("kworker/") && !std::string_view(next_comm).starts_with("kondemand/")) {
 			if (next_pid) {
 				/* If someone woke us up.. blame him instead */
 				if (new_proc->waker) {
@@ -293,7 +295,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		}
 		new_proc->waker = NULL;
 	}
-	else if (strcmp(event->name, "sched_wakeup") == 0) {
+	else if (event_name == "sched_wakeup") {
 		class power_consumer *from = NULL;
 		class process *dest_proc = NULL;
 		class process *from_proc = NULL;
@@ -354,7 +356,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			from->xwakes ++ ;
 
 	}
-	else if (strcmp(event->name, "irq_handler_entry") == 0) {
+	else if (event_name == "irq_handler_entry") {
 		class interrupt *irq = NULL;
 		const char *handler;
 		int nr;
@@ -382,7 +384,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 	}
 
-	else if (strcmp(event->name, "irq_handler_exit") == 0) {
+	else if (event_name == "irq_handler_exit") {
 		class interrupt *irq = NULL;
 		uint64_t t;
 
@@ -396,7 +398,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		consumer_child_time(cpu, t);
 	}
 
-	else if (strcmp(event->name, "softirq_entry") == 0) {
+	else if (event_name == "softirq_entry") {
 		class interrupt *irq = NULL;
 		const char *handler = NULL;
 		int vec;
@@ -421,7 +423,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		irq->start_interrupt(time);
 		change_blame(cpu, irq, LEVEL_SOFTIRQ);
 	}
-	else if (strcmp(event->name, "softirq_exit") == 0) {
+	else if (event_name == "softirq_exit") {
 		class interrupt *irq = NULL;
 		uint64_t t;
 
@@ -433,7 +435,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		t = irq->end_interrupt(time);
 		consumer_child_time(cpu, t);
 	}
-	else if (strcmp(event->name, "timer_expire_entry") == 0) {
+	else if (event_name == "timer_expire_entry") {
 		class timer *timer = NULL;
 		uint64_t function;
 		uint64_t tmr;
@@ -463,7 +465,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		if (timer->handler != "delayed_work_timer_fn")
 			change_blame(cpu, timer, LEVEL_TIMER);
 	}
-	else if (strcmp(event->name, "timer_expire_exit") == 0) {
+	else if (event_name == "timer_expire_exit") {
 		class timer *timer = NULL;
 		uint64_t tmr;
 		uint64_t t;
@@ -485,7 +487,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		}
 		consumer_child_time(cpu, t);
 	}
-	else if (strcmp(event->name, "hrtimer_expire_entry") == 0) {
+	else if (event_name == "hrtimer_expire_entry") {
 		class timer *timer = NULL;
 		uint64_t function;
 		uint64_t tmr;
@@ -508,7 +510,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		if (timer->handler != "delayed_work_timer_fn")
 			change_blame(cpu, timer, LEVEL_TIMER);
 	}
-	else if (strcmp(event->name, "hrtimer_expire_exit") == 0) {
+	else if (event_name == "hrtimer_expire_exit") {
 		class timer *timer = NULL;
 		uint64_t tmr;
 		uint64_t t;
@@ -531,7 +533,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		}
 		consumer_child_time(cpu, t);
 	}
-	else if (strcmp(event->name, "workqueue_execute_start") == 0) {
+	else if (event_name == "workqueue_execute_start") {
 		class work *work = NULL;
 		uint64_t function;
 		uint64_t wk;
@@ -556,7 +558,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		if (work->handler != "do_dbs_timer" && work->handler != "vmstat_update")
 			change_blame(cpu, work, LEVEL_WORK);
 	}
-	else if (strcmp(event->name, "workqueue_execute_end") == 0) {
+	else if (event_name == "workqueue_execute_end") {
 		class work *work = NULL;
 		uint64_t t;
 		uint64_t wk;
@@ -578,21 +580,21 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		}
 		consumer_child_time(cpu, t);
 	}
-	else if (strcmp(event->name, "cpu_idle") == 0) {
+	else if (event_name == "cpu_idle") {
 		tep_get_field_val(NULL, event, "state", &rec, &val, 0);
 		if (val == (unsigned int)-1)
 			consume_blame(cpu);
 		else
 			set_wakeup_pending(cpu);
 	}
-	else if (strcmp(event->name, "power_start") == 0) {
+	else if (event_name == "power_start") {
 		set_wakeup_pending(cpu);
 	}
-	else if (strcmp(event->name, "power_end") == 0) {
+	else if (event_name == "power_end") {
 		consume_blame(cpu);
 	}
-	else if (strcmp(event->name, "i915_gem_ring_dispatch") == 0
-	 || strcmp(event->name, "i915_gem_request_submit") == 0) {
+	else if (event_name == "i915_gem_ring_dispatch"
+	 || event_name == "i915_gem_request_submit") {
 		/* any kernel contains only one of the these tracepoints,
 		 * the latter one got replaced by the former one */
 		class power_consumer *consumer = NULL;
@@ -625,7 +627,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			consumer->gpu_ops++;
 		}
 	}
-	else if (strcmp(event->name, "writeback_inode_dirty") == 0) {
+	else if (event_name == "writeback_inode_dirty") {
 		static uint64_t prev_time;
 		class power_consumer *consumer = NULL;
 		int dev;
@@ -923,7 +925,7 @@ void report_process_update_display(void)
 	init_title_attr(&title_attr);
 
 	/* Set array of data in row Major order */
-	string *software_data = new string[cols * rows];
+	std::vector<std::string> software_data(cols * rows);
 	software_data[0]=__("Usage");
 	software_data[1]=__("Wakeups/s");
 	software_data[2]=__("GPU ops/s");
@@ -1014,9 +1016,8 @@ void report_process_update_display(void)
 	/* Report Output */
 	report.add_div(&div_attr);
 	report.add_title(&title_attr, __("Overview of Software Power Consumers"));
-	report.add_table(software_data, &std_table_css);
+	report.add_table(software_data.data(), &std_table_css);
         report.end_div();
-	delete [] software_data;
 }
 
 void report_summary(void)
@@ -1051,28 +1052,23 @@ void report_summary(void)
 	init_title_attr(&title_attr);
 
 	/* Set array for summary */
-	int summary_size =12;
-	string *summary = new string [summary_size];
+	int summary_size = 12;
+	std::vector<std::string> summary(summary_size);
 	summary[0]=__("Target:");
 	summary[1]=__("1 units/s");
 	summary[2]=__("System: ");
-	summary[3]= double_to_string(total_wakeups());
-	summary[3].append(__(" wakeup/s"));
+	summary[3]=std::format("{:5.1f} {}", total_wakeups(), __(" wakeup/s"));
 	summary[4]=__("CPU: ");
-	summary[5]= double_to_string(total_cpu_time()*100);
-	summary[5].append(__("\% usage"));
+	summary[5]=std::format("{:5.1f}% {}", total_cpu_time()*100, __(" usage"));
 	summary[6]=__("GPU:");
-	summary[7]=double_to_string(total_gpu_ops());
-	summary[7].append(__(" ops/s"));
+	summary[7]=std::format("{:5.1f} {}", total_gpu_ops(), __(" ops/s"));
 	summary[8]=__("GFX:");
-	summary[9]=double_to_string(total_xwakes());
-	summary[9].append(__(" wakeups/s"));
+	summary[9]=std::format("{:5.1f} {}", total_xwakes(), __(" wakeups/s"));
 	summary[10]=__("VFS:");
-	summary[11]= double_to_string(total_disk_hits());
-	summary[11].append(__(" ops/s"));
+	summary[11]=std::format("{:5.1f} {}", total_disk_hits(), __(" ops/s"));
 
 	/* Set array of data in row Major order */
-	string *summary_data = new string[cols * (rows + 1)];
+	std::vector<std::string> summary_data(cols * (rows + 1));
 	summary_data[0]=__("Usage");
 	summary_data[1]=__("Events/s");
 	summary_data[2]=__("Category");
@@ -1129,13 +1125,11 @@ void report_summary(void)
 	}
 
 	/* Report Summary for all */
-	report.add_summary_list(summary, summary_size);
+	report.add_summary_list(summary.data(), summary_size);
 	report.add_div(&div_attr);
 	report.add_title(&title_attr, __("Top 10 Power Consumers"));
-	report.add_table(summary_data, &std_table_css);
+	report.add_table(summary_data.data(), &std_table_css);
 	report.end_div();
-	delete [] summary;
-	delete [] summary_data;
 }
 
 

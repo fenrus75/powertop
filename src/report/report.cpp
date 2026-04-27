@@ -99,11 +99,11 @@ static string read_os_release(const string &filename)
 	return os;
 }
 
-static string get_time_string(const char *fmt, time_t t)
+static string get_time_string(const std::string &fmt, time_t t)
 {
 	char buf[128];
 	struct tm *tm_info = localtime(&t);
-	if (strftime(buf, sizeof(buf), fmt, tm_info))
+	if (strftime(buf, sizeof(buf), fmt.c_str(), tm_info))
 		return buf;
 	return "";
 }

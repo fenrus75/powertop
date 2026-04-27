@@ -72,7 +72,7 @@
 int debug_learning = 0;
 unsigned time_out = 20;
 int leave_powertop = 0;
-void (*ui_notify_user) (const char *frmt, ...);
+void (*ui_notify_user) (const std::string &msg);
 
 enum {
 	OPT_AUTO_TUNE = CHAR_MAX + 1,

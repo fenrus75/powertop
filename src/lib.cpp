@@ -535,29 +535,16 @@ int write_msr(int cpu, uint64_t offset, uint64_t value)
 
 #define UI_NOTIFY_BUFF_SZ 2048
 
-void ui_notify_user_ncurses(const char *frmt, ...)
+void ui_notify_user_ncurses(const std::string &msg)
 {
-	char notify[UI_NOTIFY_BUFF_SZ];
-	va_list list;
-
 	start_color();
 	init_pair(1, COLOR_BLACK, COLOR_WHITE);
 	attron(COLOR_PAIR(1));
-	va_start(list, frmt);
-	/* there is no ncurses *print() function which takes
-	 * int x, int y and va_list, this is why we use temp
-	 * buffer */
-	vsnprintf(notify, UI_NOTIFY_BUFF_SZ - 1, frmt, list);
-	va_end(list);
-	mvprintw(1, 0, "%s", notify);
+	mvprintw(1, 0, "%s", msg.c_str());
 	attroff(COLOR_PAIR(1));
 }
 
-void ui_notify_user_console(const char *frmt, ...)
+void ui_notify_user_console(const std::string &msg)
 {
-	va_list list;
-
-	va_start(list, frmt);
-	vprintf(frmt, list);
-	va_end(list);
+	printf("%s\n", msg.c_str());
 }

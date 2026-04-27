@@ -107,7 +107,7 @@ void wakeup_window::cursor_enter(void)
 		return;
 	wakeup_toggle_script = wake->wakeup_toggle_script();
 	wake->wakeup_toggle();
-	ui_notify_user(">> %s\n", wakeup_toggle_script.c_str());
+	ui_notify_user(std::format(">> {}\n", wakeup_toggle_script));
 }
 
 void report_show_wakeup(void)

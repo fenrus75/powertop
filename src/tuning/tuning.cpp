@@ -154,7 +154,7 @@ void tuning_window::cursor_enter(void)
 	toggle_script = tun->toggle_script();
 	tun->toggle();
 	if (!toggle_script.empty())
-		ui_notify_user(">> %s\n", toggle_script.c_str());
+		ui_notify_user(std::format(">> {}\n", toggle_script));
 }
 
 static bool tunables_sort(class tunable * i, class tunable * j)

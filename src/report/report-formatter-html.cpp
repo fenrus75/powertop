@@ -274,23 +274,22 @@ report_formatter_html::end_header()
 }
 
 void
-report_formatter_html::add_div(struct tag_attr * div_attr)
+report_formatter_html::add_div(struct tag_attr *div_attr)
 {
-	string empty="";
-	string tmp_str;
+	string  empty="";
 
 	if (div_attr->css_class == empty && div_attr->css_id == empty)
 		add_exact("<div>\n");
 
 	else if (div_attr->css_class == empty && div_attr->css_id != empty)
-		addf_exact("<div id=\"%s\">\n", div_attr->css_id);
+		addf_exact("<div id=\"%s\">\n", div_attr->css_id.c_str());
 
 	else if (div_attr->css_class != empty && div_attr->css_id == empty)
-		addf_exact("<div class=\"%s\">\n", div_attr->css_class);
+		addf_exact("<div class=\"%s\">\n", div_attr->css_class.c_str());
 
 	else if (div_attr->css_class != empty && div_attr->css_id != empty)
 		addf_exact("<div class=\"%s\" id=\"%s\">\n",
-				div_attr->css_class, div_attr->css_id);
+				div_attr->css_class.c_str(), div_attr->css_id.c_str());
 }
 
 void
@@ -302,7 +301,7 @@ report_formatter_html::end_div()
 void
 report_formatter_html::add_title(struct tag_attr *title_att, const string &title)
 {
-	addf_exact("<h2 class=\"%s\"> %s </h2>\n", title_att->css_class, title.c_str());
+	addf_exact("<h2 class=\"%s\"> %s </h2>\n", title_att->css_class.c_str(), title.c_str());
 }
 
 void
@@ -312,11 +311,10 @@ report_formatter_html::add_navigation()
 }
 
 void
-report_formatter_html::add_summary_list(string *list, int size)
+report_formatter_html::add_summary_list(const std::vector<std::string> &list)
 {
-	int i;
 	add_exact("<div><br/> <ul>\n");
-	for (i=0; i < size; i+=2){
+	for (size_t i=0; i < list.size(); i+=2){
 		addf_exact("<li class=\"summary_list\"> <b> %s </b> %s </li>",
 				list[i].c_str(), list[i+1].c_str());
 	}
@@ -325,7 +323,7 @@ report_formatter_html::add_summary_list(string *list, int size)
 
 
 void
-report_formatter_html::add_table(string *system_data, struct table_attributes* tb_attr)
+report_formatter_html::add_table(const std::vector<std::string> &system_data, struct table_attributes* tb_attr)
 {
 	int i, j;
 	int offset=0;
@@ -334,37 +332,40 @@ report_formatter_html::add_table(string *system_data, struct table_attributes* t
 	if (tb_attr->table_class == empty)
 		add_exact("<table>\n");
 	else
-		addf_exact("<table class=\"%s\">\n", tb_attr->table_class);
+		addf_exact("<table class=\"%s\">\n", tb_attr->table_class.c_str());
 
 	for (i=0; i < tb_attr->rows; i++){
 		if (tb_attr->tr_class == empty)
 			add_exact("<tr> ");
 		else
-			addf_exact("<tr class=\"%s\"> ", tb_attr->tr_class);
+			addf_exact("<tr class=\"%s\"> ", tb_attr->tr_class.c_str());
 
 		for (j=0; j < tb_attr->cols; j++){
 			offset = i * (tb_attr->cols) + j;
 
+			if (offset >= (int)system_data.size())
+				break;
+
 			if (tb_attr->pos_table_title == T &&  i==0)
 				addf_exact("<th class=\"%s\"> %s </th> ",
-				tb_attr->th_class,system_data[offset].c_str());
+				tb_attr->th_class.c_str(),system_data[offset].c_str());
 			else if (tb_attr->pos_table_title == L &&  j==0)
 				addf_exact("<th class=\"%s\"> %s </th> ",
-				tb_attr->th_class, system_data[offset].c_str());
+				tb_attr->th_class.c_str(), system_data[offset].c_str());
 			else if (tb_attr->pos_table_title == TL && ( i==0 || j==0 ))
 				addf_exact("<th class=\"%s\"> %s </th> ",
-				tb_attr->th_class, system_data[offset].c_str());
+				tb_attr->th_class.c_str(), system_data[offset].c_str());
 			else if (tb_attr->pos_table_title == TC && ((i % tb_attr->title_mod ) == 0))
-				addf_exact("<th class=\"%s\"> %s </th> ", tb_attr->th_class,
+				addf_exact("<th class=\"%s\"> %s </th> ", tb_attr->th_class.c_str(),
 					system_data[offset].c_str());
 			else if (tb_attr->pos_table_title == TLC && ((i % tb_attr->title_mod) == 0 || j==0))
-				addf_exact("<th class=\"%s\"> %s </th> ", tb_attr->th_class,
+				addf_exact("<th class=\"%s\"> %s </th> ", tb_attr->th_class.c_str(),
 				system_data[offset].c_str());
 			else
 				if ( tb_attr->td_class == empty)
 					addf_exact("<td > %s </td> ", system_data[offset].c_str());
 				else
-					addf_exact("<td class=\"%s\"> %s </td> ", tb_attr->td_class,
+					addf_exact("<td class=\"%s\"> %s </td> ", tb_attr->td_class.c_str(),
 						system_data[offset].c_str());
 		}
 		add_exact("</tr>\n");

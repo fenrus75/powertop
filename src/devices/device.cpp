@@ -246,30 +246,26 @@ void show_report_devices(void)
 
 	/* Device Summary */
 	int summary_size=2;
-	string *summary = new string[summary_size];
+	std::vector<std::string> summary(summary_size);
 	pw = global_power();
 	if (pw > 0.0001) {
 		summary[0]= __("The battery reports a discharge rate of: ");
-		summary[1]=fmt_prefix(pw);
-		summary[1].append(" W");
-		report.add_summary_list(summary, summary_size);
+		summary[1]=std::format("{} W", fmt_prefix(pw));
+		report.add_summary_list(summary);
 
 		summary[0]= __("The energy consumed was : ");
-		summary[1]=fmt_prefix(global_joules());
-		summary[1].append(" J");
-		report.add_summary_list(summary, summary_size);
+		summary[1]=std::format("{} J", fmt_prefix(global_joules()));
+		report.add_summary_list(summary);
 	}
 
 	if (show_power) {
 		summary[0]=__("The system baseline power is estimated at: ");
-		summary[1]=fmt_prefix(get_parameter_value("base power"));
-		summary[1].append(" W");
-		report.add_summary_list(summary, summary_size);
+		summary[1]=std::format("{} W", fmt_prefix(get_parameter_value("base power")));
+		report.add_summary_list(summary);
 	}
-	delete [] summary;
 
         /* Set array of data in row Major order */
-	string *device_data = new string[cols * rows];
+	std::vector<std::string> device_data(cols * rows);
 	device_data[0]= __("Usage");
 	device_data[1]= __("Device Name");
 	if (show_power)
@@ -311,7 +307,6 @@ void show_report_devices(void)
 	/* Report Output */
 	report.add_title(&title_attr, __("Device Power Report"));
 	report.add_table(device_data, &std_table_css);
-	delete [] device_data;
 }
 
 

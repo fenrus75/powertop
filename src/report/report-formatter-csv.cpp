@@ -121,20 +121,20 @@ report_formatter_csv::add_navigation()
 }
 
 void
-report_formatter_csv::add_summary_list(string *list, int size)
+report_formatter_csv::add_summary_list(const std::vector<std::string> &list)
 {
-	int i;
 	add_exact("\n");
-	for (i=0; i < size; i+=2){
+	for (size_t i=0; i < list.size(); i+=2){
 		addf_exact("%s %s", list[i].c_str(), list[i+1].c_str());
-		if(i < (size - 1))
+		if(i < (list.size() - 1))
 			add_exact(";");
 	}
 	add_exact("\n");
 }
 
+
 void
-report_formatter_csv::add_table(string *system_data, struct table_attributes* tb_attr)
+report_formatter_csv::add_table(const std::vector<std::string> &system_data, struct table_attributes* tb_attr)
 {
 	int i, j;
 	int offset=0;
@@ -144,6 +144,10 @@ report_formatter_csv::add_table(string *system_data, struct table_attributes* tb
 	for (i=0; i < tb_attr->rows; i++){
 		for (j=0; j < tb_attr->cols; j++){
 			offset = i * (tb_attr->cols) + j;
+
+			if (offset >= (int)system_data.size())
+				break;
+
 			tmp_str=system_data[offset];
 
 			if(tmp_str == "&nbsp;")

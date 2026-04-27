@@ -328,7 +328,7 @@ void report_show_open_devices(void)
 	init_title_attr(&title_attr);
 
 	/* Set array of data in row Major order */
-	string *process_data = new string[cols * rows];
+	std::vector<std::string> process_data(cols * rows);
 
 	sort(target->begin(), target->end(), devlist_sort);
 	process_data[0]=__("Process");
@@ -350,6 +350,5 @@ void report_show_open_devices(void)
 	/* No div attribute here inherits from device power report */
 	report.add_title(&title_attr, __("Process Device Activity"));
 	report.add_table(process_data, &std_table_css);
-	delete [] process_data;
 	report.end_div();
 }

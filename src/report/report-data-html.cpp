@@ -1,6 +1,6 @@
 #include "report-data-html.h"
 
-void init_div(struct tag_attr *div_attr, const char *css_class, const char *css_id)
+void init_div(struct tag_attr *div_attr, const std::string &css_class, const std::string &css_id)
 {
 	div_attr->css_class=css_class;
 	div_attr->css_id=css_id;

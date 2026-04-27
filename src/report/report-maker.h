@@ -61,6 +61,7 @@
 #include <stdarg.h>
 
 #include <string>
+#include <vector>
 using namespace std;
 /* Conditional gettext. We need original strings for CSV. */
 #ifdef ENABLE_NLS
@@ -128,8 +129,8 @@ public:
 	void end_div();
 	void add_title(struct tag_attr *att_title, const std::string &title);
 	void add_navigation();
-	void add_summary_list(string *list, int size);
-	void add_table(string *system_data, struct table_attributes *tb_attr);
+	void add_summary_list(const std::vector<std::string> &list);
+	void add_table(const std::vector<std::string> &system_data, struct table_attributes *tb_attr);
 
 private:
 	void setup_report_formatter();

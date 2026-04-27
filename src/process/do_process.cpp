@@ -1016,7 +1016,7 @@ void report_process_update_display(void)
 	/* Report Output */
 	report.add_div(&div_attr);
 	report.add_title(&title_attr, __("Overview of Software Power Consumers"));
-	report.add_table(software_data.data(), &std_table_css);
+	report.add_table(software_data, &std_table_css);
         report.end_div();
 }
 
@@ -1125,10 +1125,10 @@ void report_summary(void)
 	}
 
 	/* Report Summary for all */
-	report.add_summary_list(summary.data(), summary_size);
+	report.add_summary_list(summary);
 	report.add_div(&div_attr);
 	report.add_title(&title_attr, __("Top 10 Power Consumers"));
-	report.add_table(summary_data.data(), &std_table_css);
+	report.add_table(summary_data, &std_table_css);
 	report.end_div();
 }
 

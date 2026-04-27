@@ -173,13 +173,13 @@ report_maker::add_navigation()
 }
 
 void
-report_maker::add_summary_list(string *list, int size)
+report_maker::add_summary_list(const std::vector<std::string> &list)
 {
-	formatter->add_summary_list(list, size);
+	formatter->add_summary_list(list);
 }
 
 void
-report_maker::add_table(string *system_data, struct table_attributes *tb_attr)
+report_maker::add_table(const std::vector<std::string> &system_data, struct table_attributes *tb_attr)
 {
 	formatter->add_table(system_data, tb_attr);
 }

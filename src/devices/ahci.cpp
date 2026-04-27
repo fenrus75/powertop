@@ -353,7 +353,7 @@ void ahci_create_device_stats_table(void)
 		links[i]->report_device_stats(ahci_data, i);
 	}
 	report.add_title(&title_attr, __("AHCI ALPM Residency Statistics"));
-	report.add_table(ahci_data.data(), &std_table_css);
+	report.add_table(ahci_data, &std_table_css);
 	report.end_div();
 }
 

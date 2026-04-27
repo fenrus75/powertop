@@ -232,7 +232,7 @@ void report_show_tunables(void)
 		init_tune_table_attr(&tune_table_css, rows, cols);
 
 		/* Set array of data in row Major order */
-		string *tunable_data = new string[cols * rows];
+		std::vector<std::string> tunable_data(cols * rows);
 
 		tunable_data[0]=__("Description");
 		tunable_data[1]=__("Script");
@@ -251,7 +251,6 @@ void report_show_tunables(void)
 		/* Report Output */
 		report.add_title(&title_attr,__("Software Settings in Need of Tuning"));
 		report.add_table(tunable_data, &tune_table_css);
-		delete [] tunable_data;
 	}
 
 	/* Second Table */
@@ -261,7 +260,7 @@ void report_show_tunables(void)
 	init_tune_table_attr(&tune_table_css, rows, cols);
 
 	/* Set array of data in row Major order */
-	string *untunable_data = new string[rows];
+	std::vector<std::string> untunable_data(rows);
 	untunable_data[0]=__("Description");
 
 	for (i = 0; i < all_untunables.size(); i++) {
@@ -270,7 +269,6 @@ void report_show_tunables(void)
 	/* Report Output */
 	report.add_title(&title_attr,__("Untunable Software Issues"));
 	report.add_table(untunable_data, &tune_table_css);
-	delete [] untunable_data;
 
 	/* Third Table */
 	/* Set Table attributes, rows, and cols */
@@ -286,7 +284,7 @@ void report_show_tunables(void)
 	init_tune_table_attr(&tune_table_css, rows, cols);
 
 	/* Set array of data in row Major order */
-	string *tuned_data = new string[rows];
+	std::vector<std::string> tuned_data(rows);
 	tuned_data[0]=__("Description");
 	idx=cols;
 	for (i = 0; i < all_tunables.size(); i++) {
@@ -302,7 +300,6 @@ void report_show_tunables(void)
 	report.add_title(&title_attr,__("Optimal Tuned Software Settings"));
         report.add_table(tuned_data, &tune_table_css);
         report.end_div();
-	delete [] tuned_data;
 }
 
 void clear_tuning()

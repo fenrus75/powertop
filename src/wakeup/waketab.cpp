@@ -143,7 +143,7 @@ void report_show_wakeup(void)
 		init_wakeup_table_attr(&wakeup_table_css, rows, cols);
 
 		/* Set array of data in row Major order */
-		string *wakeup_data = new string[cols * rows];
+		std::vector<std::string> wakeup_data(cols * rows);
 
 		wakeup_data[0]=__("Description");
 		wakeup_data[1]=__("Script");
@@ -162,7 +162,6 @@ void report_show_wakeup(void)
 		/* Report Output */
 		report.add_title(&title_attr,__("Wake status of the devices"));
 		report.add_table(wakeup_data, &wakeup_table_css);
-		delete [] wakeup_data;
 	}
 }
 

@@ -27,6 +27,7 @@
 #define _REPORT_FORMATTER_CSV_H_
 
 #include <string>
+#include <vector>
 
 #include "report-formatter-base.h"
 
@@ -60,10 +61,8 @@ public:
 	void end_div();
 	void add_title(struct tag_attr *title_att, const std::string &title);
 	void add_navigation();
-	void add_summary_list(string *list, int size);
-	void add_table(string *system_data, struct table_attributes *tb_attr);
-
-private:
+	void add_summary_list(const std::vector<std::string> &list);
+	void add_table(const std::vector<std::string> &system_data, struct table_attributes *tb_attr);private:
 	void add_quotes();
 	string escape_string(const std::string &str);
 	bool csv_need_quotes;

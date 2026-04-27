@@ -26,6 +26,7 @@
 #ifndef _REPORT_FORMATTER_H_
 #define _REPORT_FORMATTER_H_
 
+#include <vector>
 #include "report-maker.h"
 using namespace std;
 
@@ -49,8 +50,8 @@ public:
 	virtual void end_div() {}
 	virtual void add_title(struct tag_attr *att_title, const std::string &title) {}
 	virtual void add_navigation() {}
-	virtual void add_summary_list(string *list, int size) {}
-	virtual void add_table(string *system_data,
+	virtual void add_summary_list(const std::vector<std::string> &list) {}
+	virtual void add_table(const std::vector<std::string> &system_data,
 			struct table_attributes *tb_attr)     {}
 };
 

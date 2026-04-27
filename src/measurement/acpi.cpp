@@ -26,6 +26,7 @@
 #include "acpi.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,16 +54,17 @@ present voltage:         12001 mV
 void acpi_power_meter::measure(void)
 {
 	std::string filename;
-	char line[4096];
-	ifstream file;
+	std::string content;
+	std::istringstream stream;
+	std::string line;
 
 	double _rate = 0;
 	double _capacity = 0;
 	double _voltage = 0;
 
-	std::string rate_units;
-	std::string capacity_units;
-	std::string voltage_units;
+	std::string rate_units = "Unknown";
+	std::string capacity_units = "Unknown";
+	std::string voltage_units = "Unknown";
 
 
 	rate = 0;
@@ -70,66 +72,41 @@ void acpi_power_meter::measure(void)
 	capacity = 0;
 
 	filename = std::format("/proc/acpi/battery/{}/state", name);
-
-	file.open(filename.c_str(), ios::in);
-	if (!file)
+	content = read_file_content(filename);
+	if (content.empty())
 		return;
 
-	while (file) {
-		char *c;
-		file.getline(line, sizeof(line));
+	stream.str(content);
 
-		if (strstr(line, "present:") && (strstr(line, "yes") == NULL)) {
+	while (std::getline(stream, line)) {
+		if (line.find("present:") != std::string::npos && line.find("yes") == std::string::npos) {
 			return;
 		}
-		if (strstr(line, "charging state:") && (strstr(line, "discharging") == NULL)) {
+		if (line.find("charging state:") != std::string::npos && line.find("discharging") == std::string::npos) {
 			return; /* not discharging */
 		}
-		if (strstr(line, "present rate:")) {
-			c = strchr(line, ':');
-			c++;
-			while (*c == ' ') c++;
-			_rate = strtoull(c, NULL, 10);
-			c = strchr(c, ' ');
-			if (c) {
-				c++;
-				rate_units = c;
-			} else {
-				_rate = 0;
-				rate_units = "Unknown";
-			}
-
-		}
-		if (strstr(line, "remaining capacity:")) {
-			c = strchr(line, ':');
-			c++;
-			while (*c == ' ') c++;
-			_capacity = strtoull(c, NULL, 10);
-			c = strchr(c, ' ');
-			if (c) {
-				c++;
-				capacity_units = c;
-			} else {
-				_capacity = 0;
-				capacity_units = "Unknown";
+		if (line.find("present rate:") != std::string::npos) {
+			size_t pos = line.find(':');
+			if (pos != std::string::npos) {
+				std::istringstream iss(line.substr(pos + 1));
+				iss >> _rate >> rate_units;
 			}
 		}
-		if (strstr(line, "present voltage:")) {
-			c = strchr(line, ':');
-			c++;
-			while (*c == ' ') c++;
-			_voltage = strtoull(c, NULL, 10);
-			c = strchr(c, ' ');
-			if (c) {
-				c++;
-				voltage_units = c;
-			} else {
-				_voltage = 0;
-				voltage_units = "Unknown";
+		if (line.find("remaining capacity:") != std::string::npos) {
+			size_t pos = line.find(':');
+			if (pos != std::string::npos) {
+				std::istringstream iss(line.substr(pos + 1));
+				iss >> _capacity >> capacity_units;
+			}
+		}
+		if (line.find("present voltage:") != std::string::npos) {
+			size_t pos = line.find(':');
+			if (pos != std::string::npos) {
+				std::istringstream iss(line.substr(pos + 1));
+				iss >> _voltage >> voltage_units;
 			}
 		}
 	}
-	file.close();
 
 	/* BIOS report random crack-inspired units. Lets try to get to the Si-system units */
 

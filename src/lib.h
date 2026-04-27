@@ -71,6 +71,7 @@ using namespace std;
 extern void write_sysfs(const string &filename, const string &value);
 extern int read_sysfs(const string &filename, bool *ok = NULL);
 extern string read_sysfs_string(const string &filename);
+extern string read_file_content(const string &filename);
 
 extern std::string format_watts(double W, unsigned int len);
 

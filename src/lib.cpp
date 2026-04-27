@@ -227,6 +227,25 @@ string read_sysfs_string(const string &filename)
 	return content;
 }
 
+string read_file_content(const string &filename)
+{
+	ifstream file;
+	string content;
+
+	file.open(filename.c_str(), ios::in);
+	if (!file)
+		return "";
+	try
+	{
+		content.assign((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+		file.close();
+	} catch (std::exception &exc) {
+		file.close();
+		return "";
+	}
+	return content;
+}
+
 void align_string(std::string &str, size_t min_sz, size_t max_sz)
 {
 	size_t sz;

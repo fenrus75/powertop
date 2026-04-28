@@ -100,8 +100,10 @@ void show_tab(unsigned int tab)
 	if (!display)
 		return;
 
+	if (tab >= tab_names.size())
+		return;
+
 	if (tab_bar) {
-		delwin(tab_bar);
 		tab_bar = NULL;
 	}
 

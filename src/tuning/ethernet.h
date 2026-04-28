@@ -29,8 +29,6 @@
 
 #include "tunable.h"
 
-using namespace std;
-
 class ethernet_tunable : public tunable {
 public:
 	std::string interf;

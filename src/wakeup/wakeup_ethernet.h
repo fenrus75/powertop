@@ -29,8 +29,6 @@
 
 #include "wakeup.h"
 
-using namespace std;
-
 class ethernet_wakeup : public wakeup {
 	std::string eth_path;
 public:

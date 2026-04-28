@@ -31,8 +31,6 @@
 #include <limits.h>
 
 
-using namespace std;
-
 #include "device.h"
 #include "backlight.h"
 #include "../parameters/parameters.h"

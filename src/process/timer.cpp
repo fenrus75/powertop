@@ -36,8 +36,6 @@
 
 #include <string_view>
 
-using namespace std;
-
 static bool timer_is_deferred(string_view handler)
 {
 	bool ret = false;

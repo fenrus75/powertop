@@ -31,8 +31,6 @@
 #include <limits.h>
 
 
-using namespace std;
-
 #include "device.h"
 #include "report/report.h"
 #include "report/report-maker.h"

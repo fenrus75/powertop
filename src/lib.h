@@ -75,7 +75,6 @@ extern std::string kernel_function(uint64_t address);
 
 #include <ctime>
 #include <sys/time.h>
-using namespace std;
 
 extern void write_sysfs(const string &filename, const string &value);
 extern int read_sysfs(const string &filename, bool *ok = NULL);

@@ -30,8 +30,6 @@
 
 #include "tunable.h"
 
-using namespace std;
-
 class sysfs_tunable : public tunable {
 	std::string sysfs_path;
 	std::string target_value;

@@ -29,8 +29,6 @@
 
 #include "tunable.h"
 
-using namespace std;
-
 class bt_tunable : public tunable {
 public:
 	bt_tunable(void);

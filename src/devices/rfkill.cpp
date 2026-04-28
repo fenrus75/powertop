@@ -32,8 +32,6 @@
 #include <limits.h>
 
 
-using namespace std;
-
 #include "device.h"
 #include "rfkill.h"
 #include "../parameters/parameters.h"

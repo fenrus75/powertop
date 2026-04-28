@@ -32,8 +32,6 @@
 #include "report-formatter-base.h"
 #include "report-data-html.h"
 
-using namespace std;
-
 /* Whether to replace " and ' in HTML by &quot; and &apos; respectively */
 /*#define REPORT_HTML_ESCAPE_QUOTES*/
 

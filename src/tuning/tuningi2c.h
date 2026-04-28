@@ -25,8 +25,6 @@
 
 #include "tunable.h"
 
-using namespace std;
-
 class i2c_tunable : public tunable {
 	std::string i2c_path;
 public:

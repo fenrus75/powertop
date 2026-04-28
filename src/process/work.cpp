@@ -33,8 +33,6 @@
 #include "../lib.h"
 #include "process.h"
 
-using namespace std;
-
 
 work::work(unsigned long address) : power_consumer()
 {

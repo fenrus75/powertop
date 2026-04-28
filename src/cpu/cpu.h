@@ -33,8 +33,6 @@
 #include <sys/time.h>
 #include "../lib.h"
 
-using namespace std;
-
 class abstract_cpu;
 
 #define LEVEL_C0 -1

@@ -33,8 +33,6 @@
 #include <limits.h>
 #include "../lib.h"
 
-using namespace std;
-
 acpi_power_meter::acpi_power_meter(const string &acpi_name) : power_meter(acpi_name)
 {
 	rate = 0.0;

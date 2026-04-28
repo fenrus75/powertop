@@ -29,8 +29,6 @@
 
 #include "wakeup.h"
 
-using namespace std;
-
 class usb_wakeup : public wakeup {
 	std::string usb_path;
 public:

@@ -40,8 +40,6 @@
 #include <format>
 #include "report-data-html.h"
 
-using namespace std;
-
 struct reportstream reportout;
 report_type reporttype = REPORT_OFF;
 report_maker report(REPORT_OFF);

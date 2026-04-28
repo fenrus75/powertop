@@ -62,7 +62,6 @@
 
 #include <string>
 #include <vector>
-using namespace std;
 /* Conditional gettext. We need original strings for CSV. */
 #ifdef ENABLE_NLS
 #define __(STRING) \

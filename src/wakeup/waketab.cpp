@@ -13,8 +13,6 @@
 #include "wakeup_ethernet.h"
 #include "wakeup_usb.h"
 
-using namespace std;
-
 static bool should_clear = false;
 
 class wakeup_window *newtab_window;

@@ -30,8 +30,6 @@
 #include <string>
 #include <ncurses.h>
 
-using namespace std;
-
 extern void init_display(void);
 extern void reset_display(void);
 extern int ncurses_initialized(void);

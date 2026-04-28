@@ -31,8 +31,6 @@
 
 #include <string>
 
-using namespace std;
-
 class wifi_tunable : public tunable {
 	std::string iface;
 public:

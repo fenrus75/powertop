@@ -30,8 +30,6 @@
 #include <algorithm>
 #include <string>
 
-using namespace std;
-
 extern double measurement_time;
 
 class power_consumer;

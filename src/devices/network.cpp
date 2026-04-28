@@ -36,8 +36,6 @@
 
 #include <linux/ethtool.h>
 
-using namespace std;
-
 #include "device.h"
 #include "network.h"
 #include "../lib.h"

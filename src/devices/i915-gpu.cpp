@@ -32,8 +32,6 @@
 #include <limits.h>
 #include "../lib.h"
 
-using namespace std;
-
 #include "device.h"
 #include "i915-gpu.h"
 #include "../parameters/parameters.h"

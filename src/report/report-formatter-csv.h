@@ -43,8 +43,6 @@
 /* Whether to escape with quotes empty cell values with spaces */
 /*#define REPORT_CSV_SPACE_NEED_QUOTES*/
 
-using namespace std;
-
 /* ************************************************************************ */
 
 class report_formatter_csv: public report_formatter_string_base

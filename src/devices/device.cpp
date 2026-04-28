@@ -32,8 +32,6 @@
 #include <unistd.h>
 #include <format>
 
-using namespace std;
-
 #include "backlight.h"
 #include "usb.h"
 #include "ahci.h"

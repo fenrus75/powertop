@@ -33,8 +33,6 @@
 #include <string>
 #include <string.h>
 
-using namespace std;
-
 static int display = 0;
 
 vector<string> tab_names;

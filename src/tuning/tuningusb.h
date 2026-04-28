@@ -30,8 +30,6 @@
 
 #include "tunable.h"
 
-using namespace std;
-
 class usb_tunable : public tunable {
 	std::string usb_path;
 public:

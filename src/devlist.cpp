@@ -40,8 +40,6 @@
 #include <ctype.h>
 #include <limits.h>
 
-using namespace std;
-
 #include "devlist.h"
 #include "lib.h"
 #include "report/report.h"

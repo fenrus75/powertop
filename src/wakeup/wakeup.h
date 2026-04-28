@@ -30,8 +30,6 @@
 
 #include <string>
 
-using namespace std;
-
 #define WAKEUP_ENABLE 1
 #define WAKEUP_DISABLE 0
 

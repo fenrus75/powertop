@@ -29,7 +29,6 @@
 #include <vector>
 #include "report-maker.h"
 #include "../lib.h"
-using namespace std;
 
 class report_formatter
 {

@@ -61,8 +61,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-using namespace std;
-
 struct packet {
 	char	buf[256];
 	char	op[32];

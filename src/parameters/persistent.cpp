@@ -31,8 +31,6 @@
 #include "parameters.h"
 #include "../measurement/measurement.h"
 
-using namespace std;
-
 void save_all_results(const std::string &filename)
 {
 	ofstream file;

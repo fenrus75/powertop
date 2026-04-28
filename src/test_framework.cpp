@@ -15,8 +15,6 @@
 #include <format>
 #include "test_framework.h"
 
-using namespace std;
-
 test_framework_manager& test_framework_manager::get() {
 	static test_framework_manager instance;
 	return instance;

@@ -106,8 +106,6 @@ std::string hz_to_human(unsigned long hz, int digits)
 	return std::format("{:9d}", (int)Hz);
 }
 
-using namespace std;
-
 map<unsigned long, string> kallsyms;
 
 static void read_kallsyms(void)

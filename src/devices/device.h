@@ -71,8 +71,6 @@ public:
 	virtual int grouping_prio(void) { return 0; }; /* priority of this device class if multiple classes match to the same underlying device. 0 is lowest */
 };
 
-using namespace std;
-
 extern std::vector<class device *> all_devices;
 
 extern void devices_start_measurement(void);

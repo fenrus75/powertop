@@ -28,8 +28,6 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
 #include <sys/time.h>
 #include "cpudevice.h"
 #include "rapl/rapl_interface.h"

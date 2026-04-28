@@ -28,8 +28,6 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
 #include "../devices/device.h"
 #include "cpu.h"
 

@@ -31,8 +31,6 @@
 
 #include <string>
 
-using namespace std;
-
 #define TUNE_GOOD    1
 #define TUNE_BAD     -1
 #define TUNE_UNFIXABLE -2

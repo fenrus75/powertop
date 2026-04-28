@@ -32,8 +32,6 @@
 
 #include "report-maker.h"
 
-using namespace std;
-
 struct reportstream {
 	std::ofstream report_file;
 	std::string filename;

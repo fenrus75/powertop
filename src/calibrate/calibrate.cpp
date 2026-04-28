@@ -45,8 +45,6 @@ extern "C" {
 #include <vector>
 #include <string>
 
-using namespace std;
-
 
 static vector<string> usb_devices;
 static vector<string> rfkill_devices;

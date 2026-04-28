@@ -29,8 +29,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-using namespace std;
-
 #include "device.h"
 #include "alsa.h"
 #include "../parameters/parameters.h"

@@ -34,8 +34,6 @@ extern "C" {
 }
 
 
-using namespace std;
-
 class  perf_event {
 protected:
 	int perf_fd;

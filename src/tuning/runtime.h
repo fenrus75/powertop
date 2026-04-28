@@ -29,7 +29,6 @@
 #include <limits.h>
 
 #include "tunable.h"
-using namespace std;
 
 class runtime_tunable : public tunable {
 	std::string runtime_path;

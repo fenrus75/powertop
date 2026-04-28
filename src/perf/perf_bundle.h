@@ -29,8 +29,6 @@
 #include <vector>
 #include <map>
 
-using namespace std;
-
 #include "perf.h"
 class perf_event;
 

@@ -29,8 +29,6 @@
 #include <vector>
 #include "../lib.h"
 
-using namespace std;
-
 std::vector<class wakeup *> wakeup_all;
 
 wakeup::wakeup(const string &str, double _score, const string &enable, const string &disable)

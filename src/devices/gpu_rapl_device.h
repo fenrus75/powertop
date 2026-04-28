@@ -28,8 +28,6 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
 #include <sys/time.h>
 #include "i915-gpu.h"
 #include "cpu/rapl/rapl_interface.h"

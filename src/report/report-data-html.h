@@ -4,8 +4,6 @@
 #include <string>
 #include <sstream>
 
-using namespace std;
-
 struct tag_attr {
 	std::string css_class;
 	std::string css_id;

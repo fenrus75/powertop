@@ -34,8 +34,6 @@
 #include "../devices/device.h"
 #include "../lib.h"
 
-using namespace std;
-
 #define MAX_KEEP 700
 #define MAX_PARAM 750
 

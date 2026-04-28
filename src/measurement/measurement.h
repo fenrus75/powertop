@@ -28,8 +28,6 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
 class power_meter {
 	bool discharging = false;
 public:

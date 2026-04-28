@@ -62,7 +62,7 @@ static struct timespec tlast;
 void start_power_measurement(void)
 {
 	unsigned int i;
-	clock_gettime(CLOCK_REALTIME, &tlast);
+	clock_gettime(CLOCK_MONOTONIC, &tlast);
 	for (i = 0; i < power_meters.size(); i++)
 		power_meters[i]->start_measurement();
 	all_results.joules = 0.0;
@@ -99,7 +99,7 @@ void global_sample_power(void)
 {
 	struct timespec tnow;
 
-	clock_gettime(CLOCK_REALTIME, &tnow);
+	clock_gettime(CLOCK_MONOTONIC, &tnow);
 	/* power * time = joules */
 	all_results.joules += global_power() * \
 			 ( ((double)tnow.tv_sec + 1.0e-9*tnow.tv_nsec) - \

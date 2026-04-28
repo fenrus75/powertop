@@ -29,6 +29,7 @@
 #include <dirent.h>
 
 #include "cpu.h"
+#include "../lib.h"
 
 
 #define MSR_TSC				0x10
@@ -166,7 +167,7 @@ public:
 	virtual std::string  fill_pstate_line(int line_nr);
 	virtual std::string  fill_pstate_name(int line_nr);
 	virtual std::string  fill_cstate_line(int line_nr, const std::string &separator);
-	virtual int	has_pstate_level(int level) { return 0; };
+	virtual int	has_pstate_level(int level __unused) { return 0; };
 	virtual int	has_pstates(void) { return 0; };
 	virtual void	wiggle(void) { };
 

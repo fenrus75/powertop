@@ -26,6 +26,7 @@
 #define _INCLUDE_GUARD_PERF_H_
 
 #include <iostream>
+#include "../lib.h"
 
 
 extern "C" {
@@ -67,7 +68,7 @@ public:
 
 	void process(void *cookie);
 
-	virtual void handle_event(struct perf_event_header *header, void *cookie) { };
+	virtual void handle_event(struct perf_event_header *header __unused, void *cookie __unused) { };
 
 	static struct tep_handle *tep;
 

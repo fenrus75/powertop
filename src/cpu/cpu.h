@@ -31,6 +31,7 @@
 #include <string>
 #include <stdint.h>
 #include <sys/time.h>
+#include "../lib.h"
 
 using namespace std;
 
@@ -129,10 +130,10 @@ public:
 
 	virtual int	has_cstate_level(int level);
 
-	virtual std::string  fill_cstate_line(int line_nr, const std::string &separator="") { return "";};
-	virtual std::string  fill_cstate_percentage(int line_nr) { return ""; };
-	virtual std::string  fill_cstate_time(int line_nr) { return ""; };
-	virtual std::string  fill_cstate_name(int line_nr) { return "";};
+	virtual std::string  fill_cstate_line(int line_nr __unused, const std::string &separator __unused ="") { return "";};
+	virtual std::string  fill_cstate_percentage(int line_nr __unused) { return ""; };
+	virtual std::string  fill_cstate_time(int line_nr __unused) { return ""; };
+	virtual std::string  fill_cstate_name(int line_nr __unused) { return "";};
 
 
 	/* P state related methods */
@@ -141,8 +142,8 @@ public:
 	void		finalize_pstate(uint64_t freq, uint64_t duration, int count);
 
 
-	virtual std::string  fill_pstate_line(int line_nr) { return "";};
-	virtual std::string  fill_pstate_name(int line_nr) { return "";};
+	virtual std::string  fill_pstate_line(int line_nr __unused) { return "";};
+	virtual std::string  fill_pstate_name(int line_nr __unused) { return "";};
 	virtual int	has_pstate_level(int level);
 	virtual int	has_pstates(void) { return 1; };
 

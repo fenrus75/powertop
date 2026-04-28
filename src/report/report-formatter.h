@@ -28,6 +28,7 @@
 
 #include <vector>
 #include "report-maker.h"
+#include "../lib.h"
 using namespace std;
 
 class report_formatter
@@ -39,19 +40,19 @@ public:
 	virtual std::string get_result() {return "Basic report_formatter::get_result() call\n";}
 	virtual void clear_result() {}
 
-	virtual void add(const std::string &str) {}
+	virtual void add(const std::string &str __unused) {}
 
 	/* *** Report Style *** */
 	virtual void add_logo() {}
 	virtual void add_header() {}
 	virtual void end_header() {}
-	virtual void add_div(struct tag_attr *div_attr) {}
+	virtual void add_div(struct tag_attr *div_attr __unused) {}
 	virtual void end_div() {}
-	virtual void add_title(struct tag_attr *att_title, const std::string &title) {}
+	virtual void add_title(struct tag_attr *att_title __unused, const std::string &title __unused) {}
 	virtual void add_navigation() {}
-	virtual void add_summary_list(const std::vector<std::string> &list) {}
-	virtual void add_table(const std::vector<std::string> &system_data,
-			struct table_attributes *tb_attr)     {}
+	virtual void add_summary_list(const std::vector<std::string> &list __unused) {}
+	virtual void add_table(const std::vector<std::string> &system_data __unused,
+			struct table_attributes *tb_attr __unused)     {}
 };
 
 #endif /* _REPORT_FORMATTER_H_ */

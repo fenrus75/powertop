@@ -93,7 +93,9 @@ static std::string model_name(const std::string &path, const std::string &shortn
 			continue;
 		if (d_name.find("target") == std::string::npos)
 			continue;
-		return disk_name(pathname, d_name, shortname);
+		std::string result = disk_name(pathname, d_name, shortname);
+		closedir(dir);
+		return result;
 	}
 	closedir(dir);
 

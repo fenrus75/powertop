@@ -61,9 +61,9 @@
 
 */
 
-static vector<struct devuser *> one;
-static vector<struct devuser *> two;
-static vector<struct devpower *> devpower;
+static std::vector<struct devuser *> one;
+static std::vector<struct devuser *> two;
+static std::vector<struct devpower *> devpower;
 
 static int phase;
 /*
@@ -95,7 +95,7 @@ void collect_open_devices(void)
 	std::string filename;
 	char link[PATH_MAX];
 	unsigned int i;
-	vector<struct devuser *> *target;
+	std::vector<struct devuser *> *target;
 
 	if (phase == 1)
 		target = &one;
@@ -295,7 +295,7 @@ static bool devlist_sort(struct devuser * i, struct devuser * j)
 
 void report_show_open_devices(void)
 {
-	vector<struct devuser *> *target;
+	std::vector<struct devuser *> *target;
 	unsigned int i;
 	std::string prev, proc;
 	int idx, cols, rows;

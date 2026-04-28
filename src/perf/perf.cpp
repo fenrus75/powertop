@@ -55,7 +55,7 @@ static inline int sys_perf_event_open(struct perf_event_attr *attr,
 			group_fd, flags);
 }
 
-void perf_event::create_perf_event(const string &eventname __unused, int _cpu)
+void perf_event::create_perf_event(const std::string &eventname __unused, int _cpu)
 {
 	struct perf_event_attr attr;
 	int ret;
@@ -133,7 +133,7 @@ void perf_event::create_perf_event(const string &eventname __unused, int _cpu)
 
 }
 
-static int parse_event_format(const string &system_name, const string &event_name)
+static int parse_event_format(const std::string &system_name, const std::string &event_name)
 {
 	char *buf;
 	int size;
@@ -147,7 +147,7 @@ static int parse_event_format(const string &system_name, const string &event_nam
 	return 0;
 }
 
-void perf_event::set_event_name(const string &system_name, const string &event_name)
+void perf_event::set_event_name(const std::string &system_name, const std::string &event_name)
 {
 	struct tep_event *event;
 	int ret;
@@ -187,7 +187,7 @@ static void allocate_tep(void)
 		tep_ref(perf_event::tep);
 }
 
-perf_event::perf_event(const string &system_name, const string &event_name, int _cpu, int buffer_size)
+perf_event::perf_event(const std::string &system_name, const std::string &event_name, int _cpu, int buffer_size)
 {
 	allocate_tep();
 	perf_fd = -1;
@@ -218,7 +218,7 @@ void perf_event::stop(void)
 	int ret;
 	ret = ioctl(perf_fd, PERF_EVENT_IOC_DISABLE, 0);
 	if (ret)
-		cout << "stop failing\n";
+		std::cout << "stop failing\n";
 }
 
 void perf_event::process(void *cookie)

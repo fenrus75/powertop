@@ -114,11 +114,11 @@ void init_wakeup_table_attr(struct table_attributes *table_css, int rows, int co
 }
 
 /* Other Helper Functions */
-string
+std::string
 double_to_string(double dval)
 {
-	ostringstream dtmp;
-	string str;
+	std::ostringstream dtmp;
+	std::string str;
 	dtmp << dval;
 	str= dtmp.str();
 	str = str.substr(0, str.find(".")+2);

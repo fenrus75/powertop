@@ -38,7 +38,7 @@
 #include <iostream>
 #include <fstream>
 
-usbdevice::usbdevice(const string &_name, const string &path, const string &devid): device()
+usbdevice::usbdevice(const std::string &_name, const std::string &path, const std::string &devid): device()
 {
 	std::string vendor;
 	std::string product;

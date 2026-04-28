@@ -35,13 +35,13 @@
 
 static int display = 0;
 
-vector<string> tab_names;
-map<string, class tab_window *> tab_windows;
-map<string, string> tab_translations;
+std::vector<std::string> tab_names;
+std::map<std::string, class tab_window *> tab_windows;
+std::map<std::string, std::string> tab_translations;
 
-map<string, string> bottom_lines;
+std::map<std::string, std::string> bottom_lines;
 
-void create_tab(const string &name, const string &translation, class tab_window *w, string bottom_line)
+void create_tab(const std::string &name, const std::string &translation, class tab_window *w, std::string bottom_line)
 {
 	if (!w)
 		w = new(class tab_window);
@@ -151,7 +151,7 @@ void show_tab(unsigned int tab)
 	prefresh(win->win, win->ypad_pos, win->xpad_pos, 1, 0, LINES - 3, COLS - 1);
 }
 
-WINDOW *get_ncurses_win(const string &name)
+WINDOW *get_ncurses_win(const std::string &name)
 {
 	class tab_window *w;
 	WINDOW *win;

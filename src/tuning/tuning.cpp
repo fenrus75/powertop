@@ -244,7 +244,7 @@ void report_show_tunables(void)
 				continue;
 			tunable_data[idx]=all_tunables[i]->description();
 			idx+=1;
-			tunable_data[idx]=string(all_tunables[i]->toggle_script());
+			tunable_data[idx]=std::string(all_tunables[i]->toggle_script());
 			idx+=1;
 		}
 

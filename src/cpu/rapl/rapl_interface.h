@@ -29,9 +29,9 @@ class c_rapl_interface
 private:
 	static const int def_sampling_interval = 1; //In seconds
 	bool powercap_sysfs_present;
-	string powercap_core_path;
-	string powercap_uncore_path;
-	string powercap_dram_path;
+	std::string powercap_core_path;
+	std::string powercap_uncore_path;
+	std::string powercap_dram_path;
 
 	unsigned char rapl_domains;
 	int first_cpu;

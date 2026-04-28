@@ -226,7 +226,7 @@ void abstract_cpu::insert_cstate(const std::string &linux_name, const std::strin
 						if (cstates[pos]->human_name.length() > 2) {
 							if(c == cstates[pos]->human_name[1]){
 								if(i + 1 < human_name.length() && human_name[i+1] != cstates[pos]->human_name[2]){
-									greater_line_level = max(greater_line_level, cstates[pos]->line_level);
+									greater_line_level = std::max(greater_line_level, cstates[pos]->line_level);
 									state->line_level = greater_line_level + 1;
 								}
 							}
@@ -259,7 +259,7 @@ void abstract_cpu::insert_cstate(const std::string &linux_name, const std::strin
 	state->before_count = count;
 }
 
-void abstract_cpu::finalize_cstate(const string &linux_name, uint64_t usage, uint64_t duration, int count)
+void abstract_cpu::finalize_cstate(const std::string &linux_name, uint64_t usage, uint64_t duration, int count)
 {
 	unsigned int i;
 	struct idle_state *state = NULL;
@@ -272,7 +272,7 @@ void abstract_cpu::finalize_cstate(const string &linux_name, uint64_t usage, uin
 	}
 
 	if (!state) {
-		cout << "Invalid C state finalize " << linux_name << " \n";
+		std::cout << "Invalid C state finalize " << linux_name << " \n";
 		return;
 	}
 
@@ -281,7 +281,7 @@ void abstract_cpu::finalize_cstate(const string &linux_name, uint64_t usage, uin
 	state->after_count += count;
 }
 
-void abstract_cpu::update_cstate(const string &linux_name, const string &human_name, uint64_t usage, uint64_t duration, int count, int level)
+void abstract_cpu::update_cstate(const std::string &linux_name, const std::string &human_name, uint64_t usage, uint64_t duration, int count, int level)
 {
 	unsigned int i;
 	struct idle_state *state = NULL;
@@ -340,7 +340,7 @@ int abstract_cpu::has_pstate_level(int level)
 
 
 
-void abstract_cpu::insert_pstate(uint64_t freq, const string &human_name, uint64_t duration, int count)
+void abstract_cpu::insert_pstate(uint64_t freq, const std::string &human_name, uint64_t duration, int count)
 {
 	class frequency *state;
 
@@ -372,7 +372,7 @@ void abstract_cpu::finalize_pstate(uint64_t freq, uint64_t duration, int count)
 	}
 
 	if (!state) {
-		cout << "Invalid P state finalize " << freq << " \n";
+		std::cout << "Invalid P state finalize " << freq << " \n";
 		return;
 	}
 	state->time_after += duration;
@@ -380,7 +380,7 @@ void abstract_cpu::finalize_pstate(uint64_t freq, uint64_t duration, int count)
 
 }
 
-void abstract_cpu::update_pstate(uint64_t freq, const string &human_name, uint64_t duration, int count)
+void abstract_cpu::update_pstate(uint64_t freq, const std::string &human_name, uint64_t duration, int count)
 {
 	unsigned int i;
 	class frequency *state = NULL;

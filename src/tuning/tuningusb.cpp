@@ -37,7 +37,7 @@
 
 #include "../lib.h"
 
-usb_tunable::usb_tunable(const string &path, const string &name) : tunable("", 0.9, _("Good"), _("Bad"), _("Unknown"))
+usb_tunable::usb_tunable(const std::string &path, const std::string &name) : tunable("", 0.9, _("Good"), _("Bad"), _("Unknown"))
 {
 	std::string vendor;
 	std::string product;
@@ -70,7 +70,7 @@ usb_tunable::usb_tunable(const string &path, const string &name) : tunable("", 0
 
 int usb_tunable::good_bad(void)
 {
-	string content;
+	std::string content;
 
 	content = read_sysfs_string(usb_path);
 

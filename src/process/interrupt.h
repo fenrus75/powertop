@@ -51,8 +51,8 @@ public:
 	virtual std::string usage_units_summary(void);
 };
 
-extern vector <class interrupt *> all_interrupts;
-extern const vector<std::string> softirqs;
+extern std::vector <class interrupt *> all_interrupts;
+extern const std::vector<std::string> softirqs;
 
 
 extern class interrupt * find_create_interrupt(const std::string &_handler, int nr, int cpu);

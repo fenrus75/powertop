@@ -106,7 +106,7 @@ std::string hz_to_human(unsigned long hz, int digits)
 	return std::format("{:9d}", (int)Hz);
 }
 
-map<unsigned long, string> kallsyms;
+std::map<unsigned long, std::string> kallsyms;
 
 static void read_kallsyms(void)
 {
@@ -121,7 +121,7 @@ static void read_kallsyms(void)
 
 	while (std::getline(stream, line)) {
 		size_t pos = line.find(' ');
-		if (pos == string::npos)
+		if (pos == std::string::npos)
 			continue;
 
 		unsigned long address = 0;
@@ -135,10 +135,10 @@ static void read_kallsyms(void)
 		std::string rest = line.substr(pos + 1);
 		/* skip type character and spaces */
 		size_t pos2 = rest.find_first_not_of(" \t");
-		if (pos2 != string::npos) {
+		if (pos2 != std::string::npos) {
 			/* skip the type char (e.g. 'T') and next spaces */
 			size_t pos3 = rest.find_first_not_of(" \t", pos2 + 1);
-			if (pos3 != string::npos) {
+			if (pos3 != std::string::npos) {
 				kallsyms[address] = rest.substr(pos3);
 			}
 		}
@@ -169,7 +169,7 @@ void set_max_cpu(int cpu)
 }
 
 
-void write_sysfs(const string &filename, const string &value)
+void write_sysfs(const std::string &filename, const std::string &value)
 {
 	if (test_framework_manager::get().is_replaying()) {
 		test_framework_manager::get().replay_write(filename, value);
@@ -178,9 +178,9 @@ void write_sysfs(const string &filename, const string &value)
 	if (test_framework_manager::get().is_recording()) {
 		test_framework_manager::get().record_write(filename, value);
 	}
-	ofstream file;
+	std::ofstream file;
 
-	file.open(filename.c_str(), ios::out);
+	file.open(filename.c_str(), std::ios::out);
 	if (!file)
 		return;
 	try
@@ -192,7 +192,7 @@ void write_sysfs(const string &filename, const string &value)
 	}
 }
 
-int read_sysfs(const string &filename, bool *ok)
+int read_sysfs(const std::string &filename, bool *ok)
 {
 	std::string content = read_file_content(filename);
 	if (content.empty()) {
@@ -213,24 +213,24 @@ int read_sysfs(const string &filename, bool *ok)
 	}
 }
 
-string read_sysfs_string(const string &filename)
+std::string read_sysfs_string(const std::string &filename)
 {
-	string content = read_file_content(filename);
+	std::string content = read_file_content(filename);
 	size_t pos = content.find('\n');
-	if (pos != string::npos)
+	if (pos != std::string::npos)
 		content.erase(pos);
 	return content;
 }
 
-string read_file_content(const string &filename)
+std::string read_file_content(const std::string &filename)
 {
 	if (test_framework_manager::get().is_replaying()) {
 		return test_framework_manager::get().replay_read(filename);
 	}
-	ifstream file;
-	string content;
+	std::ifstream file;
+	std::string content;
 
-	file.open(filename.c_str(), ios::in);
+	file.open(filename.c_str(), std::ios::in);
 	if (!file) {
 		if (test_framework_manager::get().is_recording()) {
 			test_framework_manager::get().record_read_fail(filename);
@@ -344,7 +344,7 @@ int utf_ok = -1;
 
 
 /* pretty print numbers while limiting the precision */
-string fmt_prefix(double n)
+std::string fmt_prefix(double n)
 {
 	static const char prefixes[] = "yzafpnum kMGTPEZY";
 	int omag, npfx;
@@ -369,7 +369,7 @@ string fmt_prefix(double n)
 
 	std::string tmpbuf = std::format("{:.2e}", n);
 	size_t e_pos = tmpbuf.find('e');
-	if (e_pos == string::npos) {
+	if (e_pos == std::string::npos) {
 		return "NaN";
 	}
 	
@@ -411,7 +411,7 @@ string fmt_prefix(double n)
 	return res;
 }
 
-static map<string, string> pretty_prints;
+static std::map<std::string, std::string> pretty_prints;
 static int pretty_print_init = 0;
 
 static void init_pretty_print(void)
@@ -483,7 +483,7 @@ void process_glob(const std::string &d_glob, callback fn)
 	globfree(&g);
 }
 
-string get_user_input(unsigned sz)
+std::string get_user_input(unsigned sz)
 {
 	std::string buf(sz + 1, '\0');
 	fflush(stdout);

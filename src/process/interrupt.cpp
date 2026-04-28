@@ -29,7 +29,7 @@
 #include "interrupt.h"
 #include "../lib.h"
 
-const vector<std::string> softirqs = {
+const std::vector<std::string> softirqs = {
 	"HI_SOFTIRQ",
 	"timer(softirq)",
 	"net tx(softirq)",
@@ -43,7 +43,7 @@ const vector<std::string> softirqs = {
 };
 
 
-interrupt::interrupt(const string &_handler, int _number) : power_consumer()
+interrupt::interrupt(const std::string &_handler, int _number) : power_consumer()
 {
 	running_since = 0;
 	number = _number;
@@ -53,7 +53,7 @@ interrupt::interrupt(const string &_handler, int _number) : power_consumer()
 }
 
 
-vector <class interrupt *> all_interrupts;
+std::vector <class interrupt *> all_interrupts;
 
 void interrupt::start_interrupt(uint64_t time)
 {

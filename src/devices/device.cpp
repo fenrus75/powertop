@@ -96,7 +96,7 @@ double	device::utilization(void)
 
 
 
-vector<class device *> all_devices;
+std::vector<class device *> all_devices;
 
 
 void devices_start_measurement(void)

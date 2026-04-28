@@ -55,7 +55,7 @@ double power_meter::power(void)
 	return 0.0;
 }
 
-vector<class power_meter *> power_meters;
+std::vector<class power_meter *> power_meters;
 
 static struct timespec tlast;
 

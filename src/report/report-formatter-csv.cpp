@@ -49,10 +49,10 @@ report_formatter_csv::finish_report()
 }
 
 
-string
-report_formatter_csv::escape_string(const string &str)
+std::string
+report_formatter_csv::escape_string(const std::string &str)
 {
-	string res;
+	std::string res;
 
 	for (size_t i = 0; i < str.length(); i++) {
 		switch (str[i]) {
@@ -109,7 +109,7 @@ report_formatter_csv::end_div()
 	/*Do nothing*/
 }
 
-void report_formatter_csv::add_title(struct tag_attr *title_att __unused, const string &title)
+void report_formatter_csv::add_title(struct tag_attr *title_att __unused, const std::string &title)
 
 {
 	add_exact("____________________________________________________________________\n");
@@ -140,7 +140,7 @@ report_formatter_csv::add_table(const std::vector<std::string> &system_data, str
 {
 	int i, j;
 	int offset=0;
-	string tmp_str="";
+	std::string tmp_str="";
 	int empty_row=0;
 	add_exact("\n");
 	for (i=0; i < tb_attr->rows; i++){

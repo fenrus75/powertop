@@ -45,7 +45,7 @@
 #include "../lib.h"
 #include "wakeup_usb.h"
 
-usb_wakeup::usb_wakeup(const string &path __unused, const string &iface) : wakeup("", 0.5, _("Enabled"), _("Disabled"))
+usb_wakeup::usb_wakeup(const std::string &path __unused, const std::string &iface) : wakeup("", 0.5, _("Enabled"), _("Disabled"))
 {
 	interf = iface;
 	desc = pt_format(_("Wake status for USB device {}"), iface);
@@ -56,7 +56,7 @@ usb_wakeup::usb_wakeup(const string &path __unused, const string &iface) : wakeu
 
 int usb_wakeup::wakeup_value(void)
 {
-	string content;
+	std::string content;
 
 	content = read_sysfs_string(usb_path);
 

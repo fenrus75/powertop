@@ -29,13 +29,13 @@
 #include <stdio.h>
 #include <limits.h>
 
-sysfs_power_meter::sysfs_power_meter(const string &power_supply_name) : power_meter(power_supply_name)
+sysfs_power_meter::sysfs_power_meter(const std::string &power_supply_name) : power_meter(power_supply_name)
 {
 	rate = 0.0;
 	capacity = 0.0;
 }
 
-bool sysfs_power_meter::get_sysfs_attr(const string &attribute, int *value)
+bool sysfs_power_meter::get_sysfs_attr(const std::string &attribute, int *value)
 {
 	std::string filename;
 	bool ok;

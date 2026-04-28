@@ -26,7 +26,7 @@
 #include "../parameters/parameters.h"
 #include <stdio.h>
 
-vector<class device_consumer *> all_proc_devices;
+std::vector<class device_consumer *> all_proc_devices;
 
 
 device_consumer::device_consumer(class device *dev) : power_consumer()

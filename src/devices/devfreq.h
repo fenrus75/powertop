@@ -45,7 +45,7 @@ class devfreq: public device {
 
 public:
 
-	vector<class frequency *> dstates;
+	std::vector<class frequency *> dstates;
 
 	devfreq(const std::string &c);
 	std::string fill_freq_utilization(unsigned int idx);

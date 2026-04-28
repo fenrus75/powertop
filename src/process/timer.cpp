@@ -36,7 +36,7 @@
 
 #include <string_view>
 
-static bool timer_is_deferred(string_view handler)
+static bool timer_is_deferred(std::string_view handler)
 {
 	bool ret = false;
 	std::string content = read_file_content("/proc/timer_stats");
@@ -66,8 +66,8 @@ timer::timer(unsigned long address) : power_consumer()
 }
 
 
-static map<unsigned long, class timer *> all_timers;
-static map<unsigned long, uint64_t> running_since;
+static std::map<unsigned long, class timer *> all_timers;
+static std::map<unsigned long, uint64_t> running_since;
 
 void timer::fire(uint64_t time, uint64_t timer_struct)
 {
@@ -107,14 +107,14 @@ std::string timer::usage_units_summary(void)
 
 
 
-static void add_timer(const pair<unsigned long, class timer*>& elem)
+static void add_timer(const std::pair<unsigned long, class timer*>& elem)
 {
 	all_power.push_back(elem.second);
 }
 
 void all_timers_to_all_power(void)
 {
-	for_each(all_timers.begin(), all_timers.end(), add_timer);
+	std::for_each(all_timers.begin(), all_timers.end(), add_timer);
 
 }
 

@@ -86,11 +86,11 @@ public:
 	}
 };
 
-extern map<string, class tab_window *> tab_windows;
+extern std::map<std::string, class tab_window *> tab_windows;
 
-WINDOW *get_ncurses_win(const string &name);
+WINDOW *get_ncurses_win(const std::string &name);
 WINDOW *get_ncurses_win(int nr);
 
-void create_tab(const string &name, const string &translation, class tab_window *w = NULL, string bottom_line = "");
+void create_tab(const std::string &name, const std::string &translation, class tab_window *w = NULL, std::string bottom_line = "");
 
 #endif

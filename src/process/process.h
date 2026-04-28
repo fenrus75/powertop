@@ -68,7 +68,7 @@ public:
 
 };
 
-extern vector <class process *> all_processes;
+extern std::vector <class process *> all_processes;
 
 extern double measurement_time;
 

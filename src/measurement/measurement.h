@@ -56,7 +56,7 @@ public:
 	}
 };
 
-extern vector<class power_meter *> power_meters;
+extern std::vector<class power_meter *> power_meters;
 
 extern void start_power_measurement(void);
 extern void end_power_measurement(void);

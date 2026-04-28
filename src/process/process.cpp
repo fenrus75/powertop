@@ -39,7 +39,7 @@
 #include "../lib.h"
 
 
-vector <class process *> all_processes;
+std::vector <class process *> all_processes;
 
 void process::account_disk_dirty(void)
 {
@@ -80,7 +80,7 @@ static void cmdline_to_string(std::string& str)
 }
 
 
-process::process(const string &_comm, int _pid, int _tid) : power_consumer()
+process::process(const std::string &_comm, int _pid, int _tid) : power_consumer()
 {
 	comm = _comm;
 	pid = _pid;

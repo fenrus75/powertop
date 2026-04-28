@@ -46,7 +46,7 @@
 
 static class abstract_cpu system_level;
 
-vector<class abstract_cpu *> all_cpus;
+std::vector<class abstract_cpu *> all_cpus;
 
 static	class perf_bundle * perf_events;
 
@@ -367,7 +367,7 @@ static std::string fill_state_name(class abstract_cpu *acpu, int state, int line
 }
 
 static std::string fill_state_line(class abstract_cpu *acpu, int state, int line,
-					const string &sep = "")
+					const std::string &sep = "")
 {
 	switch (state) {
 		case PSTATE:
@@ -459,7 +459,7 @@ void report_display_cpu_cstates(void)
 
 	/* Set array of data in row Major order */
        	int idx1, idx2, idx3;
-	string tmp_str;
+	std::string tmp_str;
 
 	for (package = 0; package < system_level.children.size(); package++) {
 		bool first_core = true;
@@ -658,7 +658,7 @@ void report_display_cpu_pstates(void)
 
         /* Set array of data in row Major order */
 	int idx1, idx2, idx3, num_cpus=0, num_cores=0;
-        string tmp_str;
+        std::string tmp_str;
 
 	for (i = 0, pstates_num = 0; i < all_cpus.size(); i++) {
 		if (all_cpus[i])
@@ -946,7 +946,7 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 		return;
 
 	if (cpunr >= (int)all_cpus.size()) {
-		cout << "INVALID cpu nr in handle_trace_point\n";
+		std::cout << "INVALID cpu nr in handle_trace_point\n";
 		return;
 	}
 

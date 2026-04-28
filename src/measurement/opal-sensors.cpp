@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <limits.h>
 
-opal_sensors_power_meter::opal_sensors_power_meter(const string &power_supply_name) : power_meter(power_supply_name)
+opal_sensors_power_meter::opal_sensors_power_meter(const std::string &power_supply_name) : power_meter(power_supply_name)
 {
 }
 

@@ -32,7 +32,7 @@ std::vector<class tunable *> all_tunables;
 std::vector<class tunable *> all_untunables;
 
 
-tunable::tunable(const string &str, double _score, const string &good, const string &bad, const string &neutral)
+tunable::tunable(const std::string &str, double _score, const std::string &good, const std::string &bad, const std::string &neutral)
 {
 	desc = str;
 	score = _score;

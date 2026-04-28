@@ -54,7 +54,7 @@ void i965_core::measurement_start(void)
 	update_cstate("gpu rc6pp", "RC6pp", 0, rc6pp_before, 1, 3);
 }
 
-std::string i965_core::fill_cstate_line(int line_nr, const string &separator __unused)
+std::string i965_core::fill_cstate_line(int line_nr, const std::string &separator __unused)
 {
 	double ratio, d = -1.0, time_delta;
 

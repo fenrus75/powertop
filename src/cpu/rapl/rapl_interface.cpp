@@ -70,7 +70,7 @@
 #define PP0_DOMAIN_PRESENT	0x04
 #define PP1_DOMAIN_PRESENT	0x08
 
-c_rapl_interface::c_rapl_interface(const string &dev_name, int cpu) :
+c_rapl_interface::c_rapl_interface(const std::string &dev_name, int cpu) :
 	powercap_sysfs_present(false),
 	powercap_core_path(),
 	powercap_uncore_path(),
@@ -84,7 +84,7 @@ c_rapl_interface::c_rapl_interface(const string &dev_name, int cpu) :
 {
 	uint64_t value;
 	int ret;
-	string package_path;
+	std::string package_path;
 	DIR *dir;
 	struct dirent *entry;
 
@@ -93,11 +93,11 @@ c_rapl_interface::c_rapl_interface(const string &dev_name, int cpu) :
 	rapl_domains = 0;
 
 	if (!dev_name.empty()) {
-		string base_path = "/sys/class/powercap/intel-rapl/";
+		std::string base_path = "/sys/class/powercap/intel-rapl/";
 		if ((dir = opendir(base_path.c_str())) != NULL) {
 			while ((entry = readdir(dir)) != NULL) {
-				string path = base_path + entry->d_name + "/name";
-				string str = read_sysfs_string(path);
+				std::string path = base_path + entry->d_name + "/name";
+				std::string str = read_sysfs_string(path);
 				if (str.length() > 0) {
 					if (str == dev_name) {
 						package_path = base_path + entry->d_name + "/";
@@ -114,8 +114,8 @@ c_rapl_interface::c_rapl_interface(const string &dev_name, int cpu) :
 	if (powercap_sysfs_present) {
 		if ((dir = opendir(package_path.c_str())) != NULL) {
 			while ((entry = readdir(dir)) != NULL) {
-				string path = package_path + entry->d_name;
-				string str = read_sysfs_string(path + "/name");
+				std::string path = package_path + entry->d_name;
+				std::string str = read_sysfs_string(path + "/name");
 				if (str.length() > 0) {
 					if (str == "core") {
 						rapl_domains |= PP0_DOMAIN_PRESENT;
@@ -371,7 +371,7 @@ int c_rapl_interface::get_dram_energy_status(double *status)
 	}
 
 	if (powercap_sysfs_present) {
-		string str = read_sysfs_string(powercap_dram_path + "energy_uj");
+		std::string str = read_sysfs_string(powercap_dram_path + "energy_uj");
 		if (str.length() > 0) {
 			*status =  atof(str.c_str()) / 1000000; // uj to Js
 			return 0;
@@ -462,7 +462,7 @@ int c_rapl_interface::get_pp0_energy_status(double *status)
 	}
 
 	if (powercap_sysfs_present) {
-		string str = read_sysfs_string(powercap_core_path + "energy_uj");
+		std::string str = read_sysfs_string(powercap_core_path + "energy_uj");
 		if (str.length() > 0) {
 			*status = atof(str.c_str()) / 1000000; // uj to Js
 			return 0;
@@ -550,7 +550,7 @@ int c_rapl_interface::get_pp1_energy_status(double *status)
 	}
 
 	if (powercap_sysfs_present) {
-		string str = read_sysfs_string(powercap_uncore_path + "energy_uj");
+		std::string str = read_sysfs_string(powercap_uncore_path + "energy_uj");
 		if (str.length() > 0) {
 			*status =  atof(str.c_str()) / 1000000; // uj to Js
 			return 0;

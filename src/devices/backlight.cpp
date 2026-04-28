@@ -39,7 +39,7 @@
 #include <format>
 
 
-backlight::backlight(const string &_name, const string &path): device()
+backlight::backlight(const std::string &_name, const std::string &path): device()
 {
 	min_level = 0;
 	max_level = 0;

@@ -36,7 +36,7 @@
 #include <format>
 
 #include "../lib.h"
-sysfs_tunable::sysfs_tunable(const string &str, const string &_sysfs_path, const string &target_content) : tunable(str, 1.0, _("Good"), _("Bad"), _("Unknown"))
+sysfs_tunable::sysfs_tunable(const std::string &str, const std::string &_sysfs_path, const std::string &target_content) : tunable(str, 1.0, _("Good"), _("Bad"), _("Unknown"))
 {
 	sysfs_path = _sysfs_path;
 	target_value = target_content;

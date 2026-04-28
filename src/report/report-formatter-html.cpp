@@ -99,10 +99,10 @@ report_formatter_html::add_doc_footer()
 }
 
 /* ************************************************************************ */
-string
-report_formatter_html::escape_string(const string &str)
+std::string
+report_formatter_html::escape_string(const std::string &str)
 {
-	string res;
+	std::string res;
 
 	for (size_t i = 0; i < str.length(); i++) {
 		switch (str[i]) {
@@ -277,7 +277,7 @@ report_formatter_html::end_header()
 void
 report_formatter_html::add_div(struct tag_attr *div_attr)
 {
-	string  empty="";
+	std::string  empty="";
 
 	if (div_attr->css_class == empty && div_attr->css_id == empty)
 		add_exact("<div>\n");
@@ -300,7 +300,7 @@ report_formatter_html::end_div()
 }
 
 void
-report_formatter_html::add_title(struct tag_attr *title_att, const string &title)
+report_formatter_html::add_title(struct tag_attr *title_att, const std::string &title)
 {
 	add_exact(std::format("<h2 class=\"{}\"> {} </h2>\n", title_att->css_class, title));
 }
@@ -328,7 +328,7 @@ report_formatter_html::add_table(const std::vector<std::string> &system_data, st
 {
 	int i, j;
 	int offset=0;
-	string  empty="";
+	std::string  empty="";
 
 	if (tb_attr->table_class == empty)
 		add_exact("<table>\n");

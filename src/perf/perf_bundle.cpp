@@ -58,7 +58,7 @@ perf_bundle_event::perf_bundle_event(void) : perf_event()
 void perf_bundle_event::handle_event(struct perf_event_header *header, void *cookie)
 {
 	unsigned char *buffer;
-	vector<void *> *vector;
+	std::vector<void *> *vector;
 
 	buffer = (unsigned char *)malloc(header->size);
 	memcpy(buffer, header, header->size);
@@ -92,7 +92,7 @@ void perf_bundle::release(void)
 	records.clear();
 }
 
-bool perf_bundle::add_event(const string &system_name, const string &event_name)
+bool perf_bundle::add_event(const std::string &system_name, const std::string &event_name)
 {
 	unsigned int i;
 	int event_added = false;

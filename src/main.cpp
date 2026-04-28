@@ -445,7 +445,7 @@ int main(int argc, char **argv)
 		int  iterations = 1, auto_tune = 0, sample_interval = 5;
 		bool auto_tune_dump = false;
 
-		set_new_handler(out_of_memory);
+		std::set_new_handler(out_of_memory);
 
 		setlocale (LC_ALL, "");
 

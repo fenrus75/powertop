@@ -67,7 +67,7 @@ public:
 	virtual int show_events(void) { return 1; };
 };
 
-extern vector <class power_consumer *> all_power;
+extern std::vector <class power_consumer *> all_power;
 
 extern double total_wakeups(void);
 extern double total_cpu_time(void);

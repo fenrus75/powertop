@@ -39,7 +39,7 @@
 #include <unistd.h>
 #include <format>
 
-alsa::alsa(const string &_name, const string &path): device()
+alsa::alsa(const std::string &_name, const std::string &path): device()
 {
 	std::string model;
 	std::string vendor;

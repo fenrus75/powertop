@@ -264,7 +264,7 @@ static double extech_read(int fd)
 	return -1000.0;
 }
 
-extech_power_meter::extech_power_meter(const string &extech_name) : power_meter(extech_name)
+extech_power_meter::extech_power_meter(const std::string &extech_name) : power_meter(extech_name)
 {
 	rate = 0.0;
 	int ret;

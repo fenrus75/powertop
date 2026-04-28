@@ -63,7 +63,7 @@ public:
 	void init_markup();
 	void add_doc_header();
 	void add_doc_footer();
-	string escape_string(const std::string &str);
+	std::string escape_string(const std::string &str);
 
 };
 

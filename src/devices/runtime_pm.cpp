@@ -39,7 +39,7 @@
 #include <iostream>
 #include <fstream>
 
-runtime_pmdevice::runtime_pmdevice(const string &_name, const string &path) : device()
+runtime_pmdevice::runtime_pmdevice(const std::string &_name, const std::string &path) : device()
 {
 	sysfs_path = path;
 	register_sysfs_path(sysfs_path);
@@ -99,13 +99,13 @@ double runtime_pmdevice::power_usage(struct result_bundle *result, struct parame
 	return power;
 }
 
-void runtime_pmdevice::set_human_name(const string &_name)
+void runtime_pmdevice::set_human_name(const std::string &_name)
 {
 	humanname = _name;
 }
 
 
-bool device_has_runtime_pm(const string &sysfs_path)
+bool device_has_runtime_pm(const std::string &sysfs_path)
 {
 	if (read_sysfs(std::format("{}/power/runtime_suspended_time", sysfs_path)))
 		return true;

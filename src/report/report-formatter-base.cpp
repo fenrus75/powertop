@@ -51,7 +51,7 @@ report_formatter_string_base::clear_result()
 /* ************************************************************************ */
 
 void
-report_formatter_string_base::add(const string &str)
+report_formatter_string_base::add(const std::string &str)
 {
 	result += escape_string(str);
 }
@@ -59,7 +59,7 @@ report_formatter_string_base::add(const string &str)
 /* ************************************************************************ */
 
 void
-report_formatter_string_base::add_exact(const string &str)
+report_formatter_string_base::add_exact(const std::string &str)
 {
 	result += str;
 }

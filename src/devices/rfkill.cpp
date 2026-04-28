@@ -40,7 +40,7 @@
 #include <unistd.h>
 #include <format>
 
-rfkill::rfkill(const string &_name, const string &path): device()
+rfkill::rfkill(const std::string &_name, const std::string &path): device()
 {
 	char buf[4096];
 	ssize_t len;

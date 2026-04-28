@@ -33,25 +33,25 @@
 
 void save_all_results(const std::string &filename)
 {
-	ofstream file;
+	std::ofstream file;
 	unsigned int i;
 	struct result_bundle *bundle;
 	std::string pathname;
 
 	pathname = get_param_directory(filename);
 
-	file.open(pathname, ios::out);
+	file.open(pathname, std::ios::out);
 	if (!file) {
-		cout << _("Cannot save to file") << " " << pathname << "\n";
+		std::cout << _("Cannot save to file") << " " << pathname << "\n";
 		return;
 	}
 	for (i = 0; i < past_results.size(); i++) {
 		bundle = past_results[i];
-		map<string, int>::iterator it;
-		file << setiosflags(ios::fixed) <<  setprecision(5) << bundle->power << "\n";
+		std::map<std::string, int>::iterator it;
+		file << std::setiosflags(std::ios::fixed) <<  std::setprecision(5) << bundle->power << "\n";
 
 		for (it = result_index.begin(); it != result_index.end(); it++) {
-			file << it->first << "\t" << setprecision(5) << get_result_value(it->second, bundle) << "\n";
+			file << it->first << "\t" << std::setprecision(5) << get_result_value(it->second, bundle) << "\n";
 		}
 		file << ":\n";
 	}
@@ -72,7 +72,7 @@ void close_results()
 
 void load_results(const std::string &filename)
 {
-	string line;
+	std::string line;
 	struct result_bundle *bundle;
 	int first = 1;
 	unsigned int count = 0;
@@ -83,7 +83,7 @@ void load_results(const std::string &filename)
 
 	std::string content = read_file_content(pathname);
 	if (content.empty()) {
-		cout << _("Cannot load from file") << " " << pathname << "\n";
+		std::cout << _("Cannot load from file") << " " << pathname << "\n";
 		return;
 	}
 
@@ -96,7 +96,7 @@ void load_results(const std::string &filename)
 		if (first) {
 			if (line.length() > 0) {
 				try {
-					bundle->power = stod(line);
+					bundle->power = std::stod(line);
 					if (bundle->power < min_power)
 						min_power = bundle->power;
 				} catch (...) {}
@@ -123,13 +123,13 @@ void load_results(const std::string &filename)
 		}
 
 		size_t pos = line.find('\t');
-		if (pos == string::npos)
+		if (pos == std::string::npos)
 			continue;
 
-		string name = line.substr(0, pos);
-		string value_str = line.substr(pos + 1);
+		std::string name = line.substr(0, pos);
+		std::string value_str = line.substr(pos + 1);
 		try {
-			d = stod(value_str);
+			d = std::stod(value_str);
 			set_result_value(name, d, bundle);
 		} catch (...) {}
 	}
@@ -143,7 +143,7 @@ void load_results(const std::string &filename)
 
 void save_parameters(const std::string &filename)
 {
-	ofstream file;
+	std::ofstream file;
 	std::string pathname;
 
 //	printf("result size is %i, #parameters is %i \n", (int)past_results.size(), (int)all_parameters.parameters.size());
@@ -153,33 +153,33 @@ void save_parameters(const std::string &filename)
 
 	pathname = get_param_directory(filename);
 
-	file.open(pathname, ios::out);
+	file.open(pathname, std::ios::out);
 	if (!file) {
-		cout << _("Cannot save to file") << " " << pathname << "\n";
+		std::cout << _("Cannot save to file") << " " << pathname << "\n";
 		return;
 	}
 
-	map<string, int>::iterator it;
+	std::map<std::string, int>::iterator it;
 
 	for (it = param_index.begin(); it != param_index.end(); it++) {
 		int index;
 		index = it->second;
-		file << it->first << "\t" << setprecision(9) << all_parameters.parameters[index] << "\n";
+		file << it->first << "\t" << std::setprecision(9) << all_parameters.parameters[index] << "\n";
 	}
 	file.close();
 }
 
 void load_parameters(const std::string &filename)
 {
-	string line;
+	std::string line;
 	std::string pathname;
 
 	pathname = get_param_directory(filename);
 
 	std::string content = read_file_content(pathname);
 	if (content.empty()) {
-		cout << _("Cannot load from file") << " " << pathname << "\n";
-		cout << _("File will be loaded after taking minimum number of measurement(s) with battery only \n");
+		std::cout << _("Cannot load from file") << " " << pathname << "\n";
+		std::cout << _("File will be loaded after taking minimum number of measurement(s) with battery only \n");
 		return;
 	}
 
@@ -188,13 +188,13 @@ void load_parameters(const std::string &filename)
 	while (getline(stream, line)) {
 		double d;
 		size_t pos = line.find('\t');
-		if (pos == string::npos)
+		if (pos == std::string::npos)
 			continue;
 
-		string name = line.substr(0, pos);
-		string value_str = line.substr(pos + 1);
+		std::string name = line.substr(0, pos);
+		std::string value_str = line.substr(pos + 1);
 		try {
-			d = stod(value_str);
+			d = std::stod(value_str);
 			set_parameter_value(name, d);
 		} catch (...) {}
 	}

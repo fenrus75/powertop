@@ -31,7 +31,7 @@
 
 std::vector<class wakeup *> wakeup_all;
 
-wakeup::wakeup(const string &str, double _score, const string &enable, const string &disable)
+wakeup::wakeup(const std::string &str, double _score, const std::string &enable, const std::string &disable)
 {
 	score = _score;
         desc = str;

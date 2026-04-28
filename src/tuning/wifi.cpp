@@ -43,7 +43,7 @@ extern "C" {
 }
 
 
-wifi_tunable::wifi_tunable(const string &_iface) : tunable("", 1.5, _("Good"), _("Bad"), _("Unknown"))
+wifi_tunable::wifi_tunable(const std::string &_iface) : tunable("", 1.5, _("Good"), _("Bad"), _("Unknown"))
 {
 	iface = _iface;
 	desc = pt_format(_("Wireless Power Saving for interface {}"), iface);

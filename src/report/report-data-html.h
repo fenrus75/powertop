@@ -68,7 +68,7 @@ void
 init_wakeup_table_attr(struct table_attributes *table_css, int rows, int cols);
 
 /* Other helper functions */
-string
+std::string
 double_to_string(double dval);
 
 #endif

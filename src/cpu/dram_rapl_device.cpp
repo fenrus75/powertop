@@ -29,7 +29,7 @@
 #include "dram_rapl_device.h"
 
 
-dram_rapl_device::dram_rapl_device(cpudevice *parent, const string &classname, const string &dev_name, class abstract_cpu *_cpu)
+dram_rapl_device::dram_rapl_device(cpudevice *parent, const std::string &classname, const std::string &dev_name, class abstract_cpu *_cpu)
 	: cpudevice(classname, dev_name, _cpu),
 	  device_valid(false)
 {

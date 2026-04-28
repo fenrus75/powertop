@@ -46,13 +46,13 @@ extern "C" {
 #include <string>
 
 
-static vector<string> usb_devices;
-static vector<string> rfkill_devices;
-static vector<string> backlight_devices;
-static vector<string> scsi_link_devices;
+static std::vector<std::string> usb_devices;
+static std::vector<std::string> rfkill_devices;
+static std::vector<std::string> backlight_devices;
+static std::vector<std::string> scsi_link_devices;
 static int blmax;
 
-static map<string, string> saved_sysfs;
+static std::map<std::string, std::string> saved_sysfs;
 
 
 static volatile int stop_measurement;
@@ -67,7 +67,7 @@ static void save_sysfs(const std::string &filename)
 
 static void restore_all_sysfs(void)
 {
-	map<string, string>::iterator it;
+	std::map<std::string, std::string>::iterator it;
 
 	for (it = saved_sysfs.begin(); it != saved_sysfs.end(); it++)
 		write_sysfs(it->first, it->second);
@@ -384,7 +384,7 @@ void calibrate(void)
 
         save_sysfs("/sys/module/snd_hda_intel/parameters/power_save");
 
-	cout << _("Starting PowerTOP power estimate calibration \n");
+	std::cout << _("Starting PowerTOP power estimate calibration \n");
 	suspend_all_usb_devices();
 	rfkill_all_radios();
 	lower_backlight();
@@ -407,7 +407,7 @@ void calibrate(void)
 	usb_calibration();
 	rfkill_calibration();
 
-	cout << _("Finishing PowerTOP power estimate calibration \n");
+	std::cout << _("Finishing PowerTOP power estimate calibration \n");
 
 	restore_all_sysfs();
         learn_parameters(300, 1);

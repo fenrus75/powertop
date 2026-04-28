@@ -48,7 +48,7 @@
 
 extern void create_all_nics(callback fn);
 
-ethernet_tunable::ethernet_tunable(const string &iface) : tunable("", 0.3, _("Good"), _("Bad"), _("Unknown"))
+ethernet_tunable::ethernet_tunable(const std::string &iface) : tunable("", 0.3, _("Good"), _("Bad"), _("Unknown"))
 {
 	interf = iface;
 	desc = pt_format(_("Wake-on-lan status for device {}"), iface);

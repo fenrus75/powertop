@@ -40,14 +40,14 @@
 #include <string.h>
 #include <format>
 
-vector <class ahci *> links;
+std::vector <class ahci *> links;
 
-static string disk_name(const string &path, const string &target, const string &shortname __unused)
+static std::string disk_name(const std::string &path, const std::string &target, const std::string &shortname __unused)
 {
 
 	DIR *dir;
 	struct dirent *dirent;
-	string diskname = "";
+	std::string diskname = "";
 	std::string pathname;
 
 	pathname = std::format("{}/{}", path, target);
@@ -71,7 +71,7 @@ static string disk_name(const string &path, const string &target, const string &
 	return diskname;
 }
 
-static string model_name(const string &path, const string &shortname)
+static std::string model_name(const std::string &path, const std::string &shortname)
 {
 
 	DIR *dir;
@@ -100,7 +100,7 @@ static string model_name(const string &path, const string &shortname)
 	return "";
 }
 
-ahci::ahci(const string &_name, const string &path): device()
+ahci::ahci(const std::string &_name, const std::string &path): device()
 {
 	std::string diskname;
 

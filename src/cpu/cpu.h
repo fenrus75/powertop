@@ -98,9 +98,9 @@ public:
 	uint64_t	current_frequency;
 	uint64_t	effective_frequency;
 
-	vector<class abstract_cpu *> children;
-	vector<struct idle_state *> cstates;
-	vector<struct frequency *> pstates;
+	std::vector<class abstract_cpu *> children;
+	std::vector<struct idle_state *> cstates;
+	std::vector<struct frequency *> pstates;
 
 	virtual ~abstract_cpu();
 
@@ -161,7 +161,7 @@ public:
 	virtual void reset_pstate_data(void);
 };
 
-extern vector<class abstract_cpu *> all_cpus;
+extern std::vector<class abstract_cpu *> all_cpus;
 
 class cpu_linux: public abstract_cpu
 {

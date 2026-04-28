@@ -32,7 +32,7 @@
 
 #include "../lib.h"
 #include "../devices/runtime_pm.h"
-i2c_tunable::i2c_tunable(const string &path, const string &name, bool is_adapter) : tunable("", 0.9, _("Good"), _("Bad"), _("Unknown"))
+i2c_tunable::i2c_tunable(const std::string &path, const std::string &name, bool is_adapter) : tunable("", 0.9, _("Good"), _("Bad"), _("Unknown"))
 {
 	std::string filename;
 	std::string devname;

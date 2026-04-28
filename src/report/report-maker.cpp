@@ -112,7 +112,7 @@ report_maker::setup_report_formatter()
 /* ************************************************************************ */
 
 void
-report_maker::add(const string &str)
+report_maker::add(const std::string &str)
 {
 	formatter->add(str);
 }
@@ -137,7 +137,7 @@ report_maker::end_header()
 }
 
 void
-report_maker::add_title(struct tag_attr *att_title, const string &title)
+report_maker::add_title(struct tag_attr *att_title, const std::string &title)
 {
 	formatter->add_title(att_title, title);
 }

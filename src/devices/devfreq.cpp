@@ -43,20 +43,20 @@
 static bool is_enabled = true;
 static DIR *dir = NULL;
 
-static vector<class devfreq *> all_devfreq;
+static std::vector<class devfreq *> all_devfreq;
 
-devfreq::devfreq(const string &dpath): device()
+devfreq::devfreq(const std::string &dpath): device()
 {
 	dir_name = dpath;
 }
 
-uint64_t devfreq::parse_freq_time(const string &pchr_s)
+uint64_t devfreq::parse_freq_time(const std::string &pchr_s)
 {
 	uint64_t ctime = 0;
 	size_t pos;
 
 	pos = pchr_s.find_last_of(" :");
-	if (pos != string::npos) {
+	if (pos != std::string::npos) {
 		try {
 			ctime = std::stoull(pchr_s.substr(pos + 1));
 		} catch (...) {}
@@ -118,7 +118,7 @@ void devfreq::update_devfreq_freq_state(uint64_t freq, uint64_t time)
 	state->time_after = time;
 }
 
-void devfreq::parse_devfreq_trans_stat(const string &dname __unused)
+void devfreq::parse_devfreq_trans_stat(const std::string &dname __unused)
 {
 	std::string filename;
 	std::string content;
@@ -189,7 +189,7 @@ double devfreq::utilization(void)
 	return 0;
 }
 
-string devfreq::fill_freq_utilization(unsigned int idx)
+std::string devfreq::fill_freq_utilization(unsigned int idx)
 {
 	if (idx < dstates.size() && dstates[idx]) {
 		class frequency *state = dstates[idx];
@@ -198,7 +198,7 @@ string devfreq::fill_freq_utilization(unsigned int idx)
 	return "";
 }
 
-string devfreq::fill_freq_name(unsigned int idx)
+std::string devfreq::fill_freq_name(unsigned int idx)
 {
 	if (idx < dstates.size() && dstates[idx]) {
 		return std::format("{:<15}", dstates[idx]->human_name);

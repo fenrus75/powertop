@@ -54,7 +54,7 @@ extern "C" {
 #include <unistd.h>
 #include <sstream>
 
-static map<string, class network *> nics;
+static std::map<std::string, class network *> nics;
 
 static void do_proc_net_dev(void)
 {
@@ -82,7 +82,7 @@ static void do_proc_net_dev(void)
 		uint64_t pkt = 0;
 
 		size_t pos = line.find(':');
-		if (pos == string::npos)
+		if (pos == std::string::npos)
 			continue;
 
 		std::string name = line.substr(0, pos);
@@ -127,7 +127,7 @@ static inline __u32 ethtool_cmd_speed(struct ethtool_cmd *ep)
 #endif
 
 
-network::network(const string &_name, const string &path): device()
+network::network(const std::string &_name, const std::string &path): device()
 {
 	start_up = 0;
 	end_up = 0;

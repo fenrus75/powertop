@@ -44,13 +44,13 @@ struct parameter_bundle
 	double guessed_power;
 	double actual_power;
 
-	vector<double> parameters;
-	vector<double> weights;
+	std::vector<double> parameters;
+	std::vector<double> weights;
 };
 
 extern struct parameter_bundle all_parameters;
-extern map <string, int> param_index;
-extern map <string, int> result_index;
+extern std::map <std::string, int> param_index;
+extern std::map <std::string, int> result_index;
 
 extern int get_param_index(const std::string &param);
 extern int get_result_index(const std::string &param);
@@ -66,11 +66,11 @@ struct result_bundle
 {
 	double joules;
 	double power;
-	vector <double> utilization; /* device name, device utilization %age */
+	std::vector <double> utilization; /* device name, device utilization %age */
 };
 
 extern struct result_bundle all_results;
-extern vector <struct result_bundle *> past_results;
+extern std::vector <struct result_bundle *> past_results;
 
 extern double get_result_value(const std::string &name, struct result_bundle *bundle = &all_results);
 extern double get_result_value(int index, struct result_bundle *bundle = &all_results);

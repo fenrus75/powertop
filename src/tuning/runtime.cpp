@@ -40,7 +40,7 @@
 #include "../lib.h"
 #include "../devices/runtime_pm.h"
 
-runtime_tunable::runtime_tunable(const string &path, const string &bus, const string &dev, const string &port) : tunable("", 0.4, _("Good"), _("Bad"), _("Unknown"))
+runtime_tunable::runtime_tunable(const std::string &path, const std::string &bus, const std::string &dev, const std::string &port) : tunable("", 0.4, _("Good"), _("Bad"), _("Unknown"))
 {
 	runtime_path = std::format("{}/power/control", path);
 
@@ -78,11 +78,11 @@ runtime_tunable::runtime_tunable(const string &path, const string &bus, const st
 			}
 		}
 
-		if (path.find("ata") != string::npos) {
+		if (path.find("ata") != std::string::npos) {
 			desc = pt_format(_("Runtime PM for port {} of PCI device: {}"), port, pci_id_to_name(vendor, device));
 		}
 
-		if (path.find("block") != string::npos) {
+		if (path.find("block") != std::string::npos) {
 			desc = pt_format(_("Runtime PM for disk {}"), port);
 		}
 

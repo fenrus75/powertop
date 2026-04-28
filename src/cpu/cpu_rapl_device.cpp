@@ -28,7 +28,7 @@
 #include "../parameters/parameters.h"
 #include "cpu_rapl_device.h"
 
-cpu_rapl_device::cpu_rapl_device(cpudevice *parent, const string &classname, const string &dev_name, class abstract_cpu *_cpu)
+cpu_rapl_device::cpu_rapl_device(cpudevice *parent, const std::string &classname, const std::string &dev_name, class abstract_cpu *_cpu)
 	: cpudevice(classname, dev_name, _cpu),
 	  device_valid(false)
 {

@@ -42,8 +42,8 @@ work::work(unsigned long address) : power_consumer()
 }
 
 
-static map<unsigned long, class work *> all_work;
-static map<unsigned long, uint64_t> running_since;
+static std::map<unsigned long, class work *> all_work;
+static std::map<unsigned long, uint64_t> running_since;
 
 void work::fire(uint64_t time, uint64_t work_struct)
 {
@@ -84,14 +84,14 @@ std::string work::usage_units_summary(void)
 
 
 
-static void add_work(const pair<unsigned long, class work*>& elem)
+static void add_work(const std::pair<unsigned long, class work*>& elem)
 {
 	all_power.push_back(elem.second);
 }
 
 void all_work_to_all_power(void)
 {
-	for_each(all_work.begin(), all_work.end(), add_work);
+	std::for_each(all_work.begin(), all_work.end(), add_work);
 
 }
 

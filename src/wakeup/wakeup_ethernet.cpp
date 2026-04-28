@@ -45,7 +45,7 @@
 #include "../lib.h"
 #include "wakeup_ethernet.h"
 
-ethernet_wakeup::ethernet_wakeup(const string &path __unused, const string &iface) : wakeup("", 0.5, _("Enabled"), _("Disabled"))
+ethernet_wakeup::ethernet_wakeup(const std::string &path __unused, const std::string &iface) : wakeup("", 0.5, _("Enabled"), _("Disabled"))
 {
 	interf = iface;
 	desc = pt_format(_("Wake-on-lan status for device {}"), iface);
@@ -56,7 +56,7 @@ ethernet_wakeup::ethernet_wakeup(const string &path __unused, const string &ifac
 
 int ethernet_wakeup::wakeup_value(void)
 {
-	string content;
+	std::string content;
 
 	content = read_sysfs_string(eth_path);
 

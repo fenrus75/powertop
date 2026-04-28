@@ -44,7 +44,7 @@ struct reportstream reportout;
 report_type reporttype = REPORT_OFF;
 report_maker report(REPORT_OFF);
 
-string cpu_model(void)
+std::string cpu_model(void)
 {
 	std::string content = read_file_content("/proc/cpuinfo");
 	if (content.empty())
@@ -68,26 +68,26 @@ string cpu_model(void)
 	return "";
 }
 
-static string read_os_release(const string &filename)
+static std::string read_os_release(const std::string &filename)
 {
-	ifstream file;
-	string line;
-	const string pname = "PRETTY_NAME=";
-	string os("");
+	std::ifstream file;
+	std::string line;
+	const std::string pname = "PRETTY_NAME=";
+	std::string os("");
 
-	file.open(filename, ios::in);
+	file.open(filename, std::ios::in);
 	if (!file)
 		return "";
 	while (getline(file, line)) {
 		if (line.starts_with(pname)) {
 			size_t pos = line.find('=');
-			if (pos == string::npos)
+			if (pos == std::string::npos)
 				break;
 			os = line.substr(pos + 1);
 			if (os.length() >= 2 && (os.front() == '"' || os.front() == '\'')) {
 				os.erase(0, 1);
 				size_t end_pos = os.find_first_of("\"\'");
-				if (end_pos != string::npos)
+				if (end_pos != std::string::npos)
 					os.erase(end_pos);
 			}
 			break;
@@ -97,7 +97,7 @@ static string read_os_release(const string &filename)
 	return os;
 }
 
-static string get_time_string(const std::string &fmt, time_t t)
+static std::string get_time_string(const std::string &fmt, time_t t)
 {
 	char buf[128];
 	struct tm *tm_info = localtime(&t);
@@ -108,7 +108,7 @@ static string get_time_string(const std::string &fmt, time_t t)
 
 static void system_info(void)
 {
-	string str;
+	std::string str;
 	time_t now = time(NULL);
 
 	/* div attr css_class and css_id */
@@ -176,7 +176,7 @@ void init_report_output(const std::string &filename_str, int iterations)
 	else
 	{
 		period = filename_str.find_last_of(".");
-		if (period == string::npos)
+		if (period == std::string::npos)
 			period = filename_str.length();
 
 		stamp = time(NULL);
@@ -186,7 +186,7 @@ void init_report_output(const std::string &filename_str, int iterations)
 			filename_str.substr(period));
 	}
 
-	reportout.report_file.open(reportout.filename, ios::out);
+	reportout.report_file.open(reportout.filename, std::ios::out);
 	if (!reportout.report_file) {
 		fprintf(stderr, _("Cannot open output file %s (%s)\n"),
 			reportout.filename.c_str(), strerror(errno));

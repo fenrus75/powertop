@@ -49,13 +49,13 @@
 
 static  class perf_bundle * perf_events;
 
-vector <class power_consumer *> all_power;
+std::vector <class power_consumer *> all_power;
 
-vector< vector<class power_consumer *> > cpu_stack;
+std::vector< std::vector<class power_consumer *> > cpu_stack;
 
-vector<int> cpu_level;
-vector<int> cpu_credit;
-vector<class power_consumer *> cpu_blame;
+std::vector<int> cpu_level;
+std::vector<int> cpu_credit;
+std::vector<class power_consumer *> cpu_blame;
 
 #define LEVEL_HARDIRQ	1
 #define LEVEL_SOFTIRQ	2
@@ -379,7 +379,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 		irq->start_interrupt(time);
 
-		if (irq->handler.find("timer") == string::npos)
+		if (irq->handler.find("timer") == std::string::npos)
 			change_blame(cpu, irq, LEVEL_HARDIRQ);
 
 	}

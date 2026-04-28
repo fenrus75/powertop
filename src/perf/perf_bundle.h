@@ -35,9 +35,9 @@ class perf_event;
 
 class  perf_bundle {
 protected:
-	vector<class perf_event *> events;
+	std::vector<class perf_event *> events;
 public:
-	vector<void *> records;
+	std::vector<void *> records;
 	virtual ~perf_bundle() {};
 
 	virtual void release(void);

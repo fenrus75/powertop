@@ -17,6 +17,13 @@ The process for working on this codebase always consists for 4 steps
 Also read `review/tools.md` when you're asked to use the various
 tooling to create and manipulate test data.
 
+# Code style notes
+
+- `using namespace std;` has been removed from all 50 source files (commit 41e0502).
+  The codebase now requires explicit `std::` qualification — bare `string`, `map`,
+  `vector`, etc. are unqualified and the build is currently broken until qualifiers
+  are added.
+
 # Prefered user style
 
 When asked to make a non-trivial change (multiple files/elements), create a

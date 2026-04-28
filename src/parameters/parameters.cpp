@@ -36,16 +36,16 @@
 struct parameter_bundle all_parameters;
 struct result_bundle all_results;
 
-vector <struct result_bundle *> past_results;
+std::vector <struct result_bundle *> past_results;
 
-map <string, int> param_index;
+std::map <std::string, int> param_index;
 static int maxindex = 1;
-map <string, int> result_index;
+std::map <std::string, int> result_index;
 static int maxresindex = 1;
 
 int get_param_index(const std::string &name)
 {
-	std::map<string, int>::iterator it;
+	std::map<std::string, int>::iterator it;
 	int index = 0;
 
 	it = param_index.find(name);
@@ -61,7 +61,7 @@ int get_param_index(const std::string &name)
 
 int get_result_index(const std::string &name)
 {
-	std::map<string, int>::iterator it;
+	std::map<std::string, int>::iterator it;
 	int index = 0;
 
 	it = result_index.find(name);
@@ -246,7 +246,7 @@ double bundle_power(struct parameter_bundle *parameters, struct result_bundle *r
 
 void dump_parameter_bundle(struct parameter_bundle *para)
 {
-	map<string, int>::iterator it;
+	std::map<std::string, int>::iterator it;
 	int index;
 
 	printf("\n\n");
@@ -268,7 +268,7 @@ void dump_parameter_bundle(struct parameter_bundle *para)
 
 void dump_result_bundle(struct result_bundle *res)
 {
-	map<string, int>::iterator it;
+	std::map<std::string, int>::iterator it;
 	unsigned int index;
 
 	printf("\n\n");
@@ -289,7 +289,7 @@ void dump_result_bundle(struct result_bundle *res)
 struct result_bundle * clone_results(struct result_bundle *bundle)
 {
 	struct result_bundle *b2;
-	map<string, double>::iterator it;
+	std::map<std::string, double>::iterator it;
 	unsigned int i;
 
 	b2 = new struct result_bundle;

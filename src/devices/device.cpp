@@ -51,7 +51,6 @@
 #include "../report/report-data-html.h"
 #include "../measurement/measurement.h"
 #include "../devlist.h"
-#include <unistd.h>
 
 device::device(void)
 {

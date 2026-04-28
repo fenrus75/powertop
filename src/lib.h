@@ -51,6 +51,8 @@ inline std::string pt_format(std::string_view fmt, Args&&... args)
 #define _(STRING)    (STRING)
 #endif
 
+#define __unused __attribute__((unused))
+
 extern int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo);
 
 extern int get_max_cpu(void);

@@ -126,7 +126,7 @@ static void system_info(void)
 	/* Set array of data in row Major order */
 	std::vector<std::string> system_data(sys_table.rows * sys_table.cols);
 	system_data[0]=__("PowerTOP Version");
-	system_data[1]=std::format("{} ran at {}", PACKAGE_VERSION, get_time_string("%c", now));
+	system_data[1] = pt_format(_("{} ran at {}"), PACKAGE_VERSION, get_time_string("%c", now));
 
 	str = read_sysfs_string("/proc/version");
 	size_t  found = str.find(" ");

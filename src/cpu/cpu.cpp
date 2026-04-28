@@ -951,14 +951,9 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 	}
 
 	cpu = all_cpus[cpunr];
+	if (!cpu)
+		return;
 
-#if 0
-	unsigned int i;
-	printf("Time is %llu \n", time);
-	for (i = 0; i < system_level.children.size(); i++)
-		if (system_level.children[i])
-			system_level.children[i]->validate();
-#endif
 	unsigned long long val;
 	int ret;
 	if (strcmp(event->name, "cpu_idle")==0) {

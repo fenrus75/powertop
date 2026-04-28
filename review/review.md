@@ -63,7 +63,7 @@ Suggested fix: <proposed fix, if any. leave out if none>
 
 ## Low severity items
 
-## Nit sevirty items
+## Nit severity items
 
 # Tests performed
 

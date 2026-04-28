@@ -25,6 +25,8 @@
 #pragma once
 
 #include <pthread.h>
+#include <atomic>
+#include <mutex>
 #include "measurement.h"
 
 class extech_power_meter: public power_meter {
@@ -34,7 +36,8 @@ class extech_power_meter: public power_meter {
 	void measure(void);
 	double sum = 0.0;
 	int samples = 0;
-	int end_thread = 0;
+	std::atomic<bool> end_thread{false};
+	std::mutex samples_mutex;
 	pthread_t thread;
 public:
 	extech_power_meter(const std::string &_dev_name);

@@ -306,9 +306,12 @@ void extech_power_meter::sample(void)
 		if (ret < 0)
 			continue;
 
-		sum += extech_read(fd);
-		samples++;
-
+		double v = extech_read(fd);
+		if (v >= 0.0) {
+			std::lock_guard<std::mutex> lock(samples_mutex);
+			sum += v;
+			samples++;
+		}
 	}
 }
 
@@ -325,19 +328,25 @@ extern "C"
 
 void extech_power_meter::end_measurement(void)
 {
-	end_thread = 1;
+	end_thread = true;
 	pthread_join( thread, NULL);
-	if (samples){
-		rate = sum / samples;
+	{
+		std::lock_guard<std::mutex> lock(samples_mutex);
+		if (samples)
+			rate = sum / samples;
+		else
+			measure();
 	}
-	else
-		measure();
 }
 
 void extech_power_meter::start_measurement(void)
 {
-	end_thread = 0;
-	sum = samples = 0;
+	end_thread = false;
+	{
+		std::lock_guard<std::mutex> lock(samples_mutex);
+		sum = 0.0;
+		samples = 0;
+	}
 
 	if (pthread_create(&thread, NULL, thread_proc, this))
 		fprintf(stderr, "ERROR: extech measurement thread creation failed\n");

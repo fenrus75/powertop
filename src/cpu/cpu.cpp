@@ -512,6 +512,8 @@ void report_display_cpu_cstates(void)
 			if (!_core)
 				continue;
 
+			core_num+=1;
+
 			/* *** PKG STARTS *** */
 			for (line = LEVEL_HEADER; line <= cstates_num; line++) {
 				bool first_cpu = true;

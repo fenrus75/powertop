@@ -46,7 +46,7 @@ Template output format:
 
 <summary of the prompt/task>
 
-## Criticial items
+## Critical items
 
 ### Critical item #1 : <short description>
 

@@ -23,4 +23,54 @@ function.
 In addition, load these files into the context:
 - `style.md` - Coding style guide
 - `general-c++.md` - C++ coding rules
+- 'rules.md' - PowerTOP specific coding rules
+
+
+## Perform code review
+
+Perform your normal code review process, but also check coding style
+(`style.md`), and **in addition** use the other rules that you collected in the 
+"Gather context" phase as part of your code review.
+
+Assign a priority to each issue found: 'nit', 'low', 'medium', 'high',
+'critical'.
+
+
+## Reporting results
+Generate a report in Markdown format. Use `review.md` as filename unless the
+prompt requested a different filename or filenames.
+
+Template output format:
+```
+# PowerTOP review of <filename, git commit hash or PR number>
+
+<summary of the prompt/task>
+
+## Criticial items
+
+### Critical item #1 : <short description>
+
+Location:  <filename> : <line number>
+Description: <one or two paragraph description>
+Severity rationale: <why was this critical>
+Suggested fix: <proposed fix, if any. leave out if none>
+
+## High severity items
+
+### High severity item #1 : <short description>
+...
+## Medium severty items
+
+## Low severity itemms
+
+## Nit sevirty items
+
+# Tests performed
+
+<a list of all checks performed during this code review>
+```
+This template shows only 1 critical item for the purpose of illustration, but use the same format for any
+item found at any severity.
+
+Leave out any severity levels for which nothing was found. 
 

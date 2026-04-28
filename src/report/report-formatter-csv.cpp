@@ -97,7 +97,7 @@ report_formatter_csv::add_logo()
 }
 
 
-void report_formatter_csv::add_div(struct tag_attr * div_attr __unused)
+void report_formatter_csv::add_div(struct tag_attr * [[maybe_unused]] div_attr)
 
 {
 	add_exact("\n");
@@ -109,7 +109,7 @@ report_formatter_csv::end_div()
 	/*Do nothing*/
 }
 
-void report_formatter_csv::add_title(struct tag_attr *title_att __unused, const std::string &title)
+void report_formatter_csv::add_title(struct tag_attr *[[maybe_unused]] title_att, const std::string &title)
 
 {
 	add_exact("____________________________________________________________________\n");

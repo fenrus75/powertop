@@ -189,7 +189,7 @@ static void set_scsi_link(const std::string &state)
 }
 
 
-static void *burn_cpu(void *dummy __unused)
+static void *burn_cpu(void *[[maybe_unused]] dummy)
 {
 	volatile double d = 1.1;
 
@@ -211,7 +211,7 @@ static void *burn_cpu_wakeups(void *dummy)
 	return nullptr;
 }
 
-static void *burn_disk(void *dummy __unused)
+static void *burn_disk(void *[[maybe_unused]] dummy)
 {
 	int fd;
 	char buffer[64*1024];

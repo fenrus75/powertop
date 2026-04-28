@@ -40,7 +40,7 @@ void cpu_package::freq_updated(uint64_t time)
 
 #include <format>
 
-std::string cpu_package::fill_cstate_line(int line_nr, const std::string &separator __unused)
+std::string cpu_package::fill_cstate_line(int line_nr, const std::string &[[maybe_unused]] separator)
 {
 	unsigned int i;
 

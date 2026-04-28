@@ -166,7 +166,7 @@ public:
 	virtual std::string  fill_pstate_line(int line_nr) override;
 	virtual std::string  fill_pstate_name(int line_nr) override;
 	virtual std::string  fill_cstate_line(int line_nr, const std::string &separator) override;
-	virtual int	has_pstate_level(int level __unused) override { return 0; };
+	virtual int	has_pstate_level(int [[maybe_unused]] level) override { return 0; };
 	virtual int	has_pstates(void) override { return 0; };
 	virtual void	wiggle(void) override { };
 

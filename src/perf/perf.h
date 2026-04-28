@@ -65,7 +65,7 @@ public:
 
 	void process(void *cookie);
 
-	virtual void handle_event(struct perf_event_header *header __unused, void *cookie __unused) { };
+	virtual void handle_event(struct perf_event_header *[[maybe_unused]] header, void *[[maybe_unused]] cookie) { };
 
 	static struct tep_handle *tep;
 

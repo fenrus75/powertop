@@ -45,7 +45,7 @@ void process::account_disk_dirty(void)
 	disk_hits++;
 }
 
-void process::schedule_thread(uint64_t time, int thread_id __unused)
+void process::schedule_thread(uint64_t time, int [[maybe_unused]] thread_id)
 {
 	running_since = time;
 	running = 1;

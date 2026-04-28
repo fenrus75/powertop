@@ -41,7 +41,7 @@
 
 std::vector <class ahci *> links;
 
-static std::string disk_name(const std::string &path, const std::string &target, const std::string &shortname __unused)
+static std::string disk_name(const std::string &path, const std::string &target, const std::string &[[maybe_unused]] shortname)
 {
 
 	DIR *dir;

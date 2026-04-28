@@ -24,7 +24,9 @@
  */
 #pragma once
 
+#ifndef __cplusplus
 #define __unused __attribute__((unused))
+#endif
 
 #ifdef __cplusplus
 

@@ -277,7 +277,7 @@ void perf_bundle::process(void)
 	}
 }
 
-void perf_bundle::handle_trace_point(void *trace __unused, int cpu __unused, uint64_t time __unused)
+void perf_bundle::handle_trace_point(void *[[maybe_unused]] trace, int [[maybe_unused]] cpu, uint64_t [[maybe_unused]] time)
 {
 	fprintf(stderr, _("abstract handle_trace_point called\n"));
 }

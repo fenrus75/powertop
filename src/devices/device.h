@@ -59,13 +59,13 @@ public:
 
 	virtual std::string human_name(void) { return device_name(); };
 
-	virtual double power_usage(struct result_bundle *results __unused, struct parameter_bundle *bundle __unused) { return 0.0; };
+	virtual double power_usage(struct result_bundle *[[maybe_unused]] results, struct parameter_bundle *[[maybe_unused]] bundle) { return 0.0; };
 
 	virtual bool show_in_list(void) {return !hide;};
 
 	virtual bool power_valid(void) { return true;};
 
-	virtual void register_power_with_devlist(struct result_bundle *results __unused, struct parameter_bundle *bundle __unused) { ; };
+	virtual void register_power_with_devlist(struct result_bundle *[[maybe_unused]] results, struct parameter_bundle *[[maybe_unused]] bundle) { ; };
 
 	virtual int grouping_prio(void) { return 0; }; /* priority of this device class if multiple classes match to the same underlying device. 0 is lowest */
 };

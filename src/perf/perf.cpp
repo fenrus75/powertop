@@ -172,10 +172,10 @@ void perf_event::set_event_name(const std::string &system_name, const std::strin
 
 perf_event::~perf_event(void)
 {
+	clear();
 	if (tep_get_ref(perf_event::tep) == 1) {
 		tep_free(perf_event::tep);
 		perf_event::tep = NULL;
-		clear();
 	} else
 		tep_unref(perf_event::tep);
 }

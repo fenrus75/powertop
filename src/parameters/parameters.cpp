@@ -128,6 +128,10 @@ double get_parameter_value(unsigned int index, struct parameter_bundle *the_bund
 
 double get_parameter_weight(int index, struct parameter_bundle *the_bundle)
 {
+	if (index < 0 || (unsigned int)index >= the_bundle->weights.size()) {
+		fprintf(stderr, "BUG: requesting unregistered weight %d\n", index);
+		return 1.0;
+	}
 	return the_bundle->weights[index];
 }
 

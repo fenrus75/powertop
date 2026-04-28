@@ -96,6 +96,8 @@ c_rapl_interface::c_rapl_interface(const std::string &dev_name, int cpu) :
 		std::string base_path = "/sys/class/powercap/intel-rapl/";
 		if ((dir = opendir(base_path.c_str())) != NULL) {
 			while ((entry = readdir(dir)) != NULL) {
+				if (std::string_view(entry->d_name).starts_with('.'))
+					continue;
 				std::string path = base_path + entry->d_name + "/name";
 				std::string str = read_sysfs_string(path);
 				if (str.length() > 0) {
@@ -114,6 +116,8 @@ c_rapl_interface::c_rapl_interface(const std::string &dev_name, int cpu) :
 	if (powercap_sysfs_present) {
 		if ((dir = opendir(package_path.c_str())) != NULL) {
 			while ((entry = readdir(dir)) != NULL) {
+				if (std::string_view(entry->d_name).starts_with('.'))
+					continue;
 				std::string path = package_path + entry->d_name;
 				std::string str = read_sysfs_string(path + "/name");
 				if (str.length() > 0) {

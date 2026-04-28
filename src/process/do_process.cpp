@@ -1219,5 +1219,6 @@ void clear_process_data(void)
 	if (perf_events)
 		perf_events->release();
 	delete perf_events;
+	perf_events = nullptr;
 }
 

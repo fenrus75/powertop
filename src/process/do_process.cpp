@@ -585,7 +585,9 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		consumer_child_time(cpu, t);
 	}
 	else if (event_name == "cpu_idle") {
-		tep_get_field_val(NULL, event, "state", &rec, &val, 0);
+		ret = tep_get_field_val(NULL, event, "state", &rec, &val, 0);
+		if (ret < 0)
+			return;
 		if (val == (unsigned int)-1)
 			consume_blame(cpu);
 		else

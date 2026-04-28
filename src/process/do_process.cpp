@@ -143,6 +143,10 @@ static int get_wakeup_pending(unsigned int cpu)
 
 static void change_blame(unsigned int cpu, class power_consumer *consumer, int level)
 {
+	if (cpu_level.size() <= cpu)
+		return;
+	if (cpu_blame.size() <= cpu)
+		return;
 	if (cpu_level[cpu] >= level)
 		return;
 	cpu_blame[cpu] = consumer;

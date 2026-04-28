@@ -310,6 +310,9 @@ void ahci::report_device_stats(std::vector<std::string> &ahci_data, int idx)
 	double slumber_util = get_result_value(slumber_rindex, &all_results);
 	double devslp_util = get_result_value(devslp_rindex, &all_results);
 
+	ahci_data[offset] = humanname;
+	offset += 1;
+
 	ahci_data[offset]= std::format("{:5.1f}",  active_util);
 	offset +=1;
 

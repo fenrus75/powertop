@@ -620,7 +620,7 @@ void report_display_cpu_cstates(void)
 
 		init_pkg_table_attr(&std_table_css, pkg_tbl_size.rows,  pkg_tbl_size.cols);
 		report.add_table(pkg_data, &std_table_css);
-		if (!_core->can_collapse()){
+		if (_core && !_core->can_collapse()) {
 			init_core_table_attr(&std_table_css, title+1, core_tbl_size.rows,
 				core_tbl_size.cols);
 			report.add_table(core_data, &std_table_css);

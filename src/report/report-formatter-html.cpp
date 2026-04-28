@@ -315,7 +315,7 @@ void
 report_formatter_html::add_summary_list(const std::vector<std::string> &list)
 {
 	add_exact("<div><br/> <ul>\n");
-	for (size_t i=0; i < list.size(); i+=2){
+	for (size_t i = 0; i + 1 < list.size(); i += 2) {
 		add_exact(std::format("<li class=\"summary_list\"> <b> {} </b> {} </li>",
 				list[i], list[i+1]));
 	}

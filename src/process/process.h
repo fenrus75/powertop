@@ -39,17 +39,17 @@ Need to collect
  * Number of disk dirties (inode for now)
  */
 class process : public power_consumer {
-	uint64_t	running_since;
+	uint64_t	running_since = 0;
 public:
 	std::string	desc;
-	int		tgid;
+	int		tgid = 0;
 	std::string	comm;
-	int		pid;
+	int		pid = 0;
 
 
-	int		is_idle;   /* count this as if the cpu was idle */
-	int		running;
-	int		is_kernel; /* kernel thread */
+	int		is_idle = 0;   /* count this as if the cpu was idle */
+	int		running = 0;
+	int		is_kernel = 0; /* kernel thread */
 
 	process(const std::string &_comm, int _pid, int _tid = 0);
 

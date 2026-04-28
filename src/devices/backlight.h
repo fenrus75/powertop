@@ -30,12 +30,12 @@
 #include "device.h"
 
 class backlight: public device {
-	int min_level, max_level;
-	int start_level, end_level;
+	int min_level = 0, max_level = 0;
+	int start_level = 0, end_level = 0;
 	std::string sysfs_path;
 	std::string name;
-	int r_index;
-	int r_index_power;
+	int r_index = 0;
+	int r_index_power = 0;
 public:
 
 	backlight(const std::string &_name, const std::string &path);

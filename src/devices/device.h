@@ -35,8 +35,8 @@ struct result_bundle;
 
 class device {
 public:
-	int cached_valid;
-	bool hide;
+	int cached_valid = 0;
+	bool hide = false;
 
 	std::string guilty;
 	std::string real_path;

@@ -33,12 +33,12 @@
 #include <string>
 
 class alsa: public device {
-	uint64_t start_active, end_active;
-	uint64_t start_inactive, end_inactive;
+	uint64_t start_active = 0, end_active = 0;
+	uint64_t start_inactive = 0, end_inactive = 0;
 	std::string sysfs_path;
 	std::string name;
 	std::string humanname;
-	int rindex;
+	int rindex = 0;
 public:
 
 	alsa(const std::string &_name, const std::string &path);

@@ -31,9 +31,9 @@
 
 class device_consumer : public power_consumer {
 public:
-	int prio;
-	double power;
-	class device *device;
+	int prio = 0;
+	double power = 0.0;
+	class device *device = nullptr;
 	device_consumer(class device *dev);
 
 	virtual std::string description(void);

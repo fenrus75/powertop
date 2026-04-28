@@ -29,13 +29,13 @@
 #include "powerconsumer.h"
 
 class interrupt : public power_consumer {
-	uint64_t	running_since;
+	uint64_t	running_since = 0;
 	std::string	desc;
 public:
 	std::string	handler;
-	int		number;
+	int		number = 0;
 
-	int		raw_count;
+	int		raw_count = 0;
 
 	interrupt(const std::string &_handler, int _number);
 

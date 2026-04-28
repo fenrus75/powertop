@@ -32,18 +32,18 @@
 #include <stdint.h>
 
 class ahci: public device {
-	uint64_t start_active, end_active;
-	uint64_t start_partial, end_partial;
-	uint64_t start_slumber, end_slumber;
-	uint64_t start_devslp, end_devslp;
+	uint64_t start_active = 0, end_active = 0;
+	uint64_t start_partial = 0, end_partial = 0;
+	uint64_t start_slumber = 0, end_slumber = 0;
+	uint64_t start_devslp = 0, end_devslp = 0;
 	std::string sysfs_path;
 	std::string name;
-	int partial_rindex;
-	int active_rindex;
-	int slumber_rindex;
-	int devslp_rindex;
-	int partial_index;
-	int active_index;
+	int partial_rindex = 0;
+	int active_rindex = 0;
+	int slumber_rindex = 0;
+	int devslp_rindex = 0;
+	int partial_index = 0;
+	int active_index = 0;
 	std::string humanname;
 public:
 

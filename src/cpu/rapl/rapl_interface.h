@@ -27,27 +27,27 @@ class c_rapl_interface
 {
 private:
 	static const int def_sampling_interval = 1; //In seconds
-	bool powercap_sysfs_present;
+	bool powercap_sysfs_present = false;
 	std::string powercap_core_path;
 	std::string powercap_uncore_path;
 	std::string powercap_dram_path;
 
-	unsigned char rapl_domains;
-	int first_cpu;
+	unsigned char rapl_domains = 0;
+	int first_cpu = 0;
 
-	double power_units;
-	double energy_status_units;
-	double time_units;
+	double power_units = 0.0;
+	double energy_status_units = 0.0;
+	double time_units = 0.0;
 
 	int read_msr(int cpu, unsigned int idx, uint64_t *val);
 	int write_msr(int cpu, unsigned int idx, uint64_t val);
 
 protected:
-	int measurment_interval;
-	double last_pkg_energy_status;
-	double last_dram_energy_status;
-	double last_pp0_energy_status;
-	double last_pp1_energy_status;
+	int measurment_interval = 0;
+	double last_pkg_energy_status = 0.0;
+	double last_dram_energy_status = 0.0;
+	double last_pp0_energy_status = 0.0;
+	double last_pp1_energy_status = 0.0;
 
 public:
 	c_rapl_interface(const std::string &dev_name = "package-0", int cpu = 0);

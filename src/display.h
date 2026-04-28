@@ -45,10 +45,10 @@ extern void window_refresh(void);
 
 class tab_window {
 public:
-	int cursor_pos;
-	int cursor_max;
-	short int xpad_pos, ypad_pos; 
-	WINDOW *win;
+	int cursor_pos = 0;
+	int cursor_max = 0;
+	short int xpad_pos = 0, ypad_pos = 0; 
+	WINDOW *win = nullptr;
 
 	tab_window() {
 		cursor_pos = 0;

@@ -34,10 +34,10 @@
 class gpu_rapl_device: public i915gpu {
 
 	c_rapl_interface rapl;
-	time_t		last_time;
-	double		last_energy;
-	double 		consumed_power;
-	bool		device_valid;
+	time_t		last_time = 0;
+	double		last_energy = 0.0;
+	double 		consumed_power = 0.0;
+	bool		device_valid = false;
 
 public:
 	gpu_rapl_device(i915gpu *parent);

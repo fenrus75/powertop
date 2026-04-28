@@ -34,7 +34,7 @@ class frequency;
 class devfreq: public device {
 	std::string dir_name;
 	struct timeval  stamp_before, stamp_after;
-	double sample_time;
+	double sample_time = 0.0;
 
 	uint64_t parse_freq_time(const std::string &ptr);
 	void add_devfreq_freq_state(uint64_t freq, uint64_t time);

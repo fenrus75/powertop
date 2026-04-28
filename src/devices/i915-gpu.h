@@ -28,8 +28,8 @@
 #include "device.h"
 
 class i915gpu: public device {
-	int index;
-	int rindex;
+	int index = 0;
+	int rindex = 0;
 	std::vector<device *>child_devices;
 
 public:

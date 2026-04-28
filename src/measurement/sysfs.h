@@ -27,8 +27,8 @@
 #include "measurement.h"
 
 class sysfs_power_meter: public power_meter {
-	double capacity;
-	double rate;
+	double capacity = 0.0;
+	double rate = 0.0;
 
 	bool get_sysfs_attr(const std::string &attribute, int *value);
 	bool is_present();

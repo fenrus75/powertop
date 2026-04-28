@@ -3,7 +3,7 @@
 #include <string>
 
 struct devuser {
-	unsigned int pid;
+	unsigned int pid = 0;
 	std::string comm;
 	std::string device;
 };
@@ -12,8 +12,8 @@ class device;
 
 struct devpower {
 	std::string device;
-	double power;
-	class device *dev;
+	double power = 0.0;
+	class device *dev = nullptr;
 };
 
 extern void clean_open_devices();

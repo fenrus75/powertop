@@ -35,20 +35,20 @@ extern "C" {
 
 class  perf_event {
 protected:
-	int perf_fd;
-	void * perf_mmap;
-	void * data_mmap;
-	struct perf_event_mmap_page *pc;
+	int perf_fd = 0;
+	void * perf_mmap = nullptr;
+	void * data_mmap = nullptr;
+	struct perf_event_mmap_page *pc = nullptr;
 
 
 
-	int bufsize;
+	int bufsize = 0;
 	std::string name;
-	int cpu;
+	int cpu = 0;
 	void create_perf_event(const std::string &eventname, int cpu);
 
 public:
-	unsigned int trace_type;
+	unsigned int trace_type = 0;
 
 	perf_event(void);
 	perf_event(const std::string &system_name, const std::string &event_name, int cpu = 0, int buffer_size = 128);

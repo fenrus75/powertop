@@ -44,18 +44,18 @@ struct idle_state {
 	std::string linux_name; /* state0 etc.. cpuidle name */
 	std::string human_name;
 
-	uint64_t usage_before;
-	uint64_t usage_after;
-	uint64_t usage_delta;
+	uint64_t usage_before = 0;
+	uint64_t usage_after = 0;
+	uint64_t usage_delta = 0;
 
-	uint64_t duration_before;
-	uint64_t duration_after;
-	uint64_t duration_delta;
+	uint64_t duration_before = 0;
+	uint64_t duration_after = 0;
+	uint64_t duration_delta = 0;
 
-	int before_count;
-	int after_count;
+	int before_count = 0;
+	int after_count = 0;
 
-	int line_level;
+	int line_level = 0;
 };
 
 class frequency {
@@ -78,9 +78,9 @@ public:
 class abstract_cpu
 {
 protected:
-	int	first_cpu;
+	int	first_cpu = 0;
 	struct timeval	stamp_before, stamp_after;
-	double  time_factor;
+	double  time_factor = 0.0;
 	uint64_t max_frequency = 0;
 	uint64_t max_minus_one_frequency = 0;
 
@@ -88,14 +88,14 @@ protected:
 	virtual void	freq_updated(uint64_t time);
 
 public:
-	uint64_t	last_stamp;
-	uint64_t	total_stamp;
-	int	number;
-	int	childcount;
+	uint64_t	last_stamp = 0;
+	uint64_t	total_stamp = 0;
+	int	number = 0;
+	int	childcount = 0;
 	std::string    name;
-	bool	idle, old_idle, has_intel_MSR;
-	uint64_t	current_frequency;
-	uint64_t	effective_frequency;
+	bool	idle = false, old_idle = false, has_intel_MSR = false;
+	uint64_t	current_frequency = 0;
+	uint64_t	effective_frequency = 0;
 
 	std::vector<class abstract_cpu *> children;
 	std::vector<struct idle_state *> cstates;
@@ -103,7 +103,7 @@ public:
 
 	virtual ~abstract_cpu();
 
-	class abstract_cpu *parent;
+	class abstract_cpu *parent = nullptr;
 
 
 	int	get_first_cpu() { return first_cpu; }

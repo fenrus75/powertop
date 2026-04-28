@@ -32,7 +32,7 @@ class work : public power_consumer {
 	std::string desc;
 public:
 	std::string	handler;
-	int		raw_count;
+	int		raw_count = 0;
 
 	work(unsigned long work_func);
 

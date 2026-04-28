@@ -28,13 +28,13 @@
 #include "measurement.h"
 
 class extech_power_meter: public power_meter {
-	int fd;
+	int fd = 0;
 
-	double rate;
+	double rate = 0.0;
 	void measure(void);
-	double sum;
-	int samples;
-	int end_thread;
+	double sum = 0.0;
+	int samples = 0;
+	int end_thread = 0;
 	pthread_t thread;
 public:
 	extech_power_meter(const std::string &_dev_name);

@@ -33,11 +33,11 @@
 
 class cpu_rapl_device: public cpudevice {
 
-	c_rapl_interface *rapl;
-	time_t		last_time;
-	double		last_energy;
-	double 		consumed_power;
-	bool		device_valid;
+	c_rapl_interface *rapl = nullptr;
+	time_t		last_time = 0;
+	double		last_energy = 0.0;
+	double 		consumed_power = 0.0;
+	bool		device_valid = false;
 
 public:
 	cpu_rapl_device(cpudevice *parent, const std::string &classname = "cpu_core", const std::string &device_name = "cpu_core", class abstract_cpu *_cpu = NULL);

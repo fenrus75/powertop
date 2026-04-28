@@ -62,7 +62,7 @@ public:
 	void add_table(const std::vector<std::string> &system_data, struct table_attributes *tb_attr);private:
 	void add_quotes();
 	std::string escape_string(const std::string &str);
-	bool csv_need_quotes;
-	size_t text_start;
+	bool csv_need_quotes = false;
+	size_t text_start = 0;
 };
 

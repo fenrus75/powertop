@@ -27,9 +27,9 @@
 #include "measurement.h"
 
 class acpi_power_meter: public power_meter {
-	double capacity;
-	double rate;
-	double voltage;
+	double capacity = 0.0;
+	double rate = 0.0;
+	double voltage = 0.0;
 	void measure(void);
 public:
 	acpi_power_meter(const std::string &_battery_name);

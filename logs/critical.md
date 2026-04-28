@@ -18,6 +18,7 @@ static void change_blame(unsigned int cpu, class power_consumer *consumer, int l
     cpu_level[cpu] = level;
 }
 ```
+Fixed-with: 52811c8
 
 ### Critical item #2 : perf_events dangling pointer after clear_process_data
 
@@ -25,6 +26,7 @@ Location: src/process/do_process.cpp : 1213
 Description: `clear_process_data()` calls `delete perf_events` but never sets `perf_events = nullptr`. The variable is a file-scope static and retains the stale pointer value. If `start_process_measurement()` is subsequently called (e.g., on a second measurement run), the guard `if (!perf_events)` evaluates to *false* because the pointer is non-null, the initialisation block is skipped entirely, and `perf_events->start()` is invoked on the freed object — a classic use-after-free leading to undefined behaviour / crash.
 Severity rationale: Directly causes a use-after-free on any second invocation of the measurement cycle, which is normal PowerTOP operation.
 Suggested fix: Add `perf_events = nullptr;` immediately after `delete perf_events;` in `clear_process_data()`.
+Fixed-with: 9d9b536
 
 ## Review of src/perf/perf.h, src/perf/perf_event.h, src/perf/perf_bundle.cpp, src/perf/perf_bundle.h, src/perf/perf.cpp — batch 10
 
@@ -42,13 +44,13 @@ if (!event) {
 }
 trace_type = event->id;
 ```
-
-### Critical item #2 : Null pointer dereference of `pc` after mmap failure in `process()`
+Fixed-with: e401353
 
 Location: src/perf/perf.cpp : 231
 Description: In `create_perf_event`, if `mmap()` fails the function returns early (line 122) without setting `pc` or `data_mmap`. However `perf_fd` has already been set to a valid file descriptor. The guard in `process()` only checks `if (perf_fd < 0)`, so when mmap has failed but `perf_fd` is valid, execution proceeds to `pc->data_tail` where `pc` is NULL (set only in the constructors, not explicitly initialized to NULL there either). This is an unconditional null pointer dereference.
 Severity rationale: Any call to `process()` after a mmap failure will crash the process. mmap failures are realistic (e.g. under low memory or file-descriptor pressure).
 Suggested fix: On mmap failure in `create_perf_event`, close and reset `perf_fd` to -1 before returning, so the guard in `process()` will correctly skip processing. Also initialize `pc = nullptr` and `data_mmap = nullptr` in both constructors.
+Fixed-with: 9bed143
 
 ### Critical item #3 : `malloc` return value unchecked before `memcpy` in `handle_event`
 

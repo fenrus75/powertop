@@ -19,6 +19,8 @@ tooling to create and manipulate test data.
 
 # Code style notes
 
+- All 59 header files now use `#pragma once` instead of `#ifndef`/`#define`/`#endif` include guards (commit 17c3046).
+
 - `using namespace std;` has been removed from all 50 source files (commit 41e0502).
   All bare STL names (string, vector, map, cout, etc.) have been explicitly qualified
   with std:: throughout the codebase (commit cb42d45). The build is now clean.

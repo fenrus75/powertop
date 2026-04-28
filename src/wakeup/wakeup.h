@@ -41,7 +41,7 @@ protected:
 	std::string toggle_disable;
 public:
 	std::string desc;
-	double score;
+	double score = 0.0;
 
 	wakeup(const std::string &str, double _score, const std::string &enable = "", const std::string &disable = "");
 	wakeup(void);

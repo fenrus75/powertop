@@ -36,11 +36,11 @@ protected:
 	std::string _cpuname;
 
 	std::vector<std::string> params;
-	class abstract_cpu *cpu;
-	int wake_index;
-	int consumption_index;
-	int r_wake_index;
-	int r_consumption_index;
+	class abstract_cpu *cpu = nullptr;
+	int wake_index = 0;
+	int consumption_index = 0;
+	int r_wake_index = 0;
+	int r_consumption_index = 0;
 
 	std::vector<device *>child_devices;
 

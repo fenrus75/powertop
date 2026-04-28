@@ -29,9 +29,9 @@
 #include "../parameters/parameters.h"
 
 class thinkpad_light: public device {
-	double start_rate, end_rate;
-	int light_index;
-	int r_index;
+	double start_rate = 0.0, end_rate = 0.0;
+	int light_index = 0;
+	int r_index = 0;
 public:
 
 	thinkpad_light();

@@ -129,7 +129,7 @@ public:
 
 private:
 	void setup_report_formatter();
-	report_type type;
-	report_formatter *formatter;
+	report_type type = REPORT_OFF;
+	report_formatter *formatter = nullptr;
 };
 

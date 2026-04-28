@@ -31,13 +31,13 @@
 #include "../parameters/parameters.h"
 
 class runtime_pmdevice: public device {
-	uint64_t before_suspended_time, before_active_time;
-	uint64_t after_suspended_time, after_active_time;
+	uint64_t before_suspended_time = 0, before_active_time = 0;
+	uint64_t after_suspended_time = 0, after_active_time = 0;
 	std::string sysfs_path;
 	std::string name;
 	std::string humanname;
-	int index;
-	int r_index;
+	int index = 0;
+	int r_index = 0;
 public:
 
 	runtime_pmdevice(const std::string &_name, const std::string &path);

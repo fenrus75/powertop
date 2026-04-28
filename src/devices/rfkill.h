@@ -31,13 +31,13 @@
 #include "../parameters/parameters.h"
 
 class rfkill: public device {
-	int start_soft, end_soft;
-	int start_hard, end_hard;
+	int start_soft = 0, end_soft = 0;
+	int start_hard = 0, end_hard = 0;
 	std::string sysfs_path;
 	std::string name;
 	std::string humanname;
-	int index;
-	int rindex;
+	int index = 0;
+	int rindex = 0;
 public:
 
 	rfkill(const std::string &_name, const std::string &path);

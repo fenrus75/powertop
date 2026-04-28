@@ -32,36 +32,36 @@
 #include "../parameters/parameters.h"
 
 class network: public device {
-	int start_up, end_up;
-	uint64_t start_pkts, end_pkts;
+	int start_up = 0, end_up = 0;
+	uint64_t start_pkts = 0, end_pkts = 0;
 	struct timeval before, after;
 
-	int start_speed; /* 0 is "no link" */
-	int end_speed; /* 0 is "no link" */
+	int start_speed = 0; /* 0 is "no link" */
+	int end_speed = 0; /* 0 is "no link" */
 
 	std::string sysfs_path;
 	std::string name;
 	std::string humanname;
-	int index_up;
-	int rindex_up;
-	int index_link_100;
-	int rindex_link_100;
-	int index_link_1000;
-	int rindex_link_1000;
-	int index_link_high;
-	int rindex_link_high;
-	int index_pkts;
-	int rindex_pkts;
-	int index_powerunsave;
-	int rindex_powerunsave;
+	int index_up = 0;
+	int rindex_up = 0;
+	int index_link_100 = 0;
+	int rindex_link_100 = 0;
+	int index_link_1000 = 0;
+	int rindex_link_1000 = 0;
+	int index_link_high = 0;
+	int rindex_link_high = 0;
+	int index_pkts = 0;
+	int rindex_pkts = 0;
+	int index_powerunsave = 0;
+	int rindex_powerunsave = 0;
 
-	int valid_100;
-	int valid_1000;
-	int valid_high;
-	int valid_powerunsave;
+	int valid_100 = 0;
+	int valid_1000 = 0;
+	int valid_high = 0;
+	int valid_powerunsave = 0;
 public:
-	uint64_t pkts;
-	double duration;
+	uint64_t pkts = 0;
+	double duration = 0.0;
 
 	network(const std::string &_name, const std::string &path);
 

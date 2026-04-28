@@ -36,17 +36,17 @@ class power_consumer;
 class power_consumer {
 
 public:
-	uint64_t	accumulated_runtime;
-	uint64_t	child_runtime;
-	int		disk_hits;
-	int		wake_ups;
-	int		gpu_ops;
-	int		hard_disk_hits;  /* those which are likely a wakeup of the disk */
-	int		xwakes;
+	uint64_t	accumulated_runtime = 0;
+	uint64_t	child_runtime = 0;
+	int		disk_hits = 0;
+	int		wake_ups = 0;
+	int		gpu_ops = 0;
+	int		hard_disk_hits = 0;  /* those which are likely a wakeup of the disk */
+	int		xwakes = 0;
 
-	double		power_charge;    /* power consumed by devices opened by this process */
-	class power_consumer *waker;
-	class power_consumer *last_waker;
+	double		power_charge = 0.0;    /* power consumed by devices opened by this process */
+	class power_consumer *waker = nullptr;
+	class power_consumer *last_waker = nullptr;
 
 	power_consumer(void);
 	virtual ~power_consumer() {};

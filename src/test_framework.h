@@ -78,8 +78,8 @@ private:
 	~test_framework_manager();
 
 #ifdef ENABLE_TEST_FRAMEWORK
-	bool recording;
-	bool replaying;
+	bool recording = false;
+	bool replaying = false;
 	std::string record_filename;
 	std::string replay_filename;
 

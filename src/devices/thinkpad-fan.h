@@ -29,9 +29,9 @@
 #include "../parameters/parameters.h"
 
 class thinkpad_fan: public device {
-	double start_rate, end_rate;
-	int fan_index, fansqr_index, fancub_index;
-	int r_index;
+	double start_rate = 0.0, end_rate = 0.0;
+	int fan_index = 0, fansqr_index = 0, fancub_index = 0;
+	int r_index = 0;
 public:
 
 	thinkpad_fan();

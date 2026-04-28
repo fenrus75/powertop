@@ -39,9 +39,9 @@
 
 struct parameter_bundle
 {
-	double score;
-	double guessed_power;
-	double actual_power;
+	double score = 0.0;
+	double guessed_power = 0.0;
+	double actual_power = 0.0;
 
 	std::vector<double> parameters;
 	std::vector<double> weights;
@@ -63,8 +63,8 @@ extern void set_parameter_value(const std::string &name, double value, struct pa
 
 struct result_bundle
 {
-	double joules;
-	double power;
+	double joules = 0.0;
+	double power = 0.0;
 	std::vector <double> utilization; /* device name, device utilization %age */
 };
 

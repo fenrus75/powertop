@@ -31,17 +31,17 @@
 #include "../parameters/parameters.h"
 
 class usbdevice: public device {
-	int active_before, active_after;
-	int connected_before, connected_after;
+	int active_before = 0, active_after = 0;
+	int connected_before = 0, connected_after = 0;
 	std::string sysfs_path;
 	std::string name;
 	std::string devname;
 	std::string humanname;
-	int index;
-	int r_index;
-	int rootport;
-	int busnum;
-	int devnum;
+	int index = 0;
+	int r_index = 0;
+	int rootport = 0;
+	int busnum = 0;
+	int devnum = 0;
 public:
 
 	usbdevice(const std::string &_name, const std::string &path, const std::string &devid);

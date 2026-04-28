@@ -15,15 +15,15 @@ struct table_attributes {
 	std::string td_class;
 	std::string tr_class;
 	std::string th_class;
-	position pos_table_title;
-	int title_mod;
-	int rows;
-	int cols;
+	position pos_table_title = T;
+	int title_mod = 0;
+	int rows = 0;
+	int cols = 0;
 };
 
 struct table_size {
-	int rows;
-	int cols;
+	int rows = 0;
+	int cols = 0;
 };
 
 

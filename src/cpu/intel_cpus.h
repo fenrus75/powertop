@@ -51,8 +51,8 @@
 class intel_util
 {
 protected:
-	int byt_ahci_support;
-        DIR *dir;
+	int byt_ahci_support = 0;
+        DIR *dir = nullptr;
 public:
 	intel_util();
 	virtual void byt_has_ahci();
@@ -62,23 +62,23 @@ public:
 class nhm_package: public cpu_package, public intel_util
 {
 private:
-	uint64_t	c2_before, c2_after;
-	uint64_t	c3_before, c3_after;
-	uint64_t	c6_before, c6_after;
-	uint64_t	c7_before, c7_after;
-	uint64_t	c8_before, c8_after;
-	uint64_t	c9_before, c9_after;
-	uint64_t	c10_before, c10_after;
-	uint64_t	tsc_before, tsc_after;
+	uint64_t	c2_before = 0, c2_after = 0;
+	uint64_t	c3_before = 0, c3_after = 0;
+	uint64_t	c6_before = 0, c6_after = 0;
+	uint64_t	c7_before = 0, c7_after = 0;
+	uint64_t	c8_before = 0, c8_after = 0;
+	uint64_t	c9_before = 0, c9_after = 0;
+	uint64_t	c10_before = 0, c10_after = 0;
+	uint64_t	tsc_before = 0, tsc_after = 0;
 
-	uint64_t	last_stamp;
-	uint64_t	total_stamp;
+	uint64_t	last_stamp = 0;
+	uint64_t	total_stamp = 0;
 public:
-	int		has_c7_res;
-	int		has_c2c6_res;
-	int		has_c3_res;
-	int		has_c6c_res;		/* BSW */
-	int		has_c8c9c10_res;
+	int		has_c7_res = 0;
+	int		has_c2c6_res = 0;
+	int		has_c3_res = 0;
+	int		has_c6c_res = 0;		/* BSW */
+	int		has_c8c9c10_res = 0;
 	nhm_package(int model);
 	virtual void	measurement_start(void);
 	virtual void	measurement_end(void);
@@ -90,18 +90,18 @@ public:
 class nhm_core: public cpu_core, public intel_util
 {
 private:
-	uint64_t	c1_before, c1_after;
-	uint64_t	c3_before, c3_after;
-	uint64_t	c6_before, c6_after;
-	uint64_t	c7_before, c7_after;
-	uint64_t	tsc_before, tsc_after;
+	uint64_t	c1_before = 0, c1_after = 0;
+	uint64_t	c3_before = 0, c3_after = 0;
+	uint64_t	c6_before = 0, c6_after = 0;
+	uint64_t	c7_before = 0, c7_after = 0;
+	uint64_t	tsc_before = 0, tsc_after = 0;
 
-	uint64_t	last_stamp;
-	uint64_t	total_stamp;
+	uint64_t	last_stamp = 0;
+	uint64_t	total_stamp = 0;
 public:
-	int		has_c1_res;
-	int		has_c7_res;
-	int		has_c3_res;
+	int		has_c1_res = 0;
+	int		has_c7_res = 0;
+	int		has_c3_res = 0;
 	nhm_core(int model);
 	virtual void	measurement_start(void);
 	virtual void	measurement_end(void);
@@ -113,14 +113,14 @@ public:
 class nhm_cpu: public cpu_linux, public intel_util
 {
 private:
-	uint64_t	aperf_before;
-	uint64_t	aperf_after;
-	uint64_t	mperf_before;
-	uint64_t	mperf_after;
-	uint64_t	tsc_before, tsc_after;
+	uint64_t	aperf_before = 0;
+	uint64_t	aperf_after = 0;
+	uint64_t	mperf_before = 0;
+	uint64_t	mperf_after = 0;
+	uint64_t	tsc_before = 0, tsc_after = 0;
 
-	uint64_t	last_stamp;
-	uint64_t	total_stamp;
+	uint64_t	last_stamp = 0;
+	uint64_t	total_stamp = 0;
 public:
 	virtual void	measurement_start(void);
 	virtual void	measurement_end(void);
@@ -151,9 +151,9 @@ public:
 class i965_core: public cpu_core
 {
 private:
-	uint64_t	rc6_before, rc6_after;
-	uint64_t	rc6p_before, rc6p_after;
-	uint64_t	rc6pp_before, rc6pp_after;
+	uint64_t	rc6_before = 0, rc6_after = 0;
+	uint64_t	rc6p_before = 0, rc6p_after = 0;
+	uint64_t	rc6pp_before = 0, rc6pp_after = 0;
 
 	struct timeval	before;
 	struct timeval	after;

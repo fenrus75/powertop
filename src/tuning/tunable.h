@@ -46,7 +46,7 @@ protected:
 	std::string toggle_bad;
 public:
 	std::string desc;
-	double score;
+	double score = 0.0;
 
 	tunable(void);
 	tunable(const std::string &str, double _score, const std::string &good = "", const std::string &bad = "", const std::string &neutral ="");

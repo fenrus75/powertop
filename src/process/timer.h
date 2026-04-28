@@ -32,8 +32,8 @@ class timer : public power_consumer {
 	std::string desc;
 public:
 	std::string	handler;
-	int		raw_count;
-	bool		deferred;
+	int		raw_count = 0;
+	bool		deferred = false;
 
 	timer(unsigned long timer_func);
 
@@ -51,8 +51,8 @@ public:
 
 class timer_list {
 public:
-	uint64_t	timer_address;
-	uint64_t	timer_func;
+	uint64_t	timer_address = 0;
+	uint64_t	timer_func = 0;
 };
 
 

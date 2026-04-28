@@ -339,7 +339,7 @@ void store_results(double duration)
 		unsigned int overflow_index;
 		overflow_index = 50 + (rand() % MAX_KEEP);
 		if (past_results.size() >= MAX_PARAM) {
-			/* memory leak, must free old one first */
+			delete past_results[overflow_index];
 			past_results[overflow_index] = clone_results(&all_results);
 		} else {
 			past_results.push_back(clone_results(&all_results));

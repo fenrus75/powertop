@@ -111,7 +111,7 @@ void load_results(const std::string &filename)
 			bundle_saved = 1;
 			overflow_index = 50 + (rand() % MAX_KEEP);
 			if (past_results.size() >= MAX_PARAM) {
-			/* memory leak, must free old one first */
+				delete past_results[overflow_index];
 				past_results[overflow_index] = bundle;
 			} else {
 				past_results.push_back(bundle);

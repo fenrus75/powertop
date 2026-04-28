@@ -97,7 +97,7 @@ void devfreq::add_devfreq_freq_state(uint64_t freq, uint64_t time)
 
 	state->freq = freq;
 	if (freq == 0)
-		state->human_name = "Idle";
+		state->human_name = _("Idle");
 	else
 		state->human_name = hz_to_human(freq);
 	state->time_before = time;

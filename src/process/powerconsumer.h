@@ -29,6 +29,8 @@
 #include <algorithm>
 #include <string>
 
+#include "../lib.h"
+
 extern double measurement_time;
 
 class power_consumer;
@@ -54,8 +56,8 @@ public:
 	virtual double Witts(void);
 	virtual std::string description(void) { return ""; };
 
-	virtual std::string name(void) { return "abstract"; };
-	virtual std::string type(void) { return "abstract"; };
+	virtual std::string name(void) { return _("abstract"); };
+	virtual std::string type(void) { return _("abstract"); };
 
 	virtual double usage(void);
 	virtual std::string usage_units(void);

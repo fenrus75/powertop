@@ -48,10 +48,10 @@ public:
 			return "GPU misc";
 		return "GPU";
 	};
-	virtual std::string human_name(void) override { return "Intel GPU"; };
+	virtual std::string human_name(void) override { return _("Intel GPU"); };
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
 	virtual bool show_in_list(void) override {return false;};
-	virtual std::string util_units(void) override { return " ops/s"; };
+	virtual std::string util_units(void) override { return _(" ops/s"); };
 
 	virtual void add_child(device *dev_ptr) { child_devices.push_back(dev_ptr);}
 };

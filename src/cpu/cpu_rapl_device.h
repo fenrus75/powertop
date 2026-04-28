@@ -42,8 +42,8 @@ class cpu_rapl_device: public cpudevice {
 public:
 	cpu_rapl_device(cpudevice *parent, const std::string &classname = "cpu_core", const std::string &device_name = "cpu_core", class abstract_cpu *_cpu = nullptr);
 	~cpu_rapl_device() { delete rapl; }
-	virtual std::string device_name(void) override {return "CPU core";};
-	virtual std::string human_name(void) override {return "CPU core";};
+	virtual std::string device_name(void) override {return _("CPU core");};
+	virtual std::string human_name(void) override {return _("CPU core");};
 	bool device_present() { return device_valid;}
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
 	virtual void start_measurement(void) override;

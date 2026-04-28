@@ -23,7 +23,6 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 
-#include <iostream>
 #include <fstream>
 
 #include <errno.h>
@@ -117,7 +116,7 @@ void perf_event::create_perf_event(const std::string &eventname __unused, int _c
 	perf_mmap = mmap(nullptr, (bufsize+1)*getpagesize(),
 				PROT_READ | PROT_WRITE, MAP_SHARED, perf_fd, 0);
 	if (perf_mmap == MAP_FAILED) {
-		fprintf(stderr, "failed to mmap with %d (%s)\n", errno, strerror(errno));
+		fprintf(stderr, _("failed to mmap with %d (%s)\n"), errno, strerror(errno));
 		close(perf_fd);
 		perf_fd = -1;
 		return;
@@ -126,7 +125,7 @@ void perf_event::create_perf_event(const std::string &eventname __unused, int _c
 	ret = ioctl(perf_fd, PERF_EVENT_IOC_ENABLE, 0);
 
 	if (ret < 0) {
-		fprintf(stderr, "failed to enable perf \n");
+		fprintf(stderr, _("failed to enable perf\n"));
 	}
 
 	pc = (perf_event_mmap_page *)perf_mmap;
@@ -228,7 +227,7 @@ void perf_event::stop(void)
 	int ret;
 	ret = ioctl(perf_fd, PERF_EVENT_IOC_DISABLE, 0);
 	if (ret)
-		std::cout << "stop failing\n";
+		fprintf(stderr, _("stop failing\n"));
 }
 
 void perf_event::process(void *cookie)

@@ -236,7 +236,7 @@ void one_measurement(int seconds, int sample_interval, const std::string &worklo
 		pthread_t thread = 0UL;
 		end_thread = false;
 		if (pthread_create(&thread, nullptr, measure_background_thread, &sample_interval))
-			fprintf(stderr, "ERROR: workload measurement thread creation failed\n");
+			fprintf(stderr, _("ERROR: workload measurement thread creation failed\n"));
 
 		if (system(workload.c_str()))
 			fprintf(stderr, _("Unknown issue running workload!\n"));
@@ -542,7 +542,7 @@ int main(int argc, char **argv)
 			make_report(time_out, workload, iterations, sample_interval, filename);
 
 		if (debug_learning)
-			printf("Learning debugging enabled\n");
+			fprintf(stderr, _("Learning debugging enabled\n"));
 
 		learn_parameters(250, 0);
 		save_parameters("saved_parameters.powertop");

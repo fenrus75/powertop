@@ -410,7 +410,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 		ret = tep_get_field_val(nullptr, event, "vec", &rec, &val, 0);
                 if (ret < 0) {
-                        fprintf(stderr, "softirq_entry event returned no vector number?\n");
+                        fprintf(stderr, _("softirq_entry event returned no vector number?\n"));
                         return;
                 }
 		vec = (int)val;
@@ -447,7 +447,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 		ret = tep_get_field_val(nullptr, event, "function", &rec, &val, 0);
 		if (ret < 0) {
-			fprintf(stderr, "timer_expire_entry event returned no function value?\n");
+			fprintf(stderr, _("timer_expire_entry event returned no function value?\n"));
 			return;
 		}
 		function = (uint64_t)val;
@@ -459,7 +459,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 		ret = tep_get_field_val(nullptr, event, "timer", &rec, &val, 0);
 		if (ret < 0) {
-			fprintf(stderr, "timer_expire_entry event returned no timer?\n");
+			fprintf(stderr, _("timer_expire_entry event returned no timer?\n"));
 			return;
 		}
 		tmr = (uint64_t)val;

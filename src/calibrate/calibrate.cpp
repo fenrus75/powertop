@@ -227,7 +227,7 @@ static void *burn_disk(void *dummy __unused)
 	while (!stop_measurement) {
 		lseek(fd, 0, SEEK_SET);
 		if(write(fd, buffer, 64*1024) == -1)
-			printf("Error: %s\n", strerror(errno));
+			fprintf(stderr, _("Error: %s\n"), strerror(errno));
 		fdatasync(fd);
 	}
 	unlink(filename);
@@ -344,20 +344,20 @@ static void backlight_calibration(void)
 	}
 	printf(_("Calibrating idle\n"));
 	if (system("DISPLAY=:0 /usr/bin/xset dpms force off") != 0)
-		printf("System is not available\n");
+		fprintf(stderr, _("System is not available\n"));
 	one_measurement(15, 15, "");
 	if (system("DISPLAY=:0 /usr/bin/xset dpms force on") != 0)
-		printf("System is not available\n");
+		fprintf(stderr, _("System is not available\n"));
 }
 
 static void idle_calibration(void)
 {
 	printf(_("Calibrating idle\n"));
 	if (system("DISPLAY=:0 /usr/bin/xset dpms force off") != 0)
-		printf("System is not available\n");
+		fprintf(stderr, _("System is not available\n"));
 	one_measurement(15, 15, "");
 	if (system("DISPLAY=:0 /usr/bin/xset dpms force on") != 0)
-		printf("System is not available\n");
+		fprintf(stderr, _("System is not available\n"));
 }
 
 

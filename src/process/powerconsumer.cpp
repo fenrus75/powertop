@@ -99,9 +99,9 @@ std::string power_consumer::usage_units(void)
 	t = (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time;
 	if (t < 0.7) {
 		if (utf_ok)
-			return " µs/s";
+			return _(" µs/s");
 		else
-			return " us/s";
+			return _(" us/s");
 	}
-	return " ms/s";
+	return _(" ms/s");
 }

@@ -212,7 +212,7 @@ static int parse_packet(struct packet * p)
 	 */
 	for (i = 0; i < 4; i++) {
 		if (p->buf[i * 5] != 2 || p->buf[i * 5 + 4] != 3) {
-			printf("Invalid packet\n");
+			fprintf(stderr, _("Invalid packet\n"));
 			return -1;
 		}
 	}
@@ -222,7 +222,7 @@ static int parse_packet(struct packet * p)
 					  p->buf[5 * i + 3],
 					  &(p->op[8 * i]));
 		if (ret) {
-			printf("Invalid packet, conversion failed\n");
+			fprintf(stderr, _("Invalid packet, conversion failed\n"));
 			return -1;
 		}
 		p->watts = strtod( &(p->op[8 * i]), nullptr);
@@ -286,7 +286,7 @@ void extech_power_meter::measure(void)
 {
 	/* trigger the extech to send data */
 	if(write(fd, " ", 1) == -1)
-		 printf("Error: %s\n", strerror(errno));
+		 fprintf(stderr, _("Error: %s\n"), strerror(errno));
 
 	rate = extech_read(fd);
 
@@ -349,7 +349,7 @@ void extech_power_meter::start_measurement(void)
 	}
 
 	if (pthread_create(&thread, nullptr, thread_proc, this))
-		fprintf(stderr, "ERROR: extech measurement thread creation failed\n");
+		fprintf(stderr, _("ERROR: extech measurement thread creation failed\n"));
 
 }
 

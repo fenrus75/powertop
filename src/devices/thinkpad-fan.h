@@ -44,7 +44,7 @@ public:
 	virtual std::string class_name(void) override { return "fan";};
 
 	virtual std::string device_name(void) override { return "Fan-1";};
-	virtual std::string human_name(void) override { return "Laptop fan";};
+	virtual std::string human_name(void) override { return _("Laptop fan");};
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
 	virtual std::string util_units(void) override { return " rpm"; };
 	virtual bool power_valid(void) override { return utilization_power_valid(r_index);};

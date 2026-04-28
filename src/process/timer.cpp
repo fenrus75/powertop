@@ -102,7 +102,7 @@ double timer::usage_summary(void)
 
 std::string timer::usage_units_summary(void)
 {
-	return "%";
+	return _("%");
 }
 
 

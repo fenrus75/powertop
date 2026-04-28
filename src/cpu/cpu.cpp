@@ -22,7 +22,6 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#include <iostream>
 #include <fstream>
 #include <vector>
 #include <string.h>
@@ -952,7 +951,7 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 		return;
 
 	if (cpunr >= (int)all_cpus.size()) {
-		std::cout << "INVALID cpu nr in handle_trace_point\n";
+		fprintf(stderr, _("INVALID cpu nr in handle_trace_point\n"));
 		return;
 	}
 

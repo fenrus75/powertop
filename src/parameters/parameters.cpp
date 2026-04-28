@@ -254,9 +254,9 @@ void dump_parameter_bundle(struct parameter_bundle *para)
 	int index;
 
 	printf("\n\n");
-	printf("Parameter state \n");
+	printf(_("Parameter state \n"));
 	printf("----------------------------------\n");
-	printf("Value\t\tName\n");
+	printf(_("Value\t\tName\n"));
 	for (it = param_index.begin(); it != param_index.end(); it++) {
 		index = it->second;
 		printf("%5.2f\t\t%s (%i)\n", para->parameters[index], it->first.c_str(), index);
@@ -276,9 +276,9 @@ void dump_result_bundle(struct result_bundle *res)
 	unsigned int index;
 
 	printf("\n\n");
-	printf("Utilisation state \n");
+	printf(_("Utilisation state \n"));
 	printf("----------------------------------\n");
-	printf("Value\t\tName\n");
+	printf(_("Value\t\tName\n"));
 	for (it = result_index.begin(); it != result_index.end(); it++) {
 		index = get_result_index(it->first);
 		printf("%5.2f%%\t\t%s(%i)\n", res->utilization[index], it->first.c_str(), index);
@@ -457,7 +457,7 @@ int global_power_valid(void)
 		return 1;
 
 	if (past_results.size() > 0 && global_run_times < 1){
-		printf("To show power estimates do %ld measurement(s) connected to battery only\n",
+		fprintf(stderr, _("To show power estimates do %ld measurement(s) connected to battery only\n"),
 			(3 * all_parameters.parameters.size()) - past_results.size());
 		global_run_times += 1; 
 	}

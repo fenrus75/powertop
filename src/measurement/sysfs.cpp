@@ -25,7 +25,6 @@
 #include "measurement.h"
 #include "sysfs.h"
 #include "../lib.h"
-#include <string.h>
 #include <stdio.h>
 #include <limits.h>
 

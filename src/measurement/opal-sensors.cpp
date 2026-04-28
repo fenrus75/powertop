@@ -25,7 +25,6 @@
 #include "measurement.h"
 #include "opal-sensors.h"
 #include "../lib.h"
-#include <string.h>
 #include <stdio.h>
 #include <limits.h>
 

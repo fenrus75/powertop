@@ -38,7 +38,6 @@
 #include "../parameters/parameters.h"
 #include "../process/powerconsumer.h"
 
-#include <string.h>
 
 thinkpad_fan::thinkpad_fan(): device()
 {

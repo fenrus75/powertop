@@ -38,7 +38,6 @@
 #include <stack>
 
 #include <stdio.h>
-#include <string.h>
 #include <ncurses.h>
 
 #include "../perf/perf_bundle.h"

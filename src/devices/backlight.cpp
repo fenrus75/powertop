@@ -35,7 +35,6 @@
 #include "backlight.h"
 #include "../parameters/parameters.h"
 
-#include <string.h>
 #include <format>
 
 

@@ -37,7 +37,6 @@
 #include "ahci.h"
 #include "../parameters/parameters.h"
 #include "report/report-data-html.h"
-#include <string.h>
 #include <format>
 
 std::vector <class ahci *> links;

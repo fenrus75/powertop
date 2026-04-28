@@ -25,7 +25,7 @@
 #include <iostream>
 #include <malloc.h>
 #include <algorithm>
-#include <string.h>
+#include <cstring>
 #include <stdint.h>
 #include <sys/types.h>
 #include <sys/stat.h>

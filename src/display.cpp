@@ -31,7 +31,6 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <string.h>
 
 static int display = 0;
 

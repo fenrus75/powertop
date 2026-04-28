@@ -21,7 +21,6 @@
 #include "tunable.h"
 #include "unistd.h"
 #include "tuningi2c.h"
-#include <string.h>
 #include <dirent.h>
 #include <utility>
 #include <iostream>

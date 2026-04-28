@@ -23,7 +23,6 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 #include <stdint.h>
-#include <string.h>
 #include <stdio.h>
 #include "process.h"
 #include "interrupt.h"

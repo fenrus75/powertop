@@ -28,7 +28,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <utility>
 #include <iostream>
 #include <fstream>

@@ -25,7 +25,6 @@
 #include "cpudevice.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include <format>
 #include "../lib.h"
 #include "../parameters/parameters.h"

@@ -46,7 +46,7 @@ extern "C" {
 #include "../tuning/iw.h"
 }
 
-#include <string.h>
+#include <cstring>
 #include <format>
 #include <net/if.h>
 #include <linux/sockios.h>

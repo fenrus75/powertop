@@ -37,7 +37,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <string.h>
+#include <cstring>
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -57,7 +57,7 @@
 #include "../lib.h"
 #include <iostream>
 #include <fstream>
-#include <string.h>
+#include <cstring>
 #include <stdio.h>
 #include <stdlib.h>
 

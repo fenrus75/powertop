@@ -24,7 +24,7 @@
  */
 #include <fstream>
 #include <vector>
-#include <string.h>
+#include <cstring>
 #include <stdlib.h>
 #include <sstream>
 #include <ncurses.h>

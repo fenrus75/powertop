@@ -27,7 +27,6 @@
 #include "tunable.h"
 #include "unistd.h"
 #include "runtime.h"
-#include <string.h>
 #include <utility>
 #include <iostream>
 #include <fstream>

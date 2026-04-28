@@ -27,7 +27,6 @@
 #include "tunable.h"
 #include <unistd.h>
 #include "tuningsysfs.h"
-#include <string.h>
 #include <dirent.h>
 #include <utility>
 #include <iostream>

@@ -28,12 +28,12 @@
 #include "report.h"
 #include "report-maker.h"
 #include <errno.h>
-#include <string.h>
+#include <cstring>
 #include <utility>
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <string.h>
+#include <cstring>
 #include <malloc.h>
 #include <unistd.h>
 #include <limits.h>

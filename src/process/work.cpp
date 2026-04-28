@@ -26,7 +26,6 @@
 #include <utility>
 
 #include <stdint.h>
-#include <string.h>
 #include <stdio.h>
 
 #include "work.h"

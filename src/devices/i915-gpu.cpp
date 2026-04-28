@@ -39,7 +39,6 @@
 #include "gpu_rapl_device.h"
 
 extern "C" {
-#include <string.h>
 #include <unistd.h>
 #include <tracefs.h>
 }

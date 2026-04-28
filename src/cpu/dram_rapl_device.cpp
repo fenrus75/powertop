@@ -24,7 +24,6 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include "../parameters/parameters.h"
 #include "dram_rapl_device.h"
 

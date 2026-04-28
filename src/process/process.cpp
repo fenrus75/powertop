@@ -26,7 +26,6 @@
 
 
 #include "process.h"
-#include <string.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <errno.h>

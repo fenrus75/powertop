@@ -36,7 +36,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <dirent.h>
-#include <string.h>
+#include <cstring>
 #include <ctype.h>
 #include <limits.h>
 

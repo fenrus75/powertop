@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <stdio.h>
-#include <string.h>
 #include <ncurses.h>
 #include "wakeup.h"
 #include <vector>

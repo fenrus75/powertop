@@ -29,7 +29,6 @@
 #include <vector>
 #include <string>
 
-#include "string.h"
 #include "../devices/device.h"
 #include "../lib.h"
 

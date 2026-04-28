@@ -25,7 +25,6 @@
 
 #include "tuning.h"
 #include "tunable.h"
-#include <string.h>
 #include "../lib.h"
 
 std::vector<class tunable *> all_tunables;

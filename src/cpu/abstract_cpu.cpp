@@ -22,9 +22,8 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#include <iostream>
-#include <fstream>
 #include <sstream>
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -271,7 +270,7 @@ void abstract_cpu::finalize_cstate(const std::string &linux_name, uint64_t usage
 	}
 
 	if (!state) {
-		std::cout << "Invalid C state finalize " << linux_name << " \n";
+		fprintf(stderr, _("Invalid C state finalize %s\n"), linux_name.c_str());
 		return;
 	}
 
@@ -371,7 +370,7 @@ void abstract_cpu::finalize_pstate(uint64_t freq, uint64_t duration, int count)
 	}
 
 	if (!state) {
-		std::cout << "Invalid P state finalize " << freq << " \n";
+		fprintf(stderr, _("Invalid P state finalize %" PRIu64 "\n"), freq);
 		return;
 	}
 	state->time_after += duration;

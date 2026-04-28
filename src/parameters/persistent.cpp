@@ -42,7 +42,7 @@ void save_all_results(const std::string &filename)
 
 	file.open(pathname, std::ios::out);
 	if (!file) {
-		std::cout << _("Cannot save to file") << " " << pathname << "\n";
+		fprintf(stderr, "%s %s\n", _("Cannot save to file"), pathname.c_str());
 		return;
 	}
 	for (i = 0; i < past_results.size(); i++) {
@@ -83,7 +83,7 @@ void load_results(const std::string &filename)
 
 	std::string content = read_file_content(pathname);
 	if (content.empty()) {
-		std::cout << _("Cannot load from file") << " " << pathname << "\n";
+		fprintf(stderr, "%s %s\n", _("Cannot load from file"), pathname.c_str());
 		return;
 	}
 
@@ -157,7 +157,7 @@ void save_parameters(const std::string &filename)
 
 	file.open(pathname, std::ios::out);
 	if (!file) {
-		std::cout << _("Cannot save to file") << " " << pathname << "\n";
+		fprintf(stderr, "%s %s\n", _("Cannot save to file"), pathname.c_str());
 		return;
 	}
 
@@ -180,8 +180,8 @@ void load_parameters(const std::string &filename)
 
 	std::string content = read_file_content(pathname);
 	if (content.empty()) {
-		std::cout << _("Cannot load from file") << " " << pathname << "\n";
-		std::cout << _("File will be loaded after taking minimum number of measurement(s) with battery only \n");
+		fprintf(stderr, "%s %s\n", _("Cannot load from file"), pathname.c_str());
+		fprintf(stderr, _("File will be loaded after taking minimum number of measurement(s) with battery only\n"));
 		return;
 	}
 

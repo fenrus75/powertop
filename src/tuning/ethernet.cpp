@@ -84,7 +84,11 @@ int ethernet_tunable::good_bad(void)
 
 	wol.cmd = ETHTOOL_GWOL;
 	ifr.ifr_data = (caddr_t)&wol;
-        ioctl(sock, SIOCETHTOOL, &ifr);
+	ret = ioctl(sock, SIOCETHTOOL, &ifr);
+	if (ret < 0) {
+		close(sock);
+		return result;
+	}
 
 	if (wol.wolopts)
 		result = TUNE_BAD;
@@ -120,10 +124,14 @@ void ethernet_tunable::toggle(void)
 
 	wol.cmd = ETHTOOL_GWOL;
 	ifr.ifr_data = (caddr_t)&wol;
-        ioctl(sock, SIOCETHTOOL, &ifr);
+	ret = ioctl(sock, SIOCETHTOOL, &ifr);
+	if (ret < 0) {
+		close(sock);
+		return;
+	}
 	wol.cmd = ETHTOOL_SWOL;
 	wol.wolopts = 0;
-        ioctl(sock, SIOCETHTOOL, &ifr);
+	ioctl(sock, SIOCETHTOOL, &ifr);
 
 	close(sock);
 }

@@ -127,7 +127,7 @@ static void add_usb_callback(const std::string &d_name)
 	}
 
 	filename = std::format("/sys/bus/usb/devices/{}", d_name);
-	usb = new class usb_tunable(filename, d_name);
+	usb = new usb_tunable(filename, d_name);
 	all_tunables.push_back(usb);
 }
 

@@ -223,7 +223,7 @@ void create_all_ahcis(void)
 
 		write_sysfs(std::format("/sys/class/scsi_host/{}/ahci_alpm_accounting", entry->d_name), "1");
 
-		bl = new class ahci(entry->d_name, std::format("/sys/class/scsi_host/{}", entry->d_name));
+		bl = new ahci(entry->d_name, std::format("/sys/class/scsi_host/{}", entry->d_name));
 		all_devices.push_back(bl);
 		register_parameter("ahci-link-power-active", 0.6);  /* active sata link takes about 0.6 W */
 		register_parameter("ahci-link-power-partial");

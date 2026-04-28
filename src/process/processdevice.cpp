@@ -76,7 +76,7 @@ static void add_device(class device *device)
 		}
 	}
 
-	dev = new class device_consumer(device);
+	dev = new device_consumer(device);
 	all_power.push_back(dev);
 	all_proc_devices.push_back(dev);
 }

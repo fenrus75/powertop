@@ -69,12 +69,12 @@ static class abstract_cpu * new_package(int package, int cpu, const std::string 
 	if (vendor == "GenuineIntel")
 		if (family == 6)
 			if (is_supported_intel_cpu(model, cpu)) {
-				ret = new class nhm_package(model);
+				ret = new nhm_package(model);
 				ret->set_intel_MSR(true);
 			}
 
 	if (!ret) {
-		ret = new class cpu_package;
+		ret = new cpu_package;
 		ret->set_intel_MSR(false);
 	}
 
@@ -83,18 +83,18 @@ static class abstract_cpu * new_package(int package, int cpu, const std::string 
 	ret->childcount = 0;
 
 	packagename = pt_format(_("cpu package {}"), cpu);
-	cpudev = new class cpudevice(_("cpu package"), packagename.c_str(), ret);
+	cpudev = new cpudevice(_("cpu package"), packagename.c_str(), ret);
 	all_devices.push_back(cpudev);
 
 	packagename = pt_format(_("package-{}"), cpu);
-	cpu_rapl_dev = new class cpu_rapl_device(cpudev, _("cpu rapl package"), packagename.c_str(), ret);
+	cpu_rapl_dev = new cpu_rapl_device(cpudev, _("cpu rapl package"), packagename.c_str(), ret);
 	if (cpu_rapl_dev->device_present())
 		all_devices.push_back(cpu_rapl_dev);
 	else
 		delete cpu_rapl_dev;
 
 	packagename = pt_format(_("package-{}"), cpu);
-	dram_rapl_dev = new class dram_rapl_device(cpudev, _("dram rapl package"), packagename.c_str(), ret);
+	dram_rapl_dev = new dram_rapl_device(cpudev, _("dram rapl package"), packagename.c_str(), ret);
 	if (dram_rapl_dev->device_present())
 		all_devices.push_back(dram_rapl_dev);
 	else
@@ -110,12 +110,12 @@ static class abstract_cpu * new_core(int core, int cpu, const std::string &vendo
 	if (vendor == "GenuineIntel")
 		if (family == 6)
 			if (is_supported_intel_cpu(model, cpu)) {
-				ret = new class nhm_core(model);
+				ret = new nhm_core(model);
 				ret->set_intel_MSR(true);
 			}
 
 	if (!ret) {
-		ret = new class cpu_core;
+		ret = new cpu_core;
 		ret->set_intel_MSR(false);
 	}
 
@@ -130,7 +130,7 @@ static class abstract_cpu * new_i965_gpu(void)
 {
 	class abstract_cpu *ret = nullptr;
 
-	ret = new class i965_core;
+	ret = new i965_core;
 	ret->childcount = 0;
 	ret->set_type("GPU");
 
@@ -144,12 +144,12 @@ static class abstract_cpu * new_cpu(int number, const std::string &vendor, int f
 	if (vendor == "GenuineIntel")
 		if (family == 6)
 			if (is_supported_intel_cpu(model, number)) {
-				ret = new class nhm_cpu;
+				ret = new nhm_cpu;
 				ret->set_intel_MSR(true);
 			}
 
 	if (!ret) {
-		ret = new class cpu_linux;
+		ret = new cpu_linux;
 		ret->set_intel_MSR(false);
 	}
 	ret->set_number(number, number);

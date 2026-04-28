@@ -87,7 +87,7 @@ void add_wifi_tunables(void)
 			break;
 		std::string name(entry->d_name);
 		if (name.starts_with("wlan") || name.starts_with("wlp") || name.starts_with("wlx")) {
-			wifi = new(std::nothrow) class wifi_tunable(name);
+			wifi = new(std::nothrow) wifi_tunable(name);
 			if (wifi)
 				all_tunables.push_back(wifi);
 		}

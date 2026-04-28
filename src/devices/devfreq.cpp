@@ -90,7 +90,7 @@ void devfreq::add_devfreq_freq_state(uint64_t freq, uint64_t time)
 {
 	class frequency *state;
 
-	state = new(std::nothrow) class frequency;
+	state = new(std::nothrow) frequency;
 	if (!state)
 		return;
 
@@ -230,7 +230,7 @@ void end_devfreq_measurement(void)
 
 static void devfreq_dev_callback(const std::string &d_name)
 {
-	devfreq *df = new(std::nothrow) class devfreq(d_name);
+	devfreq *df = new(std::nothrow) devfreq(d_name);
 	if (df)
 		all_devfreq.push_back(df);
 }

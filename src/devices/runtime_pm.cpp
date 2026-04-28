@@ -135,7 +135,7 @@ static void do_bus(const std::string &bus)
 			continue;
 
 		std::string path = std::format("/sys/bus/{}/devices/{}", bus, entry->d_name);
-		dev = new class runtime_pmdevice(entry->d_name, path);
+		dev = new runtime_pmdevice(entry->d_name, path);
 		if (bus == "i2c") {
 			std::string devname;
 			bool is_adapter = false;

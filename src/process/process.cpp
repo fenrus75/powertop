@@ -158,7 +158,7 @@ class process * find_create_process(const std::string &comm, int pid)
 			return all_processes[i];
 	}
 
-	new_proc = new class process(comm, pid);
+	new_proc = new process(comm, pid);
 	all_processes.push_back(new_proc);
 	return new_proc;
 }

@@ -83,7 +83,7 @@ void create_thinkpad_fan(void)
 	register_parameter("thinkpad-fan-sqr", 5);
 	register_parameter("thinkpad-fan-cub", 10);
 
-	fan = new class thinkpad_fan();
+	fan = new thinkpad_fan();
 	all_devices.push_back(fan);
 }
 

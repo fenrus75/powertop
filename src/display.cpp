@@ -43,7 +43,7 @@ std::map<std::string, std::string> bottom_lines;
 void create_tab(const std::string &name, const std::string &translation, class tab_window *w, std::string bottom_line)
 {
 	if (!w)
-		w = new(class tab_window);
+		w = new tab_window;
 
 	w->win = newpad(1000,1000);
 	tab_names.push_back(name);

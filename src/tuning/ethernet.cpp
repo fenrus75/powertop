@@ -142,7 +142,7 @@ void ethtunable_callback(const std::string &d_name)
 	class ethernet_tunable *eth;
 	if (d_name == "lo")
 		return;
-	eth = new(std::nothrow) class ethernet_tunable(d_name);
+	eth = new(std::nothrow) ethernet_tunable(d_name);
 	if (eth)
 		all_tunables.push_back(eth);
 }

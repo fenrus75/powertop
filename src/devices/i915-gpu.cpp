@@ -77,10 +77,10 @@ void create_i915_gpu(void)
 
 	register_parameter("gpu-operations");
 
-	gpu = new class i915gpu();
+	gpu = new i915gpu();
 	all_devices.push_back(gpu);
 
-	rapl_dev = new class gpu_rapl_device(gpu);
+	rapl_dev = new gpu_rapl_device(gpu);
 	if (rapl_dev->device_present())
 		all_devices.push_back(rapl_dev);
 	else

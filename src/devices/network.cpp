@@ -348,7 +348,7 @@ static void netdev_callback(const std::string &d_name)
 	register_parameter(std::format("{}-link-high", d_name));
 	register_parameter(std::format("{}-packets", d_name));
 
-	network *bl = new(std::nothrow) class network(d_name, f_name);
+	network *bl = new(std::nothrow) network(d_name, f_name);
 	if (bl) {
 		all_devices.push_back(bl);
 		nics[d_name] = bl;

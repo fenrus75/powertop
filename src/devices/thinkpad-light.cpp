@@ -82,7 +82,7 @@ void create_thinkpad_light(void)
 
 	register_parameter("thinkpad-light", 10);
 
-	light = new class thinkpad_light();
+	light = new thinkpad_light();
 	all_devices.push_back(light);
 }
 

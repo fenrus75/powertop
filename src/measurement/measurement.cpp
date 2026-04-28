@@ -141,7 +141,7 @@ void sysfs_power_meters_callback(const std::string &d_name)
 		return;
 
 	class sysfs_power_meter *meter;
-	meter = new(std::nothrow) class sysfs_power_meter(d_name);
+	meter = new(std::nothrow) sysfs_power_meter(d_name);
 	if (meter)
 		power_meters.push_back(meter);
 }
@@ -149,7 +149,7 @@ void sysfs_power_meters_callback(const std::string &d_name)
 void acpi_power_meters_callback(const std::string &d_name)
 {
 	class acpi_power_meter *meter;
-	meter = new(std::nothrow) class acpi_power_meter(d_name);
+	meter = new(std::nothrow) acpi_power_meter(d_name);
 	if (meter)
 		power_meters.push_back(meter);
 }
@@ -162,7 +162,7 @@ void sysfs_opal_sensors_callback(const std::string &d_name)
 	if (!d_name.empty() && d_name.back() == '/')
 		return;
 
-	meter = new(std::nothrow) class opal_sensors_power_meter(d_name);
+	meter = new(std::nothrow) opal_sensors_power_meter(d_name);
 	if (meter)
 		power_meters.push_back(meter);
 }

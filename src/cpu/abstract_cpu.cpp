@@ -58,7 +58,7 @@ void abstract_cpu::account_freq(uint64_t freq, uint64_t duration)
 
 
 	if (!state) {
-		state = new(std::nothrow) class frequency;
+		state = new(std::nothrow) frequency;
 
 		if (!state)
 			return;
@@ -342,7 +342,7 @@ void abstract_cpu::insert_pstate(uint64_t freq, const std::string &human_name, u
 {
 	class frequency *state;
 
-	state = new(std::nothrow) class frequency;
+	state = new(std::nothrow) frequency;
 
 	if (!state)
 		return;

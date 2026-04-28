@@ -100,7 +100,7 @@ static void wakeup_usb_callback(const std::string &d_name)
 		return;
 
 	filename = std::format("/sys/bus/usb/devices/{}/power/wakeup", d_name);
-	usb = new class usb_wakeup(filename, d_name);
+	usb = new usb_wakeup(filename, d_name);
 	wakeup_all.push_back(usb);
 }
 

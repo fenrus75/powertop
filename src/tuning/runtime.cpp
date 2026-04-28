@@ -143,7 +143,7 @@ void add_runtime_tunables(const std::string &bus)
 
 		filename = std::format("/sys/bus/{}/devices/{}", bus, entry->d_name);
 
-		runtime = new class runtime_tunable(filename, bus, entry->d_name, "");
+		runtime = new runtime_tunable(filename, bus, entry->d_name, "");
 
 		if (!device_has_runtime_pm(filename))
 			all_untunables.push_back(runtime);
@@ -158,7 +158,7 @@ void add_runtime_tunables(const std::string &bus)
 				continue;
 
 			filename = std::format("/sys/bus/{}/devices/{}/{}", bus, entry->d_name, port);
-			runtime_ahci_port = new class runtime_tunable(filename, bus, entry->d_name, port);
+			runtime_ahci_port = new runtime_tunable(filename, bus, entry->d_name, port);
 
 			if (!device_has_runtime_pm(filename))
 				all_untunables.push_back(runtime_ahci_port);
@@ -178,7 +178,7 @@ void add_runtime_tunables(const std::string &bus)
 
 			port = std::format("sd{}", blk);
 			filename = std::format("/sys/block/{}/device", port);
-			runtime_ahci_disk = new class runtime_tunable(filename, bus, entry->d_name, port);
+			runtime_ahci_disk = new runtime_tunable(filename, bus, entry->d_name, port);
 			if (!device_has_runtime_pm(filename))
 				all_untunables.push_back(runtime_ahci_disk);
 			else

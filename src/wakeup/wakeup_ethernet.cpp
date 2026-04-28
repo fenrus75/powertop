@@ -100,7 +100,7 @@ static void wakeup_eth_callback(const std::string &d_name)
 		return;
 
 	filename = std::format("/sys/class/net/{}/device/power/wakeup", d_name);
-	eth = new class ethernet_wakeup(filename, d_name);
+	eth = new ethernet_wakeup(filename, d_name);
 	wakeup_all.push_back(eth);
 }
 

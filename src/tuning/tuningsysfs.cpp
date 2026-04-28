@@ -78,7 +78,7 @@ void add_sysfs_tunable(const std::string &str, const std::string &_sysfs_path, c
 		return;
 	class sysfs_tunable *st;
 
-	st = new class sysfs_tunable(str, _sysfs_path, _target_content);
+	st = new sysfs_tunable(str, _sysfs_path, _target_content);
 	all_tunables.push_back(st);
 }
 

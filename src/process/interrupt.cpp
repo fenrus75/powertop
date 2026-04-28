@@ -105,7 +105,7 @@ class interrupt * find_create_interrupt(const std::string &_handler, int nr, int
 			return all_interrupts[i];
 	}
 
-	new_irq = new class interrupt(handler_s, nr);
+	new_irq = new interrupt(handler_s, nr);
 	all_interrupts.push_back(new_irq);
 	return new_irq;
 }

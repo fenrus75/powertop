@@ -92,7 +92,7 @@ static void add_i2c_callback(const std::string &d_name)
 		is_adapter = true;
 
 	filename = std::format("/sys/bus/i2c/devices/{}", d_name);
-	i2c = new class i2c_tunable(filename, d_name, is_adapter);
+	i2c = new i2c_tunable(filename, d_name, is_adapter);
 
 	if (is_adapter)
 		filename = std::format("/sys/bus/i2c/devices/{}/device", d_name);

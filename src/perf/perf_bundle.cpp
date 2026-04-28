@@ -104,7 +104,7 @@ bool perf_bundle::add_event(const std::string &system_name, const std::string &e
 		if (!all_cpus[i])
 			continue;
 
-		ev = new class perf_bundle_event();
+		ev = new perf_bundle_event();
 
 		ev->set_event_name(system_name, event_name);
 		ev->set_cpu(i);

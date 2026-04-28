@@ -213,6 +213,6 @@ void add_bt_tunable(void)
 		return;
 
 
-	bt = new class bt_tunable();
+	bt = new bt_tunable();
 	all_tunables.push_back(bt);
 }

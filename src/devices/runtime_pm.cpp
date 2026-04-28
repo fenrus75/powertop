@@ -135,7 +135,8 @@ static void do_bus(const std::string &bus)
 		if (entry->d_name[0] == '.')
 			continue;
 
-		dev = new class runtime_pmdevice(entry->d_name, std::format("/sys/bus/{}/devices/{}", bus, entry->d_name));
+		std::string path = std::format("/sys/bus/{}/devices/{}", bus, entry->d_name);
+		dev = new class runtime_pmdevice(entry->d_name, path);
 		if (bus == "i2c") {
 			std::string devname;
 			bool is_adapter = false;
@@ -170,6 +171,10 @@ static void do_bus(const std::string &bus)
 				dev->set_human_name(pt_format(_("PCI Device: {}"),
 					pci_id_to_name(vendor, device)));
 			}
+		}
+		if (!device_has_runtime_pm(path)) {
+			delete dev;
+			continue;
 		}
 		all_devices.push_back(dev);
 	}

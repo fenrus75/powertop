@@ -49,13 +49,6 @@ public:
 
 };
 
-class timer_list {
-public:
-	uint64_t	timer_address = 0;
-	uint64_t	timer_func = 0;
-};
-
-
 extern void all_timers_to_all_power(void);
 extern class timer * find_create_timer(uint64_t func);
 extern void clear_timers(void);

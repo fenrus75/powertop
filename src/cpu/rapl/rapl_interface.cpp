@@ -47,22 +47,22 @@
 #define MSR_RAPL_POWER_UNIT	0x606
 #define MSR_PKG_POWER_LIMIT	0x610
 
-#define MSR_PKG_ENERY_STATUS	0x611
+#define MSR_PKG_ENERGY_STATUS	0x611
 #define MSR_PKG_POWER_INFO	0x614
 #define MSR_PKG_PERF_STATUS	0x613
 
 #define MSR_DRAM_POWER_LIMIT	0x618
-#define MSR_DRAM_ENERY_STATUS	0x619
+#define MSR_DRAM_ENERGY_STATUS	0x619
 #define MSR_DRAM_PERF_STATUS	0x61B
 #define MSR_DRAM_POWER_INFO	0x61c
 
 #define MSR_PP0_POWER_LIMIT	0x638
-#define MSR_PP0_ENERY_STATUS	0x639
+#define MSR_PP0_ENERGY_STATUS	0x639
 #define MSR_PP0_POLICY		0x63A
 #define MSR_PP0_PERF_STATUS	0x63B
 
 #define MSR_PP1_POWER_LIMIT	0x640
-#define MSR_PP1_ENERY_STATUS	0x641
+#define MSR_PP1_ENERGY_STATUS	0x641
 #define MSR_PP1_POLICY		0x642
 
 #define PKG_DOMAIN_PRESENT	0x01
@@ -76,7 +76,7 @@ c_rapl_interface::c_rapl_interface(const std::string &dev_name, int cpu) :
 	powercap_uncore_path(),
 	powercap_dram_path(),
 	first_cpu(cpu),
-	measurment_interval(def_sampling_interval),
+	measurement_interval(def_sampling_interval),
 	last_pkg_energy_status(0.0),
 	last_dram_energy_status(0.0),
 	last_pp0_energy_status(0.0),
@@ -146,7 +146,7 @@ c_rapl_interface::c_rapl_interface(const std::string &dev_name, int cpu) :
 
 	// presence of each domain
 	// Check presence of PKG domain
-	ret = read_msr(first_cpu, MSR_PKG_ENERY_STATUS, &value);
+	ret = read_msr(first_cpu, MSR_PKG_ENERGY_STATUS, &value);
 	if (ret > 0) {
 		rapl_domains |= PKG_DOMAIN_PRESENT;
 		RAPL_DBG_PRINT("Domain : PKG present\n");
@@ -155,7 +155,7 @@ c_rapl_interface::c_rapl_interface(const std::string &dev_name, int cpu) :
 	}
 
 	// Check presence of DRAM domain
-	ret = read_msr(first_cpu, MSR_DRAM_ENERY_STATUS, &value);
+	ret = read_msr(first_cpu, MSR_DRAM_ENERGY_STATUS, &value);
 	if (ret > 0) {
 		rapl_domains |= DRAM_DOMAIN_PRESENT;
 		RAPL_DBG_PRINT("Domain : DRAM present\n");
@@ -164,7 +164,7 @@ c_rapl_interface::c_rapl_interface(const std::string &dev_name, int cpu) :
 	}
 
 	// Check presence of PP0 domain
-	ret = read_msr(first_cpu, MSR_PP0_ENERY_STATUS, &value);
+	ret = read_msr(first_cpu, MSR_PP0_ENERGY_STATUS, &value);
 	if (ret > 0) {
 		rapl_domains |= PP0_DOMAIN_PRESENT;
 		RAPL_DBG_PRINT("Domain : PP0 present\n");
@@ -173,7 +173,7 @@ c_rapl_interface::c_rapl_interface(const std::string &dev_name, int cpu) :
 	}
 
 	// Check presence of PP1 domain
-	ret = read_msr(first_cpu, MSR_PP1_ENERY_STATUS, &value);
+	ret = read_msr(first_cpu, MSR_PP1_ENERGY_STATUS, &value);
 	if (ret > 0) {
 		rapl_domains |= PP1_DOMAIN_PRESENT;
 		RAPL_DBG_PRINT("Domain : PP1 present\n");
@@ -294,7 +294,7 @@ int c_rapl_interface::get_pkg_energy_status(double *status)
 		return -1;
 	}
 
-	ret = read_msr(first_cpu, MSR_PKG_ENERY_STATUS, &value);
+	ret = read_msr(first_cpu, MSR_PKG_ENERGY_STATUS, &value);
 	if(ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_pkg_energy_status failed\n");
@@ -384,7 +384,7 @@ int c_rapl_interface::get_dram_energy_status(double *status)
 		return -EINVAL;
 	}
 
-	ret = read_msr(first_cpu, MSR_DRAM_ENERY_STATUS, &value);
+	ret = read_msr(first_cpu, MSR_DRAM_ENERGY_STATUS, &value);
 	if(ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_dram_energy_status failed\n");
@@ -475,7 +475,7 @@ int c_rapl_interface::get_pp0_energy_status(double *status)
 		return -EINVAL;
 	}
 
-	ret = read_msr(first_cpu, MSR_PP0_ENERY_STATUS, &value);
+	ret = read_msr(first_cpu, MSR_PP0_ENERGY_STATUS, &value);
 	if(ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_pp0_energy_status failed\n");
@@ -563,7 +563,7 @@ int c_rapl_interface::get_pp1_energy_status(double *status)
 		return -EINVAL;
 	}
 
-	ret = read_msr(first_cpu, MSR_PP1_ENERY_STATUS, &value);
+	ret = read_msr(first_cpu, MSR_PP1_ENERGY_STATUS, &value);
 	if(ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_pp1_energy_status failed\n");
@@ -662,7 +662,7 @@ void c_rapl_interface::rapl_measure_energy()
 				last_pkg_energy_status = energy_status;
 			if (ret > 0) {
 				pkg_joules = energy_status;
-				pkg_watts = (energy_status-last_pkg_energy_status)/measurment_interval;
+				pkg_watts = (energy_status-last_pkg_energy_status)/measurement_interval;
 			}
 			last_pkg_energy_status = energy_status;
 		}
@@ -672,7 +672,7 @@ void c_rapl_interface::rapl_measure_energy()
 				last_dram_energy_status = energy_status;
 			if (ret > 0){
 				dram_joules = energy_status;
-				dram_watts = (energy_status-last_dram_energy_status)/measurment_interval;
+				dram_watts = (energy_status-last_dram_energy_status)/measurement_interval;
 			}
 			last_dram_energy_status = energy_status;
 		}
@@ -682,7 +682,7 @@ void c_rapl_interface::rapl_measure_energy()
 				last_pp0_energy_status = energy_status;
 			if (ret > 0){
 				pp0_joules = energy_status;
-				pp0_watts = (energy_status-last_pp0_energy_status)/measurment_interval;
+				pp0_watts = (energy_status-last_pp0_energy_status)/measurement_interval;
 			}
 			last_pp0_energy_status = energy_status;
 		}
@@ -692,12 +692,12 @@ void c_rapl_interface::rapl_measure_energy()
 				last_pp1_energy_status = energy_status;
 			if (ret > 0){
 				pp1_joules = energy_status;
-				pp1_watts = (energy_status-last_pp1_energy_status)/measurment_interval;
+				pp1_watts = (energy_status-last_pp1_energy_status)/measurement_interval;
 			}
 			last_pp1_energy_status = energy_status;
 		}
 		RAPL_DBG_PRINT("%f, %f, %f, %f\n", pkg_watts, dram_watts, pp0_watts, pp1_watts);
-		sleep(measurment_interval);
+		sleep(measurement_interval);
 	}
 #endif
 }

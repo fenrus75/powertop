@@ -1,5 +1,5 @@
 /*
- * This code has been blatently stolen from
+ * This code has been blatantly stolen from
  *
  * nl80211 userspace tool
  *

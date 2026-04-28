@@ -43,7 +43,7 @@ private:
 	int write_msr(int cpu, unsigned int idx, uint64_t val);
 
 protected:
-	int measurment_interval = 0;
+	int measurement_interval = 0;
 	double last_pkg_energy_status = 0.0;
 	double last_dram_energy_status = 0.0;
 	double last_pp0_energy_status = 0.0;

@@ -35,10 +35,10 @@ cpudevice::cpudevice(const std::string &classname, const std::string &dev_name, 
 	_class = classname;
 	_cpuname = dev_name;
 	cpu = _cpu;
-	wake_index = get_param_index("cpu-wakeups");;
-	consumption_index = get_param_index("cpu-consumption");;
-	r_wake_index = get_result_index("cpu-wakeups");;
-	r_consumption_index = get_result_index("cpu-consumption");;
+	wake_index = get_param_index("cpu-wakeups");
+	consumption_index = get_param_index("cpu-consumption");
+	r_wake_index = get_result_index("cpu-wakeups");
+	r_consumption_index = get_result_index("cpu-consumption");
 }
 
 std::string cpudevice::device_name(void)

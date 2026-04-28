@@ -87,7 +87,7 @@ extern void precompute_valid(void);
 extern double compute_bundle(struct parameter_bundle *parameters = &all_parameters, struct result_bundle *results = &all_results);
 
 
-void dump_parameter_bundle(struct parameter_bundle *patameters = &all_parameters);
+void dump_parameter_bundle(struct parameter_bundle *parameters = &all_parameters);
 void dump_result_bundle(struct result_bundle *res = &all_results);
 
 extern struct result_bundle * clone_results(struct result_bundle *bundle);

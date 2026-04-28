@@ -616,7 +616,7 @@ void report_display_cpu_cstates(void)
 		/* Report Output */
 		if(core_num > 0)
 			title=title/core_num;
-		else if(_core && _core->children.size() > 0)
+		else if(_core && !_core->children.empty())
 			title=title/_core->children.size();
 
 		init_pkg_table_attr(&std_table_css, pkg_tbl_size.rows,  pkg_tbl_size.cols);

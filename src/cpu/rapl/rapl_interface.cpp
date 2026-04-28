@@ -100,7 +100,7 @@ c_rapl_interface::c_rapl_interface(const std::string &dev_name, int cpu) :
 					continue;
 				std::string path = base_path + entry->d_name + "/name";
 				std::string str = read_sysfs_string(path);
-				if (str.length() > 0) {
+				if (!str.empty()) {
 					if (str == dev_name) {
 						package_path = base_path + entry->d_name + "/";
 						powercap_sysfs_present = true;
@@ -120,7 +120,7 @@ c_rapl_interface::c_rapl_interface(const std::string &dev_name, int cpu) :
 					continue;
 				std::string path = package_path + entry->d_name;
 				std::string str = read_sysfs_string(path + "/name");
-				if (str.length() > 0) {
+				if (!str.empty()) {
 					if (str == "core") {
 						rapl_domains |= PP0_DOMAIN_PRESENT;
 						powercap_core_path = path + "/";
@@ -376,7 +376,7 @@ int c_rapl_interface::get_dram_energy_status(double *status)
 
 	if (powercap_sysfs_present) {
 		std::string str = read_sysfs_string(powercap_dram_path + "energy_uj");
-		if (str.length() > 0) {
+		if (!str.empty()) {
 			try { *status = std::stod(str) / 1000000; } catch (...) { return -EINVAL; } // uj to Js
 			return 0;
 		}
@@ -467,7 +467,7 @@ int c_rapl_interface::get_pp0_energy_status(double *status)
 
 	if (powercap_sysfs_present) {
 		std::string str = read_sysfs_string(powercap_core_path + "energy_uj");
-		if (str.length() > 0) {
+		if (!str.empty()) {
 			try { *status = std::stod(str) / 1000000; } catch (...) { return -EINVAL; } // uj to Js
 			return 0;
 		}
@@ -555,7 +555,7 @@ int c_rapl_interface::get_pp1_energy_status(double *status)
 
 	if (powercap_sysfs_present) {
 		std::string str = read_sysfs_string(powercap_uncore_path + "energy_uj");
-		if (str.length() > 0) {
+		if (!str.empty()) {
 			try { *status = std::stod(str) / 1000000; } catch (...) { return -EINVAL; } // uj to Js
 			return 0;
 		}

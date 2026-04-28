@@ -94,7 +94,7 @@ void load_results(const std::string &filename)
 	while (getline(stream, line)) {
 		double d;
 		if (first) {
-			if (line.length() > 0) {
+			if (!line.empty()) {
 				try {
 					bundle->power = std::stod(line);
 					if (bundle->power < min_power)

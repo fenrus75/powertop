@@ -459,7 +459,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 		ret = tep_get_field_val(NULL, event, "timer", &rec, &val, 0);
 		if (ret < 0) {
-			fprintf(stderr, "softirq_entry event returned no timer ?\n");
+			fprintf(stderr, "timer_expire_entry event returned no timer?\n");
 			return;
 		}
 		tmr = (uint64_t)val;

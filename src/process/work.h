@@ -39,11 +39,11 @@ public:
 	void fire(uint64_t time, uint64_t work_struct);
 	uint64_t done(uint64_t time, uint64_t work_struct);
 
-	virtual std::string description(void);
-	virtual std::string name(void) { return "work"; };
-	virtual std::string type(void) { return "kWork"; };
-	virtual double usage_summary(void);
-	virtual std::string usage_units_summary(void);
+	virtual std::string description(void) override;
+	virtual std::string name(void) override { return "work"; };
+	virtual std::string type(void) override { return "kWork"; };
+	virtual double usage_summary(void) override;
+	virtual std::string usage_units_summary(void) override;
 
 };
 

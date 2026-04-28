@@ -42,12 +42,12 @@ class dram_rapl_device: public cpudevice {
 public:
 	dram_rapl_device(cpudevice *parent, const std::string &classname = "dram_core", const std::string &device_name = "dram_core", class abstract_cpu *_cpu = NULL);
 	~dram_rapl_device() { delete rapl; }
-	virtual std::string device_name(void) {return "DRAM";};
-	virtual std::string human_name(void) {return "DRAM";};
+	virtual std::string device_name(void) override {return "DRAM";};
+	virtual std::string human_name(void) override {return "DRAM";};
 	bool device_present() { return device_valid;}
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
-	void start_measurement(void);
-	void end_measurement(void);
+	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	void start_measurement(void) override;
+	void end_measurement(void) override;
 
 };
 

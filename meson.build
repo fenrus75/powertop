@@ -301,6 +301,7 @@ executable('powertop',
     '-fno-omit-frame-pointer',
     '-fstack-protector',
     '-fpermissive',
+    '-Wsuggest-override',
   ],
   install: true
 )

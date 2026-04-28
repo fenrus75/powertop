@@ -80,11 +80,11 @@ public:
 	int		has_c6c_res = 0;		/* BSW */
 	int		has_c8c9c10_res = 0;
 	nhm_package(int model);
-	virtual void	measurement_start(void);
-	virtual void	measurement_end(void);
-	virtual int     can_collapse(void) { return 0;};
+	virtual void	measurement_start(void) override;
+	virtual void	measurement_end(void) override;
+	virtual int     can_collapse(void) override { return 0;};
 
-	virtual std::string  fill_pstate_line(int line_nr);
+	virtual std::string  fill_pstate_line(int line_nr) override;
 };
 
 class nhm_core: public cpu_core, public intel_util
@@ -103,11 +103,11 @@ public:
 	int		has_c7_res = 0;
 	int		has_c3_res = 0;
 	nhm_core(int model);
-	virtual void	measurement_start(void);
-	virtual void	measurement_end(void);
-	virtual int     can_collapse(void) { return 0;};
+	virtual void	measurement_start(void) override;
+	virtual void	measurement_end(void) override;
+	virtual int     can_collapse(void) override { return 0;};
 
-	virtual std::string  fill_pstate_line(int line_nr);
+	virtual std::string  fill_pstate_line(int line_nr) override;
 };
 
 class nhm_cpu: public cpu_linux, public intel_util
@@ -122,28 +122,28 @@ private:
 	uint64_t	last_stamp = 0;
 	uint64_t	total_stamp = 0;
 public:
-	virtual void	measurement_start(void);
-	virtual void	measurement_end(void);
-	virtual int     can_collapse(void) { return 0;};
+	virtual void	measurement_start(void) override;
+	virtual void	measurement_end(void) override;
+	virtual int     can_collapse(void) override { return 0;};
 
-	virtual std::string  fill_pstate_name(int line_nr);
-	virtual std::string  fill_pstate_line(int line_nr);
-	virtual int	has_pstate_level(int level);
+	virtual std::string  fill_pstate_name(int line_nr) override;
+	virtual std::string  fill_pstate_line(int line_nr) override;
+	virtual int	has_pstate_level(int level) override;
 };
 
 class atom_package: public cpu_package
 {
 public:
-	virtual void	measurement_start(void);
-	virtual void	measurement_end(void);
+	virtual void	measurement_start(void) override;
+	virtual void	measurement_end(void) override;
 
 };
 
 class atom_core: public cpu_core
 {
 public:
-	virtual void	measurement_start(void);
-	virtual void	measurement_end(void);
+	virtual void	measurement_start(void) override;
+	virtual void	measurement_end(void) override;
 
 };
 
@@ -159,16 +159,16 @@ private:
 	struct timeval	after;
 
 public:
-	virtual void	measurement_start(void);
-	virtual void	measurement_end(void);
-	virtual int     can_collapse(void) { return 0;};
+	virtual void	measurement_start(void) override;
+	virtual void	measurement_end(void) override;
+	virtual int     can_collapse(void) override { return 0;};
 
-	virtual std::string  fill_pstate_line(int line_nr);
-	virtual std::string  fill_pstate_name(int line_nr);
-	virtual std::string  fill_cstate_line(int line_nr, const std::string &separator);
-	virtual int	has_pstate_level(int level __unused) { return 0; };
-	virtual int	has_pstates(void) { return 0; };
-	virtual void	wiggle(void) { };
+	virtual std::string  fill_pstate_line(int line_nr) override;
+	virtual std::string  fill_pstate_name(int line_nr) override;
+	virtual std::string  fill_cstate_line(int line_nr, const std::string &separator) override;
+	virtual int	has_pstate_level(int level __unused) override { return 0; };
+	virtual int	has_pstates(void) override { return 0; };
+	virtual void	wiggle(void) override { };
 
 };
 

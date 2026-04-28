@@ -42,10 +42,10 @@ class sysfs_power_meter: public power_meter {
 	void measure();
 public:
 	sysfs_power_meter(const std::string &power_supply_name);
-	virtual void start_measurement(void);
-	virtual void end_measurement(void);
+	virtual void start_measurement(void) override;
+	virtual void end_measurement(void) override;
 
-	virtual double power(void) { return rate; }
-	virtual double dev_capacity(void) { return capacity; }
+	virtual double power(void) override { return rate; }
+	virtual double dev_capacity(void) override { return capacity; }
 };
 

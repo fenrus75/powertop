@@ -36,9 +36,9 @@ class sysfs_tunable : public tunable {
 public:
 	sysfs_tunable(const std::string &str, const std::string &sysfs_path, const std::string &target_content);
 
-	virtual int good_bad(void);
+	virtual int good_bad(void) override;
 
-	virtual void toggle(void);
+	virtual void toggle(void) override;
 
 };
 

@@ -32,9 +32,9 @@ class bt_tunable : public tunable {
 public:
 	bt_tunable(void);
 
-	virtual int good_bad(void);
+	virtual int good_bad(void) override;
 
-	virtual void toggle(void);
+	virtual void toggle(void) override;
 
 };
 

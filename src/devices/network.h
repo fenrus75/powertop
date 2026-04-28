@@ -65,19 +65,19 @@ public:
 
 	network(const std::string &_name, const std::string &path);
 
-	virtual void start_measurement(void);
-	virtual void end_measurement(void);
+	virtual void start_measurement(void) override;
+	virtual void end_measurement(void) override;
 
-	virtual double	utilization(void);
-	virtual std::string util_units(void) { return " pkts/s"; };
+	virtual double	utilization(void) override;
+	virtual std::string util_units(void) override { return " pkts/s"; };
 
-	virtual std::string class_name(void) { return "ethernet";};
+	virtual std::string class_name(void) override { return "ethernet";};
 
-	virtual std::string device_name(void) { return name; };
-	virtual std::string human_name(void) { return humanname; };
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
-	virtual bool power_valid(void) { return utilization_power_valid(rindex_up) || utilization_power_valid(rindex_link_100) || utilization_power_valid(rindex_link_1000) || utilization_power_valid(rindex_link_high);};
-	virtual int grouping_prio(void) { return 10; };
+	virtual std::string device_name(void) override { return name; };
+	virtual std::string human_name(void) override { return humanname; };
+	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	virtual bool power_valid(void) override { return utilization_power_valid(rindex_up) || utilization_power_valid(rindex_link_100) || utilization_power_valid(rindex_link_1000) || utilization_power_valid(rindex_link_high);};
+	virtual int grouping_prio(void) override { return 10; };
 };
 
 extern void create_all_nics(callback fn = NULL);

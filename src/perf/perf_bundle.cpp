@@ -47,7 +47,7 @@ class perf_bundle_event: public perf_event
 {
 public:
 	perf_bundle_event(void);
-	virtual void handle_event(struct perf_event_header *header, void *cookie);
+	virtual void handle_event(struct perf_event_header *header, void *cookie) override;
 };
 
 perf_bundle_event::perf_bundle_event(void) : perf_event()

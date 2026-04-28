@@ -46,19 +46,19 @@ public:
 
 	usbdevice(const std::string &_name, const std::string &path, const std::string &devid);
 
-	virtual void start_measurement(void);
-	virtual void end_measurement(void);
+	virtual void start_measurement(void) override;
+	virtual void end_measurement(void) override;
 
-	virtual double	utilization(void); /* percentage */
+	virtual double	utilization(void) override; /* percentage */
 
-	virtual std::string class_name(void) { return "usb";};
+	virtual std::string class_name(void) override { return "usb";};
 
-	virtual std::string device_name(void) { return devname; };
-	virtual std::string human_name(void) { return humanname; };
-	virtual void register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle);
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
-	virtual bool power_valid(void) { return utilization_power_valid(r_index);};
-	virtual int grouping_prio(void) { return 4; };
+	virtual std::string device_name(void) override { return devname; };
+	virtual std::string human_name(void) override { return humanname; };
+	virtual void register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle) override;
+	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	virtual bool power_valid(void) override { return utilization_power_valid(r_index);};
+	virtual int grouping_prio(void) override { return 4; };
 };
 
 extern void create_all_usb_devices(void);

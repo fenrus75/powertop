@@ -41,11 +41,11 @@ public:
 	uint64_t done(uint64_t time, uint64_t timer_struct);
 	bool is_deferred(void);
 
-	virtual std::string description(void);
-	virtual std::string name(void) { return "timer"; };
-	virtual std::string type(void) { return "Timer"; };
-	virtual double usage_summary(void);
-	virtual std::string usage_units_summary(void);
+	virtual std::string description(void) override;
+	virtual std::string name(void) override { return "timer"; };
+	virtual std::string type(void) override { return "Timer"; };
+	virtual double usage_summary(void) override;
+	virtual std::string usage_units_summary(void) override;
 
 };
 

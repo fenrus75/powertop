@@ -36,13 +36,13 @@ public:
 	class device *device = nullptr;
 	device_consumer(class device *dev);
 
-	virtual std::string description(void);
-	virtual std::string name(void) { return "device"; };
-	virtual std::string type(void) { return "Device"; };
-	virtual double Witts(void);
-	virtual double usage(void) { return device->utilization();};
-	virtual std::string usage_units(void) {return device->util_units();};
-	virtual int show_events(void) { return 0; };
+	virtual std::string description(void) override;
+	virtual std::string name(void) override { return "device"; };
+	virtual std::string type(void) override { return "Device"; };
+	virtual double Witts(void) override;
+	virtual double usage(void) override { return device->utilization();};
+	virtual std::string usage_units(void) override {return device->util_units();};
+	virtual int show_events(void) override { return 0; };
 };
 
 extern void all_devices_to_all_power(void);

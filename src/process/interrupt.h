@@ -42,12 +42,12 @@ public:
 	virtual void start_interrupt(uint64_t time);
 	virtual uint64_t end_interrupt(uint64_t time);
 
-	virtual std::string description(void);
+	virtual std::string description(void) override;
 
-	virtual std::string name(void) { return "interrupt"; };
-	virtual std::string type(void) { return "Interrupt"; };
-	virtual double usage_summary(void);
-	virtual std::string usage_units_summary(void);
+	virtual std::string name(void) override { return "interrupt"; };
+	virtual std::string type(void) override { return "Interrupt"; };
+	virtual double usage_summary(void) override;
+	virtual std::string usage_units_summary(void) override;
 };
 
 extern std::vector <class interrupt *> all_interrupts;

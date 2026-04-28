@@ -30,10 +30,10 @@
 class report_formatter_string_base: public report_formatter
 {
 public:
-	virtual std::string get_result();
-	virtual void clear_result();
+	virtual std::string get_result() override;
+	virtual void clear_result() override;
 
-	virtual void add(const std::string &str);
+	virtual void add(const std::string &str) override;
 
 protected:
 	void add_exact(const std::string &str);

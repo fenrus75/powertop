@@ -50,19 +50,19 @@ public:
 	std::string fill_freq_utilization(unsigned int idx);
 	std::string fill_freq_name(unsigned int idx);
 
-	virtual void start_measurement(void);
-	virtual void end_measurement(void);
+	virtual void start_measurement(void) override;
+	virtual void end_measurement(void) override;
 
-	virtual double	utilization(void); /* percentage */
+	virtual double	utilization(void) override; /* percentage */
 
-	virtual std::string class_name(void) { return "devfreq";};
+	virtual std::string class_name(void) override { return "devfreq";};
 
-	virtual std::string device_name(void) { return dir_name; };
-	virtual std::string human_name(void) { return "devfreq";};
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
-	virtual std::string util_units(void) { return " rpm"; };
-	virtual bool power_valid(void) { return false; /*utilization_power_valid(r_index);*/};
-	virtual int grouping_prio(void) { return 1; };
+	virtual std::string device_name(void) override { return dir_name; };
+	virtual std::string human_name(void) override { return "devfreq";};
+	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	virtual std::string util_units(void) override { return " rpm"; };
+	virtual bool power_valid(void) override { return false; /*utilization_power_valid(r_index);*/};
+	virtual int grouping_prio(void) override { return 1; };
 };
 
 extern void create_all_devfreq_devices(void);

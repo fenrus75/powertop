@@ -48,20 +48,20 @@ class report_formatter_csv: public report_formatter_string_base
 {
 public:
 	report_formatter_csv();
-	void finish_report();
+	void finish_report() override;
 
 	/* Report Style */
-	void add_logo();
-	void add_header();
-	void end_header();
-	void add_div(struct tag_attr *div_attr);
-	void end_div();
-	void add_title(struct tag_attr *title_att, const std::string &title);
-	void add_navigation();
-	void add_summary_list(const std::vector<std::string> &list);
-	void add_table(const std::vector<std::string> &system_data, struct table_attributes *tb_attr);private:
+	void add_logo() override;
+	void add_header() override;
+	void end_header() override;
+	void add_div(struct tag_attr *div_attr) override;
+	void end_div() override;
+	void add_title(struct tag_attr *title_att, const std::string &title) override;
+	void add_navigation() override;
+	void add_summary_list(const std::vector<std::string> &list) override;
+	void add_table(const std::vector<std::string> &system_data, struct table_attributes *tb_attr) override;private:
 	void add_quotes();
-	std::string escape_string(const std::string &str);
+	std::string escape_string(const std::string &str) override;
 	bool csv_need_quotes = false;
 	size_t text_start = 0;
 };

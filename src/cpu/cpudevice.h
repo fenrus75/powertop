@@ -46,14 +46,14 @@ protected:
 
 public:
 	cpudevice(const std::string &classname = "cpu", const std::string &device_name = "cpu0", class abstract_cpu *_cpu = NULL);
-	virtual std::string class_name(void) { return _class; };
+	virtual std::string class_name(void) override { return _class; };
 
-	virtual std::string device_name(void);
-	virtual std::string human_name(void);
+	virtual std::string device_name(void) override;
+	virtual std::string human_name(void) override;
 
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
-	virtual bool show_in_list(void) {return false;};
-	virtual double	utilization(void); /* percentage */
+	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	virtual bool show_in_list(void) override {return false;};
+	virtual double	utilization(void) override; /* percentage */
 	void add_child(device *dev_ptr) { child_devices.push_back(dev_ptr);}
 };
 

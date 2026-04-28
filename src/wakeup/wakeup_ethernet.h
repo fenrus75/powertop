@@ -34,11 +34,11 @@ public:
 	std::string interf;
 	ethernet_wakeup(const std::string &eth_path, const std::string &iface);
 
-	virtual int wakeup_value(void);
+	virtual int wakeup_value(void) override;
 
-	virtual void wakeup_toggle(void);
+	virtual void wakeup_toggle(void) override;
 
-	virtual std::string wakeup_toggle_script(void);
+	virtual std::string wakeup_toggle_script(void) override;
 
 };
 

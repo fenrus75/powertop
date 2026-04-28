@@ -29,9 +29,9 @@ class i2c_tunable : public tunable {
 public:
 	i2c_tunable(const std::string &path, const std::string &name, bool is_adapter);
 
-	virtual int good_bad(void);
+	virtual int good_bad(void) override;
 
-	virtual void toggle(void);
+	virtual void toggle(void) override;
 
 };
 

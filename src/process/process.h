@@ -58,12 +58,12 @@ public:
 
 	virtual void account_disk_dirty(void);
 
-	virtual std::string description(void);
-	virtual std::string name(void) { return "process"; };
-	virtual std::string type(void) { return "Process"; };
+	virtual std::string description(void) override;
+	virtual std::string name(void) override { return "process"; };
+	virtual std::string type(void) override { return "Process"; };
 
-	virtual double usage_summary(void);
-	virtual std::string usage_units_summary(void);
+	virtual double usage_summary(void) override;
+	virtual std::string usage_units_summary(void) override;
 
 };
 

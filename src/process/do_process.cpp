@@ -174,7 +174,7 @@ static void consume_blame(unsigned int cpu)
 
 class perf_process_bundle: public perf_bundle
 {
-	virtual void handle_trace_point(void *trace, int cpu, uint64_t time);
+	virtual void handle_trace_point(void *trace, int cpu, uint64_t time) override;
 };
 
 static bool comm_is_xorg(const std::string &comm)

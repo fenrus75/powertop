@@ -34,9 +34,9 @@ class runtime_tunable : public tunable {
 public:
 	runtime_tunable(const std::string &runtime_path, const std::string &bus, const std::string &dev, const std::string &port);
 
-	virtual int good_bad(void);
+	virtual int good_bad(void) override;
 
-	virtual void toggle(void);
+	virtual void toggle(void) override;
 
 };
 

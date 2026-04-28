@@ -19,10 +19,10 @@ class wakeup_window *newtab_window;
 
 class wakeup_window: public tab_window {
 public:
-	virtual void repaint(void);
-	virtual void cursor_enter(void);
-	virtual void expose(void);
-	virtual void window_refresh(void);
+	virtual void repaint(void) override;
+	virtual void cursor_enter(void) override;
+	virtual void expose(void) override;
+	virtual void window_refresh(void) override;
 };
 
 static void init_wakeup(void)

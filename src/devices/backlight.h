@@ -40,17 +40,17 @@ public:
 
 	backlight(const std::string &_name, const std::string &path);
 
-	virtual void start_measurement(void);
-	virtual void end_measurement(void);
+	virtual void start_measurement(void) override;
+	virtual void end_measurement(void) override;
 
-	virtual double	utilization(void); /* percentage */
+	virtual double	utilization(void) override; /* percentage */
 
-	virtual std::string class_name(void) { return "backlight";};
+	virtual std::string class_name(void) override { return "backlight";};
 
-	virtual std::string device_name(void) { return name; };
-	virtual std::string human_name(void) { return "Display backlight";};
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
-	virtual int grouping_prio(void) { return 10; };
+	virtual std::string device_name(void) override { return name; };
+	virtual std::string human_name(void) override { return "Display backlight";};
+	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	virtual int grouping_prio(void) override { return 10; };
 };
 
 extern void create_all_backlights(void);

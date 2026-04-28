@@ -34,9 +34,9 @@ class usb_tunable : public tunable {
 public:
 	usb_tunable(const std::string &usb_path, const std::string &path);
 
-	virtual int good_bad(void);
+	virtual int good_bad(void) override;
 
-	virtual void toggle(void);
+	virtual void toggle(void) override;
 
 };
 

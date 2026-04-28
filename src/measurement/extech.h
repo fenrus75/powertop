@@ -41,11 +41,11 @@ class extech_power_meter: public power_meter {
 	pthread_t thread;
 public:
 	extech_power_meter(const std::string &_dev_name);
-	virtual void start_measurement(void);
-	virtual void end_measurement(void);
+	virtual void start_measurement(void) override;
+	virtual void end_measurement(void) override;
 	virtual void sample(void);
 	
-	virtual double power(void);
-	virtual double dev_capacity(void) { return 0.0; };
+	virtual double power(void) override;
+	virtual double dev_capacity(void) override { return 0.0; };
 };
 

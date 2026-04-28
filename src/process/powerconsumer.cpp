@@ -37,6 +37,9 @@ double power_consumer::Witts(void)
 	double hard_disk_cost;
 	double xwake_cost;
 
+	if (measurement_time < 0.00001)
+		return 0.0;
+
 	if (child_runtime > accumulated_runtime)
 		child_runtime = 0;
 
@@ -80,6 +83,8 @@ power_consumer::power_consumer(void)
 double power_consumer::usage(void)
 {
 	double t;
+	if (measurement_time < 0.00001)
+		return 0.0;
 	t = (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time;
 	if (t < 0.7)
 		t = t * 1000;
@@ -89,6 +94,8 @@ double power_consumer::usage(void)
 std::string power_consumer::usage_units(void)
 {
 	double t;
+	if (measurement_time < 0.00001)
+		return "";
 	t = (accumulated_runtime - child_runtime) / 1000000.0 / measurement_time;
 	if (t < 0.7) {
 		if (utf_ok)

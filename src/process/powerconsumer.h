@@ -62,7 +62,7 @@ public:
 
 	virtual double usage_summary(void) { return usage();};
 	virtual std::string usage_units_summary(void) { return usage_units(); };
-	virtual double events(void) { return  (wake_ups + gpu_ops + hard_disk_hits) / measurement_time;};
+	virtual double events(void) { if (measurement_time < 0.00001) return 0.0; return  (wake_ups + gpu_ops + hard_disk_hits) / measurement_time;};
 	virtual int show_events(void) { return 1; };
 };
 

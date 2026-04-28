@@ -27,7 +27,6 @@
 #include "tunable.h"
 #include "unistd.h"
 #include "wifi.h"
-#include <string.h>
 #include <utility>
 #include <iostream>
 #include <fstream>
@@ -83,15 +82,16 @@ void add_wifi_tunables(void)
 	dir = opendir("/sys/class/net/");
 	if (!dir)
 		return;
-	while (1) {
+	while (true) {
 		entry = readdir(dir);
 		if (!entry)
 			break;
-		if (strstr(entry->d_name, "wlan")) {
-			wifi = new class wifi_tunable(entry->d_name);
-			all_tunables.push_back(wifi);
+		std::string name(entry->d_name);
+		if (name.starts_with("wlan") || name.starts_with("wlp") || name.starts_with("wlx")) {
+			wifi = new(std::nothrow) class wifi_tunable(name);
+			if (wifi)
+				all_tunables.push_back(wifi);
 		}
-	
 	}
 
 	closedir(dir);

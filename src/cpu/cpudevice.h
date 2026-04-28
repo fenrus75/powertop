@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_CPUDEVICE_H
-#define _INCLUDE_GUARD_CPUDEVICE_H
+#pragma once
 
 #include <vector>
 #include <string>
@@ -58,5 +57,3 @@ public:
 	void add_child(device *dev_ptr) { child_devices.push_back(dev_ptr);}
 };
 
-
-#endif

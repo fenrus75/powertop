@@ -22,8 +22,7 @@
  * Authors:
  *	Anssi Hannula <anssi.hannula@iki.fi>
  */
-#ifndef INCLUDE_GUARD_SYSFS_H
-#define INCLUDE_GUARD_SYSFS_H
+#pragma once
 
 #include "measurement.h"
 
@@ -50,4 +49,3 @@ public:
 	virtual double dev_capacity(void) { return capacity; }
 };
 
-#endif

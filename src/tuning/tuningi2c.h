@@ -17,8 +17,7 @@
  *	Daniel Leung <daniel.leung@linux.intel.com>
  */
 
-#ifndef _INCLUDE_GUARD_I2C_TUNE_H
-#define _INCLUDE_GUARD_I2C_TUNE_H
+#pragma once
 
 #include <vector>
 #include <limits.h>
@@ -38,5 +37,3 @@ public:
 
 extern void add_i2c_tunables(void);
 
-
-#endif

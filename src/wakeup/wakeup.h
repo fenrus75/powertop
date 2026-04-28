@@ -22,8 +22,7 @@
  * Authors:
  *      Gayatri Kammela <gayatri.kammela@intel.com>
  */
-#ifndef _INCLUDE_GUARD_WAKEUP_H
-#define _INCLUDE_GUARD_WAKEUP_H
+#pragma once
 
 #include<vector>
 #include <limits.h>
@@ -78,4 +77,3 @@ extern void wakeup_update_display(void);
 extern void report_show_wakeup(void);
 extern void clear_wakeup(void);
 
-#endif

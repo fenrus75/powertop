@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_PROCESS_H
-#define _INCLUDE_GUARD_PROCESS_H
+#pragma once
 
 #include <stdint.h>
 
@@ -92,4 +91,3 @@ extern void report_summary(void);
 
 extern void clear_timers(void);
 
-#endif

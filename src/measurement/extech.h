@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef __INCLUDE_GUARD_EXTECH_H
-#define __INCLUDE_GUARD_EXTECH_H
+#pragma once
 
 #include <pthread.h>
 #include "measurement.h"
@@ -47,4 +46,3 @@ public:
 	virtual double dev_capacity(void) { return 0.0; };
 };
 
-#endif

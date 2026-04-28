@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_RUNTIMEPM_H
-#define _INCLUDE_GUARD_RUNTIMEPM_H
+#pragma once
 
 #include <limits.h>
 #include <string>
@@ -63,5 +62,3 @@ extern void create_all_runtime_pm_devices(void);
 
 extern bool device_has_runtime_pm(const std::string &sysfs_path);
 
-
-#endif

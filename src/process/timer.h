@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_TIMER_H
-#define _INCLUDE_GUARD_TIMER_H
+#pragma once
 
 #include <stdint.h>
 
@@ -61,4 +60,3 @@ extern void all_timers_to_all_power(void);
 extern class timer * find_create_timer(uint64_t func);
 extern void clear_timers(void);
 
-#endif

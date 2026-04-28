@@ -22,8 +22,7 @@
  * Authors:
  *	Stewart Smith <stewart@linux.vnet.ibm.com>
  */
-#ifndef INCLUDE_GUARD_OPAL_SENSORS_H
-#define INCLUDE_GUARD_OPAL_SENSORS_H
+#pragma once
 
 #include "measurement.h"
 #include <limits.h>
@@ -38,4 +37,3 @@ public:
 	virtual double dev_capacity(void) { return 0.0; }
 };
 
-#endif

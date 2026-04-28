@@ -23,8 +23,7 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 
-#ifndef __INCLUDE_GUARD_CPUDEV_H
-#define __INCLUDE_GUARD_CPUDEV_H
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -225,4 +224,3 @@ extern void end_cpu_data(void);
 extern void clear_cpu_data(void);
 extern void clear_all_cpus(void);
 
-#endif

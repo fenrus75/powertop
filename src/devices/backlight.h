@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_BACKLIGHT_H
-#define _INCLUDE_GUARD_BACKLIGHT_H
+#pragma once
 
 #include <limits.h>
 #include <string>
@@ -56,5 +55,3 @@ public:
 
 extern void create_all_backlights(void);
 
-
-#endif

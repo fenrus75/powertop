@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_NETWORK_H
-#define _INCLUDE_GUARD_NETWORK_H
+#pragma once
 
 #include <sys/time.h>
 #include <limits.h>
@@ -83,4 +82,3 @@ public:
 
 extern void create_all_nics(callback fn = NULL);
 
-#endif

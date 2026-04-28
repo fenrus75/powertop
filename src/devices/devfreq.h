@@ -22,8 +22,7 @@
  * Authors:
  *	Rajagopal Venkat <rajagopal.venkat@linaro.org>
  */
-#ifndef _INCLUDE_GUARD_DEVFREQ_H
-#define _INCLUDE_GUARD_DEVFREQ_H
+#pragma once
 
 #include "device.h"
 #include "../parameters/parameters.h"
@@ -74,4 +73,3 @@ extern void initialize_devfreq(void);
 extern void start_devfreq_measurement(void);
 extern void end_devfreq_measurement(void);
 
-#endif

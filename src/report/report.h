@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef __INCLUDE_GUARD_REPORT_H_
-#define __INCLUDE_GUARD_REPORT_H_
+#pragma once
 
 #include <string>
 #include <stdio.h>
@@ -43,4 +42,3 @@ extern struct reportstream reportout;
 extern void init_report_output(const std::string &filename_str, int iterations);
 extern void finish_report_output(void);
 
-#endif

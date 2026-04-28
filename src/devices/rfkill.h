@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_RFKILL_H
-#define _INCLUDE_GUARD_RFKILL_H
+#pragma once
 
 #include <limits.h>
 #include <string>
@@ -59,5 +58,3 @@ public:
 
 extern void create_all_rfkills(void);
 
-
-#endif

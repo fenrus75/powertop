@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_DEVICE_H
-#define _INCLUDE_GUARD_DEVICE_H
+#pragma once
 
 
 #include <vector>
@@ -82,4 +81,3 @@ extern void report_devices(void);
 extern void create_all_devices(void);
 extern void clear_all_devices(void);
 
-#endif

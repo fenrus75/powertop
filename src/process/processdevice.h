@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_DEVICE2_H
-#define _INCLUDE_GUARD_DEVICE2_H
+#pragma once
 
 #include <stdint.h>
 
@@ -51,4 +50,3 @@ extern std::vector<class device_consumer *> all_proc_devices;
 
 extern void clear_proc_devices(void);
 
-#endif

@@ -23,8 +23,7 @@
  * Written by Igor Zhbanov <i.zhbanov@samsung.com>
  * 2012.10 */
 
-#ifndef _REPORT_MAKER_H_
-#define _REPORT_MAKER_H_
+#pragma once
 
 /* This report generator implements the following document structure:
  *	body
@@ -133,4 +132,4 @@ private:
 	report_type type;
 	report_formatter *formatter;
 };
-#endif /* _REPORT_MAKER_H_ */
+

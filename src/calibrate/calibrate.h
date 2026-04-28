@@ -22,11 +22,8 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef __INCLUDE_GUARD_CALIBRATE_H
-#define __INCLUDE_GUARD_CALIBRATE_H
+#pragma once
 
 extern void one_measurement(int seconds, int sample_interval, const std::string &workload);
 extern void calibrate(void);
 
-
-#endif

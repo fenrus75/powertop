@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_THINKPAD_FAN_H
-#define _INCLUDE_GUARD_THINKPAD_FAN_H
+#pragma once
 
 
 #include "device.h"
@@ -54,5 +53,3 @@ public:
 
 extern void create_thinkpad_fan(void);
 
-
-#endif

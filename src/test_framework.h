@@ -8,8 +8,7 @@
  * Free Software Foundation; version 2 of the License.
  */
 
-#ifndef _INCLUDE_GUARD_TEST_FRAMEWORK_H_
-#define _INCLUDE_GUARD_TEST_FRAMEWORK_H_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -101,4 +100,3 @@ private:
 #endif
 };
 
-#endif

@@ -23,8 +23,7 @@
  * Written by Igor Zhbanov <i.zhbanov@samsung.com>
  * 2012.10 */
 
-#ifndef _REPORT_FORMATTER_H_
-#define _REPORT_FORMATTER_H_
+#pragma once
 
 #include <vector>
 #include "report-maker.h"
@@ -54,4 +53,3 @@ public:
 			struct table_attributes *tb_attr __unused)     {}
 };
 
-#endif /* _REPORT_FORMATTER_H_ */

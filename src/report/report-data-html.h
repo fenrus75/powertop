@@ -1,5 +1,4 @@
-#ifndef PowerTop_REPORT_DATA_HTML_H_C58C116411234A34AC2EFB8D23A69713
-#define PowerTop_REPORT_DATA_HTML_H_C58C116411234A34AC2EFB8D23A69713
+#pragma once
 
 #include <string>
 #include <sstream>
@@ -71,4 +70,3 @@ init_wakeup_table_attr(struct table_attributes *table_css, int rows, int cols);
 std::string
 double_to_string(double dval);
 
-#endif

@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_PERF_H_
-#define _INCLUDE_GUARD_PERF_H_
+#pragma once
 
 #include <iostream>
 #include "../lib.h"
@@ -72,4 +71,3 @@ public:
 
 };
 
-#endif

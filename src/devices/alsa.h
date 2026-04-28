@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_ALSA_H
-#define _INCLUDE_GUARD_ALSA_H
+#pragma once
 
 
 #include "device.h"
@@ -63,5 +62,3 @@ public:
 
 extern void create_all_alsa(void);
 
-
-#endif

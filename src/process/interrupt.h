@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_INTERRUPT_H
-#define _INCLUDE_GUARD_INTERRUPT_H
+#pragma once
 
 #include <stdint.h>
 
@@ -59,4 +58,3 @@ extern class interrupt * find_create_interrupt(const std::string &_handler, int 
 extern void all_interrupts_to_all_power(void);
 extern void clear_interrupts(void);
 
-#endif

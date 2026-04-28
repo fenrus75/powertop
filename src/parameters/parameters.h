@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef __INCLUDE_GUARD_PARAMETERS_H_
-#define __INCLUDE_GUARD_PARAMETERS_H_
+#pragma once
 
 
 #include <map>
@@ -117,5 +116,3 @@ int global_power_valid(void);
 
 extern int global_power_override;
 
-
-#endif

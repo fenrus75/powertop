@@ -1,5 +1,4 @@
-#ifndef __LINUX_NL80211_H
-#define __LINUX_NL80211_H
+#pragma once
 /*
  * 802.11 netlink interface public header
  *
@@ -1894,4 +1893,3 @@ enum nl80211_tx_power_setting {
 	NL80211_TX_POWER_FIXED,
 };
 
-#endif /* __LINUX_NL80211_H */

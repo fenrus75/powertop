@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_AHCI_H
-#define _INCLUDE_GUARD_AHCI_H
+#pragma once
 
 
 #include <string>
@@ -68,5 +67,3 @@ public:
 extern void create_all_ahcis(void);
 extern void ahci_create_device_stats_table(void);
 
-
-#endif

@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_TUNABLE_H
-#define _INCLUDE_GUARD_TUNABLE_H
+#pragma once
 
 #include <vector>
 
@@ -87,4 +86,3 @@ public:
 extern std::vector<class tunable *> all_tunables;
 extern std::vector<class tunable *> all_untunables;
 
-#endif

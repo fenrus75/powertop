@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_BLUETOOTH_TUNE_H
-#define _INCLUDE_GUARD_BLUETOOTH_TUNE_H
+#pragma once
 
 #include <vector>
 
@@ -41,5 +40,3 @@ public:
 
 extern void add_bt_tunable(void);
 
-
-#endif

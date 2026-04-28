@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef __INCLUDE_GUARD_MEASUREMENT_H
-#define __INCLUDE_GUARD_MEASUREMENT_H
+#pragma once
 
 #include <vector>
 #include <string>
@@ -70,4 +69,3 @@ extern void extech_power_meter(const std::string &devnode);
 
 extern double min_power;
 
-#endif

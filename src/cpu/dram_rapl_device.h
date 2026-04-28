@@ -22,8 +22,7 @@
  * Authors:
  *	Srinivas Pandruvada <Srinivas.Pandruvada@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_DRAM_RAPL_DEVICE_H
-#define _INCLUDE_GUARD_DRAM_RAPL_DEVICE_H
+#pragma once
 
 #include <vector>
 #include <string>
@@ -52,5 +51,3 @@ public:
 
 };
 
-
-#endif

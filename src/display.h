@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef __INCLUDE_GUARD_DISPLAY_H_
-#define __INCLUDE_GUARD_DISPLAY_H_
+#pragma once
 
 
 #include <map>
@@ -93,4 +92,3 @@ WINDOW *get_ncurses_win(int nr);
 
 void create_tab(const std::string &name, const std::string &translation, class tab_window *w = NULL, std::string bottom_line = "");
 
-#endif

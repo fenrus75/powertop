@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef __INCLUDE_GUARD_ACPI_H
-#define __INCLUDE_GUARD_ACPI_H
+#pragma once
 
 #include "measurement.h"
 
@@ -41,4 +40,3 @@ public:
 	virtual double dev_capacity(void) { return capacity; };
 };
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef __INCLUDE_GUARD_DEVLIST_H__
-#define __INCLUDE_GUARD_DEVLIST_H__
+#pragma once
 
 #include <string>
 
@@ -26,4 +25,3 @@ extern void run_devpower_list(void);
 
 extern void report_show_open_devices(void);
 
-#endif

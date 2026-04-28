@@ -35,8 +35,7 @@
  *
  * For licencing details see kernel-base/COPYING
  */
-#ifndef _LINUX_PERF_EVENT_H
-#define _LINUX_PERF_EVENT_H
+#pragma once
 
 #include <linux/types.h>
 #include <linux/ioctl.h>
@@ -907,4 +906,3 @@ enum trace_flag_type {
 };
 #endif
 
-#endif /* _LINUX_PERF_EVENT_H */

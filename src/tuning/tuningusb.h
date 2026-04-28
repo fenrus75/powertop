@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_USB_TUNE_H
-#define _INCLUDE_GUARD_USB_TUNE_H
+#pragma once
 
 #include <vector>
 #include <limits.h>
@@ -43,5 +42,3 @@ public:
 
 extern void add_usb_tunables(void);
 
-
-#endif

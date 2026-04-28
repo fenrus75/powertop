@@ -1,5 +1,4 @@
-#ifndef PowerTop_INTEL_CPUS_H_84F09FB4F519470FA914AA9B02453221
-#define PowerTop_INTEL_CPUS_H_84F09FB4F519470FA914AA9B02453221
+#pragma once
 /*
  * Copyright 2010, Intel Corporation
  *
@@ -178,4 +177,3 @@ int byt_has_ahci();
 
 int is_intel_pstate_driver_loaded();
 
-#endif

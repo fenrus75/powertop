@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_WORK_H
-#define _INCLUDE_GUARD_WORK_H
+#pragma once
 
 #include <stdint.h>
 
@@ -54,4 +53,3 @@ extern class work * find_create_work(uint64_t func);
 
 extern void clear_work(void);
 
-#endif

@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_ETHERNET_TUNE_H
-#define _INCLUDE_GUARD_ETHERNET_TUNE_H
+#pragma once
 
 #include <vector>
 
@@ -42,4 +41,3 @@ public:
 
 extern void add_ethernet_tunable(void);
 
-#endif

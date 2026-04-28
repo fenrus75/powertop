@@ -22,12 +22,11 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_TUNING_H
-#define _INCLUDE_GUARD_TUNING_H
+#pragma once
 
 extern void initialize_tuning(void);
 extern void tuning_update_display(void);
 extern void report_show_tunables(void);
 extern void clear_tuning(void);
 extern void auto_toggle_tuning(bool dump_only);
-#endif
+

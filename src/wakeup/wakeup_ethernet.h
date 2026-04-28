@@ -22,8 +22,7 @@
  * Authors:
  *      Gayatri Kammela <gayatri.kammela@intel.com>
  */
-#ifndef _INCLUDE_GUARD_ETHERNET_WAKEUP_H
-#define _INCLUDE_GUARD_ETHERNET_WAKEUP_H
+#pragma once
 
 #include <vector>
 
@@ -45,4 +44,3 @@ public:
 
 extern void add_ethernet_wakeup(void);
 
-#endif

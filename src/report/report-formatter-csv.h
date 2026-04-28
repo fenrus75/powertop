@@ -23,8 +23,7 @@
  * Written by Igor Zhbanov <i.zhbanov@samsung.com>
  * 2012.10 */
 
-#ifndef _REPORT_FORMATTER_CSV_H_
-#define _REPORT_FORMATTER_CSV_H_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -67,4 +66,3 @@ public:
 	size_t text_start;
 };
 
-#endif /* _REPORT_FORMATTER_CSV_H_ */

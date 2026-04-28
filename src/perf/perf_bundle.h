@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_PERF_BUNDLE_H_
-#define _INCLUDE_GUARD_PERF_BUNDLE_H_
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -52,5 +51,3 @@ public:
 	virtual void handle_trace_point(void *trace, int cpu = 0, uint64_t time = 0);
 };
 
-
-#endif

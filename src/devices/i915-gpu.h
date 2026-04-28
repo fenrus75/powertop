@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_i915_GPU_H
-#define _INCLUDE_GUARD_i915_GPU_H
+#pragma once
 
 
 #include "device.h"
@@ -59,5 +58,3 @@ public:
 
 extern void create_i915_gpu(void);
 
-
-#endif

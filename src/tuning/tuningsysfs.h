@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef _INCLUDE_GUARD_SYSFS_TUNE_H
-#define _INCLUDE_GUARD_SYSFS_TUNE_H
+#pragma once
 
 #include <vector>
 #include <limits.h>
@@ -46,4 +45,3 @@ public:
 extern void add_sysfs_tunable(const std::string &str, const std::string &_sysfs_path, const std::string &_target_content);
 extern void add_sata_tunables(void);
 
-#endif

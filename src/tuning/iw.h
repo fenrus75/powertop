@@ -1,5 +1,4 @@
-#ifndef __IW_H
-#define __IW_H
+#pragma once
 
 /*
  * This code has been blatently stolen from
@@ -74,4 +73,3 @@ int set_wifi_power_saving(const char *iface, int state);
 }
 #endif
 
-#endif /* __IW_H */

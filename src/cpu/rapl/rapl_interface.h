@@ -21,8 +21,7 @@
  *
  */
 
-#ifndef RAPL_INTERFACE_H
-#define RAPL_INTERFACE_H
+#pragma once
 
 class c_rapl_interface
 {
@@ -88,4 +87,3 @@ public:
 	void rapl_measure_energy();
 };
 
-#endif

@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef INCLUDE_GUARD_LIB_H
-#define INCLUDE_GUARD_LIB_H
+#pragma once
 
 #define __unused __attribute__((unused))
 
@@ -114,4 +113,3 @@ extern void (*ui_notify_user) (const std::string &msg);
 
 #endif /* __cplusplus */
 
-#endif /* INCLUDE_GUARD_LIB_H */

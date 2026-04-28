@@ -66,7 +66,7 @@ timer::timer(unsigned long address) : power_consumer()
 }
 
 
-static std::map<unsigned long, class timer *> all_timers;
+static std::map<uint64_t, class timer *> all_timers;
 static std::map<unsigned long, uint64_t> running_since;
 
 void timer::fire(uint64_t time, uint64_t timer_struct)
@@ -139,7 +139,7 @@ class timer * find_create_timer(uint64_t func)
 
 void clear_timers(void)
 {
-	std::map<unsigned long, class timer *>::iterator it = all_timers.begin();
+	std::map<uint64_t, class timer *>::iterator it = all_timers.begin();
 	while (it != all_timers.end()) {
 		delete it->second;
 		all_timers.erase(it);

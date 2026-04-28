@@ -104,7 +104,7 @@ process::process(const std::string &_comm, int _pid, int _tid) : power_consumer(
 					size_t pos = line.find(':');
 					if (pos != std::string::npos) {
 						try {
-							tgid = std::stoull(line.substr(pos + 1));
+							tgid = std::stoi(line.substr(pos + 1));
 						} catch (...) {}
 						break;
 					}

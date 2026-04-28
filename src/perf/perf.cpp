@@ -225,6 +225,8 @@ void perf_event::start(void)
 void perf_event::stop(void)
 {
 	int ret;
+	if (perf_fd < 0)
+		return;
 	ret = ioctl(perf_fd, PERF_EVENT_IOC_DISABLE, 0);
 	if (ret)
 		fprintf(stderr, _("stop failing\n"));

@@ -48,7 +48,7 @@ protected:
 	void create_perf_event(const std::string &eventname, int cpu);
 
 public:
-	unsigned int trace_type = 0;
+	int trace_type = 0;
 
 	perf_event(void);
 	perf_event(const std::string &system_name, const std::string &event_name, int cpu = 0, int buffer_size = 128);

@@ -134,8 +134,10 @@ void load_results(const std::string &filename)
 		} catch (...) {}
 	}
 
+	delete bundle;   /* always discard last-allocated but unsaved bundle */
+
 	if (bundle_saved == 0)
-		delete bundle;
+		return;
 
 	// '%i" is for count, do not translate
 	fprintf(stderr, _("Loaded %i prior measurements\n"), (int)count);

@@ -118,6 +118,8 @@ void perf_event::create_perf_event(const std::string &eventname __unused, int _c
 				PROT_READ | PROT_WRITE, MAP_SHARED, perf_fd, 0);
 	if (perf_mmap == MAP_FAILED) {
 		fprintf(stderr, "failed to mmap with %d (%s)\n", errno, strerror(errno));
+		close(perf_fd);
+		perf_fd = -1;
 		return;
 	}
 
@@ -198,6 +200,8 @@ perf_event::perf_event(const std::string &system_name, const std::string &event_
 	bufsize = buffer_size;
 	cpu = _cpu;
 	perf_mmap = NULL;
+	pc = nullptr;
+	data_mmap = nullptr;
 	trace_type = 0;
 	set_event_name(system_name, event_name);
 }
@@ -208,6 +212,8 @@ perf_event::perf_event(void)
 	perf_fd = -1;
 	bufsize = 128;
 	perf_mmap = NULL;
+	pc = nullptr;
+	data_mmap = nullptr;
 	cpu = 0;
 	trace_type = 0;
 }

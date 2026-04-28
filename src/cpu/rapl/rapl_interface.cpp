@@ -377,7 +377,7 @@ int c_rapl_interface::get_dram_energy_status(double *status)
 	if (powercap_sysfs_present) {
 		std::string str = read_sysfs_string(powercap_dram_path + "energy_uj");
 		if (str.length() > 0) {
-			*status =  atof(str.c_str()) / 1000000; // uj to Js
+			try { *status = std::stod(str) / 1000000; } catch (...) { return -EINVAL; } // uj to Js
 			return 0;
 		}
 
@@ -468,7 +468,7 @@ int c_rapl_interface::get_pp0_energy_status(double *status)
 	if (powercap_sysfs_present) {
 		std::string str = read_sysfs_string(powercap_core_path + "energy_uj");
 		if (str.length() > 0) {
-			*status = atof(str.c_str()) / 1000000; // uj to Js
+			try { *status = std::stod(str) / 1000000; } catch (...) { return -EINVAL; } // uj to Js
 			return 0;
 		}
 
@@ -556,7 +556,7 @@ int c_rapl_interface::get_pp1_energy_status(double *status)
 	if (powercap_sysfs_present) {
 		std::string str = read_sysfs_string(powercap_uncore_path + "energy_uj");
 		if (str.length() > 0) {
-			*status =  atof(str.c_str()) / 1000000; // uj to Js
+			try { *status = std::stod(str) / 1000000; } catch (...) { return -EINVAL; } // uj to Js
 			return 0;
 		}
 

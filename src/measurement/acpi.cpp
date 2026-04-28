@@ -24,14 +24,8 @@
  */
 #include "measurement.h"
 #include "acpi.h"
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
 #include "../lib.h"
+#include <format>
 
 acpi_power_meter::acpi_power_meter(const std::string &acpi_name) : power_meter(acpi_name)
 {
@@ -40,130 +34,33 @@ acpi_power_meter::acpi_power_meter(const std::string &acpi_name) : power_meter(a
 	voltage = 0.0;
 }
 
-/*
-present:                 yes
-capacity state:          ok
-charging state:          discharging
-present rate:            8580 mW
-remaining capacity:      34110 mWh
-present voltage:         12001 mV
-*/
-
 void acpi_power_meter::measure(void)
 {
-	std::string filename;
-	std::string content;
-	std::istringstream stream;
-	std::string line;
+	rate = 0.0;
+	voltage = 0.0;
+	capacity = 0.0;
 
-	double _rate = 0;
-	double _capacity = 0;
-	double _voltage = 0;
+	std::string base = std::format("/sys/class/power_supply/{}/", name);
 
-	std::string rate_units = "Unknown";
-	std::string capacity_units = "Unknown";
-	std::string voltage_units = "Unknown";
-
-
-	rate = 0;
-	voltage = 0;
-	capacity = 0;
-
-	filename = std::format("/proc/acpi/battery/{}/state", name);
-	content = read_file_content(filename);
-	if (content.empty())
+	std::string status = read_sysfs_string(base + "status");
+	if (status != "Discharging")
 		return;
 
-	stream.str(content);
-
-	while (std::getline(stream, line)) {
-		if (line.find("present:") != std::string::npos && line.find("yes") == std::string::npos) {
-			return;
-		}
-		if (line.find("charging state:") != std::string::npos && line.find("discharging") == std::string::npos) {
-			return; /* not discharging */
-		}
-		if (line.find("present rate:") != std::string::npos) {
-			size_t pos = line.find(':');
-			if (pos != std::string::npos) {
-				std::istringstream iss(line.substr(pos + 1));
-				iss >> _rate >> rate_units;
-			}
-		}
-		if (line.find("remaining capacity:") != std::string::npos) {
-			size_t pos = line.find(':');
-			if (pos != std::string::npos) {
-				std::istringstream iss(line.substr(pos + 1));
-				iss >> _capacity >> capacity_units;
-			}
-		}
-		if (line.find("present voltage:") != std::string::npos) {
-			size_t pos = line.find(':');
-			if (pos != std::string::npos) {
-				std::istringstream iss(line.substr(pos + 1));
-				iss >> _voltage >> voltage_units;
-			}
-		}
+	/* Try direct power_now (µW → W) */
+	std::string pw = read_sysfs_string(base + "power_now");
+	if (!pw.empty()) {
+		try { rate = std::stod(pw) / 1000000.0; } catch (...) {}
+		return;
 	}
 
-	/* BIOS report random crack-inspired units. Lets try to get to the Si-system units */
-
-	if (voltage_units == "mV") {
-		_voltage = _voltage / 1000.0;
-		voltage_units = "V";
+	/* Fall back to current_now (µA) × voltage_now (µV) → W */
+	std::string cv = read_sysfs_string(base + "current_now");
+	std::string vv = read_sysfs_string(base + "voltage_now");
+	if (!cv.empty() && !vv.empty()) {
+		try {
+			rate = (std::stod(cv) * std::stod(vv)) / 1e12;
+		} catch (...) {}
 	}
-
-	if (rate_units == "mW") {
-		_rate = _rate / 1000.0;
-		rate_units = "W";
-	}
-
-	if (rate_units == "mA") {
-		_rate = _rate / 1000.0;
-		rate_units = "A";
-	}
-
-	if (capacity_units == "mAh") {
-		_capacity = _capacity / 1000.0;
-		capacity_units = "Ah";
-	}
-	if (capacity_units == "mWh") {
-		_capacity = _capacity / 1000.0;
-		capacity_units = "Wh";
-	}
-	if (capacity_units == "Wh") {
-		_capacity = _capacity * 3600.0;
-		capacity_units = "J";
-	}
-
-
-	if (capacity_units == "Ah" && voltage_units == "V") {
-		_capacity = _capacity * 3600.0 * _voltage;
-		capacity_units = "J";
-	}
-
-	if (rate_units == "A" && voltage_units == "V") {
-		_rate = _rate * _voltage;
-		rate_units = "W";
-	}
-
-
-
-
-	if (capacity_units == "J")
-		capacity = _capacity;
-	else
-		capacity = 0.0;
-
-	if (rate_units == "W")
-		rate = _rate;
-	else
-		rate = 0.0;
-
-	if (voltage_units == "V")
-		voltage = _voltage;
-	else
-		voltage = 0.0;
 }
 
 

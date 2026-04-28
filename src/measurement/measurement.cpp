@@ -171,9 +171,6 @@ void detect_power_meters(void)
 {
 	process_directory("/sys/class/power_supply", sysfs_power_meters_callback);
 	process_glob("/sys/devices/platform/opal-sensor/hwmon/hwmon*/power*", sysfs_opal_sensors_callback);
-	if (power_meters.size() == 0) {
-		process_directory("/proc/acpi/battery", acpi_power_meters_callback);
-	}
 }
 
 void extech_power_meter(const std::string &devnode)

@@ -211,7 +211,7 @@ static int parse_packet(struct packet * p)
 	 * Fifth character in 5 character block should be '03'
 	 */
 	for (i = 0; i < 4; i++) {
-		if (p->buf[i * 0] != 2 || p->buf[i * 0 + 4] != 3) {
+		if (p->buf[i * 5] != 2 || p->buf[i * 5 + 4] != 3) {
 			printf("Invalid packet\n");
 			return -1;
 		}

@@ -1,6 +1,9 @@
 This repository is for PowerTOP, a linux tool to find the sources of power
 consumption in a system.
 
+Do **NOT** update this file to record the results of code review or fixes
+for code review comments!
+
 The code review rules for this project are in `review/review.md` and this
 includes a style guide.
 
@@ -16,23 +19,6 @@ The process for working on this codebase always consists for 4 steps
 
 Also read `review/tools.md` when you're asked to use the various
 tooling to create and manipulate test data.
-
-# Code style notes
-
-- All 59 header files now use `#pragma once` instead of `#ifndef`/`#define`/`#endif` include guards (commit 17c3046).
-
-- `using namespace std;` has been removed from all 50 source files (commit 41e0502).
-  All bare STL names (string, vector, map, cout, etc.) have been explicitly qualified
-  with std:: throughout the codebase (commit cb42d45). The build is now clean.
-
-# C++ style notes (additional)
-
-- All virtual method overrides now have the `override` specifier (commit c4ab4f1).
-  271 methods across 44 files were updated. The `-Wsuggest-override` flag is already
-  in meson.build (line 304) to enforce this going forward.
-  A Python script pattern was used: iterate over {filename: [line_numbers]} dict,
-  apply `add_override()` per line — insert `override` before `{` (inline body) or
-  before `;` (declaration), tracking parenthesis depth to find the correct `{`.
 
 # Prefered user style
 

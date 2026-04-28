@@ -205,7 +205,7 @@ static void *burn_cpu_wakeups(void *dummy)
 
 	while (!stop_measurement) {
 		tm.tv_sec = 0;
-		tm.tv_nsec = (unsigned long)dummy;
+		tm.tv_nsec = (unsigned long)(uintptr_t)dummy;
 		nanosleep(&tm, nullptr);
 	}
 	return nullptr;
@@ -245,7 +245,10 @@ static void cpu_calibration(int threads)
 	stop_measurement = 0;
 	for (i = 0; i < threads; i++) {
 		pthread_t thr;
-		pthread_create(&thr, nullptr, burn_cpu, nullptr);
+		if (pthread_create(&thr, nullptr, burn_cpu, nullptr) != 0) {
+			fprintf(stderr, _("Failed to create calibration thread\n"));
+			return;
+		}
 		thr_vec.push_back(thr);
 	}
 
@@ -264,7 +267,10 @@ static void wakeup_calibration(unsigned long interval)
 
 	stop_measurement = 0;
 
-	pthread_create(&thr, nullptr, burn_cpu_wakeups, (void *)interval);
+	if (pthread_create(&thr, nullptr, burn_cpu_wakeups, (void *)(uintptr_t)interval) != 0) {
+		fprintf(stderr, _("Failed to create wakeup calibration thread\n"));
+		return;
+	}
 
 	one_measurement(15, 15, "");
 	stop_measurement = 1;
@@ -370,7 +376,10 @@ static void disk_calibration(void)
 	set_scsi_link("min_power");
 
 	stop_measurement = 0;
-	pthread_create(&thr, nullptr, burn_disk, nullptr);
+	if (pthread_create(&thr, nullptr, burn_disk, nullptr) != 0) {
+		fprintf(stderr, _("Failed to create disk calibration thread\n"));
+		return;
+	}
 
 	one_measurement(15, 15, "");
 	stop_measurement = 1;

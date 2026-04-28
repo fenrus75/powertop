@@ -419,8 +419,6 @@ static void powertop_init(int auto_tune)
 	register_parameter("disk-operations", 0.0);
 	register_parameter("xwakes", 0.1);
 
-        load_parameters("saved_parameters.powertop");
-
 	initialized = 1;
 }
 
@@ -471,7 +469,7 @@ int main(int argc, char **argv)
 			case 'c':
 				powertop_init(0);
 				calibrate();
-				break;
+				exit(0);
 			case 'C':		/* csv report */
 				reporttype = REPORT_CSV;
 				filename = optarg ? optarg : "powertop.csv";

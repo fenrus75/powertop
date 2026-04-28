@@ -22,8 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#ifndef __INCLUDE_GUARD_POWER_CONSUMER_
-#define __INCLUDE_GUARD_POWER_CONSUMER_
+#pragma once
 
 #include <stdint.h>
 #include <vector>
@@ -74,5 +73,3 @@ extern double total_cpu_time(void);
 extern double total_gpu_ops(void);
 
 
-
-#endif

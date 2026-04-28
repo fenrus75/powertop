@@ -259,8 +259,6 @@ double ahci::power_usage(struct result_bundle *result, struct parameter_bundle *
 void ahci_create_device_stats_table(void)
 {
 	unsigned int i;
-	int cols=0;
-	int rows=0;
 
 	/* div attr css_class and css_id */
 	tag_attr div_attr;
@@ -281,8 +279,8 @@ void ahci_create_device_stats_table(void)
 
 	/* Set Table attributes, rows, and cols */
 	table_attributes std_table_css;
-	cols=5;
-	rows=links.size()+1;
+	int cols = 5;
+	int rows = static_cast<int>(links.size()) + 1;
 	init_std_side_table_attr(&std_table_css, rows, cols);
 
 

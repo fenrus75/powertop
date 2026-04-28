@@ -260,7 +260,8 @@ static int __handle_cmd(struct nl80211_state *state, const char *iface, int get)
 	return err;
  nla_put_failure:
 	fprintf(stderr, "building message failed\n");
-	return 2;
+	err = 2;
+	goto out;
 }
 
 

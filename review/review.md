@@ -61,7 +61,7 @@ Suggested fix: <proposed fix, if any. leave out if none>
 ...
 ## Medium severity items
 
-## Low severity itemms
+## Low severity items
 
 ## Nit sevirty items
 

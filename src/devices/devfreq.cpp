@@ -70,6 +70,9 @@ void devfreq::process_time_stamps()
 	unsigned int i;
 	uint64_t active_time = 0;
 
+	if (dstates.empty())
+		return;
+
 	sample_time = (1000000.0 * (stamp_after.tv_sec - stamp_before.tv_sec))
 			+ ((stamp_after.tv_usec - stamp_before.tv_usec) );
 

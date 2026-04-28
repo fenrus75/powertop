@@ -42,13 +42,16 @@ gpu_rapl_device::gpu_rapl_device(i915gpu *parent)
 
 void gpu_rapl_device::start_measurement(void)
 {
+	if (!device_valid)
+		return;
 	last_time = time(nullptr);
-
 	rapl.get_pp1_energy_status(&last_energy);
 }
 
 void gpu_rapl_device::end_measurement(void)
 {
+	if (!device_valid)
+		return;
 	time_t		curr_time = time(nullptr);
 	double energy;
 

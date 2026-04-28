@@ -60,9 +60,7 @@ public:
 	void add_navigation() override;
 	void add_summary_list(const std::vector<std::string> &list) override;
 	void add_table(const std::vector<std::string> &system_data, struct table_attributes *tb_attr) override;private:
-	void add_quotes();
 	std::string escape_string(const std::string &str) override;
 	bool csv_need_quotes = false;
-	size_t text_start = 0;
 };
 

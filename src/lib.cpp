@@ -261,7 +261,7 @@ struct timeval pt_gettime(void)
 		test_framework_manager::get().replay_time(&tv);
 		return tv;
 	}
-	gettimeofday(&tv, NULL);
+	gettimeofday(&tv, nullptr);
 	if (test_framework_manager::get().is_recording()) {
 		test_framework_manager::get().record_time(tv);
 	}
@@ -273,13 +273,13 @@ void align_string(std::string &str, size_t min_sz, size_t max_sz)
 	size_t sz;
 	const char *buffer = str.c_str();
 
-	/** mbsrtowcs() allows NULL dst and zero sz,
+	/** mbsrtowcs() allows nullptr dst and zero sz,
 	 * comparing to mbstowcs(), which causes undefined
 	 * behaviour under given circumstances*/
 
 	/* start with mbsrtowcs() local mbstate_t * and
-	 * NULL dst pointer*/
-	sz = mbsrtowcs(NULL, &buffer, max_sz, NULL);
+	 * nullptr dst pointer*/
+	sz = mbsrtowcs(nullptr, &buffer, max_sz, nullptr);
 	if (sz == (size_t)-1) {
 		return;
 	}
@@ -463,7 +463,7 @@ void process_glob(const std::string &d_glob, callback fn)
 	glob_t g;
 	size_t c;
 
-	switch (glob(d_glob.c_str(), GLOB_ERR | GLOB_MARK | GLOB_NOSORT, NULL, &g)) {
+	switch (glob(d_glob.c_str(), GLOB_ERR | GLOB_MARK | GLOB_NOSORT, nullptr, &g)) {
 	case GLOB_NOSPACE:
 		fprintf(stderr,_("glob returned GLOB_NOSPACE\n"));
 		globfree(&g);

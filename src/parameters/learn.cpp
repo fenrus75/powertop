@@ -158,7 +158,7 @@ void learn_parameters(int iterations, int do_base_power)
 	if (do_base_power && !debug_learning)
 		best_so_far->parameters[bpi] = best_so_far->parameters[bpi] * 0.9998;
 
-	start = time(NULL);
+	start = time(nullptr);
 
 	while (retry--) {
 		int changed  = 0;
@@ -169,7 +169,7 @@ void learn_parameters(int iterations, int do_base_power)
 
 		bestparam = -1;
 
-		if (time(NULL) - start > 1 && !debug_learning)
+		if (time(nullptr) - start > 1 && !debug_learning)
 			retry = 0;
 
 		calculate_params(best_so_far);

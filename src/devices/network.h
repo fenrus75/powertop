@@ -80,5 +80,5 @@ public:
 	virtual int grouping_prio(void) override { return 10; };
 };
 
-extern void create_all_nics(callback fn = NULL);
+extern void create_all_nics(callback fn = nullptr);
 

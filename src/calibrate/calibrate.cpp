@@ -196,7 +196,7 @@ static void *burn_cpu(void *dummy __unused)
 	while (!stop_measurement) {
 		d = pow(d, 1.0001);
 	}
-	return NULL;
+	return nullptr;
 }
 
 static void *burn_cpu_wakeups(void *dummy)
@@ -206,9 +206,9 @@ static void *burn_cpu_wakeups(void *dummy)
 	while (!stop_measurement) {
 		tm.tv_sec = 0;
 		tm.tv_nsec = (unsigned long)dummy;
-		nanosleep(&tm, NULL);
+		nanosleep(&tm, nullptr);
 	}
-	return NULL;
+	return nullptr;
 }
 
 static void *burn_disk(void *dummy __unused)
@@ -221,7 +221,7 @@ static void *burn_disk(void *dummy __unused)
 
 	if (fd < 0) {
 		printf(_("Cannot create temp file\n"));
-		return NULL;
+		return nullptr;
 	}
 
 	while (!stop_measurement) {
@@ -231,7 +231,7 @@ static void *burn_disk(void *dummy __unused)
 		fdatasync(fd);
 	}
 	unlink(filename);
-	return NULL;
+	return nullptr;
 }
 
 
@@ -245,7 +245,7 @@ static void cpu_calibration(int threads)
 	stop_measurement = 0;
 	for (i = 0; i < threads; i++) {
 		pthread_t thr;
-		pthread_create(&thr, NULL, burn_cpu, NULL);
+		pthread_create(&thr, nullptr, burn_cpu, nullptr);
 		thr_vec.push_back(thr);
 	}
 
@@ -253,7 +253,7 @@ static void cpu_calibration(int threads)
 	stop_measurement = 1;
 	sleep(1);
 	for (auto &thr : thr_vec)
-		pthread_join(thr, NULL);
+		pthread_join(thr, nullptr);
 }
 
 static void wakeup_calibration(unsigned long interval)
@@ -264,12 +264,12 @@ static void wakeup_calibration(unsigned long interval)
 
 	stop_measurement = 0;
 
-	pthread_create(&thr, NULL, burn_cpu_wakeups, (void *)interval);
+	pthread_create(&thr, nullptr, burn_cpu_wakeups, (void *)interval);
 
 	one_measurement(15, 15, "");
 	stop_measurement = 1;
 	sleep(1);
-	pthread_join(thr, NULL);
+	pthread_join(thr, nullptr);
 }
 
 static void usb_calibration(void)
@@ -370,12 +370,12 @@ static void disk_calibration(void)
 	set_scsi_link("min_power");
 
 	stop_measurement = 0;
-	pthread_create(&thr, NULL, burn_disk, NULL);
+	pthread_create(&thr, nullptr, burn_disk, nullptr);
 
 	one_measurement(15, 15, "");
 	stop_measurement = 1;
 	sleep(1);
-	pthread_join(thr, NULL);
+	pthread_join(thr, nullptr);
 
 
 }

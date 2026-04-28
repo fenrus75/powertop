@@ -36,7 +36,7 @@ cpu_rapl_device::cpu_rapl_device(cpudevice *parent, const std::string &classname
 		rapl = new c_rapl_interface(dev_name, cpu->get_first_cpu());
 	else
 		rapl = new c_rapl_interface();
-	last_time = time(NULL);
+	last_time = time(nullptr);
 	if (rapl->pp0_domain_present()) {
 		device_valid = true;
 		parent->add_child(this);
@@ -46,14 +46,14 @@ cpu_rapl_device::cpu_rapl_device(cpudevice *parent, const std::string &classname
 
 void cpu_rapl_device::start_measurement(void)
 {
-	last_time = time(NULL);
+	last_time = time(nullptr);
 
 	rapl->get_pp0_energy_status(&last_energy);
 }
 
 void cpu_rapl_device::end_measurement(void)
 {
-	time_t		curr_time = time(NULL);
+	time_t		curr_time = time(nullptr);
 	double energy;
 
 	consumed_power = 0.0;

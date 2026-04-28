@@ -114,7 +114,7 @@ void perf_event::create_perf_event(const std::string &eventname __unused, int _c
 
 	fcntl(perf_fd, F_SETFL, O_NONBLOCK);
 
-	perf_mmap = mmap(NULL, (bufsize+1)*getpagesize(),
+	perf_mmap = mmap(nullptr, (bufsize+1)*getpagesize(),
 				PROT_READ | PROT_WRITE, MAP_SHARED, perf_fd, 0);
 	if (perf_mmap == MAP_FAILED) {
 		fprintf(stderr, "failed to mmap with %d (%s)\n", errno, strerror(errno));
@@ -140,7 +140,7 @@ static int parse_event_format(const std::string &system_name, const std::string 
 	char *buf;
 	int size;
 
-	buf = tracefs_event_file_read(NULL, system_name.c_str(), event_name.c_str(), "format", &size);
+	buf = tracefs_event_file_read(nullptr, system_name.c_str(), event_name.c_str(), "format", &size);
 	if (!buf)
 		return -1;
 
@@ -175,7 +175,7 @@ perf_event::~perf_event(void)
 	clear();
 	if (tep_get_ref(perf_event::tep) == 1) {
 		tep_free(perf_event::tep);
-		perf_event::tep = NULL;
+		perf_event::tep = nullptr;
 	} else
 		tep_unref(perf_event::tep);
 }
@@ -199,7 +199,7 @@ perf_event::perf_event(const std::string &system_name, const std::string &event_
 	perf_fd = -1;
 	bufsize = buffer_size;
 	cpu = _cpu;
-	perf_mmap = NULL;
+	perf_mmap = nullptr;
 	pc = nullptr;
 	data_mmap = nullptr;
 	trace_type = 0;
@@ -211,7 +211,7 @@ perf_event::perf_event(void)
 	allocate_tep();
 	perf_fd = -1;
 	bufsize = 128;
-	perf_mmap = NULL;
+	perf_mmap = nullptr;
 	pc = nullptr;
 	data_mmap = nullptr;
 	cpu = 0;
@@ -266,7 +266,7 @@ void perf_event::clear(void)
 	if (perf_mmap) {
 //		memset(perf_mmap, 0, (bufsize)*getpagesize());
 		munmap(perf_mmap, (bufsize+1)*getpagesize());
-		perf_mmap = NULL;
+		perf_mmap = nullptr;
 	}
 	if (perf_fd != -1)
 		close(perf_fd);

@@ -86,8 +86,8 @@ void reset_display(void)
 }
 
 
-WINDOW *tab_bar = NULL;
-WINDOW *bottom_line = NULL;
+WINDOW *tab_bar = nullptr;
+WINDOW *bottom_line = nullptr;
 
 static int current_tab;
 
@@ -104,12 +104,12 @@ void show_tab(unsigned int tab)
 		return;
 
 	if (tab_bar) {
-		tab_bar = NULL;
+		tab_bar = nullptr;
 	}
 
 	if (bottom_line) {
 		delwin(bottom_line);
-		bottom_line = NULL;
+		bottom_line = nullptr;
 	}
 
 	tab_bar = newwin(1, 0, 0, 0);
@@ -159,11 +159,11 @@ WINDOW *get_ncurses_win(const std::string &name)
 	WINDOW *win;
 
 	if (tab_windows.count(name) == 0)
-		return NULL;
+		return nullptr;
 
 	w = tab_windows[name];
 	if (!w)
-		return NULL;
+		return nullptr;
 
 	win = w->win;
 
@@ -176,11 +176,11 @@ WINDOW *get_ncurses_win(int nr)
 	WINDOW *win;
 
 	if (nr < 0 || nr >= (int)tab_names.size())
-		return NULL;
+		return nullptr;
 
 	w = tab_windows[tab_names[nr]];
 	if (!w)
-		return NULL;
+		return nullptr;
 
 	win = w->win;
 

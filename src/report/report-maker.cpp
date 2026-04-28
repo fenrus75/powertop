@@ -38,7 +38,7 @@
 report_maker::report_maker(report_type t)
 {
 	type = t;
-	formatter = NULL;
+	formatter = nullptr;
 	setup_report_formatter();
 	clear_result(); /* To reset state and add document header */
 }

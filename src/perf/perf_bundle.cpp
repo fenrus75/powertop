@@ -242,7 +242,7 @@ static void fixup_sample_trace_cpu(struct perf_sample *sample)
 	if (!event)
 		return;
 	/** don't touch trace if event does not contain cpu_id field*/
-	ret = tep_get_field_val(NULL, event, "cpu_id", &rec, &cpu_nr, 0);
+	ret = tep_get_field_val(nullptr, event, "cpu_id", &rec, &cpu_nr, 0);
 	if (ret < 0)
 		return;
 	sample->trace.cpu = cpu_nr;

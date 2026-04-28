@@ -89,8 +89,8 @@ process::process(const std::string &_comm, int _pid, int _tid) : power_consumer(
 	pid = _pid;
 	is_idle = 0;
 	running = 0;
-	last_waker = NULL;
-	waker = NULL;
+	last_waker = nullptr;
+	waker = nullptr;
 	is_kernel = 0;
 	tgid = _tid;
 

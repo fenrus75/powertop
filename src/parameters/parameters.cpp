@@ -299,7 +299,7 @@ struct result_bundle * clone_results(struct result_bundle *bundle)
 	b2 = new struct result_bundle;
 
 	if (!b2)
-		return NULL;
+		return nullptr;
 
 	b2->power = bundle->power;
 	b2->utilization.resize(bundle->utilization.size());
@@ -320,7 +320,7 @@ struct parameter_bundle * clone_parameters(struct parameter_bundle *bundle)
 	b2 = new struct parameter_bundle;
 
 	if (!b2)
-		return NULL;
+		return nullptr;
 
 	b2->score = 0;
 	b2->guessed_power = 0;

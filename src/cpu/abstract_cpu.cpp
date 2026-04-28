@@ -48,7 +48,7 @@ abstract_cpu::~abstract_cpu()
 
 void abstract_cpu::account_freq(uint64_t freq, uint64_t duration)
 {
-	class frequency *state = NULL;
+	class frequency *state = nullptr;
 	unsigned int i;
 
 	for (i = 0; i < pstates.size(); i++) {
@@ -262,7 +262,7 @@ void abstract_cpu::insert_cstate(const std::string &linux_name, const std::strin
 void abstract_cpu::finalize_cstate(const std::string &linux_name, uint64_t usage, uint64_t duration, int count)
 {
 	unsigned int i;
-	struct idle_state *state = NULL;
+	struct idle_state *state = nullptr;
 
 	for (i = 0; i < cstates.size(); i++) {
 		if (cstates[i]->linux_name == linux_name) {
@@ -284,7 +284,7 @@ void abstract_cpu::finalize_cstate(const std::string &linux_name, uint64_t usage
 void abstract_cpu::update_cstate(const std::string &linux_name, const std::string &human_name, uint64_t usage, uint64_t duration, int count, int level)
 {
 	unsigned int i;
-	struct idle_state *state = NULL;
+	struct idle_state *state = nullptr;
 
 	for (i = 0; i < cstates.size(); i++) {
 		if (cstates[i]->linux_name == linux_name) {
@@ -362,7 +362,7 @@ void abstract_cpu::insert_pstate(uint64_t freq, const std::string &human_name, u
 void abstract_cpu::finalize_pstate(uint64_t freq, uint64_t duration, int count)
 {
 	unsigned int i;
-	class frequency *state = NULL;
+	class frequency *state = nullptr;
 
 	for (i = 0; i < pstates.size(); i++) {
 		if (freq == pstates[i]->freq) {
@@ -383,7 +383,7 @@ void abstract_cpu::finalize_pstate(uint64_t freq, uint64_t duration, int count)
 void abstract_cpu::update_pstate(uint64_t freq, const std::string &human_name, uint64_t duration, int count)
 {
 	unsigned int i;
-	class frequency *state = NULL;
+	class frequency *state = nullptr;
 
 	for (i = 0; i < pstates.size(); i++) {
 		if (freq == pstates[i]->freq) {

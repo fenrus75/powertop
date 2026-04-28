@@ -61,7 +61,7 @@ class perf_power_bundle: public perf_bundle
 
 static class abstract_cpu * new_package(int package, int cpu, const std::string &vendor, int family, int model)
 {
-	class abstract_cpu *ret = NULL;
+	class abstract_cpu *ret = nullptr;
 	class cpudevice *cpudev;
 	class cpu_rapl_device *cpu_rapl_dev;
 	class dram_rapl_device *dram_rapl_dev;
@@ -106,7 +106,7 @@ static class abstract_cpu * new_package(int package, int cpu, const std::string 
 
 static class abstract_cpu * new_core(int core, int cpu, const std::string &vendor, int family, int model)
 {
-	class abstract_cpu *ret = NULL;
+	class abstract_cpu *ret = nullptr;
 
 	if (vendor == "GenuineIntel")
 		if (family == 6)
@@ -129,7 +129,7 @@ static class abstract_cpu * new_core(int core, int cpu, const std::string &vendo
 
 static class abstract_cpu * new_i965_gpu(void)
 {
-	class abstract_cpu *ret = NULL;
+	class abstract_cpu *ret = nullptr;
 
 	ret = new class i965_core;
 	ret->childcount = 0;
@@ -140,7 +140,7 @@ static class abstract_cpu * new_i965_gpu(void)
 
 static class abstract_cpu * new_cpu(int number, const std::string &vendor, int family, int model)
 {
-	class abstract_cpu * ret = NULL;
+	class abstract_cpu * ret = nullptr;
 
 	if (vendor == "GenuineIntel")
 		if (family == 6)
@@ -179,7 +179,7 @@ static void handle_one_cpu(unsigned int number, const std::string &vendor, int f
 
 
 	if (system_level.children.size() <= package_number)
-		system_level.children.resize(package_number + 1, NULL);
+		system_level.children.resize(package_number + 1, nullptr);
 
 	if (!system_level.children[package_number]) {
 		system_level.children[package_number] = new_package(package_number, number, vendor, family, model);
@@ -191,7 +191,7 @@ static void handle_one_cpu(unsigned int number, const std::string &vendor, int f
 
 
 	if (package->children.size() <= core_number)
-		package->children.resize(core_number + 1, NULL);
+		package->children.resize(core_number + 1, nullptr);
 
 	if (!package->children[core_number]) {
 		package->children[core_number] = new_core(core_number, number, vendor, family, model);
@@ -202,7 +202,7 @@ static void handle_one_cpu(unsigned int number, const std::string &vendor, int f
 	core->parent = package;
 
 	if (core->children.size() <= number)
-		core->children.resize(number + 1, NULL);
+		core->children.resize(number + 1, nullptr);
 
 	if (!core->children[number]) {
 		core->children[number] = new_cpu(number, vendor, family, model);
@@ -213,7 +213,7 @@ static void handle_one_cpu(unsigned int number, const std::string &vendor, int f
 	cpu->parent = core;
 
 	if (number >= all_cpus.size())
-		all_cpus.resize(number + 1, NULL);
+		all_cpus.resize(number + 1, nullptr);
 	all_cpus[number] = cpu;
 }
 
@@ -228,7 +228,7 @@ static void handle_i965_gpu(void)
 	core_number = package->children.size();
 
 	if (package->children.size() <= core_number)
-		package->children.resize(core_number + 1, NULL);
+		package->children.resize(core_number + 1, nullptr);
 
 	if (!package->children[core_number]) {
 		package->children[core_number] = new_i965_gpu();
@@ -390,7 +390,7 @@ static int get_cstates_num(void)
 	for (package = 0, cstates_num = 0;
 			package < system_level.children.size(); package++) {
 		_package = system_level.children[package];
-		if (_package == NULL)
+		if (_package == nullptr)
 			continue;
 
 		/* walk package cstates and get largest cstates number */
@@ -404,7 +404,7 @@ static int get_cstates_num(void)
 		 */
 		for (core = 0; core < _package->children.size(); core++) {
 			_core = _package->children[core];
-			if (_core == NULL)
+			if (_core == nullptr)
 				continue;
 
 			for (i = 0; i <  _core->cstates.size(); i++)
@@ -417,7 +417,7 @@ static int get_cstates_num(void)
 			 */
 			 for (cpu = 0; cpu < _core->children.size(); cpu++) {
 				_cpu = _core->children[cpu];
-				if (_cpu == NULL)
+				if (_cpu == nullptr)
 					continue;
 
 				for (i = 0; i < _cpu->cstates.size(); i++)
@@ -434,7 +434,7 @@ void report_display_cpu_cstates(void)
 {
 	unsigned int package, core, cpu;
 	int line, cstates_num, title=0, core_num=0;
-	class abstract_cpu *_package, *_core = NULL, * _cpu;
+	class abstract_cpu *_package, *_core = nullptr, * _cpu;
 	std::string core_type;
 
 	cstates_num = get_cstates_num();
@@ -636,7 +636,7 @@ void report_display_cpu_pstates(void)
 {
 	unsigned int package, core, cpu;
 	int line, title=0;
-	class abstract_cpu *_package, *_core = NULL, * _cpu;
+	class abstract_cpu *_package, *_core = nullptr, * _cpu;
 	unsigned int i, pstates_num;
 	std::string core_type;
 
@@ -964,7 +964,7 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 	int ret;
 	if (strcmp(event->name, "cpu_idle")==0) {
 
-		ret = tep_get_field_val(NULL, event, "state", &rec, &val, 0);
+		ret = tep_get_field_val(nullptr, event, "state", &rec, &val, 0);
                 if (ret < 0) {
                         fprintf(stderr, _("cpu_idle event returned no state?\n"));
                         exit(-1);
@@ -979,7 +979,7 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 	if (strcmp(event->name, "power_frequency") == 0
 	|| strcmp(event->name, "cpu_frequency") == 0){
 
-		ret = tep_get_field_val(NULL, event, "state", &rec, &val, 0);
+		ret = tep_get_field_val(nullptr, event, "state", &rec, &val, 0);
 		if (ret < 0) {
 			fprintf(stderr, _("power or cpu_frequency event returned no state?\n"));
 			exit(-1);

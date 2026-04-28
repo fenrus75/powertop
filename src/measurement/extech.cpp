@@ -225,7 +225,7 @@ static int parse_packet(struct packet * p)
 			printf("Invalid packet, conversion failed\n");
 			return -1;
 		}
-		p->watts = strtod( &(p->op[8 * i]), NULL);
+		p->watts = strtod( &(p->op[8 * i]), nullptr);
 	}
 	return 0;
 }
@@ -249,7 +249,7 @@ static double extech_read(int fd)
 
 	memset(&p, 0, sizeof(p));
 
-	ret = select(fd + 1, &read_fd, NULL, NULL, &tv);
+	ret = select(fd + 1, &read_fd, nullptr, nullptr, &tv);
 	if (ret <= 0)
 		return -1;
 
@@ -300,7 +300,7 @@ void extech_power_meter::sample(void)
 	tv.tv_sec = 0;
 	tv.tv_nsec = 200000000;
 	while (!end_thread) {
-		nanosleep(&tv, NULL);
+		nanosleep(&tv, nullptr);
 		/* trigger the extech to send data */
 		ret = write(fd, " ", 1);
 		if (ret < 0)
@@ -329,7 +329,7 @@ extern "C"
 void extech_power_meter::end_measurement(void)
 {
 	end_thread = true;
-	pthread_join( thread, NULL);
+	pthread_join( thread, nullptr);
 	{
 		std::lock_guard<std::mutex> lock(samples_mutex);
 		if (samples)
@@ -348,7 +348,7 @@ void extech_power_meter::start_measurement(void)
 		samples = 0;
 	}
 
-	if (pthread_create(&thread, NULL, thread_proc, this))
+	if (pthread_create(&thread, nullptr, thread_proc, this))
 		fprintf(stderr, "ERROR: extech measurement thread creation failed\n");
 
 }

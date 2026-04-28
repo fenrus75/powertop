@@ -70,9 +70,9 @@ void create_i915_gpu(void)
 	class i915gpu *gpu;
 	gpu_rapl_device *rapl_dev;
 
-	if (!tracefs_event_file_exists(NULL, "i915", "i915_gem_ring_dispatch", "format")) {
+	if (!tracefs_event_file_exists(nullptr, "i915", "i915_gem_ring_dispatch", "format")) {
 		/* try an older tracepoint */
-		if (!tracefs_event_file_exists(NULL, "i915", "i915_gem_request_submit", "format"))
+		if (!tracefs_event_file_exists(nullptr, "i915", "i915_gem_request_submit", "format"))
 			return;
 	}
 

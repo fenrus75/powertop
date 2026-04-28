@@ -44,9 +44,9 @@
 void i965_core::measurement_start(void)
 {
 	before = pt_gettime();
-	rc6_before = read_sysfs("/sys/class/drm/card0/power/rc6_residency_ms", NULL);
-	rc6p_before = read_sysfs("/sys/class/drm/card0/power/rc6p_residency_ms", NULL);
-	rc6pp_before = read_sysfs("/sys/class/drm/card0/power/rc6pp_residency_ms", NULL);
+	rc6_before = read_sysfs("/sys/class/drm/card0/power/rc6_residency_ms", nullptr);
+	rc6p_before = read_sysfs("/sys/class/drm/card0/power/rc6p_residency_ms", nullptr);
+	rc6pp_before = read_sysfs("/sys/class/drm/card0/power/rc6pp_residency_ms", nullptr);
 
 	update_cstate("gpu c0", "Powered On", 0, 0, 1, 0);
 	update_cstate("gpu rc6", "RC6", 0, rc6_before, 1, 1);
@@ -96,9 +96,9 @@ void i965_core::measurement_end(void)
 {
 	after = pt_gettime();
 
-	rc6_after = read_sysfs("/sys/class/drm/card0/power/rc6_residency_ms", NULL);
-	rc6p_after = read_sysfs("/sys/class/drm/card0/power/rc6p_residency_ms", NULL);
-	rc6pp_after = read_sysfs("/sys/class/drm/card0/power/rc6pp_residency_ms", NULL);
+	rc6_after = read_sysfs("/sys/class/drm/card0/power/rc6_residency_ms", nullptr);
+	rc6p_after = read_sysfs("/sys/class/drm/card0/power/rc6p_residency_ms", nullptr);
+	rc6pp_after = read_sysfs("/sys/class/drm/card0/power/rc6pp_residency_ms", nullptr);
 }
 
 std::string i965_core::fill_pstate_line(int line_nr __unused)

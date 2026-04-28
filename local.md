@@ -25,6 +25,15 @@ tooling to create and manipulate test data.
   All bare STL names (string, vector, map, cout, etc.) have been explicitly qualified
   with std:: throughout the codebase (commit cb42d45). The build is now clean.
 
+# C++ style notes (additional)
+
+- All virtual method overrides now have the `override` specifier (commit c4ab4f1).
+  271 methods across 44 files were updated. The `-Wsuggest-override` flag is already
+  in meson.build (line 304) to enforce this going forward.
+  A Python script pattern was used: iterate over {filename: [line_numbers]} dict,
+  apply `add_override()` per line — insert `override` before `{` (inline body) or
+  before `;` (declaration), tracking parenthesis depth to find the correct `{`.
+
 # Prefered user style
 
 When asked to make a non-trivial change (multiple files/elements), create a

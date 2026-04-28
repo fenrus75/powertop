@@ -40,7 +40,7 @@ class cpu_rapl_device: public cpudevice {
 	bool		device_valid = false;
 
 public:
-	cpu_rapl_device(cpudevice *parent, const std::string &classname = "cpu_core", const std::string &device_name = "cpu_core", class abstract_cpu *_cpu = NULL);
+	cpu_rapl_device(cpudevice *parent, const std::string &classname = "cpu_core", const std::string &device_name = "cpu_core", class abstract_cpu *_cpu = nullptr);
 	~cpu_rapl_device() { delete rapl; }
 	virtual std::string device_name(void) override {return "CPU core";};
 	virtual std::string human_name(void) override {return "CPU core";};

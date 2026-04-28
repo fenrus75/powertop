@@ -41,7 +41,7 @@
 #include "../report/report-maker.h"
 
 static bool is_enabled = true;
-static DIR *dir = NULL;
+static DIR *dir = nullptr;
 
 static std::vector<class devfreq *> all_devfreq;
 
@@ -106,14 +106,14 @@ void devfreq::add_devfreq_freq_state(uint64_t freq, uint64_t time)
 void devfreq::update_devfreq_freq_state(uint64_t freq, uint64_t time)
 {
 	unsigned int i;
-	class frequency *state = NULL;
+	class frequency *state = nullptr;
 
 	for(i=0; i < dstates.size(); i++) {
 		if (freq == dstates[i]->freq)
 			state = dstates[i];
 	}
 
-	if (state == NULL) {
+	if (state == nullptr) {
 		add_devfreq_freq_state(freq, time);
 		return;
 	}
@@ -240,20 +240,20 @@ void create_all_devfreq_devices(void)
 
 	std::string p = "/sys/class/devfreq/";
 	dir = opendir(p.c_str());
-	if (dir == NULL) {
+	if (dir == nullptr) {
 		fprintf(stderr, "Devfreq not enabled\n");
 		is_enabled = false;
 		return;
 	}
 
-	while(readdir(dir) != NULL)
+	while(readdir(dir) != nullptr)
 		num++;
 
 	if (num == 2) {
 		fprintf(stderr, "Devfreq not enabled\n");
 		is_enabled = false;
 		closedir(dir);
-		dir = NULL;
+		dir = nullptr;
 		return;
 	}
 
@@ -327,8 +327,8 @@ void clear_all_devfreq()
 	}
 	all_devfreq.clear();
 	/* close /sys/class/devfreq */
-	if (dir != NULL) {
+	if (dir != nullptr) {
 		closedir(dir);
-		dir = NULL;
+		dir = nullptr;
 	}
 }

@@ -87,25 +87,25 @@ enum {
 static const struct option long_options[] =
 {
 	/* These options set a flag. */
-	{"auto-tune",	no_argument,		NULL,		 OPT_AUTO_TUNE},
-	{"auto-tune-dump",	no_argument,	NULL,		 OPT_AUTO_TUNE_DUMP},
-	{"calibrate",	no_argument,		NULL,		 'c'},
-	{"csv",		optional_argument,	NULL,		 'C'},
+	{"auto-tune",	no_argument,		nullptr,		 OPT_AUTO_TUNE},
+	{"auto-tune-dump",	no_argument,	nullptr,		 OPT_AUTO_TUNE_DUMP},
+	{"calibrate",	no_argument,		nullptr,		 'c'},
+	{"csv",		optional_argument,	nullptr,		 'C'},
 	{"debug",	no_argument,		&debug_learning, OPT_DEBUG},
-	{"extech",	optional_argument,	NULL,		 OPT_EXTECH},
-	{"html",	optional_argument,	NULL,		 'r'},
-	{"iteration",	optional_argument,	NULL,		 'i'},
-	{"quiet",	no_argument,		NULL,		 'q'},
-	{"sample",	optional_argument,	NULL,		 's'},
-	{"time",	optional_argument,	NULL,		 't'},
-	{"workload",	optional_argument,	NULL,		 'w'},
-	{"version",	no_argument,		NULL,		 'V'},
-	{"help",	no_argument,		NULL,		 'h'},
+	{"extech",	optional_argument,	nullptr,		 OPT_EXTECH},
+	{"html",	optional_argument,	nullptr,		 'r'},
+	{"iteration",	optional_argument,	nullptr,		 'i'},
+	{"quiet",	no_argument,		nullptr,		 'q'},
+	{"sample",	optional_argument,	nullptr,		 's'},
+	{"time",	optional_argument,	nullptr,		 't'},
+	{"workload",	optional_argument,	nullptr,		 'w'},
+	{"version",	no_argument,		nullptr,		 'V'},
+	{"help",	no_argument,		nullptr,		 'h'},
 #ifdef ENABLE_TEST_FRAMEWORK
-	{"record",	required_argument,	NULL,		 OPT_RECORD},
-	{"replay",	required_argument,	NULL,		 OPT_REPLAY},
+	{"record",	required_argument,	nullptr,		 OPT_RECORD},
+	{"replay",	required_argument,	nullptr,		 OPT_REPLAY},
 #endif
-	{NULL,		0,			NULL,		 0}
+	{nullptr,		0,			nullptr,		 0}
 };
 
 static void print_version()
@@ -119,7 +119,7 @@ static bool set_refresh_timeout()
 	mvprintw(1, 0, "%s (currently %u): ", _("Set refresh time out"), time_out);
 	buf = get_user_input(3);
 	show_tab(0);
-	unsigned time = strtoul(buf.c_str(), NULL, 0);
+	unsigned time = strtoul(buf.c_str(), nullptr, 0);
 	if (!time) return 0;
 	if (time > 32) time = 32;
 	time_out = time;
@@ -156,7 +156,7 @@ static void do_sleep(int seconds)
 		sleep(seconds);
 		return;
 	}
-	target = time(NULL) + seconds;
+	target = time(nullptr) + seconds;
 	delta = seconds;
 	do {
 		int c;
@@ -203,7 +203,7 @@ static void do_sleep(int seconds)
 			return;
 		}
 
-		delta = target - time(NULL);
+		delta = target - time(nullptr);
 		if (delta <= 0)
 			break;
 
@@ -235,7 +235,7 @@ void one_measurement(int seconds, int sample_interval, const std::string &worklo
 	if (!workload.empty()) {
 		pthread_t thread = 0UL;
 		end_thread = false;
-		if (pthread_create(&thread, NULL, measure_background_thread, &sample_interval))
+		if (pthread_create(&thread, nullptr, measure_background_thread, &sample_interval))
 			fprintf(stderr, "ERROR: workload measurement thread creation failed\n");
 
 		if (system(workload.c_str()))
@@ -244,7 +244,7 @@ void one_measurement(int seconds, int sample_interval, const std::string &worklo
 		if (thread)
 		{
 			end_thread = true;
-			pthread_join( thread, NULL);
+			pthread_join( thread, nullptr);
 		}
 		global_sample_power();
 	} else {
@@ -396,7 +396,7 @@ static void powertop_init(int auto_tune)
 		}
 	}
 
-	srand(time(NULL));
+	srand(time(nullptr));
 
 	if (access("/var/cache/", W_OK) == 0)
 		mkdir("/var/cache/powertop", 0600);

@@ -61,10 +61,10 @@ static void do_proc_net_dev(void)
 	static time_t last_time;
 	class network *dev;
 
-	if (time(NULL) == last_time)
+	if (time(nullptr) == last_time)
 		return;
 
-	last_time = time(NULL);
+	last_time = time(nullptr);
 
 	std::string content = read_file_content("/proc/net/dev");
 	if (content.empty())

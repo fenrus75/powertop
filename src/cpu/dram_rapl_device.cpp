@@ -37,7 +37,7 @@ dram_rapl_device::dram_rapl_device(cpudevice *parent, const std::string &classna
 		rapl = new c_rapl_interface(dev_name, cpu->get_first_cpu());
 	else
 		rapl = new c_rapl_interface();
-	last_time = time(NULL);
+	last_time = time(nullptr);
 	if (rapl->dram_domain_present()) {
 		device_valid = true;
 		parent->add_child(this);
@@ -47,14 +47,14 @@ dram_rapl_device::dram_rapl_device(cpudevice *parent, const std::string &classna
 
 void dram_rapl_device::start_measurement(void)
 {
-	last_time = time(NULL);
+	last_time = time(nullptr);
 
 	rapl->get_dram_energy_status(&last_energy);
 }
 
 void dram_rapl_device::end_measurement(void)
 {
-	time_t		curr_time = time(NULL);
+	time_t		curr_time = time(nullptr);
 	double energy;
 
 	consumed_power = 0.0;

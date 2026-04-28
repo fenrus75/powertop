@@ -45,7 +45,7 @@ protected:
 	std::vector<device *>child_devices;
 
 public:
-	cpudevice(const std::string &classname = "cpu", const std::string &device_name = "cpu0", class abstract_cpu *_cpu = NULL);
+	cpudevice(const std::string &classname = "cpu", const std::string &device_name = "cpu0", class abstract_cpu *_cpu = nullptr);
 	virtual std::string class_name(void) override { return _class; };
 
 	virtual std::string device_name(void) override;

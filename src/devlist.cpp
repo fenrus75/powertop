@@ -166,7 +166,7 @@ void collect_open_devices(void)
 				dev = new(std::nothrow) struct devuser;
 				if (!dev)
 					continue;
-				dev->pid = strtoull(entry->d_name, NULL, 10);
+				dev->pid = strtoull(entry->d_name, nullptr, 10);
 				dev->device = link;
 				dev->comm = read_sysfs_string(std::format("/proc/{}/comm", entry->d_name));
 				target->push_back(dev);
@@ -253,7 +253,7 @@ void clear_devpower(void)
 void register_devpower(const std::string &devstring, double power, class device *_dev)
 {
 	unsigned int i;
-	struct devpower *dev =  NULL;
+	struct devpower *dev =  nullptr;
 
 	for (i = 0; i < devpower.size(); i++)
 		if (devstring == devpower[i]->device) {

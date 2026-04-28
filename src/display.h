@@ -55,7 +55,7 @@ public:
 		cursor_max = 0;
 		xpad_pos =0;
 		ypad_pos = 0;
-		win = NULL;
+		win = nullptr;
 	}
 
 	virtual void cursor_down(void) { 
@@ -81,7 +81,7 @@ public:
 	virtual ~tab_window()
 	{
 		delwin(win);
-		win = NULL;
+		win = nullptr;
 	}
 };
 
@@ -90,5 +90,5 @@ extern std::map<std::string, class tab_window *> tab_windows;
 WINDOW *get_ncurses_win(const std::string &name);
 WINDOW *get_ncurses_win(int nr);
 
-void create_tab(const std::string &name, const std::string &translation, class tab_window *w = NULL, std::string bottom_line = "");
+void create_tab(const std::string &name, const std::string &translation, class tab_window *w = nullptr, std::string bottom_line = "");
 

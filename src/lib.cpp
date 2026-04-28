@@ -380,6 +380,7 @@ std::string fmt_prefix(double n)
 	}
 
 	npfx = ((omag + 27) / 3) - (27/3);
+	npfx = std::clamp(npfx, -8, 8);
 	omag = (omag + 27) % 3;
 
 	if (omag == 2)

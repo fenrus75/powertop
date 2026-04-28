@@ -25,6 +25,10 @@
 #ifndef INCLUDE_GUARD_LIB_H
 #define INCLUDE_GUARD_LIB_H
 
+#define __unused __attribute__((unused))
+
+#ifdef __cplusplus
+
 #include <format>
 #include <string_view>
 
@@ -34,11 +38,14 @@ inline std::string pt_format(std::string_view fmt, Args&&... args)
 	return std::vformat(fmt, std::make_format_args(args...));
 }
 
+#include <cstring>
+#include <string>
+
+#endif
+
 #include <libintl.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <cstring>
-#include <string>
 
 /* Include only for Automake builds */
 #ifdef HAVE_CONFIG_H
@@ -51,7 +58,7 @@ inline std::string pt_format(std::string_view fmt, Args&&... args)
 #define _(STRING)    (STRING)
 #endif
 
-#define __unused __attribute__((unused))
+#ifdef __cplusplus
 
 extern int is_turbo(uint64_t freq, uint64_t max, uint64_t maxmo);
 
@@ -67,7 +74,6 @@ extern std::string kernel_function(uint64_t address);
 
 
 #include <ctime>
-#include <string>
 #include <sys/time.h>
 using namespace std;
 
@@ -106,4 +112,7 @@ extern void align_string(std::string &str, size_t min_sz, size_t max_sz);
 extern void ui_notify_user_ncurses(const std::string &msg);
 extern void ui_notify_user_console(const std::string &msg);
 extern void (*ui_notify_user) (const std::string &msg);
-#endif
+
+#endif /* __cplusplus */
+
+#endif /* INCLUDE_GUARD_LIB_H */

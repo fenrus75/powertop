@@ -402,6 +402,12 @@ int utilization_power_valid(const std::string &u)
 	if (index <= 0)
 		return 0;
 
+	if (past_results.size() == 0)
+		return 0;
+
+	if (index >= (int)past_results[0]->utilization.size())
+		return 0;
+
 	first_value = past_results[0]->utilization[index];
 	for (i = 1; i < past_results.size(); i++) {
 		if (get_result_value(index, past_results[i]) < first_value - 0.0001)

@@ -950,7 +950,7 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 	if (!event)
 		return;
 
-	if (cpunr >= (int)all_cpus.size()) {
+	if (cpunr < 0 || cpunr >= (int)all_cpus.size()) {
 		fprintf(stderr, _("INVALID cpu nr in handle_trace_point\n"));
 		return;
 	}

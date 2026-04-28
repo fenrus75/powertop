@@ -140,7 +140,7 @@ static int setup_serial_device(int dev_fd)
 }
 
 
-static unsigned int decode_extech_value(unsigned char byt3, unsigned char byt4, char *a)
+static int decode_extech_value(unsigned char byt3, unsigned char byt4, char *a)
 {
 	unsigned int input = ((unsigned int)byt4 << 8) + byt3;
 	unsigned int i;
@@ -217,7 +217,7 @@ static int parse_packet(struct packet * p)
 		}
 	}
 
-	for (i = 0; i < 1; i++) {
+	for (i = 0; i < 4; i++) {
 		ret = decode_extech_value(p->buf[5 * i + 2],
 					  p->buf[5 * i + 3],
 					  &(p->op[8 * i]));

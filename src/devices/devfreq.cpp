@@ -82,7 +82,8 @@ void devfreq::process_time_stamps()
 		active_time += state->time_after;
 	}
 	/* Compute idle time for the device */
-	dstates[i]->time_after = sample_time - active_time;
+	double idle = sample_time - (double)active_time;
+	dstates[i]->time_after = (idle > 0.0) ? (uint64_t)idle : 0;
 }
 
 void devfreq::add_devfreq_freq_state(uint64_t freq, uint64_t time)

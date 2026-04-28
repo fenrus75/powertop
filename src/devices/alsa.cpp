@@ -102,7 +102,10 @@ void alsa::end_measurement(void)
 		} catch (...) {}
 	}
 
-	p = (end_active - start_active) / (0.001 + end_active + end_inactive - start_active - start_inactive) * 100.0;
+	double active_delta = (end_active >= start_active) ? (double)(end_active - start_active) : 0.0;
+	double total_delta = (end_active + end_inactive >= start_active + start_inactive) ?
+		(double)(end_active + end_inactive - start_active - start_inactive) : 0.0;
+	p = active_delta / (0.001 + total_delta) * 100.0;
 	report_utilization(name, p);
 }
 
@@ -111,7 +114,10 @@ double alsa::utilization(void)
 {
 	double p;
 
-	p = (end_active - start_active) / (0.001 + end_active - start_active + end_inactive - start_inactive) * 100.0;
+	double active_delta = (end_active >= start_active) ? (double)(end_active - start_active) : 0.0;
+	double total_delta = (end_active + end_inactive >= start_active + start_inactive) ?
+		(double)(end_active + end_inactive - start_active - start_inactive) : 0.0;
+	p = active_delta / (0.001 + total_delta) * 100.0;
 
 	return p;
 }
@@ -141,10 +147,10 @@ double alsa::power_usage(struct result_bundle *result, struct parameter_bundle *
 	double power;
 	double factor;
 	double util;
-	static int index = 0;
+	static int index = -1;
 
 	power = 0;
-	if (!index)
+	if (index < 0)
 		index = get_param_index("alsa-codec-power");
 
 	factor = get_parameter_value(index, bundle);

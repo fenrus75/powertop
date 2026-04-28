@@ -279,7 +279,7 @@ void nhm_core::measurement_end(void)
 {
 	unsigned int i;
 	uint64_t time_delta;
-	double ratio;
+	double ratio = 0.0;
 
 	if (this->has_c1_res)
 		c1_after = get_msr(first_cpu, MSR_CORE_C1_RESIDENCY);
@@ -310,7 +310,8 @@ void nhm_core::measurement_end(void)
 
 	time_delta = 1000000 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
 
-	ratio = 1.0 * time_delta / (tsc_after - tsc_before);
+	if (tsc_after != tsc_before)
+		ratio = 1.0 * time_delta / (tsc_after - tsc_before);
 
 	for (i = 0; i < cstates.size(); i++) {
 		struct idle_state *state = cstates[i];
@@ -548,7 +549,7 @@ void nhm_package::measurement_start(void)
 void nhm_package::measurement_end(void)
 {
 	uint64_t time_delta;
-	double ratio;
+	double ratio = 0.0;
 	unsigned int i, j;
 
 	for (i = 0; i < children.size(); i++)
@@ -601,7 +602,8 @@ void nhm_package::measurement_end(void)
 
 	time_delta = 1000000 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
 
-	ratio = 1.0 * time_delta / (tsc_after - tsc_before);
+	if (tsc_after != tsc_before)
+		ratio = 1.0 * time_delta / (tsc_after - tsc_before);
 
 
 	for (i = 0; i < cstates.size(); i++) {
@@ -665,7 +667,7 @@ void nhm_cpu::measurement_start(void)
 void nhm_cpu::measurement_end(void)
 {
 	uint64_t time_delta;
-	double ratio;
+	double ratio = 0.0;
 	unsigned int i;
 
 	aperf_after = get_msr(number, MSR_APERF);
@@ -681,7 +683,8 @@ void nhm_cpu::measurement_end(void)
 
 	time_delta = 1000000 * (stamp_after.tv_sec - stamp_before.tv_sec) + stamp_after.tv_usec - stamp_before.tv_usec;
 
-	ratio = 1.0 * time_delta / (tsc_after - tsc_before);
+	if (tsc_after != tsc_before)
+		ratio = 1.0 * time_delta / (tsc_after - tsc_before);
 
 
 	for (i = 0; i < cstates.size(); i++) {

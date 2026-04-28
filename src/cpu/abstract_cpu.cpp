@@ -217,7 +217,7 @@ void abstract_cpu::insert_cstate(const std::string &linux_name, const std::strin
 			char c = human_name[i];
 			if (c >= '0' && c <= '9') {
 				try {
-					state->line_level = std::stoull(human_name.substr(i));
+					state->line_level = std::stoi(human_name.substr(i));
 				} catch (...) {}
 
 				if (i + 1 < human_name.length() && human_name[i+1] != '-') {
@@ -244,7 +244,7 @@ void abstract_cpu::insert_cstate(const std::string &linux_name, const std::strin
 			char c = linux_name[i];
 			if (c >= '0' && c <= '9') {
 				try {
-					state->line_level = std::stoull(linux_name.substr(i));
+					state->line_level = std::stoi(linux_name.substr(i));
 				} catch (...) {}
 				break;
 			}

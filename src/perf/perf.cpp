@@ -238,7 +238,10 @@ void perf_event::process(void *cookie)
 	if (perf_fd < 0)
 		return;
 
-	while (pc->data_tail != pc->data_head ) {
+	uint64_t head = pc->data_head;
+	__sync_synchronize(); /* required rmb() before reading ring buffer data */
+
+	while (pc->data_tail != head) {
 		while (pc->data_tail >= (unsigned int)bufsize * getpagesize())
 			pc->data_tail -= bufsize * getpagesize();
 
@@ -255,7 +258,7 @@ void perf_event::process(void *cookie)
 		if (header->type == PERF_RECORD_SAMPLE)
 			handle_event(header, cookie);
 	}
-	pc->data_tail = pc->data_head;
+	pc->data_tail = head;
 }
 
 void perf_event::clear(void)

@@ -119,14 +119,12 @@ process::process(const std::string &_comm, int _pid, int _tid) : power_consumer(
 	desc = std::format("[PID {}] {}", pid, comm);
 
 	std::string cmdline = read_file_content(std::format("/proc/{}/cmdline", _pid));
-	if (!cmdline.empty()) {
-		if (cmdline.size() < 1) {
-			is_kernel = 1;
-			desc = std::format("[PID {}] [{}]", pid, comm);
-		} else {
-			cmdline_to_string(cmdline);
-			desc = std::format("[PID {}] {}", pid, cmdline);
-		}
+	if (cmdline.empty()) {
+		is_kernel = 1;
+		desc = std::format("[PID {}] [{}]", pid, comm);
+	} else {
+		cmdline_to_string(cmdline);
+		desc = std::format("[PID {}] {}", pid, cmdline);
 	}
 }
 

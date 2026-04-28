@@ -118,10 +118,11 @@ std::string
 double_to_string(double dval)
 {
 	std::ostringstream dtmp;
-	std::string str;
 	dtmp << dval;
-	str= dtmp.str();
-	str = str.substr(0, str.find(".")+2);
+	std::string str = dtmp.str();
+	auto dot = str.find('.');
+	if (dot != std::string::npos)
+		str = str.substr(0, dot + 2);
 	return str;
 }
 

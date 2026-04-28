@@ -29,56 +29,56 @@ test_framework_manager::~test_framework_manager() {
 	}
 }
 
-void test_framework_manager::set_record(const string& filename) {
+void test_framework_manager::set_record(const std::string& filename) {
 	recording = true;
 	record_filename = filename;
 }
 
-void test_framework_manager::set_replay(const string& filename) {
+void test_framework_manager::set_replay(const std::string& filename) {
 	replaying = true;
 	replay_filename = filename;
 	load();
 }
 
-void test_framework_manager::record_read(const string& path, const string& content) {
+void test_framework_manager::record_read(const std::string& path, const std::string& content) {
 	if (!recording) return;
 	recorded_reads.push_back({path, content});
 }
 
-void test_framework_manager::record_read_fail(const string& path) {
+void test_framework_manager::record_read_fail(const std::string& path) {
 	if (!recording) return;
 	recorded_reads.push_back({path, "__POWERTOP_FILE_NOT_FOUND__"});
 }
 
-string test_framework_manager::replay_read(const string& path) {
+std::string test_framework_manager::replay_read(const std::string& path) {
 	if (!replaying) return "";
 	if (read_sequences[path].empty()) {
 		throw test_exception("TEST FAIL: No more recorded content for read: " + path);
 	}
-	string content = read_sequences[path].front();
+	std::string content = read_sequences[path].front();
 	read_sequences[path].pop_front();
 	if (content == "__POWERTOP_FILE_NOT_FOUND__")
 		return "";
 	return content;
 }
 
-void test_framework_manager::record_write(const string& path, const string& content) {
+void test_framework_manager::record_write(const std::string& path, const std::string& content) {
 	if (!recording) return;
 	recorded_writes.push_back({path, content});
 }
 
-void test_framework_manager::replay_write(const string& path, const string& content) {
+void test_framework_manager::replay_write(const std::string& path, const std::string& content) {
 	if (!replaying) return;
 	if (write_sequences[path].empty()) {
-		cerr << "TEST FAIL: Unexpected write to: " << path << " (nothing recorded)" << endl;
+		std::cerr << "TEST FAIL: Unexpected write to: " << path << " (nothing recorded)" << std::endl;
 		return;
 	}
-	string expected = write_sequences[path].front();
+	std::string expected = write_sequences[path].front();
 	write_sequences[path].pop_front();
 	if (expected != content) {
-		cerr << "TEST FAIL: Write mismatch for " << path << endl;
-		cerr << "  Expected: " << expected << endl;
-		cerr << "  Actual:   " << content << endl;
+		std::cerr << "TEST FAIL: Write mismatch for " << path << std::endl;
+		std::cerr << "  Expected: " << expected << std::endl;
+		std::cerr << "  Actual:   " << content << std::endl;
 	}
 }
 
@@ -115,43 +115,43 @@ void test_framework_manager::replay_time(struct timeval *tv) {
 void test_framework_manager::save() {
 	ofstream file(record_filename);
 	if (!file) {
-		cerr << "Failed to open record file: " << record_filename << endl;
+		std::cerr << "Failed to open record file: " << record_filename << std::endl;
 		return;
 	}
 
 	for (const auto& p : recorded_reads) {
 		if (p.second == "__POWERTOP_FILE_NOT_FOUND__")
-			file << "N " << p.first << endl;
+			file << "N " << p.first << std::endl;
 		else
-			file << "R " << p.first << " " << base64_encode(p.second) << endl;
+			file << "R " << p.first << " " << base64_encode(p.second) << std::endl;
 	}
 	for (const auto& p : recorded_writes) {
-		file << "W " << p.first << " " << base64_encode(p.second) << endl;
+		file << "W " << p.first << " " << base64_encode(p.second) << std::endl;
 	}
 	for (const auto& m : recorded_msrs) {
-		file << "M " << std::get<0>(m) << " " << hex << std::get<1>(m) << " " << std::get<2>(m) << dec << endl;
+		file << "M " << std::get<0>(m) << " " << hex << std::get<1>(m) << " " << std::get<2>(m) << dec << std::endl;
 	}
 	for (const auto& t : recorded_times) {
-		file << "T " << t.tv_sec << " " << t.tv_usec << endl;
+		file << "T " << t.tv_sec << " " << t.tv_usec << std::endl;
 	}
 }
 
 void test_framework_manager::load() {
 	ifstream file(replay_filename);
 	if (!file) {
-		cerr << "Failed to open replay file: " << replay_filename << endl;
+		std::cerr << "Failed to open replay file: " << replay_filename << std::endl;
 		return;
 	}
 
-	string line;
+	std::string line;
 	while (getline(file, line)) {
 		if (line.empty()) continue;
 
 		size_t first_space = line.find(' ');
-		if (first_space == string::npos) continue;
+		if (first_space == std::string::npos) continue;
 
 		char type = line[0];
-		string rest = line.substr(first_space + 1);
+		std::string rest = line.substr(first_space + 1);
 
 		if (type == 'N') {
 			read_sequences[rest].push_back("__POWERTOP_FILE_NOT_FOUND__");
@@ -176,10 +176,10 @@ void test_framework_manager::load() {
 		}
 
 		size_t last_space = rest.rfind(' ');
-		if (last_space == string::npos) continue;
+		if (last_space == std::string::npos) continue;
 
-		string path = rest.substr(0, last_space);
-		string b64_content = rest.substr(last_space + 1);
+		std::string path = rest.substr(0, last_space);
+		std::string b64_content = rest.substr(last_space + 1);
 
 		if (type == 'R') {
 			read_sequences[path].push_back(base64_decode(b64_content));
@@ -189,13 +189,13 @@ void test_framework_manager::load() {
 	}
 }
 
-static const string base64_chars = 
+static const std::string base64_chars = 
              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
              "abcdefghijklmnopqrstuvwxyz"
              "0123456789+/";
 
-string test_framework_manager::base64_encode(const string& in) {
-    string out;
+std::string test_framework_manager::base64_encode(const std::string& in) {
+    std::string out;
     int val = 0, valb = -6;
     for (unsigned char c : in) {
         val = (val << 8) + c;
@@ -210,9 +210,9 @@ string test_framework_manager::base64_encode(const string& in) {
     return out;
 }
 
-string test_framework_manager::base64_decode(const string& in) {
-    string out;
-    vector<int> T(256, -1);
+std::string test_framework_manager::base64_decode(const std::string& in) {
+    std::string out;
+    std::vector<int> T(256, -1);
     for (int i = 0; i < 64; i++) T[base64_chars[i]] = i;
 
     int val = 0, valb = -8;

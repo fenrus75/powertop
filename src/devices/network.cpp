@@ -30,7 +30,7 @@
 
 #include <stdio.h>
 #include <sys/types.h>
-#include <libgen.h>
+#include <filesystem>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -164,12 +164,10 @@ network::network(const std::string &_name, const std::string &path): device()
 	index_pkts = get_param_index(std::format("{}-packets", _name));
 	rindex_pkts = get_result_index(std::format("{}-packets", _name));
 
-	char buf[4096];
-	ssize_t len = readlink(std::format("{}/device/driver", path).c_str(), buf, sizeof(buf) - 1);
-	if (len != -1) {
-		buf[len] = '\0';
-		humanname = pt_format(_("Network interface: {} ({})"), _name, basename(buf));
-	};
+	std::error_code ec;
+	auto link = std::filesystem::read_symlink(std::format("{}/device/driver", path), ec);
+	if (!ec)
+		humanname = pt_format(_("Network interface: {} ({})"), _name, link.filename().string());
 }
 
 static int net_iface_up(const std::string &iface)

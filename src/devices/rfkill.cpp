@@ -24,10 +24,10 @@
  */
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 
 #include <stdio.h>
 #include <sys/types.h>
-#include <libgen.h>
 #include <unistd.h>
 #include <limits.h>
 
@@ -41,30 +41,13 @@
 
 rfkill::rfkill(const std::string &_name, const std::string &path): device()
 {
-	char buf[4096];
-	ssize_t len;
-	start_soft = 0;
-	start_hard = 0;
-	end_soft = 0;
-	end_hard = 0;
-	sysfs_path = path;
-	register_sysfs_path(sysfs_path);
-	name = std::format("radio:{}", _name);
-	humanname = std::format("radio:{}", _name);
-	register_parameter(name);
-	index = get_param_index(name);
-	rindex = get_result_index(name);
-
-	len = readlink(std::format("{}/device/driver", path).c_str(), buf, sizeof(buf) - 1);
-	if (len != -1) {
-		buf[len] = '\0';
-		humanname = pt_format(_("Radio device: {}"), basename(buf));
-	}
-	len = readlink(std::format("{}/device/device/driver", path).c_str(), buf, sizeof(buf) - 1);
-	if (len != -1) {
-		buf[len] = '\0';
-		humanname = pt_format(_("Radio device: {}"), basename(buf));
-	}
+	std::error_code ec;
+	auto link = std::filesystem::read_symlink(std::format("{}/device/driver", path), ec);
+	if (!ec)
+		humanname = pt_format(_("Radio device: {}"), link.filename().string());
+	link = std::filesystem::read_symlink(std::format("{}/device/device/driver", path), ec);
+	if (!ec)
+		humanname = pt_format(_("Radio device: {}"), link.filename().string());
 }
 
 void rfkill::start_measurement(void)

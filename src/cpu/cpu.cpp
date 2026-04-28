@@ -497,7 +497,10 @@ void report_display_cpu_cstates(void)
 				num_cpus+=1;
 			}
 		}
-		cpu_tbl_size.cols=(2 * (num_cpus / num_cores)) + 1;
+		if (num_cores > 0)
+			cpu_tbl_size.cols = (2 * (num_cpus / num_cores)) + 1;
+		else
+			cpu_tbl_size.cols = 1;
 		cpu_tbl_size.rows = ((cstates_num+1-LEVEL_HEADER) * _package->children.size())
 				+ _package->children.size();
 		std::vector<std::string> cpu_data(cpu_tbl_size.cols * cpu_tbl_size.rows);
@@ -705,7 +708,10 @@ void report_display_cpu_pstates(void)
 				num_cpus+=1;
 			}
 		}
-		cpu_tbl_size.cols= (num_cpus/ num_cores) + 1;
+		if (num_cores > 0)
+			cpu_tbl_size.cols = (num_cpus / num_cores) + 1;
+		else
+			cpu_tbl_size.cols = 1;
 		cpu_tbl_size.rows= (pstates_num+2) * _package->children.size()
 				+ _package->children.size();
 		std::vector<std::string> cpu_data(cpu_tbl_size.cols * cpu_tbl_size.rows);

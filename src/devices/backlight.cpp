@@ -97,7 +97,10 @@ void backlight::end_measurement(void)
 	end_level = read_sysfs(std::format("{}/actual_brightness", sysfs_path));
 
 	if (dpms_screen_on()) {
-		p = 100.0 * (end_level + start_level) / 2 / max_level;
+		if (max_level > 0)
+			p = 100.0 * (end_level + start_level) / 2 / max_level;
+		else
+			p = 0;
 		_backlight = 100;
 	} else {
 		p = 0;
@@ -110,10 +113,9 @@ void backlight::end_measurement(void)
 
 double backlight::utilization(void)
 {
-	double p;
-
-	p = 100.0 * (end_level + start_level) / 2 / max_level;
-	return p;
+	if (max_level <= 0)
+		return 0.0;
+	return 100.0 * (end_level + start_level) / 2 / max_level;
 }
 
 static void create_all_backlights_callback(const std::string &d_name)

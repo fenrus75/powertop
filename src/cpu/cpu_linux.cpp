@@ -61,7 +61,7 @@ void cpu_linux::parse_cstates_start(void)
 		uint64_t duration = 0;
 
 
-		if (strlen(entry->d_name) < 3)
+		if (entry->d_name[0] == '.')
 			continue;
 
 		linux_name = entry->d_name;
@@ -140,7 +140,7 @@ void cpu_linux::parse_cstates_end(void)
 		uint64_t duration = 0;
 
 
-		if (strlen(entry->d_name) < 3)
+		if (entry->d_name[0] == '.')
 			continue;
 
 		linux_name = entry->d_name;

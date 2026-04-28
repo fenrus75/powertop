@@ -160,6 +160,10 @@ void perf_event::set_event_name(const std::string &system_name, const std::strin
 			return;
 		}
 		event = tep_find_event_by_name(perf_event::tep, system_name.c_str(), event_name.c_str());
+		if (!event) {
+			trace_type = -1;
+			return;
+		}
 	}
 	trace_type = event->id;
 }

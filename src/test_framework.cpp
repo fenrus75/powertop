@@ -89,7 +89,7 @@ void test_framework_manager::record_msr(int cpu, uint64_t offset, uint64_t value
 
 int test_framework_manager::replay_msr(int cpu, uint64_t offset, uint64_t *value) {
 	if (!replaying) return -1;
-	auto key = make_pair(cpu, offset);
+	auto key = std::make_pair(cpu, offset);
 	if (msr_sequences[key].empty()) {
 		throw test_exception(std::format("TEST FAIL: No more recorded content for MSR read: cpu {} offset 0x{:x}", cpu, offset));
 	}
@@ -113,7 +113,7 @@ void test_framework_manager::replay_time(struct timeval *tv) {
 }
 
 void test_framework_manager::save() {
-	ofstream file(record_filename);
+	std::ofstream file(record_filename);
 	if (!file) {
 		std::cerr << "Failed to open record file: " << record_filename << std::endl;
 		return;
@@ -129,7 +129,7 @@ void test_framework_manager::save() {
 		file << "W " << p.first << " " << base64_encode(p.second) << std::endl;
 	}
 	for (const auto& m : recorded_msrs) {
-		file << "M " << std::get<0>(m) << " " << hex << std::get<1>(m) << " " << std::get<2>(m) << dec << std::endl;
+		file << "M " << std::get<0>(m) << " " << std::hex << std::get<1>(m) << " " << std::get<2>(m) << std::dec << std::endl;
 	}
 	for (const auto& t : recorded_times) {
 		file << "T " << t.tv_sec << " " << t.tv_usec << std::endl;
@@ -137,7 +137,7 @@ void test_framework_manager::save() {
 }
 
 void test_framework_manager::load() {
-	ifstream file(replay_filename);
+	std::ifstream file(replay_filename);
 	if (!file) {
 		std::cerr << "Failed to open replay file: " << replay_filename << std::endl;
 		return;
@@ -159,16 +159,16 @@ void test_framework_manager::load() {
 		}
 
 		if (type == 'M') {
-			stringstream msr_ss(rest);
+			std::stringstream msr_ss(rest);
 			int cpu;
 			uint64_t offset, value;
-			msr_ss >> cpu >> hex >> offset >> value;
-			msr_sequences[make_pair(cpu, offset)].push_back(value);
+			msr_ss >> cpu >> std::hex >> offset >> value;
+			msr_sequences[std::make_pair(cpu, offset)].push_back(value);
 			continue;
 		}
 
 		if (type == 'T') {
-			stringstream time_ss(rest);
+			std::stringstream time_ss(rest);
 			struct timeval tv;
 			time_ss >> tv.tv_sec >> tv.tv_usec;
 			time_sequences.push_back(tv);

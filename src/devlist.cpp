@@ -78,14 +78,17 @@ void clean_open_devices()
 	for (i = 0; i < one.size(); i++) {
 		delete one[i];
 	}
+	one.clear();
 
 	for (i = 0; i < two.size(); i++) {
 		delete two[i];
 	}
+	two.clear();
 
 	for (i = 0; i < devpower.size(); i++){
 		delete devpower[i];
 	}
+	devpower.clear();
 }
 
 void collect_open_devices(void)

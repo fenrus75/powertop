@@ -301,7 +301,7 @@ int c_rapl_interface::get_pkg_energy_status(double *status)
 		return ret;
 	}
 
-	*status = (double) (value & 0xffffffff) * get_energy_status_unit();
+	*status = (double)(value & 0xffffffff) * energy_status_units;
 
 	return ret;
 }
@@ -391,7 +391,7 @@ int c_rapl_interface::get_dram_energy_status(double *status)
 		return ret;
 	}
 
-	*status = (double) (value & 0xffffffff) * get_energy_status_unit();
+	*status = (double)(value & 0xffffffff) * energy_status_units;
 
 	return ret;
 }
@@ -482,7 +482,7 @@ int c_rapl_interface::get_pp0_energy_status(double *status)
 		return ret;
 	}
 
-	*status = (double) (value & 0xffffffff) * get_energy_status_unit();
+	*status = (double)(value & 0xffffffff) * energy_status_units;
 
 	return ret;
 }
@@ -570,7 +570,7 @@ int c_rapl_interface::get_pp1_energy_status(double *status)
 		return ret;
 	}
 
-	*status = (double) (value & 0xffffffff) * get_energy_status_unit();
+	*status = (double)(value & 0xffffffff) * energy_status_units;
 
 	return ret;
 }

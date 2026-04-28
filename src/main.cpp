@@ -509,7 +509,7 @@ int main(int argc, char **argv)
 				iterations = (optarg ? atoi(optarg) : 1);
 				break;
 			case 'q':
-				if (freopen("/dev/null", "a", stderr))
+				if (!freopen("/dev/null", "a", stderr))
 					fprintf(stderr, _("Quiet mode failed!\n"));
 				break;
 			case 's':

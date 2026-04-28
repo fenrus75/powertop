@@ -238,17 +238,22 @@ static void *burn_disk(void *dummy __unused)
 static void cpu_calibration(int threads)
 {
 	int i;
-	pthread_t thr;
+	std::vector<pthread_t> thr_vec;
 
 	printf(_("Calibrating: CPU usage on %i threads\n"), threads);
 
 	stop_measurement = 0;
-	for (i = 0; i < threads; i++)
+	for (i = 0; i < threads; i++) {
+		pthread_t thr;
 		pthread_create(&thr, NULL, burn_cpu, NULL);
+		thr_vec.push_back(thr);
+	}
 
 	one_measurement(15, 15, "");
 	stop_measurement = 1;
 	sleep(1);
+	for (auto &thr : thr_vec)
+		pthread_join(thr, NULL);
 }
 
 static void wakeup_calibration(unsigned long interval)
@@ -264,6 +269,7 @@ static void wakeup_calibration(unsigned long interval)
 	one_measurement(15, 15, "");
 	stop_measurement = 1;
 	sleep(1);
+	pthread_join(thr, NULL);
 }
 
 static void usb_calibration(void)
@@ -337,20 +343,20 @@ static void backlight_calibration(void)
 		sleep(1);
 	}
 	printf(_("Calibrating idle\n"));
-	if(!system("DISPLAY=:0 /usr/bin/xset dpms force off"))
+	if (system("DISPLAY=:0 /usr/bin/xset dpms force off") != 0)
 		printf("System is not available\n");
 	one_measurement(15, 15, "");
-	if(!system("DISPLAY=:0 /usr/bin/xset dpms force on"))
+	if (system("DISPLAY=:0 /usr/bin/xset dpms force on") != 0)
 		printf("System is not available\n");
 }
 
 static void idle_calibration(void)
 {
 	printf(_("Calibrating idle\n"));
-	if(!system("DISPLAY=:0 /usr/bin/xset dpms force off"))
+	if (system("DISPLAY=:0 /usr/bin/xset dpms force off") != 0)
 		printf("System is not available\n");
 	one_measurement(15, 15, "");
-	if(!system("DISPLAY=:0 /usr/bin/xset dpms force on"))
+	if (system("DISPLAY=:0 /usr/bin/xset dpms force on") != 0)
 		printf("System is not available\n");
 }
 
@@ -369,6 +375,7 @@ static void disk_calibration(void)
 	one_measurement(15, 15, "");
 	stop_measurement = 1;
 	sleep(1);
+	pthread_join(thr, NULL);
 
 
 }

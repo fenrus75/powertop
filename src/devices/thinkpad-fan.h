@@ -47,7 +47,7 @@ public:
 	virtual std::string human_name(void) { return "Laptop fan";};
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
 	virtual std::string util_units(void) { return " rpm"; };
-	virtual int power_valid(void) { return utilization_power_valid(r_index);};
+	virtual bool power_valid(void) { return utilization_power_valid(r_index);};
 	virtual int grouping_prio(void) { return 1; };
 };
 

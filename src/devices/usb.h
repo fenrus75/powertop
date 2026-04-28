@@ -57,7 +57,7 @@ public:
 	virtual std::string human_name(void) { return humanname; };
 	virtual void register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle);
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle);
-	virtual int power_valid(void) { return utilization_power_valid(r_index);};
+	virtual bool power_valid(void) { return utilization_power_valid(r_index);};
 	virtual int grouping_prio(void) { return 4; };
 };
 

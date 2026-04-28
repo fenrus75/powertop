@@ -35,7 +35,7 @@ struct result_bundle;
 
 class device {
 public:
-	int cached_valid = 0;
+	bool cached_valid = false;
 	bool hide = false;
 
 	std::string guilty;
@@ -63,7 +63,7 @@ public:
 
 	virtual bool show_in_list(void) {return !hide;};
 
-	virtual int power_valid(void) { return 1;};
+	virtual bool power_valid(void) { return true;};
 
 	virtual void register_power_with_devlist(struct result_bundle *results __unused, struct parameter_bundle *bundle __unused) { ; };
 

@@ -127,7 +127,7 @@ static bool power_device_sort(class device * i, class device * j)
 	pJ = j->power_usage(&all_results, &all_parameters);
 
 	if (equals(pI, pJ)) {
-		int vI, vJ;
+		bool vI, vJ;
 		vI = i->power_valid();
 		vJ = j->power_valid();
 

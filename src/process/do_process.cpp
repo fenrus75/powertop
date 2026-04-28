@@ -65,6 +65,7 @@ std::vector<class power_consumer *> cpu_blame;
 #define LEVEL_WORK	6
 
 static uint64_t first_stamp, last_stamp;
+static uint64_t prev_disk_time;
 
 double measurement_time;
 
@@ -634,7 +635,6 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		}
 	}
 	else if (event_name == "writeback_inode_dirty") {
-		static uint64_t prev_time;
 		class power_consumer *consumer = NULL;
 		int dev;
 
@@ -651,10 +651,10 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			consumer->disk_hits++;
 
 			/* if the previous inode dirty was > 1 second ago, it becomes a hard hit */
-			if ((time - prev_time) > 1000000000)
+			if ((time - prev_disk_time) > 1000000000)
 				consumer->hard_disk_hits++;
 
-			prev_time = time;
+			prev_disk_time = time;
 		}
 	}
 }
@@ -686,6 +686,7 @@ void start_process_measurement(void)
 
 	first_stamp = ~0ULL;
 	last_stamp = 0;
+	prev_disk_time = 0;
 	perf_events->start();
 }
 

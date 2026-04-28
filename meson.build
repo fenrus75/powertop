@@ -137,7 +137,7 @@ endforeach
 
 configure_file(output: 'config.h', configuration: conf_data)
 
-add_project_arguments('-DHAVE_CONFIG_H', language: ['c', 'cpp'])
+add_project_arguments('-DHAVE_CONFIG_H', '-Wall', language: ['c', 'cpp'])
 
 # src directory
 src_inc = include_directories('src')
@@ -296,7 +296,6 @@ executable('powertop',
     rt_dep,
   ],
   cpp_args: [
-    '-Wall',
     '-Wformat',
     '-Wshadow',
     '-fno-omit-frame-pointer',

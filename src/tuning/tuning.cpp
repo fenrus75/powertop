@@ -82,7 +82,7 @@ void initialize_tuning(void)
 
 	init_tuning();
 
-	w->cursor_max = all_tunables.size() - 1;
+	w->cursor_max = all_tunables.empty() ? 0 : static_cast<int>(all_tunables.size()) - 1;
 
 	if (tune_window)
 		delete tune_window;

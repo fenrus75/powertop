@@ -111,16 +111,19 @@ static void add_usb_callback(const std::string &d_name)
 	filename = std::format("/sys/bus/usb/devices/{}", d_name);
 	if ((dir = opendir(filename.c_str()))) {
 		struct dirent *entry;
+		bool has_non_autosuspend = false;
 		while ((entry = readdir(dir))) {
 			/* dirname: <busnum>-<devnum>...:<config num>-<interface num> */
 			if (!isdigit(entry->d_name[0]))
 				continue;
 			filename = std::format("/sys/bus/usb/devices/{}/{}/supports_autosuspend", d_name, entry->d_name);
-			if (access(filename.c_str(), R_OK) == 0 && read_sysfs(filename) == 0)
+			if (access(filename.c_str(), R_OK) == 0 && read_sysfs(filename) == 0) {
+				has_non_autosuspend = true;
 				break;
+			}
 		}
 		closedir(dir);
-		if (entry)
+		if (has_non_autosuspend)
 			return;
 	}
 

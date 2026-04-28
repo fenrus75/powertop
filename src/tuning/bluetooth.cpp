@@ -139,16 +139,17 @@ int bt_tunable::good_bad(void)
 
 	/* this check is expensive.. only do it once per minute */
 	if (time(nullptr) - last_check_time > 60) {
+		last_check_time = time(nullptr);
 		last_check_result = TUNE_BAD;
 		/* now, also check for active connections */
 		file = popen("/usr/bin/hcitool con 2> /dev/null", "r");
 		if (file) {
 			char line[2048];
 			/* first line is standard header */
-			if (fgets(line, 2047, file) == nullptr)
+			if (fgets(line, sizeof(line), file) == nullptr)
 				goto out;
-			memset(line, 0, 2048);
-			if (fgets(line, 2047, file) == nullptr) {
+			memset(line, 0, sizeof(line));
+			if (fgets(line, sizeof(line), file) == nullptr) {
 				result = last_check_result = TUNE_GOOD;
 				goto out;
 			}
@@ -158,7 +159,6 @@ int bt_tunable::good_bad(void)
 				goto out;
 			}
 		}
-		last_check_time = time(nullptr);
 	};
 
 	result = last_check_result;

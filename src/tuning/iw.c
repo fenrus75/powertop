@@ -49,6 +49,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <asm/errno.h>
 #include <linux/genetlink.h>
 #include "iw.h"
+#include "../lib.h"
 
 
 #ifndef HAVE_LIBNL20
@@ -123,8 +124,8 @@ static void nl80211_cleanup(struct nl80211_state *state)
 static int enable_power_save;
 
 
-static int set_power_save(struct nl80211_state *state,
-			  struct nl_cb *cb,
+static int set_power_save(struct nl80211_state *state __unused,
+			  struct nl_cb *cb __unused,
 			  struct nl_msg *msg)
 {
 	enum nl80211_ps_state ps_state;
@@ -141,7 +142,7 @@ static int set_power_save(struct nl80211_state *state,
 	return -ENOBUFS;
 }
 
-static int print_power_save_handler(struct nl_msg *msg, void *arg)
+static int print_power_save_handler(struct nl_msg *msg, void *arg __unused)
 {
 	struct nlattr *attrs[NL80211_ATTR_MAX + 1];
 	struct genlmsghdr *gnlh = nlmsg_data(nlmsg_hdr(msg));
@@ -165,16 +166,16 @@ static int print_power_save_handler(struct nl_msg *msg, void *arg)
 	return NL_SKIP;
 }
 
-static int get_power_save(struct nl80211_state *state,
+static int get_power_save(struct nl80211_state *state __unused,
 				   struct nl_cb *cb,
-				   struct nl_msg *msg)
+				   struct nl_msg *msg __unused)
 {
 	nl_cb_set(cb, NL_CB_VALID, NL_CB_CUSTOM,
 		  print_power_save_handler, NULL);
 	return 0;
 }
 
-static int error_handler(struct sockaddr_nl *nla, struct nlmsgerr *err,
+static int error_handler(struct sockaddr_nl *nla __unused, struct nlmsgerr *err,
 			 void *arg)
 {
 	int *ret = arg;
@@ -182,14 +183,14 @@ static int error_handler(struct sockaddr_nl *nla, struct nlmsgerr *err,
 	return NL_STOP;
 }
 
-static int finish_handler(struct nl_msg *msg, void *arg)
+static int finish_handler(struct nl_msg *msg __unused, void *arg)
 {
 	int *ret = arg;
 	*ret = 0;
 	return NL_SKIP;
 }
 
-static int ack_handler(struct nl_msg *msg, void *arg)
+static int ack_handler(struct nl_msg *msg __unused, void *arg)
 {
 	int *ret = arg;
 	*ret = 0;

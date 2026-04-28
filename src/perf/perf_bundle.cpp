@@ -277,7 +277,7 @@ void perf_bundle::process(void)
 	}
 }
 
-void perf_bundle::handle_trace_point(void *trace, int cpu, uint64_t time)
+void perf_bundle::handle_trace_point(void *trace __unused, int cpu __unused, uint64_t time __unused)
 {
 	printf("UH OH... abstract handle_trace_point called\n");
 }

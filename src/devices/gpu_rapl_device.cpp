@@ -61,7 +61,7 @@ void gpu_rapl_device::end_measurement(void)
 	}
 }
 
-double gpu_rapl_device::power_usage(struct result_bundle *result, struct parameter_bundle *bundle)
+double gpu_rapl_device::power_usage(struct result_bundle *result __unused, struct parameter_bundle *bundle __unused)
 {
 	if (rapl.pp1_domain_present())
 		return consumed_power;

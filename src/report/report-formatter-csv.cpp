@@ -58,6 +58,7 @@ report_formatter_csv::escape_string(const string &str)
 		switch (str[i]) {
 			case '"':
 				res += '"';
+				[[fallthrough]];
 #ifdef REPORT_CSV_SPACE_NEED_QUOTES
 			case ' ':
 #endif /* REPORT_CSV_SPACE_NEED_QUOTES */
@@ -96,8 +97,8 @@ report_formatter_csv::add_logo()
 }
 
 
-void
-report_formatter_csv::add_div(struct tag_attr * div_attr)
+void report_formatter_csv::add_div(struct tag_attr * div_attr __unused)
+
 {
 	add_exact("\n");
 }
@@ -108,8 +109,8 @@ report_formatter_csv::end_div()
 	/*Do nothing*/
 }
 
-void
-report_formatter_csv::add_title(struct tag_attr *title_att, const string &title)
+void report_formatter_csv::add_title(struct tag_attr *title_att __unused, const string &title)
+
 {
 	add_exact("____________________________________________________________________\n");
 	add_exact(std::format(" *  *  *   {}   *  *  *\n", title));

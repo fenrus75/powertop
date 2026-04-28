@@ -118,7 +118,7 @@ void devfreq::update_devfreq_freq_state(uint64_t freq, uint64_t time)
 	state->time_after = time;
 }
 
-void devfreq::parse_devfreq_trans_stat(const string &dname)
+void devfreq::parse_devfreq_trans_stat(const string &dname __unused)
 {
 	std::string filename;
 	std::string content;
@@ -179,7 +179,7 @@ void devfreq::end_measurement(void)
 	process_time_stamps();
 }
 
-double devfreq::power_usage(struct result_bundle *result, struct parameter_bundle *bundle)
+double devfreq::power_usage(struct result_bundle *result __unused, struct parameter_bundle *bundle __unused)
 {
 	return 0;
 }

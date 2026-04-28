@@ -462,6 +462,7 @@ int main(int argc, char **argv)
 			switch (c) {
 			case OPT_AUTO_TUNE_DUMP:
 				auto_tune_dump = true; // do NOT `break;` here!
+				[[fallthrough]];
 			case OPT_AUTO_TUNE:
 				auto_tune = 1;
 				leave_powertop = 1;

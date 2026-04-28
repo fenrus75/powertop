@@ -55,7 +55,7 @@ static inline int sys_perf_event_open(struct perf_event_attr *attr,
 			group_fd, flags);
 }
 
-void perf_event::create_perf_event(const string &eventname, int _cpu)
+void perf_event::create_perf_event(const string &eventname __unused, int _cpu)
 {
 	struct perf_event_attr attr;
 	int ret;

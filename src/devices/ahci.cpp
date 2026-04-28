@@ -44,7 +44,7 @@ using namespace std;
 
 vector <class ahci *> links;
 
-static string disk_name(const string &path, const string &target, const string &shortname)
+static string disk_name(const string &path, const string &target, const string &shortname __unused)
 {
 
 	DIR *dir;

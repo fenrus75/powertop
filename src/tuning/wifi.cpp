@@ -25,7 +25,6 @@
 
 #include "tuning.h"
 #include "tunable.h"
-#include "unistd.h"
 #include "wifi.h"
 #include <utility>
 #include <iostream>

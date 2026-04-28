@@ -112,12 +112,8 @@ double usbdevice::utilization(void) /* percentage */
 
 void usbdevice::register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle)
 {
-	char devfs_name[1024];
-
-	snprintf(devfs_name, sizeof(devfs_name), "usb/%03d/%03d", busnum,
-		 devnum);
-
-        register_devpower(devfs_name, power_usage(results, bundle), this);
+	std::string devfs_name = std::format("usb/{:03}/{:03}", busnum, devnum);
+	register_devpower(devfs_name.c_str(), power_usage(results, bundle), this);
 }
 
 double usbdevice::power_usage(struct result_bundle *result, struct parameter_bundle *bundle)

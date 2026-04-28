@@ -59,7 +59,7 @@ Suggested fix: <proposed fix, if any. leave out if none>
 
 ### High severity item #1 : <short description>
 ...
-## Medium severty items
+## Medium severity items
 
 ## Low severity itemms
 

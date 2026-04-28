@@ -41,7 +41,10 @@ void initialize_wakeup(void)
 
 	init_wakeup();
 
-	win->cursor_max = wakeup_all.size() - 1;
+	if (wakeup_all.empty())
+		win->cursor_max = 0;
+	else
+		win->cursor_max = (int)wakeup_all.size() - 1;
 
 	if (newtab_window)
 		delete newtab_window;
@@ -98,6 +101,8 @@ void wakeup_window::repaint(void)
 
 void wakeup_window::cursor_enter(void)
 {
+	if ((size_t)cursor_pos >= wakeup_all.size())
+		return;
 	class wakeup *wake;
 	std::string wakeup_toggle_script;
 	wake = wakeup_all[cursor_pos];

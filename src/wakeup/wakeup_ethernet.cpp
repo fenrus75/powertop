@@ -1,4 +1,4 @@
-;/*
+/*
  * Copyright 2018, Intel Corporation
  *
  * This file is part of PowerTOP

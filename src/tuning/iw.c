@@ -147,8 +147,9 @@ static int print_power_save_handler(struct nl_msg *msg, void *arg __unused)
 	struct nlattr *attrs[NL80211_ATTR_MAX + 1];
 	struct genlmsghdr *gnlh = nlmsg_data(nlmsg_hdr(msg));
 
-	nla_parse(attrs, NL80211_ATTR_MAX, genlmsg_attrdata(gnlh, 0),
-		  genlmsg_attrlen(gnlh, 0), NULL);
+	if (nla_parse(attrs, NL80211_ATTR_MAX, genlmsg_attrdata(gnlh, 0),
+		      genlmsg_attrlen(gnlh, 0), NULL) < 0)
+		return -1;
 
 	if (!attrs[NL80211_ATTR_PS_STATE])
 		return 0;

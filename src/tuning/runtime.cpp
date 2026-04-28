@@ -100,7 +100,7 @@ int runtime_tunable::good_bad(void)
 	if (content == "auto")
 		return TUNE_GOOD;
 	if (content == "on")
-		return TUNE_GOOD;
+		return TUNE_BAD;
 
 	return TUNE_BAD;
 }

@@ -101,6 +101,8 @@ static std::string get_time_string(const std::string &fmt, time_t t)
 {
 	char buf[128];
 	struct tm *tm_info = localtime(&t);
+	if (!tm_info)
+		return "";
 	if (strftime(buf, sizeof(buf), fmt.c_str(), tm_info))
 		return buf;
 	return "";

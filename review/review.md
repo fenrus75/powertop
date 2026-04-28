@@ -23,7 +23,7 @@ function.
 In addition, load these files into the context:
 - `style.md` - Coding style guide
 - `general-c++.md` - C++ coding rules
-- 'rules.md' - PowerTOP specific coding rules
+- `rules.md` - PowerTOP specific coding rules
 
 
 ## Perform code review

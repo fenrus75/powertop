@@ -44,7 +44,7 @@ public:
 	virtual void start_measurement(void) override;
 	virtual void end_measurement(void) override;
 	virtual void sample(void);
-	
+
 	virtual double power(void) override;
 	virtual double dev_capacity(void) override { return 0.0; };
 };

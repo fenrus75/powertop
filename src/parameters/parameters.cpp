@@ -458,7 +458,7 @@ int global_power_valid(void)
 	if (!past_results.empty() && global_run_times < 1){
 		fprintf(stderr, _("To show power estimates do %ld measurement(s) connected to battery only\n"),
 			(3 * all_parameters.parameters.size()) - past_results.size());
-		global_run_times += 1; 
+		global_run_times += 1;
 	}
 
 	return global_power_override;

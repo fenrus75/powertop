@@ -64,7 +64,7 @@ std::string i965_core::fill_cstate_line(int line_nr, const std::string &[[maybe_
 	time_delta  = 1000000 * (after.tv_sec - before.tv_sec) + after.tv_usec - before.tv_usec;
 	ratio = 100000.0/time_delta;
 
-	switch (line_nr) {	
+	switch (line_nr) {
 	case 0:
 		d = 100.0 - ratio * (rc6_after + rc6p_after + rc6pp_after - rc6_before - rc6p_before - rc6pp_before);
 		break;
@@ -80,13 +80,13 @@ std::string i965_core::fill_cstate_line(int line_nr, const std::string &[[maybe_
 	default:
 		return "";
 	}
-		
+
 	/* cope with rounding errors due to the measurement interval */
 	if (d < 0.0)
 		d = 0.0;
 	if (d > 100.0)
 		d = 100.0;
-	
+
 	return std::format("{:5.1f}%", d);
 }
 

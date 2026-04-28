@@ -189,7 +189,7 @@ void test_framework_manager::load() {
 	}
 }
 
-static const std::string base64_chars = 
+static const std::string base64_chars =
              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
              "abcdefghijklmnopqrstuvwxyz"
              "0123456789+/";

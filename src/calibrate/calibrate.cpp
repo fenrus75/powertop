@@ -226,7 +226,7 @@ static void *burn_disk(void *[[maybe_unused]] dummy)
 
 	while (!stop_measurement) {
 		lseek(fd, 0, SEEK_SET);
-		if(write(fd, buffer, 64*1024) == -1)
+		if (write(fd, buffer, 64*1024) == -1)
 			fprintf(stderr, _("Error: %s\n"), strerror(errno));
 		fdatasync(fd);
 	}

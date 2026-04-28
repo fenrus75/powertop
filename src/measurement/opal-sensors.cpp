@@ -40,7 +40,7 @@ double opal_sensors_power_meter::power(void)
 
 	value = read_sysfs(name, &ok);
 
-	if(ok)
+	if (ok)
 		r = value / 1000000.0;
 	return r;
 }

@@ -86,7 +86,7 @@ void perf_bundle::release(void)
 	}
 	events.clear();
 
-	for(i = 0; i < records.size(); i++) {
+	for (i = 0; i < records.size(); i++) {
 		free(records[i]);
 	}
 	records.clear();

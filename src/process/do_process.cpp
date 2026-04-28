@@ -880,11 +880,11 @@ void process_update_display(void)
 		align_string(usage, 14, 20);
 		align_string(events, 12, 20);
 
-		wprintw(win, "%s  %s %s %s %s\n", 
-			power.c_str(), 
-			usage.c_str(), 
-			events.c_str(), 
-			name.c_str(), 
+		wprintw(win, "%s  %s %s %s %s\n",
+			power.c_str(),
+			usage.c_str(),
+			events.c_str(),
+			name.c_str(),
 			pretty_print(all_power[i]->description()).c_str());
 	}
 }
@@ -1102,7 +1102,7 @@ void report_summary(void)
 				usage = std::format("{:5d}{}", (int)all_power[i]->usage_summary(),
 					all_power[i]->usage_units_summary());
 		}
-		
+
 		events = std::format("{:5.1f}", all_power[i]->events());
 		if (!all_power[i]->show_events())
 			events = "";

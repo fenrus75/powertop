@@ -47,7 +47,7 @@ class tab_window {
 public:
 	int cursor_pos = 0;
 	int cursor_max = 0;
-	short int xpad_pos = 0, ypad_pos = 0; 
+	short int xpad_pos = 0, ypad_pos = 0;
 	WINDOW *win = nullptr;
 
 	tab_window() {
@@ -58,12 +58,12 @@ public:
 		win = nullptr;
 	}
 
-	virtual void cursor_down(void) { 
+	virtual void cursor_down(void) {
 		if (cursor_pos < cursor_max)
 			cursor_pos++;
 		repaint();
 	} ;
-	virtual void cursor_up(void) { 
+	virtual void cursor_up(void) {
 		if (cursor_pos > 0)
 			cursor_pos--;
 		repaint();

@@ -249,7 +249,7 @@ double c_rapl_interface::get_power_unit()
 	uint64_t value;
 
 	ret = get_rapl_power_unit(&value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		return ret;
 	}
@@ -263,7 +263,7 @@ double c_rapl_interface::get_energy_status_unit()
 	uint64_t value;
 
 	ret = get_rapl_power_unit(&value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		return ret;
 	}
@@ -277,7 +277,7 @@ double c_rapl_interface::get_time_unit()
 	uint64_t value;
 
 	ret = get_rapl_power_unit(&value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		return ret;
 	}
@@ -295,7 +295,7 @@ int c_rapl_interface::get_pkg_energy_status(double *status)
 	}
 
 	ret = read_msr(first_cpu, MSR_PKG_ENERGY_STATUS, &value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_pkg_energy_status failed\n");
 		return ret;
@@ -316,7 +316,7 @@ int c_rapl_interface::get_pkg_power_info(double *thermal_spec_power,
 		return -1;
 	}
 	ret = read_msr(first_cpu, MSR_PKG_POWER_INFO, &value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_pkg_power_info failed\n");
 		return ret;
@@ -338,7 +338,7 @@ int c_rapl_interface::get_pkg_power_limit(uint64_t *value)
 	}
 
 	ret = read_msr(first_cpu, MSR_PKG_POWER_LIMIT, value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_pkg_power_limit failed\n");
 		return ret;
@@ -356,7 +356,7 @@ int c_rapl_interface::set_pkg_power_limit(uint64_t value)
 	}
 
 	ret = write_msr(first_cpu, MSR_PKG_POWER_LIMIT, value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("set_pkg_power_limit failed\n");
 		return ret;
@@ -385,7 +385,7 @@ int c_rapl_interface::get_dram_energy_status(double *status)
 	}
 
 	ret = read_msr(first_cpu, MSR_DRAM_ENERGY_STATUS, &value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_dram_energy_status failed\n");
 		return ret;
@@ -406,7 +406,7 @@ int c_rapl_interface::get_dram_power_info(double *thermal_spec_power,
 		return -1;
 	}
 	ret = read_msr(first_cpu, MSR_DRAM_POWER_INFO, &value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_dram_power_info failed\n");
 		return ret;
@@ -429,7 +429,7 @@ int c_rapl_interface::get_dram_power_limit(uint64_t *value)
 	}
 
 	ret = read_msr(first_cpu, MSR_DRAM_POWER_LIMIT, value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_dram_power_limit failed\n");
 		return ret;
@@ -447,7 +447,7 @@ int c_rapl_interface::set_dram_power_limit(uint64_t value)
 	}
 
 	ret = write_msr(first_cpu, MSR_DRAM_POWER_LIMIT, value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("set_dram_power_limit failed\n");
 		return ret;
@@ -476,7 +476,7 @@ int c_rapl_interface::get_pp0_energy_status(double *status)
 	}
 
 	ret = read_msr(first_cpu, MSR_PP0_ENERGY_STATUS, &value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_pp0_energy_status failed\n");
 		return ret;
@@ -496,7 +496,7 @@ int c_rapl_interface::get_pp0_power_limit(uint64_t *value)
 	}
 
 	ret = read_msr(first_cpu, MSR_PP0_POWER_LIMIT, value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_pp0_power_limit failed\n");
 		return ret;
@@ -514,7 +514,7 @@ int c_rapl_interface::set_pp0_power_limit(uint64_t value)
 	}
 
 	ret = write_msr(first_cpu, MSR_PP0_POWER_LIMIT, value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("set_pp0_power_limit failed\n");
 		return ret;
@@ -533,7 +533,7 @@ int c_rapl_interface::get_pp0_power_policy(unsigned int *pp0_power_policy)
 	}
 
 	ret = read_msr(first_cpu, MSR_PP0_POLICY, &value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_pp0_power_policy failed\n");
 		return ret;
@@ -564,7 +564,7 @@ int c_rapl_interface::get_pp1_energy_status(double *status)
 	}
 
 	ret = read_msr(first_cpu, MSR_PP1_ENERGY_STATUS, &value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_pp1_energy_status failed\n");
 		return ret;
@@ -584,7 +584,7 @@ int c_rapl_interface::get_pp1_power_limit(uint64_t *value)
 	}
 
 	ret = read_msr(first_cpu, MSR_PP1_POWER_LIMIT, value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_pp1_power_info failed\n");
 		return ret;
@@ -602,7 +602,7 @@ int c_rapl_interface::set_pp1_power_limit(uint64_t value)
 	}
 
 	ret = write_msr(first_cpu, MSR_PP1_POWER_LIMIT, value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("set_pp1_power_limit failed\n");
 		return ret;
@@ -621,7 +621,7 @@ int c_rapl_interface::get_pp1_power_policy(unsigned int *pp1_power_policy)
 	}
 
 	ret = read_msr(first_cpu, MSR_PP1_POLICY, &value);
-	if(ret < 0)
+	if (ret < 0)
 	{
 		RAPL_ERROR_PRINT("get_pp1_power_policy failed\n");
 		return ret;

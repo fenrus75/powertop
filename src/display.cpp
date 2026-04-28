@@ -244,13 +244,13 @@ void cursor_down(void)
 	if (w) {
 		if (w->ypad_pos < 1000) {
 			if (tab_names[current_tab] == "Tunables" || tab_names[current_tab] == "WakeUp") {
-		                if ((w->cursor_pos + 7) >= LINES) { 
-					prefresh(w->win, ++w->ypad_pos, w->xpad_pos, 
+		                if ((w->cursor_pos + 7) >= LINES) {
+					prefresh(w->win, ++w->ypad_pos, w->xpad_pos,
 						1, 0, LINES - 3, COLS - 1);
-				}			
-					w->cursor_down(); 
+				}
+					w->cursor_down();
 			} else {
-				prefresh(w->win, ++w->ypad_pos, w->xpad_pos, 
+				prefresh(w->win, ++w->ypad_pos, w->xpad_pos,
 					1, 0, LINES - 3, COLS - 1);
 			}
 		}
@@ -266,13 +266,13 @@ void cursor_up(void)
 	w = tab_windows[tab_names[current_tab]];
 
 	if (w) {
-		w->cursor_up(); 
-		if(w->ypad_pos > 0) {
+		w->cursor_up();
+		if (w->ypad_pos > 0) {
 			prefresh(w->win, --w->ypad_pos, w->xpad_pos,
 				 1, 0, LINES - 3, COLS - 1);
 		}
 	}
-	
+
 	show_cur_tab();
 }
 
@@ -281,16 +281,16 @@ void cursor_left(void)
         class tab_window *w;
 
 	w = tab_windows[tab_names[current_tab]];
-	
-	if (w) {			
+
+	if (w) {
 		if (w->xpad_pos > 0) {
-			prefresh(w->win, w->ypad_pos,--w->xpad_pos, 
+			prefresh(w->win, w->ypad_pos,--w->xpad_pos,
 				1, 0, LINES - 3, COLS - 1);
 		}
 	}
 }
 
-void cursor_right(void) 
+void cursor_right(void)
 {
         class tab_window *w;
 
@@ -298,7 +298,7 @@ void cursor_right(void)
 
 	if (w) {
 		if (w->xpad_pos < 1000) {
-			prefresh(w->win, w->ypad_pos, ++w->xpad_pos, 
+			prefresh(w->win, w->ypad_pos, ++w->xpad_pos,
 				1, 0, LINES - 3, COLS - 1);
 		}
 	}

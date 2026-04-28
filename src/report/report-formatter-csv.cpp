@@ -128,7 +128,7 @@ report_formatter_csv::add_summary_list(const std::vector<std::string> &list)
 	add_exact("\n");
 	for (size_t i=0; i < list.size(); i+=2){
 		add_exact(std::format("{} {}", list[i], list[i+1]));
-		if(i < (list.size() - 1))
+		if (i < (list.size() - 1))
 			add_exact(";");
 	}
 	add_exact("\n");
@@ -152,15 +152,15 @@ report_formatter_csv::add_table(const std::vector<std::string> &system_data, str
 
 			tmp_str=system_data[offset];
 
-			if(tmp_str == "&nbsp;")
+			if (tmp_str == "&nbsp;")
 				empty_row+=1;
 			else{
 				add_exact(system_data[offset]);
-				if(j < (tb_attr->cols - 1))
+				if (j < (tb_attr->cols - 1))
 					add_exact(";");
 			}
 		}
-		if(empty_row < tb_attr->cols)
+		if (empty_row < tb_attr->cols)
 		add_exact("\n");
 		empty_row=0;
 	}

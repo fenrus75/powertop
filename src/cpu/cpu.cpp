@@ -293,7 +293,7 @@ void enumerate_cpus(void)
 		 * on POWER, it's 'revision'
 		 * on RISCV64 it's 'isa'
 		 */
-		
+
 		std::string lower_line = line;
 		std::transform(lower_line.begin(), lower_line.end(), lower_line.begin(), ::tolower);
 
@@ -537,12 +537,12 @@ void report_display_cpu_cstates(void)
 
 				/* *** CORE STARTS *** */
 				if (!_core->can_collapse()) {
-					
+
 					/*
 						* Patch for compatibility with Ryzen processors
 						* See https://github.com/fenrus75/powertop/issues/64
 					*/
-					if(idx2 >= core_tbl_size.cols * core_tbl_size.rows) break;
+					if (idx2 >= core_tbl_size.cols * core_tbl_size.rows) break;
 
 					if (line == LEVEL_HEADER) {
 						/* Here we need to check for which core type we
@@ -566,7 +566,7 @@ void report_display_cpu_cstates(void)
 						}
 					} else {
 
-						
+
 						tmp_str=_core->fill_cstate_name(line);
 						core_data[idx2]=(tmp_str=="" ? "&nbsp;" : tmp_str);
 						idx2+=1;
@@ -614,9 +614,9 @@ void report_display_cpu_cstates(void)
 		}
 
 		/* Report Output */
-		if(core_num > 0)
+		if (core_num > 0)
 			title=title/core_num;
-		else if(_core && !_core->children.empty())
+		else if (_core && !_core->children.empty())
 			title=title/_core->children.size();
 
 		init_pkg_table_attr(&std_table_css, pkg_tbl_size.rows,  pkg_tbl_size.cols);
@@ -795,7 +795,7 @@ void report_display_cpu_pstates(void)
 		}
 		init_pkg_table_attr(&std_table_css, pkg_tbl_size.rows, pkg_tbl_size.cols);
 		report.add_table(pkg_data, &std_table_css);
-		if(_core && !_core->can_collapse()){
+		if (_core && !_core->can_collapse()){
 			title=pstates_num+2;
 			init_core_table_attr(&std_table_css, title,
 				core_tbl_size.rows, core_tbl_size.cols);

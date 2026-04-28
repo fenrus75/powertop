@@ -285,7 +285,7 @@ extech_power_meter::extech_power_meter(const std::string &extech_name) : power_m
 void extech_power_meter::measure(void)
 {
 	/* trigger the extech to send data */
-	if(write(fd, " ", 1) == -1)
+	if (write(fd, " ", 1) == -1)
 		 fprintf(stderr, _("Error: %s\n"), strerror(errno));
 
 	rate = extech_read(fd);

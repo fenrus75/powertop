@@ -372,7 +372,7 @@ std::string fmt_prefix(double n)
 	if (e_pos == std::string::npos) {
 		return "NaN";
 	}
-	
+
 	try {
 		omag = std::stoi(tmpbuf.substr(e_pos + 1));
 	} catch (...) {

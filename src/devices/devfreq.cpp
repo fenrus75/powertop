@@ -109,7 +109,7 @@ void devfreq::update_devfreq_freq_state(uint64_t freq, uint64_t time)
 	unsigned int i;
 	class frequency *state = nullptr;
 
-	for(i=0; i < dstates.size(); i++) {
+	for (i=0; i < dstates.size(); i++) {
 		if (freq == dstates[i]->freq)
 			state = dstates[i];
 	}
@@ -247,7 +247,7 @@ void create_all_devfreq_devices(void)
 		return;
 	}
 
-	while(readdir(dir) != nullptr)
+	while (readdir(dir) != nullptr)
 		num++;
 
 	if (num == 2) {
@@ -295,7 +295,7 @@ void display_devfreq_devices(void)
 		class devfreq *df = all_devfreq[i];
 		wprintw(win, "\n%s\n", df->device_name().c_str());
 
-		for(j=0; j < df->dstates.size(); j++) {
+		for (j=0; j < df->dstates.size(); j++) {
 			std::string f_name = df->fill_freq_name(j);
 			std::string f_util = df->fill_freq_utilization(j);
 			wprintw(win, "\t%s%s\n", f_name.c_str(), f_util.c_str());
@@ -321,7 +321,7 @@ void clear_all_devfreq()
 	for (i=0; i < all_devfreq.size(); i++) {
 		class devfreq *df = all_devfreq[i];
 
-		for(j=0; j < df->dstates.size(); j++)
+		for (j=0; j < df->dstates.size(); j++)
 			delete df->dstates[j];
 
 		delete df;

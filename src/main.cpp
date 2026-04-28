@@ -169,13 +169,13 @@ static void do_sleep(int seconds)
 			show_prev_tab();
 			break;
 		case '\t':
-			show_next_tab(); 
+			show_next_tab();
 			break;
 		case KEY_RIGHT:
-			cursor_right(); 
+			cursor_right();
 			break;
 		case KEY_LEFT:
-			cursor_left(); 
+			cursor_left();
 			break;
 		case KEY_NPAGE:
 		case KEY_DOWN:

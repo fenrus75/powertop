@@ -196,6 +196,8 @@ std::string devfreq::fill_freq_utilization(unsigned int idx)
 {
 	if (idx < dstates.size() && dstates[idx]) {
 		class frequency *state = dstates[idx];
+		if (sample_time < 0.00001)
+			return "";
 		return std::format(" {:5.1f}% ", percentage(1.0 * state->time_after / sample_time));
 	}
 	return "";

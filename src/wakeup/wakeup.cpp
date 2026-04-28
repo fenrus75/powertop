@@ -34,17 +34,17 @@ std::vector<class wakeup *> wakeup_all;
 wakeup::wakeup(const std::string &str, double _score, const std::string &enable, const std::string &disable)
 {
 	score = _score;
-        desc = str;
-        wakeup_enable = enable;
-        wakeup_disable = disable;
+	desc = str;
+	wakeup_enable = enable;
+	wakeup_disable = disable;
 }
 
 wakeup::wakeup(void)
 {
 	score = 0;
-        desc = "";
-        wakeup_enable = _("Enabled");
-        wakeup_disable = _("Disabled");
+	desc = "";
+	wakeup_enable = _("Enabled");
+	wakeup_disable = _("Disabled");
 	wakeup_idle = _("Unknown");
 }
 

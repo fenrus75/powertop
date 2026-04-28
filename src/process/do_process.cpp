@@ -721,72 +721,63 @@ static bool power_cpu_sort(class power_consumer * i, class power_consumer * j)
 
 double total_wakeups(void)
 {
+	if (measurement_time < 0.00001)
+		return 0.0;
 	double total = 0;
 	unsigned int i;
 	for (i = 0; i < all_power.size() ; i++)
 		total += all_power[i]->wake_ups;
 
-	total = total / measurement_time;
-
-
-	return total;
+	return total / measurement_time;
 }
 
 double total_gpu_ops(void)
 {
+	if (measurement_time < 0.00001)
+		return 0.0;
 	double total = 0;
 	unsigned int i;
 	for (i = 0; i < all_power.size() ; i++)
 		total += all_power[i]->gpu_ops;
 
-
-	total = total / measurement_time;
-
-
-	return total;
+	return total / measurement_time;
 }
 
 double total_disk_hits(void)
 {
+	if (measurement_time < 0.00001)
+		return 0.0;
 	double total = 0;
 	unsigned int i;
 	for (i = 0; i < all_power.size() ; i++)
 		total += all_power[i]->disk_hits;
 
-
-	total = total / measurement_time;
-
-
-	return total;
+	return total / measurement_time;
 }
 
 
 double total_hard_disk_hits(void)
 {
+	if (measurement_time < 0.00001)
+		return 0.0;
 	double total = 0;
 	unsigned int i;
 	for (i = 0; i < all_power.size() ; i++)
 		total += all_power[i]->hard_disk_hits;
 
-
-	total = total / measurement_time;
-
-
-	return total;
+	return total / measurement_time;
 }
 
 double total_xwakes(void)
 {
+	if (measurement_time < 0.00001)
+		return 0.0;
 	double total = 0;
 	unsigned int i;
 	for (i = 0; i < all_power.size() ; i++)
 		total += all_power[i]->xwakes;
 
-
-	total = total / measurement_time;
-
-
-	return total;
+	return total / measurement_time;
 }
 
 void process_update_display(void)
@@ -966,17 +957,23 @@ void report_process_update_display(void)
 				usage = std::format("{:5d}{}", (int)all_power[i]->usage(), all_power[i]->usage_units());
 		}
 
-		wakes = std::format("{:5.1f}", all_power[i]->wake_ups / measurement_time);
-		if (all_power[i]->wake_ups / measurement_time <= 0.3)
-			wakes = std::format("{:5.2f}", all_power[i]->wake_ups / measurement_time);
-		
-		gpus = std::format("{:5.1f}", all_power[i]->gpu_ops / measurement_time);
-		
-		disks = std::format("{:5.1f} ({:5.1f})", 
-				all_power[i]->hard_disk_hits / measurement_time,
-				all_power[i]->disk_hits / measurement_time);
-		
-		xwakes = std::format("{:5.1f}", all_power[i]->xwakes / measurement_time);
+		wakes = "  0.0";
+		gpus = "  0.0";
+		disks = "  0.0 (  0.0)";
+		xwakes = "  0.0";
+		if (measurement_time >= 0.00001) {
+			wakes = std::format("{:5.1f}", all_power[i]->wake_ups / measurement_time);
+			if (all_power[i]->wake_ups / measurement_time <= 0.3)
+				wakes = std::format("{:5.2f}", all_power[i]->wake_ups / measurement_time);
+
+			gpus = std::format("{:5.1f}", all_power[i]->gpu_ops / measurement_time);
+
+			disks = std::format("{:5.1f} ({:5.1f})",
+					all_power[i]->hard_disk_hits / measurement_time,
+					all_power[i]->disk_hits / measurement_time);
+
+			xwakes = std::format("{:5.1f}", all_power[i]->xwakes / measurement_time);
+		}
 
 		if (!all_power[i]->show_events()) {
 			wakes = "";

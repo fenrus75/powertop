@@ -107,15 +107,11 @@ std::string timer::usage_units_summary(void)
 
 
 
-static void add_timer(const std::pair<unsigned long, class timer*>& elem)
-{
-	all_power.push_back(elem.second);
-}
-
 void all_timers_to_all_power(void)
 {
-	std::for_each(all_timers.begin(), all_timers.end(), add_timer);
-
+	for (auto &[addr, t] : all_timers)
+		if (t->accumulated_runtime > 0)
+			all_power.push_back(t);
 }
 
 

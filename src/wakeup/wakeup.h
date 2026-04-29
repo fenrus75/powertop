@@ -26,8 +26,8 @@
 
 #include<vector>
 #include <limits.h>
-
 #include <string>
+#include "../lib.h"
 
 #define WAKEUP_ENABLE 1
 #define WAKEUP_DISABLE 0
@@ -67,6 +67,9 @@ public:
 	virtual void wakeup_toggle(void) { };
 
 	virtual std::string wakeup_toggle_script(void) { return toggle_enable; }
+
+	virtual void collect_json_fields(std::string &_js);
+	std::string serialize() { JSON_START(); collect_json_fields(_js); JSON_END(); }
 
 };
 

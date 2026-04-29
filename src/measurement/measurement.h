@@ -26,6 +26,7 @@
 
 #include <vector>
 #include <string>
+#include "../lib.h"
 
 class power_meter {
 	bool discharging = false;
@@ -53,6 +54,9 @@ public:
 	{
 		return discharging;
 	}
+
+	virtual void collect_json_fields(std::string &_js);
+	std::string serialize() { JSON_START(); collect_json_fields(_js); JSON_END(); }
 };
 
 extern std::vector<class power_meter *> power_meters;

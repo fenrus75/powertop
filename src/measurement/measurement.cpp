@@ -55,6 +55,14 @@ double power_meter::power(void)
 	return 0.0;
 }
 
+void power_meter::collect_json_fields(std::string &_js)
+{
+	JSON_FIELD(name);
+	JSON_KV("discharging", is_discharging());
+	JSON_KV("power", power());
+	JSON_KV("capacity", dev_capacity());
+}
+
 std::vector<class power_meter *> power_meters;
 
 static struct timespec tlast;

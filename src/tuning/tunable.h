@@ -81,6 +81,9 @@ public:
 			return toggle_bad;
 		return toggle_good;
 	}
+
+	virtual void collect_json_fields(std::string &_js);
+	std::string serialize() { JSON_START(); collect_json_fields(_js); JSON_END(); }
 };
 
 extern std::vector<class tunable *> all_tunables;

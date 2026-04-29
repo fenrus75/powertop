@@ -519,3 +519,17 @@ void abstract_cpu::reset_pstate_data(void)
 		if (children[i])
 			children[i]->reset_pstate_data();
 }
+
+void abstract_cpu::collect_json_fields(std::string &_js)
+{
+	JSON_KV("type", get_type());
+	JSON_FIELD(number);
+	JSON_FIELD(first_cpu);
+	JSON_FIELD(idle);
+	JSON_FIELD(has_intel_MSR);
+	JSON_FIELD(current_frequency);
+	JSON_FIELD(effective_frequency);
+	JSON_ARRAY("cstates", cstates);
+	JSON_ARRAY("pstates", pstates);
+	JSON_ARRAY("children", children);
+}

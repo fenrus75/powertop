@@ -49,3 +49,12 @@ tunable::tunable(void)
 	bad_string = _("Bad");
 	neutral_string = _("Unknown");
 }
+
+void tunable::collect_json_fields(std::string &_js)
+{
+	JSON_FIELD(desc);
+	JSON_FIELD(score);
+	JSON_KV("result", result_string());
+	JSON_FIELD(toggle_good);
+	JSON_FIELD(toggle_bad);
+}

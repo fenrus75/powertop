@@ -68,6 +68,9 @@ public:
 	virtual void register_power_with_devlist([[maybe_unused]] struct result_bundle *results, [[maybe_unused]] struct parameter_bundle *bundle) { ; };
 
 	virtual int grouping_prio(void) { return 0; }; /* priority of this device class if multiple classes match to the same underlying device. 0 is lowest */
+
+	virtual void collect_json_fields(std::string &_js);
+	std::string serialize() { JSON_START(); collect_json_fields(_js); JSON_END(); }
 };
 
 extern std::vector<class device *> all_devices;

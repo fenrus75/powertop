@@ -66,6 +66,9 @@ public:
 	virtual std::string usage_units_summary(void) { return usage_units(); };
 	virtual double events(void) { if (measurement_time < 0.00001) return 0.0; return  (wake_ups + gpu_ops + hard_disk_hits) / measurement_time;};
 	virtual int show_events(void) { return 1; };
+
+	virtual void collect_json_fields(std::string &_js);
+	std::string serialize() { JSON_START(); collect_json_fields(_js); JSON_END(); }
 };
 
 extern std::vector <class power_consumer *> all_power;

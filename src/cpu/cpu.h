@@ -56,6 +56,16 @@ struct idle_state {
 	int after_count = 0;
 
 	int line_level = 0;
+
+	std::string serialize() {
+		JSON_START();
+		JSON_FIELD(linux_name); JSON_FIELD(human_name);
+		JSON_FIELD(usage_before); JSON_FIELD(usage_after); JSON_FIELD(usage_delta);
+		JSON_FIELD(duration_before); JSON_FIELD(duration_after); JSON_FIELD(duration_delta);
+		JSON_FIELD(before_count); JSON_FIELD(after_count);
+		JSON_FIELD(line_level);
+		JSON_END();
+	}
 };
 
 class frequency {
@@ -73,6 +83,16 @@ public:
 	int after_count = 0;
 
 	double   display_value = 0.0;
+
+	std::string serialize() {
+		JSON_START();
+		JSON_FIELD(human_name); JSON_FIELD(line_level);
+		JSON_FIELD(freq);
+		JSON_FIELD(time_after); JSON_FIELD(time_before);
+		JSON_FIELD(before_count); JSON_FIELD(after_count);
+		JSON_FIELD(display_value);
+		JSON_END();
+	}
 };
 
 class abstract_cpu
@@ -158,6 +178,9 @@ public:
 
 	virtual void validate(void);
 	virtual void reset_pstate_data(void);
+
+	virtual void collect_json_fields(std::string &_js);
+	std::string serialize() { JSON_START(); collect_json_fields(_js); JSON_END(); }
 };
 
 extern std::vector<class abstract_cpu *> all_cpus;

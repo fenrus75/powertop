@@ -32,6 +32,7 @@
 
 #include <format>
 #include <string_view>
+#include <vector>
 
 template<typename... Args>
 inline std::string pt_format(std::string_view fmt, Args&&... args)
@@ -98,6 +99,99 @@ template<size_t N> void pt_strcpy(char (&d)[N], const char *s)
 	strncpy(d, s, N);
 	d[N-1] = '\0';
 }
+
+/* ── JSON serialization helpers ────────────────────────────────────────── */
+
+/* Escape a string value for inclusion in a JSON string literal. */
+inline std::string pt_json_escape(const std::string &s)
+{
+	std::string out;
+	out.reserve(s.size());
+	for (unsigned char c : s) {
+		if      (c == '"')  out += "\\\"";
+		else if (c == '\\') out += "\\\\";
+		else if (c == '\n') out += "\\n";
+		else if (c == '\r') out += "\\r";
+		else if (c == '\t') out += "\\t";
+		else                out += c;
+	}
+	return out;
+}
+
+/* pt_json_kv — one overload per supported value type. */
+inline std::string pt_json_kv(const std::string &k, const std::string &v)
+{ return "\"" + k + "\":\"" + pt_json_escape(v) + "\""; }
+
+inline std::string pt_json_kv(const std::string &k, const char *v)
+{ return pt_json_kv(k, std::string(v ? v : "")); }
+
+inline std::string pt_json_kv(const std::string &k, bool v)
+{ return "\"" + k + "\":" + (v ? "true" : "false"); }
+
+inline std::string pt_json_kv(const std::string &k, int v)
+{ return "\"" + k + "\":" + std::to_string(v); }
+
+inline std::string pt_json_kv(const std::string &k, unsigned int v)
+{ return "\"" + k + "\":" + std::to_string(v); }
+
+inline std::string pt_json_kv(const std::string &k, long v)
+{ return "\"" + k + "\":" + std::to_string(v); }
+
+inline std::string pt_json_kv(const std::string &k, unsigned long v)
+{ return "\"" + k + "\":" + std::to_string(v); }
+
+inline std::string pt_json_kv(const std::string &k, long long v)
+{ return "\"" + k + "\":" + std::to_string(v); }
+
+inline std::string pt_json_kv(const std::string &k, unsigned long long v)
+{ return "\"" + k + "\":" + std::to_string(v); }
+
+inline std::string pt_json_kv(const std::string &k, double v)
+{ return "\"" + k + "\":" + std::format("{:.6g}", v); }
+
+/*
+ * pt_json_array — serializes a vector of pointers whose pointees have a
+ * serialize() const method. Returns a JSON array string "[...]".
+ */
+template<typename T>
+inline std::string pt_json_array(const std::vector<T *> &vec)
+{
+	std::string out = "[";
+	for (size_t i = 0; i < vec.size(); ++i) {
+		out += vec[i]->serialize();
+		if (i + 1 < vec.size())
+			out += ",";
+	}
+	out += "]";
+	return out;
+}
+
+/*
+ * Serialization macros.
+ *
+ * Usage in serialize() / collect_json_fields():
+ *
+ *   std::string serialize() const {
+ *       JSON_START();
+ *       JSON_FIELD(my_member);          // key = "my_member"
+ *       JSON_KV("key", some_method());  // explicit key
+ *       JSON_ARRAY("items", vec_);      // vector<T*> whose T has serialize()
+ *       JSON_END();
+ *   }
+ *
+ * JSON_START() declares the local accumulator string _js.
+ * JSON_END() appends a sentinel field "_end":0 (avoids trailing-comma
+ * handling) then closes the object and returns it.
+ *
+ * For class hierarchies, override collect_json_fields(std::string &_js) and
+ * call the parent version first.  serialize() in the base calls
+ * collect_json_fields() then JSON_END().
+ */
+#define JSON_START()      std::string _js = "{"
+#define JSON_FIELD(x)     _js += pt_json_kv(#x, (x)) + ","
+#define JSON_KV(k, v)     _js += pt_json_kv((k), (v)) + ","
+#define JSON_ARRAY(k, v)  _js += "\"" k "\":" + pt_json_array(v) + ","
+#define JSON_END()        return _js + "\"_end\":0}"
 
 typedef void (*callback)(const std::string&);
 extern void process_directory(const std::string &d_name, callback fn);

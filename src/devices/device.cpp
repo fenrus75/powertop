@@ -93,6 +93,15 @@ double	device::utilization(void)
 	return 0.0;
 }
 
+void device::collect_json_fields(std::string &_js)
+{
+	JSON_KV("class", class_name());
+	JSON_KV("name", device_name());
+	JSON_FIELD(hide);
+	JSON_FIELD(guilty);
+	JSON_FIELD(real_path);
+}
+
 
 
 std::vector<class device *> all_devices;

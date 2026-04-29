@@ -105,3 +105,17 @@ std::string power_consumer::usage_units(void)
 	}
 	return _(" ms/s");
 }
+
+void power_consumer::collect_json_fields(std::string &_js)
+{
+	JSON_KV("name", name());
+	JSON_KV("type", type());
+	JSON_FIELD(accumulated_runtime);
+	JSON_FIELD(child_runtime);
+	JSON_FIELD(wake_ups);
+	JSON_FIELD(gpu_ops);
+	JSON_FIELD(disk_hits);
+	JSON_FIELD(hard_disk_hits);
+	JSON_FIELD(xwakes);
+	JSON_FIELD(power_charge);
+}

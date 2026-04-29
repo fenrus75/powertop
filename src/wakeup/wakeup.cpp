@@ -47,3 +47,12 @@ wakeup::wakeup(void)
 	wakeup_idle = _("Unknown");
 }
 
+void wakeup::collect_json_fields(std::string &_js)
+{
+	JSON_FIELD(desc);
+	JSON_FIELD(score);
+	JSON_KV("enabled", wakeup_value() == WAKEUP_ENABLE);
+	JSON_FIELD(toggle_enable);
+	JSON_FIELD(toggle_disable);
+}
+

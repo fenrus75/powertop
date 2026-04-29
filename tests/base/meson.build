@@ -185,3 +185,27 @@ test_usb_wakeup_exe = executable(
 )
 
 test('base: usb_wakeup serialize', test_usb_wakeup_exe)
+
+test_sysfs_pm_exe = executable(
+  'powertop-test-sysfs-power-meter',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/measurement/measurement.cpp',
+    '../../src/measurement/sysfs.cpp',
+    'test_sysfs_power_meter.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: sysfs_power_meter serialize', test_sysfs_pm_exe)

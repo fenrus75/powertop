@@ -1,0 +1,4 @@
+R /sys/class/power_supply/BAT0/present MQo=
+R /sys/class/power_supply/BAT0/status Q2hhcmdpbmcK
+R /sys/class/power_supply/BAT0/power_now MTUwMDAwMDAK
+R /sys/class/power_supply/BAT0/energy_now MzYwMDAwMDAK

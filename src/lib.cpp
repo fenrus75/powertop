@@ -38,6 +38,7 @@
 #include <limits.h>
 #include <format>
 
+#include <filesystem>
 #include "test_framework.h"
 
 #include "lib.h"
@@ -259,16 +260,15 @@ std::string pt_readlink(const std::string &path)
 	if (test_framework_manager::get().is_replaying()) {
 		return test_framework_manager::get().replay_readlink(path);
 	}
-	char buf[PATH_MAX + 1];
-	ssize_t len = readlink(path.c_str(), buf, PATH_MAX);
-	if (len < 0) {
+	std::string target;
+	try {
+		target = std::filesystem::read_symlink(path).string();
+	} catch (const std::filesystem::filesystem_error &) {
 		if (test_framework_manager::get().is_recording()) {
 			test_framework_manager::get().record_readlink(path, "");
 		}
 		return "";
 	}
-	buf[len] = '\0';
-	std::string target(buf, len);
 	if (test_framework_manager::get().is_recording()) {
 		test_framework_manager::get().record_readlink(path, target);
 	}

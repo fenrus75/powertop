@@ -46,13 +46,29 @@ GCC warnings triggered by the wrong placement:
 Git commits in this repo must use `--no-gpg-sign` flag to avoid hanging due
 to GPG agent unavailability:
 ```
-git commit --no-gpg-sign -F /tmp/commitmsg.txt
+git commit --no-gpg-sign -F commitmsg.txt
 ```
+Write the commit message to a file in the project directory (NOT /tmp), then
+remove it after committing. Use `git add -A` carefully — always check for
+untracked files (like DEADJOE, temp files) that should NOT be committed; use
+`git restore --staged <file>` to unstage them before committing.
 The repo has a global `user.signingkey` set, but the GPG agent is not running
 in the terminal session. Setting `commit.gpgsign=false` locally is not
 sufficient — `--no-gpg-sign` on the command line is required.
 
-# Prefered user style
+# collect_json_fields pattern
+
+When adding `collect_json_fields(std::string &_js)` to derived classes:
+1. Add declaration to header public section: `void collect_json_fields(std::string &_js) override;`
+2. Append implementation to the .cpp file
+3. Always call parent's `collect_json_fields(_js)` first
+4. Use `JSON_FIELD(x)` for simple fields, `JSON_KV(k, v)` for computed/cast values,
+   `JSON_ARRAY(k, vec)` for `vector<T*>` where T has `serialize()`
+5. For `vector<string>`, manually build JSON array (no pointer T, can't use JSON_ARRAY)
+6. For `nhm_*` and `i965_core` classes: call `abstract_cpu::collect_json_fields(_js)`
+   (not the intermediate cpu_package/cpu_core base — those lack the method)
+7. Skip non-serializable members: mutex, atomic, pthread_t, pointer-to-interface
+
 
 When asked to make a non-trivial change (multiple files/elements), create a
 proposal to do this in incremental steps, and consider doing one step at a

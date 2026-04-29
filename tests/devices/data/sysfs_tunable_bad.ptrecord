@@ -1,0 +1,2 @@
+R /sys/class/scsi_host/host0/link_power_management_policy bWF4X3BlcmZvcm1hbmNlCg==
+R /sys/class/scsi_host/host0/link_power_management_policy bWF4X3BlcmZvcm1hbmNlCg==

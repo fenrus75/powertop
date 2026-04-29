@@ -186,6 +186,7 @@ powertop_sources = [
   'src/devices/devfreq.h',
   'src/devices/device.cpp',
   'src/devices/device.h',
+  'src/devices/device_manager.cpp',
   'src/devices/gpu_rapl_device.cpp',
   'src/devices/gpu_rapl_device.h',
   'src/devices/i915-gpu.cpp',

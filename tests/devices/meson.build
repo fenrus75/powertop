@@ -4,8 +4,9 @@ test_alsa_exe = executable(
     '../../src/lib.cpp',
     '../../src/test_framework.cpp',
     '../../src/parameters/parameters.cpp',
+    '../../src/devices/device.cpp',
     '../../src/devices/alsa.cpp',
-    'device_stub.cpp',
+    'test_stubs.cpp',
     'test_alsa_serialize.cpp',
   ],
   include_directories: [

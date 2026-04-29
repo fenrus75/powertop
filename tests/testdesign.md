@@ -379,3 +379,93 @@ PT_ASSERT_TRUE(got.find("\"start_pkts\":") != std::string::npos);
 | `rfkill` | reads two soft/hard block integers, no children |
 | `runtime_pmdevice` | reads suspended/active time counters from sysfs |
 | `process` | fields set directly from `/proc` reads, no sysfs, no children |
+
+---
+
+## Python helper scripts for pass/fail analysis
+
+For tests whose pass/fail logic is too complex or verbose to express cleanly
+in C++ (e.g. deep JSON comparison, numeric tolerance checks, diff-style
+reporting), write a small Python helper script and invoke it from the C++ test
+binary via `system()` or `popen()`, or register it directly as a Meson `test()`
+target.
+
+### When to use a Python helper
+
+- **Structured JSON comparison**: comparing two `serialize()` outputs while
+  ignoring specific keys (e.g. timestamp fields, platform-varying values) is
+  much cleaner in Python than in C++ string manipulation.
+- **Numeric tolerance**: asserting that a floating-point field is within ±5 %
+  of an expected value without adding a floating-point epsilon framework to the
+  C++ tests.
+- **Diff reporting**: when a snapshot mismatch occurs, a Python script can print
+  a human-readable field-by-field diff (e.g. using `jsondiff` or the stdlib
+  `json` + `difflib` modules) instead of printing two very long strings.
+- **Cross-run regression checks**: comparing `serialize()` output captured
+  across two different builds or two runs on the same hardware.
+
+### Registering a Python test in Meson
+
+```meson
+# A pure Python analysis script registered as a Meson test target:
+test('devices: alsa snapshot',
+  find_program('python3'),
+  args: [files('check_alsa_snapshot.py'),
+         meson.current_source_dir() / 'data' / 'alsa_expected.json'],
+  workdir: meson.current_source_dir(),
+)
+```
+
+The script exits 0 for pass, non-zero for fail — Meson uses the exit code.
+
+### Pattern: C++ binary dumps JSON, Python validates
+
+```cpp
+// In the C++ test binary — write serialize() output to stdout:
+std::cout << dev.serialize() << "\n";
+```
+
+```python
+# check_alsa_snapshot.py — read from a file or pipe, parse, validate
+import sys, json
+
+with open(sys.argv[1]) as f:
+    expected = json.load(f)
+
+actual = json.loads(sys.stdin.read())   # or load from a fixed output file
+
+def check(key, exp_val):
+    if actual.get(key) != exp_val:
+        print(f"FAIL: {key}: expected {exp_val!r}, got {actual.get(key)!r}")
+        sys.exit(1)
+
+check("name", "hw:0,0")
+check("start_active", 0)
+print("PASS")
+```
+
+### Ignoring volatile fields
+
+```python
+IGNORE_KEYS = {"_end", "stamp_before_sec", "stamp_before_usec",
+               "stamp_after_sec",  "stamp_after_usec"}
+
+def json_eq_ignore(a, b):
+    ka = {k: v for k, v in a.items() if k not in IGNORE_KEYS}
+    kb = {k: v for k, v in b.items() if k not in IGNORE_KEYS}
+    return ka == kb
+```
+
+### Script location convention
+
+Place helper scripts alongside the test they support:
+
+```
+tests/<area>/
+├── meson.build
+├── test_<subject>.cpp
+├── check_<subject>.py        ← Python validator
+└── data/
+    ├── <fixture>.ptrecord
+    └── <fixture>_expected.json
+```

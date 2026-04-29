@@ -1,0 +1,6 @@
+N /sys/class/sound/hwC0D0/modelname
+N /sys/class/sound/hwC0D0/vendor_name
+R /sys/class/sound/hwC0D0/power_off_acct MTAwMDAwMAo=
+R /sys/class/sound/hwC0D0/power_on_acct NTAwMDAwCg==
+R /sys/class/sound/hwC0D0/power_off_acct MTUwMDAwMAo=
+R /sys/class/sound/hwC0D0/power_on_acct NjAwMDAwCg==

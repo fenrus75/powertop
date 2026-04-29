@@ -1,1 +1,2 @@
 subdir('lib')
+subdir('devices')

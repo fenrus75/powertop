@@ -161,3 +161,27 @@ test_process_exe = executable(
 )
 
 test('base: process serialize', test_process_exe)
+
+test_usb_wakeup_exe = executable(
+  'powertop-test-usb-wakeup',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/wakeup/wakeup.cpp',
+    '../../src/wakeup/wakeup_usb.cpp',
+    'test_usb_wakeup.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: usb_wakeup serialize', test_usb_wakeup_exe)

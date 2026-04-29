@@ -98,6 +98,21 @@ int test_framework_manager::replay_msr(int cpu, uint64_t offset, uint64_t *value
 	return 0;
 }
 
+void test_framework_manager::record_readlink(const std::string& path, const std::string& target) {
+	if (!recording) return;
+	recorded_links.push_back({path, target});
+}
+
+std::string test_framework_manager::replay_readlink(const std::string& path) {
+	if (!replaying) return "";
+	if (link_sequences[path].empty()) {
+		throw test_exception("TEST FAIL: No more recorded content for readlink: " + path);
+	}
+	std::string target = link_sequences[path].front();
+	link_sequences[path].pop_front();
+	return target;
+}
+
 void test_framework_manager::record_time(struct timeval tv) {
 	if (!recording) return;
 	recorded_times.push_back(tv);
@@ -125,6 +140,8 @@ void test_framework_manager::reset() {
 	recorded_msrs.clear();
 	time_sequences.clear();
 	recorded_times.clear();
+	link_sequences.clear();
+	recorded_links.clear();
 }
 
 void test_framework_manager::save() {
@@ -148,6 +165,10 @@ void test_framework_manager::save() {
 	}
 	for (const auto& t : recorded_times) {
 		file << "T " << t.tv_sec << " " << t.tv_usec << std::endl;
+	}
+	/* L base64(target) path — empty base64 means readlink failed */
+	for (const auto& p : recorded_links) {
+		file << "L " << base64_encode(p.second) << " " << p.first << std::endl;
 	}
 }
 
@@ -187,6 +208,15 @@ void test_framework_manager::load() {
 			struct timeval tv;
 			time_ss >> tv.tv_sec >> tv.tv_usec;
 			time_sequences.push_back(tv);
+			continue;
+		}
+
+		if (type == 'L') {
+			/* format: base64(target) path — split on first space */
+			size_t sp = rest.find(' ');
+			std::string b64 = (sp != std::string::npos) ? rest.substr(0, sp) : "";
+			std::string path = (sp != std::string::npos) ? rest.substr(sp + 1) : rest;
+			link_sequences[path].push_back(base64_decode(b64));
 			continue;
 		}
 

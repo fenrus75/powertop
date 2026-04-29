@@ -82,6 +82,7 @@ extern void write_sysfs(const std::string &filename, const std::string &value);
 extern int read_sysfs(const std::string &filename, bool *ok = nullptr);
 extern std::string read_sysfs_string(const std::string &filename);
 extern std::string read_file_content(const std::string &filename);
+extern std::string pt_readlink(const std::string &path);
 extern struct timeval pt_gettime(void);
 
 extern std::string format_watts(double W, unsigned int len);

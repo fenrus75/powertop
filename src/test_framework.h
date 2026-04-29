@@ -47,6 +47,9 @@ public:
 	void record_time(struct timeval tv);
 	void replay_time(struct timeval *tv);
 
+	void record_readlink(const std::string& path, const std::string& target);
+	std::string replay_readlink(const std::string& path);
+
 	void save();
 	void load();
 	void reset();
@@ -70,6 +73,9 @@ public:
 
 	void record_time(struct timeval) {}
 	void replay_time(struct timeval *) {}
+
+	void record_readlink(const std::string&, const std::string&) {}
+	std::string replay_readlink(const std::string&) { return ""; }
 
 	void save() {}
 	void load() {}
@@ -96,6 +102,9 @@ private:
 
 	std::deque<struct timeval> time_sequences;
 	std::vector<struct timeval> recorded_times;
+
+	std::map<std::string, std::deque<std::string>> link_sequences;
+	std::vector<std::pair<std::string, std::string>> recorded_links;
 
 	std::string base64_encode(const std::string& in);
 	std::string base64_decode(const std::string& in);

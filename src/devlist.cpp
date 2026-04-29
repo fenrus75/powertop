@@ -96,7 +96,6 @@ void collect_open_devices(void)
 	struct dirent *entry;
 	DIR *dir;
 	std::string filename;
-	char link[PATH_MAX];
 	unsigned int i;
 	std::vector<struct devuser *> *target;
 
@@ -132,7 +131,6 @@ void collect_open_devices(void)
 		if (!dir2)
 			continue;
 		while (1) {
-			int ret;
 			struct devuser * dev;
 			entry2 = readdir(dir2);
 			if (!entry2)
@@ -140,29 +138,28 @@ void collect_open_devices(void)
 			if (!isdigit(entry2->d_name[0]))
 				continue;
 			filename = std::format("/proc/{}/fd/{}", entry->d_name, entry2->d_name);
-			memset(link, 0, sizeof(link));
-			ret = readlink(filename.c_str(), link, sizeof(link) - 1);
-			if (ret < 0)
+			std::string link = pt_readlink(filename);
+			if (link.empty())
 				continue;
 
-			if (strcmp(link, "/dev/null") == 0)
+			if (link == "/dev/null")
 				continue;
-			if (strcmp(link, "/dev/.udev/queue.bin") == 0)
+			if (link == "/dev/.udev/queue.bin")
 				continue;
-			if (strcmp(link, "/dev/initctl") == 0)
+			if (link == "/dev/initctl")
 				continue;
-			if (strcmp(link, "/dev/ptmx") == 0)
+			if (link == "/dev/ptmx")
 				continue;
-			if (strstr(link, "/dev/pts/"))
+			if (link.find("/dev/pts/") != std::string::npos)
 				continue;
-			if (strstr(link, "/dev/shm/"))
+			if (link.find("/dev/shm/") != std::string::npos)
 				continue;
-			if (strstr(link, "/dev/urandom"))
+			if (link.find("/dev/urandom") != std::string::npos)
 				continue;
-			if (strstr(link, "/dev/tty"))
+			if (link.find("/dev/tty") != std::string::npos)
 				continue;
 
-			if (strncmp(link, "/dev", 4)==0) {
+			if (link.compare(0, 4, "/dev") == 0) {
 				dev = new(std::nothrow) struct devuser;
 				if (!dev)
 					continue;

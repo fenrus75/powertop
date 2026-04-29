@@ -254,6 +254,27 @@ std::string read_file_content(const std::string &filename)
 	return content;
 }
 
+std::string pt_readlink(const std::string &path)
+{
+	if (test_framework_manager::get().is_replaying()) {
+		return test_framework_manager::get().replay_readlink(path);
+	}
+	char buf[PATH_MAX + 1];
+	ssize_t len = readlink(path.c_str(), buf, PATH_MAX);
+	if (len < 0) {
+		if (test_framework_manager::get().is_recording()) {
+			test_framework_manager::get().record_readlink(path, "");
+		}
+		return "";
+	}
+	buf[len] = '\0';
+	std::string target(buf, len);
+	if (test_framework_manager::get().is_recording()) {
+		test_framework_manager::get().record_readlink(path, target);
+	}
+	return target;
+}
+
 struct timeval pt_gettime(void)
 {
 	struct timeval tv;

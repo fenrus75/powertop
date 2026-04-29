@@ -43,3 +43,42 @@ test_lib_misc_exe = executable(
 )
 
 test('lib: pt_gettime and align_string', test_lib_misc_exe)
+
+_lib_incdirs = [
+  include_directories('../..'),
+  include_directories('../../src'),
+  include_directories('..'),
+]
+_lib_cpp_args = [
+  '-DENABLE_TEST_FRAMEWORK',
+  '-DHAVE_NO_PCI',
+  '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+]
+_lib_sources = ['../../src/lib.cpp', '../../src/test_framework.cpp']
+
+test_lib_pure_exe = executable(
+  'powertop-test-lib-pure',
+  _lib_sources + ['test_lib_pure.cpp'],
+  include_directories: _lib_incdirs,
+  cpp_args: _lib_cpp_args,
+  dependencies: [ncursesw_dep],
+)
+test('lib: pure functions', test_lib_pure_exe)
+
+test_lib_sysfs_exe = executable(
+  'powertop-test-lib-sysfs',
+  _lib_sources + ['test_lib_sysfs.cpp'],
+  include_directories: _lib_incdirs,
+  cpp_args: _lib_cpp_args,
+  dependencies: [ncursesw_dep],
+)
+test('lib: sysfs and msr functions', test_lib_sysfs_exe)
+
+test_lib_system_exe = executable(
+  'powertop-test-lib-system',
+  _lib_sources + ['test_lib_system.cpp'],
+  include_directories: _lib_incdirs,
+  cpp_args: _lib_cpp_args,
+  dependencies: [ncursesw_dep],
+)
+test('lib: system functions', test_lib_system_exe)

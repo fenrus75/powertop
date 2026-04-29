@@ -136,3 +136,28 @@ test_abstract_cpu_base_exe = executable(
 )
 
 test('base: abstract_cpu serialize', test_abstract_cpu_base_exe)
+
+test_process_exe = executable(
+  'powertop-test-process',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/process/process.cpp',
+    '../../src/process/powerconsumer.cpp',
+    'powerconsumer_stubs.cpp',
+    'test_process.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: process serialize', test_process_exe)

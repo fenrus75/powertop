@@ -230,7 +230,52 @@ Put this at the top of the test `.cpp` file (outside any function).
 
 ## Known gotchas
 
-### `align_string`: `max_sz` has no effect
+### `kernel_function`: static cache is never reset
+
+`kernel_function()` uses an internal `static int kallsyms_read` flag.  The
+first call reads `/proc/kallsyms` (via `read_file_content`) and sets the flag
+to 1.  Subsequent calls use the cached `kallsyms` map and never re-read.
+
+`test_framework_manager::reset()` does **not** clear this flag or the map.
+Consequences for test design:
+
+- The `kernel_function` tests must be the **first** tests to run in their
+  binary (so the replay fixture is consumed on the first real read).
+- Put them in a dedicated binary or as the very first `PT_RUN_TEST` in `main()`.
+- Only one complete test scenario (fixture load → lookup → unknown-address) can
+  be exercised per binary run.
+
+### `callback` type does not accept capturing lambdas
+
+`process_directory` and `process_glob` take `typedef void (*callback)(const std::string&)`.
+A C++ lambda with captures cannot be implicitly converted to a plain function
+pointer.  Use a file-scope free function plus a file-scope `std::vector` to
+collect results:
+
+```cpp
+static std::vector<std::string> results;
+static void collect(const std::string& s) { results.push_back(s); }
+
+// in test:
+results.clear();
+process_directory("/some/path", collect);
+```
+
+### Seeding fixtures from the live system
+
+For replay fixtures that reflect real hardware state (sysfs values, MSR
+readings), read the live values and base64-encode them rather than inventing
+values.  This keeps fixtures meaningful and catches regressions when the
+platform changes.
+
+```bash
+# sysfs integer
+printf "$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq)\n" | base64 --wrap=0
+
+# MSR (requires root or setuid binary)
+# hand-craft from a known-good value if root is unavailable
+```
+
 
 POSIX specifies that `mbsrtowcs()` **ignores `nwc` when `dst` is a null
 pointer**. `align_string` passes `nullptr` as `dst`, so the `max_sz` parameter

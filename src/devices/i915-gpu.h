@@ -54,6 +54,7 @@ public:
 	virtual std::string util_units(void) override { return _(" ops/s"); };
 
 	virtual void add_child(device *dev_ptr) { child_devices.push_back(dev_ptr);}
+	void collect_json_fields(std::string &_js) override;
 };
 
 extern void create_i915_gpu(void);

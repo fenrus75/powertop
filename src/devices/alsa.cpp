@@ -176,3 +176,16 @@ std::string alsa::human_name(void)
 
 	return humanname;
 }
+
+void alsa::collect_json_fields(std::string &_js)
+{
+    device::collect_json_fields(_js);
+    JSON_FIELD(start_active);
+    JSON_FIELD(end_active);
+    JSON_FIELD(start_inactive);
+    JSON_FIELD(end_inactive);
+    JSON_FIELD(sysfs_path);
+    JSON_FIELD(name);
+    JSON_FIELD(humanname);
+    JSON_FIELD(rindex);
+}

@@ -59,6 +59,7 @@ public:
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
 	virtual bool power_valid(void) override { return utilization_power_valid(r_index);};
 	virtual int grouping_prio(void) override { return 4; };
+	void collect_json_fields(std::string &_js) override;
 };
 
 extern void create_all_usb_devices(void);

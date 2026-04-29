@@ -151,3 +151,12 @@ bool timer::is_deferred(void)
 {
 	return deferred;
 }
+
+void timer::collect_json_fields(std::string &_js)
+{
+    power_consumer::collect_json_fields(_js);
+    JSON_FIELD(desc);
+    JSON_FIELD(handler);
+    JSON_FIELD(raw_count);
+    JSON_FIELD(deferred);
+}

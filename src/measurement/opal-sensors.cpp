@@ -44,3 +44,8 @@ double opal_sensors_power_meter::power(void)
 		r = value / 1000000.0;
 	return r;
 }
+
+void opal_sensors_power_meter::collect_json_fields(std::string &_js)
+{
+    power_meter::collect_json_fields(_js);
+}

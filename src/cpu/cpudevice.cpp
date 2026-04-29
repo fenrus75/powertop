@@ -89,3 +89,22 @@ double	cpudevice::utilization(void)
 	return _utilization * 100;
 
 }
+
+void cpudevice::collect_json_fields(std::string &_js)
+{
+    device::collect_json_fields(_js);
+    JSON_FIELD(_class);
+    JSON_FIELD(_cpuname);
+    std::string ps = "[";
+    for (size_t i = 0; i < params.size(); i++) {
+        ps += "\"" + pt_json_escape(params[i]) + "\"";
+        if (i + 1 < params.size()) ps += ",";
+    }
+    ps += "]";
+    _js += "\"params\":" + ps + ",";
+    JSON_FIELD(wake_index);
+    JSON_FIELD(consumption_index);
+    JSON_FIELD(r_wake_index);
+    JSON_FIELD(r_consumption_index);
+    JSON_ARRAY("child_devices", child_devices);
+}

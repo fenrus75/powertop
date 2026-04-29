@@ -181,3 +181,16 @@ double backlight::power_usage(struct result_bundle *result, struct parameter_bun
 
 	return power;
 }
+
+void backlight::collect_json_fields(std::string &_js)
+{
+    device::collect_json_fields(_js);
+    JSON_FIELD(min_level);
+    JSON_FIELD(max_level);
+    JSON_FIELD(start_level);
+    JSON_FIELD(end_level);
+    JSON_FIELD(sysfs_path);
+    JSON_FIELD(name);
+    JSON_FIELD(r_index);
+    JSON_FIELD(r_index_power);
+}

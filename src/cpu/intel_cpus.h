@@ -85,6 +85,7 @@ public:
 	virtual int     can_collapse(void) override { return 0;};
 
 	virtual std::string  fill_pstate_line(int line_nr) override;
+	void collect_json_fields(std::string &_js) override;
 };
 
 class nhm_core: public cpu_core, public intel_util
@@ -108,6 +109,7 @@ public:
 	virtual int     can_collapse(void) override { return 0;};
 
 	virtual std::string  fill_pstate_line(int line_nr) override;
+	void collect_json_fields(std::string &_js) override;
 };
 
 class nhm_cpu: public cpu_linux, public intel_util
@@ -129,6 +131,7 @@ public:
 	virtual std::string  fill_pstate_name(int line_nr) override;
 	virtual std::string  fill_pstate_line(int line_nr) override;
 	virtual int	has_pstate_level(int level) override;
+	void collect_json_fields(std::string &_js) override;
 };
 
 class atom_package: public cpu_package
@@ -169,6 +172,7 @@ public:
 	virtual int	has_pstate_level([[maybe_unused]] int level) override { return 0; };
 	virtual int	has_pstates(void) override { return 0; };
 	virtual void	wiggle(void) override { };
+	void collect_json_fields(std::string &_js) override;
 
 };
 

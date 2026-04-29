@@ -109,3 +109,11 @@ double i915gpu::power_usage(struct result_bundle *result, struct parameter_bundl
 
 	return power;
 }
+
+void i915gpu::collect_json_fields(std::string &_js)
+{
+    device::collect_json_fields(_js);
+    JSON_FIELD(index);
+    JSON_FIELD(rindex);
+    JSON_ARRAY("child_devices", child_devices);
+}

@@ -110,3 +110,12 @@ double thinkpad_light::power_usage(struct result_bundle *result, struct paramete
 
 	return power;
 }
+
+void thinkpad_light::collect_json_fields(std::string &_js)
+{
+    device::collect_json_fields(_js);
+    JSON_FIELD(start_rate);
+    JSON_FIELD(end_rate);
+    JSON_FIELD(light_index);
+    JSON_FIELD(r_index);
+}

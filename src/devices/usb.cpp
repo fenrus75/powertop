@@ -159,3 +159,21 @@ void create_all_usb_devices(void)
 {
 	process_directory("/sys/bus/usb/devices/", create_all_usb_devices_callback);
 }
+
+void usbdevice::collect_json_fields(std::string &_js)
+{
+    device::collect_json_fields(_js);
+    JSON_FIELD(active_before);
+    JSON_FIELD(active_after);
+    JSON_FIELD(connected_before);
+    JSON_FIELD(connected_after);
+    JSON_FIELD(sysfs_path);
+    JSON_FIELD(name);
+    JSON_FIELD(devname);
+    JSON_FIELD(humanname);
+    JSON_FIELD(index);
+    JSON_FIELD(r_index);
+    JSON_FIELD(rootport);
+    JSON_FIELD(busnum);
+    JSON_FIELD(devnum);
+}

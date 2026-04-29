@@ -224,3 +224,16 @@ void clear_processes(void)
 		it = all_processes.erase(it);
 	}
 }
+
+void process::collect_json_fields(std::string &_js)
+{
+    power_consumer::collect_json_fields(_js);
+    JSON_FIELD(running_since);
+    JSON_FIELD(desc);
+    JSON_FIELD(tgid);
+    JSON_FIELD(comm);
+    JSON_FIELD(pid);
+    JSON_FIELD(is_idle);
+    JSON_FIELD(running);
+    JSON_FIELD(is_kernel);
+}

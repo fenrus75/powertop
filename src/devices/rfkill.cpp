@@ -112,3 +112,17 @@ double rfkill::power_usage(struct result_bundle *result, struct parameter_bundle
 
 	return power;
 }
+
+void rfkill::collect_json_fields(std::string &_js)
+{
+    device::collect_json_fields(_js);
+    JSON_FIELD(start_soft);
+    JSON_FIELD(end_soft);
+    JSON_FIELD(start_hard);
+    JSON_FIELD(end_hard);
+    JSON_FIELD(sysfs_path);
+    JSON_FIELD(name);
+    JSON_FIELD(humanname);
+    JSON_FIELD(index);
+    JSON_FIELD(rindex);
+}

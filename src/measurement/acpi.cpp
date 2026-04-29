@@ -79,3 +79,11 @@ double acpi_power_meter::power(void)
 {
 	return rate;
 }
+
+void acpi_power_meter::collect_json_fields(std::string &_js)
+{
+    power_meter::collect_json_fields(_js);
+    JSON_FIELD(capacity);
+    JSON_FIELD(rate);
+    JSON_FIELD(voltage);
+}

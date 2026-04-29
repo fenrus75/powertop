@@ -125,3 +125,11 @@ class work * find_create_work(uint64_t func)
 	all_work[func] = work;
 	return work;
 }
+
+void work::collect_json_fields(std::string &_js)
+{
+    power_consumer::collect_json_fields(_js);
+    JSON_FIELD(desc);
+    JSON_FIELD(handler);
+    JSON_FIELD(raw_count);
+}

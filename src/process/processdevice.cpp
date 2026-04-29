@@ -96,3 +96,11 @@ void clear_proc_devices(void)
 		it = all_proc_devices.erase(it);
 	}
 }
+
+void device_consumer::collect_json_fields(std::string &_js)
+{
+    power_consumer::collect_json_fields(_js);
+    JSON_FIELD(prio);
+    JSON_FIELD(power);
+    JSON_KV("device_name", device ? device->device_name() : std::string(""));
+}

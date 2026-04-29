@@ -108,3 +108,10 @@ void add_usb_wakeup(void)
 {
 	process_directory("/sys/bus/usb/devices/", wakeup_usb_callback);
 }
+
+void usb_wakeup::collect_json_fields(std::string &_js)
+{
+    wakeup::collect_json_fields(_js);
+    JSON_FIELD(usb_path);
+    JSON_FIELD(interf);
+}

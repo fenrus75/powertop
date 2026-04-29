@@ -51,6 +51,7 @@ public:
 	virtual std::string human_name(void) override { return _("Display backlight");};
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
 	virtual int grouping_prio(void) override { return 10; };
+	void collect_json_fields(std::string &_js) override;
 };
 
 extern void create_all_backlights(void);

@@ -64,6 +64,7 @@ public:
 
 	virtual double usage_summary(void) override;
 	virtual std::string usage_units_summary(void) override;
+	void collect_json_fields(std::string &_js) override;
 
 };
 

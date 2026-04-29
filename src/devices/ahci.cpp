@@ -323,3 +323,25 @@ void ahci::report_device_stats(std::vector<std::string> &ahci_data, int idx)
 
 	ahci_data[offset]= std::format("{:5.1f}",  devslp_util);
 }
+
+void ahci::collect_json_fields(std::string &_js)
+{
+    device::collect_json_fields(_js);
+    JSON_FIELD(start_active);
+    JSON_FIELD(end_active);
+    JSON_FIELD(start_partial);
+    JSON_FIELD(end_partial);
+    JSON_FIELD(start_slumber);
+    JSON_FIELD(end_slumber);
+    JSON_FIELD(start_devslp);
+    JSON_FIELD(end_devslp);
+    JSON_FIELD(sysfs_path);
+    JSON_FIELD(name);
+    JSON_FIELD(partial_rindex);
+    JSON_FIELD(active_rindex);
+    JSON_FIELD(slumber_rindex);
+    JSON_FIELD(devslp_rindex);
+    JSON_FIELD(partial_index);
+    JSON_FIELD(active_index);
+    JSON_FIELD(humanname);
+}

@@ -108,3 +108,10 @@ void add_ethernet_wakeup(void)
 {
 	process_directory("/sys/class/net/", wakeup_eth_callback);
 }
+
+void ethernet_wakeup::collect_json_fields(std::string &_js)
+{
+    wakeup::collect_json_fields(_js);
+    JSON_FIELD(eth_path);
+    JSON_FIELD(interf);
+}

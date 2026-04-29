@@ -13,6 +13,8 @@ needs to be kept uptodate as changes to the class hierarchy are made.
 The process for working on this codebase always consists of 5 steps
 1. Make the change
 2. Build the project (with meson/ninja)
+   - Use `ninja -C <builddir> -t clean && ninja -C <builddir>` when the build cache seems stale
+   - The build output goes through a pipe in many invocations; "no work to do" after a clean means the build already completed in the same shell pipeline
 3. Run the test suite: `ninja -C <builddir> test` (requires `-Denable-tests=true` at setup time)
    - When adding new tests, read `tests/testdesign.md` for conventions and patterns.
 4. Code review the change to make sure it strictly matches the narrow objective

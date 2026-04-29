@@ -55,5 +55,6 @@ public:
 	virtual bool show_in_list(void) override {return false;};
 	virtual double	utilization(void) override; /* percentage */
 	void add_child(device *dev_ptr) { child_devices.push_back(dev_ptr);}
+	void collect_json_fields(std::string &_js) override;
 };
 

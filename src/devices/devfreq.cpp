@@ -333,3 +333,15 @@ void clear_all_devfreq()
 		dir = nullptr;
 	}
 }
+
+void devfreq::collect_json_fields(std::string &_js)
+{
+    device::collect_json_fields(_js);
+    JSON_FIELD(dir_name);
+    JSON_KV("stamp_before_sec", (long)stamp_before.tv_sec);
+    JSON_KV("stamp_before_usec", (long)stamp_before.tv_usec);
+    JSON_KV("stamp_after_sec", (long)stamp_after.tv_sec);
+    JSON_KV("stamp_after_usec", (long)stamp_after.tv_usec);
+    JSON_FIELD(sample_time);
+    JSON_ARRAY("dstates", dstates);
+}

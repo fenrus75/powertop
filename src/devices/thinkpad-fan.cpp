@@ -118,3 +118,14 @@ double thinkpad_fan::power_usage(struct result_bundle *result, struct parameter_
 
 	return power;
 }
+
+void thinkpad_fan::collect_json_fields(std::string &_js)
+{
+    device::collect_json_fields(_js);
+    JSON_FIELD(start_rate);
+    JSON_FIELD(end_rate);
+    JSON_FIELD(fan_index);
+    JSON_FIELD(fansqr_index);
+    JSON_FIELD(fancub_index);
+    JSON_FIELD(r_index);
+}

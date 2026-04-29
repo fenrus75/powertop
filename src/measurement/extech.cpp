@@ -358,3 +358,12 @@ double extech_power_meter::power(void)
 {
 	return rate;
 }
+
+void extech_power_meter::collect_json_fields(std::string &_js)
+{
+    power_meter::collect_json_fields(_js);
+    JSON_FIELD(fd);
+    JSON_FIELD(rate);
+    JSON_FIELD(sum);
+    JSON_FIELD(samples);
+}

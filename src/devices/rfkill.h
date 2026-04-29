@@ -54,6 +54,7 @@ public:
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
 	virtual bool power_valid(void) override { return utilization_power_valid(rindex);};
 	virtual int grouping_prio(void) override { return 5; };
+	void collect_json_fields(std::string &_js) override;
 };
 
 extern void create_all_rfkills(void);

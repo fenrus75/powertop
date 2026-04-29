@@ -48,6 +48,7 @@ public:
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
 	void start_measurement(void) override;
 	void end_measurement(void) override;
+	void collect_json_fields(std::string &_js) override;
 
 };
 

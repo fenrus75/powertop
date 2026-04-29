@@ -413,3 +413,39 @@ double network::power_usage(struct result_bundle *result, struct parameter_bundl
 
 	return power;
 }
+
+void network::collect_json_fields(std::string &_js)
+{
+    device::collect_json_fields(_js);
+    JSON_FIELD(start_up);
+    JSON_FIELD(end_up);
+    JSON_FIELD(start_pkts);
+    JSON_FIELD(end_pkts);
+    JSON_KV("before_sec", (long)before.tv_sec);
+    JSON_KV("before_usec", (long)before.tv_usec);
+    JSON_KV("after_sec", (long)after.tv_sec);
+    JSON_KV("after_usec", (long)after.tv_usec);
+    JSON_FIELD(start_speed);
+    JSON_FIELD(end_speed);
+    JSON_FIELD(sysfs_path);
+    JSON_FIELD(name);
+    JSON_FIELD(humanname);
+    JSON_FIELD(index_up);
+    JSON_FIELD(rindex_up);
+    JSON_FIELD(index_link_100);
+    JSON_FIELD(rindex_link_100);
+    JSON_FIELD(index_link_1000);
+    JSON_FIELD(rindex_link_1000);
+    JSON_FIELD(index_link_high);
+    JSON_FIELD(rindex_link_high);
+    JSON_FIELD(index_pkts);
+    JSON_FIELD(rindex_pkts);
+    JSON_FIELD(index_powerunsave);
+    JSON_FIELD(rindex_powerunsave);
+    JSON_FIELD(valid_100);
+    JSON_FIELD(valid_1000);
+    JSON_FIELD(valid_high);
+    JSON_FIELD(valid_powerunsave);
+    JSON_FIELD(pkts);
+    JSON_FIELD(duration);
+}

@@ -742,3 +742,79 @@ int nhm_cpu::has_pstate_level(int level)
 		return 1;
 	return cpu_linux::has_pstate_level(level);
 }
+
+void nhm_package::collect_json_fields(std::string &_js)
+{
+    abstract_cpu::collect_json_fields(_js);
+    JSON_FIELD(has_c7_res);
+    JSON_FIELD(has_c2c6_res);
+    JSON_FIELD(has_c3_res);
+    JSON_FIELD(has_c6c_res);
+    JSON_FIELD(has_c8c9c10_res);
+    JSON_FIELD(c2_before);
+    JSON_FIELD(c2_after);
+    JSON_FIELD(c3_before);
+    JSON_FIELD(c3_after);
+    JSON_FIELD(c6_before);
+    JSON_FIELD(c6_after);
+    JSON_FIELD(c7_before);
+    JSON_FIELD(c7_after);
+    JSON_FIELD(c8_before);
+    JSON_FIELD(c8_after);
+    JSON_FIELD(c9_before);
+    JSON_FIELD(c9_after);
+    JSON_FIELD(c10_before);
+    JSON_FIELD(c10_after);
+    JSON_FIELD(tsc_before);
+    JSON_FIELD(tsc_after);
+    JSON_FIELD(last_stamp);
+    JSON_FIELD(total_stamp);
+}
+
+void nhm_core::collect_json_fields(std::string &_js)
+{
+    abstract_cpu::collect_json_fields(_js);
+    JSON_FIELD(has_c1_res);
+    JSON_FIELD(has_c7_res);
+    JSON_FIELD(has_c3_res);
+    JSON_FIELD(c1_before);
+    JSON_FIELD(c1_after);
+    JSON_FIELD(c3_before);
+    JSON_FIELD(c3_after);
+    JSON_FIELD(c6_before);
+    JSON_FIELD(c6_after);
+    JSON_FIELD(c7_before);
+    JSON_FIELD(c7_after);
+    JSON_FIELD(tsc_before);
+    JSON_FIELD(tsc_after);
+    JSON_FIELD(last_stamp);
+    JSON_FIELD(total_stamp);
+}
+
+void nhm_cpu::collect_json_fields(std::string &_js)
+{
+    abstract_cpu::collect_json_fields(_js);
+    JSON_FIELD(aperf_before);
+    JSON_FIELD(aperf_after);
+    JSON_FIELD(mperf_before);
+    JSON_FIELD(mperf_after);
+    JSON_FIELD(tsc_before);
+    JSON_FIELD(tsc_after);
+    JSON_FIELD(last_stamp);
+    JSON_FIELD(total_stamp);
+}
+
+void i965_core::collect_json_fields(std::string &_js)
+{
+    abstract_cpu::collect_json_fields(_js);
+    JSON_FIELD(rc6_before);
+    JSON_FIELD(rc6_after);
+    JSON_FIELD(rc6p_before);
+    JSON_FIELD(rc6p_after);
+    JSON_FIELD(rc6pp_before);
+    JSON_FIELD(rc6pp_after);
+    JSON_KV("before_sec", (long)before.tv_sec);
+    JSON_KV("before_usec", (long)before.tv_usec);
+    JSON_KV("after_sec", (long)after.tv_sec);
+    JSON_KV("after_usec", (long)after.tv_usec);
+}

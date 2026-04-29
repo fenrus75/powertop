@@ -70,3 +70,12 @@ double gpu_rapl_device::power_usage([[maybe_unused]] struct result_bundle *resul
 	else
 		return 0.0;
 }
+
+void gpu_rapl_device::collect_json_fields(std::string &_js)
+{
+    i915gpu::collect_json_fields(_js);
+    JSON_KV("last_time", (long)last_time);
+    JSON_FIELD(last_energy);
+    JSON_FIELD(consumed_power);
+    JSON_FIELD(device_valid);
+}

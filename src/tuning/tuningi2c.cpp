@@ -109,3 +109,9 @@ void add_i2c_tunables(void)
 {
 	process_directory("/sys/bus/i2c/devices/", add_i2c_callback);
 }
+
+void i2c_tunable::collect_json_fields(std::string &_js)
+{
+    tunable::collect_json_fields(_js);
+    JSON_FIELD(i2c_path);
+}

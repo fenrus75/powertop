@@ -57,6 +57,7 @@ public:
 
 	virtual void register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle) override;
 	virtual int grouping_prio(void) override { return 0; };
+	void collect_json_fields(std::string &_js) override;
 
 };
 

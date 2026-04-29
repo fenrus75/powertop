@@ -62,6 +62,7 @@ public:
 	virtual bool power_valid(void) override { return utilization_power_valid(partial_rindex) || utilization_power_valid(active_rindex);};
 	virtual int grouping_prio(void) override { return 1; };
 	virtual void report_device_stats(std::vector<std::string> &ahci_data, int idx);
+	void collect_json_fields(std::string &_js) override;
 };
 
 extern void create_all_ahcis(void);

@@ -187,3 +187,17 @@ void create_all_runtime_pm_devices(void)
 	do_bus("platform");
 	do_bus("i2c");
 }
+
+void runtime_pmdevice::collect_json_fields(std::string &_js)
+{
+    device::collect_json_fields(_js);
+    JSON_FIELD(before_suspended_time);
+    JSON_FIELD(before_active_time);
+    JSON_FIELD(after_suspended_time);
+    JSON_FIELD(after_active_time);
+    JSON_FIELD(sysfs_path);
+    JSON_FIELD(name);
+    JSON_FIELD(humanname);
+    JSON_FIELD(index);
+    JSON_FIELD(r_index);
+}

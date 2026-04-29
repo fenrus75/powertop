@@ -63,6 +63,7 @@ public:
 	virtual std::string util_units(void) override { return " rpm"; };
 	virtual bool power_valid(void) override { return false; /*utilization_power_valid(r_index);*/};
 	virtual int grouping_prio(void) override { return 1; };
+	void collect_json_fields(std::string &_js) override;
 };
 
 extern void create_all_devfreq_devices(void);

@@ -43,6 +43,7 @@ public:
 	virtual double usage(void) override { return device->utilization();};
 	virtual std::string usage_units(void) override {return device->util_units();};
 	virtual int show_events(void) override { return 0; };
+	void collect_json_fields(std::string &_js) override;
 };
 
 extern void all_devices_to_all_power(void);

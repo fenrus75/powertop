@@ -126,3 +126,13 @@ void clear_interrupts(void)
 		it = all_interrupts.erase(it);
 	}
 }
+
+void interrupt::collect_json_fields(std::string &_js)
+{
+    power_consumer::collect_json_fields(_js);
+    JSON_FIELD(running_since);
+    JSON_FIELD(desc);
+    JSON_FIELD(handler);
+    JSON_FIELD(number);
+    JSON_FIELD(raw_count);
+}

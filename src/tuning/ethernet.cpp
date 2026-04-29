@@ -151,3 +151,9 @@ void add_ethernet_tunable(void)
 {
 	create_all_nics(&ethtunable_callback);
 }
+
+void ethernet_tunable::collect_json_fields(std::string &_js)
+{
+    tunable::collect_json_fields(_js);
+    JSON_FIELD(interf);
+}

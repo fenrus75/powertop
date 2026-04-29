@@ -56,6 +56,7 @@ public:
 
 	void set_human_name(const std::string &name);
 	virtual int grouping_prio(void) override { return 1; };
+	void collect_json_fields(std::string &_js) override;
 };
 
 extern void create_all_runtime_pm_devices(void);

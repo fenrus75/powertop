@@ -135,3 +135,9 @@ void add_usb_tunables(void)
 {
 	process_directory("/sys/bus/usb/devices/", add_usb_callback);
 }
+
+void usb_tunable::collect_json_fields(std::string &_js)
+{
+    tunable::collect_json_fields(_js);
+    JSON_FIELD(usb_path);
+}

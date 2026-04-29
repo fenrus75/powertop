@@ -47,5 +47,6 @@ public:
 
 	virtual double power(void) override;
 	virtual double dev_capacity(void) override { return 0.0; };
+	void collect_json_fields(std::string &_js) override;
 };
 

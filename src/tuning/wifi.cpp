@@ -96,3 +96,9 @@ void add_wifi_tunables(void)
 	closedir(dir);
 
 }
+
+void wifi_tunable::collect_json_fields(std::string &_js)
+{
+    tunable::collect_json_fields(_js);
+    JSON_FIELD(iface);
+}

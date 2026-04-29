@@ -40,6 +40,8 @@ public:
 
 	virtual std::string wakeup_toggle_script(void) override;
 
+	void collect_json_fields(std::string &_js) override;
+
 };
 
 extern void add_ethernet_wakeup(void);

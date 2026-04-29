@@ -49,6 +49,7 @@ public:
 	virtual std::string util_units(void) override { return "%"; };
 	virtual bool power_valid(void) override { return utilization_power_valid(r_index);};
 	virtual int grouping_prio(void) override { return 1; };
+	void collect_json_fields(std::string &_js) override;
 };
 
 extern void create_thinkpad_light(void);

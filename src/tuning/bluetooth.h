@@ -36,6 +36,8 @@ public:
 
 	virtual void toggle(void) override;
 
+	void collect_json_fields(std::string &_js) override;
+
 };
 
 extern void add_bt_tunable(void);

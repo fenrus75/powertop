@@ -189,3 +189,9 @@ void add_runtime_tunables(const std::string &bus)
 	}
 	closedir(dir);
 }
+
+void runtime_tunable::collect_json_fields(std::string &_js)
+{
+    tunable::collect_json_fields(_js);
+    JSON_FIELD(runtime_path);
+}

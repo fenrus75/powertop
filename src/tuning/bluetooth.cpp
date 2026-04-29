@@ -216,3 +216,8 @@ void add_bt_tunable(void)
 	bt = new bt_tunable();
 	all_tunables.push_back(bt);
 }
+
+void bt_tunable::collect_json_fields(std::string &_js)
+{
+    tunable::collect_json_fields(_js);
+}

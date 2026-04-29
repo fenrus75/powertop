@@ -96,3 +96,11 @@ void add_sata_tunables(void)
 {
 	process_directory("/sys/class/scsi_host/", add_sata_callback);
 }
+
+void sysfs_tunable::collect_json_fields(std::string &_js)
+{
+    tunable::collect_json_fields(_js);
+    JSON_FIELD(sysfs_path);
+    JSON_FIELD(target_value);
+    JSON_FIELD(bad_value);
+}

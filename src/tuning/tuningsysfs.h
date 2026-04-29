@@ -40,6 +40,8 @@ public:
 
 	virtual void toggle(void) override;
 
+	void collect_json_fields(std::string &_js) override;
+
 };
 
 extern void add_sysfs_tunable(const std::string &str, const std::string &_sysfs_path, const std::string &_target_content);

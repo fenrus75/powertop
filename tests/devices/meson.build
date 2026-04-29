@@ -47,3 +47,27 @@ test_sysfs_tunable_exe = executable(
 )
 
 test('devices: sysfs_tunable serialize', test_sysfs_tunable_exe)
+
+test_acpi_power_meter_exe = executable(
+  'powertop-test-acpi-power-meter',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/measurement/measurement.cpp',
+    '../../src/measurement/acpi.cpp',
+    'test_acpi_power_meter.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('devices: acpi_power_meter serialize', test_acpi_power_meter_exe)

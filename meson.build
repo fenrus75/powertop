@@ -208,6 +208,7 @@ powertop_sources = [
   'src/measurement/extech.cpp',
   'src/measurement/extech.h',
   'src/measurement/measurement.cpp',
+  'src/measurement/measurement_manager.cpp',
   'src/measurement/measurement.h',
   'src/measurement/sysfs.cpp',
   'src/measurement/sysfs.h',

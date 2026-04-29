@@ -1,0 +1,4 @@
+R /sys/class/power_supply/BAT0/status RGlzY2hhcmdpbmcK
+N /sys/class/power_supply/BAT0/power_now
+R /sys/class/power_supply/BAT0/current_now MjAwMDAwMAo=
+R /sys/class/power_supply/BAT0/voltage_now MTIwMDAwMDAK

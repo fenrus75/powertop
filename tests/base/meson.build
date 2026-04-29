@@ -1,0 +1,138 @@
+ncursesw_dep = dependency('ncursesw', required: false)
+if not ncursesw_dep.found()
+  ncursesw_dep = dependency('ncurses')
+endif
+
+test_wakeup_base_exe = executable(
+  'powertop-test-wakeup-base',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/wakeup/wakeup.cpp',
+    'test_wakeup_base.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: wakeup serialize', test_wakeup_base_exe)
+
+test_tunable_base_exe = executable(
+  'powertop-test-tunable-base',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/tuning/tunable.cpp',
+    'test_tunable_base.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: tunable serialize', test_tunable_base_exe)
+
+test_device_base_exe = executable(
+  'powertop-test-device-base',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/devices/device.cpp',
+    'test_device_base.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: device serialize', test_device_base_exe)
+
+test_power_meter_base_exe = executable(
+  'powertop-test-power-meter-base',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/measurement/measurement.cpp',
+    'test_power_meter_base.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: power_meter serialize', test_power_meter_base_exe)
+
+test_power_consumer_base_exe = executable(
+  'powertop-test-power-consumer-base',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/process/powerconsumer.cpp',
+    'powerconsumer_stubs.cpp',
+    'test_power_consumer_base.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: power_consumer serialize', test_power_consumer_base_exe)
+
+test_abstract_cpu_base_exe = executable(
+  'powertop-test-abstract-cpu-base',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/cpu/abstract_cpu.cpp',
+    '../../src/cpu/frequency.cpp',
+    'test_abstract_cpu_base.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: abstract_cpu serialize', test_abstract_cpu_base_exe)

@@ -160,6 +160,7 @@ powertop_sources = [
   'src/calibrate/calibrate.cpp',
   'src/calibrate/calibrate.h',
   'src/cpu/abstract_cpu.cpp',
+  'src/cpu/frequency.cpp',
   'src/cpu/cpu.cpp',
   'src/cpu/cpu.h',
   'src/cpu/cpu_core.cpp',

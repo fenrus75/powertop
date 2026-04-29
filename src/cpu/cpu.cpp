@@ -1039,7 +1039,3 @@ void clear_all_cpus(void)
 	system_level.children.clear();
 	all_cpus.clear();
 }
-
-frequency::frequency()
-{
-}

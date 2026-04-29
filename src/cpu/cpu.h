@@ -31,69 +31,7 @@
 #include <stdint.h>
 #include <sys/time.h>
 #include "../lib.h"
-
-class abstract_cpu;
-
-#define LEVEL_C0 -1
-#define LEVEL_HEADER -2
-
-#define PSTATE 1
-#define CSTATE 2
-
-struct idle_state {
-	std::string linux_name; /* state0 etc.. cpuidle name */
-	std::string human_name;
-
-	uint64_t usage_before = 0;
-	uint64_t usage_after = 0;
-	uint64_t usage_delta = 0;
-
-	uint64_t duration_before = 0;
-	uint64_t duration_after = 0;
-	uint64_t duration_delta = 0;
-
-	int before_count = 0;
-	int after_count = 0;
-
-	int line_level = 0;
-
-	std::string serialize() {
-		JSON_START();
-		JSON_FIELD(linux_name); JSON_FIELD(human_name);
-		JSON_FIELD(usage_before); JSON_FIELD(usage_after); JSON_FIELD(usage_delta);
-		JSON_FIELD(duration_before); JSON_FIELD(duration_after); JSON_FIELD(duration_delta);
-		JSON_FIELD(before_count); JSON_FIELD(after_count);
-		JSON_FIELD(line_level);
-		JSON_END();
-	}
-};
-
-class frequency {
-public:
-	frequency(void);
-	std::string human_name = "";
-	int line_level = 0;
-
-	uint64_t freq = 0;
-
-	uint64_t time_after = 0;
-	uint64_t time_before = 0;
-
-	int before_count = 0;
-	int after_count = 0;
-
-	double   display_value = 0.0;
-
-	std::string serialize() {
-		JSON_START();
-		JSON_FIELD(human_name); JSON_FIELD(line_level);
-		JSON_FIELD(freq);
-		JSON_FIELD(time_after); JSON_FIELD(time_before);
-		JSON_FIELD(before_count); JSON_FIELD(after_count);
-		JSON_FIELD(display_value);
-		JSON_END();
-	}
-};
+#include "frequency.h"
 
 class abstract_cpu
 {

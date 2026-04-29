@@ -24,7 +24,6 @@
  */
 #include <iostream>
 #include <fstream>
-#include <filesystem>
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -41,13 +40,12 @@
 
 rfkill::rfkill([[maybe_unused]] const std::string &_name, const std::string &path): device()
 {
-	std::error_code ec;
-	auto link = std::filesystem::read_symlink(std::format("{}/device/driver", path), ec);
-	if (!ec)
-		humanname = pt_format(_("Radio device: {}"), link.filename().string());
-	link = std::filesystem::read_symlink(std::format("{}/device/device/driver", path), ec);
-	if (!ec)
-		humanname = pt_format(_("Radio device: {}"), link.filename().string());
+	std::string link = pt_readlink(std::format("{}/device/driver", path));
+	if (!link.empty())
+		humanname = pt_format(_("Radio device: {}"), link.substr(link.rfind('/') + 1));
+	link = pt_readlink(std::format("{}/device/device/driver", path));
+	if (!link.empty())
+		humanname = pt_format(_("Radio device: {}"), link.substr(link.rfind('/') + 1));
 }
 
 void rfkill::start_measurement(void)

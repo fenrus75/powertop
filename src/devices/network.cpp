@@ -30,7 +30,7 @@
 
 #include <stdio.h>
 #include <sys/types.h>
-#include <filesystem>
+
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -164,10 +164,9 @@ network::network(const std::string &_name, const std::string &path): device()
 	index_pkts = get_param_index(std::format("{}-packets", _name));
 	rindex_pkts = get_result_index(std::format("{}-packets", _name));
 
-	std::error_code ec;
-	auto link = std::filesystem::read_symlink(std::format("{}/device/driver", path), ec);
-	if (!ec)
-		humanname = pt_format(_("Network interface: {} ({})"), _name, link.filename().string());
+	std::string link = pt_readlink(std::format("{}/device/driver", path));
+	if (!link.empty())
+		humanname = pt_format(_("Network interface: {} ({})"), _name, link.substr(link.rfind('/') + 1));
 }
 
 static int net_iface_up(const std::string &iface)

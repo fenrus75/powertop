@@ -15,6 +15,7 @@
 #include <fstream>
 #include <cstdio>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #include "lib.h"
 #include "test_framework.h"
@@ -148,6 +149,121 @@ static void test_read_msr_replay()
 	tf.reset();
 }
 
+/* ── read_sysfs: non-integer content (catch block, lines 210-214) ────────── */
+
+static void test_read_sysfs_non_integer_content()
+{
+	auto& tf = test_framework_manager::get();
+	tf.reset();
+	tf.set_replay(DATA_DIR + "/replay_sysfs_reads.ptrecord");
+
+	/* Consume the first three standard entries first */
+	bool ok = true;
+	read_sysfs("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq", &ok);
+	ok = true;
+	read_sysfs("/sys/nonexistent/file", &ok);
+	read_sysfs_string("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor");
+
+	/* Fourth fixture entry: "not_a_number\n" — stoi throws → ok=false */
+	ok = true;
+	int val = read_sysfs("/sys/devices/system/cpu/cpu0/cpufreq/not_an_int", &ok);
+	PT_ASSERT_EQ(ok, false);
+	PT_ASSERT_EQ(val, 0);
+
+	tf.reset();
+}
+
+/* ── read_sysfs_string: content without trailing newline ─────────────────── */
+
+static void test_read_sysfs_string_no_newline()
+{
+	auto& tf = test_framework_manager::get();
+	tf.reset();
+	tf.set_replay(DATA_DIR + "/replay_sysfs_reads.ptrecord");
+
+	/* Consume first four entries, then get the no-newline one */
+	bool ok;
+	read_sysfs("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq", &ok);
+	read_sysfs("/sys/nonexistent/file", nullptr);
+	read_sysfs_string("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor");
+	read_sysfs("/sys/devices/system/cpu/cpu0/cpufreq/not_an_int", nullptr);
+
+	/* Fifth fixture entry: "value_without_newline" — no '\n', no erase */
+	std::string s = read_sysfs_string(
+	    "/sys/devices/system/cpu/cpu0/cpufreq/no_newline");
+	PT_ASSERT_EQ(s, "value_without_newline");
+
+	tf.reset();
+}
+
+/* ── pt_readlink: non-replay paths (lines 263-276) ──────────────────────── */
+
+static void test_pt_readlink_real_symlink()
+{
+	auto& tf = test_framework_manager::get();
+	tf.reset(); /* not in replay mode */
+
+	char tmpdir[] = "/tmp/pt_link_test_XXXXXX";
+	mkdtemp(tmpdir);
+	std::string target = std::string(tmpdir) + "/target";
+	std::string link   = std::string(tmpdir) + "/mylink";
+
+	/* Create a real file and symlink to it */
+	{ std::ofstream f(target); f << "x"; }
+	symlink(target.c_str(), link.c_str());
+
+	std::string result = pt_readlink(link);
+	PT_ASSERT_EQ(result, target);
+
+	unlink(link.c_str());
+	unlink(target.c_str());
+	rmdir(tmpdir);
+}
+
+static void test_pt_readlink_nonexistent()
+{
+	auto& tf = test_framework_manager::get();
+	tf.reset(); /* not in replay mode */
+
+	/* Non-existent path → filesystem_error caught → returns "" */
+	std::string result = pt_readlink("/tmp/pt_no_such_symlink_xyz");
+	PT_ASSERT_EQ(result, std::string(""));
+}
+
+static void test_pt_readlink_recording()
+{
+	auto& tf = test_framework_manager::get();
+
+	char tmpdir[] = "/tmp/pt_link_rec_XXXXXX";
+	mkdtemp(tmpdir);
+	std::string target = std::string(tmpdir) + "/target";
+	std::string link   = std::string(tmpdir) + "/mylink";
+	char rec_tmp[]     = "/tmp/pt_link_record_XXXXXX";
+	int fd = mkstemp(rec_tmp); close(fd);
+
+	{ std::ofstream f(target); f << "x"; }
+	symlink(target.c_str(), link.c_str());
+
+	tf.reset();
+	tf.set_record(rec_tmp);
+	std::string recorded = pt_readlink(link);
+	tf.save();
+	tf.reset();
+
+	PT_ASSERT_EQ(recorded, target);
+
+	/* Replay should return the same value */
+	tf.set_replay(rec_tmp);
+	std::string replayed = pt_readlink(link);
+	tf.reset();
+	PT_ASSERT_EQ(replayed, target);
+
+	unlink(link.c_str());
+	unlink(target.c_str());
+	rmdir(tmpdir);
+	unlink(rec_tmp);
+}
+
 /* ── main ───────────────────────────────────────────────────────────────── */
 
 int main()
@@ -162,12 +278,19 @@ int main()
 
 	std::cout << "\n=== read_sysfs_string tests ===\n";
 	PT_RUN_TEST(test_read_sysfs_string_strips_newline);
+	PT_RUN_TEST(test_read_sysfs_non_integer_content);
+	PT_RUN_TEST(test_read_sysfs_string_no_newline);
 
 	std::cout << "\n=== write_sysfs tests ===\n";
 	PT_RUN_TEST(test_write_sysfs_recording_and_replay);
 
 	std::cout << "\n=== read_msr tests ===\n";
 	PT_RUN_TEST(test_read_msr_replay);
+
+	std::cout << "\n=== pt_readlink tests ===\n";
+	PT_RUN_TEST(test_pt_readlink_real_symlink);
+	PT_RUN_TEST(test_pt_readlink_nonexistent);
+	PT_RUN_TEST(test_pt_readlink_recording);
 
 	return pt_test_summary();
 }

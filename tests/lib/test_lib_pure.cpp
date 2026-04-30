@@ -1,11 +1,13 @@
 /*
  * Tests for pure (no-I/O) functions in src/lib.cpp:
  *   is_turbo, percentage, hz_to_human, equals, fmt_prefix,
- *   pretty_print, pci_id_to_name (HAVE_NO_PCI stub)
+ *   format_watts, pretty_print, pci_id_to_name (HAVE_NO_PCI stub),
+ *   end_pci_access (HAVE_NO_PCI stub)
  *
  * No test-framework fixtures needed — all inputs are computed inline.
  * Live system data informs the frequency values used (cpu0 max = 4500000 kHz).
  */
+#include <cstdlib>
 #include "lib.h"
 #include "test_framework.h"
 #include "../test_helper.h"
@@ -183,6 +185,97 @@ static void test_pci_id_to_name_stub_returns_empty()
 	PT_ASSERT_EQ(pci_id_to_name(0x8086, 0x1234), std::string(""));
 }
 
+/* ── end_pci_access (HAVE_NO_PCI stub) ──────────────────────────────────── */
+
+static void test_end_pci_access_stub()
+{
+	/* HAVE_NO_PCI stub is a no-op; just confirm it doesn't crash */
+	end_pci_access();
+}
+
+/* ── hz_to_human: missing MHz digits==2 branch ───────────────────────────── */
+
+static void test_hz_to_human_mhz_two_digits()
+{
+	/* 800000 kHz = 800 MHz with digits==2 → 4-wide integer format */
+	PT_ASSERT_EQ(hz_to_human(800000, 2), " 800 MHz");
+}
+
+/* ── fmt_prefix: omag==2 special case (line 414) ────────────────────────── */
+
+static void test_fmt_prefix_hundred()
+{
+	/* 100.0: scientific "1.00e+02" → omag=2 → hits the omag=-1 reassignment */
+	utf_ok = 0;
+	std::string r = fmt_prefix(100.0);
+	PT_ASSERT_TRUE(r.find("100") != std::string::npos);
+}
+
+/* ── fmt_prefix: µ (micro) UTF-8 prefix ─────────────────────────────────── */
+
+static void test_fmt_prefix_micro_utf8()
+{
+	/* Force UTF-8 mode; µ is the 2-byte sequence 0xc2 0xb5 */
+	utf_ok = 1;
+	std::string r = fmt_prefix(1e-6);
+	PT_ASSERT_TRUE(r.find("µ") != std::string::npos);
+	utf_ok = 0; /* restore for subsequent tests */
+}
+
+/* ── fmt_prefix: UTF-8 environment detection (lines 382-387) ────────────── */
+
+static void test_fmt_prefix_utf8_detection_ascii()
+{
+	/* Reset detection state; use non-UTF-8 LANG → utf_ok becomes 0 */
+	utf_ok = -1;
+	const char *saved = getenv("LANG");
+	setenv("LANG", "C", 1);
+	std::string r = fmt_prefix(1e-6);
+	if (saved) setenv("LANG", saved, 1); else unsetenv("LANG");
+	utf_ok = 0; /* restore known state for later tests */
+	/* ASCII mode: micro prefix is literal 'u' */
+	PT_ASSERT_TRUE(r.find("u") != std::string::npos);
+}
+
+static void test_fmt_prefix_utf8_detection_unicode()
+{
+	/* Reset detection state; use UTF-8 LANG → utf_ok becomes 1 */
+	utf_ok = -1;
+	const char *saved = getenv("LANG");
+	setenv("LANG", "en_US.UTF-8", 1);
+	std::string r = fmt_prefix(1e-6);
+	if (saved) setenv("LANG", saved, 1); else unsetenv("LANG");
+	utf_ok = 0; /* restore known state for later tests */
+	/* UTF-8 mode: micro prefix is the µ character */
+	PT_ASSERT_TRUE(r.find("µ") != std::string::npos);
+}
+
+/* ── format_watts ────────────────────────────────────────────────────────── */
+
+static void test_format_watts_normal()
+{
+	utf_ok = 0;
+	std::string s = format_watts(0.5, 0);
+	/* 0.5 W → expressed in mW prefix range; "W" suffix always present */
+	PT_ASSERT_TRUE(s.find("W") != std::string::npos);
+}
+
+static void test_format_watts_tiny_zero()
+{
+	utf_ok = 0;
+	/* W < 0.0001 → overrides to "    0 mW" fixed string */
+	std::string s = format_watts(0.00001, 0);
+	PT_ASSERT_TRUE(s.find("0 mW") != std::string::npos);
+}
+
+static void test_format_watts_aligned()
+{
+	utf_ok = 0;
+	/* len > current string → align_string pads with spaces */
+	std::string s = format_watts(1.0, 20);
+	PT_ASSERT_TRUE(s.size() >= 20);
+}
+
 /* ── main ───────────────────────────────────────────────────────────────── */
 
 int main()
@@ -228,6 +321,23 @@ int main()
 
 	std::cout << "\n=== pci_id_to_name tests ===\n";
 	PT_RUN_TEST(test_pci_id_to_name_stub_returns_empty);
+
+	std::cout << "\n=== end_pci_access tests ===\n";
+	PT_RUN_TEST(test_end_pci_access_stub);
+
+	std::cout << "\n=== hz_to_human extra branch ===\n";
+	PT_RUN_TEST(test_hz_to_human_mhz_two_digits);
+
+	std::cout << "\n=== fmt_prefix extra branches ===\n";
+	PT_RUN_TEST(test_fmt_prefix_hundred);
+	PT_RUN_TEST(test_fmt_prefix_micro_utf8);
+	PT_RUN_TEST(test_fmt_prefix_utf8_detection_ascii);
+	PT_RUN_TEST(test_fmt_prefix_utf8_detection_unicode);
+
+	std::cout << "\n=== format_watts tests ===\n";
+	PT_RUN_TEST(test_format_watts_normal);
+	PT_RUN_TEST(test_format_watts_tiny_zero);
+	PT_RUN_TEST(test_format_watts_aligned);
 
 	return pt_test_summary();
 }

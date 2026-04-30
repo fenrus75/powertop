@@ -1,3 +1,5 @@
 R /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq NDUwMDAwMAo=
 N /sys/nonexistent/file
 R /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor cG93ZXJzYXZlCg==
+R /sys/devices/system/cpu/cpu0/cpufreq/not_an_int bm90X2FfbnVtYmVyCg==
+R /sys/devices/system/cpu/cpu0/cpufreq/no_newline dmFsdWVfd2l0aG91dF9uZXdsaW5l

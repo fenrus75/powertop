@@ -113,6 +113,14 @@ static void test_process_glob_matches_pattern()
 	rmdir(tmpdir);
 }
 
+static void test_process_glob_no_match()
+{
+	glob_entries.clear();
+	/* Pattern that matches no files → GLOB_NOMATCH path in switch */
+	process_glob("/tmp/pt_no_such_path_xyz/*.nothing", collect_glob_entry);
+	PT_ASSERT_EQ(glob_entries.size(), (size_t)0);
+}
+
 /* ── main ───────────────────────────────────────────────────────────────── */
 
 int main()
@@ -126,6 +134,7 @@ int main()
 
 	std::cout << "\n=== process_glob tests ===\n";
 	PT_RUN_TEST(test_process_glob_matches_pattern);
+	PT_RUN_TEST(test_process_glob_no_match);
 
 	return pt_test_summary();
 }

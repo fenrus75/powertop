@@ -1,5 +1,7 @@
 /*
  * Tests for pt_gettime() and align_string() in src/lib.cpp
+ *
+ * Also covers: ui_notify_user_console
  */
 #include <cstdio>
 #include <unistd.h>
@@ -107,6 +109,14 @@ static void test_align_string_max_sz_has_no_effect()
 	PT_ASSERT_EQ(s, "abcdefghij");  /* 10 >= 7, no padding added */
 }
 
+/* ── ui_notify_user_console ───────────────────────────────────────────────── */
+
+static void test_ui_notify_user_console()
+{
+	/* Just calls printf — verify it doesn't crash */
+	ui_notify_user_console("powertop test message");
+}
+
 /* ── main ────────────────────────────────────────────────────────────────── */
 
 int main()
@@ -124,6 +134,9 @@ int main()
 	PT_RUN_TEST(test_align_string_exact_min_sz);
 	PT_RUN_TEST(test_align_string_empty_string);
 	PT_RUN_TEST(test_align_string_max_sz_has_no_effect);
+
+	std::cout << "\n=== ui_notify_user_console tests ===\n";
+	PT_RUN_TEST(test_ui_notify_user_console);
 
 	return pt_test_summary();
 }

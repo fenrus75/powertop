@@ -306,3 +306,29 @@ test_ahci_exe = executable(
 )
 
 test('devices: ahci', test_ahci_exe)
+
+test_i915_exe = executable(
+  'powertop-test-i915',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/devices/device.cpp',
+    '../../src/devices/i915-gpu.cpp',
+    '../../src/parameters/parameters.cpp',
+    'test_stubs.cpp',
+    'stub_rapl.cpp',
+    'test_i915.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+  ],
+  dependencies: [ncursesw_dep, libtracefs_dep],
+)
+
+test('devices: i915gpu', test_i915_exe)

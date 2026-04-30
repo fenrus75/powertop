@@ -1,0 +1,6 @@
+L  /sys/class/rfkill/rfkill0/device/driver
+L  /sys/class/rfkill/rfkill0/device/device/driver
+R /sys/class/rfkill/rfkill0/hard MA==
+R /sys/class/rfkill/rfkill0/soft MA==
+R /sys/class/rfkill/rfkill0/hard MQ==
+R /sys/class/rfkill/rfkill0/soft MQ==

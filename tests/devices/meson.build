@@ -332,3 +332,35 @@ test_i915_exe = executable(
 )
 
 test('devices: i915gpu', test_i915_exe)
+
+test_rapl_devices_exe = executable(
+  'powertop-test-rapl-devices',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/parameters/parameters.cpp',
+    '../../src/devices/device.cpp',
+    '../../src/measurement/measurement.cpp',
+    '../../src/cpu/cpudevice.cpp',
+    '../../src/cpu/cpu_rapl_device.cpp',
+    '../../src/cpu/dram_rapl_device.cpp',
+    '../../src/devices/gpu_rapl_device.cpp',
+    '../../src/devices/i915-gpu.cpp',
+    'test_stubs.cpp',
+    'stub_rapl_iface.cpp',
+    'test_rapl_devices.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep, libtracefs_dep],
+)
+
+test('devices: rapl_devices', test_rapl_devices_exe)

@@ -88,6 +88,11 @@ static int dpms_screen_on(void)
 	return 0;
 }
 
+int backlight::display_is_on(void)
+{
+	return dpms_screen_on();
+}
+
 void backlight::end_measurement(void)
 {
 	double p;
@@ -95,7 +100,7 @@ void backlight::end_measurement(void)
 
 	end_level = read_sysfs(std::format("{}/actual_brightness", sysfs_path));
 
-	if (dpms_screen_on()) {
+	if (display_is_on()) {
 		if (max_level > 0)
 			p = 100.0 * (end_level + start_level) / 2 / max_level;
 		else

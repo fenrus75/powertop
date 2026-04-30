@@ -81,6 +81,7 @@ def decode_content(tag, b64):
 def cmd_list(args):
     lines = load_trace(args.trace_file)
     show_content = getattr(args, 'content', False)
+    path_filter = getattr(args, 'path', None)
     if show_content:
         print(f"{'Line':<6} {'Type':<6} {'Path':<55} {'Content'}")
         print("-" * 100)
@@ -92,6 +93,8 @@ def cmd_list(args):
         if not parsed:
             continue
         tag, path, b64 = parsed
+        if path_filter and path_filter not in path:
+            continue
         if show_content:
             content = decode_content(tag, b64) or ""
             # Truncate long content for display
@@ -371,6 +374,8 @@ def main():
     p.add_argument("trace_file")
     p.add_argument("--content", "-c", action="store_true",
                    help="Show decoded content inline")
+    p.add_argument("--path", "-p", metavar="SUBSTR",
+                   help="Only show entries whose path contains SUBSTR")
 
     # extract
     p = subparsers.add_parser("extract", help="Extract a line")

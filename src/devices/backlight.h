@@ -52,6 +52,9 @@ public:
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
 	virtual int grouping_prio(void) override { return 10; };
 	void collect_json_fields(std::string &_js) override;
+
+protected:
+	virtual int display_is_on(void);
 };
 
 extern void create_all_backlights(void);

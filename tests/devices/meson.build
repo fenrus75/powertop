@@ -149,3 +149,29 @@ test_usb_exe = executable(
 )
 
 test('devices: usbdevice serialize', test_usb_exe)
+
+test_backlight_exe = executable(
+  'powertop-test-backlight-serialize',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/parameters/parameters.cpp',
+    '../../src/devices/device.cpp',
+    '../../src/devices/backlight.cpp',
+    'test_stubs.cpp',
+    'test_backlight_serialize.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('devices: backlight serialize', test_backlight_exe)

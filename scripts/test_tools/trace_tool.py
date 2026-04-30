@@ -353,8 +353,20 @@ def cmd_add(args):
         # path = symlink path, value = target (empty = broken link)
         b64 = base64.b64encode(value.encode('utf-8')).decode('ascii') if value else ""
         record = f"L {b64} {path}\n"
+    elif record_type == 'T':
+        # path = "sec usec"  (two decimal integers)
+        parts = path.split()
+        if len(parts) != 2:
+            print("Error: T record requires path to be 'sec usec' (two integers).")
+            sys.exit(1)
+        try:
+            int(parts[0]); int(parts[1])
+        except ValueError:
+            print("Error: T record sec and usec must be integers.")
+            sys.exit(1)
+        record = f"T {parts[0]} {parts[1]}\n"
     else:
-        print(f"Error: Unknown record type '{record_type}'. Use R, W, N, or L.")
+        print(f"Error: Unknown record type '{record_type}'. Use R, W, N, L, or T.")
         sys.exit(1)
 
     try:
@@ -416,7 +428,7 @@ def main():
     p = subparsers.add_parser("add",
         help="Append a record to a trace file (creates file if needed)")
     p.add_argument("trace_file")
-    p.add_argument("record_type", metavar="type", choices=["R", "W", "N", "L"],
+    p.add_argument("record_type", metavar="type", choices=["R", "W", "N", "L", "T"],
                    help="Record type: R=read, W=write, N=miss, L=symlink")
     p.add_argument("path", help="Sysfs/proc path (for L: the symlink path)")
     p.add_argument("value", nargs="?", default="",

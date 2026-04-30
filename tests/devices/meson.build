@@ -202,3 +202,29 @@ test_thinkpad_exe = executable(
 )
 
 test('devices: thinkpad fan/light serialize', test_thinkpad_exe)
+
+test_devfreq_exe = executable(
+  'powertop-test-devfreq',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/devices/device.cpp',
+    '../../src/devices/devfreq.cpp',
+    '../../src/cpu/frequency.cpp',
+    'stub_display.cpp',
+    'test_devfreq.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('devices: devfreq', test_devfreq_exe)

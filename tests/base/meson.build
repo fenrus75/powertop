@@ -283,3 +283,27 @@ test_work_exe = executable(
 )
 
 test('base: work fire/done', test_work_exe)
+
+test_ethernet_wakeup_exe = executable(
+  'powertop-test-ethernet-wakeup',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/wakeup/wakeup.cpp',
+    '../../src/wakeup/wakeup_ethernet.cpp',
+    'test_ethernet_wakeup.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: ethernet_wakeup', test_ethernet_wakeup_exe)

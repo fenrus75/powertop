@@ -67,11 +67,33 @@ static void test_product_only()
 	PT_ASSERT_TRUE(got.find("\"devnum\":4") != std::string::npos);
 }
 
+static void test_measurement()
+{
+	test_framework_manager::get().reset();
+	test_framework_manager::get().set_replay(DATA_DIR + "/usb_measurement.ptrecord");
+
+	usbdevice d("1-1", USB_PATH, "1-1");
+	d.start_measurement();  /* active_before=100, connected_before=100 */
+	d.end_measurement();    /* active_after=150, connected_after=200  */
+	std::string got = d.serialize();
+	test_framework_manager::get().reset();
+
+	PT_ASSERT_TRUE(got.find("\"active_before\":100") != std::string::npos);
+	PT_ASSERT_TRUE(got.find("\"active_after\":150") != std::string::npos);
+	PT_ASSERT_TRUE(got.find("\"connected_before\":100") != std::string::npos);
+	PT_ASSERT_TRUE(got.find("\"connected_after\":200") != std::string::npos);
+
+	/* utilization = 100 * (150-100) / (0.01 + 200-100) = 5000/100.01 ≈ 49.995 */
+	double util = d.utilization();
+	PT_ASSERT_TRUE(util > 49.9 && util < 50.1);
+}
+
 int main()
 {
 	std::cout << "=== usbdevice serialize tests ===\n";
 	PT_RUN_TEST(test_hub);
 	PT_RUN_TEST(test_named);
 	PT_RUN_TEST(test_product_only);
+	PT_RUN_TEST(test_measurement);
 	return pt_test_summary();
 }

@@ -1,0 +1,9 @@
+R /sys/bus/usb/devices/1-1/bDeviceClass MAo=
+R /sys/bus/usb/devices/1-1/manufacturer SW50ZWwgQ29ycC4K
+R /sys/bus/usb/devices/1-1/product VVNCIEtleWJvYXJkCg==
+R /sys/bus/usb/devices/1-1/busnum MQo=
+R /sys/bus/usb/devices/1-1/devnum Mwo=
+R /sys/bus/usb/devices/1-1/power/active_duration MTAwCg==
+R /sys/bus/usb/devices/1-1/power/connected_duration MTAwCg==
+R /sys/bus/usb/devices/1-1/power/active_duration MTUwCg==
+R /sys/bus/usb/devices/1-1/power/connected_duration MjAwCg==

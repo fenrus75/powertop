@@ -71,3 +71,29 @@ test_acpi_power_meter_exe = executable(
 )
 
 test('devices: acpi_power_meter serialize', test_acpi_power_meter_exe)
+
+test_rfkill_exe = executable(
+  'powertop-test-rfkill-serialize',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/parameters/parameters.cpp',
+    '../../src/devices/device.cpp',
+    '../../src/devices/rfkill.cpp',
+    'test_stubs.cpp',
+    'test_rfkill_serialize.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('devices: rfkill serialize', test_rfkill_exe)

@@ -302,10 +302,21 @@ Before/after pattern:
 `ninja coverage` is broken due to duplicate test_framework.cpp symbols;
 use the script instead (it passes `--ignore-errors inconsistent`).
 
-Current baseline: **20.6% line / 32.3% function** (src/ only, after lib.cpp improvements).
-lib.cpp: 72.7% lines (up from 59%).
+Current baseline: **20.7% line / 32.3% function** (src/ only, after lib.cpp round 2).
+lib.cpp: 74.8% lines (up from 72.7%, up from original 59%).
 
-## lib.cpp coverage targets (achieved)
+## lib.cpp coverage targets (achieved round 2)
+
+- Fix `process_glob_no_match`: use existing tmpdir so GLOB_NOMATCH fires (502-505)
+- `pt_readlink` fail+record path (268): non-existent path while in recording mode
+- `align_string` invalid UTF-8 (311): setlocale("C.UTF-8") + \x80 lead byte
+- `read_kallsyms` empty content (118): new binary `test_lib_kallsyms_empty` with N fixture
+
+## lib.cpp future opportunity: libpci tests
+
+Link a test WITHOUT `-DHAVE_NO_PCI` against `libpci` to cover `pci_id_to_name`
+and `end_pci_access` real implementations (lines 336-354, ~19 lines → ~80%+).
+See `/tmp/lib.md` for full design.
 
 Tests added to cover previously uncovered paths:
 - `format_watts` (lines 319-331): test_format_watts_normal/tiny_zero/aligned

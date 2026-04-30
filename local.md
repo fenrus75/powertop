@@ -287,6 +287,23 @@ subsystem), but no I/O. All tests are fixture-free. Link:
 `lib.cpp + test_framework.cpp + parameters.cpp + device.cpp +
 measurement.cpp + cpudevice.cpp + test_stubs.cpp`.
 
+## Coverage workflow
+
+`scripts/coverage_report.sh [label] [build_dir]` captures a named lcov
+snapshot from the coverage build directory (default: `build_cov`).
+
+One-time setup: `meson setup build_cov -Db_coverage=true -Denable-tests=true`
+
+Before/after pattern:
+  ninja -C build_cov test && scripts/coverage_report.sh before
+  # add test, rebuild
+  ninja -C build_cov test && scripts/coverage_report.sh after
+
+`ninja coverage` is broken due to duplicate test_framework.cpp symbols;
+use the script instead (it passes `--ignore-errors inconsistent`).
+
+Current baseline: 15.6% line / 25.2% function (src/ only).
+
 ## Current test count: 31 tests passing (31 executables)
 
 Easy+Medium candidates all done:

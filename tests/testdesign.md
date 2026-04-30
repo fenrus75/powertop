@@ -24,6 +24,8 @@ Add one subdirectory per functional area (e.g. `lib/`, `parameters/`,
 `devices/`). Each area produces its own standalone test executable linked only
 against the source files it actually needs.
 
+Also read `review/tools.md` for tool helpers for this task.
+
 ---
 
 ## Build system integration
@@ -379,6 +381,117 @@ PT_ASSERT_TRUE(got.find("\"start_pkts\":") != std::string::npos);
 | `rfkill` | reads two soft/hard block integers, no children |
 | `runtime_pmdevice` | reads suspended/active time counters from sysfs |
 | `process` | fields set directly from `/proc` reads, no sysfs, no children |
+
+---
+
+## Coverage-driven test development
+
+Measuring line and function coverage before and after adding a test makes
+it easy to verify that new tests actually exercise the intended code paths
+and to track overall test-suite progress.
+
+### One-time setup
+
+```bash
+meson setup build_cov -Db_coverage=true -Denable-tests=true
+```
+
+This creates a separate build directory instrumented with gcov.  Keep it
+alongside the normal `build/` directory — it does not affect the regular
+build.
+
+> **Why not `ninja coverage`?**  The built-in Meson coverage target runs
+> lcov but fails with a "duplicate function symbol" error because
+> `test_framework.cpp` is compiled into every test binary *and* the main
+> powertop binary.  The helper script below passes
+> `--ignore-errors inconsistent` to work around this.
+
+### Capturing a coverage snapshot
+
+`scripts/coverage_report.sh` automates the full lcov pipeline:
+
+```bash
+# Build + run tests (always do this first to populate .gcda files)
+ninja -C build_cov test
+
+# Capture a named snapshot
+scripts/coverage_report.sh <label> [build_cov]
+```
+
+The script writes three files to `/tmp/`:
+
+| File | Contents |
+|------|----------|
+| `/tmp/pt_<label>_src.info` | Filtered tracefile (src/ files only) |
+| `/tmp/pt_<label>_html/` | HTML report (open `index.html` in a browser) |
+
+It also prints a per-file summary table to stdout.
+
+### Before / after workflow
+
+This is the recommended process every time you add a new test:
+
+```bash
+# Step 1 — run tests to get current coverage
+ninja -C build_cov test
+
+# Step 2 — record baseline
+scripts/coverage_report.sh before
+```
+
+The last line of the output shows the overall totals, e.g.:
+```
+Total:  |15.6%  8969|25.2%  955|
+```
+
+```bash
+# Step 3 — add your new test and fixture, edit meson.build, then rebuild
+ninja -C build_cov test
+
+# Step 4 — record new snapshot
+scripts/coverage_report.sh after
+
+# Step 5 — compare (the totals lines are enough for a quick check)
+```
+
+Because the summary is printed to stdout you can also capture it to a file
+for a diff:
+
+```bash
+scripts/coverage_report.sh before 2>&1 | tee /tmp/before.txt
+# ... add test ...
+ninja -C build_cov test
+scripts/coverage_report.sh after  2>&1 | tee /tmp/after.txt
+diff /tmp/before.txt /tmp/after.txt
+```
+
+### Targeting a specific file
+
+To see line-by-line coverage for a single source file, open the HTML report
+and navigate to it, or use `lcov --list` with a grep:
+
+```bash
+lcov --list /tmp/pt_after_src.info | grep rfkill
+```
+
+### Current baselines (as of last PR)
+
+| Metric | Value |
+|--------|-------|
+| Line coverage | 15.6% (1 400 / 8 969 lines) |
+| Function coverage | 25.2% (241 / 955 functions) |
+
+Files with the most room to improve (sorted by current line coverage):
+
+| File | Lines covered |
+|------|--------------|
+| `devices/network.cpp` | 0% |
+| `devices/ahci.cpp` | 0% |
+| `cpu/cpu.cpp` | 0% |
+| `process/interrupt.cpp` | 41% |
+| `tuning/tuningsysfs.cpp` | 64% |
+| `devices/usb.cpp` | 65% |
+| `devices/alsa.cpp` | 55% |
 
 ---
 

@@ -126,9 +126,9 @@ void
 report_formatter_csv::add_summary_list(const std::vector<std::string> &list)
 {
 	add_exact("\n");
-	for (size_t i=0; i < list.size(); i+=2){
-		add_exact(std::format("{} {}", list[i], list[i+1]));
-		if (i < (list.size() - 1))
+	for (size_t i = 0; i + 1 < list.size(); i += 2) {
+		add_exact(std::format("{} {}", list[i], list[i + 1]));
+		if (i + 2 < list.size())
 			add_exact(";");
 	}
 	add_exact("\n");

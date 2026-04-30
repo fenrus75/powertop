@@ -1,0 +1,2 @@
+R /sys/devices/platform/thinkpad_acpi/leds/tpacpi::thinklight/brightness MTAw
+R /sys/devices/platform/thinkpad_acpi/leds/tpacpi::thinklight/brightness MTU1

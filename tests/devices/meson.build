@@ -175,3 +175,30 @@ test_backlight_exe = executable(
 )
 
 test('devices: backlight serialize', test_backlight_exe)
+
+test_thinkpad_exe = executable(
+  'powertop-test-thinkpad-serialize',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/parameters/parameters.cpp',
+    '../../src/devices/device.cpp',
+    '../../src/devices/thinkpad-fan.cpp',
+    '../../src/devices/thinkpad-light.cpp',
+    'test_stubs.cpp',
+    'test_thinkpad_serialize.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('devices: thinkpad fan/light serialize', test_thinkpad_exe)

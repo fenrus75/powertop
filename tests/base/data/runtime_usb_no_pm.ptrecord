@@ -1,0 +1,2 @@
+N /sys/bus/usb/devices/testdev-99/power/runtime_suspended_time
+N /sys/bus/usb/devices/testdev-99/power/runtime_active_time

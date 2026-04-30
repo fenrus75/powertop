@@ -1,0 +1,6 @@
+N /sys/bus/pci/devices/0000:99:00.0/power/runtime_suspended_time
+N /sys/bus/pci/devices/0000:99:00.0/power/runtime_active_time
+R /sys/bus/pci/devices/0000:99:00.0/vendor MHg4MDg2
+R /sys/bus/pci/devices/0000:99:00.0/device MHgxMjM0
+N /sys/bus/pci/devices/0000:99:00.0/power/runtime_suspended_time
+N /sys/bus/pci/devices/0000:99:00.0/power/runtime_active_time

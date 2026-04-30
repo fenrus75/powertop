@@ -1,0 +1,1 @@
+R /sys/bus/usb/devices/testdev-99/power/control YXV0bw==

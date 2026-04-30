@@ -432,3 +432,28 @@ test_timer_exe = executable(
 )
 
 test('base: timer', test_timer_exe)
+
+test_runtime_exe = executable(
+  'powertop-test-runtime',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/tuning/tunable.cpp',
+    '../../src/tuning/runtime.cpp',
+    'stub_runtime_pm.cpp',
+    'test_runtime.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: runtime_tunable', test_runtime_exe)

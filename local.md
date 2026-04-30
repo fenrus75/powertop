@@ -302,8 +302,16 @@ Before/after pattern:
 `ninja coverage` is broken due to duplicate test_framework.cpp symbols;
 use the script instead (it passes `--ignore-errors inconsistent`).
 
-Current baseline: **20.7% line / 32.3% function** (src/ only, after lib.cpp round 2).
-lib.cpp: 74.8% lines (up from 72.7%, up from original 59%).
+Current baseline: **20.8% line / 32.3% function** (src/ only, after libpci tests).
+lib.cpp: 78.9% lines (up from 74.8%, original was 59%).
+
+## lib.cpp coverage targets (achieved round 3)
+
+- `pci_id_to_name` + `end_pci_access` real libpci path (336-354):
+  new `test_lib_pci.cpp` compiled without `-DHAVE_NO_PCI`, linked to `pciutils_dep`.
+  Wrapped in `if pciutils_dep.found()` in meson.build.
+  First call covers pci_alloc/pci_init init branch; second call skips it.
+  `end_pci_access` with non-NULL handle covers lines 352-353.
 
 ## lib.cpp coverage targets (achieved round 2)
 

@@ -264,6 +264,30 @@ static void test_pt_readlink_recording()
 	unlink(rec_tmp);
 }
 
+static void test_pt_readlink_recording_fail()
+{
+	auto& tf = test_framework_manager::get();
+	char rec_tmp[] = "/tmp/pt_link_recfail_XXXXXX";
+	int fd = mkstemp(rec_tmp); close(fd);
+
+	/* Record a failed readlink (non-existent path) → covers line 268 */
+	tf.reset();
+	tf.set_record(rec_tmp);
+	std::string result = pt_readlink("/tmp/pt_absolutely_no_such_path_xyz");
+	tf.save();
+	tf.reset();
+
+	PT_ASSERT_EQ(result, std::string(""));
+
+	/* Replay should also return "" */
+	tf.set_replay(rec_tmp);
+	std::string replayed = pt_readlink("/tmp/pt_absolutely_no_such_path_xyz");
+	tf.reset();
+	PT_ASSERT_EQ(replayed, std::string(""));
+
+	unlink(rec_tmp);
+}
+
 /* ── main ───────────────────────────────────────────────────────────────── */
 
 int main()
@@ -291,6 +315,7 @@ int main()
 	PT_RUN_TEST(test_pt_readlink_real_symlink);
 	PT_RUN_TEST(test_pt_readlink_nonexistent);
 	PT_RUN_TEST(test_pt_readlink_recording);
+	PT_RUN_TEST(test_pt_readlink_recording_fail);
 
 	return pt_test_summary();
 }

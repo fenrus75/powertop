@@ -115,10 +115,17 @@ static void test_process_glob_matches_pattern()
 
 static void test_process_glob_no_match()
 {
+	/*
+	 * Use an existing directory with a pattern that matches nothing, so
+	 * glob() returns GLOB_NOMATCH (not GLOB_ABORTED which fires when the
+	 * directory itself doesn't exist under GLOB_ERR).
+	 */
+	char tmpdir[] = "/tmp/pt_glob_nomatch_XXXXXX";
+	mkdtemp(tmpdir);
 	glob_entries.clear();
-	/* Pattern that matches no files → GLOB_NOMATCH path in switch */
-	process_glob("/tmp/pt_no_such_path_xyz/*.nothing", collect_glob_entry);
+	process_glob(std::string(tmpdir) + "/*.nothing_xyz_abc", collect_glob_entry);
 	PT_ASSERT_EQ(glob_entries.size(), (size_t)0);
+	rmdir(tmpdir);
 }
 
 /* ── main ───────────────────────────────────────────────────────────────── */

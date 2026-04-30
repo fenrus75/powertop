@@ -82,3 +82,12 @@ test_lib_system_exe = executable(
   dependencies: [ncursesw_dep],
 )
 test('lib: system functions', test_lib_system_exe)
+
+test_lib_kallsyms_empty_exe = executable(
+  'powertop-test-lib-kallsyms-empty',
+  _lib_sources + ['test_lib_kallsyms_empty.cpp'],
+  include_directories: _lib_incdirs,
+  cpp_args: _lib_cpp_args,
+  dependencies: [ncursesw_dep],
+)
+test('lib: kallsyms empty content', test_lib_kallsyms_empty_exe)

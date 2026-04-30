@@ -117,6 +117,29 @@ static void test_ui_notify_user_console()
 	ui_notify_user_console("powertop test message");
 }
 
+static void test_align_string_invalid_utf8()
+{
+	/*
+	 * A string starting with 0x80 is invalid UTF-8 (0x80 is a continuation
+	 * byte, not valid as a lead byte).  With a UTF-8 locale, mbsrtowcs()
+	 * returns (size_t)-1 → align_string() returns immediately without
+	 * padding, covering line 311.
+	 */
+	const char *utf8_locale = setlocale(LC_ALL, "C.UTF-8");
+	if (!utf8_locale)
+		utf8_locale = setlocale(LC_ALL, "en_US.UTF-8");
+	if (!utf8_locale) {
+		std::cout << "  [SKIP] no UTF-8 locale available\n";
+		return;
+	}
+
+	std::string s = "\x80invalid";
+	align_string(s, 20, 100);
+	PT_ASSERT_EQ(s, "\x80invalid");  /* unchanged — mbsrtowcs returned -1 */
+
+	setlocale(LC_ALL, "");
+}
+
 /* ── main ────────────────────────────────────────────────────────────────── */
 
 int main()
@@ -134,6 +157,7 @@ int main()
 	PT_RUN_TEST(test_align_string_exact_min_sz);
 	PT_RUN_TEST(test_align_string_empty_string);
 	PT_RUN_TEST(test_align_string_max_sz_has_no_effect);
+	PT_RUN_TEST(test_align_string_invalid_utf8);
 
 	std::cout << "\n=== ui_notify_user_console tests ===\n";
 	PT_RUN_TEST(test_ui_notify_user_console);

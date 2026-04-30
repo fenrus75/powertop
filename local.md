@@ -302,9 +302,25 @@ Before/after pattern:
 `ninja coverage` is broken due to duplicate test_framework.cpp symbols;
 use the script instead (it passes `--ignore-errors inconsistent`).
 
-Current baseline: 15.6% line / 25.2% function (src/ only).
+Current baseline: **19.4% line / 30.7% function** (src/ only, after report tests).
 
-## Current test count: 31 tests passing (31 executables)
+## HTML report tests (tests/report/)
+
+`report_formatter_html` and `report.cpp` are tested via:
+- Full pipeline: replay fixture → `init_report_output()` + `finish_report_output()` → tidy validation
+- Direct formatter tests: local `report_maker r(REPORT_HTML)` — avoids global state
+- All `add_table()` position branches (T, L, TL, TC, TLC) need separate tables
+  - TC/TLC require `title_mod > 0` (use `init_core_table_attr` / `init_cpu_table_attr`)
+- Tidy detection: `find_program('tidy', required: false)` → `-DHAVE_TIDY -DTIDY_BIN="..."` 
+- Tidy accepts exit 0 (ok) or 1 (warnings); fails on 2 (errors)
+- `read_os_release()` was converted from `std::ifstream` to `read_file_content()` + 
+  `std::istringstream` so it's interceptable. Pattern: same as `cpu_model()`.
+- `css_h` custom_target must be in executable sources for `css.h` include path
+
+Fixture `tests/report/data/report_sysinfo.ptrecord` seeded from real hardware:
+  Gigabyte X299 AORUS Gaming 3 Pro-CF / Intel i9-7900X / Debian forky/sid
+
+## Current test count: 32 tests passing (32 executables)
 
 Easy+Medium candidates all done:
 backlight, thinkpad_fan/light, work, ethernet_wakeup,

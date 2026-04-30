@@ -407,3 +407,28 @@ test_processdevice_exe = executable(
 )
 
 test('base: processdevice', test_processdevice_exe)
+
+test_timer_exe = executable(
+  'powertop-test-timer',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/process/timer.cpp',
+    '../../src/process/powerconsumer.cpp',
+    'powerconsumer_stubs.cpp',
+    'test_timer.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: timer', test_timer_exe)

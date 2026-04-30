@@ -302,7 +302,7 @@ Before/after pattern:
 `ninja coverage` is broken due to duplicate test_framework.cpp symbols;
 use the script instead (it passes `--ignore-errors inconsistent`).
 
-Current baseline: **19.4% line / 30.7% function** (src/ only, after report tests).
+Current baseline: **20.1% line / 31.9% function** (src/ only, after CSV tests).
 
 ## HTML report tests (tests/report/)
 
@@ -320,7 +320,7 @@ Current baseline: **19.4% line / 30.7% function** (src/ only, after report tests
 Fixture `tests/report/data/report_sysinfo.ptrecord` seeded from real hardware:
   Gigabyte X299 AORUS Gaming 3 Pro-CF / Intel i9-7900X / Debian forky/sid
 
-## Current test count: 32 tests passing (32 executables)
+## Current test count: 33 tests passing (33 executables)
 
 Easy+Medium candidates all done:
 backlight, thinkpad_fan/light, work, ethernet_wakeup,

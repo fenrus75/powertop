@@ -247,3 +247,48 @@ auto-encoded to base64. Validate after building with `trace_tool.py validate`.
 Example for backlight (2 reads in start_measurement):
   trace_tool.py add backlight_start.ptrecord R /sys/class/backlight/lcd/max_brightness 100
   trace_tool.py add backlight_start.ptrecord R /sys/class/backlight/lcd/actual_brightness 60
+## trace_tool.py: T record support
+
+`trace_tool.py add FILE T "sec usec"` now adds time snapshot records.
+Used for `pt_gettime()` interception in classes that measure elapsed time
+(e.g. devfreq). The `add` command choices list was updated to include `T`.
+
+## Test infrastructure: stub files
+
+When a class pulls in a heavy dependency chain through one function:
+- Create `tests/devices/stub_display.cpp` for `create_tab` / `get_ncurses_win`
+- Create `tests/base/stub_runtime_pm.cpp` for `device_has_runtime_pm`
+Both stubs inline the actual logic using intercepted `read_sysfs()` /
+`read_file_content()` — so the stubs remain correctly intercepted in tests.
+
+## tuningusb / tuningi2c patterns
+
+For any `tunable`-derived class: `serialize()` → `collect_json_fields()` →
+`result_string()` → `good_bad()` → one extra sysfs read. Constructor fixture
+must have N+1 records (N ctor reads + 1 for good_bad in serialize).
+
+For toggle tests: construct the object with the N-record ctor fixture, then
+`reset()` + load a 1-record toggle fixture for the `good_bad()` read inside
+`toggle()`. The write is captured in `write_log`.
+
+## devfreq: measurement cycle with T records
+
+`devfreq` measurement cycle:
+- `start_measurement`: T(before) + R(trans_stat with time_before values)
+- `end_measurement`: R(trans_stat with time_after values) + T(after)
+- `process_time_stamps()`: `time_after = 1000 * (end_ms - start_ms)`;
+  last state (freq=0, Idle) gets residual = sample_time - active
+- `fill_freq_utilization(idx)`: `100 * time_after / sample_time`
+
+## cpudevice: no I/O
+
+`cpudevice` constructor calls `get_param_index`/`get_result_index` (parameters
+subsystem), but no I/O. All tests are fixture-free. Link:
+`lib.cpp + test_framework.cpp + parameters.cpp + device.cpp +
+measurement.cpp + cpudevice.cpp + test_stubs.cpp`.
+
+## Current test count: 31 tests passing (31 executables)
+
+Easy+Medium candidates all done:
+backlight, thinkpad_fan/light, work, ethernet_wakeup,
+tuningusb, tuningi2c, devfreq, opal-sensors, cpudevice.

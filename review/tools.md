@@ -69,7 +69,7 @@ Replaying uses the recorded trace instead of the live system. **Replay does not 
 
 | Command | Usage | Description |
 |:---|:---|:---|
-| **list** | `list <trace> [-c]` | List all entries. `-c`/`--content` shows decoded values inline. |
+| **list** | `list <trace> [-c] [-p SUBSTR]` | List all entries. `-c`/`--content` shows decoded values inline; `-p`/`--path SUBSTR` filters to entries whose path contains the given substring. |
 | **search** | `search <trace> <regex>` | Find entries whose path matches a regex. |
 | **grep** | `grep <trace> <string>` | Find entries whose decoded content contains a string. |
 | **extract** | `extract <trace> <line> <out>` | Write the decoded content of one entry to a file. For `L` records, writes the symlink target. |
@@ -99,6 +99,9 @@ trace_tool.py add my.ptrecord L /sys/class/rfkill/rfkill0/device/driver \
 
 # Append a broken symlink (empty target = readlink failed)
 trace_tool.py add my.ptrecord L /sys/class/rfkill/rfkill0/device/device/driver
+
+# Append a time snapshot (used by pt_gettime for devfreq-style measurement cycles)
+trace_tool.py add my.ptrecord T "1000 0"     # tv_sec=1000, tv_usec=0
 ```
 
 The file is **created** if it does not already exist. Records are appended in order; the test framework replays them in the exact order they appear.
@@ -114,6 +117,7 @@ Use `add` to build a `.ptrecord` file record by record, matching the exact read 
    - One `R` per `read_sysfs_string` or `read_sysfs` call (with the value the file would return).
    - One `N` for any path that should appear absent.
    - One `L` per `pt_readlink` call (with the target, or no target for a broken link).
+   - One `T "sec usec"` per `pt_gettime()` call (for classes that measure elapsed time, e.g. devfreq).
 3. **Verify** with `trace_tool.py validate my.ptrecord`.
 4. **Inspect** with `trace_tool.py list my.ptrecord --content` to confirm the sequence looks correct.
 

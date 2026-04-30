@@ -10,6 +10,62 @@ includes a style guide.
 The class hiearchy is documented in `review/class.md` and this document
 needs to be kept uptodate as changes to the class hierarchy are made.
 
+# CPU frequency class split
+
+`src/cpu/frequency.h` — extracted from `cpu.h`: contains `struct idle_state`,
+`class frequency`, and the `LEVEL_C0`/`LEVEL_HEADER`/`PSTATE`/`CSTATE` macros.
+Only depends on `lib.h` and standard headers. Safe to link in unit tests.
+
+`src/cpu/frequency.cpp` — `frequency::frequency()` implementation (empty ctor).
+Previously lived at the bottom of `cpu.cpp`.
+
+`cpu.h` now `#include "frequency.h"` in place of the inline definitions.
+`abstract_cpu` tests link `abstract_cpu.cpp` + `frequency.cpp` without the
+heavy `cpu.cpp` chain.
+
+# Base class serialize tests (tests/base/)
+
+All 6 base classes have snapshot tests:
+- `test_wakeup_base.cpp` — desc/score/enabled/toggle fields
+- `test_tunable_base.cpp` — desc/score/result/toggle_good/toggle_bad
+- `test_device_base.cpp` — class/name/hide/guilty/real_path
+- `test_power_meter_base.cpp` — name/discharging/power/capacity
+- `test_power_consumer_base.cpp` — all 8 member fields
+- `test_abstract_cpu_base.cpp` — type/number/idle flag/empty arrays
+
+Pattern for protected toggle fields: use a minimal `class test_X : public X`
+subclass in the test file to expose protected members for initialization.
+
+`powerconsumer_stubs.cpp` provides `all_parameters`, `get_parameter_value`
+overloads to avoid linking `parameters.cpp` → `all_devices` chain.
+
+`src/devices/device.cpp` — contains only the `class device` method
+implementations (`device()`, `register_sysfs_path`, measurement virtuals,
+`collect_json_fields`) plus the `all_devices` vector. Minimal includes;
+safe to link in unit tests.
+
+`src/devices/device_manager.cpp` — contains `create_all_devices`,
+`clear_all_devices`, `devices_start/end_measurement`, `report_devices`,
+`show_report_devices`. Has the heavy include chain (all device subtypes,
+report/, display/, measurement/).
+
+Unit tests link `device.cpp` directly. Only three symbols need stubs
+(`global_power`, `save_all_results`, `register_devpower`) — placed in
+`tests/devices/test_stubs.cpp`.
+
+# Measurement source file split
+
+`src/measurement/measurement.cpp` — contains only the `power_meter` base
+class methods and the `power_meters` vector. Minimal includes; safe to
+link in unit tests.
+
+`src/measurement/measurement_manager.cpp` — contains all manager/detection
+functions (`start/end_power_measurement`, `global_power`, `detect_power_meters`,
+etc.) with the heavy include chain (acpi.h, extech.h, sysfs.h, opal-sensors.h,
+parameters.h). Same pattern as device_manager.cpp.
+
+Unit tests link `measurement.cpp` + `acpi.cpp` directly without needing stubs.
+
 The process for working on this codebase always consists of 5 steps
 1. Make the change
 2. Build the project (with meson/ninja)
@@ -56,6 +112,46 @@ The repo has a global `user.signingkey` set, but the GPG agent is not running
 in the terminal session. Setting `commit.gpgsign=false` locally is not
 sufficient — `--no-gpg-sign` on the command line is required.
 
+# Derived class serialize tests (tests/base/ and tests/devices/)
+
+Three additional derived classes now have snapshot tests in `tests/base/`:
+
+- `test_process.cpp` — kernel_thread (N cmdline) and user_process (R cmdline).
+  Pass `tid == pid` (non-zero) to skip `/proc/status` read; only one fixture
+  record per scenario. Link: `process.cpp + powerconsumer.cpp +
+  powerconsumer_stubs.cpp + lib.cpp + test_framework.cpp`.
+
+- `test_usb_wakeup.cpp` — enabled and disabled wakeup states.
+  Constructor reads nothing; `wakeup_value()` reads `usb_path` once per
+  `serialize()` call (via `wakeup::collect_json_fields`). One fixture record
+  per scenario. Link: `wakeup_usb.cpp + wakeup.cpp + lib.cpp + test_framework.cpp`.
+
+- `test_sysfs_power_meter.cpp` — charging, discharging_direct, discharging_fallback.
+  `end_measurement()` triggers `measure()` which reads: present, status,
+  power_now, energy_now (or fallback voltage/current/charge). Fixture record
+  order must exactly match the read sequence. Link: `sysfs.cpp +
+  measurement.cpp + lib.cpp + test_framework.cpp`.
+
+# pt_readlink() — mockable readlink wrapper
+
+`pt_readlink(const std::string &path)` in `lib.cpp` wraps `readlink(2)`
+(via `std::filesystem::read_symlink`) with test framework hooks:
+- Record mode: stores the resolved target (or "" for failure)
+- Replay mode: returns the stored value
+- Normal mode: calls `std::filesystem::read_symlink()` directly
+
+Record format: `L base64(target) path`
+- base64 token first (no spaces) so path (which may contain spaces)
+  is safely everything after the first space.
+- Empty base64 (`L  path`) = readlink failed → returns "".
+
+`devlist.cpp`, `rfkill.cpp`, and `network.cpp` all use `pt_readlink`
+instead of raw `readlink` / `std::filesystem::read_symlink`.
+`<filesystem>` removed from rfkill.cpp and network.cpp.
+
+First test using L records: `tests/devices/test_rfkill_serialize.cpp`
+(3 scenarios: no driver, device/driver, device/device/driver).
+
 # collect_json_fields pattern
 
 When adding `collect_json_fields(std::string &_js)` to derived classes:
@@ -70,10 +166,57 @@ When adding `collect_json_fields(std::string &_js)` to derived classes:
 7. Skip non-serializable members: mutex, atomic, pthread_t, pointer-to-interface
 
 
-When asked to make a non-trivial change (multiple files/elements), create a
-proposal to do this in incremental steps, and consider doing one step at a
-time with a git commit for each step. Ask the user confirmation for each
-step before starting implementation.
+# Method tests: write_log, measurement cycles, scheduling
+
+## test_framework write_log
+
+`get_write_log()` returns all writes captured unconditionally in both
+record and replay modes. Key behavior in `replay_write()`:
+- `write_sequences.count(path) == 0` → no W records provided: silently
+  capture in write_log (opt-in verification via test code assertions)
+- `write_sequences.count(path) > 0` and queue empty → "TEST FAIL: Extra
+  write" (queue exhausted — still an error)
+- W records present → validate AND capture in write_log
+
+## sysfs_tunable method tests (tests/base/)
+
+`result_string()` in tunable base calls `good_bad()` internally — which
+triggers a sysfs read. Do NOT call `serialize()` after `reset()` if the
+object's `good_bad()` will read sysfs: the read will hit the real
+filesystem. Either keep replay active during serialize, or test `good_bad()`
+and write assertions separately without calling serialize.
+
+`bad_value` is private in `sysfs_tunable` — verify via `serialize()` JSON
+or `toggle_bad` (protected in tunable base). Use a derived test class to
+expose `toggle_bad`.
+
+## rfkill: sysfs_path was missing (fixed)
+
+The rfkill constructor did not set `sysfs_path`. Added:
+  `sysfs_path = path;`
+  `register_sysfs_path(path);`
+at the top of the constructor (matching runtime_pmdevice pattern).
+Note: `register_sysfs_path()` sets `real_path` only (walks /device/ chain
+and calls realpath()); the derived-class `sysfs_path` field must be set
+directly.
+
+## Measurement cycle tests
+
+rfkill, usbdevice, runtime_pmdevice follow the pattern:
+  construct (may consume L+R records) → start_measurement() → end_measurement() → serialize()
+
+Fixture file must have records in exact call order. For rfkill: 2 L records
+(constructor) + 4 R records (2 for start, 2 for end). For usbdevice: 5 R
+records (constructor) + 4 R records (start + end).
+
+## process schedule/deschedule test
+
+`schedule_thread(time, tid)` and `deschedule_thread(time, tid)` are pure
+in-memory. Reuse existing fixture for construction, call `reset()` after
+construction, then call schedule/deschedule without any fixture. Verify
+`accumulated_runtime` via serialize JSON and `usage_summary()` directly.
+
+`usage_summary()` formula: `accumulated_runtime / 1000000.0 / measurement_time / 10`
 
 If you have questions or improvement suggestions for something the user
 asked, or if you think the user made a mistake in the prompt: stop and **ask** the user!

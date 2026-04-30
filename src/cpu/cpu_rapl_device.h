@@ -34,7 +34,7 @@
 class cpu_rapl_device: public cpudevice {
 
 	c_rapl_interface *rapl = nullptr;
-	time_t		last_time = 0;
+	struct timeval	last_time = {};
 	double		last_energy = 0.0;
 	double 		consumed_power = 0.0;
 	bool		device_valid = false;

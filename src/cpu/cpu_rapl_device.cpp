@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../parameters/parameters.h"
+#include "../lib.h"
 #include "cpu_rapl_device.h"
 
 cpu_rapl_device::cpu_rapl_device(cpudevice *parent, const std::string &classname, const std::string &dev_name, class abstract_cpu *_cpu)
@@ -35,7 +36,7 @@ cpu_rapl_device::cpu_rapl_device(cpudevice *parent, const std::string &classname
 		rapl = new c_rapl_interface(dev_name, cpu->get_first_cpu());
 	else
 		rapl = new c_rapl_interface();
-	last_time = time(nullptr);
+	last_time = pt_gettime();
 	if (rapl->pp0_domain_present()) {
 		device_valid = true;
 		parent->add_child(this);
@@ -45,20 +46,25 @@ cpu_rapl_device::cpu_rapl_device(cpudevice *parent, const std::string &classname
 
 void cpu_rapl_device::start_measurement(void)
 {
-	last_time = time(nullptr);
-
+	if (!device_valid)
+		return;
+	last_time = pt_gettime();
 	rapl->get_pp0_energy_status(&last_energy);
 }
 
 void cpu_rapl_device::end_measurement(void)
 {
-	time_t		curr_time = time(nullptr);
-	double energy;
+	if (!device_valid)
+		return;
+	struct timeval	curr_time = pt_gettime();
+	double		delta = (curr_time.tv_sec - last_time.tv_sec)
+			      + (curr_time.tv_usec - last_time.tv_usec) / 1000000.0;
+	double energy = last_energy;
 
 	consumed_power = 0.0;
-	if ((curr_time - last_time) > 0) {
+	if (delta > 0.0) {
 		rapl->get_pp0_energy_status(&energy);
-		consumed_power = (energy-last_energy)/(curr_time-last_time);
+		consumed_power = (energy - last_energy) / delta;
 		last_energy = energy;
 		last_time = curr_time;
 	}
@@ -75,7 +81,8 @@ double cpu_rapl_device::power_usage([[maybe_unused]] struct result_bundle *resul
 void cpu_rapl_device::collect_json_fields(std::string &_js)
 {
     cpudevice::collect_json_fields(_js);
-    JSON_KV("last_time", (long)last_time);
+    JSON_KV("last_time_sec",  (long)last_time.tv_sec);
+    JSON_KV("last_time_usec", (long)last_time.tv_usec);
     JSON_FIELD(last_energy);
     JSON_FIELD(consumed_power);
     JSON_FIELD(device_valid);

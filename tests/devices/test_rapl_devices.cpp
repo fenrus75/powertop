@@ -46,6 +46,8 @@ static void test_cpu_rapl_device_json()
     PT_ASSERT_TRUE(js.find("\"device_valid\":false") != std::string::npos);
     PT_ASSERT_TRUE(js.find("\"last_energy\"") != std::string::npos);
     PT_ASSERT_TRUE(js.find("\"consumed_power\"") != std::string::npos);
+    PT_ASSERT_TRUE(js.find("\"last_time_sec\"") != std::string::npos);
+    PT_ASSERT_TRUE(js.find("\"last_time_usec\"") != std::string::npos);
 }
 
 /* ── dram_rapl_device tests ──────────────────────────────────────── */
@@ -77,6 +79,8 @@ static void test_dram_rapl_device_json()
     PT_ASSERT_TRUE(js.find("\"device_valid\":false") != std::string::npos);
     PT_ASSERT_TRUE(js.find("\"last_energy\"") != std::string::npos);
     PT_ASSERT_TRUE(js.find("\"consumed_power\"") != std::string::npos);
+    PT_ASSERT_TRUE(js.find("\"last_time_sec\"") != std::string::npos);
+    PT_ASSERT_TRUE(js.find("\"last_time_usec\"") != std::string::npos);
 }
 
 /* ── gpu_rapl_device tests ───────────────────────────────────────── */
@@ -110,6 +114,8 @@ static void test_gpu_rapl_device_json()
     PT_ASSERT_TRUE(js.find("\"device_valid\":false") != std::string::npos);
     PT_ASSERT_TRUE(js.find("\"last_energy\"") != std::string::npos);
     PT_ASSERT_TRUE(js.find("\"consumed_power\"") != std::string::npos);
+    PT_ASSERT_TRUE(js.find("\"last_time_sec\"") != std::string::npos);
+    PT_ASSERT_TRUE(js.find("\"last_time_usec\"") != std::string::npos);
 }
 
 int main()

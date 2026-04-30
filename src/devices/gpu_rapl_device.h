@@ -34,7 +34,7 @@
 class gpu_rapl_device: public i915gpu {
 
 	c_rapl_interface rapl;
-	time_t		last_time = 0;
+	struct timeval	last_time = {};
 	double		last_energy = 0.0;
 	double 		consumed_power = 0.0;
 	bool		device_valid = false;

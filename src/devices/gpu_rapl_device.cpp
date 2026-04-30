@@ -25,13 +25,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../parameters/parameters.h"
+#include "../lib.h"
 #include "gpu_rapl_device.h"
 
 gpu_rapl_device::gpu_rapl_device(i915gpu *parent)
 	: i915gpu(),
 	  device_valid(false)
 {
-	last_time = time(nullptr);
+	last_time = pt_gettime();
 	if (rapl.pp1_domain_present()) {
 		device_valid = true;
 		parent->add_child(this);
@@ -43,7 +44,7 @@ void gpu_rapl_device::start_measurement(void)
 {
 	if (!device_valid)
 		return;
-	last_time = time(nullptr);
+	last_time = pt_gettime();
 	rapl.get_pp1_energy_status(&last_energy);
 }
 
@@ -51,13 +52,15 @@ void gpu_rapl_device::end_measurement(void)
 {
 	if (!device_valid)
 		return;
-	time_t		curr_time = time(nullptr);
+	struct timeval	curr_time = pt_gettime();
+	double		delta = (curr_time.tv_sec - last_time.tv_sec)
+			      + (curr_time.tv_usec - last_time.tv_usec) / 1000000.0;
 	double energy;
 
 	consumed_power = 0.0;
-	if ((curr_time - last_time) > 0) {
+	if (delta > 0.0) {
 		rapl.get_pp1_energy_status(&energy);
-		consumed_power = (energy-last_energy)/(curr_time-last_time);
+		consumed_power = (energy - last_energy) / delta;
 		last_energy = energy;
 		last_time = curr_time;
 	}
@@ -74,7 +77,8 @@ double gpu_rapl_device::power_usage([[maybe_unused]] struct result_bundle *resul
 void gpu_rapl_device::collect_json_fields(std::string &_js)
 {
     i915gpu::collect_json_fields(_js);
-    JSON_KV("last_time", (long)last_time);
+    JSON_KV("last_time_sec",  (long)last_time.tv_sec);
+    JSON_KV("last_time_usec", (long)last_time.tv_usec);
     JSON_FIELD(last_energy);
     JSON_FIELD(consumed_power);
     JSON_FIELD(device_valid);

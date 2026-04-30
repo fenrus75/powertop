@@ -302,7 +302,23 @@ Before/after pattern:
 `ninja coverage` is broken due to duplicate test_framework.cpp symbols;
 use the script instead (it passes `--ignore-errors inconsistent`).
 
-Current baseline: **20.1% line / 31.9% function** (src/ only, after CSV tests).
+Current baseline: **20.6% line / 32.3% function** (src/ only, after lib.cpp improvements).
+lib.cpp: 72.7% lines (up from 59%).
+
+## lib.cpp coverage targets (achieved)
+
+Tests added to cover previously uncovered paths:
+- `format_watts` (lines 319-331): test_format_watts_normal/tiny_zero/aligned
+- `fmt_prefix` UTF-8 detection block (382-387): test_fmt_prefix_utf8_detection_ascii/unicode
+- `fmt_prefix` µ prefix (line 434): test_fmt_prefix_micro_utf8
+- `fmt_prefix` omag==2 path (line 414): test_fmt_prefix_hundred
+- `end_pci_access` stub (363-365): test_end_pci_access_stub
+- `ui_notify_user_console` (617-620): test_ui_notify_user_console
+- `pt_readlink` non-replay paths (263-276): test_pt_readlink_real_symlink/nonexistent/recording
+- `process_glob` GLOB_NOMATCH (502-505): test_process_glob_no_match
+- `read_sysfs` catch block (210-214): test_read_sysfs_non_integer_content
+- `hz_to_human` MHz digits==2 (line 102): test_hz_to_human_mhz_two_digits
+- `read_kallsyms` bad-input paths (126,131,134): updated replay fixture
 
 ## HTML report tests (tests/report/)
 

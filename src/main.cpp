@@ -29,6 +29,7 @@
  */
 #include <iostream>
 #include <fstream>
+#include <new>
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>

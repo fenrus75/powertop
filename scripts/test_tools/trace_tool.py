@@ -37,6 +37,16 @@ def parse_line(line, line_num):
         return tag, rest, None
     if tag == 'T':
         return tag, rest, None
+    if tag == 'L':
+        # Format: L b64(target) path
+        # b64 comes FIRST (may be empty = failed readlink: "L  path")
+        # path comes SECOND and may contain spaces
+        sep = rest.find(' ')
+        if sep == -1:
+            return tag, '', rest   # degenerate: no space
+        b64 = rest[:sep]
+        path = rest[sep+1:]
+        return tag, path, b64
     last_space = rest.rfind(' ')
     if last_space == -1: return None
     path = rest[:last_space]
@@ -49,18 +59,47 @@ def get_tag_str(tag):
     if tag == 'N': return "Miss"
     if tag == 'M': return "MSR"
     if tag == 'T': return "Time"
+    if tag == 'L': return "Link"
     return "????"
+
+def decode_content(tag, b64):
+    """Return human-readable content for display, or None if not applicable."""
+    if tag in ('N', 'M', 'T') or b64 is None:
+        return None
+    if tag == 'L':
+        if not b64:
+            return "(broken link)"
+        try:
+            return base64.b64decode(b64).decode('utf-8', errors='replace').strip()
+        except Exception:
+            return None
+    try:
+        return base64.b64decode(b64).decode('utf-8', errors='replace').strip()
+    except Exception:
+        return None
 
 def cmd_list(args):
     lines = load_trace(args.trace_file)
-    print(f"{'Line':<6} {'Type':<6} {'Path'}")
-    print("-" * 60)
+    show_content = getattr(args, 'content', False)
+    if show_content:
+        print(f"{'Line':<6} {'Type':<6} {'Path':<55} {'Content'}")
+        print("-" * 100)
+    else:
+        print(f"{'Line':<6} {'Type':<6} {'Path'}")
+        print("-" * 60)
     for i, line in enumerate(lines, 1):
         parsed = parse_line(line, i)
         if not parsed:
             continue
-        tag, path, _ = parsed
-        print(f"{i:<6} {get_tag_str(tag):<6} {path}")
+        tag, path, b64 = parsed
+        if show_content:
+            content = decode_content(tag, b64) or ""
+            # Truncate long content for display
+            if len(content) > 40:
+                content = content[:37] + "..."
+            print(f"{i:<6} {get_tag_str(tag):<6} {path:<55} {content}")
+        else:
+            print(f"{i:<6} {get_tag_str(tag):<6} {path}")
 
 def cmd_extract(args):
     lines = load_trace(args.trace_file)
@@ -77,6 +116,14 @@ def cmd_extract(args):
     if tag == 'N':
         print(f"Error: Line {args.line} is a 'File Not Found' (Miss) entry. No content to extract.")
         sys.exit(1)
+    if tag == 'L':
+        if not b64_content:
+            print(f"Line {args.line} is a broken symlink (empty target). Writing empty file.")
+            with open(args.output_file, 'wb') as f:
+                pass
+            return
+    if tag in ('M', 'T'):
+        print(f"Error: Line {args.line} is a {get_tag_str(tag)} entry; extract writes decoded bytes.")
 
     try:
         content = base64.b64decode(b64_content)
@@ -107,9 +154,14 @@ def cmd_replace(args):
         sys.exit(1)
 
     tag, path, _ = parsed
-    # If it was a 'Miss', it's now a 'Read' with content
-    new_tag = 'R' if tag == 'N' else tag
-    lines[args.line - 1] = f"{new_tag} {path} {b64_content}\n"
+    if tag == 'N':
+        # Miss → Read with content
+        lines[args.line - 1] = f"R {path} {b64_content}\n"
+    elif tag == 'L':
+        # Replace symlink target; preserve path
+        lines[args.line - 1] = f"L {b64_content} {path}\n"
+    else:
+        lines[args.line - 1] = f"{tag} {path} {b64_content}\n"
     save_trace(args.trace_file, lines)
     print(f"Replaced content at line {args.line} with {args.input_file}")
 
@@ -128,9 +180,12 @@ def cmd_edit(args):
     if tag == 'N':
         print(f"Error: Line {args.line} is a 'File Not Found' (Miss) entry. No content to edit.")
         sys.exit(1)
+    if tag in ('M', 'T'):
+        print(f"Error: Line {args.line} is a {get_tag_str(tag)} entry; use direct file editing.")
+        sys.exit(1)
 
     try:
-        content = base64.b64decode(b64_content)
+        content = base64.b64decode(b64_content) if b64_content else b''
     except Exception as e:
         print(f"Error decoding base64: {e}")
         sys.exit(1)
@@ -147,7 +202,10 @@ def cmd_edit(args):
             new_content = f.read()
         
         new_b64 = base64.b64encode(new_content).decode('ascii')
-        lines[args.line - 1] = f"{tag} {path} {new_b64}\n"
+        if tag == 'L':
+            lines[args.line - 1] = f"L {new_b64} {path}\n"
+        else:
+            lines[args.line - 1] = f"{tag} {path} {new_b64}\n"
         save_trace(args.trace_file, lines)
         print(f"Successfully edited line {args.line}")
         
@@ -223,7 +281,7 @@ def cmd_validate(args):
             errors += 1
             continue
         tag, path, b64 = parsed
-        if tag not in ['R', 'W', 'N', 'M', 'T']:
+        if tag not in ['R', 'W', 'N', 'M', 'T', 'L']:
             print(f"Line {i}: Invalid tag '{tag}'")
             errors += 1
         if tag == 'M':
@@ -250,6 +308,17 @@ def cmd_validate(args):
                 except:
                     print(f"Line {i}: Invalid Time decimal value")
                     errors += 1
+        if tag == 'L':
+            # b64 may be empty (broken link); if non-empty, must be valid base64
+            if b64:
+                try:
+                    base64.b64decode(b64)
+                except:
+                    print(f"Line {i}: Invalid base64 in link target")
+                    errors += 1
+            if not path:
+                print(f"Line {i}: Link record missing path")
+                errors += 1
         if tag in ['R', 'W'] and b64:
             try:
                 base64.b64decode(b64)
@@ -263,13 +332,46 @@ def cmd_validate(args):
         print(f"Validation failed with {errors} errors.")
         sys.exit(1)
 
+def cmd_add(args):
+    """Append a new record to a trace file, creating it if necessary."""
+    record_type = args.record_type.upper()
+    path = args.path
+    value = args.value or ""
+
+    if record_type == 'R':
+        b64 = base64.b64encode(value.encode('utf-8')).decode('ascii')
+        record = f"R {path} {b64}\n"
+    elif record_type == 'W':
+        b64 = base64.b64encode(value.encode('utf-8')).decode('ascii')
+        record = f"W {path} {b64}\n"
+    elif record_type == 'N':
+        record = f"N {path}\n"
+    elif record_type == 'L':
+        # path = symlink path, value = target (empty = broken link)
+        b64 = base64.b64encode(value.encode('utf-8')).decode('ascii') if value else ""
+        record = f"L {b64} {path}\n"
+    else:
+        print(f"Error: Unknown record type '{record_type}'. Use R, W, N, or L.")
+        sys.exit(1)
+
+    try:
+        with open(args.trace_file, 'a') as f:
+            f.write(record)
+        print(f"Added: {record.strip()}")
+    except Exception as e:
+        print(f"Error writing to trace file: {e}")
+        sys.exit(1)
+
 def main():
     parser = argparse.ArgumentParser(description="PowerTOP Trace Tool")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # list
-    subparsers.add_parser("list", help="List all entries").add_argument("trace_file")
-    
+    p = subparsers.add_parser("list", help="List all entries")
+    p.add_argument("trace_file")
+    p.add_argument("--content", "-c", action="store_true",
+                   help="Show decoded content inline")
+
     # extract
     p = subparsers.add_parser("extract", help="Extract a line")
     p.add_argument("trace_file")
@@ -303,14 +405,24 @@ def main():
     p.add_argument("output_dir")
 
     # validate
-    p = subparsers.add_parser("validate", help="Validate trace file format").add_argument("trace_file")
+    subparsers.add_parser("validate", help="Validate trace file format").add_argument("trace_file")
+
+    # add
+    p = subparsers.add_parser("add",
+        help="Append a record to a trace file (creates file if needed)")
+    p.add_argument("trace_file")
+    p.add_argument("record_type", metavar="type", choices=["R", "W", "N", "L"],
+                   help="Record type: R=read, W=write, N=miss, L=symlink")
+    p.add_argument("path", help="Sysfs/proc path (for L: the symlink path)")
+    p.add_argument("value", nargs="?", default="",
+                   help="Content string (for L: symlink target; omit for broken link or N)")
 
     args = parser.parse_args()
     
     cmds = {
         "list": cmd_list, "extract": cmd_extract, "replace": cmd_replace,
         "edit": cmd_edit, "search": cmd_search, "grep": cmd_grep,
-        "export": cmd_export, "validate": cmd_validate
+        "export": cmd_export, "validate": cmd_validate, "add": cmd_add,
     }
     cmds[args.command](args)
 

@@ -1,0 +1,5 @@
+R /sys/bus/usb/devices/1-1/bDeviceClass OQo=
+N /sys/bus/usb/devices/1-1/manufacturer
+N /sys/bus/usb/devices/1-1/product
+R /sys/bus/usb/devices/1-1/busnum MQo=
+R /sys/bus/usb/devices/1-1/devnum Mgo=

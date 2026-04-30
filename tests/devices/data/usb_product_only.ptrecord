@@ -1,0 +1,5 @@
+R /sys/bus/usb/devices/1-1/bDeviceClass MAo=
+N /sys/bus/usb/devices/1-1/manufacturer
+R /sys/bus/usb/devices/1-1/product VVNCIE1vdXNlCg==
+R /sys/bus/usb/devices/1-1/busnum MQo=
+R /sys/bus/usb/devices/1-1/devnum NAo=

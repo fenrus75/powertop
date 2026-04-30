@@ -356,3 +356,28 @@ test_tuningi2c_exe = executable(
 )
 
 test('base: i2c_tunable', test_tuningi2c_exe)
+
+test_cpu_core_package_exe = executable(
+  'powertop-test-cpu-core-package',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/cpu/abstract_cpu.cpp',
+    '../../src/cpu/cpu_core.cpp',
+    '../../src/cpu/cpu_package.cpp',
+    '../../src/cpu/frequency.cpp',
+    'test_cpu_core_package.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: cpu_core and cpu_package', test_cpu_core_package_exe)

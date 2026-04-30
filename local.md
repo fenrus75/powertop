@@ -220,3 +220,30 @@ construction, then call schedule/deschedule without any fixture. Verify
 
 If you have questions or improvement suggestions for something the user
 asked, or if you think the user made a mistake in the prompt: stop and **ask** the user!
+
+## backlight: display_is_on() virtual hook
+
+`dpms_screen_on()` is a static function that uses `opendir()` (not mocked)
+to scan `/sys/class/drm/card0`, then calls `read_sysfs_string()` on found
+entries (which IS intercepted by the test framework). This causes SIGABRT in
+replay mode on machines with a real DRM card.
+
+Fix: extracted `virtual int display_is_on()` as a protected method on
+`backlight` that delegates to `dpms_screen_on()`. Tests subclass `backlight`
+and override `display_is_on()` to return 1 (screen always on).
+
+## trace_tool.py: --path filter for list command
+
+`trace_tool.py list --path SUBSTR file.ptrecord` filters output to entries
+whose path contains SUBSTR. Useful for inspecting large fixture files.
+The `--content` / `-c` flag can be combined with `--path` / `-p`.
+
+## Fixture creation with trace_tool.py add
+
+Use `trace_tool.py add FILE R PATH VALUE` to build fixture files from
+scratch (creates file if it doesn't exist). Values are plain strings,
+auto-encoded to base64. Validate after building with `trace_tool.py validate`.
+
+Example for backlight (2 reads in start_measurement):
+  trace_tool.py add backlight_start.ptrecord R /sys/class/backlight/lcd/max_brightness 100
+  trace_tool.py add backlight_start.ptrecord R /sys/class/backlight/lcd/actual_brightness 60

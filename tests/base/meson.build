@@ -381,3 +381,29 @@ test_cpu_core_package_exe = executable(
 )
 
 test('base: cpu_core and cpu_package', test_cpu_core_package_exe)
+
+test_processdevice_exe = executable(
+  'powertop-test-processdevice',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/process/processdevice.cpp',
+    '../../src/process/powerconsumer.cpp',
+    '../../src/devices/device.cpp',
+    'powerconsumer_stubs.cpp',
+    '../devices/test_stubs.cpp',
+    'test_processdevice.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: processdevice', test_processdevice_exe)

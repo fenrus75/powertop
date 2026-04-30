@@ -258,3 +258,28 @@ test_sysfs_tunable_methods_exe = executable(
 )
 
 test('base: sysfs_tunable methods', test_sysfs_tunable_methods_exe)
+
+test_work_exe = executable(
+  'powertop-test-work',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/process/work.cpp',
+    '../../src/process/powerconsumer.cpp',
+    'powerconsumer_stubs.cpp',
+    'test_work.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: work fire/done', test_work_exe)

@@ -40,6 +40,7 @@
 
 rfkill::rfkill([[maybe_unused]] const std::string &_name, const std::string &path): device()
 {
+	register_sysfs_path(path);
 	std::string link = pt_readlink(std::format("{}/device/driver", path));
 	if (!link.empty())
 		humanname = pt_format(_("Radio device: {}"), link.substr(link.rfind('/') + 1));

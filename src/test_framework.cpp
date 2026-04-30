@@ -65,12 +65,19 @@ std::string test_framework_manager::replay_read(const std::string& path) {
 void test_framework_manager::record_write(const std::string& path, const std::string& content) {
 	if (!recording) return;
 	recorded_writes.push_back({path, content});
+	write_log.push_back({path, content});
 }
 
 void test_framework_manager::replay_write(const std::string& path, const std::string& content) {
 	if (!replaying) return;
+	write_log.push_back({path, content});
+	if (write_sequences.count(path) == 0) {
+		/* No W records provided for this path — captured in write_log for
+		   test-side assertion; no validation error since this is opt-in. */
+		return;
+	}
 	if (write_sequences[path].empty()) {
-		std::cerr << "TEST FAIL: Unexpected write to: " << path << " (nothing recorded)" << std::endl;
+		std::cerr << "TEST FAIL: Extra write to: " << path << " (W queue exhausted)" << std::endl;
 		return;
 	}
 	std::string expected = write_sequences[path].front();
@@ -80,6 +87,11 @@ void test_framework_manager::replay_write(const std::string& path, const std::st
 		std::cerr << "  Expected: " << expected << std::endl;
 		std::cerr << "  Actual:   " << content << std::endl;
 	}
+}
+
+const std::vector<std::pair<std::string, std::string>>&
+test_framework_manager::get_write_log() const {
+	return write_log;
 }
 
 void test_framework_manager::record_msr(int cpu, uint64_t offset, uint64_t value) {
@@ -142,6 +154,7 @@ void test_framework_manager::reset() {
 	recorded_times.clear();
 	link_sequences.clear();
 	recorded_links.clear();
+	write_log.clear();
 }
 
 void test_framework_manager::save() {

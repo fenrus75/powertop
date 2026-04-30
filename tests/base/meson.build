@@ -234,3 +234,27 @@ test_interrupt_exe = executable(
 )
 
 test('base: interrupt serialize', test_interrupt_exe)
+
+test_sysfs_tunable_methods_exe = executable(
+  'powertop-test-sysfs-tunable-methods',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/tuning/tunable.cpp',
+    '../../src/tuning/tuningsysfs.cpp',
+    'test_sysfs_tunable_methods.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: sysfs_tunable methods', test_sysfs_tunable_methods_exe)

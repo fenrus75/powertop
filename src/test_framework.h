@@ -41,6 +41,8 @@ public:
 	void record_write(const std::string& path, const std::string& content);
 	void replay_write(const std::string& path, const std::string& content);
 
+	const std::vector<std::pair<std::string, std::string>>& get_write_log() const;
+
 	void record_msr(int cpu, uint64_t offset, uint64_t value);
 	int replay_msr(int cpu, uint64_t offset, uint64_t *value);
 
@@ -67,6 +69,11 @@ public:
 
 	void record_write(const std::string&, const std::string&) {}
 	void replay_write(const std::string&, const std::string&) {}
+
+	const std::vector<std::pair<std::string, std::string>>& get_write_log() const {
+		static const std::vector<std::pair<std::string, std::string>> empty;
+		return empty;
+	}
 
 	void record_msr(int, uint64_t, uint64_t) {}
 	int replay_msr(int, uint64_t, uint64_t *) { return -1; }
@@ -96,6 +103,7 @@ private:
 
 	std::map<std::string, std::deque<std::string>> write_sequences;
 	std::vector<std::pair<std::string, std::string>> recorded_writes;
+	std::vector<std::pair<std::string, std::string>> write_log;
 
 	std::map<std::pair<int, uint64_t>, std::deque<uint64_t>> msr_sequences;
 	std::vector<std::tuple<int, uint64_t, uint64_t>> recorded_msrs;

@@ -252,3 +252,30 @@ test_opal_sensors_exe = executable(
 )
 
 test('devices: opal-sensors', test_opal_sensors_exe)
+
+test_cpudevice_exe = executable(
+  'powertop-test-cpudevice',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/parameters/parameters.cpp',
+    '../../src/devices/device.cpp',
+    '../../src/measurement/measurement.cpp',
+    '../../src/cpu/cpudevice.cpp',
+    'test_stubs.cpp',
+    'test_cpudevice.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('devices: cpudevice', test_cpudevice_exe)

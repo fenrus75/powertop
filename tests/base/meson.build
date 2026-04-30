@@ -331,3 +331,28 @@ test_tuningusb_exe = executable(
 )
 
 test('base: usb_tunable', test_tuningusb_exe)
+
+test_tuningi2c_exe = executable(
+  'powertop-test-tuningi2c',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/tuning/tunable.cpp',
+    '../../src/tuning/tuningi2c.cpp',
+    'stub_runtime_pm.cpp',
+    'test_tuningi2c.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: i2c_tunable', test_tuningi2c_exe)

@@ -1,0 +1,4 @@
+R /sys/bus/i2c/devices/i2c-1/name U01CdXMgSTgwMQ==
+N /sys/bus/i2c/devices/i2c-1/device/power/runtime_suspended_time
+R /sys/bus/i2c/devices/i2c-1/device/power/runtime_active_time NTY3OA==
+R /sys/bus/i2c/devices/i2c-1/power/control b24=

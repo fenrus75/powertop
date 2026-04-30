@@ -70,31 +70,29 @@ std::string cpu_model(void)
 
 static std::string read_os_release(const std::string &filename)
 {
-	std::ifstream file;
-	std::string line;
 	const std::string pname = "PRETTY_NAME=";
-	std::string os("");
-
-	file.open(filename, std::ios::in);
-	if (!file)
+	std::string content = read_file_content(filename);
+	if (content.empty())
 		return "";
-	while (getline(file, line)) {
+
+	std::istringstream stream(content);
+	std::string line;
+	while (std::getline(stream, line)) {
 		if (line.starts_with(pname)) {
 			size_t pos = line.find('=');
 			if (pos == std::string::npos)
 				break;
-			os = line.substr(pos + 1);
+			std::string os = line.substr(pos + 1);
 			if (os.length() >= 2 && (os.front() == '"' || os.front() == '\'')) {
 				os.erase(0, 1);
 				size_t end_pos = os.find_first_of("\"\'");
 				if (end_pos != std::string::npos)
 					os.erase(end_pos);
 			}
-			break;
+			return os;
 		}
 	}
-	file.close();
-	return os;
+	return "";
 }
 
 static std::string get_time_string(const std::string &fmt, time_t t)

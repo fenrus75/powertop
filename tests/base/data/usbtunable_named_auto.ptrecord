@@ -1,0 +1,5 @@
+R /sys/bus/usb/devices/1-2/idVendor ODA4Nw==
+R /sys/bus/usb/devices/1-2/idProduct MDAyNA==
+R /sys/bus/usb/devices/1-2/manufacturer SW50ZWwgQ29ycC4=
+R /sys/bus/usb/devices/1-2/product VVNCIEh1Yg==
+R /sys/bus/usb/devices/1-2/power/control YXV0bw==

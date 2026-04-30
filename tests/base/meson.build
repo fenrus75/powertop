@@ -307,3 +307,27 @@ test_ethernet_wakeup_exe = executable(
 )
 
 test('base: ethernet_wakeup', test_ethernet_wakeup_exe)
+
+test_tuningusb_exe = executable(
+  'powertop-test-tuningusb',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/tuning/tunable.cpp',
+    '../../src/tuning/tuningusb.cpp',
+    'test_tuningusb.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: usb_tunable', test_tuningusb_exe)

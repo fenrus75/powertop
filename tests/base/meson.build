@@ -209,3 +209,28 @@ test_sysfs_pm_exe = executable(
 )
 
 test('base: sysfs_power_meter serialize', test_sysfs_pm_exe)
+
+test_interrupt_exe = executable(
+  'powertop-test-interrupt-serialize',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/process/interrupt.cpp',
+    '../../src/process/powerconsumer.cpp',
+    'powerconsumer_stubs.cpp',
+    'test_interrupt_serialize.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: interrupt serialize', test_interrupt_exe)

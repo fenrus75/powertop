@@ -1,0 +1,4 @@
+R /sys/bus/pci/devices/0000:00:1f.0/power/runtime_suspended_time MTAwCg==
+R /sys/bus/pci/devices/0000:00:1f.0/power/runtime_active_time MAo=
+R /sys/bus/pci/devices/0000:00:1f.0/power/runtime_suspended_time MjAwCg==
+R /sys/bus/pci/devices/0000:00:1f.0/power/runtime_active_time MAo=

@@ -1,0 +1,8 @@
+R /sys/class/scsi_host/host99/ahci_alpm_active MTAw
+R /sys/class/scsi_host/host99/ahci_alpm_partial NTA=
+R /sys/class/scsi_host/host99/ahci_alpm_slumber MjAw
+R /sys/class/scsi_host/host99/ahci_alpm_devslp MTA=
+R /sys/class/scsi_host/host99/ahci_alpm_active MjAw
+R /sys/class/scsi_host/host99/ahci_alpm_partial MTAw
+R /sys/class/scsi_host/host99/ahci_alpm_slumber MzAw
+R /sys/class/scsi_host/host99/ahci_alpm_devslp MjA=

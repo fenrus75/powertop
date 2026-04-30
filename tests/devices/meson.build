@@ -279,3 +279,30 @@ test_cpudevice_exe = executable(
 )
 
 test('devices: cpudevice', test_cpudevice_exe)
+
+test_ahci_exe = executable(
+  'powertop-test-ahci',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/parameters/parameters.cpp',
+    '../../src/devices/device.cpp',
+    '../../src/devices/ahci.cpp',
+    'test_stubs.cpp',
+    'stub_report.cpp',
+    'test_ahci.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('devices: ahci', test_ahci_exe)

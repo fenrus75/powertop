@@ -228,3 +228,27 @@ test_devfreq_exe = executable(
 )
 
 test('devices: devfreq', test_devfreq_exe)
+
+test_opal_sensors_exe = executable(
+  'powertop-test-opal-sensors',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/measurement/measurement.cpp',
+    '../../src/measurement/opal-sensors.cpp',
+    'test_opal_sensors.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('devices: opal-sensors', test_opal_sensors_exe)

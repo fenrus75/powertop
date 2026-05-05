@@ -507,3 +507,30 @@ test_wifi_tunables_exe = executable(
 )
 
 test('base: wifi_tunables', test_wifi_tunables_exe)
+
+test_nhm_cpu_exe = executable(
+  'powertop-test-nhm-cpu',
+  [
+    '../../src/lib.cpp',
+    '../../src/test_framework.cpp',
+    '../../src/cpu/abstract_cpu.cpp',
+    '../../src/cpu/cpu_linux.cpp',
+    '../../src/cpu/cpu_core.cpp',
+    '../../src/cpu/cpu_package.cpp',
+    '../../src/cpu/intel_cpus.cpp',
+    '../../src/cpu/frequency.cpp',
+    'test_nhm_cpu.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: nhm_cpu', test_nhm_cpu_exe)

@@ -115,7 +115,7 @@ public:
 
 class nhm_cpu: public cpu_linux, public intel_util
 {
-private:
+protected:
 	uint64_t	aperf_before = 0;
 	uint64_t	aperf_after = 0;
 	uint64_t	mperf_before = 0;

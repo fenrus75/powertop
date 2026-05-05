@@ -109,6 +109,29 @@ static void test_csv_table_empty_rows()
 }
 
 /* --------------------------------------------------------------------------
+ * Test 3b: add_table — mixed &nbsp; cells MUST NOT shift columns
+ * -------------------------------------------------------------------------- */
+
+static void test_csv_table_mixed_empty()
+{
+	report_maker r(REPORT_CSV);
+
+	/* Row with &nbsp; in middle: "A", "&nbsp;", "B"
+	 * Should result in "A;;B" (two semicolons)
+	 */
+	std::vector<std::string> data = {
+		"A", "&nbsp;", "B"
+	};
+	table_attributes ta;
+	init_std_table_attr(&ta, 1, 3);
+	r.add_table(data, &ta);
+
+	std::string result = r.get_result();
+	/* If columns shift, we get "A;B" instead of "A;;B" */
+	PT_ASSERT_TRUE(result.find("A;;B") != std::string::npos);
+}
+
+/* --------------------------------------------------------------------------
  * Test 4: add_summary_list — even list and odd list (bug-fix verification)
  * -------------------------------------------------------------------------- */
 
@@ -165,6 +188,7 @@ int main()
 	PT_RUN_TEST(test_csv_formatter_methods);
 	PT_RUN_TEST(test_csv_table);
 	PT_RUN_TEST(test_csv_table_empty_rows);
+	PT_RUN_TEST(test_csv_table_mixed_empty);
 	PT_RUN_TEST(test_csv_summary_list);
 	PT_RUN_TEST(test_csv_escape);
 	return pt_test_summary();

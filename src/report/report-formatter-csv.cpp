@@ -154,11 +154,11 @@ report_formatter_csv::add_table(const std::vector<std::string> &system_data, str
 
 			if (tmp_str == "&nbsp;")
 				empty_row+=1;
-			else{
+			else
 				add_exact(system_data[offset]);
-				if (j < (tb_attr->cols - 1))
-					add_exact(";");
-			}
+
+			if (j < (tb_attr->cols - 1))
+				add_exact(";");
 		}
 		if (empty_row < tb_attr->cols)
 		add_exact("\n");

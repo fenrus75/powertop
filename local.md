@@ -164,30 +164,10 @@ Two thresholds are used to guard floating-point divisions:
 at 100 (commented out), and does NOT trap NaN — callers must guard
 their divisors.
 
-# list_directory() test infrastructure (commit 4adae58)
-
-`list_directory(path)` in `src/lib.cpp` returns a sorted `std::vector<std::string>`
-of filenames using `std::filesystem::directory_iterator`. It is interceptable
-by the test framework via a new `D` record type in `.ptrecord` files.
-
 **D record format:** `D path base64(newline-joined-entries)`
 - Empty base64 → empty/not-found directory (returns `{}`)
 - In `trace_tool.py add`: `add FILE D /some/dir "entry1 entry2"` — entries are
   space-separated, sorted then newline-joined before base64 encoding.
-
-**Converted callers (all callers as of commit 12883a9 — no more opendir in codebase):**
-- `process_directory()` in `lib.cpp`
-- `parse_cstates_start()` / `parse_cstates_end()` in `cpu_linux.cpp`
-- `do_bus()` in `runtime_pm.cpp`
-- `add_wifi_tunables()` in `tuning/wifi.cpp`
-- `add_runtime_tunables()` in `tuning/runtime.cpp`
-- `add_usb_callback()` in `tuning/tuningusb.cpp`
-- `disk_name()`, `model_name()`, `create_all_ahcis()` in `devices/ahci.cpp`
-- `dpms_screen_on()` in `devices/backlight.cpp`
-- `create_all_devfreq_devices()` in `devices/devfreq.cpp` (also removed `static DIR*`)
-- `rapl_device` constructor in `cpu/rapl/rapl_interface.cpp`
-- `byt_has_ahci()` in `cpu/intel_cpus.cpp` (uses `std::filesystem::exists()`)
-- `collect_open_devices()` in `devlist.cpp` (nested /proc/ and /proc/<pid>/fd/)
 
 **Note:** `byt_has_ahci()` uses `std::filesystem::exists()` rather than `list_directory()` since it only checks directory existence. The `DIR *dir` member was removed from `intel_util` class.
 
@@ -212,26 +192,52 @@ Partially covered, more tests possible but require sysfs fixtures:
 
 Practically untestable without hardware (0% or near):
 - `main.cpp`, `cpu.cpp`, `intel_cpus.cpp`, `do_process.cpp`,
-  `calibrate.cpp`, `perf/`, `display.cpp`, `devlist.cpp`
+  `calibrate.cpp`, `perf/`, `display.cpp`
+  (devlist.cpp and rapl_interface.cpp now have tests — see below)
 
-# New tests added (commit 681baea) — list_directory coverage
+# trace_tool.py M record support
 
-- `test_cpu_linux_measurement_cycle` (tests/base/test_cpu_linux.cpp):
-  Fixture `cpu_linux_cycle.ptrecord` drives a full measurement_start/end
-  cycle, exercising parse_cstates_start/end with list_directory D records
-  and verifying fill_cstate_name/time/percentage output.
+`scripts/test_tools/trace_tool.py add` now supports M (MSR) records:
+  trace_tool.py add file.ptrecord M "cpu hex_offset" [hex_value]
+  Example: trace_tool.py add f.ptrecord M "0 611" deadbeef → M 0 611 deadbeef
+  Default value is 0. `list --content` shows cpu/offset/value for MSR records.
+  M records in replay mode: replay_msr() returns 0 (success), but note that
+  rapl_interface.cpp domain detection checks ret > 0, so MSR-path domains will
+  never be detected via replay (returns 0, not 8). Use for "no domain" MSR
+  fallback tests; the powercap path is preferred for domain-present tests.
 
-- `test_dpms_screen_on_no_drm` / `test_dpms_screen_on_active` (tests/devices/test_backlight_serialize.cpp):
-  Use real `backlight` class (not the test_backlight override) with D
-  records for `/sys/class/drm/card0` to exercise dpms_screen_on().
+# ALWAYS use trace_tool.py to create/edit .ptrecord fixtures
 
-- `test_ahci_human_name_disk_model` (tests/devices/test_ahci.cpp):
-  Fixture `ahci_host0_disk.ptrecord` with nested D records for
-  target/disk entries exercises model_name() and disk_name() paths.
+**Never hand-compute base64 for fixture files.** Use `trace_tool.py add`:
 
-- `test_add_wifi_tunables_filters_by_prefix` / `test_add_wifi_tunables_empty_dir`
-  (tests/base/test_wifi_tunables.cpp):
-  New test file with stub_iw.cpp, exercises add_wifi_tunables() prefix
-  filtering (wlan/wlp/wlx added, eth0 skipped) via D record replay.
+  python3 scripts/test_tools/trace_tool.py add FILE R /some/path "plain text value"
+  python3 scripts/test_tools/trace_tool.py add FILE D /some/dir "entry1 entry2"
+  python3 scripts/test_tools/trace_tool.py add FILE N /missing/path
+  python3 scripts/test_tools/trace_tool.py add FILE M "0 611" deadbeef
 
-Test count: 44 → 45 (one new test executable for wifi_tunables).
+Other useful subcommands:
+  list --content FILE       — show all records with decoded values
+  list --path SUBSTR FILE   — filter by path substring
+  extract FILE LINE out.txt — decode a record's content to a file
+  replace FILE LINE in.txt  — replace a record's content from a file
+  edit FILE LINE            — open a record's content in $EDITOR (default: joe)
+  search FILE REGEX         — grep paths by regex
+  validate FILE             — check format is valid
+
+For D records: `add` takes space-separated entry names; they are sorted and
+newline-joined before base64 encoding. An empty value → empty directory record.
+
+# Time formatting pattern (lib.cpp / lib.h)
+
+`get_time_string(const std::string &fmt, std::chrono::system_clock::time_point tp)`
+is declared in `lib.h` and defined in `lib.cpp`. It converts to local time via
+`std::chrono::zoned_time{std::chrono::current_zone(), tp}` and formats using
+`pt_format("{:" + fmt + "}", zt)` — strftime-style specifiers (`%c`, `%Y%m%d-%H%M%S`).
+Call sites use `std::chrono::system_clock::now()` instead of `time(nullptr)`.
+
+
+# Fixing review comments and bug reports
+
+First create a testcase for the issue when possible at all; this test case will fail at
+first (to show that the issue is real). After the issue is fixed, the test
+should then pass.

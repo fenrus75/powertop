@@ -141,9 +141,10 @@ report_formatter_csv::add_table(const std::vector<std::string> &system_data, str
 	int i, j;
 	int offset=0;
 	std::string tmp_str="";
-	int empty_row=0;
 	add_exact("\n");
 	for (i=0; i < tb_attr->rows; i++){
+		std::string row_buf = "";
+		bool all_empty = true;
 		for (j=0; j < tb_attr->cols; j++){
 			offset = i * (tb_attr->cols) + j;
 
@@ -152,16 +153,17 @@ report_formatter_csv::add_table(const std::vector<std::string> &system_data, str
 
 			tmp_str=system_data[offset];
 
-			if (tmp_str == "&nbsp;")
-				empty_row+=1;
-			else
-				add_exact(system_data[offset]);
+			if (tmp_str != "&nbsp;") {
+				row_buf += system_data[offset];
+				all_empty = false;
+			}
 
 			if (j < (tb_attr->cols - 1))
-				add_exact(";");
+				row_buf += ";";
 		}
-		if (empty_row < tb_attr->cols)
-		add_exact("\n");
-		empty_row=0;
+		if (!all_empty) {
+			add_exact(row_buf);
+			add_exact("\n");
+		}
 	}
 }

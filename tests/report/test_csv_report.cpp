@@ -132,6 +132,35 @@ static void test_csv_table_mixed_empty()
 }
 
 /* --------------------------------------------------------------------------
+ * Test 3c: add_table — entirely empty row must not corrupt next row
+ *
+ * Regression: the old fix emitted ";;" for the empty row but suppressed the
+ * newline, causing the next row's data to be appended to the semicolons.
+ * -------------------------------------------------------------------------- */
+
+static void test_csv_table_empty_row_no_corruption()
+{
+	report_maker r(REPORT_CSV);
+
+	/* Middle row is entirely &nbsp; */
+	std::vector<std::string> data = {
+		"A",      "B",
+		"&nbsp;", "&nbsp;",
+		"C",      "D",
+	};
+	table_attributes ta;
+	init_std_table_attr(&ta, 3, 2);
+	r.add_table(data, &ta);
+
+	std::string result = r.get_result();
+	/* C must be the start of its own field, not glued to a semicolon */
+	PT_ASSERT_TRUE(result.find(";C") == std::string::npos);
+	/* The two data rows must both be present */
+	PT_ASSERT_TRUE(result.find("A;B") != std::string::npos);
+	PT_ASSERT_TRUE(result.find("C;D") != std::string::npos);
+}
+
+/* --------------------------------------------------------------------------
  * Test 4: add_summary_list — even list and odd list (bug-fix verification)
  * -------------------------------------------------------------------------- */
 
@@ -189,6 +218,7 @@ int main()
 	PT_RUN_TEST(test_csv_table);
 	PT_RUN_TEST(test_csv_table_empty_rows);
 	PT_RUN_TEST(test_csv_table_mixed_empty);
+	PT_RUN_TEST(test_csv_table_empty_row_no_corruption);
 	PT_RUN_TEST(test_csv_summary_list);
 	PT_RUN_TEST(test_csv_escape);
 	return pt_test_summary();

@@ -133,3 +133,18 @@ std::string find_intel_rc6_card_path(void)
 	return path;
 }
 
+
+void i965_core::collect_json_fields(std::string &_js)
+{
+    abstract_cpu::collect_json_fields(_js);
+    JSON_FIELD(rc6_before);
+    JSON_FIELD(rc6_after);
+    JSON_FIELD(rc6p_before);
+    JSON_FIELD(rc6p_after);
+    JSON_FIELD(rc6pp_before);
+    JSON_FIELD(rc6pp_after);
+    JSON_KV("before_sec", (long)before.tv_sec);
+    JSON_KV("before_usec", (long)before.tv_usec);
+    JSON_KV("after_sec", (long)after.tv_sec);
+    JSON_KV("after_usec", (long)after.tv_usec);
+}

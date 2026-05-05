@@ -207,6 +207,8 @@ void learn_parameters(int iterations, int do_base_power)
 				changed++;
 			}
 
+			if (fabs(1.0 + weight) < 1e-10)
+				continue;
 			value = orgvalue * 1 / (1 + weight);
 
 			if (value < 0.0001)

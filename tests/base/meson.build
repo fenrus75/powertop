@@ -534,3 +534,25 @@ test_nhm_cpu_exe = executable(
 )
 
 test('base: nhm_cpu', test_nhm_cpu_exe)
+
+test_learn_parameters_exe = executable(
+  'powertop-test-learn-parameters',
+  [
+    '../../src/test_framework.cpp',
+    '../../src/parameters/parameters.cpp',
+    '../../src/parameters/learn.cpp',
+    'test_learn_parameters.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: learn_parameters', test_learn_parameters_exe)

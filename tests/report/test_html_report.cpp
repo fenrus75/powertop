@@ -284,6 +284,21 @@ static void test_html_escape()
 	PT_ASSERT_TRUE(result.find("<b>") == std::string::npos);
 }
 
+/* --------------------------------------------------------------------------
+ * Test 6: constructor — MUST NOT wipe document header
+ * -------------------------------------------------------------------------- */
+
+static void test_html_report_has_header()
+{
+	report_maker r(REPORT_HTML);
+	std::string result = r.get_result();
+
+	/* If clear_result() wiped it, this would be empty or missing the doctype */
+	PT_ASSERT_TRUE(result.find("<!DOCTYPE html>") != std::string::npos);
+	/* It should also have some CSS */
+	PT_ASSERT_TRUE(result.find("body {") != std::string::npos);
+}
+
 /* -------------------------------------------------------------------------- */
 
 int main()
@@ -293,5 +308,6 @@ int main()
 	PT_RUN_TEST(test_html_tables);
 	PT_RUN_TEST(test_html_summary_list);
 	PT_RUN_TEST(test_html_escape);
+	PT_RUN_TEST(test_html_report_has_header);
 	return pt_test_summary();
 }

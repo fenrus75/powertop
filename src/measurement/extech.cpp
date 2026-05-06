@@ -204,6 +204,9 @@ static int parse_packet(struct packet * p)
 	int i;
 	int ret;
 
+	if (p->len < 20)
+		return -1;
+
 	p->buf[p->len] = '\0';
 
 	/*

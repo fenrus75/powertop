@@ -83,9 +83,9 @@ static void test_measurement()
 	PT_ASSERT_TRUE(got.find("\"connected_before\":100") != std::string::npos);
 	PT_ASSERT_TRUE(got.find("\"connected_after\":200") != std::string::npos);
 
-	/* utilization = 100 * (150-100) / (0.01 + 200-100) = 5000/100.01 ≈ 49.995 */
+	/* utilization = 100 * (150-100) / (200-100) = 5000/100 = 50.0 */
 	double util = d.utilization();
-	PT_ASSERT_TRUE(util > 49.9 && util < 50.1);
+	PT_ASSERT_TRUE(fabs(util - 50.0) < 0.0001);
 }
 
 int main()

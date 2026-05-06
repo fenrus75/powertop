@@ -229,7 +229,10 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 	if (time > last_stamp) {
 		last_stamp = time;
-		measurement_time = (0.0001 + last_stamp - first_stamp) / 1000000000 ;
+		if (last_stamp - first_stamp < 10000)
+			measurement_time = 0.00001;
+		else
+			measurement_time = (double)(last_stamp - first_stamp) / 1000000000.0;
 	}
 
 	if (event_name == "sched_switch") {
@@ -840,7 +843,7 @@ void process_update_display(void)
 		wprintw(win, "\n");
 
 
-	wprintw(win, "%s: %3.1f %s,  %3.1f %s, %3.1f %s %3.1f%% %s\n\n",_("Summary"), total_wakeups(), _("wakeups/second"), total_gpu_ops(), _("GPU ops/seconds"), total_disk_hits(), _("VFS ops/sec and"), total_cpu_time()*100, _("CPU use"));
+	wprintw(win, "%s\n\n", pt_format(_("Summary: {:3.1f} wakeups/second,  {:3.1f} GPU ops/seconds, {:3.1f} VFS ops/sec and {:3.1f}% CPU use"), total_wakeups(), total_gpu_ops(), total_disk_hits(), total_cpu_time()*100).c_str());
 
 
 	if (show_power)
@@ -1189,7 +1192,10 @@ double total_cpu_time(void)
 		total += all_power[i]->accumulated_runtime - all_power[i]->child_runtime;
 	}
 
-	total =  (total / (0.0001 + last_stamp - first_stamp));
+	if (last_stamp - first_stamp < 10000)
+		return 0.0;
+
+	total = total / (double)(last_stamp - first_stamp);
 
 	return total;
 }

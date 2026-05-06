@@ -260,7 +260,7 @@ void perf_bundle::process(void)
 			continue;
 		ev->process(&records);
 	}
-	sort(records.begin(), records.end(), event_sort_function);
+	std::sort(records.begin(), records.end(), event_sort_function);
 
 	for (i = 0; i < records.size(); i++) {
 		struct perf_sample *sample;

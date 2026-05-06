@@ -38,8 +38,9 @@
 #include <unistd.h>
 #include <format>
 
-rfkill::rfkill([[maybe_unused]] const std::string &_name, const std::string &path): device()
+rfkill::rfkill(const std::string &_name, const std::string &path): device()
 {
+	name = _name;
 	sysfs_path = path;
 	register_sysfs_path(path);
 	std::string link = pt_readlink(std::format("{}/device/driver", path));
@@ -48,6 +49,11 @@ rfkill::rfkill([[maybe_unused]] const std::string &_name, const std::string &pat
 	link = pt_readlink(std::format("{}/device/device/driver", path));
 	if (!link.empty())
 		humanname = pt_format(_("Radio device: {}"), link.substr(link.rfind('/') + 1));
+
+	index = get_param_index(std::format("radio:{}", name));
+	rindex = get_result_index(std::format("radio:{}", name));
+
+	register_parameter(std::format("radio:{}", name), 0.1);
 }
 
 void rfkill::start_measurement(void)

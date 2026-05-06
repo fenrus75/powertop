@@ -59,7 +59,7 @@ void runtime_pmdevice::start_measurement(void)
 	before_suspended_time = read_sysfs(std::format("{}/power/runtime_suspended_time", sysfs_path));
 	before_active_time = read_sysfs(std::format("{}/power/runtime_active_time", sysfs_path));
 
-        after_suspended_time = 0;
+	after_suspended_time = 0;
 	after_active_time = 0;
 }
 
@@ -72,7 +72,14 @@ void runtime_pmdevice::end_measurement(void)
 double runtime_pmdevice::utilization(void) /* percentage */
 {
 	double d;
-	d = 100 * (after_active_time - before_active_time) / (0.0001 + after_active_time - before_active_time + after_suspended_time - before_suspended_time);
+	double delta_active = (double)after_active_time - before_active_time;
+	double delta_suspended = (double)after_suspended_time - before_suspended_time;
+	double total_time = delta_active + delta_suspended;
+
+	if (total_time < 0.01)
+		return 0.0;
+
+	d = 100.0 * delta_active / total_time;
 
 	if (d < 0.00)
 		d = 0.0;
@@ -92,7 +99,7 @@ double runtime_pmdevice::power_usage(struct result_bundle *result, struct parame
 
 	factor = get_parameter_value(index, bundle);
 	util = get_result_value(r_index, result);
-        power += util * factor / 100.0;
+	power += util * factor / 100.0;
 
 	return power;
 }
@@ -176,14 +183,14 @@ void create_all_runtime_pm_devices(void)
 
 void runtime_pmdevice::collect_json_fields(std::string &_js)
 {
-    device::collect_json_fields(_js);
-    JSON_FIELD(before_suspended_time);
-    JSON_FIELD(before_active_time);
-    JSON_FIELD(after_suspended_time);
-    JSON_FIELD(after_active_time);
-    JSON_FIELD(sysfs_path);
-    JSON_FIELD(name);
-    JSON_FIELD(humanname);
-    JSON_FIELD(index);
-    JSON_FIELD(r_index);
+	device::collect_json_fields(_js);
+	JSON_FIELD(before_suspended_time);
+	JSON_FIELD(before_active_time);
+	JSON_FIELD(after_suspended_time);
+	JSON_FIELD(after_active_time);
+	JSON_FIELD(sysfs_path);
+	JSON_FIELD(name);
+	JSON_FIELD(humanname);
+	JSON_FIELD(index);
+	JSON_FIELD(r_index);
 }

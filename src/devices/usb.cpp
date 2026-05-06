@@ -101,7 +101,12 @@ void usbdevice::end_measurement(void)
 double usbdevice::utilization(void) /* percentage */
 {
 	double d;
-	d = 100.0 * (active_after - active_before) / (0.01 + connected_after - connected_before);
+	double total_connected = (double)connected_after - connected_before;
+
+	if (total_connected < 0.01)
+		return 0.0;
+
+	d = 100.0 * (active_after - active_before) / total_connected;
 	if (d < 0.0)
 		d = 0.0;
 	if (d > 99.8)

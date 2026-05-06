@@ -115,15 +115,15 @@ process::process(const std::string &_comm, int _pid, int _tid) : power_consumer(
 	if (comm.starts_with("kondemand/"))
 		is_idle = 1;
 
-	desc = std::format("[PID {}] {}", pid, comm);
+	desc = pt_format(_("[PID {}] {}"), pid, comm);
 
 	std::string cmdline = read_file_content(std::format("/proc/{}/cmdline", _pid));
 	if (cmdline.empty()) {
 		is_kernel = 1;
-		desc = std::format("[PID {}] [{}]", pid, comm);
+		desc = pt_format(_("[PID {}] [{}]"), pid, comm);
 	} else {
 		cmdline_to_string(cmdline);
-		desc = std::format("[PID {}] {}", pid, cmdline);
+		desc = pt_format(_("[PID {}] {}"), pid, cmdline);
 	}
 }
 

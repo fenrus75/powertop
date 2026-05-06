@@ -306,14 +306,19 @@ void network::end_measurement(void)
 	report_utilization(rindex_link_1000, u_1000);
 	report_utilization(rindex_link_high, u_high);
 	report_utilization(rindex_up, (start_up+end_up) / 2.0);
-	report_utilization(rindex_pkts, (end_pkts - start_pkts)/(duration + 0.001));
+	if (duration < 0.01)
+		report_utilization(rindex_pkts, 0.0);
+	else
+		report_utilization(rindex_pkts, (end_pkts - start_pkts)/duration);
 	report_utilization(rindex_powerunsave, u_powerunsave);
 }
 
 
 double network::utilization(void)
 {
-	return (end_pkts - start_pkts) / (duration + 0.001);
+	if (duration < 0.01)
+		return 0.0;
+	return (end_pkts - start_pkts) / duration;
 }
 
 static void netdev_callback(const std::string &d_name)

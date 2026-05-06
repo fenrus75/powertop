@@ -27,6 +27,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <new>
@@ -165,7 +166,7 @@ static void do_sleep(int seconds)
 	do {
 		int c;
 		usleep(6000);
-		halfdelay(delta * 10);
+		halfdelay(std::clamp(delta * 10, 1, 255));
 
 		c = getch();
 		switch (c) {

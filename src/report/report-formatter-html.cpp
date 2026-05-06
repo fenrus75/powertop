@@ -136,7 +136,7 @@ report_formatter_html::escape_string(const std::string &str)
 void
 report_formatter_html::add_logo()
 {
-	add_exact(std::format("<img alt=\"{}\" class=\"pwtop_logo\" src=\"data:image/png;base64,", _("PowerTop")));
+add_exact(std::format("<img alt=\"{}\" class=\"pwtop_logo\" src=\"data:image/png;base64,", escape_string(_("PowerTop"))));
 	add_exact("iVBORw0KGgoAAAANSUhEUgAAAbQAAABDCAYAAAD01PBTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA"
 		"GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAGsxJREFUeNrsXQt4FNXZ/nLhmutq"
 		"VdAKMXJHTMhiLGAuLUEfSg2xSFSUgIkkRPQ3QiHxqcRwswQrRq2EBKjhapvU3yCgtaQ+CRGUSyAB"

@@ -308,13 +308,10 @@ void report_devfreq_devices(void)
 
 void clear_all_devfreq()
 {
-	unsigned int i, j;
+	unsigned int i;
 
 	for (i=0; i < all_devfreq.size(); i++) {
 		class devfreq *df = all_devfreq[i];
-
-		for (j=0; j < df->dstates.size(); j++)
-			delete df->dstates[j];
 
 		delete df;
 	}

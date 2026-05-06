@@ -522,12 +522,12 @@ int equals(double a, double b)
 std::string get_user_input(unsigned sz)
 {
 	std::string buf(sz + 1, '\0');
-	fflush(stdout);
+	refresh();
 	echo();
 	/* Upon successful completion, these functions return OK. Otherwise, they return ERR. */
 	getnstr(buf.data(), sz);
 	noecho();
-	fflush(stdout);
+	refresh();
 	buf.resize(strnlen(buf.data(), sz));
 	return buf;
 }

@@ -23,7 +23,6 @@
  *      Gayatri Kammela <gayatri.kammela@intel.com>
  */
 
-#include <ncurses.h>
 #include "wakeup.h"
 #include <vector>
 #include "../lib.h"

@@ -35,6 +35,13 @@
 static int display = 0;
 static std::string current_notification;
 
+/* Viewport rectangle for prefresh() — top row is 1 (below the tab bar),
+ * bottom and right edges are dynamic and computed from LINES/COLS. */
+static constexpr int PAD_TOP  = 1;
+static constexpr int PAD_LEFT = 0;
+#define PAD_BOTTOM (LINES - 3)
+#define PAD_RIGHT  (COLS  - 1)
+
 std::vector<std::string> tab_names;
 std::map<std::string, class tab_window *> tab_windows;
 std::map<std::string, std::string> tab_translations;
@@ -167,7 +174,7 @@ void show_tab(unsigned int tab)
 	if (!win)
 		return;
 
-	prefresh(win->win, win->ypad_pos, win->xpad_pos, 1, 0, LINES - 3, COLS - 1);
+	prefresh(win->win, win->ypad_pos, win->xpad_pos, PAD_TOP, PAD_LEFT, PAD_BOTTOM, PAD_RIGHT);
 }
 
 WINDOW *get_ncurses_win(const std::string &name)
@@ -266,12 +273,12 @@ void cursor_down(void)
 			if (tab_names[current_tab] == "Tunables" || tab_names[current_tab] == "WakeUp") {
 		                if ((w->cursor_pos + 7) >= LINES) {
 					prefresh(w->win, ++w->ypad_pos, w->xpad_pos,
-						1, 0, LINES - 3, COLS - 1);
+						PAD_TOP, PAD_LEFT, PAD_BOTTOM, PAD_RIGHT);
 				}
 					w->cursor_down();
 			} else {
 				prefresh(w->win, ++w->ypad_pos, w->xpad_pos,
-					1, 0, LINES - 3, COLS - 1);
+					PAD_TOP, PAD_LEFT, PAD_BOTTOM, PAD_RIGHT);
 			}
 		}
 	}
@@ -289,7 +296,7 @@ void cursor_up(void)
 		w->cursor_up();
 		if (w->ypad_pos > 0) {
 			prefresh(w->win, --w->ypad_pos, w->xpad_pos,
-				 1, 0, LINES - 3, COLS - 1);
+				 PAD_TOP, PAD_LEFT, PAD_BOTTOM, PAD_RIGHT);
 		}
 	}
 
@@ -305,7 +312,7 @@ void cursor_left(void)
 	if (w) {
 		if (w->xpad_pos > 0) {
 			prefresh(w->win, w->ypad_pos,--w->xpad_pos,
-				1, 0, LINES - 3, COLS - 1);
+				PAD_TOP, PAD_LEFT, PAD_BOTTOM, PAD_RIGHT);
 		}
 	}
 }
@@ -319,7 +326,7 @@ void cursor_right(void)
 	if (w) {
 		if (w->xpad_pos < 1000) {
 			prefresh(w->win, w->ypad_pos, ++w->xpad_pos,
-				1, 0, LINES - 3, COLS - 1);
+				PAD_TOP, PAD_LEFT, PAD_BOTTOM, PAD_RIGHT);
 		}
 	}
 }

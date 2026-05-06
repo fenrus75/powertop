@@ -151,7 +151,7 @@ static void draw_scrollbar(class tab_window *w)
 		thumb_end = viewport_height - 1;
 
 	for (int row = 0; row < viewport_height; row++) {
-		chtype ch = (row >= thumb_top && row <= thumb_end) ? ACS_BLOCK : ACS_VLINE;
+		chtype ch = (row >= thumb_top && row <= thumb_end) ? ACS_CKBOARD : ACS_VLINE;
 		mvwaddch(scrollbar_win, row, 0, ch);
 	}
 

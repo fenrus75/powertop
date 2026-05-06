@@ -104,7 +104,12 @@ void alsa::end_measurement(void)
 	double active_delta = (end_active >= start_active) ? (double)(end_active - start_active) : 0.0;
 	double total_delta = (end_active + end_inactive >= start_active + start_inactive) ?
 		(double)(end_active + end_inactive - start_active - start_inactive) : 0.0;
-	p = active_delta / (0.001 + total_delta) * 100.0;
+
+	if (total_delta < 0.001)
+		p = 0.0;
+	else
+		p = active_delta / total_delta * 100.0;
+
 	report_utilization(name, p);
 }
 
@@ -116,7 +121,11 @@ double alsa::utilization(void)
 	double active_delta = (end_active >= start_active) ? (double)(end_active - start_active) : 0.0;
 	double total_delta = (end_active + end_inactive >= start_active + start_inactive) ?
 		(double)(end_active + end_inactive - start_active - start_inactive) : 0.0;
-	p = active_delta / (0.001 + total_delta) * 100.0;
+
+	if (total_delta < 0.001)
+		p = 0.0;
+	else
+		p = active_delta / total_delta * 100.0;
 
 	return p;
 }

@@ -130,8 +130,11 @@ void ahci::end_measurement(void)
 	if (end_slumber < start_slumber)
 		end_slumber = start_slumber;
 
-	total = 0.001 + end_active + end_partial + end_slumber + end_devslp -
+	total = (double)end_active + end_partial + end_slumber + end_devslp -
 		start_active - start_partial - start_slumber - start_devslp;
+
+	if (total < 0.00001)
+		return;
 
 	/* percent in active */
 	p = (end_active - start_active) / total * 100.0;
@@ -162,8 +165,14 @@ void ahci::end_measurement(void)
 double ahci::utilization(void)
 {
 	double p;
+	double total;
 
-	p = (end_partial - start_partial + end_active - start_active) / (0.001 + end_active + end_partial + end_slumber + end_devslp - start_active - start_partial - start_slumber - start_devslp) * 100.0;
+	total = (double)end_active + end_partial + end_slumber + end_devslp - start_active - start_partial - start_slumber - start_devslp;
+
+	if (total < 0.00001)
+		return 0.0;
+
+	p = (end_partial - start_partial + end_active - start_active) / total * 100.0;
 
 	if (p < 0)
 		p = 0;

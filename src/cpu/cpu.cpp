@@ -838,7 +838,15 @@ void impl_w_display_cpu_states(int state)
 		return;
 
 	wclear(win);
-        wmove(win, 2,0);
+#ifndef ENABLE_TEST_FRAMEWORK
+	{
+		const char *tabname = (state == PSTATE) ? "Frequency stats" : "Idle stats";
+		class tab_window *tw = tab_windows[tabname];
+		if (tw)
+			tw->reset_content_size();
+	}
+#endif
+	wmove(win, 2, 0);
 
 	for (package = 0; package < system_level.children.size(); package++) {
 		int first_pkg = 0;
@@ -913,6 +921,15 @@ void impl_w_display_cpu_states(int state)
 			first_pkg++;
 		}
 	}
+
+#ifndef ENABLE_TEST_FRAMEWORK
+	{
+		const char *tabname = (state == PSTATE) ? "Frequency stats" : "Idle stats";
+		class tab_window *tw = tab_windows[tabname];
+		if (tw)
+			tw->update_content_size();
+	}
+#endif
 }
 
 void w_display_cpu_pstates(void)

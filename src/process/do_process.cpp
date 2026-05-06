@@ -805,6 +805,13 @@ void process_update_display(void)
 		return;
 
 	wclear(win);
+#ifndef ENABLE_TEST_FRAMEWORK
+	{
+		class tab_window *tw = tab_windows["Overview"];
+		if (tw)
+			tw->reset_content_size();
+	}
+#endif
 
 	wmove(win, 1,0);
 
@@ -890,6 +897,14 @@ void process_update_display(void)
 			name.c_str(),
 			pretty_print(all_power[i]->description()).c_str());
 	}
+
+#ifndef ENABLE_TEST_FRAMEWORK
+	{
+		class tab_window *tw = tab_windows["Overview"];
+		if (tw)
+			tw->update_content_size();
+	}
+#endif
 }
 
 void report_process_update_display(void)

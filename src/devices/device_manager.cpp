@@ -105,6 +105,13 @@ void report_devices(void)
 	show_power = global_power_valid();
 
 	wclear(win);
+#ifndef ENABLE_TEST_FRAMEWORK
+	{
+		class tab_window *tw = tab_windows["Device stats"];
+		if (tw)
+			tw->reset_content_size();
+	}
+#endif
 	wmove(win, 2, 0);
 
 	sort(all_devices.begin(), all_devices.end(), power_device_sort);
@@ -157,6 +164,14 @@ void report_devices(void)
 			util.c_str(),
 			all_devices[i]->human_name().c_str());
 	}
+
+#ifndef ENABLE_TEST_FRAMEWORK
+	{
+		class tab_window *tw = tab_windows["Device stats"];
+		if (tw)
+			tw->update_content_size();
+	}
+#endif
 }
 
 void show_report_devices(void)

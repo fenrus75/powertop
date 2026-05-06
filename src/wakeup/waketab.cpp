@@ -95,7 +95,9 @@ void wakeup_update_display(void)
 
 void wakeup_window::repaint(void)
 {
+	reset_content_size();
 	__wakeup_update_display(cursor_pos);
+	update_content_size();
 }
 
 void wakeup_window::cursor_enter(void)

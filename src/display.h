@@ -25,6 +25,7 @@
 #pragma once
 
 
+#include <algorithm>
 #include <map>
 #include <string>
 #include <ncurses.h>
@@ -49,15 +50,31 @@ class tab_window {
 public:
 	int cursor_pos = 0;
 	int cursor_max = 0;
+	int content_max_y = 0;
+	int content_max_x = 0;
 	short int xpad_pos = 0, ypad_pos = 0;
 	WINDOW *win = nullptr;
 
 	tab_window() {
 		cursor_pos = 0;
 		cursor_max = 0;
+		content_max_y = 0;
+		content_max_x = 0;
 		xpad_pos =0;
 		ypad_pos = 0;
 		win = nullptr;
+	}
+
+	void reset_content_size(void) {
+		content_max_y = 0;
+		content_max_x = 0;
+	}
+
+	void update_content_size(void) {
+		if (!win)
+			return;
+		content_max_y = std::max(content_max_y, getcury(win));
+		content_max_x = std::max(content_max_x, getcurx(win));
 	}
 
 	virtual void cursor_down(void) {

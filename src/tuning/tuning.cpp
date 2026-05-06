@@ -152,7 +152,9 @@ void tuning_update_display(void)
 
 void tuning_window::repaint(void)
 {
+	reset_content_size();
 	__tuning_update_display(cursor_pos);
+	update_content_size();
 }
 
 void tuning_window::cursor_enter(void)

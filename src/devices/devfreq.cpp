@@ -266,19 +266,40 @@ void display_devfreq_devices(void)
 	WINDOW *win;
 
 	win = get_ncurses_win("Device Freq stats");
-        if (!win)
-                return;
+	if (!win)
+		return;
 
-        wclear(win);
-        wmove(win, 2,0);
+	wclear(win);
+#ifndef ENABLE_TEST_FRAMEWORK
+	{
+		class tab_window *tw = tab_windows["Device Freq stats"];
+		if (tw)
+			tw->reset_content_size();
+	}
+#endif
+	wmove(win, 2, 0);
 
 	if (!is_enabled) {
 		wprintw(win, _(" Devfreq is not enabled"));
+#ifndef ENABLE_TEST_FRAMEWORK
+		{
+			class tab_window *tw = tab_windows["Device Freq stats"];
+			if (tw)
+				tw->update_content_size();
+		}
+#endif
 		return;
 	}
 
 	if (!all_devfreq.size()) {
 		wprintw(win, _(" No devfreq devices available"));
+#ifndef ENABLE_TEST_FRAMEWORK
+		{
+			class tab_window *tw = tab_windows["Device Freq stats"];
+			if (tw)
+				tw->update_content_size();
+		}
+#endif
 		return;
 	}
 
@@ -294,6 +315,14 @@ void display_devfreq_devices(void)
 		}
 		wprintw(win, "\n");
 	}
+
+#ifndef ENABLE_TEST_FRAMEWORK
+	{
+		class tab_window *tw = tab_windows["Device Freq stats"];
+		if (tw)
+			tw->update_content_size();
+	}
+#endif
 }
 
 void report_devfreq_devices(void)

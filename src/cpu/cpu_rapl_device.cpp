@@ -62,7 +62,7 @@ void cpu_rapl_device::end_measurement(void)
 	double energy = last_energy;
 
 	consumed_power = 0.0;
-	if (delta > 0.0) {
+	if (delta >= 0.00001) {
 		rapl->get_pp0_energy_status(&energy);
 		consumed_power = (energy - last_energy) / delta;
 		last_energy = energy;

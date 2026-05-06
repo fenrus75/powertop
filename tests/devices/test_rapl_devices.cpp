@@ -115,7 +115,27 @@ static void test_cpu_rapl_zero_delta()
 
     cpu_rapl_device dev(&parent, "cpu_core", "test-cpu", nullptr);
     dev.start_measurement();
-    dev.end_measurement();   /* delta=0 → skips energy read */
+    PT_ASSERT_TRUE(dev.power_usage(nullptr, nullptr) == 0.0);
+    reset_replay();
+}
+
+static void test_cpu_rapl_near_zero_delta()
+{
+    /*
+     * delta = 5us (0.000005s) < 10us threshold → consumed_power stays 0
+     */
+    rapl_stub_reset();
+    rapl_pp0_present = true;
+    rapl_push_pp0_energy(100.0);   /* ctor */
+    rapl_push_pp0_energy(150.0);   /* start */
+    /* no end entry needed if it guards correctly and skips the read */
+
+    cpudevice parent("cpu", "test-cpu", nullptr);
+    begin_replay(DATA_DIR + "/rapl_near_zero.ptrecord");
+
+    cpu_rapl_device dev(&parent, "cpu_core", "test-cpu", nullptr);
+    dev.start_measurement();
+    dev.end_measurement();
 
     PT_ASSERT_TRUE(dev.power_usage(nullptr, nullptr) == 0.0);
     reset_replay();
@@ -168,6 +188,21 @@ static void test_dram_rapl_zero_delta()
     cpudevice parent("dram", "test-dram", nullptr);
     begin_replay(DATA_DIR + "/rapl_zero_delta.ptrecord");
 
+    dram_rapl_device dev(&parent, "dram_core", "test-dram", nullptr);
+    dev.start_measurement();
+    dev.end_measurement();
+    PT_ASSERT_TRUE(dev.power_usage(nullptr, nullptr) == 0.0);
+    reset_replay();
+}
+
+static void test_dram_rapl_near_zero_delta()
+{
+    rapl_stub_reset();
+    rapl_dram_present = true;
+    rapl_push_dram_energy(200.0);
+    rapl_push_dram_energy(210.0);
+    cpudevice parent("dram", "test-dram", nullptr);
+    begin_replay(DATA_DIR + "/rapl_near_zero.ptrecord");
     dram_rapl_device dev(&parent, "dram_core", "test-dram", nullptr);
     dev.start_measurement();
     dev.end_measurement();
@@ -249,6 +284,21 @@ static void test_gpu_rapl_zero_delta()
     reset_replay();
 }
 
+static void test_gpu_rapl_near_zero_delta()
+{
+    rapl_stub_reset();
+    rapl_pp1_present = true;
+    rapl_push_pp1_energy(500.0);
+    rapl_push_pp1_energy(520.0);
+    i915gpu parent;
+    begin_replay(DATA_DIR + "/rapl_near_zero.ptrecord");
+    gpu_rapl_device dev(&parent);
+    dev.start_measurement();
+    dev.end_measurement();
+    PT_ASSERT_TRUE(dev.power_usage(nullptr, nullptr) == 0.0);
+    reset_replay();
+}
+
 static void test_gpu_rapl_device_json()
 {
     rapl_stub_reset();
@@ -268,16 +318,19 @@ int main()
     PT_RUN_TEST(test_cpu_rapl_device_json);
     PT_RUN_TEST(test_cpu_rapl_domain_cycle);
     PT_RUN_TEST(test_cpu_rapl_zero_delta);
+    PT_RUN_TEST(test_cpu_rapl_near_zero_delta);
     PT_RUN_TEST(test_dram_rapl_device_constructor);
     PT_RUN_TEST(test_dram_rapl_device_power_usage_no_domain);
     PT_RUN_TEST(test_dram_rapl_domain_cycle);
     PT_RUN_TEST(test_dram_rapl_zero_delta);
+    PT_RUN_TEST(test_dram_rapl_near_zero_delta);
     PT_RUN_TEST(test_dram_rapl_device_json);
     PT_RUN_TEST(test_gpu_rapl_device_constructor);
     PT_RUN_TEST(test_gpu_rapl_device_power_usage_no_domain);
     PT_RUN_TEST(test_gpu_rapl_device_measurement_no_op);
     PT_RUN_TEST(test_gpu_rapl_domain_cycle);
     PT_RUN_TEST(test_gpu_rapl_zero_delta);
+    PT_RUN_TEST(test_gpu_rapl_near_zero_delta);
     PT_RUN_TEST(test_gpu_rapl_device_json);
     return pt_test_summary();
 }

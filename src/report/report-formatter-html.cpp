@@ -347,7 +347,7 @@ report_formatter_html::add_table(const std::vector<std::string> &system_data, st
 			if (offset >= (int)system_data.size())
 				break;
 
-			std::string escaped_data = escape_string(system_data[offset]);
+std::string escaped_data = (system_data[offset] == "&nbsp;") ? system_data[offset] : escape_string(system_data[offset]);
 
 			if (tb_attr->pos_table_title == T &&  i==0)
 				add_exact(std::format("<th class=\"{}\"> {} </th> ",

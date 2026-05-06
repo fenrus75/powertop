@@ -62,7 +62,7 @@ report_formatter_csv::escape_string(const std::string &str)
 				need_quotes = true;
 				break;
 			case '\n':
-			case ';':
+			case ',':
 				need_quotes = true;
 				break;
 		}
@@ -83,39 +83,32 @@ report_formatter_csv::escape_string(const std::string &str)
 void
 report_formatter_csv::add_header()
 {
-	add_exact("____________________________________________________________________\n");
 }
 
 void
 report_formatter_csv::end_header()
 {
-	/* Do nothing */
 }
 
 void
 report_formatter_csv::add_logo()
 {
-	add_exact("\t\t\tP o w e r T O P\n");
+	add_exact("PowerTOP\n");
 }
 
 
 void report_formatter_csv::add_div([[maybe_unused]] struct tag_attr *div_attr)
-
 {
-	add_exact("\n");
 }
 
 void
 report_formatter_csv::end_div()
 {
-	/*Do nothing*/
 }
 
 void report_formatter_csv::add_title([[maybe_unused]] struct tag_attr *title_att, const std::string &title)
-
 {
-	add_exact("____________________________________________________________________\n");
-	add_exact(std::format(" *  *  *   {}   *  *  *\n", title));
+	add_exact(std::format("\n# {}\n", title));
 }
 
 void
@@ -127,13 +120,9 @@ report_formatter_csv::add_navigation()
 void
 report_formatter_csv::add_summary_list(const std::vector<std::string> &list)
 {
-	add_exact("\n");
 	for (size_t i = 0; i + 1 < list.size(); i += 2) {
-		add_exact(std::format("{} {}", escape_string(list[i]), escape_string(list[i + 1])));
-		if (i + 2 < list.size())
-			add_exact(";");
+		add_exact(std::format("{},{}\n", escape_string(list[i]), escape_string(list[i + 1])));
 	}
-	add_exact("\n");
 }
 
 
@@ -161,7 +150,7 @@ report_formatter_csv::add_table(const std::vector<std::string> &system_data, str
 			}
 
 			if (j < (tb_attr->cols - 1))
-				row_buf += ";";
+				row_buf += ",";
 		}
 		if (!all_empty) {
 			add_exact(row_buf);

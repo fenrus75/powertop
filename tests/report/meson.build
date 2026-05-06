@@ -1,6 +1,7 @@
 tidy = find_program('tidy', required: false)
 mdl = find_program('mdl', required: false)
 mdformat = find_program('mdformat', required: false)
+python3 = find_program('python3', required: false)
 
 tidy_args = []
 if tidy.found()
@@ -21,6 +22,14 @@ if mdformat.found()
   md_args += [
     '-DHAVE_MDFORMAT',
     '-DMDFORMAT_BIN="' + mdformat.full_path() + '"',
+  ]
+endif
+
+csv_args = []
+if python3.found()
+  csv_args = [
+    '-DHAVE_PYTHON3',
+    '-DPYTHON3_BIN="' + python3.full_path() + '"',
   ]
 endif
 
@@ -62,7 +71,7 @@ test_csv_report_exe = executable(
   'powertop-test-csv-report',
   report_sources + ['test_csv_report.cpp'],
   include_directories: report_incdirs,
-  cpp_args: report_cpp_args,
+  cpp_args: report_cpp_args + csv_args,
   dependencies: [ncursesw_dep],
 )
 

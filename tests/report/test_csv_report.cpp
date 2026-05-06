@@ -12,8 +12,15 @@
 
 #include <string>
 #include <vector>
+#include <unistd.h>
+#include <stdlib.h>
+#include <iostream>
+#include <errno.h>
+#include <cstring>
+#include <cstdio>
 
 #include "test_helper.h"
+#include "lib.h"
 #include "report/report-maker.h"
 #include "report/report-data-html.h"
 
@@ -44,15 +51,12 @@ static void test_csv_formatter_methods()
 	r.finish_report();  /* no-op for CSV */
 
 	std::string result = r.get_result();
-	PT_ASSERT_TRUE(result.find("____") != std::string::npos);
-	PT_ASSERT_TRUE(result.find("P o w e r T O P") != std::string::npos);
-	PT_ASSERT_TRUE(result.find("Overview") != std::string::npos);
-	/* add_div emits a blank line */
-	PT_ASSERT_TRUE(result.find('\n') != std::string::npos);
+	PT_ASSERT_TRUE(result.find("PowerTOP") != std::string::npos);
+	PT_ASSERT_TRUE(result.find("# Overview") != std::string::npos);
 }
 
 /* --------------------------------------------------------------------------
- * Test 2: add_table — semicolons between columns, newline after each row
+ * Test 2: add_table — commas between columns, newline after each row
  * -------------------------------------------------------------------------- */
 
 static void test_csv_table()
@@ -71,12 +75,12 @@ static void test_csv_table()
 
 	std::string result = r.get_result();
 	PT_ASSERT_TRUE(result.find("CPU") != std::string::npos);
-	PT_ASSERT_TRUE(result.find(";") != std::string::npos);
+	PT_ASSERT_TRUE(result.find(",") != std::string::npos);
 	PT_ASSERT_TRUE(result.find("Core0") != std::string::npos);
 	PT_ASSERT_TRUE(result.find("2.8GHz") != std::string::npos);
-	/* last column of each row should NOT have a trailing semicolon */
-	PT_ASSERT_TRUE(result.find("Freq;") == std::string::npos);
-	PT_ASSERT_TRUE(result.find("2.8GHz;") == std::string::npos);
+	/* last column of each row should NOT have a trailing comma */
+	PT_ASSERT_TRUE(result.find("Freq,") == std::string::npos);
+	PT_ASSERT_TRUE(result.find("2.8GHz,") == std::string::npos);
 	/* no NaN or Inf values must appear in table output */
 	PT_ASSERT_TRUE(result.find("nan") == std::string::npos);
 	PT_ASSERT_TRUE(result.find("inf") == std::string::npos);
@@ -117,7 +121,7 @@ static void test_csv_table_mixed_empty()
 	report_maker r(REPORT_CSV);
 
 	/* Row with &nbsp; in middle: "A", "&nbsp;", "B"
-	 * Should result in "A;;B" (two semicolons)
+	 * Should result in "A,,B" (two commas)
 	 */
 	std::vector<std::string> data = {
 		"A", "&nbsp;", "B"
@@ -127,8 +131,8 @@ static void test_csv_table_mixed_empty()
 	r.add_table(data, &ta);
 
 	std::string result = r.get_result();
-	/* If columns shift, we get "A;B" instead of "A;;B" */
-	PT_ASSERT_TRUE(result.find("A;;B") != std::string::npos);
+	/* If columns shift, we get "A,B" instead of "A,,B" */
+	PT_ASSERT_TRUE(result.find("A,,B") != std::string::npos);
 }
 
 /* --------------------------------------------------------------------------
@@ -153,11 +157,11 @@ static void test_csv_table_empty_row_no_corruption()
 	r.add_table(data, &ta);
 
 	std::string result = r.get_result();
-	/* C must be the start of its own field, not glued to a semicolon */
-	PT_ASSERT_TRUE(result.find(";C") == std::string::npos);
+	/* C must be the start of its own field, not glued to a comma */
+	PT_ASSERT_TRUE(result.find(",C") == std::string::npos);
 	/* The two data rows must both be present */
-	PT_ASSERT_TRUE(result.find("A;B") != std::string::npos);
-	PT_ASSERT_TRUE(result.find("C;D") != std::string::npos);
+	PT_ASSERT_TRUE(result.find("A,B") != std::string::npos);
+	PT_ASSERT_TRUE(result.find("C,D") != std::string::npos);
 }
 
 /* --------------------------------------------------------------------------
@@ -169,21 +173,20 @@ static void test_csv_summary_list()
 
 	report_maker r(REPORT_CSV);
 
-	/* Even list: all pairs present */
+	/* Even list: all pairs present, one per line */
 	std::vector<std::string> even = {"Power", "5.2W", "CPU", "3.1W"};
 	r.add_summary_list(even);
 
 	std::string result = r.get_result();
-	PT_ASSERT_TRUE(result.find("Power") != std::string::npos);
-	PT_ASSERT_TRUE(result.find("5.2W") != std::string::npos);
-	PT_ASSERT_TRUE(result.find("CPU 3.1W") != std::string::npos);
+	PT_ASSERT_TRUE(result.find("Power,5.2W") != std::string::npos);
+	PT_ASSERT_TRUE(result.find("CPU,3.1W") != std::string::npos);
 
 	/* Odd list: last element has no pair — must not crash (was UB before fix) */
 	r.clear_result();
 	std::vector<std::string> odd = {"Power", "5.2W", "Orphan"};
 	r.add_summary_list(odd);
 	result = r.get_result();
-	PT_ASSERT_TRUE(result.find("Power 5.2W") != std::string::npos);
+	PT_ASSERT_TRUE(result.find("Power,5.2W") != std::string::npos);
 	/* "Orphan" at index 2 has no pair so must be silently skipped */
 	PT_ASSERT_TRUE(result.find("Orphan") == std::string::npos);
 }
@@ -203,11 +206,49 @@ static void test_csv_escape()
 
 	/* Input `"hello"` → escaped `""hello""` */
 	PT_ASSERT_TRUE(result.find("\"\"hello\"\"") != std::string::npos);
-	/* The comma delimiter triggers csv_need_quotes flag (exercised for coverage) */
+	/* The comma delimiter triggers quotes */
 	r.clear_result();
 	r.add("a,b");
 	result = r.get_result();
-	PT_ASSERT_TRUE(result.find("a,b") != std::string::npos);
+	PT_ASSERT_TRUE(result.find("\"a,b\"") != std::string::npos);
+}
+
+/* --------------------------------------------------------------------------
+ * Test 6: validity check using csvclean (if available)
+ * -------------------------------------------------------------------------- */
+
+static void test_csv_validity()
+{
+#ifdef HAVE_PYTHON3
+	report_maker r(REPORT_CSV);
+	r.add_header();
+	r.add_logo();
+	tag_attr ta; init_title_attr(&ta);
+	r.add_title(&ta, "Validity Test");
+	std::vector<std::string> data = {"Col 1", "Col \"2\"", "Col,3", "Col\n4"};
+	table_attributes tb; init_std_table_attr(&tb, 2, 2);
+	r.add_table(data, &tb);
+	r.finish_report();
+
+	std::string result = r.get_result();
+	char tmpname[] = "/tmp/powertop_test_XXXXXX";
+	int fd = mkstemp(tmpname);
+	PT_ASSERT_TRUE(fd >= 0);
+	ssize_t bw = write(fd, result.c_str(), result.length());
+	close(fd);
+	PT_ASSERT_TRUE(bw == (ssize_t)result.length());
+
+	std::string csvname = std::string(tmpname) + ".csv";
+	if (rename(tmpname, csvname.c_str()) != 0) {
+		std::cerr << "rename failed: " << strerror(errno) << "\n";
+	}
+
+	std::string cmd = std::string(PYTHON3_BIN) + " -c \"import csv, sys; [row for row in csv.reader(open(sys.argv[1]))]\" " + csvname + " > /dev/null 2>&1";
+	int ret = system(cmd.c_str());
+	unlink(csvname.c_str());
+
+	PT_ASSERT_EQ(ret, 0);
+#endif
 }
 
 /* -------------------------------------------------------------------------- */
@@ -221,5 +262,6 @@ int main()
 	PT_RUN_TEST(test_csv_table_empty_row_no_corruption);
 	PT_RUN_TEST(test_csv_summary_list);
 	PT_RUN_TEST(test_csv_escape);
+	PT_RUN_TEST(test_csv_validity);
 	return pt_test_summary();
 }

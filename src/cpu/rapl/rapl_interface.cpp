@@ -32,13 +32,13 @@
 #include "rapl_interface.h"
 
 #ifdef DEBUG
-#define RAPL_DBG_PRINT printf
-#define RAPL_ERROR_PRINT printf
-#define RAPL_INFO_PRINT(format, m) fprintf(stderr, format, m)
+#define RAPL_DBG_PRINT(format, ...) printf(format, ##__VA_ARGS__)
+#define RAPL_ERROR_PRINT(format, ...) fprintf(stderr, format, ##__VA_ARGS__)
+#define RAPL_INFO_PRINT(format, ...) fprintf(stderr, format, ##__VA_ARGS__)
 #else
 #define RAPL_DBG_PRINT(...)	((void) 0)
 #define RAPL_ERROR_PRINT(...) ((void) 0)
-#define RAPL_INFO_PRINT(format, m) ((void) 0)
+#define RAPL_INFO_PRINT(...) ((void) 0)
 #endif
 
 #define MAX_TEMP_STR_SIZE	20
@@ -86,7 +86,7 @@ c_rapl_interface::c_rapl_interface(const std::string &dev_name, int cpu) :
 	int ret;
 	std::string package_path;
 
-	RAPL_INFO_PRINT("RAPL device for cpu %d\n", cpu);
+	RAPL_INFO_PRINT(_("RAPL device for cpu %d\n"), cpu);
 
 	rapl_domains = 0;
 
@@ -126,7 +126,7 @@ c_rapl_interface::c_rapl_interface(const std::string &dev_name, int cpu) :
 			}
 		}
 
-		RAPL_INFO_PRINT("RAPL Using PowerCap Sysfs : Domain Mask %x\n", rapl_domains);
+		RAPL_INFO_PRINT(_("RAPL Using PowerCap Sysfs : Domain Mask %x\n"), rapl_domains);
 		return;
 	}
 
@@ -239,7 +239,7 @@ double c_rapl_interface::get_power_unit()
 	ret = get_rapl_power_unit(&value);
 	if (ret < 0)
 	{
-		return ret;
+		return 1.0;
 	}
 
 	return (double) 1/pow((double)2, (double)(value & 0xf));
@@ -253,7 +253,7 @@ double c_rapl_interface::get_energy_status_unit()
 	ret = get_rapl_power_unit(&value);
 	if (ret < 0)
 	{
-		return ret;
+		return 1.0;
 	}
 
 	return (double)1/ pow((double)2, (double)((value & 0x1f00) >> 8));
@@ -267,7 +267,7 @@ double c_rapl_interface::get_time_unit()
 	ret = get_rapl_power_unit(&value);
 	if (ret < 0)
 	{
-		return ret;
+		return 1.0;
 	}
 
 	return (double)1 / pow((double)2, (double)((value & 0xf0000) >> 16));
@@ -285,7 +285,7 @@ int c_rapl_interface::get_pkg_energy_status(double *status)
 	ret = read_msr(first_cpu, MSR_PKG_ENERGY_STATUS, &value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("get_pkg_energy_status failed\n");
+		RAPL_ERROR_PRINT(_("get_pkg_energy_status failed\n"));
 		return ret;
 	}
 
@@ -306,7 +306,7 @@ int c_rapl_interface::get_pkg_power_info(double *thermal_spec_power,
 	ret = read_msr(first_cpu, MSR_PKG_POWER_INFO, &value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("get_pkg_power_info failed\n");
+		RAPL_ERROR_PRINT(_("get_pkg_power_info failed\n"));
 		return ret;
 	}
 	*thermal_spec_power =  (value & 0x7FFF) * power_units;
@@ -328,7 +328,7 @@ int c_rapl_interface::get_pkg_power_limit(uint64_t *value)
 	ret = read_msr(first_cpu, MSR_PKG_POWER_LIMIT, value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("get_pkg_power_limit failed\n");
+		RAPL_ERROR_PRINT(_("get_pkg_power_limit failed\n"));
 		return ret;
 	}
 
@@ -346,7 +346,7 @@ int c_rapl_interface::set_pkg_power_limit(uint64_t value)
 	ret = write_msr(first_cpu, MSR_PKG_POWER_LIMIT, value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("set_pkg_power_limit failed\n");
+		RAPL_ERROR_PRINT(_("set_pkg_power_limit failed\n"));
 		return ret;
 	}
 
@@ -375,7 +375,7 @@ int c_rapl_interface::get_dram_energy_status(double *status)
 	ret = read_msr(first_cpu, MSR_DRAM_ENERGY_STATUS, &value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("get_dram_energy_status failed\n");
+		RAPL_ERROR_PRINT(_("get_dram_energy_status failed\n"));
 		return ret;
 	}
 
@@ -396,7 +396,7 @@ int c_rapl_interface::get_dram_power_info(double *thermal_spec_power,
 	ret = read_msr(first_cpu, MSR_DRAM_POWER_INFO, &value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("get_dram_power_info failed\n");
+		RAPL_ERROR_PRINT(_("get_dram_power_info failed\n"));
 		return ret;
 	}
 
@@ -419,7 +419,7 @@ int c_rapl_interface::get_dram_power_limit(uint64_t *value)
 	ret = read_msr(first_cpu, MSR_DRAM_POWER_LIMIT, value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("get_dram_power_limit failed\n");
+		RAPL_ERROR_PRINT(_("get_dram_power_limit failed\n"));
 		return ret;
 	}
 
@@ -437,7 +437,7 @@ int c_rapl_interface::set_dram_power_limit(uint64_t value)
 	ret = write_msr(first_cpu, MSR_DRAM_POWER_LIMIT, value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("set_dram_power_limit failed\n");
+		RAPL_ERROR_PRINT(_("set_dram_power_limit failed\n"));
 		return ret;
 	}
 
@@ -466,7 +466,7 @@ int c_rapl_interface::get_pp0_energy_status(double *status)
 	ret = read_msr(first_cpu, MSR_PP0_ENERGY_STATUS, &value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("get_pp0_energy_status failed\n");
+		RAPL_ERROR_PRINT(_("get_pp0_energy_status failed\n"));
 		return ret;
 	}
 
@@ -486,7 +486,7 @@ int c_rapl_interface::get_pp0_power_limit(uint64_t *value)
 	ret = read_msr(first_cpu, MSR_PP0_POWER_LIMIT, value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("get_pp0_power_limit failed\n");
+		RAPL_ERROR_PRINT(_("get_pp0_power_limit failed\n"));
 		return ret;
 	}
 
@@ -504,7 +504,7 @@ int c_rapl_interface::set_pp0_power_limit(uint64_t value)
 	ret = write_msr(first_cpu, MSR_PP0_POWER_LIMIT, value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("set_pp0_power_limit failed\n");
+		RAPL_ERROR_PRINT(_("set_pp0_power_limit failed\n"));
 		return ret;
 	}
 
@@ -523,7 +523,7 @@ int c_rapl_interface::get_pp0_power_policy(unsigned int *pp0_power_policy)
 	ret = read_msr(first_cpu, MSR_PP0_POLICY, &value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("get_pp0_power_policy failed\n");
+		RAPL_ERROR_PRINT(_("get_pp0_power_policy failed\n"));
 		return ret;
 	}
 
@@ -554,7 +554,7 @@ int c_rapl_interface::get_pp1_energy_status(double *status)
 	ret = read_msr(first_cpu, MSR_PP1_ENERGY_STATUS, &value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("get_pp1_energy_status failed\n");
+		RAPL_ERROR_PRINT(_("get_pp1_energy_status failed\n"));
 		return ret;
 	}
 
@@ -574,7 +574,7 @@ int c_rapl_interface::get_pp1_power_limit(uint64_t *value)
 	ret = read_msr(first_cpu, MSR_PP1_POWER_LIMIT, value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("get_pp1_power_info failed\n");
+		RAPL_ERROR_PRINT(_("get_pp1_power_info failed\n"));
 		return ret;
 	}
 
@@ -592,7 +592,7 @@ int c_rapl_interface::set_pp1_power_limit(uint64_t value)
 	ret = write_msr(first_cpu, MSR_PP1_POWER_LIMIT, value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("set_pp1_power_limit failed\n");
+		RAPL_ERROR_PRINT(_("set_pp1_power_limit failed\n"));
 		return ret;
 	}
 
@@ -611,7 +611,7 @@ int c_rapl_interface::get_pp1_power_policy(unsigned int *pp1_power_policy)
 	ret = read_msr(first_cpu, MSR_PP1_POLICY, &value);
 	if (ret < 0)
 	{
-		RAPL_ERROR_PRINT("get_pp1_power_policy failed\n");
+		RAPL_ERROR_PRINT(_("get_pp1_power_policy failed\n"));
 		return ret;
 	}
 
@@ -622,6 +622,9 @@ int c_rapl_interface::get_pp1_power_policy(unsigned int *pp1_power_policy)
 
 void c_rapl_interface::rapl_measure_energy()
 {
+	if (measurement_interval < 1)
+		measurement_interval = 1;
+
 #ifdef RAPL_TEST_MODE
 	int ret;
 	double energy_status;

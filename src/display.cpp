@@ -33,6 +33,7 @@
 #include <string>
 
 static int display = 0;
+static std::string current_notification;
 
 std::vector<std::string> tab_names;
 std::map<std::string, class tab_window *> tab_windows;
@@ -138,6 +139,14 @@ void show_tab(unsigned int tab)
 			"<ESC> %s | <TAB> / <Shift + TAB> %s | ", _("Exit"),
 			_("Navigate"));
 
+	if (!current_notification.empty()) {
+		int len = (int)current_notification.length();
+		if (len >= COLS)
+			len = COLS - 1;
+		mvwprintw(bottom_line, 0, COLS - len, "%.*s", len,
+			  current_notification.c_str());
+	}
+
 
 	current_tab = tab;
 
@@ -213,6 +222,7 @@ void show_prev_tab(void)
        if (w)
                w->expose();
 
+       clear_notification();
        show_tab(current_tab);
 }
 
@@ -235,6 +245,7 @@ void show_next_tab(void)
 	if (w)
 		w->expose();
 
+	clear_notification();
 	show_tab(current_tab);
 }
 
@@ -339,6 +350,7 @@ void window_refresh()
 		w->repaint();
 	}
 
+	clear_notification();
 	show_cur_tab();
 }
 
@@ -347,4 +359,21 @@ int ncurses_initialized(void)
 	if (display)
 		return 1;
 	return 0;
+}
+
+void set_notification(const std::string &msg)
+{
+	current_notification = msg;
+	while (!current_notification.empty() &&
+	       (current_notification.back() == '\n' ||
+	        current_notification.back() == '\r' ||
+	        current_notification.back() == ' '))
+		current_notification.pop_back();
+	if (display)
+		show_cur_tab();
+}
+
+void clear_notification(void)
+{
+	current_notification.clear();
 }

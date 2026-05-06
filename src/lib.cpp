@@ -63,7 +63,10 @@ extern "C" {
 #include <limits>
 #include <math.h>
 #include <ncurses.h>
+#include "display.h"
 #include <fcntl.h>
+
+extern void set_notification(const std::string &msg) __attribute__((weak));
 
 static int kallsyms_read = 0;
 
@@ -618,10 +621,7 @@ std::string get_time_string(const std::string &fmt, std::chrono::system_clock::t
 
 void ui_notify_user_ncurses(const std::string &msg)
 {
-	init_pair(1, COLOR_BLACK, COLOR_WHITE);
-	attron(COLOR_PAIR(1));
-	mvprintw(1, 0, "%s", msg.c_str());
-	attroff(COLOR_PAIR(1));
+	set_notification(msg);
 }
 
 void ui_notify_user_console(const std::string &msg)

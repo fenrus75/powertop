@@ -42,6 +42,8 @@ extern void cursor_right(void);
 extern void cursor_left(void);
 extern void cursor_enter(void);
 extern void window_refresh(void);
+extern void set_notification(const std::string &msg);
+extern void clear_notification(void);
 
 class tab_window {
 public:

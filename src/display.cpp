@@ -40,7 +40,7 @@ static std::string current_notification;
 static constexpr int PAD_TOP  = 1;
 static constexpr int PAD_LEFT = 0;
 #define PAD_BOTTOM (LINES - 3)
-#define PAD_RIGHT  (COLS  - 1)
+#define PAD_RIGHT  (COLS  - 2)
 
 /* Start scrolling when the cursor is within this many lines of the
  * bottom of the visible area. */
@@ -54,6 +54,7 @@ std::map<std::string, std::string> bottom_lines;
 
 WINDOW *tab_bar = nullptr;
 WINDOW *bottom_line = nullptr;
+static WINDOW *scrollbar_win = nullptr;
 
 void create_tab(const std::string &name, const std::string &translation, class tab_window *w, std::string bottom_text)
 {
@@ -112,6 +113,10 @@ void reset_display(void)
 		delwin(bottom_line);
 		bottom_line = nullptr;
 	}
+	if (scrollbar_win) {
+		delwin(scrollbar_win);
+		scrollbar_win = nullptr;
+	}
 
 	endwin();
 	display = 0;
@@ -119,6 +124,39 @@ void reset_display(void)
 
 
 static int current_tab;
+
+static void draw_scrollbar(class tab_window *w)
+{
+	int viewport_height = PAD_BOTTOM - PAD_TOP + 1;
+	int content_height = w->content_max_y;
+
+	if (scrollbar_win) {
+		delwin(scrollbar_win);
+		scrollbar_win = nullptr;
+	}
+
+	if (content_height <= 0 || content_height <= viewport_height)
+		return;
+
+	scrollbar_win = newwin(viewport_height, 1, PAD_TOP, COLS - 1);
+	if (!scrollbar_win)
+		return;
+
+	int thumb_top = (w->ypad_pos * viewport_height) / content_height;
+	int thumb_end = ((w->ypad_pos + viewport_height) * viewport_height) / content_height;
+
+	if (thumb_end == thumb_top)
+		thumb_end = thumb_top + 1;
+	if (thumb_end >= viewport_height)
+		thumb_end = viewport_height - 1;
+
+	for (int row = 0; row < viewport_height; row++) {
+		chtype ch = (row >= thumb_top && row <= thumb_end) ? ACS_BLOCK : ACS_VLINE;
+		mvwaddch(scrollbar_win, row, 0, ch);
+	}
+
+	wrefresh(scrollbar_win);
+}
 
 void show_tab(unsigned int tab)
 {
@@ -189,6 +227,7 @@ void show_tab(unsigned int tab)
 		return;
 
 	prefresh(win->win, win->ypad_pos, win->xpad_pos, PAD_TOP, PAD_LEFT, PAD_BOTTOM, PAD_RIGHT);
+	draw_scrollbar(win);
 }
 
 WINDOW *get_ncurses_win(const std::string &name)

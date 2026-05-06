@@ -84,8 +84,8 @@ test_csv_report_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('report: html generation', test_report_exe)
-test('report: csv generation',  test_csv_report_exe)
+test('report_ html generation', test_report_exe)
+test('report_ csv generation',  test_csv_report_exe)
 
 
 test_md_report_exe = executable(
@@ -96,4 +96,4 @@ test_md_report_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('report: md generation', test_md_report_exe)
+test('report_ md generation', test_md_report_exe)

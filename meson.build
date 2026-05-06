@@ -3,7 +3,7 @@ project('powertop', 'cpp', 'c',
   meson_version: '>= 0.56.0',
   default_options: [
     'cpp_std=c++20',
-    'warning_level=1',
+    'warning_level=2',
     'buildtype=debugoptimized',
   ]
 )
@@ -137,7 +137,7 @@ endforeach
 
 configure_file(output: 'config.h', configuration: conf_data)
 
-add_project_arguments('-DHAVE_CONFIG_H', '-Wall', '-W', language: ['c', 'cpp'])
+add_project_arguments('-DHAVE_CONFIG_H', language: ['c', 'cpp'])
 
 # src directory
 src_inc = include_directories('src')

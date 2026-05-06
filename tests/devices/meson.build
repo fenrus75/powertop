@@ -22,7 +22,7 @@ test_alsa_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('devices: alsa serialize', test_alsa_exe)
+test('devices_ alsa serialize', test_alsa_exe)
 
 test_sysfs_tunable_exe = executable(
   'powertop-test-sysfs-tunable',
@@ -46,7 +46,7 @@ test_sysfs_tunable_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('devices: sysfs_tunable serialize', test_sysfs_tunable_exe)
+test('devices_ sysfs_tunable serialize', test_sysfs_tunable_exe)
 
 test_acpi_power_meter_exe = executable(
   'powertop-test-acpi-power-meter',
@@ -70,7 +70,7 @@ test_acpi_power_meter_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('devices: acpi_power_meter serialize', test_acpi_power_meter_exe)
+test('devices_ acpi_power_meter serialize', test_acpi_power_meter_exe)
 
 test_rfkill_exe = executable(
   'powertop-test-rfkill-serialize',
@@ -96,7 +96,7 @@ test_rfkill_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('devices: rfkill serialize', test_rfkill_exe)
+test('devices_ rfkill serialize', test_rfkill_exe)
 
 test_runtime_pm_exe = executable(
   'powertop-test-runtime-pm-serialize',
@@ -122,7 +122,7 @@ test_runtime_pm_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('devices: runtime_pmdevice serialize', test_runtime_pm_exe)
+test('devices_ runtime_pmdevice serialize', test_runtime_pm_exe)
 
 test_usb_exe = executable(
   'powertop-test-usbdevice-serialize',
@@ -148,7 +148,7 @@ test_usb_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('devices: usbdevice serialize', test_usb_exe)
+test('devices_ usbdevice serialize', test_usb_exe)
 
 test_backlight_exe = executable(
   'powertop-test-backlight-serialize',
@@ -174,7 +174,7 @@ test_backlight_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('devices: backlight serialize', test_backlight_exe)
+test('devices_ backlight serialize', test_backlight_exe)
 
 test_thinkpad_exe = executable(
   'powertop-test-thinkpad-serialize',
@@ -201,7 +201,7 @@ test_thinkpad_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('devices: thinkpad fan/light serialize', test_thinkpad_exe)
+test('devices_ thinkpad fan/light serialize', test_thinkpad_exe)
 
 test_devfreq_exe = executable(
   'powertop-test-devfreq',
@@ -227,7 +227,7 @@ test_devfreq_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('devices: devfreq', test_devfreq_exe)
+test('devices_ devfreq', test_devfreq_exe)
 
 test_opal_sensors_exe = executable(
   'powertop-test-opal-sensors',
@@ -251,7 +251,7 @@ test_opal_sensors_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('devices: opal-sensors', test_opal_sensors_exe)
+test('devices_ opal-sensors', test_opal_sensors_exe)
 
 test_cpudevice_exe = executable(
   'powertop-test-cpudevice',
@@ -278,7 +278,7 @@ test_cpudevice_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('devices: cpudevice', test_cpudevice_exe)
+test('devices_ cpudevice', test_cpudevice_exe)
 
 test_ahci_exe = executable(
   'powertop-test-ahci',
@@ -305,7 +305,7 @@ test_ahci_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('devices: ahci', test_ahci_exe)
+test('devices_ ahci', test_ahci_exe)
 
 test_i915_exe = executable(
   'powertop-test-i915',
@@ -331,7 +331,7 @@ test_i915_exe = executable(
   dependencies: [ncursesw_dep, libtracefs_dep],
 )
 
-test('devices: i915gpu', test_i915_exe)
+test('devices_ i915gpu', test_i915_exe)
 
 test_rapl_devices_exe = executable(
   'powertop-test-rapl-devices',
@@ -363,7 +363,7 @@ test_rapl_devices_exe = executable(
   dependencies: [ncursesw_dep, libtracefs_dep],
 )
 
-test('devices: rapl_devices', test_rapl_devices_exe)
+test('devices_ rapl_devices', test_rapl_devices_exe)
 
 test_devlist_exe = executable(
   'powertop-test-devlist',
@@ -391,7 +391,7 @@ test_devlist_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('devices: devlist', test_devlist_exe)
+test('devices_ devlist', test_devlist_exe)
 
 test_rapl_interface_exe = executable(
   'powertop-test-rapl-interface',
@@ -414,4 +414,4 @@ test_rapl_interface_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('devices: rapl_interface', test_rapl_interface_exe)
+test('devices_ rapl_interface', test_rapl_interface_exe)

@@ -20,7 +20,7 @@ test_lib_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('lib: read_file_content', test_lib_exe)
+test('lib_ read_file_content', test_lib_exe)
 
 test_lib_misc_exe = executable(
   'powertop-test-lib-misc',
@@ -42,7 +42,7 @@ test_lib_misc_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('lib: pt_gettime and align_string', test_lib_misc_exe)
+test('lib_ pt_gettime and align_string', test_lib_misc_exe)
 
 _lib_incdirs = [
   include_directories('../..'),
@@ -63,7 +63,7 @@ test_lib_pure_exe = executable(
   cpp_args: _lib_cpp_args,
   dependencies: [ncursesw_dep],
 )
-test('lib: pure functions', test_lib_pure_exe)
+test('lib_ pure functions', test_lib_pure_exe)
 
 test_lib_sysfs_exe = executable(
   'powertop-test-lib-sysfs',
@@ -72,7 +72,7 @@ test_lib_sysfs_exe = executable(
   cpp_args: _lib_cpp_args,
   dependencies: [ncursesw_dep],
 )
-test('lib: sysfs and msr functions', test_lib_sysfs_exe)
+test('lib_ sysfs and msr functions', test_lib_sysfs_exe)
 
 test_lib_system_exe = executable(
   'powertop-test-lib-system',
@@ -81,7 +81,7 @@ test_lib_system_exe = executable(
   cpp_args: _lib_cpp_args,
   dependencies: [ncursesw_dep],
 )
-test('lib: system functions', test_lib_system_exe)
+test('lib_ system functions', test_lib_system_exe)
 
 test_lib_kallsyms_empty_exe = executable(
   'powertop-test-lib-kallsyms-empty',
@@ -90,7 +90,7 @@ test_lib_kallsyms_empty_exe = executable(
   cpp_args: _lib_cpp_args,
   dependencies: [ncursesw_dep],
 )
-test('lib: kallsyms empty content', test_lib_kallsyms_empty_exe)
+test('lib_ kallsyms empty content', test_lib_kallsyms_empty_exe)
 
 if pciutils_dep.found()
   test_lib_pci_exe = executable(
@@ -104,5 +104,5 @@ if pciutils_dep.found()
     ],
     dependencies: [ncursesw_dep, pciutils_dep],
   )
-  test('lib: pci id lookup', test_lib_pci_exe)
+  test('lib_ pci id lookup', test_lib_pci_exe)
 endif

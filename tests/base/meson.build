@@ -23,7 +23,7 @@ test_wakeup_base_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: wakeup serialize', test_wakeup_base_exe)
+test('base_ wakeup serialize', test_wakeup_base_exe)
 
 test_tunable_base_exe = executable(
   'powertop-test-tunable-base',
@@ -45,7 +45,7 @@ test_tunable_base_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: tunable serialize', test_tunable_base_exe)
+test('base_ tunable serialize', test_tunable_base_exe)
 
 test_device_base_exe = executable(
   'powertop-test-device-base',
@@ -67,7 +67,7 @@ test_device_base_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: device serialize', test_device_base_exe)
+test('base_ device serialize', test_device_base_exe)
 
 test_power_meter_base_exe = executable(
   'powertop-test-power-meter-base',
@@ -89,7 +89,7 @@ test_power_meter_base_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: power_meter serialize', test_power_meter_base_exe)
+test('base_ power_meter serialize', test_power_meter_base_exe)
 
 test_power_consumer_base_exe = executable(
   'powertop-test-power-consumer-base',
@@ -112,7 +112,7 @@ test_power_consumer_base_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: power_consumer serialize', test_power_consumer_base_exe)
+test('base_ power_consumer serialize', test_power_consumer_base_exe)
 
 test_abstract_cpu_base_exe = executable(
   'powertop-test-abstract-cpu-base',
@@ -135,7 +135,7 @@ test_abstract_cpu_base_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: abstract_cpu serialize', test_abstract_cpu_base_exe)
+test('base_ abstract_cpu serialize', test_abstract_cpu_base_exe)
 
 test_process_exe = executable(
   'powertop-test-process',
@@ -160,7 +160,7 @@ test_process_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: process serialize', test_process_exe)
+test('base_ process serialize', test_process_exe)
 
 test_usb_wakeup_exe = executable(
   'powertop-test-usb-wakeup',
@@ -184,7 +184,7 @@ test_usb_wakeup_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: usb_wakeup serialize', test_usb_wakeup_exe)
+test('base_ usb_wakeup serialize', test_usb_wakeup_exe)
 
 test_sysfs_pm_exe = executable(
   'powertop-test-sysfs-power-meter',
@@ -208,7 +208,7 @@ test_sysfs_pm_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: sysfs_power_meter serialize', test_sysfs_pm_exe)
+test('base_ sysfs_power_meter serialize', test_sysfs_pm_exe)
 
 test_interrupt_exe = executable(
   'powertop-test-interrupt-serialize',
@@ -233,7 +233,7 @@ test_interrupt_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: interrupt serialize', test_interrupt_exe)
+test('base_ interrupt serialize', test_interrupt_exe)
 
 test_sysfs_tunable_methods_exe = executable(
   'powertop-test-sysfs-tunable-methods',
@@ -257,7 +257,7 @@ test_sysfs_tunable_methods_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: sysfs_tunable methods', test_sysfs_tunable_methods_exe)
+test('base_ sysfs_tunable methods', test_sysfs_tunable_methods_exe)
 
 test_work_exe = executable(
   'powertop-test-work',
@@ -282,7 +282,7 @@ test_work_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: work fire/done', test_work_exe)
+test('base_ work fire/done', test_work_exe)
 
 test_ethernet_wakeup_exe = executable(
   'powertop-test-ethernet-wakeup',
@@ -306,7 +306,7 @@ test_ethernet_wakeup_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: ethernet_wakeup', test_ethernet_wakeup_exe)
+test('base_ ethernet_wakeup', test_ethernet_wakeup_exe)
 
 test_tuningusb_exe = executable(
   'powertop-test-tuningusb',
@@ -330,7 +330,7 @@ test_tuningusb_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: usb_tunable', test_tuningusb_exe)
+test('base_ usb_tunable', test_tuningusb_exe)
 
 test_tuningi2c_exe = executable(
   'powertop-test-tuningi2c',
@@ -355,7 +355,7 @@ test_tuningi2c_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: i2c_tunable', test_tuningi2c_exe)
+test('base_ i2c_tunable', test_tuningi2c_exe)
 
 test_cpu_core_package_exe = executable(
   'powertop-test-cpu-core-package',
@@ -380,7 +380,7 @@ test_cpu_core_package_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: cpu_core and cpu_package', test_cpu_core_package_exe)
+test('base_ cpu_core and cpu_package', test_cpu_core_package_exe)
 
 test_cpu_linux_exe = executable(
   'powertop-test-cpu-linux',
@@ -405,7 +405,7 @@ test_cpu_linux_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: cpu_linux cstate formatting', test_cpu_linux_exe)
+test('base_ cpu_linux cstate formatting', test_cpu_linux_exe)
 
 test_processdevice_exe = executable(
   'powertop-test-processdevice',
@@ -431,7 +431,7 @@ test_processdevice_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: processdevice', test_processdevice_exe)
+test('base_ processdevice', test_processdevice_exe)
 
 test_timer_exe = executable(
   'powertop-test-timer',
@@ -456,7 +456,7 @@ test_timer_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: timer', test_timer_exe)
+test('base_ timer', test_timer_exe)
 
 test_runtime_exe = executable(
   'powertop-test-runtime',
@@ -481,7 +481,7 @@ test_runtime_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: runtime_tunable', test_runtime_exe)
+test('base_ runtime_tunable', test_runtime_exe)
 
 test_wifi_tunables_exe = executable(
   'powertop-test-wifi-tunables',
@@ -506,7 +506,7 @@ test_wifi_tunables_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: wifi_tunables', test_wifi_tunables_exe)
+test('base_ wifi_tunables', test_wifi_tunables_exe)
 
 test_nhm_cpu_exe = executable(
   'powertop-test-nhm-cpu',
@@ -533,7 +533,7 @@ test_nhm_cpu_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: nhm_cpu', test_nhm_cpu_exe)
+test('base_ nhm_cpu', test_nhm_cpu_exe)
 
 test_learn_parameters_exe = executable(
   'powertop-test-learn-parameters',
@@ -555,7 +555,7 @@ test_learn_parameters_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: learn_parameters', test_learn_parameters_exe)
+test('base_ learn_parameters', test_learn_parameters_exe)
 
 test_bt_tunable_exe = executable(
   'powertop-test-bt-tunable',
@@ -578,7 +578,7 @@ test_bt_tunable_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: bt_tunable', test_bt_tunable_exe)
+test('base_ bt_tunable', test_bt_tunable_exe)
 
 test_eth_tunable_exe = executable(
   'powertop-test-eth-tunable',
@@ -600,7 +600,7 @@ test_eth_tunable_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: eth_tunable', test_eth_tunable_exe)
+test('base_ eth_tunable', test_eth_tunable_exe)
 
 test_network_exe = executable(
   'powertop-test-network',
@@ -624,4 +624,4 @@ test_network_exe = executable(
   dependencies: [ncursesw_dep],
 )
 
-test('base: network', test_network_exe)
+test('base_ network', test_network_exe)

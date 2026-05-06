@@ -40,10 +40,39 @@ static void test_device_base_fields()
 	PT_ASSERT_TRUE(got.find("\"real_path\":\"/sys/devices/pci0000:00/foo\"") != std::string::npos);
 }
 
+static void test_start_measurement_clears_hide()
+{
+	device d;
+
+	d.hide = true;
+	d.start_measurement();
+	PT_ASSERT_TRUE(d.hide == false);
+}
+
+static void test_end_measurement_no_crash()
+{
+	device d;
+
+	d.end_measurement();
+	PT_ASSERT_TRUE(true);
+}
+
+static void test_utilization_returns_zero()
+{
+	device d;
+	double u;
+
+	u = d.utilization();
+	PT_ASSERT_TRUE(u == 0.0);
+}
+
 int main()
 {
 	std::cout << "=== device base class tests ===\n";
 	PT_RUN_TEST(test_device_base_defaults);
 	PT_RUN_TEST(test_device_base_fields);
+	PT_RUN_TEST(test_start_measurement_clears_hide);
+	PT_RUN_TEST(test_end_measurement_no_crash);
+	PT_RUN_TEST(test_utilization_returns_zero);
 	return pt_test_summary();
 }

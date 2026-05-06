@@ -557,6 +557,26 @@ test_learn_parameters_exe = executable(
 
 test('base_ learn_parameters', test_learn_parameters_exe)
 
+test_parameters_exe = executable(
+  'powertop-test-parameters',
+  [
+    '../../src/parameters/parameters.cpp',
+    'test_parameters.cpp',
+  ],
+  include_directories: [
+    include_directories('../..'),
+    include_directories('../../src'),
+    include_directories('..'),
+  ],
+  cpp_args: [
+    '-DENABLE_TEST_FRAMEWORK',
+    '-DHAVE_NO_PCI',
+  ],
+  dependencies: [ncursesw_dep],
+)
+
+test('base: parameters', test_parameters_exe)
+
 test_bt_tunable_exe = executable(
   'powertop-test-bt-tunable',
   [

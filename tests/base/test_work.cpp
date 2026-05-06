@@ -25,9 +25,12 @@
  */
 #include <string>
 #include <cstdint>
+#include <vector>
 #include "process/work.h"
 #include "test_framework.h"
 #include "../test_helper.h"
+
+extern std::vector<class power_consumer *> all_power;
 
 double measurement_time = 1.0;
 
@@ -126,6 +129,38 @@ static void test_multiple_work_items()
 	PT_ASSERT_TRUE(got.find("\"accumulated_runtime\":6000000") != std::string::npos);
 }
 
+static void test_find_create_work_idempotent()
+{
+	test_framework_manager::get().reset();
+
+	static constexpr unsigned long ADDR = 0x1234abcd5678UL;
+
+	class work *w1 = find_create_work(ADDR);
+	class work *w2 = find_create_work(ADDR);
+
+	PT_ASSERT_TRUE(w1 != nullptr);
+	PT_ASSERT_TRUE(w1 == w2);
+
+	clear_work();
+}
+
+static void test_all_work_to_all_power_and_clear()
+{
+	test_framework_manager::get().reset();
+	all_power.clear();
+
+	static constexpr unsigned long ADDR = 0xaaaa1111bbbbUL;
+
+	class work *w = find_create_work(ADDR);
+	w->accumulated_runtime = 1000000;
+
+	all_work_to_all_power();
+	PT_ASSERT_TRUE(!all_power.empty());
+
+	clear_work();
+	all_power.clear();
+}
+
 int main()
 {
 	std::cout << "=== work tests ===\n";
@@ -134,5 +169,7 @@ int main()
 	PT_RUN_TEST(test_fire_done_cycle);
 	PT_RUN_TEST(test_done_missing_start);
 	PT_RUN_TEST(test_multiple_work_items);
+	PT_RUN_TEST(test_find_create_work_idempotent);
+	PT_RUN_TEST(test_all_work_to_all_power_and_clear);
 	return pt_test_summary();
 }

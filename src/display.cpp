@@ -124,12 +124,12 @@ void show_tab(unsigned int tab)
 	tab_bar = newwin(1, 0, 0, 0);
 
 	wattrset(tab_bar, A_REVERSE);
-	mvwprintw(tab_bar, 0,0, "%120s", "");
+	mvwprintw(tab_bar, 0, 0, "%-*s", COLS, "");
 	mvwprintw(tab_bar, 0,0, "PowerTOP %s", PACKAGE_VERSION);
 
 	bottom_line = newwin(1, 0, LINES-1, 0);
 	wattrset(bottom_line, A_REVERSE);
-	mvwprintw(bottom_line, 0,0, "%120s", "");
+	mvwprintw(bottom_line, 0, 0, "%-*s", COLS, "");
 
 	std::string bottom = bottom_lines[tab_names[tab]];
 	if (!bottom.empty())

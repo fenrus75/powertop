@@ -48,7 +48,10 @@ std::map<std::string, std::string> tab_translations;
 
 std::map<std::string, std::string> bottom_lines;
 
-void create_tab(const std::string &name, const std::string &translation, class tab_window *w, std::string bottom_line)
+WINDOW *tab_bar = nullptr;
+WINDOW *bottom_line = nullptr;
+
+void create_tab(const std::string &name, const std::string &translation, class tab_window *w, std::string bottom_text)
 {
 	if (!w)
 		w = new tab_window;
@@ -57,7 +60,7 @@ void create_tab(const std::string &name, const std::string &translation, class t
 	tab_names.push_back(name);
 	tab_windows[name] = w;
 	tab_translations[name] = translation;
-	bottom_lines[name] = bottom_line;
+	bottom_lines[name] = bottom_text;
 }
 
 
@@ -97,13 +100,19 @@ void reset_display(void)
 	echo();
 	nocbreak();
 
+	if (tab_bar) {
+		delwin(tab_bar);
+		tab_bar = nullptr;
+	}
+	if (bottom_line) {
+		delwin(bottom_line);
+		bottom_line = nullptr;
+	}
+
 	endwin();
 	display = 0;
 }
 
-
-WINDOW *tab_bar = nullptr;
-WINDOW *bottom_line = nullptr;
 
 static int current_tab;
 
@@ -120,6 +129,7 @@ void show_tab(unsigned int tab)
 		return;
 
 	if (tab_bar) {
+		delwin(tab_bar);
 		tab_bar = nullptr;
 	}
 

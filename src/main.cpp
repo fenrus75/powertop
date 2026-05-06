@@ -201,6 +201,12 @@ static void do_sleep(int seconds)
 		case 'r':
 			window_refresh();
 			return;
+		case KEY_RESIZE:
+			endwin();
+			clearok(stdscr, TRUE);
+			refresh();
+			window_refresh();
+			break;
 		case KEY_EXIT:
 		case 'q':
 		case 27:	// Escape

@@ -156,7 +156,11 @@ static void draw_scrollbar(class tab_window *w)
 		thumb_end = viewport_height - 1;
 
 	for (int row = 0; row < viewport_height; row++) {
-		chtype ch = (row >= thumb_top && row <= thumb_end) ? ACS_CKBOARD : ACS_VLINE;
+		chtype ch;
+		if (row >= thumb_top && row <= thumb_end)
+			ch = ACS_CKBOARD;
+		else
+			ch = ACS_VLINE;
 		mvwaddch(scrollbar_win, row, 0, ch);
 	}
 
@@ -328,9 +332,11 @@ void cursor_down(void)
 	w = tab_windows[tab_names[current_tab]];
 	if (w) {
 		int viewport_height = PAD_BOTTOM - PAD_TOP + 1;
-		int ypad_max = (w->content_max_y > 0)
-			? w->content_max_y - viewport_height + 2
-			: 1000;
+		int ypad_max;
+		if (w->content_max_y > 0)
+			ypad_max = w->content_max_y - viewport_height + 2;
+		else
+			ypad_max = 1000;
 		if (ypad_max < 0)
 			ypad_max = 0;
 

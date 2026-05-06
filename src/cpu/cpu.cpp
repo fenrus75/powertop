@@ -840,7 +840,11 @@ void impl_w_display_cpu_states(int state)
 	wclear(win);
 #ifndef ENABLE_TEST_FRAMEWORK
 	{
-		const char *tabname = (state == PSTATE) ? "Frequency stats" : "Idle stats";
+		const char *tabname;
+		if (state == PSTATE)
+			tabname = "Frequency stats";
+		else
+			tabname = "Idle stats";
 		class tab_window *tw = tab_windows[tabname];
 		if (tw)
 			tw->reset_content_size();
@@ -924,7 +928,11 @@ void impl_w_display_cpu_states(int state)
 
 #ifndef ENABLE_TEST_FRAMEWORK
 	{
-		const char *tabname = (state == PSTATE) ? "Frequency stats" : "Idle stats";
+		const char *tabname;
+		if (state == PSTATE)
+			tabname = "Frequency stats";
+		else
+			tabname = "Idle stats";
 		class tab_window *tw = tab_windows[tabname];
 		if (tw)
 			tw->update_content_size();

@@ -268,12 +268,12 @@ void nhm_core::measurement_start(void)
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
 	if (this->has_c1_res)
-		insert_cstate("core c1", "C1 (cc1)", 0, c1_before, 1);
+		insert_cstate("core c1", _("C1 (cc1)"), 0, c1_before, 1);
 	if (this->has_c3_res)
-		insert_cstate("core c3", "C3 (cc3)", 0, c3_before, 1);
-	insert_cstate("core c6", "C6 (cc6)", 0, c6_before, 1);
+		insert_cstate("core c3", _("C3 (cc3)"), 0, c3_before, 1);
+	insert_cstate("core c6", _("C6 (cc6)"), 0, c6_before, 1);
 	if (this->has_c7_res) {
-		insert_cstate("core c7", "C7 (cc7)", 0, c7_before, 1);
+		insert_cstate("core c7", _("C7 (cc7)"), 0, c7_before, 1);
 	}
 
 
@@ -569,17 +569,17 @@ void nhm_package::measurement_start(void)
 	tsc_before   = get_msr(first_cpu, MSR_TSC);
 
 	if (this->has_c2c6_res)
-		insert_cstate("pkg c2", "C2 (pc2)", 0, c2_before, 1);
+		insert_cstate("pkg c2", _("C2 (pc2)"), 0, c2_before, 1);
 
 	if (this->has_c3_res)
-		insert_cstate("pkg c3", "C3 (pc3)", 0, c3_before, 1);
-	insert_cstate("pkg c6", "C6 (pc6)", 0, c6_before, 1);
+		insert_cstate("pkg c3", _("C3 (pc3)"), 0, c3_before, 1);
+	insert_cstate("pkg c6", _("C6 (pc6)"), 0, c6_before, 1);
 	if (this->has_c7_res)
-		insert_cstate("pkg c7", "C7 (pc7)", 0, c7_before, 1);
+		insert_cstate("pkg c7", _("C7 (pc7)"), 0, c7_before, 1);
 	if (this->has_c8c9c10_res) {
-		insert_cstate("pkg c8", "C8 (pc8)", 0, c8_before, 1);
-		insert_cstate("pkg c9", "C9 (pc9)", 0, c9_before, 1);
-		insert_cstate("pkg c10", "C10 (pc10)", 0, c10_before, 1);
+		insert_cstate("pkg c8", _("C8 (pc8)"), 0, c8_before, 1);
+		insert_cstate("pkg c9", _("C9 (pc9)"), 0, c9_before, 1);
+		insert_cstate("pkg c10", _("C10 (pc10)"), 0, c10_before, 1);
 	}
 }
 

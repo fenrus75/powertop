@@ -43,9 +43,9 @@
 void i965_core::measurement_start(void)
 {
 	before = pt_gettime();
-	rc6_before = read_sysfs(std::format("{}/power/rc6_residency_ms", find_intel_rc6_card_path()), nullptr);
-	rc6p_before = read_sysfs(std::format("{}/power/rc6p_residency_ms", find_intel_rc6_card_path()), nullptr);
-	rc6pp_before = read_sysfs(std::format("{}/power/rc6pp_residency_ms", find_intel_rc6_card_path()), nullptr);
+	rc6_before = read_sysfs_uint64(std::format("{}/power/rc6_residency_ms", find_intel_rc6_card_path()), nullptr);
+	rc6p_before = read_sysfs_uint64(std::format("{}/power/rc6p_residency_ms", find_intel_rc6_card_path()), nullptr);
+	rc6pp_before = read_sysfs_uint64(std::format("{}/power/rc6pp_residency_ms", find_intel_rc6_card_path()), nullptr);
 
 	update_cstate("gpu c0", "Powered On", 0, 0, 1, 0);
 	update_cstate("gpu rc6", "RC6", 0, rc6_before, 1, 1);
@@ -89,7 +89,7 @@ std::string i965_core::fill_cstate_line(int line_nr, [[maybe_unused]] const std:
 	if (d > 100.0)
 		d = 100.0;
 
-	return std::format("{:5.1f}%", d);
+	return pt_format(_("{:5.1f}%"), d);
 }
 
 
@@ -97,9 +97,9 @@ void i965_core::measurement_end(void)
 {
 	after = pt_gettime();
 
-	rc6_after = read_sysfs(std::format("{}/power/rc6_residency_ms", find_intel_rc6_card_path()), nullptr);
-	rc6p_after = read_sysfs(std::format("{}/power/rc6p_residency_ms", find_intel_rc6_card_path()), nullptr);
-	rc6pp_after = read_sysfs(std::format("{}/power/rc6pp_residency_ms", find_intel_rc6_card_path()), nullptr);
+	rc6_after = read_sysfs_uint64(std::format("{}/power/rc6_residency_ms", find_intel_rc6_card_path()), nullptr);
+	rc6p_after = read_sysfs_uint64(std::format("{}/power/rc6p_residency_ms", find_intel_rc6_card_path()), nullptr);
+	rc6pp_after = read_sysfs_uint64(std::format("{}/power/rc6pp_residency_ms", find_intel_rc6_card_path()), nullptr);
 }
 
 std::string i965_core::fill_pstate_line([[maybe_unused]] int line_nr)

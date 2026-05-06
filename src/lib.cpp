@@ -214,6 +214,27 @@ int read_sysfs(const std::string &filename, bool *ok)
 	}
 }
 
+uint64_t read_sysfs_uint64(const std::string &filename, bool *ok)
+{
+	std::string content = read_file_content(filename);
+	if (content.empty()) {
+		if (ok)
+			*ok = false;
+		return 0;
+	}
+	try
+	{
+		uint64_t i = std::stoull(content);
+		if (ok)
+			*ok = true;
+		return i;
+	} catch (...) {
+		if (ok)
+			*ok = false;
+		return 0;
+	}
+}
+
 std::string read_sysfs_string(const std::string &filename)
 {
 	std::string content = read_file_content(filename);

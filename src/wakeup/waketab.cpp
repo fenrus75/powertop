@@ -73,10 +73,10 @@ static void __wakeup_update_display(int cursor_pos)
 		std::string desc = wakeup_all[i]->description();
 
 		if ((int)i != cursor_pos) {
-			wattrset(win, A_NORMAL);
+			wattroff(win, A_REVERSE);
 			wprintw(win, "   ");
 		} else {
-			wattrset(win, A_REVERSE);
+			wattron(win, A_REVERSE);
 			wprintw(win, ">> ");
 		}
 		wprintw(win, "%-12s  %-103s\n", res.c_str(), desc.c_str());

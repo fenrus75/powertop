@@ -123,12 +123,12 @@ void show_tab(unsigned int tab)
 
 	tab_bar = newwin(1, 0, 0, 0);
 
-	wattrset(tab_bar, A_REVERSE);
+	wattron(tab_bar, A_REVERSE);
 	mvwprintw(tab_bar, 0, 0, "%-*s", COLS, "");
 	mvwprintw(tab_bar, 0,0, "PowerTOP %s", PACKAGE_VERSION);
 
 	bottom_line = newwin(1, 0, LINES-1, 0);
-	wattrset(bottom_line, A_REVERSE);
+	wattron(bottom_line, A_REVERSE);
 	mvwprintw(bottom_line, 0, 0, "%-*s", COLS, "");
 
 	std::string bottom = bottom_lines[tab_names[tab]];
@@ -152,9 +152,9 @@ void show_tab(unsigned int tab)
 
 	for (i = 0; i < tab_names.size(); i++) {
 			if (i == tab)
-				wattrset(tab_bar, A_NORMAL);
+				wattroff(tab_bar, A_REVERSE);
 			else
-				wattrset(tab_bar, A_REVERSE);
+				wattron(tab_bar, A_REVERSE);
 			mvwprintw(tab_bar, 0, tab_pos, " %s ", tab_translations[tab_names[i]].c_str());
 
 			tab_pos += 3 + tab_names[i].length();

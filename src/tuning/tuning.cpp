@@ -130,10 +130,10 @@ static void __tuning_update_display(int cursor_pos)
 		align_string(desc, 103, 103);
 
 		if ((int)i != cursor_pos) {
-			wattrset(win, A_NORMAL);
+			wattroff(win, A_REVERSE);
 			wprintw(win, "   ");
 		} else {
-			wattrset(win, A_REVERSE);
+			wattron(win, A_REVERSE);
 			wprintw(win, ">> ");
 		}
 		wprintw(win, "%s  %s\n", res.c_str(), desc.c_str());

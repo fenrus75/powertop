@@ -53,23 +53,25 @@ std::string
 report_formatter_csv::escape_string(const std::string &str)
 {
 	std::string res;
+	bool need_quotes = false;
 
 	for (size_t i = 0; i < str.length(); i++) {
 		switch (str[i]) {
 			case '"':
 				res += '"';
-				[[fallthrough]];
-#ifdef REPORT_CSV_SPACE_NEED_QUOTES
-			case ' ':
-#endif /* REPORT_CSV_SPACE_NEED_QUOTES */
+				need_quotes = true;
+				break;
 			case '\n':
-			case REPORT_CSV_DELIMITER:
-				csv_need_quotes = true;
+			case ';':
+				need_quotes = true;
 				break;
 		}
 
 		res += str[i];
 	}
+
+	if (need_quotes)
+		return "\"" + res + "\"";
 
 	return res;
 }
@@ -127,7 +129,7 @@ report_formatter_csv::add_summary_list(const std::vector<std::string> &list)
 {
 	add_exact("\n");
 	for (size_t i = 0; i + 1 < list.size(); i += 2) {
-		add_exact(std::format("{} {}", list[i], list[i + 1]));
+		add_exact(std::format("{} {}", escape_string(list[i]), escape_string(list[i + 1])));
 		if (i + 2 < list.size())
 			add_exact(";");
 	}
@@ -154,7 +156,7 @@ report_formatter_csv::add_table(const std::vector<std::string> &system_data, str
 			tmp_str=system_data[offset];
 
 			if (tmp_str != "&nbsp;") {
-				row_buf += system_data[offset];
+				row_buf += escape_string(system_data[offset]);
 				all_empty = false;
 			}
 

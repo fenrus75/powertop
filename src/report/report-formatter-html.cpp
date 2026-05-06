@@ -136,8 +136,8 @@ report_formatter_html::escape_string(const std::string &str)
 void
 report_formatter_html::add_logo()
 {
-	add_exact("<img alt=\"PowerTop\" class=\"pwtop_logo\" src=\"data:image/png;base64,"
-		"iVBORw0KGgoAAAANSUhEUgAAAbQAAABDCAYAAAD01PBTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA"
+	add_exact(std::format("<img alt=\"{}\" class=\"pwtop_logo\" src=\"data:image/png;base64,", _("PowerTop")));
+	add_exact("iVBORw0KGgoAAAANSUhEUgAAAbQAAABDCAYAAAD01PBTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA"
 		"GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAGsxJREFUeNrsXQt4FNXZ/nLhmutq"
 		"VdAKMXJHTMhiLGAuLUEfSg2xSFSUgIkkRPQ3QiHxqcRwswQrRq2EBKjhapvU3yCgtaQ+CRGUSyAB"
 		"vNDfRhArqEA2FwjksvnPN0xokpnZPWd2dnd297w851kyt3OZ+c4773e+c8aro6MDODg4ODg4XB3e"
@@ -302,7 +302,7 @@ report_formatter_html::end_div()
 void
 report_formatter_html::add_title(struct tag_attr *title_att, const std::string &title)
 {
-	add_exact(std::format("<h2 class=\"{}\"> {} </h2>\n", title_att->css_class, title));
+	add_exact(std::format("<h2 class=\"{}\"> {} </h2>\n", title_att->css_class, escape_string(title)));
 }
 
 void
@@ -317,7 +317,7 @@ report_formatter_html::add_summary_list(const std::vector<std::string> &list)
 	add_exact("<div><br/> <ul>\n");
 	for (size_t i = 0; i + 1 < list.size(); i += 2) {
 		add_exact(std::format("<li class=\"summary_list\"> <b> {} </b> {} </li>",
-				list[i], list[i+1]));
+				escape_string(list[i]), escape_string(list[i+1])));
 	}
 	add_exact("</ul> </div> <br />\n");
 }
@@ -347,27 +347,29 @@ report_formatter_html::add_table(const std::vector<std::string> &system_data, st
 			if (offset >= (int)system_data.size())
 				break;
 
+			std::string escaped_data = escape_string(system_data[offset]);
+
 			if (tb_attr->pos_table_title == T &&  i==0)
 				add_exact(std::format("<th class=\"{}\"> {} </th> ",
-				tb_attr->th_class,system_data[offset]));
+				tb_attr->th_class, escaped_data));
 			else if (tb_attr->pos_table_title == L &&  j==0)
 				add_exact(std::format("<th class=\"{}\"> {} </th> ",
-				tb_attr->th_class, system_data[offset]));
+				tb_attr->th_class, escaped_data));
 			else if (tb_attr->pos_table_title == TL && ( i==0 || j==0 ))
 				add_exact(std::format("<th class=\"{}\"> {} </th> ",
-				tb_attr->th_class, system_data[offset]));
+				tb_attr->th_class, escaped_data));
 			else if (tb_attr->pos_table_title == TC && ((i % tb_attr->title_mod ) == 0))
 				add_exact(std::format("<th class=\"{}\"> {} </th> ", tb_attr->th_class,
-					system_data[offset]));
+					escaped_data));
 			else if (tb_attr->pos_table_title == TLC && ((i % tb_attr->title_mod) == 0 || j==0))
 				add_exact(std::format("<th class=\"{}\"> {} </th> ", tb_attr->th_class,
-				system_data[offset]));
+				escaped_data));
 			else
 				if ( tb_attr->td_class == empty)
-					add_exact(std::format("<td > {} </td> ", system_data[offset]));
+					add_exact(std::format("<td > {} </td> ", escaped_data));
 				else
 					add_exact(std::format("<td class=\"{}\"> {} </td> ", tb_attr->td_class,
-						system_data[offset]));
+						escaped_data));
 		}
 		add_exact("</tr>\n");
 	}

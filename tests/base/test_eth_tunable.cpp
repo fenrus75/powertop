@@ -172,5 +172,11 @@ int main()
 	PT_RUN_TEST(test_callback_skips_lo);
 	PT_RUN_TEST(test_callback_creates_tunable);
 
-	return pt_test_summary();
+	int result = pt_test_summary();
+
+	for (auto *t : all_tunables)
+		delete t;
+	all_tunables.clear();
+
+	return result;
 }

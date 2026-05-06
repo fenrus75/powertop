@@ -15,6 +15,7 @@
  *   named        — class=0, vendor="Intel Corp.", product="USB Keyboard"
  *   product_only — class=0, no vendor, product="USB Mouse"
  */
+#include <cmath>
 #include <string>
 #include "devices/usb.h"
 #include "test_framework.h"

@@ -42,6 +42,10 @@ static constexpr int PAD_LEFT = 0;
 #define PAD_BOTTOM (LINES - 3)
 #define PAD_RIGHT  (COLS  - 1)
 
+/* Start scrolling when the cursor is within this many lines of the
+ * bottom of the visible area. */
+static constexpr int SCROLL_MARGIN = 7;
+
 std::vector<std::string> tab_names;
 std::map<std::string, class tab_window *> tab_windows;
 std::map<std::string, std::string> tab_translations;
@@ -281,7 +285,7 @@ void cursor_down(void)
 	if (w) {
 		if (w->ypad_pos < 1000) {
 			if (tab_names[current_tab] == "Tunables" || tab_names[current_tab] == "WakeUp") {
-		                if ((w->cursor_pos + 7) >= LINES) {
+		                if ((w->cursor_pos + SCROLL_MARGIN) >= LINES) {
 					prefresh(w->win, ++w->ypad_pos, w->xpad_pos,
 						PAD_TOP, PAD_LEFT, PAD_BOTTOM, PAD_RIGHT);
 				}

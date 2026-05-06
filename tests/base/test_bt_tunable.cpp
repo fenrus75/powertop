@@ -60,6 +60,8 @@ public:
 	/* Injected clock; starts at an arbitrary epoch value */
 	time_t fake_time = 10000;
 
+	fake_bt() : bt_tunable(0, "hci0") {}
+
 	int hci_get_dev_info(unsigned int &flags,
 	                     unsigned int &byte_rx,
 	                     unsigned int &byte_tx) override

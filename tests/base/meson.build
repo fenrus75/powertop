@@ -560,6 +560,7 @@ test('base: learn_parameters', test_learn_parameters_exe)
 test_bt_tunable_exe = executable(
   'powertop-test-bt-tunable',
   [
+    '../../src/lib.cpp',
     '../../src/test_framework.cpp',
     '../../src/tuning/tunable.cpp',
     '../../src/tuning/bluetooth.cpp',

@@ -44,11 +44,13 @@
 #include "../lib.h"
 #include "bluetooth.h"
 
-bt_tunable::bt_tunable(void) : tunable("", 1.0, _("Good"), _("Bad"), _("Unknown"))
+bt_tunable::bt_tunable(int id, const std::string &name) : tunable("", 1.0, _("Good"), _("Bad"), _("Unknown"))
 {
-	desc = _("Bluetooth device interface status");
-	toggle_bad = "Enable Bluetooth (hci0)";
-	toggle_good = "Disable Bluetooth (hci0)";
+	dev_id = id;
+	bt_name = name;
+	desc = pt_format(_("Bluetooth device interface status ({})"), bt_name);
+	toggle_bad = pt_format(_("Enable Bluetooth ({})"), bt_name);
+	toggle_good = pt_format(_("Disable Bluetooth ({})"), bt_name);
 	snap_bytes[0] = snap_bytes[1] = -1;
 	snap_time[0]  = snap_time[1]  =  0;
 }
@@ -128,7 +130,7 @@ int bt_tunable::hci_get_dev_info(unsigned int &flags,
 		return -1;
 
 	memset(&devinfo, 0, sizeof(devinfo));
-	strcpy(devinfo.name, "hci0");
+	strncpy(devinfo.name, bt_name.c_str(), sizeof(devinfo.name) - 1);
 	int ret = ioctl(fd, HCIGETDEVINFO, (void *) &devinfo);
 	close(fd);
 	if (ret < 0)
@@ -142,7 +144,6 @@ int bt_tunable::hci_get_dev_info(unsigned int &flags,
 
 void bt_tunable::hci_set_power(bool up)
 {
-	int dev_id = 0; /* hci0 */
 	int fd = socket(AF_BLUETOOTH, SOCK_RAW, BTPROTO_HCI);
 	if (fd < 0)
 		return;
@@ -212,18 +213,32 @@ void add_bt_tunable(void)
 //	if (access("/sys/module/bluetooth",F_OK))
 //		return;
 
-	/* check if hci0 exists and responds; discard the values here */
-	auto *bt = new bt_tunable();
-	unsigned int flags, byte_rx, byte_tx;
-	if (bt->hci_get_dev_info(flags, byte_rx, byte_tx) < 0) {
-		delete bt;
-		return;
-	}
+	for (const auto &entry : list_directory("/sys/class/bluetooth/")) {
+		if (!entry.starts_with("hci"))
+			continue;
 
-	all_tunables.push_back(bt);
+		int id = 0;
+		try {
+			id = std::stoi(entry.substr(3));
+		} catch (...) {
+			continue;
+		}
+
+		auto *bt = new bt_tunable(id, entry);
+		unsigned int flags, byte_rx, byte_tx;
+		if (bt->hci_get_dev_info(flags, byte_rx, byte_tx) < 0) {
+			delete bt;
+			continue;
+		}
+
+		all_tunables.push_back(bt);
+	}
 }
 
 void bt_tunable::collect_json_fields(std::string &_js)
 {
-    tunable::collect_json_fields(_js);
+	tunable::collect_json_fields(_js);
+	JSON_FIELD(dev_id);
+	JSON_FIELD(bt_name);
+	_js += "\"snap_bytes\": [" + std::to_string(snap_bytes[0]) + ", " + std::to_string(snap_bytes[1]) + "],";
 }

@@ -31,7 +31,7 @@
 
 class bt_tunable : public tunable {
 public:
-	bt_tunable(void);
+	bt_tunable(int id, const std::string &name);
 
 	virtual int good_bad(void) override;
 
@@ -49,6 +49,8 @@ public:
 protected:
 	int    snap_bytes[2];
 	time_t snap_time[2];
+	int    dev_id;
+	std::string bt_name;
 };
 
 extern void add_bt_tunable(void);

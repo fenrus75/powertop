@@ -618,7 +618,6 @@ std::string get_time_string(const std::string &fmt, std::chrono::system_clock::t
 
 void ui_notify_user_ncurses(const std::string &msg)
 {
-	start_color();
 	init_pair(1, COLOR_BLACK, COLOR_WHITE);
 	attron(COLOR_PAIR(1));
 	mvprintw(1, 0, "%s", msg.c_str());

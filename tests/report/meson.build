@@ -1,4 +1,5 @@
 tidy = find_program('tidy', required: false)
+html2text = find_program('html2text', required: false)
 mdl = find_program('mdl', required: false)
 mdformat = find_program('mdformat', required: false)
 python3 = find_program('python3', required: false)
@@ -8,6 +9,14 @@ if tidy.found()
   tidy_args = [
     '-DHAVE_TIDY',
     '-DTIDY_BIN="' + tidy.full_path() + '"',
+  ]
+endif
+
+html2text_args = []
+if html2text.found()
+  html2text_args = [
+    '-DHAVE_HTML2TEXT',
+    '-DHTML2TEXT_BIN="' + html2text.full_path() + '"',
   ]
 endif
 
@@ -63,7 +72,7 @@ test_report_exe = executable(
   include_directories: report_incdirs,
   cpp_args: report_cpp_args + [
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
-  ] + tidy_args,
+  ] + tidy_args + html2text_args,
   dependencies: [ncursesw_dep],
 )
 

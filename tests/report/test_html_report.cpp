@@ -62,6 +62,30 @@ static bool tidy_ok(const std::string &path)
 }
 #endif
 
+#ifdef HAVE_HTML2TEXT
+static bool html2text_verify(const std::string &path)
+{
+	std::string cmd = std::string(HTML2TEXT_BIN) + " -nobs " + path;
+	FILE *fp = popen(cmd.c_str(), "r");
+	if (!fp) return false;
+
+	char buf[1024];
+	std::string output;
+	while (fgets(buf, sizeof(buf), fp)) {
+		output += buf;
+	}
+	pclose(fp);
+
+	/* Check for uncoverted or double-escaped entities */
+	if (output.find("&nbsp;") != std::string::npos) return false;
+	if (output.find("&lt;") != std::string::npos) return false;
+	if (output.find("&gt;") != std::string::npos) return false;
+	if (output.find("&amp;") != std::string::npos) return false;
+
+	return true;
+}
+#endif
+
 /* --------------------------------------------------------------------------
  * Test 1: full pipeline via report.cpp globals + replay fixture
  * -------------------------------------------------------------------------- */
@@ -299,6 +323,34 @@ static void test_html_report_has_header()
 	PT_ASSERT_TRUE(result.find("body {") != std::string::npos);
 }
 
+/* --------------------------------------------------------------------------
+ * Test 7: Verify no over-escaping or unconverted entities in text conversion
+ * -------------------------------------------------------------------------- */
+
+static void test_html_no_entities_in_text()
+{
+#ifdef HAVE_HTML2TEXT
+	test_framework_manager::get().reset();
+
+	report_maker r(REPORT_HTML);
+	r.add_header();
+	std::vector<std::string> data = {"Header", "Value & Co", "Special <char>", "&nbsp;"};
+	table_attributes ta; init_std_table_attr(&ta, 2, 2);
+	r.add_table(data, &ta);
+	r.end_header();
+	r.finish_report();
+
+	std::string result = r.get_result();
+	std::string html = make_html_tmpfile();
+	std::ofstream f(html);
+	f << result;
+	f.close();
+
+	PT_ASSERT_TRUE(html2text_verify(html));
+	unlink(html.c_str());
+#endif
+}
+
 /* -------------------------------------------------------------------------- */
 
 int main()
@@ -309,5 +361,6 @@ int main()
 	PT_RUN_TEST(test_html_summary_list);
 	PT_RUN_TEST(test_html_escape);
 	PT_RUN_TEST(test_html_report_has_header);
+	PT_RUN_TEST(test_html_no_entities_in_text);
 	return pt_test_summary();
 }

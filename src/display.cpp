@@ -135,12 +135,17 @@ static void draw_scrollbar(class tab_window *w)
 		scrollbar_win = nullptr;
 	}
 
-	if (content_height <= 0 || content_height <= viewport_height)
-		return;
-
 	scrollbar_win = newwin(viewport_height, 1, PAD_TOP, COLS - 1);
 	if (!scrollbar_win)
 		return;
+
+	if (content_height <= 0 || content_height <= viewport_height) {
+		/* no scrollbar needed — clear the column */
+		for (int row = 0; row < viewport_height; row++)
+			mvwaddch(scrollbar_win, row, 0, ' ');
+		wrefresh(scrollbar_win);
+		return;
+	}
 
 	int thumb_top = (w->ypad_pos * viewport_height) / content_height;
 	int thumb_end = ((w->ypad_pos + viewport_height) * viewport_height) / content_height;

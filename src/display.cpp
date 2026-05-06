@@ -322,7 +322,14 @@ void cursor_down(void)
 
 	w = tab_windows[tab_names[current_tab]];
 	if (w) {
-		if (w->ypad_pos < 1000) {
+		int viewport_height = PAD_BOTTOM - PAD_TOP + 1;
+		int ypad_max = (w->content_max_y > 0)
+			? w->content_max_y - viewport_height + 2
+			: 1000;
+		if (ypad_max < 0)
+			ypad_max = 0;
+
+		if (w->ypad_pos < ypad_max) {
 			if (tab_names[current_tab] == "Tunables" || tab_names[current_tab] == "WakeUp") {
 		                if ((w->cursor_pos + SCROLL_MARGIN) >= LINES) {
 					prefresh(w->win, ++w->ypad_pos, w->xpad_pos,

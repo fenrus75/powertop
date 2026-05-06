@@ -89,7 +89,8 @@ void reset_display(void)
 	echo();
 	nocbreak();
 
-	resetterm();
+	endwin();
+	display = 0;
 }
 
 

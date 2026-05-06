@@ -602,8 +602,6 @@ int main(int argc, char **argv)
 			if (run_once)
 				leave_powertop = 1;
 		}
-		if (!auto_tune)
-			endwin();
 		fprintf(stderr, "%s\n", _("Leaving PowerTOP"));
 
 		end_process_data();

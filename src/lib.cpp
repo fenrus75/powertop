@@ -23,7 +23,42 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  *	Peter Anvin
  */
+#include <algorithm>
+#include <cctype>
+#include <cstring>
+#include <dirent.h>
+#include <fcntl.h>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <libintl.h>
+#include <limits>
+#include <locale.h>
 #include <map>
+#include <math.h>
+#include <ncurses.h>
+#include <sstream>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <utility>
+
+#include <format>
+
+#include "display.h"
+#include "lib.h"
+#include "test_framework.h"
+
+#ifndef HAVE_NO_PCI
+extern "C" {
+#include <pci/pci.h>
+}
+#endif
 #include <vector>
 #include <cstring>
 #include <iostream>

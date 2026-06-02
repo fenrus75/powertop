@@ -223,8 +223,9 @@ static void handle_i965_gpu(void)
 
 	core_number = package->children.size();
 
-	if (package->children.size() <= core_number)
+	if (package->children.size() <= core_number) {
 		package->children.resize(core_number + 1);
+	}
 
 	if (!package->children[core_number]) {
 		package->children[core_number] = std::unique_ptr<abstract_cpu>(new_i965_gpu());
@@ -245,7 +246,9 @@ static void handle_xe_gpu(void)
 	class abstract_cpu *package = system_level.children[0].get();
 
 	const unsigned int core_number = package->children.size();
-	package->children.resize(core_number + 1);
+	if (package->children.size() <= core_number) {
+		package->children.resize(core_number + 1);
+	}
 
 	if (!package->children[core_number]) {
 		package->children[core_number] =

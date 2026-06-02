@@ -100,6 +100,8 @@ extern "C" {
 #include <ncurses.h>
 #include "display.h"
 #include <fcntl.h>
+#include <mutex>
+#include <atomic>
 
 extern void set_notification(const std::string &msg) __attribute__((weak));
 
@@ -195,16 +197,17 @@ std::string kernel_function(uint64_t address)
 	return "";
 }
 
-static int _max_cpu;
+static std::atomic<int> _max_cpu{0};
 int get_max_cpu(void)
 {
-	return _max_cpu;
+	return _max_cpu.load();
 }
 
 void set_max_cpu(int cpu)
 {
-	if (cpu > _max_cpu)
-		_max_cpu = cpu;
+	int expected = _max_cpu.load();
+	while (cpu > expected && !_max_cpu.compare_exchange_weak(expected, cpu))
+		;
 }
 
 
@@ -520,21 +523,18 @@ std::string fmt_prefix(double n)
 }
 
 static std::map<std::string, std::string> pretty_prints;
-static int pretty_print_init = 0;
+static std::once_flag pretty_print_once_flag;
 
 static void init_pretty_print(void)
 {
 	pretty_prints["[12] i8042"] = _("PS/2 Touchpad / Keyboard / Mouse");
 	pretty_prints["ahci"] = _("SATA controller");
 	pretty_prints["usb-device-8087-0020"] = _("Intel built in USB hub");
-
-	pretty_print_init = 1;
 }
 
 std::string pretty_print(const std::string &str)
 {
-	if (!pretty_print_init)
-		init_pretty_print();
+	std::call_once(pretty_print_once_flag, init_pretty_print);
 
 	if (pretty_prints.count(str))
 		return pretty_prints[str];

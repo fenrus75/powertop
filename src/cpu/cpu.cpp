@@ -218,6 +218,8 @@ static void handle_i965_gpu(void)
 	unsigned int core_number = 0;
 	class abstract_cpu *package;
 
+	if (system_level.children.empty())
+		return;
 
 	package = system_level.children[0].get();
 
@@ -243,6 +245,9 @@ static class abstract_cpu * new_xe_gpu(void)
 
 static void handle_xe_gpu(void)
 {
+	if (system_level.children.empty())
+		return;
+
 	class abstract_cpu *package = system_level.children[0].get();
 
 	const unsigned int core_number = package->children.size();

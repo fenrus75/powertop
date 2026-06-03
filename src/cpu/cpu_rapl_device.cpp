@@ -33,9 +33,9 @@ cpu_rapl_device::cpu_rapl_device(cpudevice *parent, const std::string &classname
 	  device_valid(false)
 {
 	if (_cpu)
-		rapl = new c_rapl_interface(dev_name, cpu->get_first_cpu());
+		rapl = std::make_unique<c_rapl_interface>(dev_name, cpu->get_first_cpu());
 	else
-		rapl = new c_rapl_interface();
+		rapl = std::make_unique<c_rapl_interface>();
 	last_time = pt_gettime();
 	if (rapl->pp0_domain_present()) {
 		device_valid = true;

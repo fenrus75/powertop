@@ -24,6 +24,7 @@
  */
 #pragma once
 
+#include <memory>
 #include <vector>
 #include <string>
 
@@ -33,7 +34,7 @@
 
 class cpu_rapl_device: public cpudevice {
 
-	c_rapl_interface *rapl = nullptr;
+	std::unique_ptr<c_rapl_interface> rapl;
 	struct timeval	last_time = {};
 	double		last_energy = 0.0;
 	double 		consumed_power = 0.0;
@@ -41,7 +42,7 @@ class cpu_rapl_device: public cpudevice {
 
 public:
 	cpu_rapl_device(cpudevice *parent, const std::string &classname = "cpu_core", const std::string &device_name = "cpu_core", class abstract_cpu *_cpu = nullptr);
-	~cpu_rapl_device() { delete rapl; }
+	~cpu_rapl_device() = default;
 	virtual std::string device_name(void) const override {return _("CPU core");};
 	virtual std::string human_name(void) override {return _("CPU core");};
 	bool device_present() const { return device_valid;}

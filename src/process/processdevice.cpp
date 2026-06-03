@@ -25,8 +25,9 @@
 #include "processdevice.h"
 #include "../parameters/parameters.h"
 #include <cstdio>
+#include <memory>
 
-std::vector<class device_consumer *> all_proc_devices;
+std::vector<std::unique_ptr<class device_consumer>> all_proc_devices;
 
 
 device_consumer::device_consumer(class device *dev) : power_consumer()
@@ -47,54 +48,45 @@ double device_consumer::Witts(void) const
 	return power;
 }
 
-static void add_device(class device *device)
+static void add_device(class device *dev)
 {
-	class device_consumer *dev;
-	unsigned int i;
-
 	/* first check if we want to be shown at all */
 
-	if (device->show_in_list() == 0)
+	if (dev->show_in_list() == 0)
 		return;
 
 	/* then check if a device with the same underlying object is already registered */
-	for (i = 0; i < all_proc_devices.size(); i++) {
-		class device_consumer *cdev;
-		cdev = all_proc_devices[i];
-		if (!device->real_path.empty() && cdev->device->real_path == device->real_path) {
+	for (auto &cdev_ptr : all_proc_devices) {
+		class device_consumer *cdev = cdev_ptr.get();
+		if (!dev->real_path.empty() && cdev->device->real_path == dev->real_path) {
 			/* we have a device with the same underlying object */
 
 			/* aggregate the power */
-			cdev->power += device->power_usage(&all_results, &all_parameters);
+			cdev->power += dev->power_usage(&all_results, &all_parameters);
 
-			if (cdev->prio < device->grouping_prio()) {
-				cdev->device = device;
-				cdev->prio = device->grouping_prio();
+			if (cdev->prio < dev->grouping_prio()) {
+				cdev->device = dev;
+				cdev->prio = dev->grouping_prio();
 			}
 
 			return;
 		}
 	}
 
-	dev = new device_consumer(device);
-	all_power.push_back(dev);
-	all_proc_devices.push_back(dev);
+	auto consumer = std::make_unique<class device_consumer>(dev);
+	all_power.push_back(consumer.get());
+	all_proc_devices.push_back(std::move(consumer));
 }
 
 void all_devices_to_all_power(void)
 {
-	unsigned int i;
-	for (i = 0; i < all_devices.size(); i++)
-		add_device(all_devices[i]);
+	for (auto *dev : all_devices)
+		add_device(dev);
 }
 
 void clear_proc_devices(void)
 {
-	std::vector<class device_consumer *>::iterator it = all_proc_devices.begin();
-	while (it != all_proc_devices.end()) {
-		delete *it;
-		it = all_proc_devices.erase(it);
-	}
+	all_proc_devices.clear();
 }
 
 void device_consumer::collect_json_fields(std::string &_js) const

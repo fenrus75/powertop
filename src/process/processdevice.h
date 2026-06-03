@@ -25,6 +25,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 
 #include "powerconsumer.h"
 #include "../devices/device.h"
@@ -33,7 +34,7 @@ class device_consumer : public power_consumer {
 public:
 	int prio = 0;
 	double power = 0.0;
-	class device *device = nullptr;
+	class device *device = nullptr; /* non-owning pointer to device from all_devices */
 	device_consumer(class device *dev);
 
 	virtual std::string description(void) override;
@@ -47,7 +48,6 @@ public:
 };
 
 extern void all_devices_to_all_power(void);
-extern std::vector<class device_consumer *> all_proc_devices;
+extern std::vector<std::unique_ptr<class device_consumer>> all_proc_devices;
 
 extern void clear_proc_devices(void);
-

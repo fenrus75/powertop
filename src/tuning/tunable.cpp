@@ -33,13 +33,10 @@ std::vector<std::unique_ptr<tunable>> all_tunables;
 std::vector<std::unique_ptr<tunable>> all_untunables;
 
 
-tunable::tunable(const std::string &str, double _score, const std::string &good, const std::string &bad, const std::string &neutral)
+tunable::tunable(const std::string &str, double _score, [[maybe_unused]] const std::string &good, [[maybe_unused]] const std::string &bad, [[maybe_unused]] const std::string &neutral)
 {
 	desc = str;
 	score = _score;
-	good_string = good;
-	bad_string = bad;
-	neutral_string = neutral;
 }
 
 
@@ -47,9 +44,7 @@ tunable::tunable(void)
 {
 	score = 0;
 	desc = "";
-	good_string = _("Good");
-	bad_string = _("Bad");
-	neutral_string = _("Unknown");
+	// All fields are already defaulted in header
 }
 
 void tunable::collect_json_fields(std::string &_js)

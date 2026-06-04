@@ -39,14 +39,14 @@
 
 class tunable {
 
-	std::string good_string;
-	std::string bad_string;
-	std::string neutral_string;
+	std::string good_string = _("Good");
+	std::string bad_string = _("Bad");
+	std::string neutral_string = _("Unknown");
 protected:
-	std::string toggle_good;
-	std::string toggle_bad;
+	std::string toggle_good = "";
+	std::string toggle_bad = "";
 public:
-	std::string desc;
+	std::string desc = "";
 	double score = 0.0;
 
 	tunable(void);

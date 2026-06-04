@@ -34,14 +34,14 @@
 #define WAKEUP_DISABLE 0
 
 class wakeup {
-	std::string wakeup_enable;
-	std::string wakeup_disable;
-	std::string wakeup_idle;
+	std::string wakeup_enable = _("Enabled");
+	std::string wakeup_disable = _("Disabled");
+	std::string wakeup_idle = _("Unknown");
 protected:
-	std::string toggle_enable;
-	std::string toggle_disable;
+	std::string toggle_enable = "";
+	std::string toggle_disable = "";
 public:
-	std::string desc;
+	std::string desc = "";
 	double score = 0.0;
 
 	wakeup(const std::string &str, double _score, const std::string &enable = "", const std::string &disable = "");

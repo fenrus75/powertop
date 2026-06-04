@@ -31,21 +31,17 @@
 
 std::vector<std::unique_ptr<wakeup>> wakeup_all;
 
-wakeup::wakeup(const std::string &str, double _score, const std::string &enable, const std::string &disable)
+wakeup::wakeup(const std::string &str, double _score, [[maybe_unused]] const std::string &enable, [[maybe_unused]] const std::string &disable)
 {
 	score = _score;
 	desc = str;
-	wakeup_enable = enable;
-	wakeup_disable = disable;
 }
 
 wakeup::wakeup(void)
 {
 	score = 0;
 	desc = "";
-	wakeup_enable = _("Enabled");
-	wakeup_disable = _("Disabled");
-	wakeup_idle = _("Unknown");
+	// All fields are already defaulted in header
 }
 
 void wakeup::collect_json_fields(std::string &_js) const

@@ -37,6 +37,10 @@ class extech_power_meter: public power_meter {
 	double sum = 0.0;
 	int samples = 0;
 	std::atomic<bool> end_thread{false};
+	/* Protects: sum, samples
+	 * Held by: the background sampling thread (sample()) when updating
+	 * sum/samples, and by end_measurement() when reading them to compute
+	 * the final power value.  Never held across blocking I/O. */
 	std::mutex samples_mutex;
 	pthread_t thread;
 public:

@@ -35,6 +35,23 @@ ninja -C build_cov test
 bash scripts/coverage_report.sh <label> build_cov
 ```
 
+## C++ classes note
+
+When creating a subclass, add or update the header of the parent class with a table that matches this example template:
+```c
+/*
+
+# subclasses of <parent class>
+
+| subclass     | filename                                             |
+| ------------ | ---------------------------------------------------- | 
+| <subclass 1> | <project relative path to the header for subclass 1> |
+
+*/
+```
+Check is such comment with table already exists, and add a line when it does.
+When no such comment exists, create a new comment ABOVE the class definition.
+
 ## Code review process
 
 Follow `review/review.md` exactly:

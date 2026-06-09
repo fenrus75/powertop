@@ -37,6 +37,19 @@
 #define TUNE_UNKNOWN 0
 #define TUNE_NEUTRAL 0
 
+/*
+ * # subclasses of tunable
+ *
+ * | subclass          | filename                              |
+ * | ----------------- | ------------------------------------- |
+ * | bt_tunable        | src/tuning/bluetooth.h                |
+ * | ethernet_tunable  | src/tuning/ethernet.h                 |
+ * | i2c_tunable       | src/tuning/tuningi2c.h                |
+ * | runtime_tunable   | src/tuning/runtime.h                  |
+ * | sysfs_tunable     | src/tuning/tuningsysfs.h              |
+ * | usb_tunable       | src/tuning/tuningusb.h                |
+ * | wifi_tunable      | src/tuning/wifi.h                     |
+ */
 class tunable {
 
 	std::string good_string = _("Good");

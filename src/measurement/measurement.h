@@ -29,6 +29,16 @@
 #include <string>
 #include "../lib.h"
 
+/*
+ * # subclasses of power_meter
+ *
+ * | subclass                    | filename                              |
+ * | --------------------------- | ------------------------------------- |
+ * | acpi_power_meter            | src/measurement/acpi.h                |
+ * | extech_power_meter          | src/measurement/extech.h              |
+ * | opal_sensors_power_meter    | src/measurement/opal-sensors.h        |
+ * | sysfs_power_meter           | src/measurement/sysfs.h               |
+ */
 class power_meter {
 	bool discharging = false;
 public:

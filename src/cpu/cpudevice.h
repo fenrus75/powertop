@@ -30,6 +30,14 @@
 #include "../devices/device.h"
 #include "cpu.h"
 
+/*
+ * # subclasses of cpudevice
+ *
+ * | subclass         | filename                              |
+ * | ---------------- | ------------------------------------- |
+ * | cpu_rapl_device  | src/cpu/cpu_rapl_device.h             |
+ * | dram_rapl_device | src/cpu/dram_rapl_device.h            |
+ */
 class cpudevice: public device {
 protected:
 	std::string _class;

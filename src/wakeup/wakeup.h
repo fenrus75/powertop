@@ -33,6 +33,14 @@
 #define WAKEUP_ENABLE 1
 #define WAKEUP_DISABLE 0
 
+/*
+ * # subclasses of wakeup
+ *
+ * | subclass         | filename                              |
+ * | ---------------- | ------------------------------------- |
+ * | ethernet_wakeup  | src/wakeup/wakeup_ethernet.h          |
+ * | usb_wakeup       | src/wakeup/wakeup_usb.h               |
+ */
 class wakeup {
 	std::string wakeup_enable = _("Enabled");
 	std::string wakeup_disable = _("Disabled");

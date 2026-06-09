@@ -35,6 +35,17 @@ extern double measurement_time;
 
 class power_consumer;
 
+/*
+ * # subclasses of power_consumer
+ *
+ * | subclass        | filename                              |
+ * | --------------- | ------------------------------------- |
+ * | interrupt       | src/process/interrupt.h               |
+ * | device_consumer | src/process/processdevice.h           |
+ * | process         | src/process/process.h                 |
+ * | timer           | src/process/timer.h                   |
+ * | work            | src/process/work.h                    |
+ */
 class power_consumer {
 
 public:

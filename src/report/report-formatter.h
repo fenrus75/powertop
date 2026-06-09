@@ -29,6 +29,13 @@
 #include "report-maker.h"
 #include "../lib.h"
 
+/*
+ * # subclasses of report_formatter
+ *
+ * | subclass                     | filename                                    |
+ * | ---------------------------- | ------------------------------------------- |
+ * | report_formatter_string_base | src/report/report-formatter-base.h          |
+ */
 class report_formatter
 {
 public:

@@ -27,6 +27,13 @@
 
 #include "device.h"
 
+/*
+ * # subclasses of i915gpu
+ *
+ * | subclass         | filename                              |
+ * | ---------------- | ------------------------------------- |
+ * | gpu_rapl_device  | src/devices/gpu_rapl_device.h         |
+ */
 class i915gpu: public device {
 	int index = 0;
 	int rindex = 0;

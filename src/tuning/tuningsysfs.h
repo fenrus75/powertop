@@ -29,6 +29,13 @@
 
 #include "tunable.h"
 
+/*
+ * # subclasses of sysfs_tunable
+ *
+ * | subclass              | filename                              |
+ * | --------------------- | ------------------------------------- |
+ * | numeric_sysfs_tunable | src/tuning/tuningsysfs.h              |
+ */
 class sysfs_tunable : public tunable {
 protected:
 	std::string sysfs_path;

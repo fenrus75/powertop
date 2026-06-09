@@ -27,6 +27,15 @@
 
 #include "report-formatter.h"
 
+/*
+ * # subclasses of report_formatter_string_base
+ *
+ * | subclass               | filename                                    |
+ * | ---------------------- | ------------------------------------------- |
+ * | report_formatter_csv   | src/report/report-formatter-csv.h           |
+ * | report_formatter_html  | src/report/report-formatter-html.h          |
+ * | report_formatter_md    | src/report/report-formatter-md.h            |
+ */
 class report_formatter_string_base: public report_formatter
 {
 public:

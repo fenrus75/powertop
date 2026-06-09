@@ -33,6 +33,25 @@
 struct parameter_bundle;
 struct result_bundle;
 
+/*
+ * # subclasses of device
+ *
+ * | subclass           | filename                              |
+ * | ------------------ | ------------------------------------- |
+ * | cpudevice          | src/cpu/cpudevice.h                   |
+ * | ahci               | src/devices/ahci.h                    |
+ * | alsa               | src/devices/alsa.h                    |
+ * | backlight          | src/devices/backlight.h               |
+ * | devfreq            | src/devices/devfreq.h                 |
+ * | i915gpu            | src/devices/i915-gpu.h                |
+ * | network            | src/devices/network.h                 |
+ * | rfkill             | src/devices/rfkill.h                  |
+ * | runtime_pmdevice   | src/devices/runtime_pm.h              |
+ * | thinkpad_fan       | src/devices/thinkpad-fan.h            |
+ * | thinkpad_light     | src/devices/thinkpad-light.h          |
+ * | usbdevice          | src/devices/usb.h                     |
+ * | xegpu              | src/devices/xe-gpu.h                  |
+ */
 class device {
 public:
 	bool cached_valid = false;

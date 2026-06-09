@@ -52,6 +52,16 @@ When creating a subclass, add or update the header of the parent class with a ta
 Check is such comment with table already exists, and add a line when it does.
 When no such comment exists, create a new comment ABOVE the class definition.
 
+## lock annotation process
+
+when declaring a mutex in a header file, you MUST add a comment block immediately preceding the declaration explaining: 
+- what specific member data or resources the mutex protects, and 
+- the general locking rules, lifecycle, or ordering guidelines associated with it.
+
+## Bug fix best practices
+- add extensive comments to the code when fixing issues, but comment desired/required code behavior, not changes done.
+- consider adding a test case FIRST (that fails), then fix the bug and observe the test case passing
+
 ## Code review process
 
 Follow `review/review.md` exactly:

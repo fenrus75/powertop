@@ -1020,6 +1020,13 @@ void w_display_cpu_pstates(void)
 			if (!core)
 				continue;
 
+			bool has_cpus = false;
+			for (const auto &child : core->children) {
+				if (child) { has_cpus = true; break; }
+			}
+			if (!has_cpus)
+				continue;
+
 			wprintw(win, "  Core %zu\n\n", core_idx);
 
 			for (size_t cpu_idx = 0; cpu_idx < core->children.size(); cpu_idx++) {

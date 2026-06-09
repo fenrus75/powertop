@@ -34,6 +34,15 @@
 #include "../lib.h"
 #include "frequency.h"
 
+/*
+ * # subclasses of abstract_cpu
+ *
+ * | subclass    | filename                      |
+ * | ----------- | ----------------------------- |
+ * | cpu_linux   | src/cpu/cpu.h                 |
+ * | cpu_core    | src/cpu/cpu.h                 |
+ * | cpu_package | src/cpu/cpu.h                 |
+ */
 class abstract_cpu
 {
 protected:
@@ -128,6 +137,13 @@ public:
 
 extern std::vector<class abstract_cpu *> all_cpus;
 
+/*
+ * # subclasses of cpu_linux
+ *
+ * | subclass | filename                      |
+ * | -------- | ----------------------------- |
+ * | nhm_cpu  | src/cpu/intel_cpus.h          |
+ */
 class cpu_linux: public abstract_cpu
 {
 	void 	parse_pstates_start(void);
@@ -150,6 +166,16 @@ public:
 	virtual double avg_freq_mhz(void) override;
 };
 
+/*
+ * # subclasses of cpu_core
+ *
+ * | subclass  | filename                      |
+ * | --------- | ----------------------------- |
+ * | nhm_core  | src/cpu/intel_cpus.h          |
+ * | atom_core | src/cpu/intel_cpus.h          |
+ * | i965_core | src/cpu/intel_cpus.h          |
+ * | xe_core   | src/cpu/intel_cpus.h          |
+ */
 class cpu_core: public abstract_cpu
 {
 public:
@@ -162,6 +188,14 @@ public:
 	virtual int     can_collapse(void) override { return childcount == 1;};
 };
 
+/*
+ * # subclasses of cpu_package
+ *
+ * | subclass     | filename                      |
+ * | ------------ | ----------------------------- |
+ * | nhm_package  | src/cpu/intel_cpus.h          |
+ * | atom_package | src/cpu/intel_cpus.h          |
+ */
 class cpu_package: public abstract_cpu
 {
 protected:

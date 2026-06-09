@@ -47,6 +47,13 @@ extern void window_refresh(void);
 extern void set_notification(const std::string &msg);
 extern void clear_notification(void);
 
+/*
+ * # subclasses of tab_window
+ *
+ * | subclass        | filename                      |
+ * | --------------- | ----------------------------- |
+ * | gpu_tab_window  | src/gpu-tab.h                 |
+ */
 class tab_window {
 public:
 	int cursor_pos = 0;

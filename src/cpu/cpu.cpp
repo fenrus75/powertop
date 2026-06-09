@@ -998,6 +998,8 @@ void w_display_cpu_pstates(void)
 	if (global_max_mhz <= 0.0)
 		global_max_mhz = 4000.0;   /* fallback */
 
+	const int bar_width = std::min(COLS - 4, 180);
+
 #ifndef ENABLE_TEST_FRAMEWORK
 	{
 		class tab_window *tw = tab_windows["Frequency stats"];
@@ -1037,8 +1039,12 @@ void w_display_cpu_pstates(void)
 				draw_progress_bar(win, label, bar_val,
 						  0.0, global_max_mhz,
 						  NAN, NAN,
-						  value_str, 500.0);
+						  value_str, 500.0,
+						  bar_width,
+						  0, 0, 0, 0,
+						  false);
 			}
+			wprintw(win, "\n");
 		}
 	}
 

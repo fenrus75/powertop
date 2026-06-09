@@ -475,7 +475,8 @@ void draw_progress_bar(WINDOW *win,
 		       int color_filled,
 		       int color_empty,
 		       int attr_filled,
-		       int attr_empty)
+		       int attr_empty,
+		       bool trailing_blank)
 {
 	const double range = scale_max - scale_min;
 	if (range <= 0.0)
@@ -588,5 +589,6 @@ void draw_progress_bar(WINDOW *win,
 		wprintw(win, "%s\n", marker_line.c_str());
 	}
 
-	wprintw(win, "\n");
+	if (trailing_blank)
+		wprintw(win, "\n");
 }

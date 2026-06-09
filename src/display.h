@@ -147,5 +147,6 @@ void draw_progress_bar(WINDOW *win,
 		       int color_filled = 0,
 		       int color_empty = 0,
 		       int attr_filled = 0,
-		       int attr_empty = 0);
+		       int attr_empty = 0,
+		       bool trailing_blank = true);
 

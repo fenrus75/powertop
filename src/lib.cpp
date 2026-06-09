@@ -24,84 +24,41 @@
  *	Peter Anvin
  */
 #include <algorithm>
-#include <cctype>
-#include <cstring>
-#include <dirent.h>
-#include <fcntl.h>
-#include <filesystem>
-#include <fstream>
-#include <iostream>
-#include <libintl.h>
-#include <limits>
-#include <locale.h>
-#include <map>
-#include <math.h>
-#include <ncurses.h>
-#include <sstream>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string>
-#include <sys/stat.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <utility>
-
-#include <format>
-
-#include "display.h"
-#include "lib.h"
-#include "test_framework.h"
-
-#ifndef HAVE_NO_PCI
-extern "C" {
-#include <pci/pci.h>
-}
-#endif
-#include <vector>
-#include <cstring>
-#include <iostream>
-#include <utility>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <ctype.h>
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <algorithm>
-#include <format>
-
-#include <filesystem>
-#include "test_framework.h"
-
-#include "lib.h"
-
-#ifndef HAVE_NO_PCI
-extern "C" {
-#include <pci/pci.h>
-}
-#endif
-
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <dirent.h>
-#include <locale.h>
-#include <libintl.h>
-#include <limits>
-#include <math.h>
-#include <ncurses.h>
-#include "display.h"
-#include <fcntl.h>
-#include <mutex>
 #include <atomic>
+#include <cctype>
+#include <cmath>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <iostream>
+#include <limits>
+#include <map>
+#include <mutex>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include <fcntl.h>
+#include <libintl.h>
+#include <locale.h>
+#include <ncurses.h>
+#include <sys/time.h>
+#include <unistd.h>
+
+#include "display.h"
+#include "lib.h"
+#include "test_framework.h"
+
+#ifndef HAVE_NO_PCI
+extern "C" {
+#include <pci/pci.h>
+}
+#endif
 
 extern void set_notification(const std::string &msg) __attribute__((weak));
 

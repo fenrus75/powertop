@@ -153,7 +153,8 @@ std::string cpu_linux::fill_cstate_line(int line_nr, const std::string &separato
 			continue;
 
 		if (line_nr == LEVEL_C0)
-			return std::format("{:5.1f}%", percentage(s->duration_delta / time_factor));
+			/* Pad to the same width as other cstate lines so TUI columns align */
+			return std::format("{:5.1f}%          ", percentage(s->duration_delta / time_factor));
 		else
 			return std::format("{:5.1f}%{} {:6.1f} ms",
 				percentage(s->duration_delta / time_factor),

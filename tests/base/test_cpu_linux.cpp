@@ -47,7 +47,8 @@ static void test_cpu_linux_cstate_line_c0_normal()
 	cpu.set_time_factor(1000.0);   /* 75% */
 
 	std::string s = cpu.fill_cstate_line(LEVEL_C0);
-	PT_ASSERT_EQ(s, std::string(" 75.0%"));
+	/* C0 has no residency time; padded to match non-C0 column width (16 chars) */
+	PT_ASSERT_EQ(s, std::string(" 75.0%          "));
 }
 
 static void test_cpu_linux_cstate_line_c0_zero_time_factor()

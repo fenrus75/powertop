@@ -108,3 +108,4 @@ doc/html
 Doxyfile.in.bak
 logs/
 local.md
+clang-native.ini

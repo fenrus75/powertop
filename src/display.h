@@ -112,3 +112,40 @@ WINDOW *get_ncurses_win(int nr);
 
 void create_tab(const std::string &name, const std::string &translation, class tab_window *w = nullptr, const std::string &bottom_line = "");
 
+/* Default width for draw_progress_bar */
+static constexpr int BAR_WIDTH = 50;
+
+/* Color-pair IDs for the four-segment progress bar.
+ * Pairs are initialized by the GPU tab on first expose. */
+static constexpr int BAR_COLOR_FLOOR    = 10;
+static constexpr int BAR_COLOR_ACTIVE   = 11;
+static constexpr int BAR_COLOR_HEADROOM = 12;
+static constexpr int BAR_COLOR_BEYOND   = 13;
+static constexpr int BAR_COLOR_BUSY     = 14;
+static constexpr int BAR_COLOR_IDLE     = 15;
+
+/*
+ * Draw a horizontal progress bar with scale labels and optional policy markers.
+ *
+ * Outputs up to four lines into win:
+ *   1.  "  <label>  <value_str>"
+ *   2.  "  [bar]"
+ *   3.  "  <scale labels>"
+ *   4.  "  <marker caret '<' at marker_hi>"  (only when marker_lo is NAN)
+ *
+ * Pass NAN for marker_lo and marker_hi to use simple two-segment mode
+ * (color_filled / color_empty).  Pass 0 for colors to use terminal default.
+ */
+void draw_progress_bar(WINDOW *win,
+		       const std::string &label,
+		       double value,
+		       double scale_min, double scale_max,
+		       double marker_lo, double marker_hi,
+		       const std::string &value_str,
+		       double label_interval,
+		       int bar_width = BAR_WIDTH,
+		       int color_filled = 0,
+		       int color_empty = 0,
+		       int attr_filled = 0,
+		       int attr_empty = 0);
+

@@ -26,11 +26,12 @@
 #include "lib.h"
 
 #include <ncurses.h>
-
-
+#include <algorithm>
+#include <cmath>
+#include <format>
+#include <string>
 #include <vector>
 #include <map>
-#include <string>
 
 static int display = 0;
 static std::string current_notification;
@@ -461,4 +462,131 @@ void set_notification(const std::string &msg)
 void clear_notification(void)
 {
 	current_notification.clear();
+}
+
+void draw_progress_bar(WINDOW *win,
+		       const std::string &label,
+		       double value,
+		       double scale_min, double scale_max,
+		       double marker_lo, double marker_hi,
+		       const std::string &value_str,
+		       double label_interval,
+		       int bar_width,
+		       int color_filled,
+		       int color_empty,
+		       int attr_filled,
+		       int attr_empty)
+{
+	const double range = scale_max - scale_min;
+	if (range <= 0.0)
+		return;
+
+	/* Line 1: label + current value */
+	wprintw(win, "  %s  %s\n", label.c_str(), value_str.c_str());
+
+	/* Line 2: bar */
+	{
+		const double clamped = std::clamp(value, scale_min, scale_max);
+		wprintw(win, "  ");
+
+		if (!std::isnan(marker_lo)) {
+			const int pos_min = std::clamp(
+				static_cast<int>(std::round((marker_lo - scale_min) / range * bar_width)),
+				0, bar_width);
+			const int pos_cur = std::clamp(
+				static_cast<int>(std::round((clamped - scale_min) / range * bar_width)),
+				0, bar_width);
+			const bool has_beyond = !std::isnan(marker_hi) &&
+						std::abs(marker_hi - scale_max) > 0.5;
+			int pos_max = bar_width;
+			if (has_beyond)
+				pos_max = std::clamp(
+					static_cast<int>(std::round((marker_hi - scale_min) / range * bar_width)),
+					0, bar_width);
+
+			for (int i = 0; i < bar_width; i++) {
+				if (i < pos_min) {
+					wattron(win, COLOR_PAIR(BAR_COLOR_FLOOR) | A_BOLD);
+					wprintw(win, "█");
+					wattroff(win, COLOR_PAIR(BAR_COLOR_FLOOR) | A_BOLD);
+				} else if (i < pos_cur) {
+					wattron(win, COLOR_PAIR(BAR_COLOR_ACTIVE));
+					wprintw(win, "█");
+					wattroff(win, COLOR_PAIR(BAR_COLOR_ACTIVE));
+				} else if (i < pos_max) {
+					wattron(win, COLOR_PAIR(BAR_COLOR_HEADROOM));
+					wprintw(win, "░");
+					wattroff(win, COLOR_PAIR(BAR_COLOR_HEADROOM));
+				} else {
+					wattron(win, COLOR_PAIR(BAR_COLOR_BEYOND) | A_DIM);
+					wprintw(win, "░");
+					wattroff(win, COLOR_PAIR(BAR_COLOR_BEYOND) | A_DIM);
+				}
+			}
+		} else {
+			const int filled = std::clamp(
+				static_cast<int>(std::round((clamped - scale_min) / range * bar_width)),
+				0, bar_width);
+			if (color_filled)
+				wattron(win, COLOR_PAIR(color_filled) | attr_filled);
+			for (int i = 0; i < filled; i++)
+				wprintw(win, "█");
+			if (color_filled)
+				wattroff(win, COLOR_PAIR(color_filled) | attr_filled);
+			if (color_empty)
+				wattron(win, COLOR_PAIR(color_empty) | attr_empty);
+			for (int i = filled; i < bar_width; i++)
+				wprintw(win, "░");
+			if (color_empty)
+				wattroff(win, COLOR_PAIR(color_empty) | attr_empty);
+		}
+		wprintw(win, "\n");
+	}
+
+	/* Line 3: scale labels */
+	{
+		const double min_gap_chars = 6.0;
+		while ((label_interval / range * bar_width) < min_gap_chars)
+			label_interval *= 2.0;
+
+		std::string scale_line(bar_width + 2, ' ');
+
+		const std::string max_str =
+			std::to_string(static_cast<int>(std::round(scale_max)));
+		const int max_start =
+			static_cast<int>(scale_line.size()) - static_cast<int>(max_str.size());
+
+		const double first =
+			std::ceil(scale_min / label_interval) * label_interval;
+		for (double v = first;
+		     v <= scale_max + label_interval * 0.01;
+		     v += label_interval) {
+			const int pos = std::clamp(
+				static_cast<int>(std::round((v - scale_min) / range * bar_width)),
+				0, bar_width - 1);
+			const std::string num =
+				std::to_string(static_cast<int>(std::round(v)));
+			const int write_pos = pos + 2;
+			if (write_pos + static_cast<int>(num.size()) > max_start)
+				continue;
+			if (write_pos + static_cast<int>(num.size()) <=
+			    static_cast<int>(scale_line.size()))
+				scale_line.replace(write_pos, num.size(), num);
+		}
+
+		scale_line.replace(max_start, max_str.size(), max_str);
+		wprintw(win, "%s\n", scale_line.c_str());
+	}
+
+	/* Line 4: marker caret — only in simple mode when marker_hi is set */
+	if (std::isnan(marker_lo) && !std::isnan(marker_hi)) {
+		std::string marker_line(bar_width + 2, ' ');
+		const int pos = std::clamp(
+			static_cast<int>(std::round((marker_hi - scale_min) / range * bar_width)),
+			0, bar_width - 1);
+		marker_line[pos + 2] = '<';
+		wprintw(win, "%s\n", marker_line.c_str());
+	}
+
+	wprintw(win, "\n");
 }

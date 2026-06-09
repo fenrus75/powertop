@@ -132,6 +132,7 @@ public:
 	virtual std::string  fill_pstate_name(int line_nr) override;
 	virtual std::string  fill_pstate_line(int line_nr) override;
 	virtual int	has_pstate_level(int level) const override;
+	virtual double avg_freq_mhz(void) override;
 	void collect_json_fields(std::string &_js) override;
 };
 

@@ -236,3 +236,17 @@ std::string cpu_linux::fill_pstate_line(int line_nr)
 
 	return std::format(" {:5.1f}% ", percentage(1.0 * (pstates[line_nr]->time_after) / total_stamp));
 }
+
+double cpu_linux::avg_freq_mhz(void)
+{
+const std::string path = std::format(
+"/sys/devices/system/cpu/cpu{}/cpufreq/scaling_cur_freq", first_cpu);
+std::ifstream f(path);
+if (!f.is_open())
+return -1.0;
+double khz = 0.0;
+f >> khz;
+if (khz <= 0.0)
+return -1.0;
+return khz / 1000.0;
+}

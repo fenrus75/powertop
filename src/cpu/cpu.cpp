@@ -24,6 +24,7 @@
  */
 #include <fstream>
 #include <vector>
+#include <cmath>
 #include <cstring>
 #include <cstdlib>
 #include <sstream>
@@ -971,7 +972,83 @@ void impl_w_display_cpu_states(int state)
 
 void w_display_cpu_pstates(void)
 {
-	impl_w_display_cpu_states(PSTATE);
+	WINDOW *win = get_ncurses_win("Frequency stats");
+	if (!win)
+		return;
+
+	wclear(win);
+	wmove(win, 2, 0);
+
+	/* Determine scale maximum: highest cpuinfo_max_freq across all CPUs. */
+	double global_max_mhz = 0.0;
+	for (const auto *acpu : all_cpus) {
+		if (!acpu)
+			continue;
+		const std::string path = std::format(
+			"/sys/devices/system/cpu/cpu{}/cpufreq/cpuinfo_max_freq",
+			acpu->get_first_cpu());
+		std::ifstream f(path);
+		double khz = 0.0;
+		if (f >> khz && khz > 0.0) {
+			const double mhz = khz / 1000.0;
+			if (mhz > global_max_mhz)
+				global_max_mhz = mhz;
+		}
+	}
+	if (global_max_mhz <= 0.0)
+		global_max_mhz = 4000.0;   /* fallback */
+
+#ifndef ENABLE_TEST_FRAMEWORK
+	{
+		class tab_window *tw = tab_windows["Frequency stats"];
+		if (tw)
+			tw->reset_content_size();
+	}
+#endif
+
+	for (size_t pkg_idx = 0; pkg_idx < system_level.children.size(); pkg_idx++) {
+		abstract_cpu *pkg = system_level.children[pkg_idx].get();
+		if (!pkg)
+			continue;
+
+		wprintw(win, "Package %zu\n\n", pkg_idx);
+
+		for (size_t core_idx = 0; core_idx < pkg->children.size(); core_idx++) {
+			abstract_cpu *core = pkg->children[core_idx].get();
+			if (!core)
+				continue;
+
+			wprintw(win, "  Core %zu\n\n", core_idx);
+
+			for (size_t cpu_idx = 0; cpu_idx < core->children.size(); cpu_idx++) {
+				abstract_cpu *cpu = core->children[cpu_idx].get();
+				if (!cpu)
+					continue;
+
+				const double freq = cpu->avg_freq_mhz();
+				const double bar_val = (freq > 0.0) ? freq : 0.0;
+				const std::string value_str =
+					(freq > 0.0)
+					? hz_to_human(freq * 1000.0, 1)
+					: "N/A";
+				const std::string label = std::format(
+					"CPU {:3d}", cpu->get_number());
+
+				draw_progress_bar(win, label, bar_val,
+						  0.0, global_max_mhz,
+						  NAN, NAN,
+						  value_str, 500.0);
+			}
+		}
+	}
+
+#ifndef ENABLE_TEST_FRAMEWORK
+	{
+		class tab_window *tw = tab_windows["Frequency stats"];
+		if (tw)
+			tw->update_content_size();
+	}
+#endif
 }
 
 void w_display_cpu_cstates(void)

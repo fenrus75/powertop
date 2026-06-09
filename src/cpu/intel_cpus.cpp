@@ -767,6 +767,16 @@ int nhm_cpu::has_pstate_level(int level) const
 	return cpu_linux::has_pstate_level(level);
 }
 
+double nhm_cpu::avg_freq_mhz(void)
+{
+	if (mperf_after <= mperf_before || time_factor < 1.0)
+		return cpu_linux::avg_freq_mhz();
+	return 1.0 * (tsc_after - tsc_before) *
+	       (aperf_after - aperf_before) /
+	       (mperf_after - mperf_before) /
+	       time_factor;
+}
+
 void nhm_package::collect_json_fields(std::string &_js)
 {
     abstract_cpu::collect_json_fields(_js);

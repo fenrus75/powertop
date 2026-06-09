@@ -103,6 +103,10 @@ public:
 	virtual int	has_pstate_level(int level) const;
 	virtual int	has_pstates(void) const { return 1; };
 
+	/* Returns average CPU frequency in MHz for the last measurement interval.
+	 * Returns -1.0 if no data is available yet. */
+	virtual double avg_freq_mhz(void) { return -1.0; }
+
 	/* Frequency micro accounting methods */
 	virtual void    calculate_freq(uint64_t time);
 	virtual void    go_idle(uint64_t time) { idle = true; freq_updated(time); }
@@ -142,6 +146,8 @@ public:
 
 	virtual std::string  fill_pstate_line(int line_nr) override;
 	virtual std::string  fill_pstate_name(int line_nr) override;
+
+	virtual double avg_freq_mhz(void) override;
 };
 
 class cpu_core: public abstract_cpu

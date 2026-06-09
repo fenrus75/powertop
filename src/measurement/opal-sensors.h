@@ -25,7 +25,7 @@
 #pragma once
 
 #include "measurement.h"
-#include <limits.h>
+#include <climits>
 
 class opal_sensors_power_meter: public power_meter {
 public:

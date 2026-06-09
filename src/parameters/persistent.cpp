@@ -26,7 +26,7 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "parameters.h"
 #include "../measurement/measurement.h"

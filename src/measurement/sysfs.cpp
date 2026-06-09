@@ -25,8 +25,8 @@
 #include "measurement.h"
 #include "sysfs.h"
 #include "../lib.h"
-#include <stdio.h>
-#include <limits.h>
+#include <cstdio>
+#include <climits>
 
 sysfs_power_meter::sysfs_power_meter(const std::string &power_supply_name) : power_meter(power_supply_name)
 {

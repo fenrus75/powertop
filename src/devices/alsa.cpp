@@ -25,7 +25,7 @@
 #include <iostream>
 #include <fstream>
 
-#include <stdio.h>
+#include <cstdio>
 #include <sys/types.h>
 #include <unistd.h>
 

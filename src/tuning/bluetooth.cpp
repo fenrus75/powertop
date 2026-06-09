@@ -26,8 +26,8 @@
 #include "tuning.h"
 #include "tunable.h"
 #include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <utility>
 #include <iostream>
@@ -38,7 +38,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
-#include <errno.h>
+#include <cerrno>
 #include <format>
 
 #include "../lib.h"

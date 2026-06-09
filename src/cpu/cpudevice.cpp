@@ -23,8 +23,8 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 #include "cpudevice.h"
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include <format>
 #include "../lib.h"
 #include "../parameters/parameters.h"

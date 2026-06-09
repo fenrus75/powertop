@@ -24,7 +24,7 @@
  */
 #include "processdevice.h"
 #include "../parameters/parameters.h"
-#include <stdio.h>
+#include <cstdio>
 
 std::vector<class device_consumer *> all_proc_devices;
 

@@ -36,10 +36,10 @@
 #include <string>
 #include <sys/types.h>
 #include <dirent.h>
-#include <stdio.h>
+#include <cstdio>
 #include <fstream>
 #include <unistd.h>
-#include <time.h>
+#include <ctime>
 #include <format>
 
 static struct timespec tlast;

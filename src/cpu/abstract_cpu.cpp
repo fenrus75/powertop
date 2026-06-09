@@ -24,9 +24,9 @@
  */
 #include <sstream>
 #include <inttypes.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
+#include <cstdio>
+#include <cstdlib>
+#include <climits>
 #include "cpu.h"
 #include "../lib.h"
 

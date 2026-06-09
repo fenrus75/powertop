@@ -25,8 +25,8 @@
 #include <map>
 #include <utility>
 
-#include <stdint.h>
-#include <stdio.h>
+#include <cstdint>
+#include <cstdio>
 #include <sstream>
 
 #include "timer.h"

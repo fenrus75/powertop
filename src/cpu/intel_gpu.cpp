@@ -26,14 +26,14 @@
 #include <iostream>
 #include <fstream>
 #include <format>
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdint>
+#include <cstdio>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/time.h>
-#include <errno.h>
+#include <cerrno>
 #include <unistd.h>
 
 #include "../lib.h"

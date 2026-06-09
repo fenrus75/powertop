@@ -31,7 +31,7 @@
 #include <utility>
 #include <iostream>
 #include <fstream>
-#include <limits.h>
+#include <climits>
 #include <format>
 #include <filesystem>
 

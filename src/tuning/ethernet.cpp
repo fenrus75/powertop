@@ -27,14 +27,14 @@
 #include "tunable.h"
 #include <sys/types.h>
 #include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <utility>
 #include <iostream>
 #include <fstream>
 #include <sys/socket.h>
-#include <errno.h>
+#include <cerrno>
 #include <linux/types.h>
 #include <net/if.h>
 #include <linux/sockios.h>

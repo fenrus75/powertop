@@ -26,8 +26,8 @@
 /* Uncomment to disable asserts */
 /*#define NDEBUG*/
 
-#include <stdio.h>
-#include <assert.h>
+#include <cstdio>
+#include <cassert>
 #include <stdarg.h>
 
 #include "report-formatter-base.h"

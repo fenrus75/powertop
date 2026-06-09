@@ -26,9 +26,9 @@
 
 
 #include "process.h"
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
-#include <errno.h>
+#include <cerrno>
 
 #include <iostream>
 #include <fstream>

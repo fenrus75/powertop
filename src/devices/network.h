@@ -25,7 +25,7 @@
 #pragma once
 
 #include <sys/time.h>
-#include <limits.h>
+#include <climits>
 #include <string>
 
 #include "device.h"

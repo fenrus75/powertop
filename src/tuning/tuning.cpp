@@ -25,7 +25,7 @@
 
 #include <algorithm>
 
-#include <stdio.h>
+#include <cstdio>
 #include <ncurses.h>
 
 

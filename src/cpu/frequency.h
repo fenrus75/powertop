@@ -25,7 +25,7 @@
 #pragma once
 
 #include <string>
-#include <stdint.h>
+#include <cstdint>
 #include "../lib.h"
 
 #define LEVEL_C0 -1

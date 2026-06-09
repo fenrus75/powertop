@@ -28,14 +28,14 @@
 #include <format>
 
 #include "calibrate.h"
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include <unistd.h>
 #include <pthread.h>
-#include <math.h>
+#include <cmath>
 #include <sys/types.h>
-#include <errno.h>
-#include <limits.h>
+#include <cerrno>
+#include <climits>
 
 #include "../parameters/parameters.h"
 extern "C" {

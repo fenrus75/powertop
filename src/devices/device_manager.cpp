@@ -26,7 +26,7 @@
 #include "device.h"
 #include <vector>
 #include <algorithm>
-#include <stdio.h>
+#include <cstdio>
 #include <format>
 
 #include "backlight.h"

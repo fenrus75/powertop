@@ -24,8 +24,8 @@
  */
 
 #include "device.h"
-#include <limits.h>
-#include <stdlib.h>
+#include <climits>
+#include <cstdlib>
 #include <unistd.h>
 
 device::device(void)

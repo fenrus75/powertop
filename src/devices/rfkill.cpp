@@ -25,10 +25,10 @@
 #include <iostream>
 #include <fstream>
 
-#include <stdio.h>
+#include <cstdio>
 #include <sys/types.h>
 #include <unistd.h>
-#include <limits.h>
+#include <climits>
 
 
 #include "device.h"

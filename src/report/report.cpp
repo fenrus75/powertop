@@ -27,7 +27,7 @@
 #include "lib.h"
 #include "report.h"
 #include "report-maker.h"
-#include <errno.h>
+#include <cerrno>
 #include <cstring>
 #include <utility>
 #include <iostream>
@@ -36,7 +36,7 @@
 #include <cstring>
 #include <malloc.h>
 #include <unistd.h>
-#include <limits.h>
+#include <climits>
 #include <format>
 #include "report-data-html.h"
 

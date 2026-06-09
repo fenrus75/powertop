@@ -22,8 +22,8 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#include <stdint.h>
-#include <stdio.h>
+#include <cstdint>
+#include <cstdio>
 #include "process.h"
 #include "interrupt.h"
 #include "../lib.h"

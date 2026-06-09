@@ -25,8 +25,8 @@
 #pragma once
 
 #include <string>
-#include <stdio.h>
-#include <limits.h>
+#include <cstdio>
+#include <climits>
 #include <fstream>
 
 #include "report-maker.h"

@@ -25,8 +25,8 @@
 #include "measurement.h"
 #include "opal-sensors.h"
 #include "../lib.h"
-#include <stdio.h>
-#include <limits.h>
+#include <cstdio>
+#include <climits>
 
 opal_sensors_power_meter::opal_sensors_power_meter(const std::string &power_supply_name) : power_meter(power_supply_name)
 {

@@ -25,8 +25,8 @@
 #include <utility>
 #include <iostream>
 #include <fstream>
-#include <ctype.h>
-#include <limits.h>
+#include <cctype>
+#include <climits>
 #include <format>
 
 #include "../lib.h"

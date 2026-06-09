@@ -37,7 +37,7 @@
 #include <algorithm>
 #include <stack>
 
-#include <stdio.h>
+#include <cstdio>
 #include <ncurses.h>
 
 #include "../perf/perf_bundle.h"

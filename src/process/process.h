@@ -24,7 +24,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 #include <memory>
 
 #include "powerconsumer.h"

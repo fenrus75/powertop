@@ -20,13 +20,13 @@
  * Author Name <Srinivas.Pandruvada@linux.intel.com>
  *
  */
-#include <stdio.h>
+#include <cstdio>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <errno.h>
-#include <math.h>
-#include <stdlib.h>
+#include <cerrno>
+#include <cmath>
+#include <cstdlib>
 #include <dirent.h>
 #include "lib.h"
 #include "rapl_interface.h"

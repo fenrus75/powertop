@@ -25,7 +25,7 @@
 #pragma once
 
 #include <vector>
-#include <limits.h>
+#include <climits>
 
 #include "tunable.h"
 

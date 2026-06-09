@@ -26,17 +26,17 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdint>
+#include <cstdio>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/time.h>
 #include <cstring>
-#include <errno.h>
+#include <cerrno>
 #include <unistd.h>
-#include <limits.h>
+#include <climits>
 
 #include "../lib.h"
 #include "../parameters/parameters.h"

@@ -1,0 +1,23 @@
+src: replace C headers with C++ equivalents throughout
+
+Mechanically replace all C-style headers that have standard C++
+equivalents in all .cpp and .h files under src/:
+
+  <assert.h>  → <cassert>
+  <ctype.h>   → <cctype>
+  <cerrno>    → <cerrno>   (was <errno.h>)
+  <limits.h>  → <climits>
+  <math.h>    → <cmath>
+  <stdint.h>  → <cstdint>
+  <stdio.h>   → <cstdio>
+  <stdlib.h>  → <cstdlib>
+  <string.h>  → <cstring>
+  <time.h>    → <ctime>
+
+Exception: src/lib.h keeps <stdint.h> and <stdlib.h> because it is
+included by src/tuning/iw.c, which is a plain C translation unit where
+the <c*> headers do not exist.
+
+No functional changes. All 60 tests pass.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>

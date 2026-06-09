@@ -25,11 +25,11 @@
 
 #include <fstream>
 
-#include <errno.h>
+#include <cerrno>
 #include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cerrno>
 #include <cstring>
 #include <sys/mman.h>
 #include <sys/types.h>

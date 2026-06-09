@@ -25,10 +25,10 @@
 #include "runtime_pm.h"
 
 
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
 #include <sys/types.h>
-#include <limits.h>
+#include <climits>
 #include <format>
 
 #include "../parameters/parameters.h"

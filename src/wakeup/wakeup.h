@@ -26,7 +26,7 @@
 
 #include <memory>
 #include <vector>
-#include <limits.h>
+#include <climits>
 #include <string>
 #include "../lib.h"
 

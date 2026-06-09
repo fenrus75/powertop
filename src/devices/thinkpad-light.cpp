@@ -25,12 +25,12 @@
 #include <iostream>
 #include <fstream>
 
-#include <stdio.h>
+#include <cstdio>
 #include <sys/types.h>
 #include <dirent.h>
-#include <math.h>
+#include <cmath>
 #include <unistd.h>
-#include <limits.h>
+#include <climits>
 
 #include "../lib.h"
 

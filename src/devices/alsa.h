@@ -28,8 +28,8 @@
 #include "device.h"
 #include "../parameters/parameters.h"
 
-#include <stdint.h>
-#include <limits.h>
+#include <cstdint>
+#include <climits>
 #include <string>
 
 class alsa: public device {

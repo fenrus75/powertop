@@ -24,12 +24,12 @@
  */
 #include "parameters.h"
 #include "../measurement/measurement.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
 #include <vector>
 #include <unistd.h>
-#include <limits.h>
+#include <climits>
 
 
 struct parameter_bundle all_parameters;

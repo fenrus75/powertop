@@ -25,8 +25,8 @@
 #include <map>
 #include <utility>
 
-#include <stdint.h>
-#include <stdio.h>
+#include <cstdint>
+#include <cstdio>
 
 #include "work.h"
 #include "../lib.h"

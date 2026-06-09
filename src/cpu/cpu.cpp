@@ -25,7 +25,7 @@
 #include <fstream>
 #include <vector>
 #include <cstring>
-#include <stdlib.h>
+#include <cstdlib>
 #include <sstream>
 #include <ncurses.h>
 #include <unistd.h>

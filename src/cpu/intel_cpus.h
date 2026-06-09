@@ -23,7 +23,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#include <stdint.h>
+#include <cstdint>
 #include <sys/time.h>
 #include <filesystem>
 

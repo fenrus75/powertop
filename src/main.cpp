@@ -31,16 +31,16 @@
 #include <iostream>
 #include <fstream>
 #include <new>
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
+#include <cstdlib>
+#include <cstdio>
+#include <ctime>
 #include <sys/stat.h>
 #include <sys/statfs.h>
 #include <getopt.h>
 #include <unistd.h>
 #include <locale.h>
 #include <sys/resource.h>
-#include <limits.h>
+#include <climits>
 #include <pthread.h>
 
 #include "cpu/cpu.h"

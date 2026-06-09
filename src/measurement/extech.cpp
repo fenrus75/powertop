@@ -34,17 +34,17 @@
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <stdarg.h>
 #include <cstring>
-#include <errno.h>
+#include <cerrno>
 #include <unistd.h>
 #include <fcntl.h>
 #include <termios.h>
-#include <ctype.h>
+#include <cctype>
 #include <getopt.h>
-#include <time.h>
+#include <ctime>
 #include <signal.h>
 
 #include <sys/types.h>
@@ -58,8 +58,8 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 struct packet {
 	char	buf[256];

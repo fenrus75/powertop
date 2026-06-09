@@ -27,16 +27,16 @@
  * Code to track centrally which process has what /dev files open
  */
 #include <iostream>
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
+#include <cstdlib>
+#include <cstdio>
+#include <ctime>
 #include <sys/stat.h>
 #include <vector>
 #include <algorithm>
 #include <unistd.h>
 #include <cstring>
-#include <ctype.h>
-#include <limits.h>
+#include <cctype>
+#include <climits>
 
 #include "devlist.h"
 #include "lib.h"

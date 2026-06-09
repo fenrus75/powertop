@@ -24,10 +24,10 @@
  */
 #include "usb.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
 #include <sys/types.h>
-#include <limits.h>
+#include <climits>
 #include <format>
 
 #include "../lib.h"

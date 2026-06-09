@@ -26,12 +26,12 @@
 #include <malloc.h>
 #include <algorithm>
 #include <cstring>
-#include <stdint.h>
+#include <cstdint>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <stdio.h>
+#include <cstdio>
 
 #include "perf_bundle.h"
 #include "perf_event.h"

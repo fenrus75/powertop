@@ -28,10 +28,10 @@
 #include <string>
 #include <map>
 
-#include <stdio.h>
+#include <cstdio>
 #include <sys/types.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <unistd.h>
 
 #include <linux/ethtool.h>

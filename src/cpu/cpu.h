@@ -29,7 +29,7 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include <stdint.h>
+#include <cstdint>
 #include <sys/time.h>
 #include "../lib.h"
 #include "frequency.h"

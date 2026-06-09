@@ -22,7 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
-#include <stdio.h>
+#include <cstdio>
 #include "cpu.h"
 #include "../lib.h"
 #include "../parameters/parameters.h"

@@ -29,10 +29,10 @@
 #include "cpu.h"
 #include "../lib.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #include <unistd.h>
-#include <stdio.h>
+#include <cstdio>
 #include <sys/types.h>
 #include <sys/types.h>
 #include <sys/stat.h>

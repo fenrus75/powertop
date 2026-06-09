@@ -22,8 +22,8 @@
  * Authors:
  *	Srinivas Pandruvada<Srinivas.Pandruvada@linux.intel.com>
  */
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include "../parameters/parameters.h"
 #include "../lib.h"
 #include "gpu_rapl_device.h"

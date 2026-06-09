@@ -26,10 +26,10 @@
 
 
 #include <string>
-#include <limits.h>
+#include <climits>
 #include "device.h"
 #include "../parameters/parameters.h"
-#include <stdint.h>
+#include <cstdint>
 
 class ahci: public device {
 	uint64_t start_active = 0, end_active = 0;

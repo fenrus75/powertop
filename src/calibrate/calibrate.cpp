@@ -304,12 +304,49 @@ static void rfkill_calibration(void)
 	}
 	rfkill_all_radios();
 }
-static void try_xset_dpms(const char *state)
+/* Write "On" or "Off" to every enabled DRM connector's dpms sysfs attribute.
+ * This is display-server agnostic: it works on X11, Wayland, and headless.
+ * Returns true if at least one connector was successfully written. */
+static bool sysfs_dpms_set(const std::string &state)
 {
-	/* Try to force display DPMS state via xset. Silently ignore failures:
-	 * xset is X11-only and may be absent or non-functional on Wayland,
-	 * headless systems, or NixOS-style installs without /usr/bin/xset. */
-	system(std::format("DISPLAY=:0 xset dpms force {} >/dev/null 2>&1", state).c_str());
+	bool any_set = false;
+
+	for (const auto &card : list_directory("/sys/class/drm")) {
+		/* Only process card entries without a '-' (e.g. "card0", not "card0-HDMI-A-1") */
+		if (!card.starts_with("card") || card.find('-') != std::string::npos)
+			continue;
+
+		const std::string card_path = std::format("/sys/class/drm/{}", card);
+		for (const auto &entry : list_directory(card_path)) {
+			/* Connector entries have the form "card0-HDMI-A-1" */
+			if (!entry.starts_with("card") || entry.find('-') == std::string::npos)
+				continue;
+
+			/* Skip connectors that are not physically connected */
+			const std::string enabled = read_sysfs_string(
+				std::format("{}/{}/enabled", card_path, entry));
+			if (enabled != "enabled")
+				continue;
+
+			write_sysfs(std::format("{}/{}/dpms", card_path, entry), state + "\n");
+			any_set = true;
+		}
+	}
+	return any_set;
+}
+
+/* Set display DPMS state.  Try sysfs first (works on X11, Wayland, headless);
+ * fall back to xset for legacy X11 systems where sysfs writes are not
+ * supported by the driver.  Failures in both paths are silently ignored. */
+static void set_dpms(const std::string &state)
+{
+	if (sysfs_dpms_set(state))
+		return;
+
+	/* xset fallback: drop the hardcoded DISPLAY=:0 so the calling session's
+	 * display (if any) is used; suppress all output to avoid blocking on
+	 * missing X11 or Wayland-only setups. */
+	system(std::format("xset dpms force {} >/dev/null 2>&1", state).c_str());
 }
 
 static void backlight_calibration(void)
@@ -339,17 +376,17 @@ static void backlight_calibration(void)
 		sleep(1);
 	}
 	printf(_("Calibrating idle\n"));
-	try_xset_dpms("off");
+	set_dpms("off");
 	one_measurement(15, 15, "");
-	try_xset_dpms("on");
+	set_dpms("on");
 }
 
 static void idle_calibration(void)
 {
 	printf(_("Calibrating idle\n"));
-	try_xset_dpms("off");
+	set_dpms("off");
 	one_measurement(15, 15, "");
-	try_xset_dpms("on");
+	set_dpms("on");
 }
 
 

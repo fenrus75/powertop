@@ -1,6 +1,6 @@
 # PowerTOP Release Notes
 
-## v2.16-rc3
+## v2.16
 
 ### User-visible enhancements and changes
 
@@ -24,6 +24,7 @@ The following sysfs tunables have been added (sourced from the
 | Intel energy performance preference | `/sys/devices/system/cpu/cpufreq/policy*/energy_performance_preference` | `balance_performance` |
 | Intel Xe GPU power profile | `/sys/class/drm/card*/device/tile*/gt*/freq0/power_profile` | `power_saving` |
 | Enable Audio codec power management | `/sys/module/snd_hda_intel/parameters/power_save` | `1` |
+| AMD GPU panel power savings | `/sys/class/drm/*/amdgpu/panel_power_savings` | `2` |
 
 Wildcard sysfs paths (e.g. `cpu*`) are now handled natively — PowerTOP
 applies the tunable to all matching sysfs files and reports Good only when
@@ -39,6 +40,10 @@ all of them are already at the suggested value.
 - GPU tab: C0/C6 idle bars merged into a single two-colour bar
   (red = busy/C0, bright green = idle/C6) since C0 is derived from C6
 - GPU tab: active xe power profile displayed on the Power Overview section
+- GPU tab: only shown on systems with Intel Xe GPU and xe hwmon present
+- CPU Frequency Stats tab: redesigned with progress bars, corrected bar
+  width and spacing, and fixed C0 active column misalignment in Idle stats
+- CPU Frequency Stats tab: empty cores are skipped in display
 - Show "Preparing to take measurements" message during the initial
   one-second measurement so the screen is no longer blank at startup
 - Vertical scrollbar added to tab content panes
@@ -54,6 +59,8 @@ all of them are already at the suggested value.
 - Markdown report output format added (`--output=file.md`)
 
 **Correctness / stability fixes**
+- `--calibrate`: display power control now uses sysfs DRM DPMS directly,
+  falling back to xset only if needed — works on X11, Wayland, and headless
 - Fixed three memory leaks found by Valgrind (power meters, tuning
   window, wakeup tab window)
 - Fixed double-free in devfreq cleanup
@@ -64,6 +71,8 @@ all of them are already at the suggested value.
   calculations
 - Fixed `--batch` mode numeric safety and i18n issues
 - Fixed halfdelay timeout clamping to valid ncurses range
+- Fixed null pointer dereference when accessing first CPU in some configs
+- Fixed potential memory leak in GPU handler initialisation
 
 **Translations**
 - 17 previously missing source files added to translation coverage
@@ -89,4 +98,5 @@ We thank the following external contributors who submitted patches for this rele
 - rottenpants466
 - Simon Howard
 - Steven Rostedt
+- vallode
 - Zentaro Kavanagh

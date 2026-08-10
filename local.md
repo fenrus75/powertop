@@ -358,6 +358,21 @@ every intercepted call to stderr with `[pttest]` prefix (path, type, result).
 No recompile required — detected via env var in the constructor.
 Use this to diagnose which records are missing from a fixture.
 
+# Calibration DPMS control (issue #110)
+
+`calibrate.cpp` uses a two-tier display power control:
+1. `sysfs_dpms_set(state)` — writes `state + "\n"` to each enabled DRM connector's
+   `/sys/class/drm/card*/card*-*/dpms` attribute; works on X11, Wayland, headless.
+   Returns `true` if at least one connector was written.
+2. `set_dpms(state)` — calls sysfs first; if that returns false, falls back to
+   `xset dpms force {state} >/dev/null 2>&1` (no hardcoded `DISPLAY=:0`).
+
+Brightness calibration already uses sysfs (`/sys/class/backlight/*/brightness`)
+directly — no display-server dependency there.
+
+The connector discovery mirrors `backlight.cpp:dpms_screen_on()`:
+outer loop finds `card0`/`card1` (no '-'), inner loop finds `card0-HDMI-A-1` (has '-').
+
 # Systematic code review workflow (file-by-file from a git tag)
 
 To review all changes since a tag:

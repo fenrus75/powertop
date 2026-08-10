@@ -53,6 +53,7 @@ src/tuning/ethernet.cpp
 src/tuning/nl80211.h
 src/tuning/runtime.cpp
 src/tuning/tunable.cpp
+src/tuning/tunable.h
 src/tuning/tuning.cpp
 src/tuning/tuningi2c.cpp
 src/tuning/tuningsysfs.cpp
@@ -60,5 +61,6 @@ src/tuning/tuningusb.cpp
 src/tuning/wifi.cpp
 src/wakeup/waketab.cpp
 src/wakeup/wakeup.cpp
+src/wakeup/wakeup.h
 src/wakeup/wakeup_ethernet.cpp
 src/wakeup/wakeup_usb.cpp

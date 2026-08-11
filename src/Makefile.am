@@ -15,6 +15,8 @@ powertop_SOURCES = \
 	lib.h \
 	main.cpp \
 	powertop.css \
+	gpu-tab.cpp \
+	gpu-tab.h \
 	\
 	calibrate/calibrate.cpp \
 	calibrate/calibrate.h \
@@ -33,6 +35,9 @@ powertop_SOURCES = \
 	cpu/intel_cpus.cpp \
 	cpu/intel_cpus.h \
 	cpu/intel_gpu.cpp \
+	cpu/frequency.cpp \
+	cpu/frequency.h \
+	cpu/xe_gpu.cpp \
 	cpu/rapl/rapl_interface.cpp \
 	cpu/rapl/rapl_interface.h \
 	devices/ahci.cpp \
@@ -61,6 +66,9 @@ powertop_SOURCES = \
 	devices/thinkpad-light.h \
 	devices/usb.cpp \
 	devices/usb.h \
+	devices/device_manager.cpp \
+	devices/xe-gpu.cpp \
+	devices/xe-gpu.h \
 	measurement/acpi.cpp \
 	measurement/acpi.h \
 	measurement/extech.cpp \
@@ -69,6 +77,7 @@ powertop_SOURCES = \
 	measurement/measurement.h \
 	measurement/sysfs.cpp \
 	measurement/sysfs.h \
+	measurement/measurement_manager.cpp \
 	measurement/opal-sensors.cpp \
 	measurement/opal-sensors.h \
 	parameters/learn.cpp \
@@ -101,6 +110,8 @@ powertop_SOURCES = \
 	report/report-formatter-csv.h \
 	report/report-formatter-html.cpp \
 	report/report-formatter-html.h \
+	report/report-formatter-md.cpp \
+	report/report-formatter-md.h \
 	report/report-formatter.h \
 	report/report-maker.cpp \
 	report/report-maker.h \

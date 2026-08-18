@@ -300,8 +300,10 @@ Call sites use `std::chrono::system_clock::now()` instead of `time(nullptr)`.
 
 ## Coverage baseline (build_acov, test suite + one --once run)
 
-lines: **69.7%** (6331/9078)  functions: **75.4%** (741/983)
-Snapshot saved to: `/tmp/pt_baseline_src.info` and `/tmp/pt_baseline_html/`
+**v2.16:** lines: **70.0%** (6940/9908)  functions: **76.5%** (811/1060)
+Snapshot saved to: `/tmp/pt_v2.16_html/`
+
+Previous (commit 8906999): lines: 69.7% (6331/9078)  functions: 75.4% (741/983)
 
 # Valgrind memory leak policy
 

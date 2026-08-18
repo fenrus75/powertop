@@ -1,5 +1,37 @@
 # PowerTOP Release Notes
 
+## v2.16.1-rc1
+
+### User-visible enhancements and changes
+
+This is a build-system focused maintenance release; there are no new
+tunables, UI changes, or user-facing features in this cycle.
+
+- Fixed build failures on distributions with newer autotools toolchains by
+  bumping the autoconf C++ standard requirement to C++20, matching the
+  Meson build
+- Added previously-missing source files to `src/Makefile.am` so the
+  (legacy) autoconf build no longer fails to link on some configurations
+- Removed the legacy autoconf build support entirely (Meson is now the
+  sole supported build system), eliminating a class of build breakage
+  reports caused by the two build systems drifting out of sync
+
+### New command-line options
+
+None in this cycle.
+
+### Internal changes
+
+Removed `autogen.sh` and `configure.ac`; Meson is now the only supported
+build system, which removes the maintenance burden of keeping two build
+definitions in sync.
+
+### Thanks
+
+We thank the following external contributors who submitted patches for this release:
+
+- Michael Vetter
+
 ## v2.16
 
 ### User-visible enhancements and changes

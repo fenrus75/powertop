@@ -1,5 +1,5 @@
 project('powertop', 'cpp', 'c',
-  version: '2.16',
+  version: '2.16.1-rc1',
   meson_version: '>= 0.56.0',
   default_options: [
     'cpp_std=c++20',

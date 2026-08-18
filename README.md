@@ -7,9 +7,10 @@ settings, for cases where the Linux distribution has not enabled those settings.
 
 ## Recent releases
 
-| Version   | Highlights |
-|-----------|------------|
-| v2.16     | AMD GPU tunable, CPU stats TUI redesign, Wayland-safe calibration, 14 new tunables |
+| Version      | Highlights |
+|--------------|------------|
+| v2.16.1-rc1  | Build-system fixes: autoconf C++20 bump, missing Makefile.am files, legacy autoconf removed |
+| v2.16        | AMD GPU tunable, CPU stats TUI redesign, Wayland-safe calibration, 14 new tunables |
 | v2.16-rc3 | GPU tab visual polish: colour bars, combined idle bar, power profile display |
 | v2.16-rc2 | Vertical scrollbar, terminal resize support, `--once` / `--auto-tune-dump` options, Meson build, C++20 |
 | v2.15     | Previous stable release |

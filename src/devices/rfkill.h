@@ -54,6 +54,15 @@ public:
 	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
 	virtual bool power_valid(void) const override { return utilization_power_valid(rindex);};
 	virtual int grouping_prio(void) const override { return 5; };
+	/*
+	 * rfkill's "utilization" is really just the block state (0/50/100),
+	 * not a duty cycle, and the underlying radio is already represented
+	 * by its network/bluetooth device row. Keep the object around for
+	 * the "radio:<name>" power parameter but hide it from the Device
+	 * stats list to avoid a misleading "100%" row and it out-sorting
+	 * genuinely measured devices.
+	 */
+	virtual bool show_in_list(void) const override {return false;};
 	void collect_json_fields(std::string &_js) override;
 };
 

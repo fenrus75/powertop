@@ -138,6 +138,9 @@ void report_devices(void)
 		double P;
 		std::string power;
 
+		if (!d->show_in_list())
+			continue;
+
 		util = "";
 
 		if (!d->util_units().empty()) {
@@ -191,7 +194,11 @@ void show_report_devices(void)
 		cols = 3;
 
 	idx = cols;
-	rows = all_devices.size() + 1;
+	rows = 1;
+	for (auto *d : all_devices) {
+		if (d->show_in_list())
+			rows++;
+	}
 	init_std_side_table_attr(&std_table_css, rows, cols);
 
 	/* Set Title attributes */
@@ -232,6 +239,9 @@ void show_report_devices(void)
 		double P;
 		std::string util;
 		std::string power;
+
+		if (!d->show_in_list())
+			continue;
 
 		if (!d->util_units().empty()) {
 			if (d->utilization() < 1000)

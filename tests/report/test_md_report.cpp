@@ -15,7 +15,8 @@
 
 void (*ui_notify_user)(const std::string &) = nullptr;
 
-static std::string make_md_tmpfile()
+/* only used by the markdown linter checks, which depend on HAVE_MDL/HAVE_MDFORMAT */
+[[maybe_unused]] static std::string make_md_tmpfile()
 {
 	char tmp[] = "/tmp/pt_md_XXXXXX";
 	int fd = mkstemp(tmp);

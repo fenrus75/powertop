@@ -31,6 +31,7 @@
 #include <iostream>
 #include <fstream>
 #include <new>
+#include <cerrno>
 #include <cstdlib>
 #include <cstdio>
 #include <ctime>
@@ -116,6 +117,26 @@ static const struct option long_options[] =
 #endif
 	{nullptr,		0,			nullptr,		 0}
 };
+
+/*
+ * Parse the argument of a numeric command line option.  Only strictly
+ * positive values make sense for the interval/duration/count options:
+ * 0 or a negative sample interval makes one_measurement() loop forever,
+ * and a negative iteration count never terminates the report loop.
+ */
+static int parse_positive_arg(const char *arg, const char *option)
+{
+	char *end = nullptr;
+	long val;
+
+	errno = 0;
+	val = strtol(arg, &end, 10);
+	if (errno || end == arg || *end != '\0' || val < 1 || val > INT_MAX) {
+		fprintf(stderr, _("Invalid value '%s' for option %s\n"), arg, option);
+		exit(EXIT_FAILURE);
+	}
+	return static_cast<int>(val);
+}
 
 static void print_version()
 {
@@ -483,7 +504,7 @@ int main(int argc, char **argv)
 #endif
 		ui_notify_user = ui_notify_user_ncurses;
 		while (1) { /* parse commandline options */
-			c = getopt_long(argc, argv, "cC::M::r::i:qt:w:Vh", long_options, &option_index);
+			c = getopt_long(argc, argv, "cC::M::r::i:qs:t:w:Vh", long_options, &option_index);
 			/* Detect the end of the options. */
 			if (c == -1)
 				break;
@@ -549,17 +570,23 @@ int main(int argc, char **argv)
 				}
 				break;
 			case 'i':
-				iterations = (optarg ? atoi(optarg) : 1);
+				iterations = 1;
+				if (optarg)
+					iterations = parse_positive_arg(optarg, "--iteration");
 				break;
 			case 'q':
 				if (!freopen("/dev/null", "a", stderr))
 					fprintf(stderr, _("Quiet mode failed!\n"));
 				break;
 			case 's':
-				sample_interval = (optarg ? atoi(optarg) : 5);
+				sample_interval = 5;
+				if (optarg)
+					sample_interval = parse_positive_arg(optarg, "--sample");
 				break;
 			case 't':
-				time_out = (optarg ? atoi(optarg) : 20);
+				time_out = 20;
+				if (optarg)
+					time_out = parse_positive_arg(optarg, "--time");
 				break;
 			case 'w':		/* measure workload */
 				workload = optarg ? optarg : "";

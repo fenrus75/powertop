@@ -24,6 +24,7 @@
  */
 #include "parameters.h"
 #include "../measurement/measurement.h"
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
@@ -427,16 +428,23 @@ int global_power_override = 0;
 int global_run_times=0;
 /*
  * only report power numbers once we have 3* more measurements than
- * we have parameters; anything less and our model fit is highly suspect
+ * we have parameters; anything less and our model fit is highly suspect.
+ *
+ * past_results never holds more than MAX_PARAM entries (older entries
+ * are replaced once it is full), so cap the requirement: with 250 or
+ * more parameters "3 * parameters" could otherwise never be reached and
+ * power estimates would never be shown.
  */
 int global_power_valid(void)
 {
-	if (past_results.size() > 3 * all_parameters.parameters.size())
+	const size_t needed = std::min<size_t>(3 * all_parameters.parameters.size(), MAX_PARAM - 1);
+
+	if (past_results.size() > needed)
 		return 1;
 
 	if (!past_results.empty() && global_run_times < 1){
 		fprintf(stderr, _("To show power estimates do %ld measurement(s) connected to battery only\n"),
-			(3 * all_parameters.parameters.size()) - past_results.size());
+			static_cast<long>(needed + 1 - past_results.size()));
 		global_run_times += 1;
 	}
 

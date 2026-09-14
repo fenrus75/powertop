@@ -183,17 +183,21 @@ static void do_sleep(int seconds)
 			show_next_tab();
 			break;
 		case KEY_RIGHT:
+		case 'l':
 			cursor_right();
 			break;
 		case KEY_LEFT:
+		case 'h':
 			cursor_left();
 			break;
 		case KEY_NPAGE:
 		case KEY_DOWN:
+		case 'j':
 			cursor_down();
 			break;
 		case KEY_PPAGE:
 		case KEY_UP:
+		case 'k':
 			cursor_up();
 			break;
 		case ' ':

@@ -426,9 +426,8 @@ static void powertop_init(int auto_tune)
 		if (system("/sbin/modprobe msr > /dev/null 2>&1"))
 			fprintf(stderr, _("modprobe msr failed\n"));
 #endif
-		statfs("/sys/kernel/debug", &st_fs);
-
-		if (st_fs.f_type != (long) DEBUGFS_MAGIC) {
+		/* st_fs is not filled in when statfs() fails (e.g. no /sys/kernel/debug) */
+		if (statfs("/sys/kernel/debug", &st_fs) != 0 || st_fs.f_type != (long) DEBUGFS_MAGIC) {
 			if (pt_access("/bin/mount", X_OK) == 0) {
 				ret = system("/bin/mount -t debugfs debugfs /sys/kernel/debug > /dev/null 2>&1");
 			} else {

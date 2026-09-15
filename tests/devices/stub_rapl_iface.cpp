@@ -23,15 +23,28 @@ static double pp0_seq[8]  = {}; static int pp0_idx = 0, pp0_cnt = 0;
 static double dram_seq[8] = {}; static int dram_idx = 0, dram_cnt = 0;
 static double pp1_seq[8]  = {}; static int pp1_idx = 0, pp1_cnt = 0;
 
+/* When set, the *next* get_*_energy_status() call for that domain fails
+ * (returns -1) and, like the real implementation, leaves its output
+ * argument completely untouched — this lets tests reproduce "the RAPL
+ * read failed" without needing real (or faked) uninitialized memory. */
+static bool pp0_fail_next  = false;
+static bool dram_fail_next = false;
+static bool pp1_fail_next  = false;
+
 void rapl_stub_reset()
 {
     rapl_pp0_present = rapl_dram_present = rapl_pp1_present = false;
     pp0_idx = pp0_cnt = dram_idx = dram_cnt = pp1_idx = pp1_cnt = 0;
+    pp0_fail_next = dram_fail_next = pp1_fail_next = false;
 }
 
 void rapl_push_pp0_energy(double v)  { assert(pp0_cnt  < 8); pp0_seq[pp0_cnt++]   = v; }
 void rapl_push_dram_energy(double v) { assert(dram_cnt < 8); dram_seq[dram_cnt++] = v; }
 void rapl_push_pp1_energy(double v)  { assert(pp1_cnt  < 8); pp1_seq[pp1_cnt++]   = v; }
+
+void rapl_fail_next_pp0_energy(void)  { pp0_fail_next  = true; }
+void rapl_fail_next_dram_energy(void) { dram_fail_next = true; }
+void rapl_fail_next_pp1_energy(void)  { pp1_fail_next  = true; }
 
 /* ── c_rapl_interface stubs ──────────────────────────────────────── */
 
@@ -67,6 +80,7 @@ int c_rapl_interface::get_pkg_power_limit([[maybe_unused]] uint64_t *v) const{ r
 int c_rapl_interface::set_pkg_power_limit([[maybe_unused]] uint64_t v)  { return -1; }
 
 int c_rapl_interface::get_dram_energy_status(double *s) const{
+    if (dram_fail_next) { dram_fail_next = false; return -1; }
     assert(dram_idx < dram_cnt && "dram energy queue exhausted — unexpected call");
     *s = dram_seq[dram_idx++]; return 0;
 }
@@ -77,6 +91,7 @@ int c_rapl_interface::get_dram_power_limit([[maybe_unused]] uint64_t *v) const{ 
 int c_rapl_interface::set_dram_power_limit([[maybe_unused]] uint64_t v)  { return -1; }
 
 int c_rapl_interface::get_pp0_energy_status(double *s) const{
+    if (pp0_fail_next) { pp0_fail_next = false; return -1; }
     assert(pp0_idx < pp0_cnt && "pp0 energy queue exhausted — unexpected call");
     *s = pp0_seq[pp0_idx++]; return 0;
 }
@@ -85,6 +100,7 @@ int c_rapl_interface::set_pp0_power_limit([[maybe_unused]] uint64_t v)  { return
 int c_rapl_interface::get_pp0_power_policy([[maybe_unused]] unsigned int *p) const{ return -1; }
 
 int c_rapl_interface::get_pp1_energy_status(double *s) const{
+    if (pp1_fail_next) { pp1_fail_next = false; return -1; }
     assert(pp1_idx < pp1_cnt && "pp1 energy queue exhausted — unexpected call");
     *s = pp1_seq[pp1_idx++]; return 0;
 }

@@ -20,6 +20,7 @@ void rapl_stub_reset();
 void rapl_push_pp0_energy(double v);
 void rapl_push_dram_energy(double v);
 void rapl_push_pp1_energy(double v);
+void rapl_fail_next_pp1_energy(void);
 
 static void reset_replay()
 {
@@ -299,6 +300,43 @@ static void test_gpu_rapl_near_zero_delta()
     reset_replay();
 }
 
+/*
+ * Regression test for a bug where end_measurement() declared its local
+ * "energy" uninitialized and passed it to get_pp1_energy_status(),
+ * which leaves the output argument untouched on failure (e.g. PP1
+ * domain disappears, powercap energy_uj unreadable/unparsable, or a
+ * failed MSR read).  consumed_power was then computed from garbage
+ * stack memory instead of the guaranteed "no change" (0 W) result.
+ * The fix initializes energy = last_energy before the call, so a
+ * failed read must deterministically yield consumed_power == 0.0 and
+ * must not corrupt last_energy for the next measurement cycle.
+ */
+static void test_gpu_rapl_failed_read_yields_zero_power()
+{
+    rapl_stub_reset();
+    rapl_pp1_present = true;
+    rapl_push_pp1_energy(500.0);   /* constructor: last_energy = 500 */
+    rapl_push_pp1_energy(520.0);   /* start_measurement: last_energy = 520 */
+
+    i915gpu parent;
+    begin_replay(DATA_DIR + "/rapl_domain_cycle.ptrecord");
+
+    gpu_rapl_device dev(&parent);
+    dev.start_measurement();
+
+    /* Simulate the RAPL read failing during end_measurement(); no
+     * energy value is queued for it, so a stray read would fail the
+     * "queue exhausted" assert instead of silently succeeding. */
+    rapl_fail_next_pp1_energy();
+    dev.end_measurement();
+
+    PT_ASSERT_TRUE(dev.power_usage(nullptr, nullptr) == 0.0);
+
+    std::string js = dev.serialize();
+    PT_ASSERT_TRUE(js.find("\"last_energy\":520") != std::string::npos);
+    reset_replay();
+}
+
 static void test_gpu_rapl_device_json()
 {
     rapl_stub_reset();
@@ -331,6 +369,7 @@ int main()
     PT_RUN_TEST(test_gpu_rapl_domain_cycle);
     PT_RUN_TEST(test_gpu_rapl_zero_delta);
     PT_RUN_TEST(test_gpu_rapl_near_zero_delta);
+    PT_RUN_TEST(test_gpu_rapl_failed_read_yields_zero_power);
     PT_RUN_TEST(test_gpu_rapl_device_json);
     return pt_test_summary();
 }

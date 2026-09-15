@@ -386,4 +386,12 @@ if valgrind.found() and get_option('b_sanitize') == 'none'
     timeout: 120,
     suite: 'valgrind',
   )
+  if get_option('enable-tests')
+    test('valgrind-rapl-devices',
+      valgrind,
+      args: valgrind_common_args + [ test_rapl_devices_exe.full_path() ],
+      timeout: 120,
+      suite: 'valgrind',
+    )
+  endif
 endif

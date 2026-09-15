@@ -472,3 +472,22 @@ After all files done: run `ninja -C build_tf test` (60/60), then commit with det
 - User preference: prefer `EXIT_FAILURE`/`EXIT_SUCCESS` over bare
   `exit(1)`/`exit(0)`, and prefer `std::from_chars` (C++23) over
   `strtol`/`strtoul`/`atoi` for numeric CLI argument parsing.
+
+# turbostar MCP tool fix update (2026-09-15)
+
+- `fs_compile_project` was fixed (server working directory now correctly
+  points at this project instead of `sandstone`) and is confirmed working:
+  it runs `meson compile -C build` against the real `build` dir, correctly
+  reports "no work to do" when clean and does real incremental
+  recompiles/relinks when files change. Safe to use again for this repo.
+- `run_cpp` was only *partially* fixed by the same working-directory
+  change: compilation now correctly happens under
+  `<project>/build/tmp_cpp/` and produces valid, runnable ELF binaries
+  (verified manually with `file` + direct execution — they run fine), but
+  the tool's own execution step still fails with exit 127 "No such file
+  or directory" immediately after compiling, even though the binary is
+  present on disk. Root cause looks like a separate bug (path
+  resolution/timing) in the tool's run step, not the working-directory
+  issue. Do not rely on `run_cpp` for this project yet; still use
+  `turbostar-run_cpp`'s bash-equivalent (write a temp .cpp, `g++`, run
+  manually) or plain bash g++ as a workaround if needed.

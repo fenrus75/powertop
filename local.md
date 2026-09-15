@@ -528,3 +528,28 @@ After all files done: run `ninja -C build_tf test` (60/60), then commit with det
   include), so wiring individual test executables into the top-level
   `valgrind` suite block is straightforward — no need to duplicate the
   `valgrind`/`valgrind_common_args` definitions inside subdirs.
+
+# std::from_chars gotcha: no leading '+' for floating point (2026-09-15)
+
+- Unlike `strtod`/`strtol`, `std::from_chars` for **floating-point**
+  types does NOT accept a leading `+` sign (only `-` is recognized
+  outside an exponent, per the C++ standard's grammar for
+  `from_chars`). If replacing `strtod()` with `from_chars()` and the
+  input string may be explicitly `+`-prefixed (e.g.
+  `src/measurement/extech.cpp`'s BCD-decoded values, which
+  `decode_extech_value()` always prefixes with `+` or `-`), skip a
+  leading `+` manually before calling `from_chars()`, or the call will
+  fail with `ec != std::errc()` for every positive value. This bit us
+  when modernizing `extech.cpp`'s `strtod()` call — caught it with a
+  quick standalone g++ probe before committing, not by the test suite
+  (no existing unit test covers `parse_packet()`'s numeric parsing).
+  Integer `from_chars` does not have this restriction and works as a
+  drop-in replacement for `strtol`/`strtoul`/`strtoull` when the
+  input has already been range/format validated.
+- When modernizing a `strto*()` call whose input isn't obviously
+  strictly numeric (e.g. `/proc/<name>` directory entries, which
+  include non-pid pseudo-entries like "sys"/"net"), prefer treating a
+  failed/partial `from_chars` parse as "reject this entry" rather than
+  the old silent-zero behavior of `strtoull` on invalid input — this
+  is both more correct and matches the project's general preference
+  for explicit validation over silent fallback to 0/garbage.

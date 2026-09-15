@@ -31,7 +31,8 @@
 #include <iostream>
 #include <fstream>
 #include <new>
-#include <cerrno>
+#include <charconv>
+#include <cstring>
 #include <cstdlib>
 #include <cstdio>
 #include <ctime>
@@ -126,16 +127,15 @@ static const struct option long_options[] =
  */
 static int parse_positive_arg(const char *arg, const char *option)
 {
-	char *end = nullptr;
-	long val;
+	int val = 0;
+	const char *last = arg + std::strlen(arg);
+	std::from_chars_result res = std::from_chars(arg, last, val);
 
-	errno = 0;
-	val = strtol(arg, &end, 10);
-	if (errno || end == arg || *end != '\0' || val < 1 || val > INT_MAX) {
+	if (res.ec != std::errc() || res.ptr != last || val < 1) {
 		fprintf(stderr, _("Invalid value '%s' for option %s\n"), arg, option);
 		exit(EXIT_FAILURE);
 	}
-	return static_cast<int>(val);
+	return val;
 }
 
 static void print_version()
@@ -149,7 +149,8 @@ static bool set_refresh_timeout()
 	mvprintw(1, 0, "%s (currently %u): ", _("Set refresh time out"), time_out);
 	buf = get_user_input(3);
 	show_tab(0);
-	unsigned time = strtoul(buf.c_str(), nullptr, 0);
+	unsigned time = 0;
+	std::from_chars(buf.data(), buf.data() + buf.size(), time);
 	if (!time) return 0;
 	if (time > 32) time = 32;
 	time_out = time;
@@ -378,7 +379,7 @@ void make_report(const int time, const std::string &workload, const int iteratio
 	clear_cpu_data();
 	clean_shutdown();
 
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
 
 static void checkroot() {
@@ -523,14 +524,14 @@ int main(int argc, char **argv)
 			case 'c':
 				powertop_init(0);
 				calibrate();
-				exit(0);
+				exit(EXIT_SUCCESS);
 			case 'M':
 				reporttype = REPORT_MD;
 				filename = optarg ? optarg : "powertop.md";
 				if (filename.empty())
 				{
 					fprintf(stderr, _("Invalid Markdown filename\n"));
-					exit(1);
+					exit(EXIT_FAILURE);
 				}
 				break;
 			case 'C':		/* csv report */
@@ -539,7 +540,7 @@ int main(int argc, char **argv)
 				if (filename.empty())
 				{
 					fprintf(stderr, _("Invalid CSV filename\n"));
-					exit(1);
+					exit(EXIT_FAILURE);
 				}
 				break;
 #ifdef ENABLE_TEST_FRAMEWORK
@@ -566,7 +567,7 @@ int main(int argc, char **argv)
 				if (filename.empty())
 				{
 					fprintf(stderr, _("Invalid HTML filename\n"));
-					exit(1);
+					exit(EXIT_FAILURE);
 				}
 				break;
 			case 'i':
@@ -593,15 +594,15 @@ int main(int argc, char **argv)
 				break;
 			case 'V':
 				print_version();
-				exit(0);
+				exit(EXIT_SUCCESS);
 				break;
 			case 'h':
 				print_usage();
-				exit(0);
+				exit(EXIT_SUCCESS);
 				break;
 			case '?':		/* Unknown option */
 				/* getopt_long already printed an error message. */
-				exit(1);
+				exit(EXIT_FAILURE);
 				break;
 			}
 		}
@@ -622,7 +623,7 @@ int main(int argc, char **argv)
 			learn_parameters(1000, 1);
 			dump_parameter_bundle();
 			end_pci_access();
-			exit(0);
+			exit(EXIT_SUCCESS);
 		}
 		if (!auto_tune)
 			init_display();

@@ -491,3 +491,40 @@ After all files done: run `ninja -C build_tf test` (60/60), then commit with det
   issue. Do not rely on `run_cpp` for this project yet; still use
   `turbostar-run_cpp`'s bash-equivalent (write a temp .cpp, `g++`, run
   manually) or plain bash g++ as a workaround if needed.
+
+# RAPL stub fail-injection pattern for uninitialized-value regressions (2026-09-15)
+
+- `tests/devices/stub_rapl_iface.cpp` now supports simulating "domain
+  present but this one read call fails" via
+  `rapl_fail_next_pp0_energy()` / `_dram_energy()` / `_pp1_energy()`.
+  These set a one-shot static flag consumed by the corresponding
+  `get_*_energy_status()`, which then returns -1 **without writing
+  `*s`**, mirroring the real interface's failure semantics exactly
+  (previously the stub could only succeed-from-queue or `assert()` on
+  an exhausted queue — there was no way to test the "leaves output
+  untouched on failure" contract that PR #223's bug was about).
+- Pattern for writing this kind of regression test: reset the stub,
+  push queued values for the constructor + `start_measurement()` reads,
+  call `rapl_fail_next_pp1_energy()` right before the call under test
+  (e.g. `end_measurement()`), then assert the device's computed power
+  is deterministically `0.0` (works because the correct fix is
+  `energy = last_energy` before the read) and that `last_energy` in
+  `serialize()`/JSON output is unchanged from the last successful
+  reading — i.e. the failed read must not corrupt state.
+- To verify a test like this actually catches the bug (not just
+  "happens to observe 0 by luck"): temporarily revert the fix, rebuild,
+  and run the test binary under `valgrind --track-origins=yes` — an
+  uninitialized-stack-double bug reliably produces both an assertion
+  failure (garbage-derived non-zero power) AND valgrind
+  "Uninitialised value" errors. Always restore the fix afterwards.
+- Added a `valgrind` meson-suite entry (`valgrind-rapl-devices`) that
+  runs `tests/devices/powertop-test-rapl-devices` under valgrind
+  alongside the existing `valgrind-tui`/`valgrind-html`/etc. entries —
+  this means future regressions of this class are caught automatically
+  by `meson test --suite valgrind`, not just by luck of a deterministic
+  assertion. Note: variables from `subdir('tests')` (e.g.
+  `test_rapl_devices_exe`) ARE visible in the top-level `meson.build`
+  after the `subdir()` call returns (Meson shares scope like a textual
+  include), so wiring individual test executables into the top-level
+  `valgrind` suite block is straightforward — no need to duplicate the
+  `valgrind`/`valgrind_common_args` definitions inside subdirs.

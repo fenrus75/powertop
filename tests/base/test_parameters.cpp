@@ -184,6 +184,33 @@ static void test_global_power_valid_insufficient()
 	PT_ASSERT_TRUE(global_power_valid() == 0);
 }
 
+/*
+ * Issue #119 / #168: past_results never grows beyond MAX_PARAM entries,
+ * so with 250 or more parameters "more than 3 * parameters" results is
+ * unreachable.  Power estimates must become valid once the results
+ * store is full.
+ */
+static void test_global_power_valid_many_parameters()
+{
+	for (int i = 0; i < 300; i++)
+		register_parameter(std::format("test-many-param-{}", i));
+	PT_ASSERT_TRUE(3 * all_parameters.parameters.size() >= MAX_PARAM);
+
+	past_results.clear();
+	global_power_override = 0;
+	for (int i = 0; i < MAX_PARAM - 1; i++)
+		past_results.push_back(new struct result_bundle);
+	PT_ASSERT_TRUE(global_power_valid() == 0);
+
+	past_results.push_back(new struct result_bundle);
+	PT_ASSERT_TRUE(past_results.size() == MAX_PARAM);
+	PT_ASSERT_TRUE(global_power_valid() == 1);
+
+	for (auto *r : past_results)
+		delete r;
+	past_results.clear();
+}
+
 static void test_get_param_directory_no_crash()
 {
 	std::string dir = get_param_directory("test.dat");
@@ -212,6 +239,7 @@ int main()
 	PT_RUN_TEST(test_utilization_power_valid_no_past);
 	PT_RUN_TEST(test_utilization_power_valid_varying);
 	PT_RUN_TEST(test_global_power_valid_insufficient);
+	PT_RUN_TEST(test_global_power_valid_many_parameters);
 	PT_RUN_TEST(test_get_param_directory_no_crash);
 	PT_RUN_TEST(test_result_device_exists_empty);
 	return pt_test_summary();

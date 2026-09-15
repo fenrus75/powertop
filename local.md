@@ -396,3 +396,79 @@ Structural issues to propose to user (require confirmation):
 
 After all files done: run `ninja -C build_tf test` (60/60), then commit with detailed message.
 
+
+# turbostar MCP tool notes (2026-09-01)
+
+- `fs_compile_project` without `clean: true` just runs `meson compile`; if a
+  `ninja clean` was run out-of-band (or in a different shell) it can report
+  "no work to do" without indicating anything is stale. Pass `clean: true`
+  to force a real rebuild when in doubt.
+- `fs_run_tests` targets a hardcoded `build` dir path and failed with
+  "No such build data file" in this environment even though that `build`
+  dir was configured/compiled fine via `fs_compile_project`. Falling back
+  to `ninja -C build_tf test` via bash worked (60/60 pass). Don't rely on
+  `fs_run_tests` here for now — use the `build_tf` test-framework build
+  directly.
+- Device display convention: a `device` subclass that should exist purely
+  for parameter/power accounting (not shown in Device stats) should
+  override `show_in_list()` to return `false`, matching `cpudevice`,
+  `i915gpu`, `xe-gpu`, and now `rfkill`. Both loops in
+  `device_manager.cpp` (`report_devices`, `show_report_devices`) honor
+  `show_in_list()`, so new hidden-by-default devices don't need further
+  changes there.
+- Before committing, always check `git status`/`git diff --staged` for
+  pre-existing staged changes unrelated to the task — a stale staged
+  deletion of `Makefile.am` almost got swept into an unrelated commit here
+  because it was already in the index before `git add <specific paths>`
+  was run.
+- turbostar's crash catcher intercepts every crash of anything run via its
+  process tools (`agent_start_app`, and once fixed, `fs_run_tests`) — not
+  just the app under test. A crashing unit test therefore won't just show
+  up as a bare test failure; check `crashdump_list` / `crashdump_get_info`
+  whenever a run reports an unexpected failure, since a full backtrace
+  (with source file/line when built with debug symbols) is likely already
+  captured and can save a manual gdb/coredumpctl session.
+- This also catches `assert()` failures (SIGABRT), not just segfaults —
+  the crash dump includes the assertion expression/message itself, so a
+  failing `assert(x == y)` in a test shows up as a proper crash report,
+  not just a bare abort trace. Treat assertion-failure test output the
+  same way: check the crash dump instead of only reading stdout/stderr.
+- `crashdump_get_info` crash IDs are cached per unique crash signature;
+  rerunning the exact same crash without an intervening `crashdump_clear`
+  can return the *same* crash_id from a previous run rather than a fresh
+  one — call `crashdump_clear` first if you need to confirm a fix produced
+  a genuinely new (or no) crash.
+- With debug symbols, `crashdump_get_info` resolves user frames to
+  `file:line` and adds a "Codemap Summary" table of function ranges, but
+  still doesn't show the crashing source line or the faulting argument
+  value inline — use `agent_debug_coredump` + `bt full` to get local/arg
+  values (e.g. `foo(c=0x0)`) in one shot when the concise report isn't
+  enough.
+
+# PR review workflow notes (2026-09-15)
+
+- `gh` CLI works directly for PR review here — no separate web access
+  needed. Useful commands: `gh pr view <n> --json ...`, `gh pr diff <n>`,
+  `gh pr checks <n>`, `gh pr merge <n> --merge --delete-branch=false`.
+- To build/test a specific PR without disturbing the main worktree, use
+  `git fetch origin pull/<n>/head:pr-<n>` + `git worktree add /tmp/pr<n>
+  pr-<n>`, build in a separate meson dir there, then
+  `git worktree remove /tmp/pr<n> --force && git branch -D pr-<n>` to
+  clean up.
+- `fs_compile_project` is **broken for this repo currently** (tries
+  `make -C build`, but the project is Meson+Ninja with no Makefile) — do
+  not use it here; build with `ninja -C build` / `meson setup` via bash
+  instead. `fs_run_tests` also doesn't fit this project's meson test
+  layout — use `meson test -C build --print-errorlogs` via bash.
+- Per-PR review reports are saved as `review-pr-<n>.md` (not the generic
+  `review.md` from `review/review.md`'s template) since multiple PRs are
+  being reviewed in the same session and would otherwise overwrite each
+  other's report.
+- `fs_read_lines` / `fs_file_codemap` / `fs_read_symbol` are strongly
+  preferred over `view`/bash `cat` for this project: they add line
+  numbers and an auto-appended symbol codemap (function name + start/end
+  line), which is much more useful for locating code to edit than a bare
+  file dump.
+- User preference: prefer `EXIT_FAILURE`/`EXIT_SUCCESS` over bare
+  `exit(1)`/`exit(0)`, and prefer `std::from_chars` (C++23) over
+  `strtol`/`strtoul`/`atoi` for numeric CLI argument parsing.

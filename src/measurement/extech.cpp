@@ -180,7 +180,8 @@ static int decode_extech_value(unsigned char byt3, unsigned char byt4, char *a)
 	for (i = 1; i < 4; i++) {
 		int dig = ((input & digit_map[i]) >> digit_shift[i]);
 		dig = revnum[dig];
-		if (dig > 0xa)
+		/* a decimal digit is 0..9; 0xa would be stored as ':' */
+		if (dig > 9)
 			goto error_exit;
 
 		a[idx++] = '0' + dig;
@@ -287,12 +288,16 @@ extech_power_meter::extech_power_meter(const std::string &extech_name) : power_m
 
 void extech_power_meter::measure(void)
 {
+	double v;
+
 	/* trigger the extech to send data */
 	if (write(fd, " ", 1) == -1)
 		 fprintf(stderr, _("Error: %s\n"), strerror(errno));
 
-	rate = extech_read(fd);
-
+	/* extech_read() returns a negative value on error, that is not a power */
+	v = extech_read(fd);
+	if (v >= 0.0)
+		rate = v;
 }
 
 void extech_power_meter::sample(void)
@@ -332,7 +337,10 @@ extern "C"
 void extech_power_meter::end_measurement(void)
 {
 	end_thread = true;
-	pthread_join( thread, nullptr);
+	if (thread_started) {
+		pthread_join(thread, nullptr);
+		thread_started = false;
+	}
 	{
 		std::lock_guard<std::mutex> lock(samples_mutex);
 		if (samples)
@@ -353,6 +361,8 @@ void extech_power_meter::start_measurement(void)
 
 	if (pthread_create(&thread, nullptr, thread_proc, this))
 		fprintf(stderr, _("ERROR: extech measurement thread creation failed\n"));
+	else
+		thread_started = true;
 
 }
 

@@ -43,6 +43,8 @@ class extech_power_meter: public power_meter {
 	 * the final power value.  Never held across blocking I/O. */
 	std::mutex samples_mutex;
 	pthread_t thread;
+	/* only join the sampling thread if pthread_create() succeeded */
+	bool thread_started = false;
 public:
 	extech_power_meter(const std::string &_dev_name);
 	virtual void start_measurement(void) override;

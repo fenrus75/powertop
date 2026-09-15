@@ -37,6 +37,7 @@
 #include <cstring>
 #include <cctype>
 #include <climits>
+#include <charconv>
 
 #include "devlist.h"
 #include "lib.h"
@@ -127,10 +128,19 @@ void collect_open_devices(void)
 				continue;
 
 			if (link.compare(0, 4, "/dev") == 0) {
+				/* /proc/ also contains non-pid entries (e.g. "sys",
+				 * "net"); skip any directory name that isn't a
+				 * plain decimal pid instead of silently using 0. */
+				unsigned int numeric_pid = 0;
+				const auto [ptr, ec] = std::from_chars(
+					pid.data(), pid.data() + pid.size(), numeric_pid);
+				if (ec != std::errc() || ptr != pid.data() + pid.size())
+					continue;
+
 				struct devuser *dev = new(std::nothrow) struct devuser;
 				if (!dev)
 					continue;
-				dev->pid = strtoull(pid.c_str(), nullptr, 10);
+				dev->pid = numeric_pid;
 				dev->device = link;
 				dev->comm = read_sysfs_string(std::format("/proc/{}/comm", pid));
 				target->push_back(dev);

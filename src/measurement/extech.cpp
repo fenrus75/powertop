@@ -60,6 +60,7 @@
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
+#include <charconv>
 
 struct packet {
 	char	buf[256];
@@ -229,7 +230,24 @@ static int parse_packet(struct packet * p)
 			fprintf(stderr, _("Invalid packet, conversion failed\n"));
 			return -1;
 		}
-		p->watts = strtod( &(p->op[8 * i]), nullptr);
+		/*
+		 * decode_extech_value() always prefixes the value with an
+		 * explicit '+' or '-' sign, but unlike strtod(),
+		 * std::from_chars() for floating point does not accept a
+		 * leading '+' (only '-' is recognized outside an exponent).
+		 * Skip a redundant '+' so the parsed magnitude keeps its
+		 * (implicitly positive) sign correctly; '-' is left in place
+		 * for from_chars() to handle natively.
+		 */
+		const char *digits = &(p->op[8 * i]);
+		if (*digits == '+')
+			digits++;
+		const std::from_chars_result conv = std::from_chars(
+			digits, digits + strlen(digits), p->watts);
+		if (conv.ec != std::errc()) {
+			fprintf(stderr, _("Invalid packet, conversion failed\n"));
+			return -1;
+		}
 	}
 	return 0;
 }

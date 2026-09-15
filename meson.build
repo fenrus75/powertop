@@ -66,7 +66,7 @@ conf_data.set_quoted('PACKAGE', meson.project_name())
 conf_data.set_quoted('PACKAGE_VERSION', meson.project_version())
 conf_data.set_quoted('PACKAGE_NAME', meson.project_name())
 conf_data.set_quoted('PACKAGE_STRING', meson.project_name() + ' ' + meson.project_version())
-conf_data.set_quoted('PACKAGE_BUGREPORT', 'powertop@lists.01.org')
+conf_data.set_quoted('PACKAGE_BUGREPORT', 'https://github.com/fenrus75/powertop/issues')
 conf_data.set_quoted('PACKAGE_URL', 'https://github.com/fenrus75/powertop')
 conf_data.set_quoted('LOCALEDIR', join_paths(get_option('prefix'), get_option('localedir')))
 

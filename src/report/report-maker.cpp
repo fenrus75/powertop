@@ -39,16 +39,15 @@
 report_maker::report_maker(report_type t)
 {
 	type = t;
-	formatter = nullptr;
 	setup_report_formatter();
 }
 
 /* ************************************************************************ */
 
-report_maker::~report_maker()
-{
-	delete formatter;
-}
+/* Defined here (rather than defaulted in the header) because report_formatter
+ * must be a complete type at the point unique_ptr's destructor is
+ * instantiated; the header only forward-declares it. */
+report_maker::~report_maker() = default;
 
 /* ************************************************************************ */
 
@@ -90,16 +89,19 @@ void report_maker::set_type(report_type t)
 
 void report_maker::setup_report_formatter()
 {
-	delete formatter;
-
+	/* Assigning a new unique_ptr automatically destroys the previous
+	 * formatter, so there is never a manual delete to forget. If
+	 * report_type ever gains a value not handled below, formatter simply
+	 * keeps holding its previous (still valid) formatter instead of being
+	 * left dangling. */
 	if (type == REPORT_HTML)
-		formatter = new report_formatter_html();
+		formatter = std::make_unique<report_formatter_html>();
 	else if (type == REPORT_CSV)
-		formatter = new report_formatter_csv();
+		formatter = std::make_unique<report_formatter_csv>();
 	else if (type == REPORT_MD)
-		formatter = new report_formatter_md();
+		formatter = std::make_unique<report_formatter_md>();
 	else if (type == REPORT_OFF)
-		formatter = new report_formatter();
+		formatter = std::make_unique<report_formatter>();
 	else
 		assert(false);
 }

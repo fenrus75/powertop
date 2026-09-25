@@ -59,6 +59,7 @@
 
 #include <stdarg.h>
 
+#include <memory>
 #include <string>
 #include <vector>
 /* Conditional gettext. We need original strings for CSV. */
@@ -106,7 +107,7 @@ class report_maker
 {
 public:
 	report_maker(report_type t);
-       ~report_maker();
+	~report_maker();
 
 	report_type get_type();
 	void set_type(report_type t);
@@ -131,6 +132,8 @@ public:
 private:
 	void setup_report_formatter();
 	report_type type = REPORT_OFF;
-	report_formatter *formatter = nullptr;
+	/* Owns the currently active formatter; replaced (never left dangling)
+	 * whenever set_type()/setup_report_formatter() picks a new one. */
+	std::unique_ptr<report_formatter> formatter;
 };
 

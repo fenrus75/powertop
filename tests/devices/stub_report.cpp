@@ -15,8 +15,8 @@ report_type reporttype = REPORT_OFF;
 struct reportstream reportout;
 
 /* ── report_maker stubs ──────────────────────────────────────────── */
-report_maker::report_maker(report_type t) : type(t), formatter(nullptr) {}
-report_maker::~report_maker() { delete formatter; }
+report_maker::report_maker(report_type t) : type(t) {}
+report_maker::~report_maker() = default;
 report_type report_maker::get_type()  { return type; }
 void report_maker::set_type(report_type t) { type = t; }
 void report_maker::finish_report()    {}

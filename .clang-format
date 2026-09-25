@@ -1,0 +1,77 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+# Based on the PowerTOP Coding Style Guide (review/style.md)
+
+# 1.1 Indentation
+IndentWidth: 8
+UseTab: Always
+TabWidth: 8
+# Continuation lines (wrapped statements/initializer lists) must stay
+# tab-indented too, not fall back to the 4-space LLVM default.
+ContinuationIndentWidth: 8
+
+# 1.2 Braces and Control Flow
+# K&R Style (Linux Kernel Variant): function definitions get their own
+# brace line, but control statements, classes/structs, and enums keep the
+# brace attached to the same line (verified against src/**/*.{cpp,h}).
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true
+  AfterClass: false
+  AfterStruct: false
+  AfterEnum: false
+  AfterUnion: false
+  AfterNamespace: false
+  AfterControlStatement: false
+  AfterExternBlock: false
+  BeforeCatch: false
+  BeforeElse: false
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+# "None" was breaking every one-line accessor in the ~150 header files
+# that follow the common `virtual std::string name(void) const { return _("x"); };`
+# pattern. "Inline" keeps those (and empty out-of-class bodies like
+# `test_framework_manager::test_framework_manager() {}`) on one line while
+# still forcing real function bodies onto their own brace line.
+AllowShortFunctionsOnASingleLine: Inline
+# The codebase relies heavily on empty `catch (...) {}` blocks (22+
+# occurrences) staying on one line; "Never" (the implicit default) was
+# splitting them across two lines.
+AllowShortBlocksOnASingleLine: Empty
+# Multi-value enums (see main.cpp's OPT_* option enum) are written one
+# enumerator per line; newer clang-format defaults collapse short enums
+# onto a single line unless this is disabled.
+AllowShortEnumsOnASingleLine: false
+ColumnLimit: 140
+
+PointerAlignment: Right
+ReferenceAlignment: Pointer
+
+# 1.3 Switch Statements
+# style.md's own example shows `case` aligned with `switch`, not indented
+# a level deeper: `IndentCaseLabels: true` was reformatting real code
+# (e.g. src/main.cpp's tab-switcher switch) to add a spurious indent level.
+IndentCaseLabels: false
+
+# 2.3 Classes and Structs
+# `public:`/`private:`/`protected:` sit at column 0 (same column as the
+# `class` keyword), not indented. The LLVM default AccessModifierOffset
+# (-2) combined with IndentWidth 8 produced a broken half-tab/half-space
+# offset ("      public:"); -IndentWidth cancels the indent completely.
+AccessModifierOffset: -8
+
+# 3.2 Comments
+# (General adherence, standard settings apply)
+
+# 4.4 Includes
+SortIncludes: true
+IncludeCategories:
+  - Regex:           '^<.*'
+    Priority:        1
+  - Regex:           '.*'
+    Priority:        2

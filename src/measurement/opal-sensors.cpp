@@ -22,15 +22,13 @@
  * Authors:
  *	Stewart Smith <stewart@linux.vnet.ibm.com>
  */
-#include "measurement.h"
 #include "opal-sensors.h"
-#include "../lib.h"
-#include <cstdio>
 #include <climits>
+#include <cstdio>
+#include "../lib.h"
+#include "measurement.h"
 
-opal_sensors_power_meter::opal_sensors_power_meter(const std::string &power_supply_name) : power_meter(power_supply_name)
-{
-}
+opal_sensors_power_meter::opal_sensors_power_meter(const std::string &power_supply_name) : power_meter(power_supply_name) {}
 
 double opal_sensors_power_meter::power(void) const
 {
@@ -47,5 +45,5 @@ double opal_sensors_power_meter::power(void) const
 
 void opal_sensors_power_meter::collect_json_fields(std::string &_js) const
 {
-    power_meter::collect_json_fields(_js);
+	power_meter::collect_json_fields(_js);
 }

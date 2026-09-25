@@ -29,146 +29,130 @@
 #include <cassert>
 #include <stdarg.h>
 
-#include "report-maker.h"
 #include "report-formatter-csv.h"
 #include "report-formatter-html.h"
 #include "report-formatter-md.h"
+#include "report-maker.h"
 
 /* ************************************************************************ */
 
 report_maker::report_maker(report_type t)
 {
-        type = t;
-        formatter = nullptr;
-        setup_report_formatter();
+	type = t;
+	formatter = nullptr;
+	setup_report_formatter();
 }
 
 /* ************************************************************************ */
 
 report_maker::~report_maker()
 {
-        delete formatter;
+	delete formatter;
 }
 
 /* ************************************************************************ */
 
-void
-report_maker::finish_report()
+void report_maker::finish_report()
 {
-        formatter->finish_report();
+	formatter->finish_report();
 }
 
 /* ************************************************************************ */
 
-std::string
-report_maker::get_result()
+std::string report_maker::get_result()
 {
-        return formatter->get_result();
+	return formatter->get_result();
 }
 
 /* ************************************************************************ */
 
-void
-report_maker::clear_result()
+void report_maker::clear_result()
 {
-        formatter->clear_result();
+	formatter->clear_result();
 }
 
 /* ************************************************************************ */
 
-report_type
-report_maker::get_type()
+report_type report_maker::get_type()
 {
-        return type;
+	return type;
 }
 
 /* ************************************************************************ */
 
-void
-report_maker::set_type(report_type t)
+void report_maker::set_type(report_type t)
 {
-        type = t;
-        setup_report_formatter();
+	type = t;
+	setup_report_formatter();
 }
 
 /* ************************************************************************ */
 
-void
-report_maker::setup_report_formatter()
+void report_maker::setup_report_formatter()
 {
-        delete formatter;
+	delete formatter;
 
-        if (type == REPORT_HTML)
-                formatter = new report_formatter_html();
-        else if (type == REPORT_CSV)
-                formatter = new report_formatter_csv();
-        else if (type == REPORT_MD)
-                formatter = new report_formatter_md();
-        else if (type == REPORT_OFF)
-                formatter = new report_formatter();
-        else
-                assert(false);
+	if (type == REPORT_HTML)
+		formatter = new report_formatter_html();
+	else if (type == REPORT_CSV)
+		formatter = new report_formatter_csv();
+	else if (type == REPORT_MD)
+		formatter = new report_formatter_md();
+	else if (type == REPORT_OFF)
+		formatter = new report_formatter();
+	else
+		assert(false);
 }
 
 /* ************************************************************************ */
 
-void
-report_maker::add(const std::string &str)
+void report_maker::add(const std::string &str)
 {
-        formatter->add(str);
+	formatter->add(str);
 }
 
 /* *** Report Style *** */
-void
-report_maker::add_logo()
+void report_maker::add_logo()
 {
-        formatter->add_logo();
+	formatter->add_logo();
 }
 
-void
-report_maker::add_header()
+void report_maker::add_header()
 {
-        formatter->add_header();
+	formatter->add_header();
 }
 
-void
-report_maker::end_header()
+void report_maker::end_header()
 {
-        formatter->end_header();
+	formatter->end_header();
 }
 
-void
-report_maker::add_title(const struct tag_attr *att_title, const std::string &title)
+void report_maker::add_title(const struct tag_attr *att_title, const std::string &title)
 {
-        formatter->add_title(att_title, title);
+	formatter->add_title(att_title, title);
 }
 
-void
-report_maker::add_div(const struct tag_attr * div_attr)
+void report_maker::add_div(const struct tag_attr *div_attr)
 {
-        formatter->add_div(div_attr);
+	formatter->add_div(div_attr);
 }
 
-void
-report_maker::end_div()
+void report_maker::end_div()
 {
-        formatter->end_div();
+	formatter->end_div();
 }
 
-void
-report_maker::add_navigation()
+void report_maker::add_navigation()
 {
-        formatter->add_navigation();
+	formatter->add_navigation();
 }
 
-void
-report_maker::add_summary_list(const std::vector<std::string> &list)
+void report_maker::add_summary_list(const std::vector<std::string> &list)
 {
-        formatter->add_summary_list(list);
+	formatter->add_summary_list(list);
 }
 
-void
-report_maker::add_table(const std::vector<std::string> &system_data, const struct table_attributes *tb_attr)
+void report_maker::add_table(const std::vector<std::string> &system_data, const struct table_attributes *tb_attr)
 {
-        formatter->add_table(system_data, tb_attr);
+	formatter->add_table(system_data, tb_attr);
 }

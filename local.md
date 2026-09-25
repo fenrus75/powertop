@@ -553,3 +553,20 @@ After all files done: run `ninja -C build_tf test` (60/60), then commit with det
   the old silent-zero behavior of `strtoull` on invalid input — this
   is both more correct and matches the project's general preference
   for explicit validation over silent fallback to 0/garbage.
+
+# Random-file-audit workflow ("random file audit Friday")
+
+- `pick_random_files.py` (repo root) walks the tree for `.cpp`/`.c` files
+  (excluding `.git`, `build*`, `subprojects`), and prints a true-random
+  sample via `random.sample()` with an OS-entropy seed (`random.seed()`
+  with no argument). Run as `python3 pick_random_files.py [N]` (default
+  N=5). Reuse this script for future audit-Friday sessions instead of
+  rewriting it.
+- The `turbostar` MCP server's `code_review` tool family (activate with
+  `turbostar-activate_tool_family name=code_review`) provides a proper
+  review-item database: `create_code_review_item`, `list_code_review_items`,
+  `resolve_code_review_item`, `confirm_code_review_item`. Prefer filing
+  findings there (with `path`/`line_number`/`severity`) over only writing a
+  markdown report, so items can be tracked to resolution across sessions.
+  `turbostar-security_scan_c` (cppcheck) is a good zero-cost extra pass to
+  run alongside manual review.

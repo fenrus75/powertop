@@ -348,17 +348,19 @@ void cursor_down(void)
 		if (ypad_max < 0)
 			ypad_max = 0;
 
-		if (w->ypad_pos < ypad_max) {
-			if (tab_names[current_tab] == "Tunables" || tab_names[current_tab] == "WakeUp") {
-		                if ((w->cursor_pos + SCROLL_MARGIN) >= LINES) {
-					prefresh(w->win, ++w->ypad_pos, w->xpad_pos,
-						PAD_TOP, PAD_LEFT, PAD_BOTTOM, PAD_RIGHT);
-				}
-					w->cursor_down();
-			} else {
+		if (tab_names[current_tab] == "Tunables" || tab_names[current_tab] == "WakeUp") {
+			/* Cursor movement must never be gated on whether the
+			 * content needs scrolling: short lists (e.g. the
+			 * WakeUp tab) legitimately have ypad_max == 0, and
+			 * that must not stop the highlighted row from moving. */
+			if ((w->cursor_pos + SCROLL_MARGIN) >= LINES && w->ypad_pos < ypad_max) {
 				prefresh(w->win, ++w->ypad_pos, w->xpad_pos,
 					PAD_TOP, PAD_LEFT, PAD_BOTTOM, PAD_RIGHT);
 			}
+			w->cursor_down();
+		} else if (w->ypad_pos < ypad_max) {
+			prefresh(w->win, ++w->ypad_pos, w->xpad_pos,
+				PAD_TOP, PAD_LEFT, PAD_BOTTOM, PAD_RIGHT);
 		}
 	}
 

@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cstdio>
+#include <memory>
 #include <ncurses.h>
 #include "wakeup.h"
 #include <vector>
@@ -14,7 +15,10 @@
 
 static bool should_clear = false;
 
-class wakeup_window *newtab_window;
+/* Owns the active WakeUp tab window; replaced (never left dangling) by
+ * initialize_wakeup(). Also aliased (non-owning) via a raw pointer in the
+ * tab_windows map for display dispatch. */
+std::unique_ptr<class wakeup_window> newtab_window;
 
 class wakeup_window: public tab_window {
 public:
@@ -32,11 +36,9 @@ static void init_wakeup(void)
 
 void initialize_wakeup(void)
 {
-	class wakeup_window *win;
+	auto win = std::make_unique<wakeup_window>();
 
-	win = new wakeup_window();
-
-	create_tab("WakeUp", _("WakeUp"), win, _(" <ESC> Exit | <Enter> Toggle wakeup | <r> Window refresh"));
+	create_tab("WakeUp", _("WakeUp"), win.get(), _(" <ESC> Exit | <Enter> Toggle wakeup | <r> Window refresh"));
 
 	init_wakeup();
 
@@ -45,10 +47,9 @@ void initialize_wakeup(void)
 	else
 		win->cursor_max = (int)wakeup_all.size() - 1;
 
-	if (newtab_window)
-		delete newtab_window;
-
-	newtab_window = win;
+	/* Assigning replaces (and destroys) whatever newtab_window previously
+	 * held, so there is no manual delete to forget. */
+	newtab_window = std::move(win);
 }
 
 static void __wakeup_update_display(int cursor_pos)
@@ -178,8 +179,7 @@ void wakeup_window::window_refresh(void)
 void shutdown_wakeup()
 {
 	tab_windows.erase("WakeUp");
-	delete newtab_window;
-	newtab_window = nullptr;
+	newtab_window.reset();
 	clear_wakeup();
 }
 

@@ -35,6 +35,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <memory>
 #include <stack>
 
 #include <cstdio>
@@ -46,7 +47,7 @@
 #include "../display.h"
 #include "../measurement/measurement.h"
 
-static  class perf_bundle * perf_events;
+static  std::unique_ptr<class perf_bundle> perf_events;
 
 std::vector <class power_consumer *> all_power;
 
@@ -690,7 +691,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 void start_process_measurement(void)
 {
 	if (!perf_events) {
-		perf_events = new perf_process_bundle();
+		perf_events = std::make_unique<perf_process_bundle>();
 		perf_events->add_event("sched","sched_switch");
 		perf_events->add_event("sched","sched_wakeup");
 		perf_events->add_event("irq","irq_handler_entry");
@@ -1260,7 +1261,6 @@ void clear_process_data(void)
 {
 	if (perf_events)
 		perf_events->release();
-	delete perf_events;
-	perf_events = nullptr;
+	perf_events.reset();
 }
 

@@ -27,6 +27,7 @@
 #include <cmath>
 #include <cstring>
 #include <cstdlib>
+#include <memory>
 #include <sstream>
 #include <ncurses.h>
 #include <unistd.h>
@@ -48,7 +49,7 @@ static class abstract_cpu system_level;
 
 std::vector<class abstract_cpu *> all_cpus;
 
-static	class perf_bundle * perf_events;
+static	std::unique_ptr<class perf_bundle> perf_events;
 
 
 
@@ -346,7 +347,7 @@ void enumerate_cpus(void)
 	if (!find_xe_card_path().empty())
 		handle_xe_gpu();
 
-	perf_events = new perf_power_bundle();
+	perf_events = std::make_unique<perf_power_bundle>();
 
 	if (!perf_events->add_event("power","cpu_idle")){
 		perf_events->add_event("power","power_start");
@@ -1166,7 +1167,7 @@ void clear_cpu_data(void)
 {
 	if (perf_events)
 		perf_events->release();
-	delete perf_events;
+	perf_events.reset();
 }
 
 

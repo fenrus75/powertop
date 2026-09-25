@@ -24,10 +24,9 @@
  */
 
 #include <algorithm>
-
 #include <cstdio>
+#include <memory>
 #include <ncurses.h>
-
 
 #include "tuning.h"
 #include "tuningi2c.h"
@@ -46,7 +45,10 @@
 static void sort_tunables(void);
 static bool should_clear = false;
 
-class tuning_window *tune_window;
+/* Owns the active Tunables tab window; replaced (never left dangling) by
+ * initialize_tuning(). Also aliased (non-owning) via a raw pointer in the
+ * tab_windows map for display dispatch. */
+std::unique_ptr<class tuning_window> tune_window;
 
 class tuning_window: public tab_window {
 public:
@@ -94,10 +96,9 @@ static void init_tuning(void)
 
 void initialize_tuning(void)
 {
-	class tuning_window *w;
+	auto w = std::make_unique<tuning_window>();
 
-	w = new tuning_window();
-	create_tab("Tunables", _("Tunables"), w, _(" <ESC> Exit | <Enter> Toggle tunable | <r> Window refresh"));
+	create_tab("Tunables", _("Tunables"), w.get(), _(" <ESC> Exit | <Enter> Toggle tunable | <r> Window refresh"));
 
 	init_tuning();
 
@@ -106,10 +107,9 @@ void initialize_tuning(void)
 	else
 		w->cursor_max = static_cast<int>(all_tunables.size()) - 1;
 
-	if (tune_window)
-		delete tune_window;
-
-	tune_window = w;
+	/* Assigning replaces (and destroys) whatever tune_window previously
+	 * held, so there is no manual delete to forget. */
+	tune_window = std::move(w);
 }
 
 
@@ -322,8 +322,7 @@ void report_show_tunables(void)
 void shutdown_tuning()
 {
 	tab_windows.erase("Tunables");
-	delete tune_window;
-	tune_window = nullptr;
+	tune_window.reset();
 	clear_tuning();
 }
 

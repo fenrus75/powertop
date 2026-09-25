@@ -576,3 +576,18 @@ commit fixing review item #1, report-maker.cpp/.h):
 - Verify with the `valgrind` meson test suite (`meson test -C build`),
   not just the plain unit tests — it's the cheapest way to confirm the
   new ownership doesn't leak or double-free.
+
+# RAII migration progress log
+
+Raw `new`/`delete` audit (2026-09-25): started at ~24 `delete` sites in
+`src/`. Converted the single-owning-pointer cases (report_maker::formatter,
+tune_window, newtab_window, cpu.cpp's perf_events, do_process.cpp's
+perf_events) to `unique_ptr` — see commits fixing review item #1 and
+"RAII pass 2". Remaining ~16 sites are all collection-ownership
+(`vector<T*>`/`map<K,T*>`: past_results, all_devices, all_timers, all_work,
+tab_windows, devlist's one/two/devpower) plus a handful of local
+"create-or-discard" temporaries that feed those same raw-pointer vectors
+(cpu_rapl_dev/dram_rapl_dev, i915-gpu's rapl_dev, runtime_pm's dev) —
+converting those cleanly wants the container migration done first, so
+they were deliberately left for a dedicated follow-up pass rather than
+converted piecemeal.

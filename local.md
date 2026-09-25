@@ -235,27 +235,6 @@ See `release-checklist.md` for the full pre-release checklist. Key points:
 - POTFILES.in audit: `comm -23 <(grep -rl '\b_(\|N_(' --include="*.cpp" --include="*.h" src/ | sort) <(grep -v '^#\|^$' po/POTFILES.in | sort)` — run this at every release; new source files often have translatable strings that are missing
 - msgmerge only runs for languages listed in `po/LINGUAS` (11 active languages); the other .po files are not built but still exist
 
-# Coverage baseline (as of commit 8906999)
-
-Overall: 29.0% lines (2654/9140), 43.2% functions (418/967)
-
-Well-covered files (>85%, essentially done):
-- `process/powerconsumer.cpp` 98%
-- `process/interrupt.cpp` 89%
-- `report/*.cpp`, `lib.cpp`, `timer.cpp`, `measurement/sysfs.cpp` > 90%
-
-Partially covered, more tests possible but require sysfs fixtures:
-- `cpu/abstract_cpu.cpp` 43% — measurement_start/end, wiggle need sysfs
-- `cpu/cpu_linux.cpp` 30% — parse_cstates/pstates_start/end need sysfs
-- `process/process.cpp` 39%
-- `devices/runtime_pm.cpp` 32%
-- `tuning/runtime.cpp` 45%
-
-Practically untestable without hardware (0% or near):
-- `main.cpp`, `cpu.cpp`, `intel_cpus.cpp`, `do_process.cpp`,
-  `calibrate.cpp`, `perf/`, `display.cpp`
-  (devlist.cpp and rapl_interface.cpp now have tests — see below)
-
 # trace_tool.py M record support
 
 `scripts/test_tools/trace_tool.py add` now supports M (MSR) records:
@@ -570,3 +549,30 @@ After all files done: run `ninja -C build_tf test` (60/60), then commit with det
   markdown report, so items can be tracked to resolution across sessions.
   `turbostar-security_scan_c` (cppcheck) is a good zero-cost extra pass to
   run alongside manual review.
+
+# unique_ptr conversion pattern for a single owning raw pointer member
+
+When migrating a class's single owning `T *member` (raw pointer, `new`/
+`delete`) to `std::unique_ptr<T>` (e.g. `report_maker::formatter` — see
+commit fixing review item #1, report-maker.cpp/.h):
+- Reassigning a `unique_ptr` (`member = std::make_unique<Derived>()`)
+  automatically destroys whatever it previously held — drop any
+  unconditional `delete member;` that used to precede the reassignment
+  logic. This also fixes "unhandled branch leaves a dangling pointer"
+  bugs for free: if no branch reassigns, the old (still valid) object
+  is simply kept instead of ending up deleted-but-referenced.
+- If the header only forward-declares the pointee (`class T;`), do
+  **not** write `~Owner() = default;` inline in the header — `unique_ptr`'s
+  deleter needs a complete type at the point the destructor is
+  instantiated. Declare `~Owner();` in the header and define
+  `Owner::~Owner() = default;` in the .cpp file, which includes the
+  full definition.
+- Check for test stubs that independently reimplement the owning
+  class's constructor/destructor (e.g. `tests/devices/stub_report.cpp`
+  defining its own `report_maker::report_maker`/`~report_maker`) —
+  these must be updated in lockstep or you'll get "explicitly-defaulted
+  destructor" redefinition errors or stale `delete`-on-non-pointer
+  compile errors.
+- Verify with the `valgrind` meson test suite (`meson test -C build`),
+  not just the plain unit tests — it's the cheapest way to confirm the
+  new ownership doesn't leak or double-free.

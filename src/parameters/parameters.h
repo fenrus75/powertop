@@ -35,6 +35,15 @@
 #define MAX_KEEP 700
 #define MAX_PARAM 750
 
+/*
+ * load_results() in persistent.cpp picks an overwrite slot via
+ * `50 + (rand() % MAX_KEEP)`, which relies on this exact gap between
+ * MAX_PARAM and MAX_KEEP to stay within past_results' bounds (past_results
+ * is capped at MAX_PARAM entries). Keep this invariant true, or update
+ * that computation if either constant changes.
+ */
+static_assert(MAX_PARAM - MAX_KEEP == 50, "load_results()'s overflow_index depends on this gap");
+
 
 struct parameter_bundle
 {

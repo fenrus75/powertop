@@ -23,7 +23,6 @@
  *	Stewart Smith <stewart@linux.vnet.ibm.com>
  */
 #include "opal-sensors.h"
-#include <climits>
 #include <cstdio>
 #include "../lib.h"
 #include "measurement.h"

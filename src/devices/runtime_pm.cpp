@@ -112,10 +112,20 @@ void runtime_pmdevice::set_human_name(const std::string &_name)
 
 bool device_has_runtime_pm(const std::string &sysfs_path)
 {
-	if (read_sysfs(std::format("{}/power/runtime_suspended_time", sysfs_path)))
+	bool ok = false;
+
+	/*
+	 * Check whether the attribute is readable at all rather than
+	 * whether its value is non-zero: a device that supports runtime PM
+	 * but has not yet suspended (or been active) since boot legitimately
+	 * reads 0, and must not be mistaken for "attribute absent".
+	 */
+	read_sysfs(std::format("{}/power/runtime_suspended_time", sysfs_path), &ok);
+	if (ok)
 		return true;
 
-	if (read_sysfs(std::format("{}/power/runtime_active_time", sysfs_path)))
+	read_sysfs(std::format("{}/power/runtime_active_time", sysfs_path), &ok);
+	if (ok)
 		return true;
 
 	return false;

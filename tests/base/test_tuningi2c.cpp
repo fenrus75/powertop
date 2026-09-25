@@ -11,6 +11,9 @@
  * Fixtures:
  *   i2c_device_auto.ptrecord — 3 R: name + suspended_time + control="auto"
  *   i2c_device_on.ptrecord   — R+N+R+R: name + no-suspended + active_time + control="on"
+ *   i2c_device_zero_time.ptrecord — 3 R: name + suspended_time="0" + control="auto"
+ *     (regression test: a legitimate reading of 0 elapsed time must still
+ *     count as "has runtime PM", not be mistaken for an absent attribute)
  *   i2c_toggle_auto.ptrecord — 1 R: power/control="auto"
  *   i2c_toggle_on.ptrecord   — 1 R: power/control="on"
  */
@@ -56,6 +59,24 @@ PT_ASSERT_TRUE(got.find("SMBus I801") != std::string::npos);
 PT_ASSERT_TRUE(got.find("\"result\":\"Bad\"") != std::string::npos);
 }
 
+static void test_device_zero_suspended_time_still_has_pm()
+{
+test_framework_manager::get().reset();
+test_framework_manager::get().set_replay(DATA_DIR + "/i2c_device_zero_time.ptrecord");
+
+i2c_tunable t(I2C_PATH, "i2c-1", false);
+std::string got = t.serialize();
+test_framework_manager::get().reset();
+
+/*
+ * runtime_suspended_time == "0" is a legitimate reading for a device
+ * that has never suspended since boot; device_has_runtime_pm() must
+ * not mistake it for the attribute being absent.
+ */
+PT_ASSERT_TRUE(got.find("Runtime PM") != std::string::npos);
+PT_ASSERT_TRUE(got.find("has no runtime power management") == std::string::npos);
+}
+
 static void test_toggle_from_good()
 {
 /* Construct with auto fixture (3 R), swap to toggle fixture (1 R = "auto") */
@@ -99,6 +120,7 @@ int main()
 std::cout << "=== i2c_tunable tests ===\n";
 PT_RUN_TEST(test_device_has_runtime_pm_auto);
 PT_RUN_TEST(test_device_active_time_on);
+PT_RUN_TEST(test_device_zero_suspended_time_still_has_pm);
 PT_RUN_TEST(test_toggle_from_good);
 PT_RUN_TEST(test_toggle_from_bad);
 return pt_test_summary();

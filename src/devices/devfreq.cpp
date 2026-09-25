@@ -228,7 +228,8 @@ void create_all_devfreq_devices(void)
 	const std::string p = "/sys/class/devfreq/";
 
 	if (list_directory(p).empty()) {
-		fprintf(stderr, "Devfreq not enabled\n");
+		/* Not every system has devfreq; this is expected and not
+		 * actionable by the user, so stay silent on stderr. */
 		is_enabled = false;
 		return;
 	}

@@ -591,3 +591,19 @@ tab_windows, devlist's one/two/devpower) plus a handful of local
 converting those cleanly wants the container migration done first, so
 they were deliberately left for a dedicated follow-up pass rather than
 converted piecemeal.
+
+# display.cpp cursor navigation pitfall
+
+`cursor_down()` in `src/display.cpp` computes a scroll cap
+`ypad_max = content_max_y - viewport_height + 2` (clamped to >=0) to
+limit how far the pad scrolls. For tabs whose content fits entirely in
+the viewport (e.g. WakeUp, and Tunables when the list is short),
+`ypad_max` legitimately evaluates to 0. Never nest the `w->cursor_down()`
+call (which just moves `cursor_pos` and repaints) inside an
+`if (w->ypad_pos < ypad_max)` guard meant only for the scrolling
+`prefresh()` call — doing so silently breaks arrow-key navigation on
+short-content tabs while leaving longer-content tabs looking fine,
+which is exactly what happened in issue #217 (fixed by commit
+3551819). When touching this function, keep cursor-position movement
+unconditional and gate only the scroll `prefresh()` on the ypad
+bounds check.

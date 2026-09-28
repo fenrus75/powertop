@@ -695,10 +695,56 @@ follow the same `make_unique`/`.get()`/`.clear()` pattern as `find_create_timer(
 
 **Exact remaining raw-owning containers (2), still `vector<T*>`/`map<K,T*>`:**
 1. `tab_windows` (`map<string, tab_window*>`, display.h/.cpp) — freed in
-   `reset_display()`.
+   `reset_display()`. **Scoped but NOT started 2026-09-28 — see notes below,
+   harder than the previous 3 conversions, needs a deliberate session.**
 2. `devlist.cpp`'s `one`/`two` (`vector<devuser*>`) and `devpower`
    (`vector<devpower*>`) — freed in `clean_open_devices()` /
    `collect_open_devices()`.
+
+**`tab_windows` scoping notes (2026-09-28, conversion deferred):** unlike
+`all_devices`/`past_results`/`all_timers`/`all_work`, this container has
+**mixed ownership** today, not sole ownership — a straight retype will
+either break things or paper over a real bug:
+- Most tabs (Overview, Idle stats, Frequency stats, Device stats, Device
+  Freq stats, the GPU tab) are created via `create_tab(name, translation)`
+  with `w == nullptr`; `create_tab()` does `new tab_window` internally and
+  `tab_windows` is the *sole* owner, freed by `reset_display()`'s
+  `delete val` loop over every map entry.
+- Two tabs — WakeUp (`wakeup/waketab.cpp`) and Tunables (`tuning/tuning.cpp`)
+  — are different: each file already has its own `unique_ptr<subclass>`
+  global (`newtab_window`, `tune_window`) that owns the object; they call
+  `create_tab(name, translation, win.get(), ...)`, so `tab_windows[name]`
+  only holds a **non-owning alias** to the same object. `shutdown_wakeup()`/
+  `shutdown_tuning()` call `tab_windows.erase(name)` *before*
+  `newtab_window.reset()`/`tune_window.reset()`, specifically to keep
+  `reset_display()`'s later delete-loop from ever touching an
+  already-separately-owned entry.
+- **Pre-existing latent double-free bug found while scoping (not
+  introduced by this migration, not yet fixed):** `reset_display()` is
+  also called on fatal-error paths (`main.cpp`'s `out_of_memory()`,
+  `perf/perf.cpp`, `cpu/intel_cpus.cpp`) that do *not* call
+  `shutdown_tuning()`/`shutdown_wakeup()` first. If the WakeUp/Tunables
+  tabs are active when one of those paths fires, `reset_display()`
+  deletes the tab object once via the map, and then `newtab_window`/
+  `tune_window`'s `unique_ptr` destructor (running at `exit()`'s static
+  teardown) deletes it again. Masked in practice because these are
+  abort/exit paths, but it's real UB.
+- **Recommended fix when this is picked back up:** make `tab_windows`
+  (`map<string, unique_ptr<tab_window>>`) the *sole* owner for every tab,
+  including WakeUp/Tunables, and demote `tune_window`/`newtab_window` to
+  plain non-owning `tab_window*` (or `wakeup_window*`/`tuning_window*`)
+  observer pointers obtained via `.get()` after insertion — this also
+  fixes the latent double-free as a side effect. Confirmed via grep that
+  `tune_window`/`newtab_window` are referenced *only* inside
+  `tuning.cpp`/`waketab.cpp` respectively (no external callers), so the
+  blast radius is small: `display.h`/`.cpp`, `tuning/tuning.cpp`,
+  `wakeup/waketab.cpp`, plus `.get()` touch-ups at every
+  `tab_windows[name]` read site (`cpu.cpp`, `devfreq.cpp`,
+  `device_manager.cpp`, `do_process.cpp`, `gpu-tab.cpp` — about a dozen
+  call sites, all read-only lookups assigning to a local
+  `class tab_window *`). No test file references `tab_windows` directly.
+  Budget more time for this one than the previous three; it's a genuine
+  ownership-model change, not a pure mechanical retype.
 
 **Deliberately out of scope (documented exception, not a regular
 container):** `perf_bundle::records` (`vector<void*>`) uses raw

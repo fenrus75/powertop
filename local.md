@@ -678,12 +678,25 @@ No test-file gotcha this time (no key-function/vtable issue, no stack-mock
 issue) — `tests/base/test_timer.cpp` only touches the map indirectly via
 `find_create_timer()`/`clear_timers()`/`all_timers_to_all_power()`.
 
-**Exact remaining raw-owning containers (3), still `vector<T*>`/`map<K,T*>`:**
-1. `all_work` (`map<unsigned long, work*>`, process/work.cpp) — freed in
-   `clear_work()`.
-2. `tab_windows` (`map<string, tab_window*>`, display.h/.cpp) — freed in
+**`all_work` converted 2026-09-28** — `process/work.cpp`'s `all_work` is now
+`map<unsigned long, unique_ptr<work>>`, same self-contained pattern as
+`all_timers` (static to `work.cpp`, no test-file gotchas). One extra wrinkle
+vs. `all_timers`: `all_work_to_all_power()` iterates via
+`std::for_each(all_work.begin(), all_work.end(), add_work)` rather than a
+structured-binding range-for, so the free function `add_work()`'s parameter
+type had to change from `const std::pair<unsigned long, work*>&` to
+`const std::pair<const unsigned long, unique_ptr<work>>&` (note: map's
+`value_type` key is `const K`, so the `const` on the key type is required —
+compiles either way with a range-for's `auto&`, but a raw `std::pair<...>&`
+signature must match `map::value_type` exactly or the call silently fails to
+bind and produces a "no matching function" error at the `for_each` call
+site, not at `add_work`'s definition). `find_create_work()`/`clear_work()`
+follow the same `make_unique`/`.get()`/`.clear()` pattern as `find_create_timer()`.
+
+**Exact remaining raw-owning containers (2), still `vector<T*>`/`map<K,T*>`:**
+1. `tab_windows` (`map<string, tab_window*>`, display.h/.cpp) — freed in
    `reset_display()`.
-3. `devlist.cpp`'s `one`/`two` (`vector<devuser*>`) and `devpower`
+2. `devlist.cpp`'s `one`/`two` (`vector<devuser*>`) and `devpower`
    (`vector<devpower*>`) — freed in `clean_open_devices()` /
    `collect_open_devices()`.
 

@@ -23,6 +23,7 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 #include <map>
+#include <memory>
 #include <utility>
 
 #include <cstdint>
@@ -41,7 +42,7 @@ work::work(unsigned long address) : power_consumer()
 }
 
 
-static std::map<unsigned long, class work *> all_work;
+static std::map<unsigned long, std::unique_ptr<class work>> all_work;
 static std::map<unsigned long, uint64_t> running_since;
 
 void work::fire(uint64_t time, uint64_t work_struct)
@@ -82,9 +83,9 @@ std::string work::usage_units_summary(void) const
 
 
 
-static void add_work(const std::pair<unsigned long, class work*>& elem)
+static void add_work(const std::pair<const unsigned long, std::unique_ptr<class work>>& elem)
 {
-	all_power.push_back(elem.second);
+	all_power.push_back(elem.second.get());
 }
 
 void all_work_to_all_power(void)
@@ -95,12 +96,7 @@ void all_work_to_all_power(void)
 
 void clear_work(void)
 {
-	std::map<unsigned long, class work *>::iterator it = all_work.begin();
-	while (it != all_work.end()) {
-		delete it->second;
-		all_work.erase(it);
-		it = all_work.begin();
-	}
+	all_work.clear();
 	running_since.clear();
 }
 
@@ -116,12 +112,12 @@ std::string work::description(void)
 
 class work * find_create_work(uint64_t func)
 {
-	class work * work;
 	if (all_work.find(func) != all_work.end())
-		return all_work[func];
+		return all_work[func].get();
 
-	work = new class work(func);
-	all_work[func] = work;
+	auto work_ptr = std::make_unique<class work>(func);
+	class work *work = work_ptr.get();
+	all_work[func] = std::move(work_ptr);
 	return work;
 }
 

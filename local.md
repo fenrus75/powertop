@@ -663,14 +663,27 @@ key-function/vtable gotcha; the test files that use `past_results` directly
 `parameters.cpp`, they just needed their own local `new`/`delete` push
 patterns updated to `make_unique`/`std::move`.
 
-**Exact remaining raw-owning containers (4), still `vector<T*>`/`map<K,T*>`:**
-1. `all_timers` (`map<uint64_t, timer*>`, process/timer.cpp) — freed in
-   `clear_timers()`.
-2. `all_work` (`map<unsigned long, work*>`, process/work.cpp) — freed in
+**`all_timers` converted 2026-09-29** — `process/timer.cpp`'s `all_timers` is
+now `map<uint64_t, unique_ptr<timer>>`. It's `static` to `timer.cpp` (not
+`extern`'d via `timer.h`), so unlike the previous two containers, zero other
+production or test files reference the map directly — the whole conversion
+was contained to one file. `find_create_timer()` still *returns* a raw
+`timer *` (non-owning observer, matches `do_process.cpp`'s usage pattern),
+built via `make_unique` + `.get()` before `std::move`-ing into the map.
+`all_timers_to_all_power()`'s structured-binding loop just needed
+`all_power.push_back(t.get())` (`all_power` is `vector<power_consumer*>`,
+a non-owning observer container, unchanged). `clear_timers()`'s manual
+iterator-erase-with-`delete` loop collapsed to a plain `all_timers.clear();`.
+No test-file gotcha this time (no key-function/vtable issue, no stack-mock
+issue) — `tests/base/test_timer.cpp` only touches the map indirectly via
+`find_create_timer()`/`clear_timers()`/`all_timers_to_all_power()`.
+
+**Exact remaining raw-owning containers (3), still `vector<T*>`/`map<K,T*>`:**
+1. `all_work` (`map<unsigned long, work*>`, process/work.cpp) — freed in
    `clear_work()`.
-3. `tab_windows` (`map<string, tab_window*>`, display.h/.cpp) — freed in
+2. `tab_windows` (`map<string, tab_window*>`, display.h/.cpp) — freed in
    `reset_display()`.
-4. `devlist.cpp`'s `one`/`two` (`vector<devuser*>`) and `devpower`
+3. `devlist.cpp`'s `one`/`two` (`vector<devuser*>`) and `devpower`
    (`vector<devpower*>`) — freed in `clean_open_devices()` /
    `collect_open_devices()`.
 

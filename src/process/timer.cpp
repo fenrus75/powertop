@@ -23,6 +23,7 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 #include <map>
+#include <memory>
 #include <utility>
 
 #include <cstdint>
@@ -65,7 +66,7 @@ timer::timer(unsigned long address) : power_consumer()
 }
 
 
-static std::map<uint64_t, class timer *> all_timers;
+static std::map<uint64_t, std::unique_ptr<class timer>> all_timers;
 static std::map<unsigned long, uint64_t> running_since;
 
 void timer::fire(uint64_t time, uint64_t timer_struct)
@@ -109,7 +110,7 @@ void all_timers_to_all_power(void)
 {
 	for (auto &[addr, t] : all_timers)
 		if (t->accumulated_runtime > 0)
-			all_power.push_back(t);
+			all_power.push_back(t.get());
 }
 
 
@@ -125,24 +126,19 @@ std::string timer::description(void)
 
 class timer * find_create_timer(uint64_t func)
 {
-	class timer * timer;
 	if (all_timers.find(func) != all_timers.end())
-		return all_timers[func];
+		return all_timers[func].get();
 
-	timer = new class timer(func);
-	all_timers[func] = timer;
+	auto timer_ptr = std::make_unique<class timer>(func);
+	class timer *timer = timer_ptr.get();
+	all_timers[func] = std::move(timer_ptr);
 	return timer;
 
 }
 
 void clear_timers(void)
 {
-	std::map<uint64_t, class timer *>::iterator it = all_timers.begin();
-	while (it != all_timers.end()) {
-		delete it->second;
-		all_timers.erase(it);
-		it = all_timers.begin();
-	}
+	all_timers.clear();
 	running_since.clear();
 }
 

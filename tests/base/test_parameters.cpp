@@ -100,7 +100,7 @@ static void test_clone_results()
 	set_result_value("test-clone-result", 9.9, &src);
 	src.power = 5.5;
 
-	struct result_bundle *dst = clone_results(&src);
+	auto dst = clone_results(&src);
 	PT_ASSERT_TRUE(dst != nullptr);
 	PT_ASSERT_TRUE(dst->power > 5.49);
 	PT_ASSERT_TRUE(dst->power < 5.51);
@@ -108,8 +108,6 @@ static void test_clone_results()
 	src.power = 0.0;
 	PT_ASSERT_TRUE(dst->power > 5.49);
 	PT_ASSERT_TRUE(dst->power < 5.51);
-
-	delete dst;
 }
 
 static void test_clone_parameters()
@@ -139,18 +137,16 @@ static void test_average_power_with_values()
 {
 	past_results.clear();
 
-	auto *r1 = new result_bundle();
+	auto r1 = std::make_unique<result_bundle>();
 	r1->power = 10.0;
-	auto *r2 = new result_bundle();
+	auto r2 = std::make_unique<result_bundle>();
 	r2->power = 20.0;
-	past_results.push_back(r1);
-	past_results.push_back(r2);
+	past_results.push_back(std::move(r1));
+	past_results.push_back(std::move(r2));
 
 	PT_ASSERT_TRUE(average_power() > 15.0);
 	PT_ASSERT_TRUE(average_power() < 15.01);
 
-	for (auto *r : past_results)
-		delete r;
 	past_results.clear();
 }
 
@@ -165,17 +161,15 @@ static void test_utilization_power_valid_varying()
 	past_results.clear();
 	set_result_value("test-uvv", 0.0, &all_results);
 
-	auto *r1 = new result_bundle();
-	set_result_value("test-uvv", 10.0, r1);
-	auto *r2 = new result_bundle();
-	set_result_value("test-uvv", 50.0, r2);
-	past_results.push_back(r1);
-	past_results.push_back(r2);
+	auto r1 = std::make_unique<result_bundle>();
+	set_result_value("test-uvv", 10.0, r1.get());
+	auto r2 = std::make_unique<result_bundle>();
+	set_result_value("test-uvv", 50.0, r2.get());
+	past_results.push_back(std::move(r1));
+	past_results.push_back(std::move(r2));
 
 	PT_ASSERT_TRUE(utilization_power_valid("test-uvv") == 1);
 
-	for (auto *r : past_results)
-		delete r;
 	past_results.clear();
 }
 
@@ -201,15 +195,13 @@ static void test_global_power_valid_many_parameters()
 	past_results.clear();
 	global_power_override = 0;
 	for (int i = 0; i < MAX_PARAM - 1; i++)
-		past_results.push_back(new struct result_bundle);
+		past_results.push_back(std::make_unique<result_bundle>());
 	PT_ASSERT_TRUE(global_power_valid() == 0);
 
-	past_results.push_back(new struct result_bundle);
+	past_results.push_back(std::make_unique<result_bundle>());
 	PT_ASSERT_TRUE(past_results.size() == MAX_PARAM);
 	PT_ASSERT_TRUE(global_power_valid() == 1);
 
-	for (auto *r : past_results)
-		delete r;
 	past_results.clear();
 }
 

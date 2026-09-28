@@ -41,12 +41,12 @@ void save_all_results(const std::string &filename)
 		fprintf(stderr, "%s %s\n", _("Cannot save to file"), pathname.c_str());
 		return;
 	}
-	for (auto *bundle : past_results) {
+	for (auto &bundle : past_results) {
 		std::map<std::string, int>::iterator it;
 		file << std::setiosflags(std::ios::fixed) <<  std::setprecision(5) << bundle->power << "\n";
 
 		for (it = result_index.begin(); it != result_index.end(); it++) {
-			file << it->first << "\t" << std::setprecision(5) << get_result_value(it->second, bundle) << "\n";
+			file << it->first << "\t" << std::setprecision(5) << get_result_value(it->second, bundle.get()) << "\n";
 		}
 		file << ":\n";
 	}
@@ -57,9 +57,6 @@ void save_all_results(const std::string &filename)
 
 void close_results()
 {
-	for (auto *r : past_results)
-		delete r;
-
 	past_results.clear();
 	return;
 }
@@ -67,7 +64,7 @@ void close_results()
 void load_results(const std::string &filename)
 {
 	std::string line;
-	struct result_bundle *bundle;
+	std::unique_ptr<struct result_bundle> bundle;
 	int first = 1;
 	unsigned int count = 0;
 	const std::string pathname = get_param_directory(filename);
@@ -84,7 +81,7 @@ void load_results(const std::string &filename)
 
 	std::istringstream stream(content);
 
-	bundle = new struct result_bundle;
+	bundle = std::make_unique<struct result_bundle>();
 
 	while (getline(stream, line)) {
 		double d;
@@ -104,12 +101,11 @@ void load_results(const std::string &filename)
 			bundle_saved = 1;
 			const int overflow_index = 50 + (rand() % MAX_KEEP);
 			if (past_results.size() >= MAX_PARAM) {
-				delete past_results[overflow_index];
-				past_results[overflow_index] = bundle;
+				past_results[overflow_index] = std::move(bundle);
 			} else {
-				past_results.push_back(bundle);
+				past_results.push_back(std::move(bundle));
 			}
-			bundle = new struct result_bundle;
+			bundle = std::make_unique<struct result_bundle>();
 			first = 1;
 			count++;
 			continue;
@@ -123,11 +119,12 @@ void load_results(const std::string &filename)
 		const std::string value_str = line.substr(pos + 1);
 		try {
 			d = std::stod(value_str);
-			set_result_value(name, d, bundle);
+			set_result_value(name, d, bundle.get());
 		} catch (...) {}
 	}
 
-	delete bundle;   /* always discard last-allocated but unsaved bundle */
+	/* bundle goes out of scope here and is auto-deleted, discarding the
+	 * last-allocated but unsaved bundle */
 
 	if (bundle_saved == 0)
 		return;

@@ -26,6 +26,7 @@
 
 
 #include <map>
+#include <memory>
 #include <vector>
 #include <string>
 
@@ -77,7 +78,7 @@ struct result_bundle
 };
 
 extern struct result_bundle all_results;
-extern std::vector <struct result_bundle *> past_results;
+extern std::vector <std::unique_ptr<struct result_bundle>> past_results;
 
 extern double get_result_value(const std::string &name, const struct result_bundle *bundle = &all_results);
 extern double get_result_value(int index, const struct result_bundle *bundle = &all_results);
@@ -99,7 +100,7 @@ extern double compute_bundle(struct parameter_bundle *parameters = &all_paramete
 void dump_parameter_bundle(const struct parameter_bundle *parameters = &all_parameters);
 void dump_result_bundle(const struct result_bundle *res = &all_results);
 
-extern struct result_bundle * clone_results(const struct result_bundle *bundle);
+extern std::unique_ptr<struct result_bundle> clone_results(const struct result_bundle *bundle);
 extern struct parameter_bundle * clone_parameters(const struct parameter_bundle *bundle);
 
 extern void store_results(double duration);

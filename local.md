@@ -648,16 +648,29 @@ is now just `all_devices.clear();`.
   actually building the test binaries — whenever an `extern`-only stub in
   a test file has its container type migrated to an owning smart pointer.
 
-**Exact remaining raw-owning containers (5), still `vector<T*>`/`map<K,T*>`:**
-1. `past_results` (`vector<result_bundle*>`, parameters.cpp/persistent.cpp) —
-   ring-buffer overwrite deletes old entry before storing a clone.
-2. `all_timers` (`map<uint64_t, timer*>`, process/timer.cpp) — freed in
+**`past_results` converted 2026-09-29** — `parameters.h`/`.cpp`'s
+`past_results` is now `vector<unique_ptr<result_bundle>>`. `clone_results()`
+now returns `unique_ptr<result_bundle>` (via `make_unique`) instead of a raw
+pointer; both the ring-buffer overwrite in `store_results()` (parameters.cpp)
+and `load_results()` (persistent.cpp) just do plain assignment/`std::move`
+into the vector slot — the old element's `delete` is now automatic. Raw
+`result_bundle *` is still used locally wherever a non-owning view is needed
+(`.get()` at call sites like `compute_bundle()`, `get_result_value()`,
+`bundle_power()`). No test-file link issues here (unlike `all_devices`) —
+`result_bundle` is a plain struct with no virtual functions, so there's no
+key-function/vtable gotcha; the test files that use `past_results` directly
+(`test_parameters.cpp`, `test_learn_parameters.cpp`) already link the real
+`parameters.cpp`, they just needed their own local `new`/`delete` push
+patterns updated to `make_unique`/`std::move`.
+
+**Exact remaining raw-owning containers (4), still `vector<T*>`/`map<K,T*>`:**
+1. `all_timers` (`map<uint64_t, timer*>`, process/timer.cpp) — freed in
    `clear_timers()`.
-3. `all_work` (`map<unsigned long, work*>`, process/work.cpp) — freed in
+2. `all_work` (`map<unsigned long, work*>`, process/work.cpp) — freed in
    `clear_work()`.
-4. `tab_windows` (`map<string, tab_window*>`, display.h/.cpp) — freed in
+3. `tab_windows` (`map<string, tab_window*>`, display.h/.cpp) — freed in
    `reset_display()`.
-5. `devlist.cpp`'s `one`/`two` (`vector<devuser*>`) and `devpower`
+4. `devlist.cpp`'s `one`/`two` (`vector<devuser*>`) and `devpower`
    (`vector<devpower*>`) — freed in `clean_open_devices()` /
    `collect_open_devices()`.
 
@@ -682,3 +695,24 @@ which is exactly what happened in issue #217 (fixed by commit
 3551819). When touching this function, keep cursor-position movement
 unconditional and gate only the scroll `prefresh()` on the ypad
 bounds check.
+
+# turbostar MCP tooling notes
+
+- `turbostar-fs_run_tests` in this environment is configured with a stale
+  build path (`/home/arjan/git/powertop/build`) that doesn't match this
+  repo's actual checkout path (`/sdb1/arjan/git/powertop`), so it always
+  fails with "No such build data file". Use `bash` + `meson test -C
+  <build_dir>` / `ninja -C <build_dir>` directly instead for test runs in
+  this session; there's no turbostar-native way to target a non-default
+  build dir (e.g. `build_acov`) yet.
+- `turbostar-fs_grep_files`'s `pattern` is a **literal string by default**;
+  passing something like `"past_results|clone_results"` without
+  `is_regex: true` searches for that exact literal (including the `|`),
+  not an alternation — silently returns "No matches found" instead of an
+  error. Always set `is_regex: true` when using regex metacharacters
+  (`|`, `.*`, character classes, etc.), or split into separate calls.
+- `turbostar-fs_replace_content` reports "Successfully replaced" even when
+  `target_content` and `replacement_content` are identical (a true no-op)
+  — it doesn't warn that nothing changed. Double-check edits that were
+  meant to change something actually show up in a subsequent `view`/diff.
+

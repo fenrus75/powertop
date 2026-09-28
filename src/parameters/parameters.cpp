@@ -36,7 +36,7 @@
 struct parameter_bundle all_parameters;
 struct result_bundle all_results;
 
-std::vector <struct result_bundle *> past_results;
+std::vector <std::unique_ptr<struct result_bundle>> past_results;
 
 std::map <std::string, int> param_index;
 static int maxindex = 1;
@@ -281,15 +281,9 @@ void dump_result_bundle(const struct result_bundle *res)
 	printf("----------------------------------\n");
 }
 
-struct result_bundle * clone_results(const struct result_bundle *bundle)
+std::unique_ptr<struct result_bundle> clone_results(const struct result_bundle *bundle)
 {
-	struct result_bundle *b2;
-	std::map<std::string, double>::iterator it;
-
-	b2 = new struct result_bundle;
-
-	if (!b2)
-		return nullptr;
+	auto b2 = std::make_unique<struct result_bundle>();
 
 	b2->power = bundle->power;
 	b2->utilization = bundle->utilization;
@@ -325,7 +319,6 @@ void store_results(double duration)
 		unsigned int overflow_index;
 		overflow_index = 50 + (rand() % MAX_KEEP);
 		if (past_results.size() >= MAX_PARAM) {
-			delete past_results[overflow_index];
 			past_results[overflow_index] = clone_results(&all_results);
 		} else {
 			past_results.push_back(clone_results(&all_results));
@@ -347,13 +340,13 @@ void dump_past_results(void)
 	for (j = 0; j < past_results.size(); j+=10) {
 		printf("Est    ");
 		for (i = j; i < past_results.size() && i < j + 10; i++) {
-			result = past_results[i];
+			result = past_results[i].get();
 			printf("%6.2f  ", bundle_power(&all_parameters, result));
 		}
 		printf("\n");
 		printf("Actual ");
 		for (i = j; i < past_results.size() && i < j + 10; i++) {
-			result = past_results[i];
+			result = past_results[i].get();
 			printf("%6.2f  ", result->power);
 		}
 		printf("\n\n");
@@ -363,7 +356,7 @@ void dump_past_results(void)
 double average_power(void)
 {
 	double sum = 0.0;
-	for (const auto *r : past_results)
+	for (const auto &r : past_results)
 		sum += r->power;
 
 	if (past_results.size())
@@ -390,9 +383,9 @@ int utilization_power_valid(const std::string &u)
 
 	const double first_value = past_results[0]->utilization[index];
 	for (i = 1; i < past_results.size(); i++) {
-		if (get_result_value(index, past_results[i]) < first_value - 0.0001)
+		if (get_result_value(index, past_results[i].get()) < first_value - 0.0001)
 			return 1;
-		if (get_result_value(index, past_results[i]) > first_value + 0.0001)
+		if (get_result_value(index, past_results[i].get()) > first_value + 0.0001)
 			return 1;
 	}
 
@@ -413,9 +406,9 @@ int utilization_power_valid(int index)
 		return 0;
 	const double first_value = past_results[0]->utilization[index];
 	for (i = 1; i < past_results.size(); i++) {
-		if (get_result_value(index, past_results[i]) < first_value - 0.0001)
+		if (get_result_value(index, past_results[i].get()) < first_value - 0.0001)
 			return 1;
-		if (get_result_value(index, past_results[i]) > first_value + 0.0001)
+		if (get_result_value(index, past_results[i].get()) > first_value + 0.0001)
 			return 1;
 	}
 

@@ -36,8 +36,8 @@ double calculate_params(struct parameter_bundle *params)
 	params->score = 0;
 
 
-	for (auto *r : past_results)
-		compute_bundle(params, r);
+	for (auto &r : past_results)
+		compute_bundle(params, r.get());
 
 	return params->score;
 }

@@ -96,9 +96,9 @@ static void test_learn_parameters_no_divzero_with_negative_weight()
 	 * at least 4 entries; use 10 for safety.
 	 */
 	for (int i = 0; i < 10; i++) {
-		auto *r = new result_bundle();
+		auto r = std::make_unique<result_bundle>();
 		r->power = 0.0;
-		past_results.push_back(r);
+		past_results.push_back(std::move(r));
 	}
 
 	/* Clear all FP exception flags before the call under test. */
@@ -144,8 +144,6 @@ static void test_learn_parameters_no_divzero_with_negative_weight()
 	PT_ASSERT_EQ(divbyzero, 0);
 
 	/* Cleanup */
-	for (auto *r : past_results)
-		delete r;
 	past_results.clear();
 }
 

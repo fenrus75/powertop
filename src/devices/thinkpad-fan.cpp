@@ -84,7 +84,7 @@ void create_thinkpad_fan(void)
 	register_parameter("thinkpad-fan-cub", 10);
 
 	fan = new thinkpad_fan();
-	all_devices.push_back(fan);
+	all_devices.push_back(std::unique_ptr<thinkpad_fan>(fan));
 }
 
 

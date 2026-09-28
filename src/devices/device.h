@@ -26,6 +26,7 @@
 
 
 #include <vector>
+#include <memory>
 #include <climits>
 #include <string>
 #include "../lib.h"
@@ -92,7 +93,7 @@ public:
 	std::string serialize() { JSON_START(); collect_json_fields(_js); JSON_END(); }
 };
 
-extern std::vector<class device *> all_devices;
+extern std::vector<std::unique_ptr<class device>> all_devices;
 
 extern void devices_start_measurement(void);
 extern void devices_end_measurement(void);

@@ -26,6 +26,7 @@
 #include "device.h"
 #include <climits>
 #include <cstdlib>
+#include <memory>
 #include <unistd.h>
 
 device::device(void)
@@ -77,4 +78,4 @@ void device::collect_json_fields(std::string &_js)
 	JSON_FIELD(real_path);
 }
 
-std::vector<class device *> all_devices;
+std::vector<std::unique_ptr<class device>> all_devices;

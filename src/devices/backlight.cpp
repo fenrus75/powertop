@@ -120,7 +120,7 @@ static void create_all_backlights_callback(const std::string &d_name)
 {
 	class backlight *bl;
 	bl = new backlight(d_name, std::format("/sys/class/backlight/{}", d_name));
-	all_devices.push_back(bl);
+	all_devices.push_back(std::unique_ptr<backlight>(bl));
 }
 
 void create_all_backlights(void)

@@ -32,6 +32,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "parameters/parameters.h"
 #include "devices/device.h"
@@ -39,7 +40,8 @@
 
 extern double get_parameter_weight(int index, const struct parameter_bundle *the_bundle);
 
-std::vector<class device *> all_devices;
+/* all_devices itself is defined in devices/device.cpp (linked below); this
+ * file never populates it. */
 
 double global_power(void)
 {

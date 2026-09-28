@@ -25,6 +25,7 @@
 #include <fstream>
 #include <format>
 #include <unistd.h>
+#include <memory>
 
 extern "C" {
 #include <tracefs.h>
@@ -234,7 +235,7 @@ static void create_xe_fans(void)
 				const std::string label =
 					pt_format(_("Xe GPU Fan {}"), n);
 				all_devices.push_back(
-					new xe_fan_device(fan_path, label));
+					std::make_unique<xe_fan_device>(fan_path, label));
 			}
 		}
 	}
@@ -278,8 +279,7 @@ void create_xe_gpu(void)
 
 	register_parameter("xe-gpu-operations");
 
-	auto *gpu = new xegpu();
-	all_devices.push_back(gpu);
+	all_devices.push_back(std::make_unique<xegpu>());
 
 	create_xe_fans();
 }

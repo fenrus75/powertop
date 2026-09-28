@@ -131,10 +131,10 @@ static void show_fan_section(WINDOW *win)
 	static double max_rpm_seen = 1000.0;
 
 	std::vector<device *> fans;
-	for (auto *d : all_devices) {
+	for (auto &d : all_devices) {
 		if (d->class_name() == "GPU" &&
 		    d->util_units().find("RPM") != std::string::npos)
-			fans.push_back(d);
+			fans.push_back(d.get());
 	}
 
 	if (fans.empty())
@@ -195,8 +195,8 @@ static void show_idle_section(WINDOW *win)
 static void show_power_section(WINDOW *win)
 {
 	xegpu *gpu = nullptr;
-	for (auto *d : all_devices) {
-		gpu = dynamic_cast<xegpu *>(d);
+	for (auto &d : all_devices) {
+		gpu = dynamic_cast<xegpu *>(d.get());
 		if (gpu)
 			break;
 	}
@@ -266,8 +266,8 @@ void report_gpu_stats(void)
 {
 	/* Check if any GPU is present before opening the report div. */
 	xegpu *gpu = nullptr;
-	for (auto *d : all_devices) {
-		gpu = dynamic_cast<xegpu *>(d);
+	for (auto &d : all_devices) {
+		gpu = dynamic_cast<xegpu *>(d.get());
 		if (gpu)
 			break;
 	}
@@ -412,10 +412,10 @@ void report_gpu_stats(void)
 	/* ---- Fan Speeds ---- */
 	{
 		std::vector<device *> fans;
-		for (auto *d : all_devices) {
+		for (auto &d : all_devices) {
 			if (d->class_name() == "GPU" &&
 			    d->util_units().find("RPM") != std::string::npos)
-				fans.push_back(d);
+				fans.push_back(d.get());
 		}
 
 		if (!fans.empty()) {
@@ -453,8 +453,8 @@ void initialize_gpu_tab(void)
 {
 	xegpu *gpu = nullptr;
 
-	for (auto *d : all_devices) {
-		auto *x = dynamic_cast<xegpu *>(d);
+	for (auto &d : all_devices) {
+		auto *x = dynamic_cast<xegpu *>(d.get());
 		if (x && !x->power_channels.empty()) {
 			gpu = x;
 			break;

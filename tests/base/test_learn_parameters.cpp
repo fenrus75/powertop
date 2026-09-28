@@ -43,6 +43,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "parameters/parameters.h"
 #include "test_framework.h"
@@ -50,11 +51,9 @@
 
 /* ── Stubs required by parameters.cpp and learn.cpp ────────────────────── */
 
-/* all_devices is used in compute_bundle(); keep it empty so the bundle score
- * stays at zero (which causes delta to be clamped to 0.05 — the value that
- * triggers the bug). */
-class device;
-std::vector<class device *> all_devices;
+/* all_devices is used in compute_bundle(); it is defined in devices/device.cpp
+ * (linked below) and stays empty here, which causes delta to be clamped to
+ * 0.05 — the value that triggers the bug. */
 
 /* min_power is used in learn_parameters() for the base-power parameter cap. */
 double min_power = 50000.0;

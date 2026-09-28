@@ -15,6 +15,7 @@
 #include <cstdint>
 #include <iostream>
 #include <vector>
+#include <memory>
 
 #include "cpu/intel_cpus.h"
 #include "cpu/frequency.h"
@@ -22,9 +23,8 @@
 #include "test_framework.h"
 #include "../test_helper.h"
 
-/* abstract_cpu.cpp references all_devices but xe_core never calls the
- * code paths that touch it — provide a stub definition to satisfy the linker. */
-std::vector<class device *> all_devices;
+/* all_devices itself is defined in devices/device.cpp (linked below); this
+ * file never populates it. */
 
 /* ── no DRM: constructor builds an empty xe_core ────────────────── */
 

@@ -33,6 +33,7 @@
 
 #include <cstdlib>
 #include <unistd.h>
+#include <memory>
 
 #include <linux/ethtool.h>
 
@@ -338,8 +339,8 @@ static void netdev_callback(const std::string &d_name)
 
 	network *bl = new(std::nothrow) network(d_name, f_name);
 	if (bl) {
-		all_devices.push_back(bl);
 		nics[d_name] = bl;
+		all_devices.push_back(std::unique_ptr<network>(bl));
 	}
 }
 

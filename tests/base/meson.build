@@ -540,6 +540,7 @@ test_learn_parameters_exe = executable(
   [
     '../../src/lib.cpp',
     '../../src/test_framework.cpp',
+    '../../src/devices/device.cpp',
     '../../src/parameters/parameters.cpp',
     '../../src/parameters/learn.cpp',
     'test_learn_parameters.cpp',
@@ -563,6 +564,7 @@ test_parameters_exe = executable(
   [
     '../../src/lib.cpp',
     '../../src/test_framework.cpp',
+    '../../src/devices/device.cpp',
     '../../src/parameters/parameters.cpp',
     'test_parameters.cpp',
   ],

@@ -169,7 +169,7 @@ double get_result_value(int index, const struct result_bundle *the_bundle)
 
 int result_device_exists(const std::string &name)
 {
-	for (auto *d : all_devices) {
+	for (auto &d : all_devices) {
 		if (d->device_name() == name)
 			return 1;
 	}
@@ -198,7 +198,7 @@ double compute_bundle(struct parameter_bundle *parameters, struct result_bundle 
 	if (!bpi)
 		bpi = get_param_index("base power");
 
-	for (auto *d : all_devices)
+	for (auto &d : all_devices)
 		power += d->power_usage(results, parameters);
 
 	parameters->actual_power = results->power;
@@ -212,7 +212,7 @@ double compute_bundle(struct parameter_bundle *parameters, struct result_bundle 
 static int precomputed_valid = 0;
 void precompute_valid(void)
 {
-	for (auto *d : all_devices)
+	for (auto &d : all_devices)
 		d->cached_valid = d->power_valid();
 	precomputed_valid = 1;
 }
@@ -230,7 +230,7 @@ double bundle_power(struct parameter_bundle *parameters, struct result_bundle *r
 
 	power = parameters->parameters[bpi];
 
-	for (auto *d : all_devices) {
+	for (auto &d : all_devices) {
 		if (d->cached_valid)
 			power += d->power_usage(results, parameters);
 	}

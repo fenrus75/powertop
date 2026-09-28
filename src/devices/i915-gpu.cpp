@@ -30,6 +30,7 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <climits>
+#include <memory>
 #include "../lib.h"
 
 #include "device.h"
@@ -67,7 +68,6 @@ double i915gpu::utilization(void) const
 void create_i915_gpu(void)
 {
 	class i915gpu *gpu;
-	gpu_rapl_device *rapl_dev;
 
 	if (!tracefs_event_file_exists(nullptr, "i915", "i915_gem_ring_dispatch", "format")) {
 		/* try an older tracepoint */
@@ -77,14 +77,14 @@ void create_i915_gpu(void)
 
 	register_parameter("gpu-operations");
 
-	gpu = new i915gpu();
-	all_devices.push_back(gpu);
+	auto gpu_ptr = std::make_unique<i915gpu>();
+	gpu = gpu_ptr.get();
+	all_devices.push_back(std::move(gpu_ptr));
 
-	rapl_dev = new gpu_rapl_device(gpu);
+	auto rapl_dev = std::make_unique<gpu_rapl_device>(gpu);
 	if (rapl_dev->device_present())
-		all_devices.push_back(rapl_dev);
-	else
-		delete rapl_dev;
+		all_devices.push_back(std::move(rapl_dev));
+	/* else: rapl_dev goes out of scope here and is auto-deleted */
 }
 
 

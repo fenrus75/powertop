@@ -30,6 +30,7 @@
 #include <sys/types.h>
 #include <climits>
 #include <format>
+#include <memory>
 
 #include "../parameters/parameters.h"
 #include "../lib.h"
@@ -137,7 +138,8 @@ static void do_bus(const std::string &bus)
 
 	for (const auto &devname : list_directory(bus_path)) {
 		std::string path = std::format("/sys/bus/{}/devices/{}", bus, devname);
-		class runtime_pmdevice *dev = new runtime_pmdevice(devname, path);
+		auto dev_ptr = std::make_unique<runtime_pmdevice>(devname, path);
+		class runtime_pmdevice *dev = dev_ptr.get();
 
 		if (bus == "i2c") {
 			std::string devnode;
@@ -176,10 +178,10 @@ static void do_bus(const std::string &bus)
 		}
 
 		if (!device_has_runtime_pm(path)) {
-			delete dev;
+			/* dev_ptr goes out of scope at loop end and is auto-deleted */
 			continue;
 		}
-		all_devices.push_back(dev);
+		all_devices.push_back(std::move(dev_ptr));
 	}
 }
 

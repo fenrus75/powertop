@@ -447,6 +447,7 @@ test_xe_core_exe = executable(
   [
     '../../src/lib.cpp',
     '../../src/test_framework.cpp',
+    '../../src/devices/device.cpp',
     '../../src/parameters/parameters.cpp',
     '../../src/cpu/xe_gpu.cpp',
     '../../src/cpu/abstract_cpu.cpp',

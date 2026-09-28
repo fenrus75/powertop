@@ -83,7 +83,7 @@ void create_thinkpad_light(void)
 	register_parameter("thinkpad-light", 10);
 
 	light = new thinkpad_light();
-	all_devices.push_back(light);
+	all_devices.push_back(std::unique_ptr<thinkpad_light>(light));
 }
 
 

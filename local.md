@@ -592,6 +592,81 @@ converting those cleanly wants the container migration done first, so
 they were deliberately left for a dedicated follow-up pass rather than
 converted piecemeal.
 
+**Re-verified 2026-09-28: no drift since the 2026-09-25 audit** — still
+exactly 16 real `delete` statements / ~30 `new` allocations in `src/`
+(excludes the stale `src/tuning/runtime.cpp~` backup and the vendored
+`src/tuning/nl80211.h` kernel header, which only has `delete`/`new` in
+comments). Since the 2026-09-25 pass, `power_meters`, `all_devfreq` +
+`devfreq::dstates`, `perf_bundle::events`, `all_interrupts`,
+`all_processes`, `all_proc_devices`, `all_tunables`/`all_untunables`, and
+`abstract_cpu::children`/`cstates`/`pstates` have all separately been
+converted to `vector<unique_ptr<T>>` (confirmed via grep — the `raii.md`
+file itself no longer exists, so this log plus the ownership map above are
+now the only source of truth).
+
+**`all_devices` converted 2026-09-29** — `src/devices/device.h`/`.cpp`'s
+`all_devices` is now `vector<unique_ptr<device>>`. All ~11 `create_*`
+producers (ahci, alsa, backlight, i915-gpu, rfkill, runtime_pm,
+thinkpad-fan/light, usb, network, xe-gpu) and `cpu.cpp::new_package()`
+converted to `make_unique`/`push_back(std::move(...))`, with
+create-or-discard temporaries (`cpu.cpp`'s `cpu_rapl_dev`/`dram_rapl_dev`,
+`i915-gpu.cpp`'s `rapl_dev`, `runtime_pm.cpp`'s `dev`) now auto-deleted by
+falling out of scope instead of explicit `delete`. All iteration sites
+(`device_manager.cpp`, `processdevice.cpp`, `parameters.cpp`, `gpu-tab.cpp`)
+changed `for (auto *d : ...)` → `for (auto &d : ...)`;
+`network.cpp`'s `nics` map and `cpudevice`/`i915gpu`'s `child_devices`
+were deliberately left as non-owning raw-pointer views. `clear_all_devices()`
+is now just `all_devices.clear();`.
+
+**Two gotchas hit during this conversion, worth knowing for the remaining
+5 containers below:**
+- *Stack-vs-heap test mocks*: `tests/base/test_processdevice.cpp` had
+  `mock_device dev(...); all_devices.push_back(&dev);` (stack-allocated,
+  fine for a raw-pointer vector since nothing ever deletes it). Once the
+  vector owns via `unique_ptr`, its destructor calls `delete` on every
+  element — pushing a stack address causes a crash/UB on teardown. Fixed
+  by switching to `all_devices.push_back(std::make_unique<mock_device>(...));`.
+  Audit every test file that pushes into a container being migrated for
+  this exact pattern before flipping the container's type.
+- *Key-function vtable link errors in stub-only test files*: several test
+  files (`test_xe_core.cpp`, `test_parameters.cpp`,
+  `test_learn_parameters.cpp`) declare their own local
+  `all_devices` "stub" instead of linking the real `device.cpp`, because
+  they never previously needed `device`'s implementation (a raw-pointer
+  vector's destructor is trivial). `device`'s virtual destructor is
+  inline in `device.h`, but `collect_json_fields()` — its Itanium ABI "key
+  function" (first non-inline virtual) — is defined out-of-line in
+  `device.cpp`, so the vtable is only emitted in that TU. Converting the
+  stub to `vector<unique_ptr<device>>` makes the *global variable's own
+  destructor* require `device`'s vtable (to `delete` through the base
+  pointer), which fails to link with "undefined reference to vtable for
+  device" unless `device.cpp` is part of that executable. Fix: add
+  `../../src/devices/device.cpp` to the test's `meson.build` sources and
+  delete the local stub definition (keep only the `extern` from
+  `device.h`) rather than just retyping it. Check for this class of
+  failure — a link error, not a compile error, so it only surfaces when
+  actually building the test binaries — whenever an `extern`-only stub in
+  a test file has its container type migrated to an owning smart pointer.
+
+**Exact remaining raw-owning containers (5), still `vector<T*>`/`map<K,T*>`:**
+1. `past_results` (`vector<result_bundle*>`, parameters.cpp/persistent.cpp) —
+   ring-buffer overwrite deletes old entry before storing a clone.
+2. `all_timers` (`map<uint64_t, timer*>`, process/timer.cpp) — freed in
+   `clear_timers()`.
+3. `all_work` (`map<unsigned long, work*>`, process/work.cpp) — freed in
+   `clear_work()`.
+4. `tab_windows` (`map<string, tab_window*>`, display.h/.cpp) — freed in
+   `reset_display()`.
+5. `devlist.cpp`'s `one`/`two` (`vector<devuser*>`) and `devpower`
+   (`vector<devpower*>`) — freed in `clean_open_devices()` /
+   `collect_open_devices()`.
+
+**Deliberately out of scope (documented exception, not a regular
+container):** `perf_bundle::records` (`vector<void*>`) uses raw
+`malloc`/`free` for event buffers (`perf_bundle.cpp`) — needs a custom
+RAII wrapper rather than `unique_ptr<T>`, tracked as a separate follow-up,
+not part of this vector-of-pointers migration.
+
 # display.cpp cursor navigation pitfall
 
 `cursor_down()` in `src/display.cpp` computes a scroll cap

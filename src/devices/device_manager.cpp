@@ -25,6 +25,7 @@
 
 #include "device.h"
 #include <vector>
+#include <memory>
 #include <algorithm>
 #include <cstdio>
 #include <format>
@@ -52,24 +53,24 @@
 
 void devices_start_measurement(void)
 {
-	for (auto *d : all_devices)
+	for (auto &d : all_devices)
 		d->start_measurement();
 }
 
 void devices_end_measurement(void)
 {
-	for (auto *d : all_devices)
+	for (auto &d : all_devices)
 		d->end_measurement();
 
 	clear_devpower();
 
-	for (auto *d : all_devices) {
+	for (auto &d : all_devices) {
 		d->hide = false;
 		d->register_power_with_devlist(&all_results, &all_parameters);
 	}
 }
 
-static bool power_device_sort(class device *i, class device *j)
+static bool power_device_sort(const std::unique_ptr<class device> &i, const std::unique_ptr<class device> &j)
 {
 	double pI, pJ;
 	pI = i->power_usage(&all_results, &all_parameters);
@@ -134,7 +135,7 @@ void report_devices(void)
 	else
 		wprintw(win, _("              Usage     Device name\n"));
 
-	for (auto *d : all_devices) {
+	for (auto &d : all_devices) {
 		double P;
 		std::string power;
 
@@ -195,7 +196,7 @@ void show_report_devices(void)
 
 	idx = cols;
 	rows = 1;
-	for (auto *d : all_devices) {
+	for (auto &d : all_devices) {
 		if (d->show_in_list())
 			rows++;
 	}
@@ -235,7 +236,7 @@ void show_report_devices(void)
 	if (show_power)
 		device_data[2] = __("PW Estimate");
 
-	for (auto *d : all_devices) {
+	for (auto &d : all_devices) {
 		double P;
 		std::string util;
 		std::string power;
@@ -293,7 +294,5 @@ void create_all_devices(void)
 
 void clear_all_devices(void)
 {
-	for (auto *d : all_devices)
-		delete d;
 	all_devices.clear();
 }

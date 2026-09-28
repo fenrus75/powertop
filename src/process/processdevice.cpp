@@ -80,8 +80,8 @@ static void add_device(class device *dev)
 
 void all_devices_to_all_power(void)
 {
-	for (auto *dev : all_devices)
-		add_device(dev);
+	for (auto &dev : all_devices)
+		add_device(dev.get());
 }
 
 void clear_proc_devices(void)

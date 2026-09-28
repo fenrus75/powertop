@@ -141,7 +141,7 @@ static void create_all_alsa_callback(const std::string &d_name)
 		return;
 
 	bl = new alsa(d_name, std::format("/sys/class/sound/{}", d_name));
-	all_devices.push_back(bl);
+	all_devices.push_back(std::unique_ptr<alsa>(bl));
 	register_parameter("alsa-codec-power", 0.5);
 }
 

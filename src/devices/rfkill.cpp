@@ -96,7 +96,7 @@ static void create_all_rfkills_callback(const std::string &d_name)
 		name = d_name;
 
 	class rfkill *bl = new rfkill(name, std::format("/sys/class/rfkill/{}", d_name));
-	all_devices.push_back(bl);
+	all_devices.push_back(std::unique_ptr<rfkill>(bl));
 }
 
 void create_all_rfkills(void)

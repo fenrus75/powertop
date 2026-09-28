@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <memory>
 #include "../test_helper.h"
 #include "test_framework.h"
 #include "process/processdevice.h"
@@ -15,7 +16,7 @@
 
 /* Globals defined in stubs */
 extern std::vector<class power_consumer *> all_power;
-extern std::vector<class device *> all_devices;
+extern std::vector<std::unique_ptr<class device>> all_devices;
 
 double measurement_time = 1.0;
 
@@ -74,8 +75,7 @@ static void test_empty_all_devices(void)
 static void test_single_device_added(void)
 {
 	reset_globals();
-	mock_device dev("disk0", "/dev/sda", 1.5, 0);
-	all_devices.push_back(&dev);
+	all_devices.push_back(std::make_unique<mock_device>("disk0", "/dev/sda", 1.5, 0));
 
 	all_devices_to_all_power();
 
@@ -88,8 +88,7 @@ static void test_single_device_added(void)
 static void test_invisible_device_not_added(void)
 {
 	reset_globals();
-	mock_device dev("hidden", "/dev/sdb", 2.0, 0, false /* invisible */);
-	all_devices.push_back(&dev);
+	all_devices.push_back(std::make_unique<mock_device>("hidden", "/dev/sdb", 2.0, 0, false /* invisible */));
 
 	all_devices_to_all_power();
 
@@ -101,10 +100,8 @@ static void test_deduplication_aggregates_power(void)
 {
 	reset_globals();
 	/* Two devices sharing the same real_path → power should be summed */
-	mock_device d1("net0",       "/sys/net/eth0", 1.0, 0);
-	mock_device d2("net0-alias", "/sys/net/eth0", 0.5, 0);
-	all_devices.push_back(&d1);
-	all_devices.push_back(&d2);
+	all_devices.push_back(std::make_unique<mock_device>("net0",       "/sys/net/eth0", 1.0, 0));
+	all_devices.push_back(std::make_unique<mock_device>("net0-alias", "/sys/net/eth0", 0.5, 0));
 
 	all_devices_to_all_power();
 
@@ -118,10 +115,8 @@ static void test_deduplication_prio_update(void)
 {
 	reset_globals();
 	/* d2 has higher prio → device pointer should switch to d2 */
-	mock_device d1("net0",    "/sys/net/eth0", 1.0, 0);
-	mock_device d2("net0-hi", "/sys/net/eth0", 0.5, 5);
-	all_devices.push_back(&d1);
-	all_devices.push_back(&d2);
+	all_devices.push_back(std::make_unique<mock_device>("net0",    "/sys/net/eth0", 1.0, 0));
+	all_devices.push_back(std::make_unique<mock_device>("net0-hi", "/sys/net/eth0", 0.5, 5));
 
 	all_devices_to_all_power();
 
@@ -135,10 +130,8 @@ static void test_deduplication_prio_no_update(void)
 {
 	reset_globals();
 	/* d2 has lower prio → device pointer should stay with d1 */
-	mock_device d1("net0",    "/sys/net/eth0", 1.0, 5);
-	mock_device d2("net0-lo", "/sys/net/eth0", 0.5, 0);
-	all_devices.push_back(&d1);
-	all_devices.push_back(&d2);
+	all_devices.push_back(std::make_unique<mock_device>("net0",    "/sys/net/eth0", 1.0, 5));
+	all_devices.push_back(std::make_unique<mock_device>("net0-lo", "/sys/net/eth0", 0.5, 0));
 
 	all_devices_to_all_power();
 
@@ -152,10 +145,8 @@ static void test_empty_real_path_not_deduplicated(void)
 {
 	reset_globals();
 	/* Devices with empty real_path must not be merged even if both empty */
-	mock_device d1("anon1", "", 1.0, 0);
-	mock_device d2("anon2", "", 0.5, 0);
-	all_devices.push_back(&d1);
-	all_devices.push_back(&d2);
+	all_devices.push_back(std::make_unique<mock_device>("anon1", "", 1.0, 0));
+	all_devices.push_back(std::make_unique<mock_device>("anon2", "", 0.5, 0));
 
 	all_devices_to_all_power();
 
@@ -166,8 +157,7 @@ static void test_empty_real_path_not_deduplicated(void)
 static void test_clear_proc_devices(void)
 {
 	reset_globals();
-	mock_device dev("gpu", "/sys/gpu/0", 5.0, 0);
-	all_devices.push_back(&dev);
+	all_devices.push_back(std::make_unique<mock_device>("gpu", "/sys/gpu/0", 5.0, 0));
 
 	all_devices_to_all_power();
 	PT_ASSERT_EQ(all_proc_devices.size(), (size_t)1);
@@ -182,8 +172,7 @@ static void test_clear_proc_devices(void)
 static void test_description_returns_human_name(void)
 {
 	reset_globals();
-	mock_device dev("MyDisk", "/dev/nvme0", 3.0, 0);
-	all_devices.push_back(&dev);
+	all_devices.push_back(std::make_unique<mock_device>("MyDisk", "/dev/nvme0", 3.0, 0));
 
 	all_devices_to_all_power();
 
@@ -194,8 +183,7 @@ static void test_description_returns_human_name(void)
 static void test_witts_returns_power(void)
 {
 	reset_globals();
-	mock_device dev("gpu", "/sys/gpu/1", 7.25, 0);
-	all_devices.push_back(&dev);
+	all_devices.push_back(std::make_unique<mock_device>("gpu", "/sys/gpu/1", 7.25, 0));
 
 	all_devices_to_all_power();
 
@@ -206,12 +194,9 @@ static void test_witts_returns_power(void)
 static void test_multiple_independent_devices(void)
 {
 	reset_globals();
-	mock_device d1("sda", "/dev/sda", 1.0, 0);
-	mock_device d2("sdb", "/dev/sdb", 2.0, 0);
-	mock_device d3("sdc", "/dev/sdc", 3.0, 0);
-	all_devices.push_back(&d1);
-	all_devices.push_back(&d2);
-	all_devices.push_back(&d3);
+	all_devices.push_back(std::make_unique<mock_device>("sda", "/dev/sda", 1.0, 0));
+	all_devices.push_back(std::make_unique<mock_device>("sdb", "/dev/sdb", 2.0, 0));
+	all_devices.push_back(std::make_unique<mock_device>("sdc", "/dev/sdc", 3.0, 0));
 
 	all_devices_to_all_power();
 

@@ -64,8 +64,6 @@ static class abstract_cpu * new_package(int package, int cpu, const std::string 
 {
 	class abstract_cpu *ret = nullptr;
 	class cpudevice *cpudev;
-	class cpu_rapl_device *cpu_rapl_dev;
-	class dram_rapl_device *dram_rapl_dev;
 
 	std::string packagename;
 	if (vendor == "GenuineIntel")
@@ -84,22 +82,21 @@ static class abstract_cpu * new_package(int package, int cpu, const std::string 
 	ret->childcount = 0;
 
 	packagename = pt_format(_("cpu package {}"), cpu);
-	cpudev = new cpudevice(_("cpu package"), packagename.c_str(), ret);
-	all_devices.push_back(cpudev);
+	auto cpudev_ptr = std::make_unique<cpudevice>(_("cpu package"), packagename.c_str(), ret);
+	cpudev = cpudev_ptr.get();
+	all_devices.push_back(std::move(cpudev_ptr));
 
 	packagename = pt_format(_("package-{}"), cpu);
-	cpu_rapl_dev = new cpu_rapl_device(cpudev, _("cpu rapl package"), packagename.c_str(), ret);
+	auto cpu_rapl_dev = std::make_unique<cpu_rapl_device>(cpudev, _("cpu rapl package"), packagename.c_str(), ret);
 	if (cpu_rapl_dev->device_present())
-		all_devices.push_back(cpu_rapl_dev);
-	else
-		delete cpu_rapl_dev;
+		all_devices.push_back(std::move(cpu_rapl_dev));
+	/* else: cpu_rapl_dev goes out of scope here and is auto-deleted */
 
 	packagename = pt_format(_("package-{}"), cpu);
-	dram_rapl_dev = new dram_rapl_device(cpudev, _("dram rapl package"), packagename.c_str(), ret);
+	auto dram_rapl_dev = std::make_unique<dram_rapl_device>(cpudev, _("dram rapl package"), packagename.c_str(), ret);
 	if (dram_rapl_dev->device_present())
-		all_devices.push_back(dram_rapl_dev);
-	else
-		delete dram_rapl_dev;
+		all_devices.push_back(std::move(dram_rapl_dev));
+	/* else: dram_rapl_dev goes out of scope here and is auto-deleted */
 
 	return ret;
 }

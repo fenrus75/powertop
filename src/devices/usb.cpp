@@ -156,7 +156,7 @@ static void create_all_usb_devices_callback(const std::string &d_name)
 		return;
 
 	usb = new usbdevice(device_name, std::format("/sys/bus/usb/devices/{}", d_name), devid_name);
-	all_devices.push_back(usb);
+	all_devices.push_back(std::unique_ptr<usbdevice>(usb));
 	register_parameter(devid_name, 0.1);
 }
 

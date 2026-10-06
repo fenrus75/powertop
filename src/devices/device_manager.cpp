@@ -106,7 +106,7 @@ void report_devices(void)
 	wclear(win);
 #ifndef ENABLE_TEST_FRAMEWORK
 	{
-		class tab_window *tw = tab_windows["Device stats"];
+		class tab_window *tw = tab_windows["Device stats"].get();
 		if (tw)
 			tw->reset_content_size();
 	}
@@ -169,7 +169,7 @@ void report_devices(void)
 
 #ifndef ENABLE_TEST_FRAMEWORK
 	{
-		class tab_window *tw = tab_windows["Device stats"];
+		class tab_window *tw = tab_windows["Device stats"].get();
 		if (tw)
 			tw->update_content_size();
 	}

@@ -45,11 +45,6 @@
 static void sort_tunables(void);
 static bool should_clear = false;
 
-/* Owns the active Tunables tab window; replaced (never left dangling) by
- * initialize_tuning(). Also aliased (non-owning) via a raw pointer in the
- * tab_windows map for display dispatch. */
-std::unique_ptr<class tuning_window> tune_window;
-
 class tuning_window: public tab_window {
 public:
 	virtual void repaint(void) override;
@@ -97,19 +92,18 @@ static void init_tuning(void)
 void initialize_tuning(void)
 {
 	auto w = std::make_unique<tuning_window>();
+	/* Keep a non-owning observer so cursor_max can be set below after
+	 * ownership has been transferred into tab_windows by create_tab(). */
+	tuning_window *observer = w.get();
 
-	create_tab("Tunables", _("Tunables"), w.get(), _(" <ESC> Exit | <Enter> Toggle tunable | <r> Window refresh"));
+	create_tab("Tunables", _("Tunables"), std::move(w), _(" <ESC> Exit | <Enter> Toggle tunable | <r> Window refresh"));
 
 	init_tuning();
 
 	if (all_tunables.empty())
-		w->cursor_max = 0;
+		observer->cursor_max = 0;
 	else
-		w->cursor_max = static_cast<int>(all_tunables.size()) - 1;
-
-	/* Assigning replaces (and destroys) whatever tune_window previously
-	 * held, so there is no manual delete to forget. */
-	tune_window = std::move(w);
+		observer->cursor_max = static_cast<int>(all_tunables.size()) - 1;
 }
 
 
@@ -153,7 +147,7 @@ void tuning_update_display(void)
 {
 	class tab_window *w;
 
-	w = tab_windows["Tunables"];
+	w = tab_windows["Tunables"].get();
 	if (!w)
 		return;
 	w->repaint();
@@ -321,8 +315,8 @@ void report_show_tunables(void)
 
 void shutdown_tuning()
 {
+	/* Erasing destroys the owned tab_window via unique_ptr. */
 	tab_windows.erase("Tunables");
-	tune_window.reset();
 	clear_tuning();
 }
 

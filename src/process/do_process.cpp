@@ -826,7 +826,7 @@ void process_update_display(void)
 	wclear(win);
 #ifndef ENABLE_TEST_FRAMEWORK
 	{
-		class tab_window *tw = tab_windows["Overview"];
+		class tab_window *tw = tab_windows["Overview"].get();
 		if (tw)
 			tw->reset_content_size();
 	}
@@ -919,7 +919,7 @@ void process_update_display(void)
 
 #ifndef ENABLE_TEST_FRAMEWORK
 	{
-		class tab_window *tw = tab_windows["Overview"];
+		class tab_window *tw = tab_windows["Overview"].get();
 		if (tw)
 			tw->update_content_size();
 	}

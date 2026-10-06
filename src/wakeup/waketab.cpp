@@ -15,11 +15,6 @@
 
 static bool should_clear = false;
 
-/* Owns the active WakeUp tab window; replaced (never left dangling) by
- * initialize_wakeup(). Also aliased (non-owning) via a raw pointer in the
- * tab_windows map for display dispatch. */
-std::unique_ptr<class wakeup_window> newtab_window;
-
 class wakeup_window: public tab_window {
 public:
 	virtual void repaint(void) override;
@@ -37,19 +32,18 @@ static void init_wakeup(void)
 void initialize_wakeup(void)
 {
 	auto win = std::make_unique<wakeup_window>();
+	/* Keep a non-owning observer so cursor_max can be set below after
+	 * ownership has been transferred into tab_windows by create_tab(). */
+	wakeup_window *observer = win.get();
 
-	create_tab("WakeUp", _("WakeUp"), win.get(), _(" <ESC> Exit | <Enter> Toggle wakeup | <r> Window refresh"));
+	create_tab("WakeUp", _("WakeUp"), std::move(win), _(" <ESC> Exit | <Enter> Toggle wakeup | <r> Window refresh"));
 
 	init_wakeup();
 
 	if (wakeup_all.empty())
-		win->cursor_max = 0;
+		observer->cursor_max = 0;
 	else
-		win->cursor_max = (int)wakeup_all.size() - 1;
-
-	/* Assigning replaces (and destroys) whatever newtab_window previously
-	 * held, so there is no manual delete to forget. */
-	newtab_window = std::move(win);
+		observer->cursor_max = (int)wakeup_all.size() - 1;
 }
 
 static void __wakeup_update_display(int cursor_pos)
@@ -88,7 +82,7 @@ void wakeup_update_display(void)
 {
 	class tab_window *wt;
 
-	wt = tab_windows["WakeUp"];
+	wt = tab_windows["WakeUp"].get();
 	if (!wt)
 		return;
 	wt->repaint();
@@ -178,8 +172,8 @@ void wakeup_window::window_refresh(void)
 
 void shutdown_wakeup()
 {
+	/* Erasing destroys the owned tab_window via unique_ptr. */
 	tab_windows.erase("WakeUp");
-	newtab_window.reset();
 	clear_wakeup();
 }
 

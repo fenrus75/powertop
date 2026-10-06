@@ -648,103 +648,51 @@ is now just `all_devices.clear();`.
   actually building the test binaries — whenever an `extern`-only stub in
   a test file has its container type migrated to an owning smart pointer.
 
-**`past_results` converted 2026-09-29** — `parameters.h`/`.cpp`'s
-`past_results` is now `vector<unique_ptr<result_bundle>>`. `clone_results()`
-now returns `unique_ptr<result_bundle>` (via `make_unique`) instead of a raw
-pointer; both the ring-buffer overwrite in `store_results()` (parameters.cpp)
-and `load_results()` (persistent.cpp) just do plain assignment/`std::move`
-into the vector slot — the old element's `delete` is now automatic. Raw
-`result_bundle *` is still used locally wherever a non-owning view is needed
-(`.get()` at call sites like `compute_bundle()`, `get_result_value()`,
-`bundle_power()`). No test-file link issues here (unlike `all_devices`) —
-`result_bundle` is a plain struct with no virtual functions, so there's no
-key-function/vtable gotcha; the test files that use `past_results` directly
-(`test_parameters.cpp`, `test_learn_parameters.cpp`) already link the real
-`parameters.cpp`, they just needed their own local `new`/`delete` push
-patterns updated to `make_unique`/`std::move`.
+The `past_results`, `all_timers`, and `all_work` migrations follow the same
+ownership rule: containers own with `unique_ptr`, and APIs return raw
+pointers only as temporary non-owning observers. For `std::for_each` over a
+map, callback signatures must match its `value_type` (including `const` on
+the key).
 
-**`all_timers` converted 2026-09-29** — `process/timer.cpp`'s `all_timers` is
-now `map<uint64_t, unique_ptr<timer>>`. It's `static` to `timer.cpp` (not
-`extern`'d via `timer.h`), so unlike the previous two containers, zero other
-production or test files reference the map directly — the whole conversion
-was contained to one file. `find_create_timer()` still *returns* a raw
-`timer *` (non-owning observer, matches `do_process.cpp`'s usage pattern),
-built via `make_unique` + `.get()` before `std::move`-ing into the map.
-`all_timers_to_all_power()`'s structured-binding loop just needed
-`all_power.push_back(t.get())` (`all_power` is `vector<power_consumer*>`,
-a non-owning observer container, unchanged). `clear_timers()`'s manual
-iterator-erase-with-`delete` loop collapsed to a plain `all_timers.clear();`.
-No test-file gotcha this time (no key-function/vtable issue, no stack-mock
-issue) — `tests/base/test_timer.cpp` only touches the map indirectly via
-`find_create_timer()`/`clear_timers()`/`all_timers_to_all_power()`.
-
-**`all_work` converted 2026-09-28** — `process/work.cpp`'s `all_work` is now
-`map<unsigned long, unique_ptr<work>>`, same self-contained pattern as
-`all_timers` (static to `work.cpp`, no test-file gotchas). One extra wrinkle
-vs. `all_timers`: `all_work_to_all_power()` iterates via
-`std::for_each(all_work.begin(), all_work.end(), add_work)` rather than a
-structured-binding range-for, so the free function `add_work()`'s parameter
-type had to change from `const std::pair<unsigned long, work*>&` to
-`const std::pair<const unsigned long, unique_ptr<work>>&` (note: map's
-`value_type` key is `const K`, so the `const` on the key type is required —
-compiles either way with a range-for's `auto&`, but a raw `std::pair<...>&`
-signature must match `map::value_type` exactly or the call silently fails to
-bind and produces a "no matching function" error at the `for_each` call
-site, not at `add_work`'s definition). `find_create_work()`/`clear_work()`
-follow the same `make_unique`/`.get()`/`.clear()` pattern as `find_create_timer()`.
-
-**Exact remaining raw-owning containers (2), still `vector<T*>`/`map<K,T*>`:**
-1. `tab_windows` (`map<string, tab_window*>`, display.h/.cpp) — freed in
-   `reset_display()`. **Scoped but NOT started 2026-09-28 — see notes below,
-   harder than the previous 3 conversions, needs a deliberate session.**
-2. `devlist.cpp`'s `one`/`two` (`vector<devuser*>`) and `devpower`
+**Exact remaining raw-owning containers (1), still `vector<T*>`/`map<K,T*>`:**
+1. `devlist.cpp`'s `one`/`two` (`vector<devuser*>`) and `devpower`
    (`vector<devpower*>`) — freed in `clean_open_devices()` /
    `collect_open_devices()`.
 
-**`tab_windows` scoping notes (2026-09-28, conversion deferred):** unlike
-`all_devices`/`past_results`/`all_timers`/`all_work`, this container has
-**mixed ownership** today, not sole ownership — a straight retype will
-either break things or paper over a real bug:
-- Most tabs (Overview, Idle stats, Frequency stats, Device stats, Device
-  Freq stats, the GPU tab) are created via `create_tab(name, translation)`
-  with `w == nullptr`; `create_tab()` does `new tab_window` internally and
-  `tab_windows` is the *sole* owner, freed by `reset_display()`'s
-  `delete val` loop over every map entry.
-- Two tabs — WakeUp (`wakeup/waketab.cpp`) and Tunables (`tuning/tuning.cpp`)
-  — are different: each file already has its own `unique_ptr<subclass>`
-  global (`newtab_window`, `tune_window`) that owns the object; they call
-  `create_tab(name, translation, win.get(), ...)`, so `tab_windows[name]`
-  only holds a **non-owning alias** to the same object. `shutdown_wakeup()`/
-  `shutdown_tuning()` call `tab_windows.erase(name)` *before*
-  `newtab_window.reset()`/`tune_window.reset()`, specifically to keep
-  `reset_display()`'s later delete-loop from ever touching an
-  already-separately-owned entry.
-- **Pre-existing latent double-free bug found while scoping (not
-  introduced by this migration, not yet fixed):** `reset_display()` is
-  also called on fatal-error paths (`main.cpp`'s `out_of_memory()`,
-  `perf/perf.cpp`, `cpu/intel_cpus.cpp`) that do *not* call
-  `shutdown_tuning()`/`shutdown_wakeup()` first. If the WakeUp/Tunables
-  tabs are active when one of those paths fires, `reset_display()`
-  deletes the tab object once via the map, and then `newtab_window`/
-  `tune_window`'s `unique_ptr` destructor (running at `exit()`'s static
-  teardown) deletes it again. Masked in practice because these are
-  abort/exit paths, but it's real UB.
-- **Recommended fix when this is picked back up:** make `tab_windows`
-  (`map<string, unique_ptr<tab_window>>`) the *sole* owner for every tab,
-  including WakeUp/Tunables, and demote `tune_window`/`newtab_window` to
-  plain non-owning `tab_window*` (or `wakeup_window*`/`tuning_window*`)
-  observer pointers obtained via `.get()` after insertion — this also
-  fixes the latent double-free as a side effect. Confirmed via grep that
-  `tune_window`/`newtab_window` are referenced *only* inside
-  `tuning.cpp`/`waketab.cpp` respectively (no external callers), so the
-  blast radius is small: `display.h`/`.cpp`, `tuning/tuning.cpp`,
-  `wakeup/waketab.cpp`, plus `.get()` touch-ups at every
-  `tab_windows[name]` read site (`cpu.cpp`, `devfreq.cpp`,
-  `device_manager.cpp`, `do_process.cpp`, `gpu-tab.cpp` — about a dozen
-  call sites, all read-only lookups assigning to a local
-  `class tab_window *`). No test file references `tab_windows` directly.
-  Budget more time for this one than the previous three; it's a genuine
-  ownership-model change, not a pure mechanical retype.
+**`tab_windows` converted 2026-09-30 —** `map<string, tab_window*>` →
+`map<string, unique_ptr<tab_window>>`; this is now the sole owner for every
+tab, including WakeUp and Tunables. `tune_window`/`newtab_window` (the
+per-file owning globals that previously raced `tab_windows` for ownership)
+were removed entirely — they had no functional read sites, only
+hold/replace/reset duty. `create_tab()` now takes `unique_ptr<tab_window>`
+by value (`make_unique`'d internally when omitted) and moves it into the
+map; `shutdown_wakeup()`/`shutdown_tuning()` simplify to a single
+`tab_windows.erase(name)`; `reset_display()` simplifies to
+`tab_windows.clear()` (no manual delete loop). This also fixes the latent
+double-free described below: there is now exactly one destruction path, so
+the error-exit paths in `perf/perf.cpp`/`cpu/intel_cpus.cpp` that skip
+`shutdown_tuning()`/`shutdown_wakeup()` before `exit()` can no longer
+double-delete the WakeUp/Tunables tab object.
+  - **Call-site pattern for "needs to set a field after init populates
+    data" tabs** (WakeUp/Tunables): grab a raw observer pointer from the
+    `unique_ptr` *before* moving it into `create_tab()`, since the
+    `cursor_max` field must be set only after `init_wakeup()`/
+    `init_tuning()` populates the backing vector (whose size it depends
+    on), and by then the tab is already owned by the map:
+    ```cpp
+    auto win = std::make_unique<wakeup_window>();
+    wakeup_window *observer = win.get();
+    create_tab("WakeUp", _("WakeUp"), std::move(win), "...");
+    init_wakeup();
+    observer->cursor_max = wakeup_all.empty() ? 0 : (int)wakeup_all.size() - 1;
+    ```
+  - Added a `get_current_tab()` static helper in display.cpp
+    (`tab_windows[tab_names[current_tab]].get()`) to replace 10 duplicated
+    inline lookups in `show_prev_tab`/`show_next_tab`/`cursor_*`/
+    `window_refresh` — the two-level index→name→owner indirection is now a
+    single named call instead of being re-derived at every use site.
+  - `tests/devices/stub_display.cpp` had its `create_tab()` stub signature
+    updated to match (`unique_ptr<tab_window>` instead of `tab_window*`).
 
 **Deliberately out of scope (documented exception, not a regular
 container):** `perf_bundle::records` (`vector<void*>`) uses raw
@@ -787,4 +735,3 @@ bounds check.
   `target_content` and `replacement_content` are identical (a true no-op)
   — it doesn't warn that nothing changed. Double-check edits that were
   meant to change something actually show up in a subsequent `view`/diff.
-

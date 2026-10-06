@@ -27,6 +27,7 @@
 
 #include <algorithm>
 #include <map>
+#include <memory>
 #include <string>
 #include <ncurses.h>
 
@@ -112,12 +113,17 @@ public:
 	}
 };
 
-extern std::map<std::string, class tab_window *> tab_windows;
+/* Sole owner of every tab's tab_window (or subclass) object. create_tab()
+ * inserts ownership here; callers that need a tab_window afterwards must
+ * use tab_windows[name].get() to obtain a non-owning observer pointer. */
+extern std::map<std::string, std::unique_ptr<class tab_window>> tab_windows;
 
 WINDOW *get_ncurses_win(const std::string &name);
 WINDOW *get_ncurses_win(int nr);
 
-void create_tab(const std::string &name, const std::string &translation, class tab_window *w = nullptr, const std::string &bottom_line = "");
+/* Takes ownership of w (if provided) and moves it into tab_windows; when w
+ * is null, a plain tab_window is allocated and owned instead. */
+void create_tab(const std::string &name, const std::string &translation, std::unique_ptr<class tab_window> w = nullptr, const std::string &bottom_line = "");
 
 /* Default width for draw_progress_bar */
 static constexpr int BAR_WIDTH = 50;

@@ -23,6 +23,8 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 
+#include <memory>
+
 #include "gpu-tab.h"
 #include "lib.h"
 #include "devices/device.h"
@@ -474,6 +476,6 @@ void initialize_gpu_tab(void)
 
 	const char *translated = _("Intel Xe GPU");
 
-	auto *w = new gpu_tab_window();
-	create_tab(GPU_TAB_KEY, translated, w);
+	auto w = std::make_unique<gpu_tab_window>();
+	create_tab(GPU_TAB_KEY, translated, std::move(w));
 }

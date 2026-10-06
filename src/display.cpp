@@ -48,7 +48,7 @@ static constexpr int PAD_LEFT = 0;
 static constexpr int SCROLL_MARGIN = 7;
 
 std::vector<std::string> tab_names;
-std::map<std::string, class tab_window *> tab_windows;
+std::map<std::string, std::unique_ptr<class tab_window>> tab_windows;
 std::map<std::string, std::string> tab_translations;
 
 std::map<std::string, std::string> bottom_lines;
@@ -57,14 +57,14 @@ WINDOW *tab_bar = nullptr;
 WINDOW *bottom_line = nullptr;
 static WINDOW *scrollbar_win = nullptr;
 
-void create_tab(const std::string &name, const std::string &translation, class tab_window *w, const std::string &bottom_text)
+void create_tab(const std::string &name, const std::string &translation, std::unique_ptr<class tab_window> w, const std::string &bottom_text)
 {
 	if (!w)
-		w = new tab_window;
+		w = std::make_unique<tab_window>();
 
 	w->win = newpad(1000,1000);
 	tab_names.push_back(name);
-	tab_windows[name] = w;
+	tab_windows[name] = std::move(w);
 	tab_translations[name] = translation;
 	bottom_lines[name] = bottom_text;
 }
@@ -101,9 +101,8 @@ void reset_display(void)
 	if (!display)
 		return;
 
-	for (auto const& [key, val] : tab_windows) {
-		delete val;
-	}
+	/* tab_windows is the sole owner of every tab object; clearing it
+	 * destroys them all via unique_ptr, no manual delete loop needed. */
 	tab_windows.clear();
 	tab_names.clear();
 	tab_translations.clear();
@@ -132,6 +131,14 @@ void reset_display(void)
 
 
 static int current_tab;
+
+/* Resolves the tab_window owned for the currently selected tab. Returns
+ * nullptr if current_tab has no associated window (shouldn't normally
+ * happen, but tab_windows[...] may legitimately hold a null unique_ptr). */
+static class tab_window *get_current_tab(void)
+{
+	return tab_windows[tab_names[current_tab]].get();
+}
 
 static void draw_scrollbar(const class tab_window *w)
 {
@@ -239,7 +246,7 @@ void show_tab(unsigned int tab)
 	wrefresh(tab_bar);
 	wrefresh(bottom_line);
 
-	win = tab_windows[tab_names[tab]];
+	win = tab_windows[tab_names[tab]].get();
 	if (!win)
 		return;
 
@@ -255,7 +262,7 @@ WINDOW *get_ncurses_win(const std::string &name)
 	if (tab_windows.count(name) == 0)
 		return nullptr;
 
-	w = tab_windows[name];
+	w = tab_windows[name].get();
 	if (!w)
 		return nullptr;
 
@@ -272,7 +279,7 @@ WINDOW *get_ncurses_win(int nr)
 	if (nr < 0 || nr >= (int)tab_names.size())
 		return nullptr;
 
-	w = tab_windows[tab_names[nr]];
+	w = tab_windows[tab_names[nr]].get();
 	if (!w)
 		return nullptr;
 
@@ -287,7 +294,7 @@ void show_prev_tab(void)
 
        if (!display)
                return;
-       w = tab_windows[tab_names[current_tab]];
+       w = get_current_tab();
        if (w)
                w->hide();
 
@@ -295,7 +302,7 @@ void show_prev_tab(void)
        if (current_tab < 0)
                current_tab = tab_names.size() - 1;
 
-       w = tab_windows[tab_names[current_tab]];
+       w = get_current_tab();
        if (w)
                w->expose();
 
@@ -310,7 +317,7 @@ void show_next_tab(void)
 	if (!display)
 		return;
 
-	w = tab_windows[tab_names[current_tab]];
+	w = get_current_tab();
 	if (w)
 		w->hide();
 
@@ -318,7 +325,7 @@ void show_next_tab(void)
 	if (current_tab >= (int)tab_names.size())
 		current_tab = 0;
 
-	w = tab_windows[tab_names[current_tab]];
+	w = get_current_tab();
 	if (w)
 		w->expose();
 
@@ -337,7 +344,7 @@ void cursor_down(void)
 {
 	class tab_window *w;
 
-	w = tab_windows[tab_names[current_tab]];
+	w = get_current_tab();
 	if (w) {
 		int viewport_height = PAD_BOTTOM - PAD_TOP + 1;
 		int ypad_max;
@@ -371,7 +378,7 @@ void cursor_up(void)
 {
 	class tab_window *w;
 
-	w = tab_windows[tab_names[current_tab]];
+	w = get_current_tab();
 
 	if (w) {
 		w->cursor_up();
@@ -388,7 +395,7 @@ void cursor_left(void)
 {
         class tab_window *w;
 
-	w = tab_windows[tab_names[current_tab]];
+	w = get_current_tab();
 
 	if (w) {
 		if (w->xpad_pos > 0) {
@@ -402,7 +409,7 @@ void cursor_right(void)
 {
         class tab_window *w;
 
-	w = tab_windows[tab_names[current_tab]];
+	w = get_current_tab();
 
 	if (w) {
 		if (w->xpad_pos < 1000) {
@@ -416,7 +423,7 @@ void cursor_enter(void)
 {
 	class tab_window *w;
 
-	w = tab_windows[tab_names[current_tab]];
+	w = get_current_tab();
 
 	if (w) {
 		w->cursor_enter();
@@ -429,7 +436,7 @@ void window_refresh()
 {
 	class tab_window *w;
 
-	w = tab_windows[tab_names[current_tab]];
+	w = get_current_tab();
 
 	if (w) {
 		w->ypad_pos = 0;

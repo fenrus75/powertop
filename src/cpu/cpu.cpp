@@ -873,7 +873,7 @@ void impl_w_display_cpu_states(int state)
 			tabname = "Frequency stats";
 		else
 			tabname = "Idle stats";
-		class tab_window *tw = tab_windows[tabname];
+		class tab_window *tw = tab_windows[tabname].get();
 		if (tw)
 			tw->reset_content_size();
 	}
@@ -961,7 +961,7 @@ void impl_w_display_cpu_states(int state)
 			tabname = "Frequency stats";
 		else
 			tabname = "Idle stats";
-		class tab_window *tw = tab_windows[tabname];
+		class tab_window *tw = tab_windows[tabname].get();
 		if (tw)
 			tw->update_content_size();
 	}
@@ -1000,7 +1000,7 @@ void w_display_cpu_pstates(void)
 
 #ifndef ENABLE_TEST_FRAMEWORK
 	{
-		class tab_window *tw = tab_windows["Frequency stats"];
+		class tab_window *tw = tab_windows["Frequency stats"].get();
 		if (tw)
 			tw->reset_content_size();
 	}
@@ -1055,7 +1055,7 @@ void w_display_cpu_pstates(void)
 
 #ifndef ENABLE_TEST_FRAMEWORK
 	{
-		class tab_window *tw = tab_windows["Frequency stats"];
+		class tab_window *tw = tab_windows["Frequency stats"].get();
 		if (tw)
 			tw->update_content_size();
 	}

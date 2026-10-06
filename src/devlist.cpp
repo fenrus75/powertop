@@ -38,6 +38,7 @@
 #include <cctype>
 #include <climits>
 #include <charconv>
+#include <memory>
 
 #include "devlist.h"
 #include "lib.h"
@@ -60,9 +61,9 @@
 
 */
 
-static std::vector<struct devuser *> one;
-static std::vector<struct devuser *> two;
-static std::vector<struct devpower *> devpower;
+static std::vector<std::unique_ptr<struct devuser>> one;
+static std::vector<std::unique_ptr<struct devuser>> two;
+static std::vector<std::unique_ptr<struct devpower>> devpower;
 
 static int phase;
 /*
@@ -72,30 +73,20 @@ static int phase;
 
 void clean_open_devices()
 {
-	for (auto *d : one)
-		delete d;
 	one.clear();
-
-	for (auto *d : two)
-		delete d;
 	two.clear();
-
-	for (auto *d : devpower)
-		delete d;
 	devpower.clear();
 }
 
 void collect_open_devices(void)
 {
-	std::vector<struct devuser *> *target;
+	std::vector<std::unique_ptr<struct devuser>> *target;
 
 	if (phase == 1)
 		target = &one;
 	else
 		target = &two;
 
-	for (auto *d : *target)
-		delete d;
 	target->clear();
 
 
@@ -137,13 +128,11 @@ void collect_open_devices(void)
 				if (ec != std::errc() || ptr != pid.data() + pid.size())
 					continue;
 
-				struct devuser *dev = new(std::nothrow) struct devuser;
-				if (!dev)
-					continue;
+				auto dev = std::make_unique<struct devuser>();
 				dev->pid = numeric_pid;
 				dev->device = link;
 				dev->comm = read_sysfs_string(std::format("/proc/{}/comm", pid));
-				target->push_back(dev);
+				target->push_back(std::move(dev));
 			}
 		}
 	}
@@ -162,11 +151,11 @@ int charge_device_to_openers(const std::string &devstring, double power, class d
 	class process *proc;
 	/* 1. count the number of openers */
 
-	for (const auto *d : one) {
+	for (const auto &d : one) {
 		if (d->device.find(devstring) != std::string::npos)
 			openers++;
 	}
-	for (const auto *d : two) {
+	for (const auto &d : two) {
 		if (d->device.find(devstring) != std::string::npos)
 			openers++;
 	}
@@ -181,7 +170,7 @@ int charge_device_to_openers(const std::string &devstring, double power, class d
 
 	/* 3. for each process that has it open, add the charge */
 
-	for (const auto *d : one)
+	for (const auto &d : one)
 		if (d->device.find(devstring) != std::string::npos) {
 			proc = find_create_process(d->comm, d->pid);
 			if (proc) {
@@ -193,7 +182,7 @@ int charge_device_to_openers(const std::string &devstring, double power, class d
 			}
 		}
 
-	for (const auto *d : two)
+	for (const auto &d : two)
 		if (d->device.find(devstring) != std::string::npos) {
 			proc = find_create_process(d->comm, d->pid);
 			if (proc) {
@@ -212,7 +201,7 @@ int charge_device_to_openers(const std::string &devstring, double power, class d
 
 void clear_devpower(void)
 {
-	for (auto *dp : devpower) {
+	for (auto &dp : devpower) {
 		dp->power = 0.0;
 		dp->dev->guilty.clear();
 	}
@@ -222,17 +211,16 @@ void register_devpower(const std::string &devstring, double power, class device 
 {
 	struct devpower *dev =  nullptr;
 
-	for (auto *dp : devpower)
+	for (auto &dp : devpower)
 		if (devstring == dp->device)
-			dev = dp;
+			dev = dp.get();
 
 	if (!dev) {
-		dev = new(std::nothrow) struct devpower;
-		if (!dev)
-			return;
-		dev->device = devstring;
-		dev->power = 0.0;
-		devpower.push_back(dev);
+		auto new_dev = std::make_unique<struct devpower>();
+		new_dev->device = devstring;
+		new_dev->power = 0.0;
+		dev = new_dev.get();
+		devpower.push_back(std::move(new_dev));
 	}
 	dev->dev = _dev;
 	dev->power = power;
@@ -240,7 +228,7 @@ void register_devpower(const std::string &devstring, double power, class device 
 
 void run_devpower_list(void)
 {
-	for (auto *dp : devpower) {
+	for (auto &dp : devpower) {
 		int ret;
 		ret = charge_device_to_openers(dp->device, dp->power, dp->dev);
 		if (ret)
@@ -250,7 +238,7 @@ void run_devpower_list(void)
 	}
 }
 
-static bool devlist_sort(const devuser *i, const devuser *j)
+static bool devlist_sort(const std::unique_ptr<devuser> &i, const std::unique_ptr<devuser> &j)
 {
 	if (i->pid != j->pid)
 		return i->pid < j->pid;
@@ -260,7 +248,7 @@ static bool devlist_sort(const devuser *i, const devuser *j)
 
 void report_show_open_devices(void)
 {
-	std::vector<struct devuser *> *target;
+	std::vector<std::unique_ptr<struct devuser>> *target;
 	std::string prev, proc;
 	int idx, cols, rows;
 
@@ -291,7 +279,7 @@ void report_show_open_devices(void)
 	process_data[0]=__("Process");
 	process_data[1]=__("Device");
 
-	for (const auto *d : *target) {
+	for (const auto &d : *target) {
 		proc = "";
 		if (prev != d->comm)
 			proc = d->comm;

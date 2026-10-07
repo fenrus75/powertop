@@ -577,89 +577,44 @@ commit fixing review item #1, report-maker.cpp/.h):
   not just the plain unit tests — it's the cheapest way to confirm the
   new ownership doesn't leak or double-free.
 
-# RAII migration progress log
+# RAII migration progress log (condensed)
 
-Raw `new`/`delete` audit (2026-09-25): started at ~24 `delete` sites in
-`src/`. Converted the single-owning-pointer cases (report_maker::formatter,
-tune_window, newtab_window, cpu.cpp's perf_events, do_process.cpp's
-perf_events) to `unique_ptr` — see commits fixing review item #1 and
-"RAII pass 2". Remaining ~16 sites are all collection-ownership
-(`vector<T*>`/`map<K,T*>`: past_results, all_devices, all_timers, all_work,
-tab_windows, devlist's one/two/devpower) plus a handful of local
-"create-or-discard" temporaries that feed those same raw-pointer vectors
-(cpu_rapl_dev/dram_rapl_dev, i915-gpu's rapl_dev, runtime_pm's dev) —
-converting those cleanly wants the container migration done first, so
-they were deliberately left for a dedicated follow-up pass rather than
-converted piecemeal.
-
-**Re-verified 2026-09-28: no drift since the 2026-09-25 audit** — still
-exactly 16 real `delete` statements / ~30 `new` allocations in `src/`
-(excludes the stale `src/tuning/runtime.cpp~` backup and the vendored
-`src/tuning/nl80211.h` kernel header, which only has `delete`/`new` in
-comments). Since the 2026-09-25 pass, `power_meters`, `all_devfreq` +
+Full raw `new`/`delete` audit started 2026-09-25 (~24 `delete` sites in
+`src/`). All single-owning-pointer cases and essentially all owning
+`vector<T*>`/`map<K,T*>` containers have since been converted to
+`unique_ptr`-based ownership: `power_meters`, `all_devfreq`/
 `devfreq::dstates`, `perf_bundle::events`, `all_interrupts`,
-`all_processes`, `all_proc_devices`, `all_tunables`/`all_untunables`, and
-`abstract_cpu::children`/`cstates`/`pstates` have all separately been
-converted to `vector<unique_ptr<T>>` (confirmed via grep — the `raii.md`
-file itself no longer exists, so this log plus the ownership map above are
-now the only source of truth).
+`all_processes`, `all_proc_devices`, `all_tunables`/`all_untunables`,
+`abstract_cpu::children`/`cstates`/`pstates`, `all_devices`,
+`past_results`, `all_timers`, `all_work`, `tab_windows`, and (as of
+2026-10-07) `devlist.cpp`'s `one`/`two`/`devpower`. The ownership map
+earlier in this file lists current owning-vs-observer status per
+container; `raii.md` no longer exists — this log + that map are the only
+source of truth.
 
-**`all_devices` converted 2026-09-29** — `src/devices/device.h`/`.cpp`'s
-`all_devices` is now `vector<unique_ptr<device>>`. All ~11 `create_*`
-producers (ahci, alsa, backlight, i915-gpu, rfkill, runtime_pm,
-thinkpad-fan/light, usb, network, xe-gpu) and `cpu.cpp::new_package()`
-converted to `make_unique`/`push_back(std::move(...))`, with
-create-or-discard temporaries (`cpu.cpp`'s `cpu_rapl_dev`/`dram_rapl_dev`,
-`i915-gpu.cpp`'s `rapl_dev`, `runtime_pm.cpp`'s `dev`) now auto-deleted by
-falling out of scope instead of explicit `delete`. All iteration sites
-(`device_manager.cpp`, `processdevice.cpp`, `parameters.cpp`, `gpu-tab.cpp`)
-changed `for (auto *d : ...)` → `for (auto &d : ...)`;
-`network.cpp`'s `nics` map and `cpudevice`/`i915gpu`'s `child_devices`
-were deliberately left as non-owning raw-pointer views. `clear_all_devices()`
-is now just `all_devices.clear();`.
+**Recurring gotchas when migrating a `vector<T*>`/`map<K,T*>` to owning
+smart pointers (apply these checks to any future container migration):**
+- *Stack-vs-heap test mocks*: grep test files for `container.push_back(&local_var)`
+  before flipping a container to `unique_ptr` ownership — a stack address
+  pushed into an owning container causes a crash/UB on teardown once the
+  container's destructor starts calling `delete` on every element. Fix by
+  switching the mock to `std::make_unique<T>(...)`.
+- *Key-function vtable link errors in stub-only test files*: if a test
+  file declares its own local stub for a global owning container instead
+  of linking the real class's `.cpp`, converting that container to
+  `unique_ptr` makes the stub's own destructor require the class's vtable
+  (to `delete` through the base pointer) — this fails to link with
+  "undefined reference to vtable for X" unless the class's `.cpp` (with
+  its out-of-line key function, e.g. `collect_json_fields()`) is added to
+  that test's `meson.build` sources, replacing the local stub.
+- `std::for_each` over a `map` needs a callback matching its `value_type`
+  exactly (including `const` on the key).
+- Factory functions that collide with a class name (e.g.
+  `extech_power_meter(const std::string &)` vs `class extech_power_meter`)
+  need `new class extech_power_meter(...)` to disambiguate.
 
-**Two gotchas hit during this conversion, worth knowing for the remaining
-5 containers below:**
-- *Stack-vs-heap test mocks*: `tests/base/test_processdevice.cpp` had
-  `mock_device dev(...); all_devices.push_back(&dev);` (stack-allocated,
-  fine for a raw-pointer vector since nothing ever deletes it). Once the
-  vector owns via `unique_ptr`, its destructor calls `delete` on every
-  element — pushing a stack address causes a crash/UB on teardown. Fixed
-  by switching to `all_devices.push_back(std::make_unique<mock_device>(...));`.
-  Audit every test file that pushes into a container being migrated for
-  this exact pattern before flipping the container's type.
-- *Key-function vtable link errors in stub-only test files*: several test
-  files (`test_xe_core.cpp`, `test_parameters.cpp`,
-  `test_learn_parameters.cpp`) declare their own local
-  `all_devices` "stub" instead of linking the real `device.cpp`, because
-  they never previously needed `device`'s implementation (a raw-pointer
-  vector's destructor is trivial). `device`'s virtual destructor is
-  inline in `device.h`, but `collect_json_fields()` — its Itanium ABI "key
-  function" (first non-inline virtual) — is defined out-of-line in
-  `device.cpp`, so the vtable is only emitted in that TU. Converting the
-  stub to `vector<unique_ptr<device>>` makes the *global variable's own
-  destructor* require `device`'s vtable (to `delete` through the base
-  pointer), which fails to link with "undefined reference to vtable for
-  device" unless `device.cpp` is part of that executable. Fix: add
-  `../../src/devices/device.cpp` to the test's `meson.build` sources and
-  delete the local stub definition (keep only the `extern` from
-  `device.h`) rather than just retyping it. Check for this class of
-  failure — a link error, not a compile error, so it only surfaces when
-  actually building the test binaries — whenever an `extern`-only stub in
-  a test file has its container type migrated to an owning smart pointer.
-
-The `past_results`, `all_timers`, and `all_work` migrations follow the same
-ownership rule: containers own with `unique_ptr`, and APIs return raw
-pointers only as temporary non-owning observers. For `std::for_each` over a
-map, callback signatures must match its `value_type` (including `const` on
-the key).
-
-**Exact remaining raw-owning containers (1), still `vector<T*>`/`map<K,T*>`:**
-1. `devlist.cpp`'s `one`/`two` (`vector<devuser*>`) and `devpower`
-   (`vector<devpower*>`) — freed in `clean_open_devices()` /
-   `collect_open_devices()`.
-
-**`tab_windows` converted 2026-09-30 —** `map<string, tab_window*>` →
+**`tab_windows` conversion (2026-09-30), kept as the reference pattern for
+"owning map with observer needed mid-init":** `map<string, tab_window*>` →
 `map<string, unique_ptr<tab_window>>`; this is now the sole owner for every
 tab, including WakeUp and Tunables. `tune_window`/`newtab_window` (the
 per-file owning globals that previously raced `tab_windows` for ownership)
@@ -735,3 +690,42 @@ bounds check.
   `target_content` and `replacement_content` are identical (a true no-op)
   — it doesn't warn that nothing changed. Double-check edits that were
   meant to change something actually show up in a subsequent `view`/diff.
+
+# Release checklist walkthrough notes (v2.16.1, 2026-10-07)
+
+- Before starting, `meson.build` and the latest git tag were already both
+  `v2.16.1-rc1` with 47 more commits merged since that rc tag — i.e. an rc
+  had been cut but not yet promoted to stable, and plenty of new work had
+  landed on top. Always check `git tag --sort=-v:refname | head` *and*
+  `meson.build`'s `version:` field *and* `git log <latest-tag>..HEAD
+  --oneline | wc -l` before asking the user which version to cut; don't
+  assume the previous tag matches `meson.build` or that there's nothing new
+  to release.
+- When promoting an existing `-rcN` cycle straight to stable (skipping
+  further rcs), the release-notes base for `git shortlog`/tunable-diff
+  purposes is still the **last stable tag** (e.g. `v2.16`), not the rc tag
+  — the `doc/relnotes.md` section for the rc is renamed in place and
+  extended with everything merged since the rc, exactly like the existing
+  RC-cadence rule in `release-checklist.md` describes for rc→rc moves.
+- After a clean `meson setup --wipe` + `ninja -C build_acov test` run
+  followed by a `sudo build_acov/powertop --once` coverage run, the
+  `*.gcda`/`*.gcno` files under `build_acov` end up root-owned; run
+  `sudo chown -R $(whoami):$(id -gn) build_acov` before
+  `scripts/coverage_report.sh`, or lcov will fail/warn on permission
+  errors reading them.
+- The checklist's valgrind/ASAN leak-check steps and the `--once` coverage
+  run all require `sudo` (binding to real hardware sysfs paths as root);
+  run these via `sudo -E` to preserve `ASAN_OPTIONS` and other env vars
+  needed by the binary.
+- Before `git add`ing the release commit, always check for pre-existing
+  unrelated untracked files in the repo root (this session had leftover
+  `review-pr-*.md`, `crash.c`, `pick_random_files.py`, `.mcp.json`, etc.
+  from earlier sessions) — stage only the specific files the release
+  touched (`meson.build`, `doc/relnotes.md`, `README.md`, `po/*`), never
+  `git add -A`, to avoid sweeping in unrelated clutter.
+- Full release cycle (5 clean builds + 5 test suites + 2 leak checks +
+  coverage capture) took about 25-30 minutes of wall-clock tool time in
+  this sandbox; budget accordingly and run steps serially since they share
+  the same `sudo`/build-directory state (parallelizing the builds is safe,
+  but the two `sudo powertop` leak/coverage runs and valgrind should not
+  overlap with each other).

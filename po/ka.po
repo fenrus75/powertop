@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: powertop 2.15\n"
-"Report-Msgid-Bugs-To: \"powertop@lists.01.org\"\n"
-"POT-Creation-Date: 2022-09-29 04:45-0700\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-06 12:30-0700\n"
 "PO-Revision-Date: 2026-09-05 14:32+0200\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
@@ -18,424 +18,543 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.9\n"
 
-#: src/calibrate/calibrate.cpp:238
+#: src/calibrate/calibrate.cpp:211
 #, c-format
 msgid "Cannot create temp file\n"
 msgstr "დროებითი ფაილის შექმნის შეცდომა\n"
 
-#: src/calibrate/calibrate.cpp:258
+#: src/calibrate/calibrate.cpp:218 src/measurement/extech.cpp:313
+#, c-format
+msgid "Error: %s\n"
+msgstr ""
+
+#: src/calibrate/calibrate.cpp:231
 #, c-format
 msgid "Calibrating: CPU usage on %i threads\n"
 msgstr "კალიბრაცია: CPU-ის გამოყენება %i ნაკადზე\n"
 
-#: src/calibrate/calibrate.cpp:273
+#: src/calibrate/calibrate.cpp:237
+#, fuzzy, c-format
+msgid "Failed to create calibration thread\n"
+msgstr "პარამეტრები კალიბრაციის შემდეგ:\n"
+
+#: src/calibrate/calibrate.cpp:254
 #, c-format
 msgid "Calibrating: CPU wakeup power consumption\n"
 msgstr "კალიბრაცია: CPU-ის გაღვიძების კვების მოხმარება\n"
 
-#: src/calibrate/calibrate.cpp:290
+#: src/calibrate/calibrate.cpp:259
+#, c-format
+msgid "Failed to create wakeup calibration thread\n"
+msgstr ""
+
+#: src/calibrate/calibrate.cpp:273
 #, c-format
 msgid "Calibrating USB devices\n"
 msgstr "USB მოწყობილობების კალიბრაცია\n"
 
-#: src/calibrate/calibrate.cpp:292 src/calibrate/calibrate.cpp:309
-#: src/calibrate/calibrate.cpp:317 src/calibrate/calibrate.cpp:334
+#: src/calibrate/calibrate.cpp:275 src/calibrate/calibrate.cpp:290
+#: src/calibrate/calibrate.cpp:298 src/calibrate/calibrate.cpp:357
 #, c-format
 msgid ".... device %s \n"
 msgstr ".... მოწყობილობა %s \n"
 
-#: src/calibrate/calibrate.cpp:307
+#: src/calibrate/calibrate.cpp:288
 #, c-format
 msgid "Calibrating radio devices\n"
 msgstr "რადიო მოწყობილობების კალიბრაცია\n"
 
-#: src/calibrate/calibrate.cpp:331
+#: src/calibrate/calibrate.cpp:354
 #, c-format
 msgid "Calibrating backlight\n"
 msgstr "მონიტორის შენათების კალიბრაცია\n"
 
-#: src/calibrate/calibrate.cpp:355 src/calibrate/calibrate.cpp:365
+#: src/calibrate/calibrate.cpp:378 src/calibrate/calibrate.cpp:386
 #, c-format
 msgid "Calibrating idle\n"
 msgstr "უქმობის კალიბრაცია\n"
 
-#: src/calibrate/calibrate.cpp:378
+#: src/calibrate/calibrate.cpp:397
 #, c-format
 msgid "Calibrating: disk usage \n"
 msgstr "დისკის მოხმარების კალიბრაცია \n"
 
 #: src/calibrate/calibrate.cpp:403
+#, c-format
+msgid "Failed to create disk calibration thread\n"
+msgstr ""
+
+#: src/calibrate/calibrate.cpp:426
 msgid "Starting PowerTOP power estimate calibration \n"
 msgstr "PowerTOP-ის ენერგიის ხარჯვის კალიბრაციის დასაწყისი\n"
 
-#: src/calibrate/calibrate.cpp:426
+#: src/calibrate/calibrate.cpp:449
 msgid "Finishing PowerTOP power estimate calibration \n"
 msgstr "PowerTOP-ის ენერგიის ხარჯვის კალიბრაციის დასასრული\n"
 
-#: src/calibrate/calibrate.cpp:430
+#: src/calibrate/calibrate.cpp:453
 #, c-format
 msgid "Parameters after calibration:\n"
 msgstr "პარამეტრები კალიბრაციის შემდეგ:\n"
 
-#: src/cpu/abstract_cpu.cpp:74
+#: src/cpu/abstract_cpu.cpp:55 src/devices/devfreq.cpp:97
 msgid "Idle"
 msgstr "უმოქმედო"
 
-#: src/cpu/abstract_cpu.cpp:76
+#: src/cpu/abstract_cpu.cpp:57
 msgid "Turbo Mode"
 msgstr "ტურბო რეჟიმი"
 
-#: src/cpu/cpu_core.cpp:37
+#: src/cpu/abstract_cpu.cpp:234
+#, fuzzy, c-format
+msgid "Invalid C state finalize %s\n"
+msgstr "არასწორი CSV ფაილის სახელი\n"
+
+#: src/cpu/abstract_cpu.cpp:324
 #, c-format
+msgid "Invalid P state finalize %<PRIu64>\n"
+msgstr ""
+
+#: src/cpu/cpu_core.cpp:38
 msgid " Core(HW)"
 msgstr "  ბირთვი(აპარ)"
 
-#: src/cpu/cpu_core.cpp:37
-#, c-format
+#: src/cpu/cpu_core.cpp:38
 msgid " Core(OS)"
 msgstr "  ბირთვი(ოს)"
 
-#: src/cpu/cpu_core.cpp:91 src/cpu/intel_cpus.cpp:367
-#, c-format
+#: src/cpu/cpu_core.cpp:89 src/cpu/intel_cpus.cpp:377
 msgid "  Core"
 msgstr "   ბირთვი"
 
-#: src/cpu/cpu.cpp:85
-#, c-format
-msgid "cpu package %i"
-msgstr "cpu-ის პაკეტი %i"
+#: src/cpu/cpu.cpp:84
+#, fuzzy, c++-format
+msgid "cpu package {}"
+msgstr "cpu-ის პაკეტი"
 
-#: src/cpu/cpu.cpp:86
+#: src/cpu/cpu.cpp:85
 msgid "cpu package"
 msgstr "cpu-ის პაკეტი"
 
-#: src/cpu/cpu.cpp:89 src/cpu/cpu.cpp:96
-#, c-format
-msgid "package-%i"
+#: src/cpu/cpu.cpp:89 src/cpu/cpu.cpp:95
+#, fuzzy, c++-format
+msgid "package-{}"
 msgstr "პაკეტი-%i"
 
 #: src/cpu/cpu.cpp:90
 msgid "cpu rapl package"
 msgstr "cpu rapl პაკეტი"
 
-#: src/cpu/cpu.cpp:97
+#: src/cpu/cpu.cpp:96
 msgid "dram rapl package"
 msgstr "dram rapl პაკეტი"
 
-#: src/cpu/cpu.cpp:471
-msgid "Processor Idle State Report"
-msgstr "პროცესორის უქმი მდგომარეობის ანგარიში"
-
-#: src/cpu/cpu.cpp:535 src/cpu/cpu.cpp:761
-msgid "Package"
-msgstr "პაკეტები"
-
-#: src/cpu/cpu.cpp:572 src/cpu/cpu.cpp:783
+#: src/cpu/cpu.cpp:1095
 #, c-format
-msgid "Core %d"
-msgstr "ბირთვი %d"
+msgid "INVALID cpu nr in handle_trace_point\n"
+msgstr ""
 
-#: src/cpu/cpu.cpp:579
-#, c-format
-msgid "GPU %d"
-msgstr "GPU %d"
-
-#: src/cpu/cpu.cpp:602
-msgid "CPU"
-msgstr "CPU"
-
-#: src/cpu/cpu.cpp:684
-msgid "Processor Frequency Report"
-msgstr "პროცესორის სიხშირის ანგარიში"
-
-#: src/cpu/cpu.cpp:804
-#, c-format
-msgid "CPU %d"
-msgstr "CPU %d"
-
-#: src/cpu/cpu.cpp:1005
+#: src/cpu/cpu.cpp:1109
 #, c-format
 msgid "cpu_idle event returned no state?\n"
 msgstr "მოვლენამ cpu_idle მდგომარეობა არ დააბრუნა?\n"
 
-#: src/cpu/cpu.cpp:1020
+#: src/cpu/cpu.cpp:1124
 #, c-format
 msgid "power or cpu_frequency event returned no state?\n"
 msgstr "მოვლენამ power ან cpu_frequency მდგომარეობა არ დააბრუნა?\n"
 
-#: src/cpu/cpu_linux.cpp:79
+#: src/cpu/cpu_linux.cpp:51
 msgid "C0 polling"
 msgstr "C0 გამოკითხვა"
 
-#: src/cpu/cpu_linux.cpp:242
-#, c-format
-msgid " CPU(OS) %i"
+#: src/cpu/cpu_linux.cpp:145
+#, fuzzy, c++-format
+msgid " CPU(OS) {}"
 msgstr " CPU(ოს-ი) %i"
 
-#: src/cpu/cpu_linux.cpp:341 src/cpu/intel_cpus.cpp:733
-#, c-format
-msgid " CPU %i"
+#: src/cpu/cpu_linux.cpp:231 src/cpu/intel_cpus.cpp:747
+#, fuzzy, c++-format
+msgid " CPU {}"
 msgstr " CPU %i"
 
-#: src/cpu/cpu_package.cpp:47
-#, c-format
-msgid " Pkg(HW)"
+#: src/cpu/cpu_package.cpp:48
+#, fuzzy
+msgid " Package(HW)"
 msgstr " Pkg(აპარ)"
 
-#: src/cpu/cpu_package.cpp:47
-#, c-format
-msgid " Pkg(OS)"
+#: src/cpu/cpu_package.cpp:48
+#, fuzzy
+msgid " Package(OS)"
 msgstr " Pkg(ოს)"
 
-#: src/cpu/cpu_package.cpp:104 src/cpu/intel_cpus.cpp:498
-#, c-format
-msgid "  Package"
-msgstr "  პაკეტი"
+#: src/cpu/cpu_package.cpp:99
+msgid "Package"
+msgstr "პაკეტები"
 
-#: src/cpu/intel_cpus.cpp:152
+#: src/cpu/cpu_rapl_device.h:46 src/cpu/cpu_rapl_device.h:47
+#, fuzzy
+msgid "CPU core"
+msgstr "CPU გამოყენება"
+
+#: src/cpu/intel_cpus.cpp:157
 #, c-format
 msgid "read_msr cpu%d 0x%llx : "
 msgstr "read_msr cpu%d 0x%llx : "
 
-#: src/cpu/intel_cpus.cpp:656
+#: src/cpu/intel_cpus.cpp:271
+msgid "C1 (cc1)"
+msgstr ""
+
+#: src/cpu/intel_cpus.cpp:273
+msgid "C3 (cc3)"
+msgstr ""
+
+#: src/cpu/intel_cpus.cpp:274
+msgid "C6 (cc6)"
+msgstr ""
+
+#: src/cpu/intel_cpus.cpp:276
+msgid "C7 (cc7)"
+msgstr ""
+
+#: src/cpu/intel_cpus.cpp:528
+msgid "  Package"
+msgstr "  პაკეტი"
+
+#: src/cpu/intel_cpus.cpp:569
+msgid "C2 (pc2)"
+msgstr ""
+
+#: src/cpu/intel_cpus.cpp:572
+msgid "C3 (pc3)"
+msgstr ""
+
+#: src/cpu/intel_cpus.cpp:573
+msgid "C6 (pc6)"
+msgstr ""
+
+#: src/cpu/intel_cpus.cpp:575
+msgid "C7 (pc7)"
+msgstr ""
+
+#: src/cpu/intel_cpus.cpp:577
+msgid "C8 (pc8)"
+msgstr ""
+
+#: src/cpu/intel_cpus.cpp:578
+msgid "C9 (pc9)"
+msgstr ""
+
+#: src/cpu/intel_cpus.cpp:579
+msgid "C10 (pc10)"
+msgstr ""
+
+#: src/cpu/intel_cpus.cpp:675
 msgid "C0 active"
 msgstr "აქტიური C0"
 
-#: src/cpu/intel_cpus.cpp:714
-#, c-format
+#: src/cpu/intel_cpus.cpp:730
 msgid "Average"
 msgstr "საშუალო"
 
-#: src/cpu/intel_gpu.cpp:64
-#, c-format
+#: src/cpu/intel_gpu.cpp:61 src/cpu/xe_gpu.cpp:168
 msgid "  GPU "
 msgstr "  GPU "
 
-#: src/devices/ahci.cpp:154
+#: src/cpu/intel_gpu.cpp:92 src/cpu/xe_gpu.cpp:204
+#, c++-format
+msgid "{:5.1f}%"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:89
 #, c-format
-msgid "SATA link: %s"
+msgid "RAPL device for cpu %d\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:129
+#, c-format
+msgid "RAPL Using PowerCap Sysfs : Domain Mask %x\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:288
+msgid "get_pkg_energy_status failed\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:309
+msgid "get_pkg_power_info failed\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:331
+msgid "get_pkg_power_limit failed\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:349
+msgid "set_pkg_power_limit failed\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:378
+#, fuzzy
+msgid "get_dram_energy_status failed\n"
+msgstr "modprobe cpufreq_stats ვერ მოხერხდა\n"
+
+#: src/cpu/rapl/rapl_interface.cpp:399
+msgid "get_dram_power_info failed\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:422
+msgid "get_dram_power_limit failed\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:440
+msgid "set_dram_power_limit failed\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:469
+msgid "get_pp0_energy_status failed\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:489
+msgid "get_pp0_power_limit failed\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:507
+msgid "set_pp0_power_limit failed\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:526
+msgid "get_pp0_power_policy failed\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:557
+msgid "get_pp1_energy_status failed\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:577
+msgid "get_pp1_power_info failed\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:595
+msgid "set_pp1_power_limit failed\n"
+msgstr ""
+
+#: src/cpu/rapl/rapl_interface.cpp:614
+msgid "get_pp1_power_policy failed\n"
+msgstr ""
+
+#: src/devices/ahci.cpp:103
+#, fuzzy, c++-format
+msgid "SATA link: {}"
 msgstr "SATA კავშირი: %s"
 
-#: src/devices/ahci.cpp:156
-#, c-format
-msgid "SATA disk: %s"
+#: src/devices/ahci.cpp:105
+#, fuzzy, c++-format
+msgid "SATA disk: {}"
 msgstr "SATA დისკი: %s"
 
-#: src/devices/ahci.cpp:374
-msgid "AHCI ALPM Residency Statistics - Not supported on this macine"
-msgstr ""
-"AHCI ALPM-ის რეზიდენტულობის სტატისტიკა - ამ მანქანაზე მხარდაჭერილი არაა"
-
-#: src/devices/ahci.cpp:389
-msgid "Link"
-msgstr "კავშირი"
-
-#: src/devices/ahci.cpp:390
-msgid "Active"
-msgstr "აქტიური"
-
-#: src/devices/ahci.cpp:391
-msgid "Partial"
-msgstr "ნაწილობრივ"
-
-#: src/devices/ahci.cpp:392
-msgid "Slumber"
-msgstr "Slumber"
-
-#: src/devices/ahci.cpp:393
-msgid "Devslp"
-msgstr "Devslp"
-
-#: src/devices/ahci.cpp:399
-msgid "AHCI ALPM Residency Statistics"
-msgstr "AHCI ALPM-ის რეზიდენტულობის სტატისტიკა"
-
-#: src/devices/alsa.cpp:77
-#, c-format
-msgid "Audio codec %s: %s (%s)"
+#: src/devices/alsa.cpp:59
+#, fuzzy, c++-format
+msgid "Audio codec {}: {} ({})"
 msgstr "აუდიო კოდეკი %s: %s (%s)"
 
-#: src/devices/alsa.cpp:79 src/devices/alsa.cpp:81
-#, c-format
-msgid "Audio codec %s: %s"
+#: src/devices/alsa.cpp:61 src/devices/alsa.cpp:63
+#, fuzzy, c++-format
+msgid "Audio codec {}: {}"
 msgstr "აუდიო კოდეკი %s: %s"
 
-#: src/devices/devfreq.cpp:260
+#: src/devices/backlight.h:51
+#, fuzzy
+msgid "Display backlight"
+msgstr "მონიტორის შენათების კალიბრაცია\n"
+
+#: src/devices/devfreq.cpp:244
 msgid "Device Freq stats"
 msgstr "მოწყობილობების სტატისტიკა"
 
-#: src/devices/devfreq.cpp:278
+#: src/devices/devfreq.cpp:266
 msgid " Devfreq is not enabled"
 msgstr " Devfreq ჩართული არაა"
 
-#: src/devices/devfreq.cpp:283
+#: src/devices/devfreq.cpp:278
 msgid " No devfreq devices available"
 msgstr " devfreq მოწყობილობები ხელმისაწვდომი არაა"
 
-#: src/devices/device.cpp:172 src/process/do_process.cpp:831
+#: src/devices/device_manager.cpp:120 src/process/do_process.cpp:857
 #, c-format
 msgid "The battery reports a discharge rate of %sW\n"
 msgstr "ელემენტის მიერ მოწოდებული დაცის სიჩქარეა %sვტ\n"
 
-#: src/devices/device.cpp:174 src/process/do_process.cpp:833
+#: src/devices/device_manager.cpp:122 src/process/do_process.cpp:859
 #, c-format
 msgid "The energy consumed was %sJ\n"
 msgstr "დახარჯულია ენერგია %sჯ\n"
 
-#: src/devices/device.cpp:180
+#: src/devices/device_manager.cpp:127
 #, c-format
 msgid "System baseline power is estimated at %sW\n"
 msgstr "სისტემის საბაზისო კვება გაზომილია დაახლ %sვტ\n"
 
-#: src/devices/device.cpp:187
+#: src/devices/device_manager.cpp:134
 msgid "Power est.    Usage     Device name\n"
 msgstr "დაახლ. კვ.    გამოყენება     მოწყობილობის სახელი\n"
 
-#: src/devices/device.cpp:189
+#: src/devices/device_manager.cpp:136
 msgid "              Usage     Device name\n"
 msgstr "              გამოყენება     მოწყობილობის სახელი\n"
 
-#: src/devices/device.cpp:256
-msgid "The battery reports a discharge rate of: "
-msgstr "ელემენტის მიერ მოწოდებული დაცლის სიჩქარე: "
+#: src/devices/gpu_rapl_device.h:44 src/devices/gpu_rapl_device.h:45
+#: src/devices/gpu_rapl_device.h:46
+msgid "GPU core"
+msgstr ""
 
-#: src/devices/device.cpp:261
-msgid "The energy consumed was : "
-msgstr "მოხმარებული ენერგია იყო : "
+#: src/devices/i915-gpu.h:58
+msgid "Intel GPU"
+msgstr ""
 
-#: src/devices/device.cpp:268
-msgid "The system baseline power is estimated at: "
-msgstr "სისტემის საბაზისო კვების გაიზომა: "
+#: src/devices/i915-gpu.h:61 src/devices/xe-gpu.h:73
+msgid " ops/s"
+msgstr " ოპ/წმ"
 
-#: src/devices/device.cpp:277 src/process/do_process.cpp:850
-#: src/process/do_process.cpp:852 src/process/do_process.cpp:926
-#: src/process/do_process.cpp:1077
-msgid "Usage"
-msgstr "გამოყენება"
-
-#: src/devices/device.cpp:278
-msgid "Device Name"
-msgstr "მოწყობილობის სახელი"
-
-#: src/devices/device.cpp:280 src/process/do_process.cpp:935
-#: src/process/do_process.cpp:1082
-msgid "PW Estimate"
-msgstr "ენ. დაახლ"
-
-#: src/devices/device.cpp:317
-msgid "Device Power Report"
-msgstr "მოწყობილობის სიმძლავრის ანგარიში"
-
-#: src/devices/network.cpp:177
-#, c-format
-msgid "Network interface: %s (%s)"
+#: src/devices/network.cpp:170
+#, fuzzy, c++-format
+msgid "Network interface: {} ({})"
 msgstr "ქსელის ინტერფეისი: %s (%s)"
 
-#: src/devices/rfkill.cpp:65 src/devices/rfkill.cpp:69
-#, c-format
-msgid "Radio device: %s"
+#: src/devices/rfkill.cpp:48 src/devices/rfkill.cpp:51
+#, fuzzy, c++-format
+msgid "Radio device: {}"
 msgstr "რადიო მოწყობილობა: %s"
 
-#: src/devices/runtime_pm.cpp:216
-#, c-format
-msgid "I2C %s (%s): %s"
+#: src/devices/runtime_pm.cpp:153
+#, fuzzy, c++-format
+msgid "I2C {} ({}): {}"
 msgstr "I2C %s (%s): %s"
 
-#: src/devices/runtime_pm.cpp:216 src/tuning/tuningi2c.cpp:57
-#: src/tuning/tuningi2c.cpp:59
+#: src/devices/runtime_pm.cpp:153 src/tuning/tuningi2c.cpp:48
+#: src/tuning/tuningi2c.cpp:50
 msgid "Adapter"
 msgstr "ადაპტერი"
 
-#: src/devices/runtime_pm.cpp:216 src/devlist.cpp:331
-#: src/tuning/tuningi2c.cpp:57 src/tuning/tuningi2c.cpp:59
+#: src/devices/runtime_pm.cpp:153 src/process/processdevice.h:42
+#: src/tuning/tuningi2c.cpp:48 src/tuning/tuningi2c.cpp:50
 msgid "Device"
 msgstr "მოწყობილობა"
 
-#: src/devices/runtime_pm.cpp:241
-#, c-format
-msgid "PCI Device: %s"
+#: src/devices/runtime_pm.cpp:175
+#, fuzzy, c++-format
+msgid "PCI Device: {}"
 msgstr "PCI მოწყობილობა: %s"
 
-#: src/devices/usb.cpp:51 src/devices/usb.cpp:96 src/devices/usb.cpp:98
-#, c-format
-msgid "USB device: %s"
+#: src/devices/thinkpad-fan.h:47
+msgid "Laptop fan"
+msgstr ""
+
+#: src/devices/thinkpad-light.h:47
+msgid "Thinkpad light"
+msgstr ""
+
+#: src/devices/usb.cpp:49 src/devices/usb.cpp:76 src/devices/usb.cpp:78
+#, fuzzy, c++-format
+msgid "USB device: {}"
 msgstr "USB მოწყობილობა: %s"
 
-#: src/devices/usb.cpp:94
-#, c-format
-msgid "USB device: %s (%s)"
+#: src/devices/usb.cpp:74
+#, fuzzy, c++-format
+msgid "USB device: {} ({})"
 msgstr "USB მოწყობილობა: %s (%s)"
 
-#: src/devlist.cpp:330
-msgid "Process"
-msgstr "პროცესი"
+#: src/devices/xe-gpu.cpp:193
+msgid " RPM"
+msgstr ""
 
-#: src/devlist.cpp:347
-msgid "Process Device Activity"
-msgstr "პროცესი მოწყობილობა აქტივობა"
+#: src/devices/xe-gpu.cpp:236
+#, c++-format
+msgid "Xe GPU Fan {}"
+msgstr ""
 
-#: src/display.cpp:70
+#: src/devices/xe-gpu.h:69 src/gpu-tab.cpp:477
+msgid "Intel Xe GPU"
+msgstr ""
+
+#: src/display.cpp:84
 msgid "Overview"
 msgstr "გადახედვა"
 
-#: src/display.cpp:71
+#: src/display.cpp:85
 msgid "Idle stats"
 msgstr "უქმეობის სტატისტიკა"
 
-#: src/display.cpp:72
+#: src/display.cpp:86
 msgid "Frequency stats"
 msgstr "სიხშირის სტატისტიკა"
 
-#: src/display.cpp:73
+#: src/display.cpp:90 src/main.cpp:354
+#, c-format
+msgid "Preparing to take measurements\n"
+msgstr "გაზომვებისთვის მომზადება\n"
+
+#: src/display.cpp:96
 msgid "Device stats"
 msgstr "მოწყობილობის სტატისტიკა"
 
-#: src/display.cpp:131
+#: src/display.cpp:222
 msgid "Exit"
 msgstr "გასვლა"
 
-#: src/display.cpp:132
+#: src/display.cpp:223
 msgid "Navigate"
 msgstr "ნავიგაცია"
 
-#: src/lib.cpp:288
-#, c-format
-msgid "%7sW"
-msgstr "%7sვ"
+#: src/gpu-tab.cpp:85
+#, fuzzy
+msgid "Frequency Overview"
+msgstr "გადახედვა"
 
-#: src/lib.cpp:291
-#, c-format
+#: src/gpu-tab.cpp:151
+msgid "Fan Speeds"
+msgstr ""
+
+#: src/gpu-tab.cpp:174
+msgid "Idle / Busy"
+msgstr ""
+
+#: src/gpu-tab.cpp:208
+#, fuzzy
+msgid "Power Overview"
+msgstr "გადახედვა"
+
+#: src/gpu-tab.cpp:212
+#, c++-format
+msgid "Power profile: {}"
+msgstr ""
+
+#: src/gpu-tab.cpp:237
+#, c++-format
+msgid "TDP cap: {:.0f} W"
+msgstr ""
+
+#: src/lib.cpp:361
+#, c++-format
+msgid "{:7s}W"
+msgstr ""
+
+#: src/lib.cpp:364
 msgid "    0 mW"
 msgstr "    0 მვ"
 
-#: src/lib.cpp:410
+#: src/lib.cpp:487
 msgid "PS/2 Touchpad / Keyboard / Mouse"
 msgstr "PS/2 სენსორული პანელი / კლავიატურა / თაგუნა"
 
-#: src/lib.cpp:411
+#: src/lib.cpp:488
 msgid "SATA controller"
 msgstr "SATA კონტროლერი"
 
-#: src/lib.cpp:412
+#: src/lib.cpp:489
 msgid "Intel built in USB hub"
 msgstr "Intel-ის ჩაშენებული USB hub"
 
-#: src/lib.cpp:467
-#, c-format
-msgid "glob returned GLOB_NOSPACE\n"
-msgstr "გლობმა დააბრუნა GLOB_NOSPACE\n"
-
-#: src/lib.cpp:471
-#, c-format
-msgid "glob returned GLOB_ABORTED\n"
-msgstr "გლობმა დააბრუნა GLOB_ABORTED\n"
-
-#: src/lib.cpp:475
-#, c-format
-msgid "glob returned GLOB_NOMATCH\n"
-msgstr "გლობმა დააბრუნა GLOB_NOMATCH\n"
-
-#: src/lib.cpp:513 src/lib.cpp:549
+#: src/lib.cpp:566 src/lib.cpp:606
 #, c-format
 msgid ""
 "Model-specific registers (MSR)\t\t\t not found (try enabling "
@@ -444,203 +563,293 @@ msgstr ""
 "მოდელის-სპეციფიკური რეგისტრები (MSR)\t\t\t აღმოჩენილი არაა (სცადეთ, ჩართოთ "
 "CONFIG_X86_MSR).\n"
 
-#: src/main.cpp:104
+#: src/main.cpp:135
+#, c-format
+msgid "Invalid value '%s' for option %s\n"
+msgstr ""
+
+#: src/main.cpp:143
 #, c-format
 msgid "PowerTOP version "
 msgstr "PowerTOP-ის ვერსია "
 
-#: src/main.cpp:110
+#: src/main.cpp:149
 msgid "Set refresh time out"
 msgstr "განახლების დროის დაყენება"
 
-#: src/main.cpp:123
+#: src/main.cpp:162
 msgid "Usage: powertop [OPTIONS]"
 msgstr "გამოყენება: powertop [პარამეტრები]"
 
-#: src/main.cpp:124
+#: src/main.cpp:163
 msgid "sets all tunable options to their GOOD setting"
 msgstr "დააყენებს ყველა ცვალებად პარამეტრს მათ *კარგ* მნიშვნელობაზე"
 
-#: src/main.cpp:125
+#: src/main.cpp:164
+msgid "print auto-tune commands to STDOUT *instead* of executing them"
+msgstr ""
+
+#: src/main.cpp:165
+msgid "skip root privilege check (for testing only)"
+msgstr ""
+
+#: src/main.cpp:166
 msgid "runs powertop in calibration mode"
 msgstr "გაუშვებს powertop-ს კალიბრაციის რეჟიმში"
 
-#: src/main.cpp:126 src/main.cpp:129
+#: src/main.cpp:167 src/main.cpp:170
 msgid "[=filename]"
 msgstr "[=filename]"
 
-#: src/main.cpp:126
+#: src/main.cpp:167
 msgid "generate a csv report"
 msgstr "csv ანგარიშის გენერაცია"
 
-#: src/main.cpp:127
+#: src/main.cpp:168
 msgid "run in \"debug\" mode"
 msgstr "\"გამართვის\" რეჟიმშ გაშვება"
 
-#: src/main.cpp:128
+#: src/main.cpp:169
 msgid "[=devnode]"
 msgstr "[=devnode]"
 
-#: src/main.cpp:128
+#: src/main.cpp:169
 msgid "uses an Extech Power Analyzer for measurements"
 msgstr "გაზომვებისთვის იყენებს Extech Power Analyzer-ს"
 
-#: src/main.cpp:129
+#: src/main.cpp:170
 msgid "generate a html report"
 msgstr "html ანგარიშის გენერაცია"
 
-#: src/main.cpp:130
+#: src/main.cpp:171
 msgid "[=iterations] number of times to run each test"
 msgstr "[=iterations] რამდენჯერ გავუშვა თითოეული ტესტი"
 
-#: src/main.cpp:131
+#: src/main.cpp:172
+msgid "run measurements only once, then exit"
+msgstr ""
+
+#: src/main.cpp:173
 msgid "suppress stderr output"
 msgstr "stderr-ზე გამოტანის გათიშვა"
 
-#: src/main.cpp:132 src/main.cpp:133
+#: src/main.cpp:174 src/main.cpp:175
 msgid "[=seconds]"
 msgstr "[=seconds]"
 
-#: src/main.cpp:132
+#: src/main.cpp:174
 msgid "interval for power consumption measurement"
 msgstr "ინტერვალი ენერგიის ხარჯვის გაზომვებს შორის"
 
-#: src/main.cpp:133
+#: src/main.cpp:175
 msgid "generate a report for 'x' seconds"
 msgstr "ანგარიშის გენერაცია 'x' წამისთვის"
 
-#: src/main.cpp:134
+#: src/main.cpp:176
 msgid "[=workload]"
 msgstr "[=workload]"
 
-#: src/main.cpp:134
+#: src/main.cpp:176
 msgid "file to execute for workload"
 msgstr "ფაილი დატვირთვის გასაშვებად"
 
-#: src/main.cpp:135
+#: src/main.cpp:177
 msgid "print version information"
 msgstr "ვერსიის ინფორმაციის გამოტანა"
 
-#: src/main.cpp:136
+#: src/main.cpp:178
 msgid "print this help menu"
 msgstr "ამ დახმარების ჩვენება"
 
-#: src/main.cpp:138
+#: src/main.cpp:180
 msgid "For more help please refer to the 'man 8 powertop'"
 msgstr "მეტი დახმარებისთვის იხილეთ 'man 8 powertop'"
 
-#: src/main.cpp:233
+#: src/main.cpp:282
+#, c-format
+msgid "ERROR: workload measurement thread creation failed\n"
+msgstr ""
+
+#: src/main.cpp:285
 #, c-format
 msgid "Unknown issue running workload!\n"
 msgstr "სამუშაო დატვირთვის გაშვების უცნობი პრობლემა!\n"
 
-#: src/main.cpp:290
+#: src/main.cpp:344
 msgid "PowerTOP is out of memory. PowerTOP is Aborting"
 msgstr "PowerTOP-ს მეხსიერება არ ჰყოფნის. PowerTOP შეწყვეტს მუშაობას"
 
-#: src/main.cpp:298
-#, c-format
-msgid "Preparing to take measurements\n"
-msgstr "გაზომვებისთვის მომზადება\n"
-
-#: src/main.cpp:303
+#: src/main.cpp:359
 #, c-format
 msgid "Taking %d measurement(s) for a duration of %d second(s) each.\n"
 msgstr "%d გაზომვის აღება %d წამი ხანგრძლივობით თითოეულისთვის.\n"
 
-#: src/main.cpp:305
+#: src/main.cpp:361
 #, c-format
 msgid "Measuring workload %s.\n"
 msgstr "იზომება დატვირთვა %s.\n"
 
-#: src/main.cpp:330
+#: src/main.cpp:397
 #, c-format
 msgid "PowerTOP "
 msgstr "PowerTOP "
 
-#: src/main.cpp:331 src/main.cpp:381
+#: src/main.cpp:398 src/main.cpp:443
 #, c-format
 msgid "exiting...\n"
 msgstr "გასვლა...\n"
 
-#: src/main.cpp:365
+#: src/main.cpp:428
 #, c-format
 msgid "modprobe cpufreq_stats failed\n"
 msgstr "modprobe cpufreq_stats ვერ მოხერხდა\n"
 
-#: src/main.cpp:368
+#: src/main.cpp:431
 #, c-format
 msgid "modprobe msr failed\n"
 msgstr "modprobe msr ვერ მოხერხდა\n"
 
-#: src/main.cpp:380 src/main.cpp:384
+#: src/main.cpp:442 src/main.cpp:445
 #, c-format
 msgid "Failed to mount debugfs!\n"
 msgstr "შეცდომა debugfs-ის მიმაგრებისას\n"
 
-#: src/main.cpp:385
+#: src/main.cpp:446
 #, c-format
 msgid "Should still be able to auto tune...\n"
 msgstr "მაინც უნდა შემეძლოს ავტომორგება...\n"
 
-#: src/main.cpp:467
+#: src/main.cpp:536
+#, fuzzy, c-format
+msgid "Invalid Markdown filename\n"
+msgstr "არასწორი HTML ფაილის სახელი\n"
+
+#: src/main.cpp:545
 #, c-format
 msgid "Invalid CSV filename\n"
 msgstr "არასწორი CSV ფაილის სახელი\n"
 
-#: src/main.cpp:483
+#: src/main.cpp:572
 #, c-format
 msgid "Invalid HTML filename\n"
 msgstr "არასწორი HTML ფაილის სახელი\n"
 
-#: src/main.cpp:492
+#: src/main.cpp:583
 #, c-format
 msgid "Quiet mode failed!\n"
 msgstr "ჩუმი რეჟიმის შეცდომა!\n"
 
-#: src/main.cpp:560
+#: src/main.cpp:619
+#, c-format
+msgid "Learning debugging enabled\n"
+msgstr ""
+
+#: src/main.cpp:659
 msgid "Leaving PowerTOP"
 msgstr "PowerTOP-დან გასვლა"
 
-#: src/parameters/persistent.cpp:46 src/parameters/persistent.cpp:155
+#: src/measurement/extech.cpp:220
+#, fuzzy, c-format
+msgid "Invalid packet\n"
+msgstr "არასწორი CSV ფაილის სახელი\n"
+
+#: src/measurement/extech.cpp:230 src/measurement/extech.cpp:248
+#, c-format
+msgid "Invalid packet, conversion failed\n"
+msgstr ""
+
+#: src/measurement/extech.cpp:381
+#, c-format
+msgid "ERROR: extech measurement thread creation failed\n"
+msgstr ""
+
+#: src/parameters/parameters.cpp:248
+#, fuzzy, c-format
+msgid "Parameter state \n"
+msgstr "პარამეტრები კალიბრაციის შემდეგ:\n"
+
+#: src/parameters/parameters.cpp:250 src/parameters/parameters.cpp:272
+#, c-format
+msgid "Value\t\tName\n"
+msgstr ""
+
+#: src/parameters/parameters.cpp:270
+#, c-format
+msgid "Utilisation state \n"
+msgstr ""
+
+#: src/parameters/parameters.cpp:439
+#, c-format
+msgid ""
+"To show power estimates do %ld measurement(s) connected to battery only\n"
+msgstr ""
+
+#: src/parameters/persistent.cpp:41 src/parameters/persistent.cpp:143
 msgid "Cannot save to file"
 msgstr "ფაილის შენახვა შეუძლებელია"
 
-#: src/parameters/persistent.cpp:89 src/parameters/persistent.cpp:180
+#: src/parameters/persistent.cpp:78 src/parameters/persistent.cpp:166
 msgid "Cannot load from file"
 msgstr "ფაილიდან ჩატვირთვა შეუძლებელია"
 
-#: src/parameters/persistent.cpp:138
+#: src/parameters/persistent.cpp:133
 #, c-format
 msgid "Loaded %i prior measurements\n"
 msgstr "ჩატვირთულია %i წინა გაზომვა\n"
 
-#: src/parameters/persistent.cpp:181
-msgid ""
-"File will be loaded after taking minimum number of measurement(s) with "
-"battery only \n"
+#: src/perf/perf_bundle.cpp:237
+#, c-format
+msgid "abstract handle_trace_point called\n"
 msgstr ""
-"ფაილი, მხოლოდ, ელემენტზე მუშაობისას მინიმალური რაოდენობის ანაზომის აღების "
-"შემდეგ ჩაიტვირთება \n"
 
-#: src/perf/perf.cpp:115
+#: src/perf/perf.cpp:100
 #, c-format
 msgid ""
 "Too many open files, please increase the limit of open file descriptors.\n"
 msgstr ""
 "მეტისმეტად ბევრი ღია ფაილი. გაზარდეთ ღია ფაილის დესკრიპტორების რაოდენობა.\n"
 
-#: src/perf/perf.cpp:117
+#: src/perf/perf.cpp:102
 #, c-format
 msgid "PowerTOP %s needs the kernel to support the 'perf' subsystem\n"
 msgstr "PowerTOP %s-ს 'perf' ქვესისტემის მხარდაჭერისთვის ბირთვი სჭირდება\n"
 
-#: src/perf/perf.cpp:118
+#: src/perf/perf.cpp:103
 #, c-format
 msgid "as well as support for trace points in the kernel:\n"
 msgstr "და ბირთვში ტრეისის წერტილების მხარდაჭერა:\n"
 
-#: src/process/do_process.cpp:819
+#: src/perf/perf.cpp:119
+#, c-format
+msgid "failed to mmap with %d (%s)\n"
+msgstr ""
+
+#: src/perf/perf.cpp:128
+#, c-format
+msgid "failed to enable perf\n"
+msgstr ""
+
+#: src/perf/perf.cpp:232
+#, c-format
+msgid "stop failing\n"
+msgstr ""
+
+#: src/process/do_process.cpp:415
+#, fuzzy, c-format
+msgid "softirq_entry event returned no vector number?\n"
+msgstr "მოვლენამ power ან cpu_frequency მდგომარეობა არ დააბრუნა?\n"
+
+#: src/process/do_process.cpp:452
+#, fuzzy, c-format
+msgid "timer_expire_entry event returned no function value?\n"
+msgstr "მოვლენამ power ან cpu_frequency მდგომარეობა არ დააბრუნა?\n"
+
+#: src/process/do_process.cpp:464
+#, fuzzy, c-format
+msgid "timer_expire_entry event returned no timer?\n"
+msgstr "მოვლენამ power ან cpu_frequency მდგომარეობა არ დააბრუნა?\n"
+
+#: src/process/do_process.cpp:846
 #, c-format
 msgid ""
 "Estimated power: %5.1f    Measured power: %5.1f    Sum: %5.1f\n"
@@ -649,310 +858,493 @@ msgstr ""
 "სავარაუდო ენერგია: %5.1f    გაზომლი ენერგია: %5.1f    სულ: %5.1f\n"
 "\n"
 
-#: src/process/do_process.cpp:838
+#: src/process/do_process.cpp:864
 #, c-format
 msgid "The estimated remaining time is %i hours, %i minutes\n"
 msgstr "დარჩენილი დროა %i საათი და %i წუთი\n"
 
-#: src/process/do_process.cpp:846
-msgid "Summary"
-msgstr "შეჯამება"
+#: src/process/do_process.cpp:872
+#, c++-format
+msgid ""
+"Summary: {:3.1f} wakeups/second,  {:3.1f} GPU ops/seconds, {:3.1f} VFS ops/"
+"sec and {:3.1f}% CPU use"
+msgstr ""
 
-#: src/process/do_process.cpp:846
-msgid "wakeups/second"
-msgstr "გაღვიძება/წმ"
-
-#: src/process/do_process.cpp:846
-msgid "GPU ops/seconds"
-msgstr "GPU ოპ/წამი"
-
-#: src/process/do_process.cpp:846
-msgid "VFS ops/sec and"
-msgstr "VFS ოპ/წამი და"
-
-#: src/process/do_process.cpp:846
-msgid "CPU use"
-msgstr "CPU გამოყენება"
-
-#: src/process/do_process.cpp:850
+#: src/process/do_process.cpp:876
 msgid "Power est."
 msgstr "დაახლ. კვება."
 
-#: src/process/do_process.cpp:850 src/process/do_process.cpp:852
-#: src/process/do_process.cpp:1078
+#: src/process/do_process.cpp:876 src/process/do_process.cpp:878
+msgid "Usage"
+msgstr "გამოყენება"
+
+#: src/process/do_process.cpp:876 src/process/do_process.cpp:878
 msgid "Events/s"
 msgstr "მოვლენა/წმ"
 
-#: src/process/do_process.cpp:850 src/process/do_process.cpp:852
-#: src/process/do_process.cpp:931 src/process/do_process.cpp:1079
+#: src/process/do_process.cpp:876 src/process/do_process.cpp:878
 msgid "Category"
 msgstr "კატეგორია"
 
-#: src/process/do_process.cpp:850 src/process/do_process.cpp:852
-#: src/process/do_process.cpp:932 src/process/do_process.cpp:1080
-#: src/tuning/tuning.cpp:242 src/tuning/tuning.cpp:270
-#: src/tuning/tuning.cpp:295 src/wakeup/waketab.cpp:155
+#: src/process/do_process.cpp:876 src/process/do_process.cpp:878
 msgid "Description"
 msgstr "აღწერა"
 
-#: src/process/do_process.cpp:927
-msgid "Wakeups/s"
-msgstr "Wakeups/s"
+#: src/process/powerconsumer.cpp:101
+msgid " µs/s"
+msgstr ""
 
-#: src/process/do_process.cpp:928
-msgid "GPU ops/s"
-msgstr "GPU ოპ/წმ"
+#: src/process/powerconsumer.cpp:103
+msgid " us/s"
+msgstr ""
 
-#: src/process/do_process.cpp:929
-msgid "Disk IO/s"
-msgstr "დისკის IO/წმ"
+#: src/process/powerconsumer.cpp:105
+msgid " ms/s"
+msgstr ""
 
-#: src/process/do_process.cpp:930
-msgid "GFX Wakeups/s"
-msgstr "GFX გღვიძება/წმ"
+#: src/process/powerconsumer.h:70 src/process/powerconsumer.h:71
+msgid "abstract"
+msgstr ""
 
-#: src/process/do_process.cpp:1017
-msgid "Overview of Software Power Consumers"
-msgstr "ენერგიის მხარჯველი პროგრამების მიმოხილვა"
+#: src/process/process.cpp:118 src/process/process.cpp:126
+#, c++-format
+msgid "[PID {}] {}"
+msgstr ""
 
-#: src/process/do_process.cpp:1057
-msgid "Target:"
-msgstr "სამიზნე:"
+#: src/process/process.cpp:123
+#, c++-format
+msgid "[PID {}] [{}]"
+msgstr ""
 
-#: src/process/do_process.cpp:1058
-msgid "1 units/s"
-msgstr "1 ერთეული/წმ"
+#: src/process/processdevice.h:41
+#, fuzzy
+msgid "device"
+msgstr "მოწყობილობა"
 
-#: src/process/do_process.cpp:1059
-msgid "System: "
-msgstr "სისტემა: "
+#: src/process/timer.cpp:104
+msgid "%"
+msgstr ""
 
-#: src/process/do_process.cpp:1061
-msgid " wakeup/s"
-msgstr " გაღვიძება/წმ"
+#: src/report/report.cpp:119
+#, c++-format
+msgid "{} ran at {}"
+msgstr ""
 
-#: src/process/do_process.cpp:1062
-msgid "CPU: "
-msgstr "CPU: "
-
-#: src/process/do_process.cpp:1064
-#, c-format
-msgid "% usage"
-msgstr "% uგამოყენება"
-
-#: src/process/do_process.cpp:1065
-msgid "GPU:"
-msgstr "GPU:"
-
-#: src/process/do_process.cpp:1067 src/process/do_process.cpp:1073
-msgid " ops/s"
-msgstr " ოპ/წმ"
-
-#: src/process/do_process.cpp:1068
-msgid "GFX:"
-msgstr "GFX:"
-
-#: src/process/do_process.cpp:1070
-msgid " wakeups/s"
-msgstr " გაღვიძება/წმ"
-
-#: src/process/do_process.cpp:1071
-msgid "VFS:"
-msgstr "VFS:"
-
-#: src/process/do_process.cpp:1139
-msgid "Top 10 Power Consumers"
-msgstr "ენერგიის მხარჯველი პირველი 10"
-
-#: src/report/report.cpp:122
-msgid "PowerTOP Version"
-msgstr "PowerTOP-ის ვერსია"
-
-#: src/report/report.cpp:131
-msgid "Kernel Version"
-msgstr "ბირთვის ვერსია"
-
-#: src/report/report.cpp:135
-msgid "System Name"
-msgstr "სისტემის სახელი"
-
-#: src/report/report.cpp:142
-msgid "CPU Information"
-msgstr "ინფორმაცია CPU-ის შესახებ"
-
-#: src/report/report.cpp:154
-msgid "OS Information"
-msgstr "ოს-ის ინფორმაცია"
-
-#: src/report/report.cpp:161
-msgid "System Information"
-msgstr "ინფორმაცის სისტემის შესახებ"
-
-#: src/report/report.cpp:195
+#: src/report/report.cpp:180
 #, c-format
 msgid "Cannot open output file %s (%s)\n"
 msgstr "შეცდომა გამოტანის ფაილის გახსნისას %s (%s)\n"
 
-#: src/report/report.cpp:211
+#: src/report/report.cpp:196
 #, c-format
 msgid "PowerTOP outputting using base filename %s\n"
 msgstr "PowerTOP გამოიტანს ფაილებს საბაზისო სახელის %s გამოყენებით\n"
 
-#: src/tuning/bluetooth.cpp:46 src/tuning/ethernet.cpp:50
-#: src/tuning/runtime.cpp:42 src/tuning/tunable.cpp:49
-#: src/tuning/tuningi2c.cpp:35 src/tuning/tuningsysfs.cpp:45
-#: src/tuning/tuningusb.cpp:39 src/tuning/wifi.cpp:45
+#: src/report/report-formatter-html.cpp:139
+#, fuzzy
+msgid "PowerTop"
+msgstr "PowerTOP "
+
+#: src/report/report-formatter-md.cpp:36
+#, fuzzy
+msgid "PowerTOP Report"
+msgstr "PowerTOP "
+
+#: src/report/report-formatter-md.cpp:68
+msgid "Property"
+msgstr ""
+
+#: src/report/report-formatter-md.cpp:68
+msgid "Value"
+msgstr ""
+
+#: src/tuning/bluetooth.cpp:47 src/tuning/ethernet.cpp:51
+#: src/tuning/runtime.cpp:36 src/tuning/tunable.h:55
+#: src/tuning/tuningi2c.cpp:34 src/tuning/tuningsysfs.cpp:71
+#: src/tuning/tuningusb.cpp:38 src/tuning/wifi.cpp:42
 msgid "Good"
 msgstr "კარგი"
 
-#: src/tuning/bluetooth.cpp:46 src/tuning/ethernet.cpp:50
-#: src/tuning/runtime.cpp:42 src/tuning/tunable.cpp:50
-#: src/tuning/tuningi2c.cpp:35 src/tuning/tuningsysfs.cpp:45
-#: src/tuning/tuningusb.cpp:39 src/tuning/wifi.cpp:45
+#: src/tuning/bluetooth.cpp:47 src/tuning/ethernet.cpp:51
+#: src/tuning/runtime.cpp:36 src/tuning/tunable.h:56
+#: src/tuning/tuningi2c.cpp:34 src/tuning/tuningsysfs.cpp:71
+#: src/tuning/tuningusb.cpp:38 src/tuning/wifi.cpp:42
 msgid "Bad"
 msgstr "ცუდი"
 
-#: src/tuning/bluetooth.cpp:46 src/tuning/ethernet.cpp:50
-#: src/tuning/runtime.cpp:42 src/tuning/tunable.cpp:51
-#: src/tuning/tuningi2c.cpp:35 src/tuning/tuningsysfs.cpp:45
-#: src/tuning/tuningusb.cpp:39 src/tuning/wifi.cpp:45 src/wakeup/wakeup.cpp:50
+#: src/tuning/bluetooth.cpp:47 src/tuning/ethernet.cpp:51
+#: src/tuning/runtime.cpp:36 src/tuning/tunable.h:57
+#: src/tuning/tuningi2c.cpp:34 src/tuning/tuningsysfs.cpp:71
+#: src/tuning/tuningusb.cpp:38 src/tuning/wifi.cpp:42 src/wakeup/wakeup.h:47
 msgid "Unknown"
 msgstr "უცნობი"
 
-#: src/tuning/bluetooth.cpp:48
-#, c-format
-msgid "Bluetooth device interface status"
+#: src/tuning/bluetooth.cpp:51
+#, fuzzy, c++-format
+msgid "Bluetooth device interface status ({})"
 msgstr "ბლუთუზ მოწყობილობის ინტერფეისის სტატუსი"
 
-#: src/tuning/ethernet.cpp:54 src/wakeup/wakeup_ethernet.cpp:51
-#, c-format
-msgid "Wake-on-lan status for device %s"
+#: src/tuning/bluetooth.cpp:52
+#, c++-format
+msgid "Enable Bluetooth ({})"
+msgstr ""
+
+#: src/tuning/bluetooth.cpp:53
+#, c++-format
+msgid "Disable Bluetooth ({})"
+msgstr ""
+
+#: src/tuning/ethernet.cpp:54 src/wakeup/wakeup_ethernet.cpp:50
+#, fuzzy, c++-format
+msgid "Wake-on-lan status for device {}"
 msgstr "ქსელით-გაღვიძების სტატუსი მოწყობილობისთვის %s"
 
-#: src/tuning/runtime.cpp:48
-#, c-format
-msgid "Runtime PM for %s device %s"
+#: src/tuning/runtime.cpp:41
+#, fuzzy, c++-format
+msgid "Runtime PM for {} device {}"
 msgstr "მუშაობის დროის PM %s მოწყობილობისთვის %s"
 
-#: src/tuning/runtime.cpp:50
-#, c-format
-msgid "%s device %s has no runtime power management"
+#: src/tuning/runtime.cpp:43
+#, fuzzy, c++-format
+msgid "{} device {} has no runtime power management"
 msgstr "%s მოწყობილობას %s მუშაობის დროისას კვების მართვა არ აქვს"
 
-#: src/tuning/runtime.cpp:74
-#, c-format
-msgid "PCI Device %s has no runtime power management"
+#: src/tuning/runtime.cpp:68
+#, fuzzy, c++-format
+msgid "PCI Device {} has no runtime power management"
 msgstr "PCI მოწყობილობას %s მუშაობის დროისას კვების მართვა არ აქვს"
 
-#: src/tuning/runtime.cpp:76
-#, c-format
-msgid "Runtime PM for PCI Device %s"
+#: src/tuning/runtime.cpp:70
+#, fuzzy, c++-format
+msgid "Runtime PM for PCI Device {}"
 msgstr "მუშაობის დროის PM PCI მოწყობილობისთვის %s"
 
-#: src/tuning/runtime.cpp:80
-#, c-format
-msgid "Runtime PM for port %s of PCI device: %s"
+#: src/tuning/runtime.cpp:75
+#, fuzzy, c++-format
+msgid "Runtime PM for port {} of PCI device: {}"
 msgstr "მუშაობის დროის PM PCI მოწყობილობის პორტისთვის %s: %s"
 
-#: src/tuning/runtime.cpp:83
-#, c-format
-msgid "Runtime PM for disk %s"
+#: src/tuning/runtime.cpp:79
+#, fuzzy, c++-format
+msgid "Runtime PM for disk {}"
 msgstr "მუშაობის დროის PM დისკისთვის %s"
 
-#: src/tuning/tuning.cpp:62
+#: src/tuning/tuning.cpp:67
+msgid "Autogroup scheduling"
+msgstr ""
+
+#: src/tuning/tuning.cpp:68
+#, fuzzy
+msgid "CPU C1 demotion"
+msgstr "ინფორმაცია CPU-ის შესახებ"
+
+#: src/tuning/tuning.cpp:69
 msgid "Enable Audio codec power management"
 msgstr "აუდიოკოდეკის კვების მართვის ჩართვა"
 
-#: src/tuning/tuning.cpp:63
+#: src/tuning/tuning.cpp:70
+msgid "Intel energy performance bias"
+msgstr ""
+
+#: src/tuning/tuning.cpp:71 src/tuning/tuning.cpp:72
+msgid "Intel energy performance preference"
+msgstr ""
+
+#: src/tuning/tuning.cpp:73
+msgid "Intel ITMT (Turbo Boost Max 3.0)"
+msgstr ""
+
+#: src/tuning/tuning.cpp:74
+msgid "Intel Xe GPU power profile"
+msgstr ""
+
+#: src/tuning/tuning.cpp:75
 msgid "NMI watchdog should be turned off"
 msgstr "NMI საკონტროლო ტაიმერი გამორთული უნდა იყოს"
 
-#: src/tuning/tuning.cpp:64
+#: src/tuning/tuning.cpp:76
 msgid "Power Aware CPU scheduler"
 msgstr "ენერგიის მზოგავი CPU-ის მგეგმავი"
 
-#: src/tuning/tuning.cpp:65
+#: src/tuning/tuning.cpp:77
+msgid "Tuning for cursor blink"
+msgstr ""
+
+#: src/tuning/tuning.cpp:78
+msgid "Tuning for default qdisc"
+msgstr ""
+
+#: src/tuning/tuning.cpp:81
+msgid "AMD GPU panel power savings"
+msgstr ""
+
+#: src/tuning/tuning.cpp:82
+msgid "Batch size for KSM"
+msgstr ""
+
+#: src/tuning/tuning.cpp:83
+msgid "Intel P-state minimum performance"
+msgstr ""
+
+#: src/tuning/tuning.cpp:84
+msgid "Tuning for scan sleep millisecs"
+msgstr ""
+
+#: src/tuning/tuning.cpp:85
+msgid "Tuning for sleep millisecs"
+msgstr ""
+
+#: src/tuning/tuning.cpp:86
+msgid "VM dirty ratio"
+msgstr ""
+
+#: src/tuning/tuning.cpp:87
 msgid "VM writeback timeout"
 msgstr "ვმ-ში უკუჩაწერის მოლოდინის ვადა"
 
-#: src/tuning/tuning.cpp:81
+#: src/tuning/tuning.cpp:99
 msgid "Tunables"
 msgstr "გადამრთველები"
 
-#: src/tuning/tuning.cpp:81
+#: src/tuning/tuning.cpp:99
 msgid " <ESC> Exit | <Enter> Toggle tunable | <r> Window refresh"
 msgstr " <ESC> გასვლა | <Enter> გადართვა | <r> ფანჯრის განახლება"
 
-#: src/tuning/tuning.cpp:243 src/wakeup/waketab.cpp:156
-msgid "Script"
-msgstr "სკრიპტი"
-
-#: src/tuning/tuning.cpp:257
-msgid "Software Settings in Need of Tuning"
-msgstr "პროგრამის პარამეტრები, რომლებსაც მორგება სჭირდებათ"
-
-#: src/tuning/tuning.cpp:276
-msgid "Untunable Software Issues"
-msgstr "პროგრამის მოუგვარებელი პრობლემები"
-
-#: src/tuning/tuning.cpp:307
-msgid "Optimal Tuned Software Settings"
-msgstr "Tuned-ის ოპტიმალური პარამეტრები"
-
-#: src/tuning/tuningi2c.cpp:57
-#, c-format
-msgid "Runtime PM for I2C %s %s (%s)"
+#: src/tuning/tuningi2c.cpp:48
+#, fuzzy, c++-format
+msgid "Runtime PM for I2C {} {} ({})"
 msgstr "მუშაობის დროის PM I2C-ისთვის %s %s (%s)"
 
-#: src/tuning/tuningi2c.cpp:59
-#, c-format
-msgid "I2C %s %s has no runtime power management"
+#: src/tuning/tuningi2c.cpp:50
+#, fuzzy, c++-format
+msgid "I2C {} {} has no runtime power management"
 msgstr "I2C %s %s გაშვების დროის კვების მართვა არ აქვს"
 
-#: src/tuning/tuningsysfs.cpp:123
-#, c-format
-msgid "Enable SATA link power management for %s"
+#: src/tuning/tuningsysfs.cpp:215
+#, fuzzy, c++-format
+msgid "Enable SATA link power management for {}"
 msgstr "SATA ბმულის კვების მართვის ჩართვა %s-ისთვის"
 
-#: src/tuning/tuningusb.cpp:54
-#, c-format
-msgid "Autosuspend for unknown USB device %s (%s:%s)"
+#: src/tuning/tuningusb.cpp:49
+#, fuzzy, c++-format
+msgid "Autosuspend for unknown USB device {} ({}:{})"
 msgstr "ავტომატური ძილი უცნობი USB მოწყობილობისთვის %s (%s:%s)"
 
-#: src/tuning/tuningusb.cpp:71 src/tuning/tuningusb.cpp:73
-#: src/tuning/tuningusb.cpp:75
-#, c-format
-msgid "Autosuspend for USB device %s [%s]"
+#: src/tuning/tuningusb.cpp:58 src/tuning/tuningusb.cpp:60
+#: src/tuning/tuningusb.cpp:62
+#, fuzzy, c++-format
+msgid "Autosuspend for USB device {} [{}]"
 msgstr "ავტომატური ძილი USB მოწყობილობისთვის %s [%s]"
 
-#: src/tuning/wifi.cpp:48
-#, c-format
-msgid "Wireless Power Saving for interface %s"
+#: src/tuning/wifi.cpp:45
+#, fuzzy, c++-format
+msgid "Wireless Power Saving for interface {}"
 msgstr "ენერგიის დაზოგვა უსადენო ინტერფეისისთვის %s"
 
-#: src/wakeup/waketab.cpp:42
+#: src/wakeup/waketab.cpp:39
 msgid "WakeUp"
 msgstr "გაღვიძება"
 
-#: src/wakeup/waketab.cpp:42
+#: src/wakeup/waketab.cpp:39
 msgid " <ESC> Exit | <Enter> Toggle wakeup | <r> Window refresh"
 msgstr " <ESC> გასვლა | <Enter> გაღვიძების გადართვა | <r> ფანჯრის განახლება"
 
-#: src/wakeup/waketab.cpp:170
-msgid "Wake status of the devices"
-msgstr "მოწყობილობების ღვიძილის მდგომარეობა"
-
-#: src/wakeup/wakeup.cpp:48 src/wakeup/wakeup_ethernet.cpp:47
+#: src/wakeup/wakeup.h:45 src/wakeup/wakeup_ethernet.cpp:47
 #: src/wakeup/wakeup_usb.cpp:47
 msgid "Enabled"
 msgstr "ჩაირთო"
 
-#: src/wakeup/wakeup.cpp:49 src/wakeup/wakeup_ethernet.cpp:47
+#: src/wakeup/wakeup.h:46 src/wakeup/wakeup_ethernet.cpp:47
 #: src/wakeup/wakeup_usb.cpp:47
 msgid "Disabled"
 msgstr "გამორთულია"
 
-#: src/wakeup/wakeup_usb.cpp:51
-#, c-format
-msgid "Wake status for USB device %s"
+#: src/wakeup/wakeup_usb.cpp:50
+#, fuzzy, c++-format
+msgid "Wake status for USB device {}"
 msgstr "ღვიძილის მდგომარეობა USB მოწყობილობისთვის %s"
+
+#, c-format
+#~ msgid "cpu package %i"
+#~ msgstr "cpu-ის პაკეტი %i"
+
+#~ msgid "Processor Idle State Report"
+#~ msgstr "პროცესორის უქმი მდგომარეობის ანგარიში"
+
+#, c-format
+#~ msgid "Core %d"
+#~ msgstr "ბირთვი %d"
+
+#, c-format
+#~ msgid "GPU %d"
+#~ msgstr "GPU %d"
+
+#~ msgid "CPU"
+#~ msgstr "CPU"
+
+#~ msgid "Processor Frequency Report"
+#~ msgstr "პროცესორის სიხშირის ანგარიში"
+
+#, c-format
+#~ msgid "CPU %d"
+#~ msgstr "CPU %d"
+
+#~ msgid "AHCI ALPM Residency Statistics - Not supported on this macine"
+#~ msgstr ""
+#~ "AHCI ALPM-ის რეზიდენტულობის სტატისტიკა - ამ მანქანაზე მხარდაჭერილი არაა"
+
+#~ msgid "Link"
+#~ msgstr "კავშირი"
+
+#~ msgid "Active"
+#~ msgstr "აქტიური"
+
+#~ msgid "Partial"
+#~ msgstr "ნაწილობრივ"
+
+#~ msgid "Slumber"
+#~ msgstr "Slumber"
+
+#~ msgid "Devslp"
+#~ msgstr "Devslp"
+
+#~ msgid "AHCI ALPM Residency Statistics"
+#~ msgstr "AHCI ALPM-ის რეზიდენტულობის სტატისტიკა"
+
+#~ msgid "The battery reports a discharge rate of: "
+#~ msgstr "ელემენტის მიერ მოწოდებული დაცლის სიჩქარე: "
+
+#~ msgid "The energy consumed was : "
+#~ msgstr "მოხმარებული ენერგია იყო : "
+
+#~ msgid "The system baseline power is estimated at: "
+#~ msgstr "სისტემის საბაზისო კვების გაიზომა: "
+
+#~ msgid "Device Name"
+#~ msgstr "მოწყობილობის სახელი"
+
+#~ msgid "PW Estimate"
+#~ msgstr "ენ. დაახლ"
+
+#~ msgid "Device Power Report"
+#~ msgstr "მოწყობილობის სიმძლავრის ანგარიში"
+
+#~ msgid "Process"
+#~ msgstr "პროცესი"
+
+#~ msgid "Process Device Activity"
+#~ msgstr "პროცესი მოწყობილობა აქტივობა"
+
+#, c-format
+#~ msgid "%7sW"
+#~ msgstr "%7sვ"
+
+#, c-format
+#~ msgid "glob returned GLOB_NOSPACE\n"
+#~ msgstr "გლობმა დააბრუნა GLOB_NOSPACE\n"
+
+#, c-format
+#~ msgid "glob returned GLOB_ABORTED\n"
+#~ msgstr "გლობმა დააბრუნა GLOB_ABORTED\n"
+
+#, c-format
+#~ msgid "glob returned GLOB_NOMATCH\n"
+#~ msgstr "გლობმა დააბრუნა GLOB_NOMATCH\n"
+
+#~ msgid ""
+#~ "File will be loaded after taking minimum number of measurement(s) with "
+#~ "battery only \n"
+#~ msgstr ""
+#~ "ფაილი, მხოლოდ, ელემენტზე მუშაობისას მინიმალური რაოდენობის ანაზომის აღების "
+#~ "შემდეგ ჩაიტვირთება \n"
+
+#~ msgid "Summary"
+#~ msgstr "შეჯამება"
+
+#~ msgid "wakeups/second"
+#~ msgstr "გაღვიძება/წმ"
+
+#~ msgid "GPU ops/seconds"
+#~ msgstr "GPU ოპ/წამი"
+
+#~ msgid "VFS ops/sec and"
+#~ msgstr "VFS ოპ/წამი და"
+
+#~ msgid "Wakeups/s"
+#~ msgstr "Wakeups/s"
+
+#~ msgid "GPU ops/s"
+#~ msgstr "GPU ოპ/წმ"
+
+#~ msgid "Disk IO/s"
+#~ msgstr "დისკის IO/წმ"
+
+#~ msgid "GFX Wakeups/s"
+#~ msgstr "GFX გღვიძება/წმ"
+
+#~ msgid "Overview of Software Power Consumers"
+#~ msgstr "ენერგიის მხარჯველი პროგრამების მიმოხილვა"
+
+#~ msgid "Target:"
+#~ msgstr "სამიზნე:"
+
+#~ msgid "1 units/s"
+#~ msgstr "1 ერთეული/წმ"
+
+#~ msgid "System: "
+#~ msgstr "სისტემა: "
+
+#~ msgid " wakeup/s"
+#~ msgstr " გაღვიძება/წმ"
+
+#~ msgid "CPU: "
+#~ msgstr "CPU: "
+
+#, c-format
+#~ msgid "% usage"
+#~ msgstr "% uგამოყენება"
+
+#~ msgid "GPU:"
+#~ msgstr "GPU:"
+
+#~ msgid "GFX:"
+#~ msgstr "GFX:"
+
+#~ msgid " wakeups/s"
+#~ msgstr " გაღვიძება/წმ"
+
+#~ msgid "VFS:"
+#~ msgstr "VFS:"
+
+#~ msgid "Top 10 Power Consumers"
+#~ msgstr "ენერგიის მხარჯველი პირველი 10"
+
+#~ msgid "PowerTOP Version"
+#~ msgstr "PowerTOP-ის ვერსია"
+
+#~ msgid "Kernel Version"
+#~ msgstr "ბირთვის ვერსია"
+
+#~ msgid "System Name"
+#~ msgstr "სისტემის სახელი"
+
+#~ msgid "OS Information"
+#~ msgstr "ოს-ის ინფორმაცია"
+
+#~ msgid "System Information"
+#~ msgstr "ინფორმაცის სისტემის შესახებ"
+
+#~ msgid "Script"
+#~ msgstr "სკრიპტი"
+
+#~ msgid "Software Settings in Need of Tuning"
+#~ msgstr "პროგრამის პარამეტრები, რომლებსაც მორგება სჭირდებათ"
+
+#~ msgid "Untunable Software Issues"
+#~ msgstr "პროგრამის მოუგვარებელი პრობლემები"
+
+#~ msgid "Optimal Tuned Software Settings"
+#~ msgstr "Tuned-ის ოპტიმალური პარამეტრები"
+
+#~ msgid "Wake status of the devices"
+#~ msgstr "მოწყობილობების ღვიძილის მდგომარეობა"

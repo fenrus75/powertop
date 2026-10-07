@@ -1,11 +1,10 @@
 # PowerTOP Release Notes
 
-## v2.16.1-rc1
+## v2.16.1
 
 ### User-visible enhancements and changes
 
-This is a build-system focused maintenance release; there are no new
-tunables, UI changes, or user-facing features in this cycle.
+This is a maintenance release; there are no new tunables in this cycle.
 
 - Fixed build failures on distributions with newer autotools toolchains by
   bumping the autoconf C++ standard requirement to C++20, matching the
@@ -15,22 +14,38 @@ tunables, UI changes, or user-facing features in this cycle.
 - Removed the legacy autoconf build support entirely (Meson is now the
   sole supported build system), eliminating a class of build breakage
   reports caused by the two build systems drifting out of sync
+- Fixed broken cursor navigation on the WakeUp and Tunables tabs (#217)
+- Added vi-style (h/j/k/l) navigation keys alongside the existing arrow keys
+- Hid the `rfkill` pseudo-device from the Device stats list; it exists only
+  for power accounting and was cluttering the device list (#214)
+- Fixed the Parameters tab failing to show power estimates once 250 or more
+  parameters were tracked
+- Fixed a process-tab debug `printf` that corrupted the interactive display
+- Fixed `gpu_rapl_device` reporting power computed from an uninitialized
+  energy value (#223)
+- Fixed the extech power meter reporting bogus power readings instead of
+  errors when it received invalid BCD digits
+- Added a Georgian translation
 
 ### New command-line options
 
-None in this cycle.
+- `-s` is now accepted, and non-positive numeric option values are rejected
+  with an error instead of silently misbehaving
 
 ### Internal changes
 
-Removed `autogen.sh` and `configure.ac`; Meson is now the only supported
-build system, which removes the maintenance burden of keeping two build
-definitions in sync.
+Continued RAII migration of owning raw-pointer containers to
+`std::unique_ptr`/smart containers across devices, processes, and tabs, and
+modernized remaining `strtoull`/`strtod` call sites to `std::from_chars`.
+`PACKAGE_BUGREPORT` now points at the GitHub issue tracker.
 
 ### Thanks
 
 We thank the following external contributors who submitted patches for this release:
 
 - Michael Vetter
+- hanjinpeng
+- Ekaterine Papava
 
 ## v2.16
 

@@ -104,7 +104,7 @@ void devfreq::update_devfreq_freq_state(uint64_t freq, uint64_t time)
 {
 	class frequency *state = nullptr;
 
-	auto it = std::find_if(dstates.begin(), dstates.end(),
+	auto it = std::ranges::find_if(dstates,
 			[freq](const auto &s) { return freq == s->freq; });
 	if (it != dstates.end())
 		state = it->get();

@@ -321,7 +321,7 @@ void enumerate_cpus(void)
 		 */
 
 		std::string lower_line = line;
-		std::transform(lower_line.begin(), lower_line.end(), lower_line.begin(), ::tolower);
+		std::ranges::transform(lower_line, lower_line.begin(), ::tolower);
 
 		if (lower_line.starts_with("bogomips\t")
 		    || lower_line.starts_with("cpu revision\t")
@@ -1019,7 +1019,7 @@ void w_display_cpu_pstates(void)
 			if (!core)
 				continue;
 
-			bool has_cpus = std::any_of(core->children.begin(), core->children.end(),
+			bool has_cpus = std::ranges::any_of(core->children,
 					[](const auto &child) { return static_cast<bool>(child); });
 			if (!has_cpus)
 				continue;

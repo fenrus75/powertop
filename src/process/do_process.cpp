@@ -812,7 +812,7 @@ void process_update_display(void)
 	int show_power;
 	int need_linebreak = 0;
 
-	sort(all_power.begin(), all_power.end(), power_cpu_sort);
+	std::ranges::sort(all_power, power_cpu_sort);
 
 	show_power = global_power_valid();
 
@@ -935,7 +935,7 @@ void report_process_update_display(void)
 
 	/* Set Table attributes, rows, and cols */
 	cols=7;
-	sort(all_power.begin(), all_power.end(), power_cpu_sort);
+	std::ranges::sort(all_power, power_cpu_sort);
 	show_power = global_power_valid();
 	if (show_power)
 		cols=8;
@@ -1064,7 +1064,7 @@ void report_summary(void)
 	int show_power;
 	int rows, cols, idx;
 
-	sort(all_power.begin(), all_power.end(), power_cpu_sort);
+	std::ranges::sort(all_power, power_cpu_sort);
 	show_power = global_power_valid();
 
 	/* div attr css_class and css_id */
@@ -1205,7 +1205,7 @@ void process_process_data(void)
 	all_work_to_all_power();
 	all_devices_to_all_power();
 
-	sort(all_power.begin(), all_power.end(), power_cpu_sort);
+	std::ranges::sort(all_power, power_cpu_sort);
 }
 
 

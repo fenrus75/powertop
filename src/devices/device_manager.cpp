@@ -113,7 +113,7 @@ void report_devices(void)
 #endif
 	wmove(win, 2, 0);
 
-	sort(all_devices.begin(), all_devices.end(), power_device_sort);
+	std::ranges::sort(all_devices, power_device_sort);
 
 	pw = global_power();
 	if (pw > 0.0001) {
@@ -182,7 +182,7 @@ void show_report_devices(void)
 	double pw;
 
 	show_power = global_power_valid();
-	sort(all_devices.begin(), all_devices.end(), power_device_sort);
+	std::ranges::sort(all_devices, power_device_sort);
 
 	/* div attr css_class and css_id */
 	tag_attr div_attr;

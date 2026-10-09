@@ -87,7 +87,7 @@ static void find_all_usb_callback(const std::string &d_name)
 
 	std::string vendor_id = read_file_content(std::format("/sys/bus/usb/devices/{}/idVendor", d_name));
 	if (!vendor_id.empty()) {
-		vendor_id.erase(std::remove(vendor_id.begin(), vendor_id.end(), '\n'), vendor_id.end());
+		vendor_id.erase(std::ranges::remove(vendor_id, '\n').begin(), vendor_id.end());
 		if (vendor_id == "1d6b")
 			return;
 	}

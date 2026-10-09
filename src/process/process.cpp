@@ -78,7 +78,7 @@ uint64_t process::deschedule_thread(uint64_t time, int thread_id)
 
 static void cmdline_to_string(std::string& str)
 {
-	std::replace(str.begin(), str.end(), '\0', ' ');
+	std::ranges::replace(str, '\0', ' ');
 }
 
 
@@ -149,7 +149,7 @@ std::string process::usage_units_summary(void) const
 
 class process * find_create_process(const std::string &comm, int pid)
 {
-	auto it = std::find_if(all_processes.begin(), all_processes.end(),
+	auto it = std::ranges::find_if(all_processes,
 			[pid, &comm](const auto &p) { return p->pid == pid && p->comm == comm; });
 	if (it != all_processes.end())
 		return it->get();

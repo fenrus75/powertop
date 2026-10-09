@@ -130,7 +130,7 @@ void sysfs_tunable::toggle(void)
 void add_sysfs_tunable(const std::string &str, const std::string &_sysfs_path, const std::string &_target_content)
 {
 	const std::vector<std::string> files = get_matching_files(_sysfs_path);
-	bool any_accessible = std::any_of(files.begin(), files.end(),
+	bool any_accessible = std::ranges::any_of(files,
 			[](const auto &file) { return pt_access(file, R_OK) == 0; });
 	if (!any_accessible)
 		return;
@@ -188,7 +188,7 @@ void add_numeric_sysfs_tunable(const std::string &str, const std::string &_sysfs
                                double target, bool higher_is_better)
 {
 	const std::vector<std::string> files = get_matching_files(_sysfs_path);
-	bool any_accessible = std::any_of(files.begin(), files.end(),
+	bool any_accessible = std::ranges::any_of(files,
 			[](const auto &file) { return pt_access(file, R_OK) == 0; });
 	if (!any_accessible)
 		return;

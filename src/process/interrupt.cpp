@@ -97,7 +97,7 @@ class interrupt * find_create_interrupt(const std::string &_handler, int nr, int
 		handler_s = std::format("timer/{}", cpu);
 
 
-	auto it = std::find_if(all_interrupts.begin(), all_interrupts.end(),
+	auto it = std::ranges::find_if(all_interrupts,
 			[nr, &handler_s](const auto &irq) { return irq->number == nr && irq->handler == handler_s; });
 	if (it != all_interrupts.end())
 		return it->get();

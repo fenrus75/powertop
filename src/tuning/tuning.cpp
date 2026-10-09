@@ -199,7 +199,7 @@ void tuning_window::window_refresh()
 
 static void sort_tunables(void)
 {
-	sort(all_tunables.begin(), all_tunables.end(), tunables_sort);
+	std::ranges::sort(all_tunables, tunables_sort);
 }
 
 void tuning_window::expose(void)

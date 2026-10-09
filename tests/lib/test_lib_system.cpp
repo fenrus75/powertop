@@ -61,7 +61,7 @@ static void test_process_directory()
 	dir_entries.clear();
 	process_directory(d, collect_dir_entry);
 
-	std::sort(dir_entries.begin(), dir_entries.end());
+	std::ranges::sort(dir_entries);
 	PT_ASSERT_EQ(dir_entries.size(), (size_t)3);
 	PT_ASSERT_EQ(dir_entries[0], "alpha");
 	PT_ASSERT_EQ(dir_entries[1], "beta");

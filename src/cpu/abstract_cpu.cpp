@@ -39,7 +39,7 @@ void abstract_cpu::account_freq(uint64_t freq, uint64_t duration)
 {
 	class frequency *state = nullptr;
 
-	auto it = std::find_if(pstates.begin(), pstates.end(),
+	auto it = std::ranges::find_if(pstates,
 			[freq](const auto &p) { return p->freq == freq; });
 	if (it != pstates.end())
 		state = it->get();
@@ -222,7 +222,7 @@ void abstract_cpu::finalize_cstate(const std::string &linux_name, uint64_t usage
 {
 	struct idle_state *state = nullptr;
 
-	auto it = std::find_if(cstates.begin(), cstates.end(),
+	auto it = std::ranges::find_if(cstates,
 			[&linux_name](const auto &c) { return c->linux_name == linux_name; });
 	if (it != cstates.end())
 		state = it->get();
@@ -241,7 +241,7 @@ void abstract_cpu::update_cstate(const std::string &linux_name, const std::strin
 {
 	struct idle_state *state = nullptr;
 
-	auto it = std::find_if(cstates.begin(), cstates.end(),
+	auto it = std::ranges::find_if(cstates,
 			[&linux_name](const auto &c) { return c->linux_name == linux_name; });
 	if (it != cstates.end())
 		state = it->get();
@@ -261,7 +261,7 @@ int abstract_cpu::has_cstate_level(int level) const
 	if (level == LEVEL_HEADER)
 		return 1;
 
-	if (std::any_of(cstates.begin(), cstates.end(),
+	if (std::ranges::any_of(cstates,
 			[level](const auto &s) { return s->line_level == level; }))
 		return 1;
 
@@ -306,7 +306,7 @@ void abstract_cpu::finalize_pstate(uint64_t freq, uint64_t duration, int count)
 {
 	class frequency *state = nullptr;
 
-	auto it = std::find_if(pstates.begin(), pstates.end(),
+	auto it = std::ranges::find_if(pstates,
 			[freq](const auto &p) { return p->freq == freq; });
 	if (it != pstates.end())
 		state = it->get();
@@ -324,7 +324,7 @@ void abstract_cpu::update_pstate(uint64_t freq, const std::string &human_name, u
 {
 	class frequency *state = nullptr;
 
-	auto it = std::find_if(pstates.begin(), pstates.end(),
+	auto it = std::ranges::find_if(pstates,
 			[freq](const auto &p) { return p->freq == freq; });
 	if (it != pstates.end())
 		state = it->get();

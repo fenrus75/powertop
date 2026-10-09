@@ -271,7 +271,7 @@ void report_show_open_devices(void)
 	/* Set array of data in row Major order */
 	std::vector<std::string> process_data(cols * rows);
 
-	sort(target->begin(), target->end(), devlist_sort);
+	std::ranges::sort(*target, devlist_sort);
 	process_data[0]=__("Process");
 	process_data[1]=__("Device");
 

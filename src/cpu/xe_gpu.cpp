@@ -89,7 +89,7 @@ std::string find_xe_card_path(void)
 				std::format("/sys/class/drm/{}/device", card);
 			/* xe driver exposes tile* subdirectories */
 			const auto entries = list_directory(dev);
-			if (std::any_of(entries.begin(), entries.end(),
+			if (std::ranges::any_of(entries,
 					[](const auto &entry) { return entry.starts_with("tile"); }))
 				return std::format("/sys/class/drm/{}", card);
 		}

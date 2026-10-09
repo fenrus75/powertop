@@ -171,7 +171,7 @@ double get_result_value(int index, const struct result_bundle *the_bundle)
 
 int result_device_exists(const std::string &name)
 {
-	return std::any_of(all_devices.begin(), all_devices.end(),
+	return std::ranges::any_of(all_devices,
 			[&name](const auto &d) { return d->device_name() == name; });
 }
 

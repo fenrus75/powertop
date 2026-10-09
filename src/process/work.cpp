@@ -22,6 +22,7 @@
  * Authors:
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
+#include <algorithm>
 #include <map>
 #include <memory>
 #include <utility>
@@ -90,7 +91,7 @@ static void add_work(const std::pair<const unsigned long, std::unique_ptr<class 
 
 void all_work_to_all_power(void)
 {
-	std::for_each(all_work.begin(), all_work.end(), add_work);
+	std::ranges::for_each(all_work, add_work);
 
 }
 

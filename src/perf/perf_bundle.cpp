@@ -217,7 +217,7 @@ void perf_bundle::process(void)
 	/* fixme: reserve enough space in the array in one go */
 	for (auto &ev : events)
 		ev->process(&records);
-	std::sort(records.begin(), records.end(), event_sort_function);
+	std::ranges::sort(records, event_sort_function);
 
 	for (auto record : records) {
 		auto *sample = static_cast<struct perf_sample *>(record);

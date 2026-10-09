@@ -81,12 +81,12 @@ reachability first, then smallest blast radius).
 
 | ID | Rule | Location | Externally visible? | Status | Commit |
 | :-- | :--- | :------- | :------------------- | :----- | :----- |
-| B1 | No Naked New | `src/cpu/cpu.cpp:71,76,110,115,130,143,148,239` — raw `new` into local `abstract_cpu *`/`ret` before being wrapped by a caller; `children` member is already `vector<unique_ptr<abstract_cpu>>` so only the construction-site idiom needs updating | No | pending | |
-| B2 | No Naked New | `src/devices/backlight.cpp:122`, `src/devices/rfkill.cpp:98`, `src/devices/thinkpad-light.cpp:85`, `src/devices/alsa.cpp:143`, `src/devices/thinkpad-fan.cpp:86`, `src/devices/usb.cpp:158` — raw `new` immediately wrapped in `std::unique_ptr<T>(bl)`; convert to `std::make_unique<T>(...)` | No | pending | |
-| B3 | No Naked New | `src/parameters/parameters.cpp:299` (`new struct parameter_bundle`) | No | pending | |
-| B4 | Scoped Locks (`modernize-use-scoped-lock`) | 3 sites — see `clang_tidy_out.txt` grep `modernize-use-scoped-lock` | No | pending | |
-| B5 | Initialize Before Use (`modernize-use-default-member-init`) | 10 sites — see `clang_tidy_out.txt` grep `modernize-use-default-member-init` | No | pending | |
-| B6 | Rule of Zero/Five (`modernize-use-equals-default`) | 5 sites — see `clang_tidy_out.txt` grep `modernize-use-equals-default` | No | pending | |
+| B1 | No Naked New | `src/cpu/cpu.cpp:71,76,110,115,130,143,148,239` — raw `new` into local `abstract_cpu *`/`ret` before being wrapped by a caller; `children` member is already `vector<unique_ptr<abstract_cpu>>` so only the construction-site idiom needs updating | No | done | cc38526 |
+| B2 | No Naked New | `src/devices/backlight.cpp:122`, `src/devices/rfkill.cpp:98`, `src/devices/thinkpad-light.cpp:85`, `src/devices/alsa.cpp:143`, `src/devices/thinkpad-fan.cpp:86`, `src/devices/usb.cpp:158` — raw `new` immediately wrapped in `std::unique_ptr<T>(bl)`; convert to `std::make_unique<T>(...)` | No | done | 8a38b25 |
+| B3 | No Naked New | `src/parameters/parameters.cpp:299` (`new struct parameter_bundle`) | No | done | 8a38b25 (return type changed to `std::unique_ptr<parameter_bundle>`, matching `clone_results()`) |
+| B4 | Scoped Locks (`modernize-use-scoped-lock`) | 3 sites — see `clang_tidy_out.txt` grep `modernize-use-scoped-lock` | No | done | 3fdfed5 |
+| B5 | Initialize Before Use (`modernize-use-default-member-init`) | 10 sites — see `clang_tidy_out.txt` grep `modernize-use-default-member-init` | No | done | 685a946 (all 10 were redundant ctor-init-list entries duplicating an existing in-class default; removed the duplicates) |
+| B6 | Rule of Zero/Five (`modernize-use-equals-default`) | 5 sites — see `clang_tidy_out.txt` grep `modernize-use-equals-default` | No | done | 622092d |
 | B7 | Initialize Before Use (`uninitMemberVar`/`uninitMemberVarNoCtor`, cppcheck) | 71 sites across many classes — see `cppcheck_out.txt`; needs per-class triage before fixing (may already be initialized via base class or `collect_json_fields` pattern) | No | pending | |
 
 ### Tier C — Idiomatic modernization

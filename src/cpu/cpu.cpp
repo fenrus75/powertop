@@ -62,20 +62,20 @@ class perf_power_bundle: public perf_bundle
 };
 
 
-static class abstract_cpu * new_package(int package, int cpu, const std::string &vendor, int family, int model)
+static std::unique_ptr<abstract_cpu> new_package(int package, int cpu, const std::string &vendor, int family, int model)
 {
-	class abstract_cpu *ret = nullptr;
+	std::unique_ptr<abstract_cpu> ret;
 	class cpudevice *cpudev;
 
 	std::string packagename;
 	if (vendor == "GenuineIntel")
 		if (is_supported_intel_cpu(family, model, cpu)) {
-			ret = new nhm_package(family, model);
+			ret = std::make_unique<nhm_package>(family, model);
 			ret->set_intel_MSR(true);
 		}
 
 	if (!ret) {
-		ret = new cpu_package;
+		ret = std::make_unique<cpu_package>();
 		ret->set_intel_MSR(false);
 	}
 
@@ -84,18 +84,18 @@ static class abstract_cpu * new_package(int package, int cpu, const std::string 
 	ret->childcount = 0;
 
 	packagename = pt_format(_("cpu package {}"), cpu);
-	auto cpudev_ptr = std::make_unique<cpudevice>(_("cpu package"), packagename.c_str(), ret);
+	auto cpudev_ptr = std::make_unique<cpudevice>(_("cpu package"), packagename.c_str(), ret.get());
 	cpudev = cpudev_ptr.get();
 	all_devices.push_back(std::move(cpudev_ptr));
 
 	packagename = pt_format(_("package-{}"), cpu);
-	auto cpu_rapl_dev = std::make_unique<cpu_rapl_device>(cpudev, _("cpu rapl package"), packagename.c_str(), ret);
+	auto cpu_rapl_dev = std::make_unique<cpu_rapl_device>(cpudev, _("cpu rapl package"), packagename.c_str(), ret.get());
 	if (cpu_rapl_dev->device_present())
 		all_devices.push_back(std::move(cpu_rapl_dev));
 	/* else: cpu_rapl_dev goes out of scope here and is auto-deleted */
 
 	packagename = pt_format(_("package-{}"), cpu);
-	auto dram_rapl_dev = std::make_unique<dram_rapl_device>(cpudev, _("dram rapl package"), packagename.c_str(), ret);
+	auto dram_rapl_dev = std::make_unique<dram_rapl_device>(cpudev, _("dram rapl package"), packagename.c_str(), ret.get());
 	if (dram_rapl_dev->device_present())
 		all_devices.push_back(std::move(dram_rapl_dev));
 	/* else: dram_rapl_dev goes out of scope here and is auto-deleted */
@@ -103,18 +103,18 @@ static class abstract_cpu * new_package(int package, int cpu, const std::string 
 	return ret;
 }
 
-static class abstract_cpu * new_core(int core, int cpu, const std::string &vendor, int family, int model)
+static std::unique_ptr<abstract_cpu> new_core(int core, int cpu, const std::string &vendor, int family, int model)
 {
-	class abstract_cpu *ret = nullptr;
+	std::unique_ptr<abstract_cpu> ret;
 
 	if (vendor == "GenuineIntel")
 		if (is_supported_intel_cpu(family, model, cpu)) {
-			ret = new nhm_core(family, model);
+			ret = std::make_unique<nhm_core>(family, model);
 			ret->set_intel_MSR(true);
 		}
 
 	if (!ret) {
-		ret = new cpu_core;
+		ret = std::make_unique<cpu_core>();
 		ret->set_intel_MSR(false);
 	}
 
@@ -125,29 +125,27 @@ static class abstract_cpu * new_core(int core, int cpu, const std::string &vendo
 	return ret;
 }
 
-static class abstract_cpu * new_i965_gpu(void)
+static std::unique_ptr<abstract_cpu> new_i965_gpu(void)
 {
-	class abstract_cpu *ret = nullptr;
-
-	ret = new i965_core;
+	std::unique_ptr<abstract_cpu> ret = std::make_unique<i965_core>();
 	ret->childcount = 0;
 	ret->set_type("GPU");
 
 	return ret;
 }
 
-static class abstract_cpu * new_cpu(int number, const std::string &vendor, int family, int model)
+static std::unique_ptr<abstract_cpu> new_cpu(int number, const std::string &vendor, int family, int model)
 {
-	class abstract_cpu * ret = nullptr;
+	std::unique_ptr<abstract_cpu> ret;
 
 	if (vendor == "GenuineIntel")
 		if (is_supported_intel_cpu(family, model, number)) {
-			ret = new nhm_cpu;
+			ret = std::make_unique<nhm_cpu>();
 			ret->set_intel_MSR(true);
 		}
 
 	if (!ret) {
-		ret = new cpu_linux;
+		ret = std::make_unique<cpu_linux>();
 		ret->set_intel_MSR(false);
 	}
 	ret->set_number(number, number);
@@ -179,7 +177,7 @@ static void handle_one_cpu(unsigned int number, const std::string &vendor, int f
 		system_level.children.resize(package_number + 1);
 
 	if (!system_level.children[package_number]) {
-		system_level.children[package_number] = std::unique_ptr<abstract_cpu>(new_package(package_number, number, vendor, family, model));
+		system_level.children[package_number] = new_package(package_number, number, vendor, family, model);
 		system_level.childcount++;
 	}
 
@@ -191,7 +189,7 @@ static void handle_one_cpu(unsigned int number, const std::string &vendor, int f
 		package->children.resize(core_number + 1);
 
 	if (!package->children[core_number]) {
-		package->children[core_number] = std::unique_ptr<abstract_cpu>(new_core(core_number, number, vendor, family, model));
+		package->children[core_number] = new_core(core_number, number, vendor, family, model);
 		package->childcount++;
 	}
 
@@ -202,7 +200,7 @@ static void handle_one_cpu(unsigned int number, const std::string &vendor, int f
 		core->children.resize(number + 1);
 
 	if (!core->children[number]) {
-		core->children[number] = std::unique_ptr<abstract_cpu>(new_cpu(number, vendor, family, model));
+		core->children[number] = new_cpu(number, vendor, family, model);
 		core->childcount++;
 	}
 
@@ -231,14 +229,14 @@ static void handle_i965_gpu(void)
 	}
 
 	if (!package->children[core_number]) {
-		package->children[core_number] = std::unique_ptr<abstract_cpu>(new_i965_gpu());
+		package->children[core_number] = new_i965_gpu();
 		package->childcount++;
 	}
 }
 
-static class abstract_cpu * new_xe_gpu(void)
+static std::unique_ptr<abstract_cpu> new_xe_gpu(void)
 {
-	class abstract_cpu *ret = new xe_core;
+	std::unique_ptr<abstract_cpu> ret = std::make_unique<xe_core>();
 	ret->childcount = 0;
 	ret->set_type("GPU");
 	return ret;
@@ -257,8 +255,7 @@ static void handle_xe_gpu(void)
 	}
 
 	if (!package->children[core_number]) {
-		package->children[core_number] =
-			std::unique_ptr<abstract_cpu>(new_xe_gpu());
+		package->children[core_number] = new_xe_gpu();
 		package->childcount++;
 	}
 }

@@ -23,6 +23,7 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 #include "process.h"
+#include <utility>
 #include "interrupt.h"
 #include "timer.h"
 #include "work.h"
@@ -417,7 +418,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
                 }
 		vec = (int)val;
 
-		if (vec >= 0 && vec < (int)softirqs.size())
+		if (vec >= 0 && std::cmp_less(vec, softirqs.size()))
 			handler = softirqs[vec];
 
 		if (handler.empty())

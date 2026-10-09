@@ -23,6 +23,7 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 #include <sstream>
+#include <utility>
 #include <inttypes.h>
 #include <cstdio>
 #include <cstdlib>
@@ -283,7 +284,7 @@ int abstract_cpu::has_pstate_level(int level) const
 	if (level == LEVEL_HEADER)
 		return 1;
 
-	if (level >= 0 && level < (int)pstates.size())
+	if (level >= 0 && std::cmp_less(level, pstates.size()))
 		return 1;
 
 	for (auto &child : children)

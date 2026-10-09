@@ -27,6 +27,7 @@
 /*#define NDEBUG*/
 
 #include <cstdio>
+#include <utility>
 #include <cassert>
 #include <stdarg.h>
 #include <format>
@@ -344,7 +345,7 @@ report_formatter_html::add_table(const std::vector<std::string> &system_data, co
 		for (j=0; j < tb_attr->cols; j++){
 			offset = i * (tb_attr->cols) + j;
 
-			if (offset >= (int)system_data.size())
+			if (std::cmp_greater_equal(offset, system_data.size()))
 				break;
 
 std::string escaped_data = (system_data[offset] == "&nbsp;") ? system_data[offset] : escape_string(system_data[offset]);

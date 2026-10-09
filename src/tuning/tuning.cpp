@@ -24,6 +24,7 @@
  */
 
 #include <algorithm>
+#include <utility>
 #include <cstdio>
 #include <memory>
 #include <ncurses.h>
@@ -132,7 +133,7 @@ static void __tuning_update_display(int cursor_pos)
 		align_string(res, 12, 12);
 		align_string(desc, 103, 103);
 
-		if ((int)i != cursor_pos) {
+		if (std::cmp_not_equal(i, cursor_pos)) {
 			wattroff(win, A_REVERSE);
 			wprintw(win, "   ");
 		} else {

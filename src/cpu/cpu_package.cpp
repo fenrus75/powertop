@@ -23,6 +23,7 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 #include <cstdio>
+#include <utility>
 #include "cpu.h"
 #include "../lib.h"
 #include "../parameters/parameters.h"
@@ -78,7 +79,7 @@ std::string cpu_package::fill_cstate_name(int line_nr)
 
 std::string cpu_package::fill_pstate_name(int line_nr)
 {
-	if (line_nr >= (int)pstates.size() || line_nr < 0)
+	if (std::cmp_greater_equal(line_nr, pstates.size()) || line_nr < 0)
 		return "";
 
 	return pstates[line_nr]->human_name;
@@ -99,7 +100,7 @@ std::string cpu_package::fill_pstate_line(int line_nr)
 		return _("Package");
 	}
 
-	if (line_nr >= (int)pstates.size() || line_nr < 0)
+	if (std::cmp_greater_equal(line_nr, pstates.size()) || line_nr < 0)
 		return "";
 
 	return std::format(" {:5.1f}% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));

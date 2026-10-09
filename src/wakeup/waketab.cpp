@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <utility>
 #include <cstdio>
 #include <memory>
 #include <ncurses.h>
@@ -67,7 +68,7 @@ static void __wakeup_update_display(int cursor_pos)
 		const std::string res = wakeup_all[i]->wakeup_string();
 		const std::string desc = wakeup_all[i]->description();
 
-		if ((int)i != cursor_pos) {
+		if (std::cmp_not_equal(i, cursor_pos)) {
 			wattroff(win, A_REVERSE);
 			wprintw(win, "   ");
 		} else {

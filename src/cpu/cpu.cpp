@@ -23,6 +23,8 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 #include <fstream>
+#include <limits>
+#include <utility>
 #include <vector>
 #include <cmath>
 #include <cstring>
@@ -165,11 +167,11 @@ static void handle_one_cpu(unsigned int number, const std::string &vendor, int f
 	class abstract_cpu *package, *core, *cpu;
 
 	core_number = read_sysfs(std::format("/sys/devices/system/cpu/cpu{}/topology/core_id", number));
-	if (core_number == (unsigned int) -1)
+	if (core_number == std::numeric_limits<unsigned int>::max())
 		core_number = number;
 
 	package_number = read_sysfs(std::format("/sys/devices/system/cpu/cpu{}/topology/physical_package_id", number));
-	if (package_number == (unsigned int) -1)
+	if (package_number == std::numeric_limits<unsigned int>::max())
 		package_number = 0;
 
 
@@ -753,7 +755,7 @@ void report_display_cpu_pstates(void)
 			if (!_core->has_pstates())
 				continue;
 
-			for (line = LEVEL_HEADER; line < (int)pstates_num; line++) {
+			for (line = LEVEL_HEADER; std::cmp_less(line, pstates_num); line++) {
 				bool first_cpu = true;
 
 				if (!_package->has_pstate_level(line))
@@ -1091,7 +1093,7 @@ void perf_power_bundle::handle_trace_point(void *trace, int cpunr, uint64_t time
 	if (!event)
 		return;
 
-	if (cpunr < 0 || cpunr >= (int)all_cpus.size()) {
+	if (cpunr < 0 || std::cmp_greater_equal(cpunr, all_cpus.size())) {
 		fprintf(stderr, _("INVALID cpu nr in handle_trace_point\n"));
 		return;
 	}

@@ -23,6 +23,7 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 #include "display.h"
+#include <utility>
 #include "lib.h"
 
 #include <ncurses.h>
@@ -276,7 +277,7 @@ WINDOW *get_ncurses_win(int nr)
 	class tab_window *w;
 	WINDOW *win;
 
-	if (nr < 0 || nr >= (int)tab_names.size())
+	if (nr < 0 || std::cmp_greater_equal(nr, tab_names.size()))
 		return nullptr;
 
 	w = tab_windows[tab_names[nr]].get();
@@ -322,7 +323,7 @@ void show_next_tab(void)
 		w->hide();
 
 	current_tab ++;
-	if (current_tab >= (int)tab_names.size())
+	if (std::cmp_greater_equal(current_tab, tab_names.size()))
 		current_tab = 0;
 
 	w = get_current_tab();

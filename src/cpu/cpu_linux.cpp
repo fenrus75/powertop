@@ -23,6 +23,7 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 #include <iostream>
+#include <utility>
 #include <fstream>
 #include <sstream>
 
@@ -212,7 +213,7 @@ std::string cpu_linux::fill_cstate_name(int line_nr)
 
 std::string cpu_linux::fill_pstate_name(int line_nr)
 {
-	if (line_nr >= (int)pstates.size() || line_nr < 0)
+	if (std::cmp_greater_equal(line_nr, pstates.size()) || line_nr < 0)
 		return "";
 
 	return std::format("{}", pstates[line_nr]->human_name);
@@ -231,7 +232,7 @@ std::string cpu_linux::fill_pstate_line(int line_nr)
 		return pt_format(_(" CPU {}"), number);
 	}
 
-	if (line_nr >= (int)pstates.size() || line_nr < 0)
+	if (std::cmp_greater_equal(line_nr, pstates.size()) || line_nr < 0)
 		return "";
 
 	return std::format(" {:5.1f}% ", percentage(1.0 * (pstates[line_nr]->time_after) / total_stamp));

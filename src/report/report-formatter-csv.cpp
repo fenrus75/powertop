@@ -27,6 +27,7 @@
 /*#define NDEBUG*/
 
 #include <cstdio>
+#include <utility>
 #include <cassert>
 #include <stdarg.h>
 #include <format>
@@ -139,7 +140,7 @@ report_formatter_csv::add_table(const std::vector<std::string> &system_data, con
 		for (j=0; j < tb_attr->cols; j++){
 			offset = i * (tb_attr->cols) + j;
 
-			if (offset >= (int)system_data.size())
+			if (std::cmp_greater_equal(offset, system_data.size()))
 				break;
 
 			tmp_str=system_data[offset];

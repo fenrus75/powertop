@@ -345,7 +345,7 @@ void align_string(std::string &str, size_t min_sz, size_t max_sz)
 	/* start with mbsrtowcs() local mbstate_t * and
 	 * nullptr dst pointer*/
 	sz = mbsrtowcs(nullptr, &buffer, max_sz, nullptr);
-	if (sz == (size_t)-1) {
+	if (sz == std::numeric_limits<size_t>::max()) {
 		return;
 	}
 	while (sz < min_sz) {

@@ -23,6 +23,7 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 #include "parameters.h"
+#include <utility>
 #include "../measurement/measurement.h"
 #include <algorithm>
 #include <cstdio>
@@ -82,7 +83,7 @@ void register_parameter(const std::string &name, double default_value, double we
 
 	index = get_param_index(name);
 
-	if (index >= (int)all_parameters.parameters.size()) {
+	if (std::cmp_greater_equal(index, all_parameters.parameters.size())) {
 		all_parameters.parameters.resize(index+1, 0.0);
 		all_parameters.weights.resize(index+1, 1.0);
 	}
@@ -100,7 +101,7 @@ void set_parameter_value(const std::string &name, double value, struct parameter
 
 	index = get_param_index(name);
 
-	if (index >= (int)bundle->parameters.size()) {
+	if (std::cmp_greater_equal(index, bundle->parameters.size())) {
 		bundle->parameters.resize(index+1, 0.0);
 		bundle->weights.resize(index+1, 1.0);
 	}
@@ -161,7 +162,7 @@ double get_result_value(int index, const struct result_bundle *the_bundle)
 {
 	if (!the_bundle)
 		return 0;
-	if (index >= (int) the_bundle->utilization.size())
+	if (std::cmp_greater_equal(index, the_bundle->utilization.size()))
 		return 0;
 	return the_bundle->utilization[index];
 }
@@ -402,7 +403,7 @@ int utilization_power_valid(int index)
 	if (past_results.size() == 0)
 		return 0;
 
-	if (index >= (int)past_results[0]->utilization.size())
+	if (std::cmp_greater_equal(index, past_results[0]->utilization.size()))
 		return 0;
 	const double first_value = past_results[0]->utilization[index];
 	for (i = 1; i < past_results.size(); i++) {

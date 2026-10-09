@@ -18,6 +18,7 @@
  */
 
 #include <cstdio>
+#include <utility>
 #include <format>
 #include "report-formatter-md.h"
 #include "report-data-html.h"
@@ -73,7 +74,7 @@ void report_formatter_md::add_table(const std::vector<std::string> &system_data,
 		add_exact("| ");
 		for (int j = 0; j < tb_attr->cols; j++) {
 			int offset = i * tb_attr->cols + j;
-			if (offset < (int)system_data.size()) {
+			if (std::cmp_less(offset, system_data.size())) {
 				std::string val = system_data[offset];
 				if (val == "&nbsp;") {
 					val = " ";

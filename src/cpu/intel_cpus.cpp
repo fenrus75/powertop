@@ -23,6 +23,7 @@
  *	Arjan van de Ven <arjan@linux.intel.com>
  */
 #include "intel_cpus.h"
+#include <utility>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -377,7 +378,7 @@ std::string nhm_core::fill_pstate_line(int line_nr)
 		return _("  Core");
 	}
 
-	if (intel_pstate > 0 || line_nr >= (int)pstates.size() || line_nr < 0)
+	if (intel_pstate > 0 || std::cmp_greater_equal(line_nr, pstates.size()) || line_nr < 0)
 		return "";
 
 	return std::format(" {:5.1f}% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
@@ -528,7 +529,7 @@ std::string nhm_package::fill_pstate_line(int line_nr)
 		return _("  Package");
 	}
 
-	if (intel_pstate > 0 || line_nr >= (int)pstates.size() || line_nr < 0)
+	if (intel_pstate > 0 || std::cmp_greater_equal(line_nr, pstates.size()) || line_nr < 0)
 		return "";
 
 	return std::format(" {:5.1f}% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));
@@ -753,7 +754,7 @@ std::string nhm_cpu::fill_pstate_line(int line_nr)
 		const double F = 1.0 * (tsc_after - tsc_before) * (aperf_after - aperf_before) / (mperf_after - mperf_before) / time_factor * 1000;
 		return hz_to_human(F, 1);
 	}
-	if (intel_pstate > 0 || line_nr >= (int)pstates.size() || line_nr < 0)
+	if (intel_pstate > 0 || std::cmp_greater_equal(line_nr, pstates.size()) || line_nr < 0)
 		return "";
 
 	return std::format(" {:5.1f}% ", percentage(1.0* (pstates[line_nr]->time_after) / total_stamp));

@@ -122,13 +122,29 @@ expose `toggle_bad`.
 
 ## Fixture creation with trace_tool.py add
 
-Use `trace_tool.py add FILE R PATH VALUE` to build fixture files from
-scratch (creates file if it doesn't exist). Values are plain strings,
-auto-encoded to base64. Validate after building with `trace_tool.py validate`.
+**Never hand-compute base64 for fixture files.** Use `trace_tool.py add`
+(creates the file if it doesn't exist; values auto-encoded to base64;
+validate after with `trace_tool.py validate`):
 
-Example for backlight (2 reads in start_measurement):
-  trace_tool.py add backlight_start.ptrecord R /sys/class/backlight/lcd/max_brightness 100
-  trace_tool.py add backlight_start.ptrecord R /sys/class/backlight/lcd/actual_brightness 60
+  python3 scripts/test_tools/trace_tool.py add FILE R /some/path "plain text value"
+  python3 scripts/test_tools/trace_tool.py add FILE D /some/dir entry1 entry2
+  python3 scripts/test_tools/trace_tool.py add FILE N /missing/path
+  python3 scripts/test_tools/trace_tool.py add FILE T 10 500000
+  python3 scripts/test_tools/trace_tool.py add FILE A /sys/foo 4 0
+  python3 scripts/test_tools/trace_tool.py add FILE M 0 611 deadbeef   # cpu offset [value], default value 0
+
+For D records: entries are space-separated, sorted and newline-joined
+before base64 encoding; empty value → empty/missing directory record.
+M records in replay mode: `replay_msr()` returns 0 (success), but
+`rapl_interface.cpp` domain detection checks `ret > 0`, so MSR-path
+domains are never detected via replay — use M records for "no domain"
+fallback tests; prefer the powercap path for domain-present tests.
+
+Other useful subcommands: `list --content FILE` (decoded values),
+`list --path SUBSTR FILE` (filter), `extract`/`replace FILE LINE
+file.txt` (decode/replace a record's content), `edit FILE LINE` (open
+in `$EDITOR`, default `joe`), `search FILE REGEX` (grep paths),
+`validate FILE` (check format).
 
 ## Test infrastructure: stub files
 
@@ -164,35 +180,19 @@ If `lib.cpp` calls display helpers such as `set_notification()`, keep the
 reference optional (for example via a weak declaration) so non-UI test targets
 still link.
 
-# RAII / vector<T*> ownership map
-
-A full review of all `std::vector<T*>` in `src/` is in `raii.md`.
-
-**Owning vectors (should migrate to `vector<unique_ptr<T>>`):**
-- `power_meters`, `all_tunables`, `all_untunables`, `all_devices`, `past_results`,
-  `wakeup_all`, `all_interrupts`, `all_processes`, `all_proc_devices` (global)
-- `abstract_cpu::children`, `abstract_cpu::cstates`, `abstract_cpu::pstates` (member)
-- `perf_bundle::events`, `devfreq::dstates` (member)
+# RAII / vector<T*> ownership status (migration complete — see RAII log above)
 
 **Non-owning observer vectors (raw pointer correct — do not migrate):**
 - `all_power` — aggregates from all owning collections; never deletes.
 - `all_cpus` — flat indexed lookup into `system_level.children`; may contain nullptrs.
 - `cpudevice::child_devices`, `i915_gpu::child_devices` — views into `all_devices`.
 
-**Special:** `perf_bundle::records` — `vector<void*>` with malloc/free; needs custom
-RAII wrapper rather than `unique_ptr<T>` (see `raii.md`).
-- `wakeup_all` is now `std::vector<std::unique_ptr<wakeup>>`; use
-  `std::make_unique<>` at registration sites, `wakeup_all.clear()` for teardown,
-  and `.get()` only where a raw `wakeup *` is temporarily needed.
-- `all_tunables` / `all_untunables` are now `std::vector<std::unique_ptr<tunable>>`;
-  registration sites should use `std::make_unique<>` plus `std::move()` for
-  conditional insertion, `clear_tuning()` should just call `.clear()`, and UI/
-  test code should use `.get()` or container resize/clear rather than manual
-  `delete` loops.
-- `measurement_manager.cpp`: the factory function `extech_power_meter(const std::string &)`
-  collides with the class name; when constructing the class inside that function,
-  use `new class extech_power_meter(...)` (or `emplace_back(new class ... )`) to
-  disambiguate the type name from the function.
+Notes from the completed migration:
+- `measurement_manager.cpp`: the factory function
+  `extech_power_meter(const std::string &)` collides with the class name;
+  disambiguate with `new class extech_power_meter(...)`.
+- `perf_bundle::records` (`vector<void*>`, malloc/free) is the sole
+  remaining exception — see RAII log above.
 
 # NaN / division-by-zero guard patterns
 
@@ -234,39 +234,6 @@ See `release-checklist.md` for the full pre-release checklist. Key points:
 - **Never pipe ninja through grep** in the checklist or anywhere else — this is now documented in release-checklist.md as well
 - POTFILES.in audit: `comm -23 <(grep -rl '\b_(\|N_(' --include="*.cpp" --include="*.h" src/ | sort) <(grep -v '^#\|^$' po/POTFILES.in | sort)` — run this at every release; new source files often have translatable strings that are missing
 - msgmerge only runs for languages listed in `po/LINGUAS` (11 active languages); the other .po files are not built but still exist
-
-# trace_tool.py M record support
-
-`scripts/test_tools/trace_tool.py add` now supports M (MSR) records:
-  trace_tool.py add file.ptrecord M 0 611 deadbeef   # cpu offset [value]
-  Default value is 0. `list --content` shows cpu/offset/value for MSR records.
-  M records in replay mode: replay_msr() returns 0 (success), but note that
-  rapl_interface.cpp domain detection checks ret > 0, so MSR-path domains will
-  never be detected via replay (returns 0, not 8). Use for "no domain" MSR
-  fallback tests; the powercap path is preferred for domain-present tests.
-
-# ALWAYS use trace_tool.py to create/edit .ptrecord fixtures
-
-**Never hand-compute base64 for fixture files.** Use `trace_tool.py add`:
-
-  python3 scripts/test_tools/trace_tool.py add FILE R /some/path "plain text value"
-  python3 scripts/test_tools/trace_tool.py add FILE D /some/dir entry1 entry2
-  python3 scripts/test_tools/trace_tool.py add FILE N /missing/path
-  python3 scripts/test_tools/trace_tool.py add FILE T 10 500000
-  python3 scripts/test_tools/trace_tool.py add FILE A /sys/foo 4 0
-  python3 scripts/test_tools/trace_tool.py add FILE M 0 611 deadbeef
-
-Other useful subcommands:
-  list --content FILE       — show all records with decoded values
-  list --path SUBSTR FILE   — filter by path substring
-  extract FILE LINE out.txt — decode a record's content to a file
-  replace FILE LINE in.txt  — replace a record's content from a file
-  edit FILE LINE            — open a record's content in $EDITOR (default: joe)
-  search FILE REGEX         — grep paths by regex
-  validate FILE             — check format is valid
-
-For D records: `add` takes space-separated entry names; they are sorted and
-newline-joined before base64 encoding. An empty value → empty directory record.
 
 # Time formatting pattern (lib.cpp / lib.h)
 
@@ -376,137 +343,76 @@ Structural issues to propose to user (require confirmation):
 After all files done: run `ninja -C build_tf test` (60/60), then commit with detailed message.
 
 
-# turbostar MCP tool notes (2026-09-01)
+# turbostar MCP tool notes (consolidated, through 2026-10-09)
 
-- `fs_compile_project` without `clean: true` just runs `meson compile`; if a
-  `ninja clean` was run out-of-band (or in a different shell) it can report
-  "no work to do" without indicating anything is stale. Pass `clean: true`
-  to force a real rebuild when in doubt.
-- `fs_run_tests` targets a hardcoded `build` dir path and failed with
-  "No such build data file" in this environment even though that `build`
-  dir was configured/compiled fine via `fs_compile_project`. Falling back
-  to `ninja -C build_tf test` via bash worked (60/60 pass). Don't rely on
-  `fs_run_tests` here for now — use the `build_tf` test-framework build
-  directly.
-- Device display convention: a `device` subclass that should exist purely
-  for parameter/power accounting (not shown in Device stats) should
-  override `show_in_list()` to return `false`, matching `cpudevice`,
-  `i915gpu`, `xe-gpu`, and now `rfkill`. Both loops in
-  `device_manager.cpp` (`report_devices`, `show_report_devices`) honor
-  `show_in_list()`, so new hidden-by-default devices don't need further
-  changes there.
+- `fs_compile_project`/`fs_run_tests` target a hardcoded `build` dir path
+  that may not match this checkout; pass `clean: true` to force a real
+  rebuild, and fall back to `ninja -C <build_dir> [test]` via bash when
+  they report a stale/missing build-data error — this has been the
+  reliable path for non-default dirs like `build_tf`/`build_acov`.
+- `fs_grep_files`'s `pattern` is literal by default; always set
+  `is_regex: true` for `|`/`.*`/character-class patterns or it silently
+  returns "No matches found".
+- `fs_replace_content` reports "Successfully replaced" even on a true
+  no-op (identical target/replacement) — verify with a follow-up
+  `view`/diff.
+- turbostar's crash catcher intercepts crashes (including `assert()`
+  SIGABRT) from anything run via its process tools, not just the primary
+  app; check `crashdump_list`/`crashdump_get_info` on any unexpected
+  failure instead of assuming a bare test failure. `crashdump_get_info`
+  caches by crash signature — call `crashdump_clear` before re-verifying a
+  fix. For local/arg values inline, use `agent_debug_coredump` + `bt full`.
+- `run_cpp`'s execution step has intermittently failed with exit 127 even
+  though the compiled binary is present on disk; if it recurs, fall back
+  to writing a temp `.cpp` and invoking `g++`/running it via bash.
+- Device display convention: a `device` subclass meant purely for
+  parameter/power accounting (not shown in Device stats) should override
+  `show_in_list()` to return `false` (see `cpudevice`, `i915gpu`, `xe-gpu`,
+  `rfkill`); both report loops in `device_manager.cpp` already honor it.
 - Before committing, always check `git status`/`git diff --staged` for
-  pre-existing staged changes unrelated to the task — a stale staged
-  deletion of `Makefile.am` almost got swept into an unrelated commit here
-  because it was already in the index before `git add <specific paths>`
-  was run.
-- turbostar's crash catcher intercepts every crash of anything run via its
-  process tools (`agent_start_app`, and once fixed, `fs_run_tests`) — not
-  just the app under test. A crashing unit test therefore won't just show
-  up as a bare test failure; check `crashdump_list` / `crashdump_get_info`
-  whenever a run reports an unexpected failure, since a full backtrace
-  (with source file/line when built with debug symbols) is likely already
-  captured and can save a manual gdb/coredumpctl session.
-- This also catches `assert()` failures (SIGABRT), not just segfaults —
-  the crash dump includes the assertion expression/message itself, so a
-  failing `assert(x == y)` in a test shows up as a proper crash report,
-  not just a bare abort trace. Treat assertion-failure test output the
-  same way: check the crash dump instead of only reading stdout/stderr.
-- `crashdump_get_info` crash IDs are cached per unique crash signature;
-  rerunning the exact same crash without an intervening `crashdump_clear`
-  can return the *same* crash_id from a previous run rather than a fresh
-  one — call `crashdump_clear` first if you need to confirm a fix produced
-  a genuinely new (or no) crash.
-- With debug symbols, `crashdump_get_info` resolves user frames to
-  `file:line` and adds a "Codemap Summary" table of function ranges, but
-  still doesn't show the crashing source line or the faulting argument
-  value inline — use `agent_debug_coredump` + `bt full` to get local/arg
-  values (e.g. `foo(c=0x0)`) in one shot when the concise report isn't
-  enough.
+  pre-existing staged changes unrelated to the task, and stage only the
+  specific files the task touched — never `git add -A` in this repo
+  (recurring leftover clutter: `review-pr-*.md`, `crash.c`,
+  `pick_random_files.py`, `.mcp.json`, stray `*~` backups).
 
 # PR review workflow notes (2026-09-15)
 
-- `gh` CLI works directly for PR review here — no separate web access
-  needed. Useful commands: `gh pr view <n> --json ...`, `gh pr diff <n>`,
-  `gh pr checks <n>`, `gh pr merge <n> --merge --delete-branch=false`.
-- To build/test a specific PR without disturbing the main worktree, use
+- `gh` CLI works directly for PR review here. Useful: `gh pr view <n>
+  --json ...`, `gh pr diff <n>`, `gh pr checks <n>`, `gh pr merge <n>
+  --merge --delete-branch=false`.
+- To build/test a specific PR without disturbing the main worktree:
   `git fetch origin pull/<n>/head:pr-<n>` + `git worktree add /tmp/pr<n>
-  pr-<n>`, build in a separate meson dir there, then
-  `git worktree remove /tmp/pr<n> --force && git branch -D pr-<n>` to
-  clean up.
-- `fs_compile_project` is **broken for this repo currently** (tries
-  `make -C build`, but the project is Meson+Ninja with no Makefile) — do
-  not use it here; build with `ninja -C build` / `meson setup` via bash
-  instead. `fs_run_tests` also doesn't fit this project's meson test
-  layout — use `meson test -C build --print-errorlogs` via bash.
+  pr-<n>`, build in a separate meson dir there, then `git worktree remove
+  /tmp/pr<n> --force && git branch -D pr-<n>` to clean up.
 - Per-PR review reports are saved as `review-pr-<n>.md` (not the generic
-  `review.md` from `review/review.md`'s template) since multiple PRs are
-  being reviewed in the same session and would otherwise overwrite each
-  other's report.
-- `fs_read_lines` / `fs_file_codemap` / `fs_read_symbol` are strongly
-  preferred over `view`/bash `cat` for this project: they add line
-  numbers and an auto-appended symbol codemap (function name + start/end
-  line), which is much more useful for locating code to edit than a bare
-  file dump.
-- User preference: prefer `EXIT_FAILURE`/`EXIT_SUCCESS` over bare
-  `exit(1)`/`exit(0)`, and prefer `std::from_chars` (C++23) over
-  `strtol`/`strtoul`/`atoi` for numeric CLI argument parsing.
-
-# turbostar MCP tool fix update (2026-09-15)
-
-- `fs_compile_project` was fixed (server working directory now correctly
-  points at this project instead of `sandstone`) and is confirmed working:
-  it runs `meson compile -C build` against the real `build` dir, correctly
-  reports "no work to do" when clean and does real incremental
-  recompiles/relinks when files change. Safe to use again for this repo.
-- `run_cpp` was only *partially* fixed by the same working-directory
-  change: compilation now correctly happens under
-  `<project>/build/tmp_cpp/` and produces valid, runnable ELF binaries
-  (verified manually with `file` + direct execution — they run fine), but
-  the tool's own execution step still fails with exit 127 "No such file
-  or directory" immediately after compiling, even though the binary is
-  present on disk. Root cause looks like a separate bug (path
-  resolution/timing) in the tool's run step, not the working-directory
-  issue. Do not rely on `run_cpp` for this project yet; still use
-  `turbostar-run_cpp`'s bash-equivalent (write a temp .cpp, `g++`, run
-  manually) or plain bash g++ as a workaround if needed.
-
+  `review.md`) so multiple PR reviews in one session don't overwrite each
+  other.
+- `fs_read_lines`/`fs_file_codemap`/`fs_read_symbol` are preferred over
+  `view`/bash `cat`: they add line numbers and an auto-appended symbol
+  codemap.
+- User preference: `EXIT_FAILURE`/`EXIT_SUCCESS` over bare `exit(1)`/
+  `exit(0)`, and `std::from_chars` over `strtol`/`strtoul`/`atoi` for
+  numeric CLI argument parsing.
 # RAPL stub fail-injection pattern for uninitialized-value regressions (2026-09-15)
 
-- `tests/devices/stub_rapl_iface.cpp` now supports simulating "domain
-  present but this one read call fails" via
-  `rapl_fail_next_pp0_energy()` / `_dram_energy()` / `_pp1_energy()`.
-  These set a one-shot static flag consumed by the corresponding
-  `get_*_energy_status()`, which then returns -1 **without writing
-  `*s`**, mirroring the real interface's failure semantics exactly
-  (previously the stub could only succeed-from-queue or `assert()` on
-  an exhausted queue — there was no way to test the "leaves output
-  untouched on failure" contract that PR #223's bug was about).
-- Pattern for writing this kind of regression test: reset the stub,
-  push queued values for the constructor + `start_measurement()` reads,
-  call `rapl_fail_next_pp1_energy()` right before the call under test
-  (e.g. `end_measurement()`), then assert the device's computed power
-  is deterministically `0.0` (works because the correct fix is
-  `energy = last_energy` before the read) and that `last_energy` in
-  `serialize()`/JSON output is unchanged from the last successful
-  reading — i.e. the failed read must not corrupt state.
-- To verify a test like this actually catches the bug (not just
-  "happens to observe 0 by luck"): temporarily revert the fix, rebuild,
-  and run the test binary under `valgrind --track-origins=yes` — an
-  uninitialized-stack-double bug reliably produces both an assertion
-  failure (garbage-derived non-zero power) AND valgrind
-  "Uninitialised value" errors. Always restore the fix afterwards.
-- Added a `valgrind` meson-suite entry (`valgrind-rapl-devices`) that
-  runs `tests/devices/powertop-test-rapl-devices` under valgrind
-  alongside the existing `valgrind-tui`/`valgrind-html`/etc. entries —
-  this means future regressions of this class are caught automatically
-  by `meson test --suite valgrind`, not just by luck of a deterministic
-  assertion. Note: variables from `subdir('tests')` (e.g.
-  `test_rapl_devices_exe`) ARE visible in the top-level `meson.build`
-  after the `subdir()` call returns (Meson shares scope like a textual
-  include), so wiring individual test executables into the top-level
-  `valgrind` suite block is straightforward — no need to duplicate the
-  `valgrind`/`valgrind_common_args` definitions inside subdirs.
+- `tests/devices/stub_rapl_iface.cpp` supports simulating "domain present
+  but this one read call fails" via `rapl_fail_next_pp0_energy()` /
+  `_dram_energy()` / `_pp1_energy()` — one-shot flags making
+  `get_*_energy_status()` return -1 **without writing `*s`**, matching
+  the real interface's failure semantics (needed to test PR #223's "leaves
+  output untouched on failure" contract).
+- Regression-test pattern: queue constructor/`start_measurement()` values,
+  call `rapl_fail_next_pp1_energy()` right before the call under test,
+  then assert power is deterministically `0.0` and `last_energy` is
+  unchanged from the last successful reading. Verify the test actually
+  catches the bug by reverting the fix and running under
+  `valgrind --track-origins=yes` (should show both an assertion failure
+  and "Uninitialised value" errors), then restore the fix.
+- Added `valgrind-rapl-devices` to the meson `valgrind` test suite so this
+  class of regression is always caught by `meson test --suite valgrind`.
+  Variables from `subdir('tests')` are visible in the top-level
+  `meson.build` after `subdir()` returns (Meson shares scope like a
+  textual include) — no need to duplicate `valgrind_common_args` per subdir.
 
 # std::from_chars gotcha: no leading '+' for floating point (2026-09-15)
 
@@ -577,83 +483,43 @@ commit fixing review item #1, report-maker.cpp/.h):
   not just the plain unit tests — it's the cheapest way to confirm the
   new ownership doesn't leak or double-free.
 
-# RAII migration progress log (condensed)
+# RAII migration progress log (condensed; migration complete)
 
-Full raw `new`/`delete` audit started 2026-09-25 (~24 `delete` sites in
-`src/`). All single-owning-pointer cases and essentially all owning
-`vector<T*>`/`map<K,T*>` containers have since been converted to
-`unique_ptr`-based ownership: `power_meters`, `all_devfreq`/
+All owning `vector<T*>`/`map<K,T*>` containers and single owning raw
+pointers in `src/` have been converted to `unique_ptr`-based ownership
+(completed 2026-09-25 through 2026-10-07): `power_meters`, `all_devfreq`/
 `devfreq::dstates`, `perf_bundle::events`, `all_interrupts`,
 `all_processes`, `all_proc_devices`, `all_tunables`/`all_untunables`,
 `abstract_cpu::children`/`cstates`/`pstates`, `all_devices`,
-`past_results`, `all_timers`, `all_work`, `tab_windows`, and (as of
-2026-10-07) `devlist.cpp`'s `one`/`two`/`devpower`. The ownership map
-earlier in this file lists current owning-vs-observer status per
-container; `raii.md` no longer exists — this log + that map are the only
-source of truth.
+`past_results`, `all_timers`, `all_work`, `tab_windows`, `wakeup_all`,
+and `devlist.cpp`'s `one`/`two`/`devpower`. The ownership map earlier in
+this file lists current owning-vs-observer status per container.
+Exception: `perf_bundle::records` (`vector<void*>`) still uses raw
+`malloc`/`free` — needs a custom RAII wrapper, tracked separately.
 
-**Recurring gotchas when migrating a `vector<T*>`/`map<K,T*>` to owning
-smart pointers (apply these checks to any future container migration):**
-- *Stack-vs-heap test mocks*: grep test files for `container.push_back(&local_var)`
-  before flipping a container to `unique_ptr` ownership — a stack address
-  pushed into an owning container causes a crash/UB on teardown once the
-  container's destructor starts calling `delete` on every element. Fix by
-  switching the mock to `std::make_unique<T>(...)`.
-- *Key-function vtable link errors in stub-only test files*: if a test
-  file declares its own local stub for a global owning container instead
-  of linking the real class's `.cpp`, converting that container to
-  `unique_ptr` makes the stub's own destructor require the class's vtable
-  (to `delete` through the base pointer) — this fails to link with
-  "undefined reference to vtable for X" unless the class's `.cpp` (with
-  its out-of-line key function, e.g. `collect_json_fields()`) is added to
-  that test's `meson.build` sources, replacing the local stub.
-- `std::for_each` over a `map` needs a callback matching its `value_type`
-  exactly (including `const` on the key).
-- Factory functions that collide with a class name (e.g.
+**Recurring gotchas, reusable for any future `vector<T*>`→`unique_ptr`
+container migration:**
+- Grep test files for `container.push_back(&local_var)` before
+  converting — a stack address pushed into an owning container crashes
+  on teardown once the destructor calls `delete` on every element; fix
+  by switching the mock to `std::make_unique<T>(...)`.
+- A test file with its own local stub for a global owning container
+  (instead of linking the real class's `.cpp`) will fail to link
+  ("undefined reference to vtable for X") once that container owns via
+  `unique_ptr`, because the stub's destructor now needs the class's
+  vtable — add the real class's `.cpp` to that test's `meson.build`
+  sources and remove the local stub.
+- `std::for_each` over a `map` needs a callback matching its
+  `value_type` exactly (including `const` on the key).
+- Factory functions colliding with a class name (e.g.
   `extech_power_meter(const std::string &)` vs `class extech_power_meter`)
   need `new class extech_power_meter(...)` to disambiguate.
-
-**`tab_windows` conversion (2026-09-30), kept as the reference pattern for
-"owning map with observer needed mid-init":** `map<string, tab_window*>` →
-`map<string, unique_ptr<tab_window>>`; this is now the sole owner for every
-tab, including WakeUp and Tunables. `tune_window`/`newtab_window` (the
-per-file owning globals that previously raced `tab_windows` for ownership)
-were removed entirely — they had no functional read sites, only
-hold/replace/reset duty. `create_tab()` now takes `unique_ptr<tab_window>`
-by value (`make_unique`'d internally when omitted) and moves it into the
-map; `shutdown_wakeup()`/`shutdown_tuning()` simplify to a single
-`tab_windows.erase(name)`; `reset_display()` simplifies to
-`tab_windows.clear()` (no manual delete loop). This also fixes the latent
-double-free described below: there is now exactly one destruction path, so
-the error-exit paths in `perf/perf.cpp`/`cpu/intel_cpus.cpp` that skip
-`shutdown_tuning()`/`shutdown_wakeup()` before `exit()` can no longer
-double-delete the WakeUp/Tunables tab object.
-  - **Call-site pattern for "needs to set a field after init populates
-    data" tabs** (WakeUp/Tunables): grab a raw observer pointer from the
-    `unique_ptr` *before* moving it into `create_tab()`, since the
-    `cursor_max` field must be set only after `init_wakeup()`/
-    `init_tuning()` populates the backing vector (whose size it depends
-    on), and by then the tab is already owned by the map:
-    ```cpp
-    auto win = std::make_unique<wakeup_window>();
-    wakeup_window *observer = win.get();
-    create_tab("WakeUp", _("WakeUp"), std::move(win), "...");
-    init_wakeup();
-    observer->cursor_max = wakeup_all.empty() ? 0 : (int)wakeup_all.size() - 1;
-    ```
-  - Added a `get_current_tab()` static helper in display.cpp
-    (`tab_windows[tab_names[current_tab]].get()`) to replace 10 duplicated
-    inline lookups in `show_prev_tab`/`show_next_tab`/`cursor_*`/
-    `window_refresh` — the two-level index→name→owner indirection is now a
-    single named call instead of being re-derived at every use site.
-  - `tests/devices/stub_display.cpp` had its `create_tab()` stub signature
-    updated to match (`unique_ptr<tab_window>` instead of `tab_window*`).
-
-**Deliberately out of scope (documented exception, not a regular
-container):** `perf_bundle::records` (`vector<void*>`) uses raw
-`malloc`/`free` for event buffers (`perf_bundle.cpp`) — needs a custom
-RAII wrapper rather than `unique_ptr<T>`, tracked as a separate follow-up,
-not part of this vector-of-pointers migration.
+- For "owning map with an observer needed mid-init" (e.g. `tab_windows`):
+  grab a raw observer pointer from the `unique_ptr` *before* moving it
+  into the owning container, since fields depending on later init data
+  (e.g. `cursor_max`) can only be set after the container owns the
+  object. Prefer a single `get_current_tab()`-style accessor over
+  repeating the index→name→owner lookup inline at every call site.
 
 # display.cpp cursor navigation pitfall
 
@@ -670,26 +536,6 @@ which is exactly what happened in issue #217 (fixed by commit
 3551819). When touching this function, keep cursor-position movement
 unconditional and gate only the scroll `prefresh()` on the ypad
 bounds check.
-
-# turbostar MCP tooling notes
-
-- `turbostar-fs_run_tests` in this environment is configured with a stale
-  build path (`/home/arjan/git/powertop/build`) that doesn't match this
-  repo's actual checkout path (`/sdb1/arjan/git/powertop`), so it always
-  fails with "No such build data file". Use `bash` + `meson test -C
-  <build_dir>` / `ninja -C <build_dir>` directly instead for test runs in
-  this session; there's no turbostar-native way to target a non-default
-  build dir (e.g. `build_acov`) yet.
-- `turbostar-fs_grep_files`'s `pattern` is a **literal string by default**;
-  passing something like `"past_results|clone_results"` without
-  `is_regex: true` searches for that exact literal (including the `|`),
-  not an alternation — silently returns "No matches found" instead of an
-  error. Always set `is_regex: true` when using regex metacharacters
-  (`|`, `.*`, character classes, etc.), or split into separate calls.
-- `turbostar-fs_replace_content` reports "Successfully replaced" even when
-  `target_content` and `replacement_content` are identical (a true no-op)
-  — it doesn't warn that nothing changed. Double-check edits that were
-  meant to change something actually show up in a subsequent `view`/diff.
 
 # Release checklist walkthrough notes (v2.16.1, 2026-10-07)
 
@@ -729,3 +575,104 @@ bounds check.
   the same `sudo`/build-directory state (parallelizing the builds is safe,
   but the two `sudo powertop` leak/coverage runs and valgrind should not
   overlap with each other).
+
+# Corporate C++ modernization protocol session (2026-10-09)
+
+Ran `protocols/cpp-modernization.md` (from `/home/arjan/git/rules/rules/`)
+Mode 4 against this repo for the first time. Key facts for future runs:
+
+- PowerTOP has **no external ABI surface**: `meson.build` only declares one
+  `executable()` target (no `shared_library()`, no installed headers), so
+  the protocol's wrapper-preservation step (Phase 2 step 4) never applies
+  here — signatures can change in place.
+- Baseline scan commands that worked in this sandbox:
+  `cppcheck --enable=all --inconclusive --std=c++20 -I src src/` and, from
+  a build dir with `compile_commands.json` (e.g. `build_tf/`),
+  `run-clang-tidy -checks='-*,modernize-*' -quiet 'src/.*\.cpp$'`. Both
+  `cppcheck` and `clang-tidy`/`run-clang-tidy` are preinstalled.
+  `clang-tidy --list-checks -checks='modernize-*'` (without the leading
+  `-*,`) silently lists clang-analyzer checks instead — always prefix with
+  `-*,`.
+- Backlog lives in **`MODERNIZATION-PLAN.md`** (repo root, committed, not
+  ephemeral like `review-*.txt`). It's tiered A (security-critical:
+  strncpy/cstyle casts/sign-comparison/C arrays) / B (RAII-lifetime: naked
+  `new`, scoped locks, member init) / C (idiomatic: override, explicit,
+  auto, etc.), with per-item status/commit columns. Re-read it before
+  resuming a future modernization pass instead of re-running the scans.
+- `abstract_cpu::children`, `all_devices`, `wakeup_all`, `all_tunables` /
+  `all_untunables` are **already** `vector<unique_ptr<T>>` (prior RAII
+  migration work) — the remaining `No Naked New` backlog items (B1-B3) are
+  about the raw `new X(...)` *construction idiom* at call sites that
+  already end up wrapped (`std::unique_ptr<T>(ptr)` or pushed into an
+  owning vector), not about un-migrated ownership.
+- Found and fixed (commit `186a270`): `pt_strcpy()` in `src/lib.h` used
+  `strncpy()` + manual `d[N-1]='\0'`; replaced with `snprintf(d, N, "%s",
+  s)` (same truncate+NUL-terminate behavior, now the destination capacity
+  bounds the copy instead of relying on a manual fixup) and routed the two
+  remaining direct `strncpy()` call sites (`ethernet.cpp` ifreq, `bluetooth.cpp`
+  hci_dev_info) through the helper. Added pinning regression tests in
+  `tests/lib/test_lib_pure.cpp` before changing the implementation
+  (short / exact-fit / truncating / empty-string cases).
+- `src/lib.h`'s `#ifdef __cplusplus` region needed an explicit `#include
+  <cstdio>` added (near the existing `<chrono>`/`<ctime>` block around
+  line 79) — `snprintf` wasn't otherwise transitively included there.
+- When asking the Phase 0 "C++20 or C++23" / ABI / ASan questions via
+  `ask_user`, bring concrete scan findings into the question text per the
+  protocol ("bring findings to the ask... rather than asking blind") —
+  users can answer much faster against findings than against an abstract
+  question.
+
+## C++ modernization protocol run: Tier C summary (through Phase 3, 2026-10-09)
+
+- Completed all of Tier C (C1-C9) and Phase 3 final verification. All
+  Tier A/B/C backlog items in `MODERNIZATION-PLAN.md` are `done` or
+  justified-excluded; labeled-rule `modernize-*` findings across `src/`
+  are down to 0. Test suite stayed at 61/61 throughout (grew from the
+  Phase 0 baseline's 60/60 — a test was added earlier in the session).
+- **Backlog site-count estimates from Phase 1 were frequently wrong in
+  both directions** once a fresh clang-tidy/cppcheck scan was run
+  immediately before fixing: C1 override 20→268, C4 const-qualifiers
+  42→31, C9's `modernize-use-ranges` 14→29. Always re-scan right before
+  fixing a backlog item instead of trusting the Phase 1 count; document
+  any discrepancy in the commit message.
+- `run-clang-tidy -p <builddir> -checks='-*,<check-name>'` then
+  `grep -n "warning: .*\[<check-name>\]"` is the reliable per-check scan
+  pattern. For combined multi-check scans, each check needs its own
+  `warning:.*\[name\]` alternation in the grep — a single bracket-group
+  alternation (`\[a|b|c\]`) does not match correctly.
+- `modernize-use-override` also flags a *redundant* `virtual` keyword on
+  a method that already has `override` (not just a *missing* `override`)
+  — worth a second, narrower grep (`"redundant since.*already declared"`)
+  after the main override pass, since the main pass's grep pattern won't
+  catch this variant.
+- `[[nodiscard]]` is not inherited by overrides in C++; don't extend a
+  nodiscard backlog item into base-class headers just because a test
+  mock overrides an un-annotated virtual — that's out of scope unless
+  the task says to touch the base class.
+- Pass-by-value+`std::move` only applies to constructor params *copied
+  into a member in the initializer list*; params merely *assigned* in
+  the constructor body are correctly left as `const &` (clang-tidy's
+  `modernize-pass-by-value` itself won't flag these).
+- `std::ranges::remove(container, val)` returns a subrange; use
+  `.begin()` on it with `container.erase(...)`, same as the classic
+  erase-remove idiom but without the second `container.end()` argument
+  to `remove`.
+- `std::filesystem::directory_iterator` satisfies the C++20 range
+  concept directly (ADL-found `begin()`/`end()`), so
+  `std::ranges::transform(it, ...)` works without the explicit
+  `std::filesystem::begin(it)/end(it)` calls some code used historically.
+- `using Name = struct __attribute__((packed)) { ... };` is valid and
+  preferred over `typedef struct {...} __attribute__((packed)) Name;`
+  for attribute-placement-sensitive typedef→using conversions.
+- `cppcheck_out.txt` is a local scratch artifact, never tracked in git —
+  do not `git add -A` or otherwise let it slip into a commit; it was
+  caught and removed via `git rm --cached` + `commit --amend` once
+  already.
+- cppcheck's `--enable=all` finding set for const-qualifiers
+  (`constParameterPointer`/`constVariableReference`/etc.) is scan-scope
+  sensitive: a Phase 3 re-scan surfaced 16 new residual hits in files
+  C4 never originally touched (`src/perf/perf_event.h` — a kernel-API
+  mirroring header where pointer params intentionally match upstream
+  kernel signatures and should NOT be made const; `src/perf/perf.cpp`,
+  `src/measurement/measurement_manager.cpp`). These are documented as
+  future-session findings in `MODERNIZATION-PLAN.md`, not a regression.

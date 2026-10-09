@@ -54,7 +54,7 @@ reachability first, then smallest blast radius).
 | A4 | No C-Style Casts (`dangerousTypeCast`, possible invalid conversion) | `src/process/do_process.cpp:201,271,320,353,399,437,485,525,578,627,658` | No | done | 920732f |
 | A5 | No C-Style Casts (`dangerousTypeCast`) | `src/perf/perf_bundle.cpp:151` | No | done | 920732f |
 | A6 | No C-Style Casts (`cstyleCast`, pointer casts) | `src/calibrate/calibrate.cpp:258`, `src/measurement/extech.cpp:349`, `src/perf/perf.cpp:131,132,249`, `src/perf/perf_bundle.cpp:63,185,186,223`, `src/tuning/bluetooth.cpp:134` | No | done | 920732f (reinterpret_cast used for genuine kernel-ABI pointer punning; see commit note) |
-| A7 | Integer Conversions (signed/unsigned comparison) | 15 files, 27 sites — see `clang_tidy_out.txt` grep `modernize-use-integer-sign-comparison`; heaviest in `src/parameters/parameters.cpp` (4), `src/cpu/cpu.cpp` (4), `src/cpu/intel_cpus.cpp` (3) | No | pending | |
+| A7 | Integer Conversions (signed/unsigned comparison) | 15 files, 27 sites — see `clang_tidy_out.txt` grep `modernize-use-integer-sign-comparison`; heaviest in `src/parameters/parameters.cpp` (4), `src/cpu/cpu.cpp` (4), `src/cpu/intel_cpus.cpp` (3) | No | done | 8c353ed (two sentinel-value sites use `numeric_limits<T>::max()` instead of `std::cmp_equal()`; see commit message) |
 | A8 | Prefer Standard Containers (C-style arrays, `modernize-avoid-c-arrays`) | 9 files, 17 sites; heaviest `src/measurement/extech.cpp` (6), `src/tuning/bluetooth.cpp` (3) | No | pending | |
 
 ### Tier B — RAII / lifetime
@@ -113,6 +113,6 @@ backlog. Recorded here for Phase 3 residual-findings tracking:
 ## Phase 3 status (to be updated as the backlog is worked)
 
 Completed this session: A1, A2, A3 (commit `186a270`); A4, A5, A6
-(commit `920732f`). All other items remain `pending` and are tracked
-above for future sessions, per the protocol's multi-session design —
-this backlog is committed so progress persists.
+(commit `920732f`); A7 (commit `8c353ed`). All other items remain
+`pending` and are tracked above for future sessions, per the protocol's
+multi-session design — this backlog is committed so progress persists.

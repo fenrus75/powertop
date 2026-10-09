@@ -95,28 +95,28 @@ static bool bypass_root_check = false;
 static const struct option long_options[] =
 {
 	/* These options set a flag. */
-	{"auto-tune",		no_argument,		nullptr,	 OPT_AUTO_TUNE},
-	{"auto-tune-dump",	no_argument,		nullptr,	 OPT_AUTO_TUNE_DUMP},
-	{"bypass-root-check",	no_argument,		nullptr,	 OPT_BYPASS_ROOT},
-	{"calibrate",		no_argument,		nullptr,	 'c'},
-	{"markdown",	optional_argument,	nullptr,		 'M'},
-	{"csv",		optional_argument,	nullptr,		 'C'},
-	{"debug",	no_argument,		&debug_learning, OPT_DEBUG},
-	{"extech",	optional_argument,	nullptr,		 OPT_EXTECH},
-	{"html",	optional_argument,	nullptr,		 'r'},
-	{"iteration",	optional_argument,	nullptr,		 'i'},
-	{"once",	no_argument,		nullptr,		 OPT_ONCE},
-	{"quiet",	no_argument,		nullptr,		 'q'},
-	{"sample",	optional_argument,	nullptr,		 's'},
-	{"time",	optional_argument,	nullptr,		 't'},
-	{"workload",	optional_argument,	nullptr,		 'w'},
-	{"version",	no_argument,		nullptr,		 'V'},
-	{"help",	no_argument,		nullptr,		 'h'},
+	{.name = "auto-tune", .has_arg = no_argument, .flag = nullptr, .val = OPT_AUTO_TUNE},
+	{.name = "auto-tune-dump", .has_arg = no_argument, .flag = nullptr, .val = OPT_AUTO_TUNE_DUMP},
+	{.name = "bypass-root-check", .has_arg = no_argument, .flag = nullptr, .val = OPT_BYPASS_ROOT},
+	{.name = "calibrate", .has_arg = no_argument, .flag = nullptr, .val = 'c'},
+	{.name = "markdown", .has_arg = optional_argument, .flag = nullptr, .val = 'M'},
+	{.name = "csv", .has_arg = optional_argument, .flag = nullptr, .val = 'C'},
+	{.name = "debug", .has_arg = no_argument, .flag = &debug_learning, .val = OPT_DEBUG},
+	{.name = "extech", .has_arg = optional_argument, .flag = nullptr, .val = OPT_EXTECH},
+	{.name = "html", .has_arg = optional_argument, .flag = nullptr, .val = 'r'},
+	{.name = "iteration", .has_arg = optional_argument, .flag = nullptr, .val = 'i'},
+	{.name = "once", .has_arg = no_argument, .flag = nullptr, .val = OPT_ONCE},
+	{.name = "quiet", .has_arg = no_argument, .flag = nullptr, .val = 'q'},
+	{.name = "sample", .has_arg = optional_argument, .flag = nullptr, .val = 's'},
+	{.name = "time", .has_arg = optional_argument, .flag = nullptr, .val = 't'},
+	{.name = "workload", .has_arg = optional_argument, .flag = nullptr, .val = 'w'},
+	{.name = "version", .has_arg = no_argument, .flag = nullptr, .val = 'V'},
+	{.name = "help", .has_arg = no_argument, .flag = nullptr, .val = 'h'},
 #ifdef ENABLE_TEST_FRAMEWORK
-	{"record",	required_argument,	nullptr,		 OPT_RECORD},
-	{"replay",	required_argument,	nullptr,		 OPT_REPLAY},
+	{.name = "record",	.has_arg = required_argument,	.flag = nullptr,	.val = OPT_RECORD},
+	{.name = "replay",	.has_arg = required_argument,	.flag = nullptr,	.val = OPT_REPLAY},
 #endif
-	{nullptr,		0,			nullptr,		 0}
+	{.name = nullptr, .has_arg = 0, .flag = nullptr, .val = 0}
 };
 
 /*

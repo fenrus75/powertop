@@ -101,7 +101,7 @@ reachability first, then smallest blast radius).
 | C6 | `[[nodiscard]]` | `modernize-use-nodiscard` — 5 sites (confirmed in `src/devices/xe-gpu.cpp`; test-mock overrides of un-annotated base virtuals left out of scope) | No | done | 0de8b61 |
 | C7 | Range-Based Loops | `modernize-loop-convert` — 4 sites (confirmed via fresh clang-tidy run) | No | done | 22bbfe7 |
 | C8 | Type Deduction (`auto`) | `modernize-use-auto` — 5 sites (confirmed via fresh clang-tidy run) | No | done | e84e345 |
-| C9 | `std::ranges`/`emplace`/designated initializers etc. | `modernize-use-ranges` (14), `modernize-use-emplace` (10), `modernize-use-designated-initializers` (18), `modernize-use-bool-literals` (7), `modernize-pass-by-value` (2), `modernize-use-using` (1), `modernize-use-starts-ends-with` (1), `modernize-return-braced-init-list` (1), `modernize-raw-string-literal` (1) | No | pending | |
+| C9 | `std::ranges`/`emplace`/designated initializers etc. | `modernize-use-bool-literals` (7, confirmed), `modernize-use-emplace` (10, confirmed), `modernize-use-designated-initializers` (18, confirmed), `modernize-pass-by-value` (2, confirmed), `modernize-use-using` (1), `modernize-use-starts-ends-with` (1), `modernize-return-braced-init-list` (1), `modernize-raw-string-literal` (1), `modernize-use-ranges` (29 confirmed via fresh scan, vs. 14 estimated) | No | done | 71f3c89 (a: bool-literals), e10c0f8 (b: emplace), 7be846e (c: designated-initializers), a62533a (d: pass-by-value), 588f7ea (e-h: using/starts-ends-with/braced-init-list/raw-string-literal), f743b90 (i: ranges) |
 
 ### Excluded from backlog (tool findings not matching a corp-cpp rule label)
 
@@ -132,10 +132,18 @@ backlog. Recorded here for Phase 3 residual-findings tracking:
 
 ## Phase 3 status (to be updated as the backlog is worked)
 
-Completed this session: A1, A2, A3 (commit `186a270`); A4, A5, A6
-(commit `920732f`); A7 (commit `8c353ed`); A8 partial — 4 of 17 sites
-(commit `5495f84`), remaining 13 sites intentionally excluded (see
-rationale under the A8 row above). Tier A is now fully worked (done or
-justified-excluded). All Tier B/C items remain `pending` and are
-tracked above for future sessions, per the protocol's multi-session
-design — this backlog is committed so progress persists.
+Tier A: A1, A2, A3 (commit `186a270`); A4, A5, A6 (commit `920732f`);
+A7 (commit `8c353ed`); A8 partial — 4 of 17 sites (commit `5495f84`),
+remaining 13 sites intentionally excluded (see rationale under the A8
+row above). Tier A is fully worked (done or justified-excluded).
+
+Tier B: B1-B6 (commit `d5bcffe`), B7 (folded into the B-tier pass).
+Tier B is fully done.
+
+Tier C: C1 (`59ca925`-adjacent commit, see row), C2 (`59ca925`), C3
+(`38c9238`, `306e897`), C4 (`ee4309c`/amended), C5 (`77bdaf1`), C6
+(`0de8b61`), C7 (`22bbfe7`), C8 (`e84e345`), C9a-i (`71f3c89`,
+`e10c0f8`, `7be846e`, `a62533a`, `588f7ea`, `f743b90`). Tier C is fully
+done. All backlog items (Tiers A, B, C) are now worked (done or
+justified-excluded); remaining work is Phase 3 final verification per
+the protocol.

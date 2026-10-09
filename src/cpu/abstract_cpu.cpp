@@ -181,11 +181,11 @@ void abstract_cpu::insert_cstate(const std::string &linux_name, const std::strin
 
 				if (i + 1 < human_name.length() && human_name[i+1] != '-') {
 					int greater_line_level = state->line_level;
-					for (unsigned int pos = 0; pos < cstates.size(); pos++){
-						if (cstates[pos]->human_name.length() > 2) {
-							if (c == cstates[pos]->human_name[1]){
-								if (i + 1 < human_name.length() && human_name[i+1] != cstates[pos]->human_name[2]){
-									greater_line_level = std::max(greater_line_level, cstates[pos]->line_level);
+					for (const auto &cstate : cstates) {
+						if (cstate->human_name.length() > 2) {
+							if (c == cstate->human_name[1]){
+								if (i + 1 < human_name.length() && human_name[i+1] != cstate->human_name[2]){
+									greater_line_level = std::max(greater_line_level, cstate->line_level);
 									state->line_level = greater_line_level + 1;
 								}
 							}

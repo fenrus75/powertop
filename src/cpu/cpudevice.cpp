@@ -72,8 +72,8 @@ double cpudevice::power_usage(struct result_bundle *result, struct parameter_bun
 
 	power += _utilization * factor;
 
-	for (unsigned int i = 0; i < child_devices.size(); ++i) {
-		child_power = child_devices[i]->power_usage(result, bundle);
+	for (const auto &child : child_devices) {
+		child_power = child->power_usage(result, bundle);
 		if ((power - child_power) > 0.0)
 			power -= child_power;
 	}

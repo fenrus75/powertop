@@ -1026,8 +1026,8 @@ void w_display_cpu_pstates(void)
 
 			wprintw(win, "  Core %zu\n\n", core_idx);
 
-			for (size_t cpu_idx = 0; cpu_idx < core->children.size(); cpu_idx++) {
-				abstract_cpu *cpu = core->children[cpu_idx].get();
+			for (const auto &cpu_ptr : core->children) {
+				abstract_cpu *cpu = cpu_ptr.get();
 				if (!cpu)
 					continue;
 

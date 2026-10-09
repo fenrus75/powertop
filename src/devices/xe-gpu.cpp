@@ -114,8 +114,7 @@ xegpu::xegpu()
 
 void xegpu::start_measurement(void)
 {
-	for (size_t i = 0; i < channel_tracks.size(); ++i) {
-		auto &tr = channel_tracks[i];
+	for (auto &tr : channel_tracks) {
 		if (tr.energy_path.empty())
 			continue;
 		tr.last_time   = pt_gettime();

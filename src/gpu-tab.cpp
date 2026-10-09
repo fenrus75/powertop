@@ -319,7 +319,7 @@ void report_gpu_stats(void)
 		const std::string dev  = card + "/device";
 
 		/* Collect per-GT frequency rows. */
-		struct freq_row { std::string label; int cur, pol_min, pol_max, hw_min, hw_max; };
+		struct freq_row { std::string label; int cur = 0, pol_min = 0, pol_max = 0, hw_min = 0, hw_max = 0; };
 		std::vector<freq_row> freq_rows;
 
 		for (const auto &tile : list_directory(dev)) {

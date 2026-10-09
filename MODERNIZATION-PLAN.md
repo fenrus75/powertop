@@ -93,9 +93,9 @@ reachability first, then smallest blast radius).
 
 | ID | Rule | Location | Externally visible? | Status | Commit |
 | :-- | :--- | :------- | :------------------- | :----- | :----- |
-| C1 | Override | `src/cpu/cpu_rapl_device.h:45`, `src/cpu/dram_rapl_device.h:45`, `src/devices/devfreq.h:52` (missing on destructor, cppcheck `missingOverride`); plus `modernize-use-override` sites in `src/devices/xe-gpu.cpp` (9), `src/wakeup/waketab.cpp` (4), `src/tuning/tuning.cpp` (4), `src/process/do_process.cpp` (1), `src/perf/perf_bundle.cpp` (1), `src/cpu/cpu.cpp` (1) | No | pending | |
-| C2 | Explicit Constructors | 18 single-arg constructors flagged by cppcheck `noExplicitConstructor` — see `cppcheck_out.txt`; heaviest cluster in `src/measurement/*.h` and `src/cpu/*.h` | No | pending | |
-| C3 | Prefer Standard Containers / algorithms (`useStlAlgorithm`) | 35 sites — see `cppcheck_out.txt` grep `useStlAlgorithm` | No | pending | |
+| C1 | Override | Original backlog estimate (20 sites) was based on `run-clang-tidy`, which only reports warnings in the main TU file, not included headers; a full `grep -rn "virtual.*override"` sweep found the true scope: 268 sites across 38 files with redundant `virtual` alongside `override` (removed via sweep), plus 3 missing-`override` destructors flagged by cppcheck `missingOverride` (`cpu_rapl_device`, `dram_rapl_device`, `devfreq`) | No | done | 66d7923 |
+| C2 | Explicit Constructors | 18 single-arg constructors flagged by cppcheck `noExplicitConstructor` — see `cppcheck_out.txt`; heaviest cluster in `src/measurement/*.h` and `src/cpu/*.h` | No | done | 59ca925 |
+| C3 | Prefer Standard Containers / algorithms (`useStlAlgorithm`) | 35 sites — see `cppcheck_out.txt` grep `useStlAlgorithm`; converted to `std::find_if`/`std::any_of`/`std::count_if`/`std::accumulate`/`std::transform` across `src/cpu/*.cpp` (11), `src/devices/devfreq.cpp` + `device_manager.cpp`, `src/devlist.cpp`, `src/gpu-tab.cpp`, `src/lib.cpp`, `src/parameters/parameters.cpp`, `src/process/do_process.cpp` + `interrupt.cpp` + `process.cpp`, `src/tuning/tuningsysfs.cpp` | No | done | 38c9238, 306e897 |
 | C4 | Qualifiers (`const`) | cppcheck `constVariable`/`constVariablePointer`/`constVariableReference`/`constParameterPointer` — 42 sites combined | No | pending | |
 | C5 | nullptr | `modernize-use-nullptr` — 2 sites | No | pending | |
 | C6 | `[[nodiscard]]` | `modernize-use-nodiscard` — 5 sites | No | pending | |

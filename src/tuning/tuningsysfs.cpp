@@ -34,6 +34,7 @@
 #include <climits>
 #include <format>
 #include <filesystem>
+#include <algorithm>
 
 
 #include "../lib.h"
@@ -129,13 +130,8 @@ void sysfs_tunable::toggle(void)
 void add_sysfs_tunable(const std::string &str, const std::string &_sysfs_path, const std::string &_target_content)
 {
 	const std::vector<std::string> files = get_matching_files(_sysfs_path);
-	bool any_accessible = false;
-	for (const auto& file : files) {
-		if (pt_access(file, R_OK) == 0) {
-			any_accessible = true;
-			break;
-		}
-	}
+	bool any_accessible = std::any_of(files.begin(), files.end(),
+			[](const auto &file) { return pt_access(file, R_OK) == 0; });
 	if (!any_accessible)
 		return;
 	all_tunables.push_back(std::make_unique<sysfs_tunable>(str, _sysfs_path, _target_content));
@@ -192,13 +188,8 @@ void add_numeric_sysfs_tunable(const std::string &str, const std::string &_sysfs
                                double target, bool higher_is_better)
 {
 	const std::vector<std::string> files = get_matching_files(_sysfs_path);
-	bool any_accessible = false;
-	for (const auto& file : files) {
-		if (pt_access(file, R_OK) == 0) {
-			any_accessible = true;
-			break;
-		}
-	}
+	bool any_accessible = std::any_of(files.begin(), files.end(),
+			[](const auto &file) { return pt_access(file, R_OK) == 0; });
 	if (!any_accessible)
 		return;
 	all_tunables.push_back(

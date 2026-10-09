@@ -36,6 +36,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <numeric>
 #include <memory>
 #include <stack>
 
@@ -751,9 +752,8 @@ double total_wakeups(void)
 {
 	if (measurement_time < 0.00001)
 		return 0.0;
-	double total = 0;
-	for (const auto *p : all_power)
-		total += p->wake_ups;
+	double total = std::accumulate(all_power.begin(), all_power.end(), 0.0,
+			[](double acc, const auto *p) { return acc + p->wake_ups; });
 
 	return total / measurement_time;
 }
@@ -762,9 +762,8 @@ double total_gpu_ops(void)
 {
 	if (measurement_time < 0.00001)
 		return 0.0;
-	double total = 0;
-	for (const auto *p : all_power)
-		total += p->gpu_ops;
+	double total = std::accumulate(all_power.begin(), all_power.end(), 0.0,
+			[](double acc, const auto *p) { return acc + p->gpu_ops; });
 
 	return total / measurement_time;
 }
@@ -773,9 +772,8 @@ double total_disk_hits(void)
 {
 	if (measurement_time < 0.00001)
 		return 0.0;
-	double total = 0;
-	for (const auto *p : all_power)
-		total += p->disk_hits;
+	double total = std::accumulate(all_power.begin(), all_power.end(), 0.0,
+			[](double acc, const auto *p) { return acc + p->disk_hits; });
 
 	return total / measurement_time;
 }
@@ -785,9 +783,8 @@ double total_hard_disk_hits(void)
 {
 	if (measurement_time < 0.00001)
 		return 0.0;
-	double total = 0;
-	for (const auto *p : all_power)
-		total += p->hard_disk_hits;
+	double total = std::accumulate(all_power.begin(), all_power.end(), 0.0,
+			[](double acc, const auto *p) { return acc + p->hard_disk_hits; });
 
 	return total / measurement_time;
 }
@@ -796,9 +793,8 @@ double total_xwakes(void)
 {
 	if (measurement_time < 0.00001)
 		return 0.0;
-	double total = 0;
-	for (const auto *p : all_power)
-		total += p->xwakes;
+	double total = std::accumulate(all_power.begin(), all_power.end(), 0.0,
+			[](double acc, const auto *p) { return acc + p->xwakes; });
 
 	return total / measurement_time;
 }

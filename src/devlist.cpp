@@ -151,14 +151,10 @@ int charge_device_to_openers(const std::string &devstring, double power, class d
 	class process *proc;
 	/* 1. count the number of openers */
 
-	for (const auto &d : one) {
-		if (d->device.find(devstring) != std::string::npos)
-			openers++;
-	}
-	for (const auto &d : two) {
-		if (d->device.find(devstring) != std::string::npos)
-			openers++;
-	}
+	openers += std::count_if(one.begin(), one.end(),
+			[&devstring](const auto &d) { return d->device.find(devstring) != std::string::npos; });
+	openers += std::count_if(two.begin(), two.end(),
+			[&devstring](const auto &d) { return d->device.find(devstring) != std::string::npos; });
 
 
 	/* 2. divide power by this number */

@@ -26,6 +26,7 @@
 #include <utility>
 #include "../measurement/measurement.h"
 #include <algorithm>
+#include <numeric>
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
@@ -170,11 +171,8 @@ double get_result_value(int index, const struct result_bundle *the_bundle)
 
 int result_device_exists(const std::string &name)
 {
-	for (auto &d : all_devices) {
-		if (d->device_name() == name)
-			return 1;
-	}
-	return 0;
+	return std::any_of(all_devices.begin(), all_devices.end(),
+			[&name](const auto &d) { return d->device_name() == name; });
 }
 
 void report_utilization(const std::string &name, double value, struct result_bundle *bundle)
@@ -351,9 +349,8 @@ void dump_past_results(void)
 
 double average_power(void)
 {
-	double sum = 0.0;
-	for (const auto &r : past_results)
-		sum += r->power;
+	double sum = std::accumulate(past_results.begin(), past_results.end(), 0.0,
+			[](double acc, const auto &r) { return acc + r->power; });
 
 	if (past_results.size())
 		sum = sum / past_results.size() + 0.0001;

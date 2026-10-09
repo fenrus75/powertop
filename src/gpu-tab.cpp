@@ -379,10 +379,8 @@ void report_gpu_stats(void)
 		const xe_core *xc = get_xe_core();
 		if (xc && !xc->per_gt_busy_pct.empty()) {
 			/* Count GTs with valid data. */
-			int valid = 0;
-			for (double v : xc->per_gt_busy_pct)
-				if (v >= 0.0)
-					++valid;
+			int valid = std::count_if(xc->per_gt_busy_pct.begin(), xc->per_gt_busy_pct.end(),
+					[](double v) { return v >= 0.0; });
 
 			if (valid > 0) {
 				report.add_title(&title_attr, __("Idle / Busy"));

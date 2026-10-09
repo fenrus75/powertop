@@ -26,6 +26,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 #include <format>
 
 #include <cstdlib>
@@ -103,12 +104,10 @@ void devfreq::update_devfreq_freq_state(uint64_t freq, uint64_t time)
 {
 	class frequency *state = nullptr;
 
-	for (const auto &s : dstates) {
-		if (freq == s->freq) {
-			state = s.get();
-			break;
-		}
-	}
+	auto it = std::find_if(dstates.begin(), dstates.end(),
+			[freq](const auto &s) { return freq == s->freq; });
+	if (it != dstates.end())
+		state = it->get();
 
 	if (state == nullptr) {
 		add_devfreq_freq_state(freq, time);

@@ -24,6 +24,7 @@
  */
 #include <cstdint>
 #include <cstdio>
+#include <algorithm>
 #include "process.h"
 #include "interrupt.h"
 #include "../lib.h"
@@ -96,10 +97,10 @@ class interrupt * find_create_interrupt(const std::string &_handler, int nr, int
 		handler_s = std::format("timer/{}", cpu);
 
 
-	for (const auto &irq : all_interrupts) {
-		if (irq->number == nr && irq->handler == handler_s)
-			return irq.get();
-	}
+	auto it = std::find_if(all_interrupts.begin(), all_interrupts.end(),
+			[nr, &handler_s](const auto &irq) { return irq->number == nr && irq->handler == handler_s; });
+	if (it != all_interrupts.end())
+		return it->get();
 
 	all_interrupts.push_back(std::make_unique<interrupt>(handler_s, nr));
 	return all_interrupts.back().get();

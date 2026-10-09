@@ -149,9 +149,10 @@ std::string process::usage_units_summary(void) const
 
 class process * find_create_process(const std::string &comm, int pid)
 {
-	for (auto &p : all_processes)
-		if (p->pid == pid && p->comm == comm)
-			return p.get();
+	auto it = std::find_if(all_processes.begin(), all_processes.end(),
+			[pid, &comm](const auto &p) { return p->pid == pid && p->comm == comm; });
+	if (it != all_processes.end())
+		return it->get();
 
 	all_processes.push_back(std::make_unique<process>(comm, pid));
 	return all_processes.back().get();

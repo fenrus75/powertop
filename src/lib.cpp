@@ -33,6 +33,7 @@
 #include <cstring>
 #include <filesystem>
 #include <format>
+#include <iterator>
 #include <fstream>
 #include <iostream>
 #include <limits>
@@ -512,8 +513,8 @@ std::vector<std::string> list_directory(const std::string &path)
 			test_framework_manager::get().record_dir_fail(path);
 		return {};
 	}
-	for (const auto &entry : it)
-		entries.push_back(entry.path().filename().string());
+	std::transform(std::filesystem::begin(it), std::filesystem::end(it), std::back_inserter(entries),
+			[](const auto &entry) { return entry.path().filename().string(); });
 	std::sort(entries.begin(), entries.end());
 	if (test_framework_manager::get().is_recording())
 		test_framework_manager::get().record_dir(path, entries);

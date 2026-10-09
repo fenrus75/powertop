@@ -195,11 +195,8 @@ void show_report_devices(void)
 		cols = 3;
 
 	idx = cols;
-	rows = 1;
-	for (auto &d : all_devices) {
-		if (d->show_in_list())
-			rows++;
-	}
+	rows = 1 + std::count_if(all_devices.begin(), all_devices.end(),
+			[](const auto &d) { return d->show_in_list(); });
 	init_std_side_table_attr(&std_table_css, rows, cols);
 
 	/* Set Title attributes */

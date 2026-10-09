@@ -97,10 +97,10 @@ reachability first, then smallest blast radius).
 | C2 | Explicit Constructors | 18 single-arg constructors flagged by cppcheck `noExplicitConstructor` — see `cppcheck_out.txt`; heaviest cluster in `src/measurement/*.h` and `src/cpu/*.h` | No | done | 59ca925 |
 | C3 | Prefer Standard Containers / algorithms (`useStlAlgorithm`) | 35 sites — see `cppcheck_out.txt` grep `useStlAlgorithm`; converted to `std::find_if`/`std::any_of`/`std::count_if`/`std::accumulate`/`std::transform` across `src/cpu/*.cpp` (11), `src/devices/devfreq.cpp` + `device_manager.cpp`, `src/devlist.cpp`, `src/gpu-tab.cpp`, `src/lib.cpp`, `src/parameters/parameters.cpp`, `src/process/do_process.cpp` + `interrupt.cpp` + `process.cpp`, `src/tuning/tuningsysfs.cpp` | No | done | 38c9238, 306e897 |
 | C4 | Qualifiers (`const`) | cppcheck `constVariable`/`constVariablePointer`/`constVariableReference`/`constParameterPointer`/`constParameterReference` — original estimate 42 sites; a regenerated cppcheck pass (against `build_tf/compile_commands.json`) found 31 current sites (21 in `src/`, 10 in `tests/`), all fixed across `abstract_cpu.cpp`, `intel_cpus.cpp`, `gpu-tab.cpp`, `devlist.cpp`, `devfreq.cpp`, `parameters.cpp`, `do_process.cpp`, `process.cpp`, `lib.cpp`, and 4 test files | No | done | ee4309c |
-| C5 | nullptr | `modernize-use-nullptr` — 2 sites | No | pending | |
-| C6 | `[[nodiscard]]` | `modernize-use-nodiscard` — 5 sites | No | pending | |
-| C7 | Range-Based Loops | `modernize-loop-convert` — 4 sites | No | pending | |
-| C8 | Type Deduction (`auto`) | `modernize-use-auto` — 5 sites | No | pending | |
+| C5 | nullptr | `modernize-use-nullptr` — 2 sites (confirmed via fresh clang-tidy run against `build_tf`) | No | done | 77bdaf1 |
+| C6 | `[[nodiscard]]` | `modernize-use-nodiscard` — 5 sites (confirmed in `src/devices/xe-gpu.cpp`; test-mock overrides of un-annotated base virtuals left out of scope) | No | done | 0de8b61 |
+| C7 | Range-Based Loops | `modernize-loop-convert` — 4 sites (confirmed via fresh clang-tidy run) | No | done | 22bbfe7 |
+| C8 | Type Deduction (`auto`) | `modernize-use-auto` — 5 sites (confirmed via fresh clang-tidy run) | No | done | e84e345 |
 | C9 | `std::ranges`/`emplace`/designated initializers etc. | `modernize-use-ranges` (14), `modernize-use-emplace` (10), `modernize-use-designated-initializers` (18), `modernize-use-bool-literals` (7), `modernize-pass-by-value` (2), `modernize-use-using` (1), `modernize-use-starts-ends-with` (1), `modernize-return-braced-init-list` (1), `modernize-raw-string-literal` (1) | No | pending | |
 
 ### Excluded from backlog (tool findings not matching a corp-cpp rule label)

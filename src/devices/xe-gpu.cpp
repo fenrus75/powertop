@@ -175,22 +175,22 @@ public:
 	xe_fan_device(const std::string &path, const std::string &label)
 		: device(), fan_path(path), fan_label(label) {}
 
-	virtual void start_measurement(void) override {}
-	virtual void end_measurement(void) override
+	void start_measurement(void) override {}
+	void end_measurement(void) override
 	{
 		current_rpm = static_cast<double>(
 			read_sysfs_uint64(fan_path, nullptr));
 	}
 
-	virtual double      utilization(void) const override { return current_rpm; }
-	virtual std::string class_name(void) const override  { return "GPU"; }
-	virtual std::string device_name(void) const override { return fan_label; }
-	virtual std::string human_name(void) override        { return fan_label; }
+	double      utilization(void) const override { return current_rpm; }
+	std::string class_name(void) const override  { return "GPU"; }
+	std::string device_name(void) const override { return fan_label; }
+	std::string human_name(void) override        { return fan_label; }
 	virtual double      power_usage([[maybe_unused]] struct result_bundle *r,
 				        [[maybe_unused]] struct parameter_bundle *b) override
 			{ return 0.0; }
-	virtual bool        show_in_list(void) const override { return true; }
-	virtual std::string util_units(void) const override   { return _(" RPM"); }
+	bool        show_in_list(void) const override { return true; }
+	std::string util_units(void) const override   { return _(" RPM"); }
 
 	void collect_json_fields(std::string &_js) override
 	{

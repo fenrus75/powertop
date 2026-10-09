@@ -41,13 +41,13 @@ class gpu_rapl_device: public i915gpu {
 
 public:
 	gpu_rapl_device(i915gpu *parent);
-	virtual std::string class_name(void) const override { return _("GPU core");};
-	virtual std::string device_name(void) const override { return _("GPU core");};
-	virtual std::string human_name(void) override { return _("GPU core");};
+	std::string class_name(void) const override { return _("GPU core");};
+	std::string device_name(void) const override { return _("GPU core");};
+	std::string human_name(void) override { return _("GPU core");};
 	bool device_present() const { return device_valid;}
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
-	virtual void start_measurement(void) override;
-	virtual void end_measurement(void) override;
+	double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	void start_measurement(void) override;
+	void end_measurement(void) override;
 	void collect_json_fields(std::string &_js) override;
 
 };

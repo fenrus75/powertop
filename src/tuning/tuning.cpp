@@ -48,10 +48,10 @@ static bool should_clear = false;
 
 class tuning_window: public tab_window {
 public:
-	virtual void repaint(void) override;
-	virtual void cursor_enter(void) override;
-	virtual void expose(void) override;
-	virtual void window_refresh(void) override;
+	void repaint(void) override;
+	void cursor_enter(void) override;
+	void expose(void) override;
+	void window_refresh(void) override;
 };
 
 static void init_tuning(void)

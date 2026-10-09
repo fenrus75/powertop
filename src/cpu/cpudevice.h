@@ -54,14 +54,14 @@ protected:
 
 public:
 	cpudevice(const std::string &classname = "cpu", const std::string &device_name = "cpu0", class abstract_cpu *_cpu = nullptr);
-	virtual std::string class_name(void) const override { return _class; };
+	std::string class_name(void) const override { return _class; };
 
-	virtual std::string device_name(void) const override;
-	virtual std::string human_name(void) override;
+	std::string device_name(void) const override;
+	std::string human_name(void) override;
 
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
-	virtual bool show_in_list(void) const override {return false;};
-	virtual double	utilization(void) const override; /* percentage */
+	double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	bool show_in_list(void) const override {return false;};
+	double	utilization(void) const override; /* percentage */
 	void add_child(device *dev_ptr) { child_devices.push_back(dev_ptr);}
 	void collect_json_fields(std::string &_js) override;
 };

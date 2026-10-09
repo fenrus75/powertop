@@ -59,18 +59,18 @@ public:
 
 	xegpu();
 
-	virtual void start_measurement(void) override;
-	virtual void end_measurement(void) override;
+	void start_measurement(void) override;
+	void end_measurement(void) override;
 
-	virtual double utilization(void) const override;
+	double utilization(void) const override;
 
-	virtual std::string class_name(void) const override { return "GPU"; }
-	virtual std::string device_name(void) const override { return "GPU"; }
-	virtual std::string human_name(void) override { return _("Intel Xe GPU"); }
+	std::string class_name(void) const override { return "GPU"; }
+	std::string device_name(void) const override { return "GPU"; }
+	std::string human_name(void) override { return _("Intel Xe GPU"); }
 	virtual double power_usage(struct result_bundle *result,
 				   struct parameter_bundle *bundle) override;
-	virtual bool show_in_list(void) const override { return false; }
-	virtual std::string util_units(void) const override { return _(" ops/s"); }
+	bool show_in_list(void) const override { return false; }
+	std::string util_units(void) const override { return _(" ops/s"); }
 
 	void collect_json_fields(std::string &_js) override;
 };

@@ -43,22 +43,22 @@ public:
 
 	i915gpu();
 
-	virtual void start_measurement(void) override;
-	virtual void end_measurement(void) override;
+	void start_measurement(void) override;
+	void end_measurement(void) override;
 
-	virtual double	utilization(void) const override; /* percentage */
+	double	utilization(void) const override; /* percentage */
 
-	virtual std::string class_name(void) const override { return "GPU";};
+	std::string class_name(void) const override { return "GPU";};
 
-	virtual std::string device_name(void) const override {
+	std::string device_name(void) const override {
 		if (child_devices.size())
 			return "GPU misc";
 		return "GPU";
 	};
-	virtual std::string human_name(void) override { return _("Intel GPU"); };
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
-	virtual bool show_in_list(void) const override {return false;};
-	virtual std::string util_units(void) const override { return _(" ops/s"); };
+	std::string human_name(void) override { return _("Intel GPU"); };
+	double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	bool show_in_list(void) const override {return false;};
+	std::string util_units(void) const override { return _(" ops/s"); };
 
 	virtual void add_child(device *dev_ptr) { child_devices.push_back(dev_ptr);}
 	void collect_json_fields(std::string &_js) override;

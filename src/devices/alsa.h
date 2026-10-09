@@ -43,20 +43,20 @@ public:
 
 	alsa(const std::string &_name, const std::string &path);
 
-	virtual void start_measurement(void) override;
-	virtual void end_measurement(void) override;
+	void start_measurement(void) override;
+	void end_measurement(void) override;
 
-	virtual double	utilization(void) const override; /* percentage */
+	double	utilization(void) const override; /* percentage */
 
-	virtual std::string class_name(void) const override { return "alsa";};
+	std::string class_name(void) const override { return "alsa";};
 
-	virtual std::string device_name(void) const override { return name; };
-	virtual std::string human_name(void) override;
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
-	virtual bool power_valid(void) const override { return utilization_power_valid(rindex);};
+	std::string device_name(void) const override { return name; };
+	std::string human_name(void) override;
+	double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	bool power_valid(void) const override { return utilization_power_valid(rindex);};
 
-	virtual void register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle) override;
-	virtual int grouping_prio(void) const override { return 0; };
+	void register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle) override;
+	int grouping_prio(void) const override { return 0; };
 	void collect_json_fields(std::string &_js) override;
 
 };

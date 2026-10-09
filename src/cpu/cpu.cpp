@@ -57,7 +57,7 @@ static	std::unique_ptr<class perf_bundle> perf_events;
 
 class perf_power_bundle: public perf_bundle
 {
-	virtual void handle_trace_point(void *trace, int cpu, uint64_t time) override;
+	void handle_trace_point(void *trace, int cpu, uint64_t time) override;
 
 };
 

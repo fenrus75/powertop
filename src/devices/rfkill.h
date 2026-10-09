@@ -42,18 +42,18 @@ public:
 
 	rfkill(const std::string &_name, const std::string &path);
 
-	virtual void start_measurement(void) override;
-	virtual void end_measurement(void) override;
+	void start_measurement(void) override;
+	void end_measurement(void) override;
 
-	virtual double	utilization(void) const override; /* percentage */
+	double	utilization(void) const override; /* percentage */
 
-	virtual std::string class_name(void) const override { return "radio";};
+	std::string class_name(void) const override { return "radio";};
 
-	virtual std::string device_name(void) const override { return name; };
-	virtual std::string human_name(void) override { return humanname; };
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
-	virtual bool power_valid(void) const override { return utilization_power_valid(rindex);};
-	virtual int grouping_prio(void) const override { return 5; };
+	std::string device_name(void) const override { return name; };
+	std::string human_name(void) override { return humanname; };
+	double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	bool power_valid(void) const override { return utilization_power_valid(rindex);};
+	int grouping_prio(void) const override { return 5; };
 	/*
 	 * rfkill's "utilization" is really just the block state (0/50/100),
 	 * not a duty cycle, and the underlying radio is already represented
@@ -62,7 +62,7 @@ public:
 	 * stats list to avoid a misleading "100%" row and it out-sorting
 	 * genuinely measured devices.
 	 */
-	virtual bool show_in_list(void) const override {return false;};
+	bool show_in_list(void) const override {return false;};
 	void collect_json_fields(std::string &_js) override;
 };
 

@@ -41,11 +41,11 @@ public:
 	uint64_t done(uint64_t time, uint64_t timer_struct);
 	bool is_deferred(void) const;
 
-	virtual std::string description(void) override;
-	virtual std::string name(void) const override { return "timer"; };
-	virtual std::string type(void) const override { return "Timer"; };
-	virtual double usage_summary(void) const override;
-	virtual std::string usage_units_summary(void) const override;
+	std::string description(void) override;
+	std::string name(void) const override { return "timer"; };
+	std::string type(void) const override { return "Timer"; };
+	double usage_summary(void) const override;
+	std::string usage_units_summary(void) const override;
 	void collect_json_fields(std::string &_js) const override;
 
 };

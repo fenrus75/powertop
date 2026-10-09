@@ -42,20 +42,20 @@ public:
 
 	runtime_pmdevice(const std::string &_name, const std::string &path);
 
-	virtual void start_measurement(void) override;
-	virtual void end_measurement(void) override;
+	void start_measurement(void) override;
+	void end_measurement(void) override;
 
-	virtual double	utilization(void) const override; /* percentage */
+	double	utilization(void) const override; /* percentage */
 
-	virtual std::string class_name(void) const override { return "runtime_pm";};
+	std::string class_name(void) const override { return "runtime_pm";};
 
-	virtual std::string device_name(void) const override { return name; };
-	virtual std::string human_name(void) override { return humanname; };
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
-	virtual bool power_valid(void) const override { return utilization_power_valid(r_index);};
+	std::string device_name(void) const override { return name; };
+	std::string human_name(void) override { return humanname; };
+	double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	bool power_valid(void) const override { return utilization_power_valid(r_index);};
 
 	void set_human_name(const std::string &name);
-	virtual int grouping_prio(void) const override { return 1; };
+	int grouping_prio(void) const override { return 1; };
 	void collect_json_fields(std::string &_js) override;
 };
 

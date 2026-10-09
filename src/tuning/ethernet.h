@@ -34,9 +34,9 @@ public:
 	std::string interf;
 	ethernet_tunable(const std::string &iface);
 
-	virtual int good_bad(void) override;
+	int good_bad(void) override;
 
-	virtual void toggle(void) override;
+	void toggle(void) override;
 
 	void collect_json_fields(std::string &_js) override;
 

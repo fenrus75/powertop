@@ -152,18 +152,18 @@ class cpu_linux: public abstract_cpu
 	void 	parse_cstates_end(void);
 
 public:
-	virtual void	measurement_start(void) override;
-	virtual void	measurement_end(void) override;
+	void	measurement_start(void) override;
+	void	measurement_end(void) override;
 
-	virtual std::string  fill_cstate_line(int line_nr, const std::string &separator="") override;
-	virtual std::string  fill_cstate_name(int line_nr) override;
-	virtual std::string  fill_cstate_percentage(int line_nr) override;
-	virtual std::string  fill_cstate_time(int line_nr) override;
+	std::string  fill_cstate_line(int line_nr, const std::string &separator="") override;
+	std::string  fill_cstate_name(int line_nr) override;
+	std::string  fill_cstate_percentage(int line_nr) override;
+	std::string  fill_cstate_time(int line_nr) override;
 
-	virtual std::string  fill_pstate_line(int line_nr) override;
-	virtual std::string  fill_pstate_name(int line_nr) override;
+	std::string  fill_pstate_line(int line_nr) override;
+	std::string  fill_pstate_name(int line_nr) override;
 
-	virtual double avg_freq_mhz(void) override;
+	double avg_freq_mhz(void) override;
 };
 
 /*
@@ -179,13 +179,13 @@ public:
 class cpu_core: public abstract_cpu
 {
 public:
-	virtual std::string  fill_cstate_line(int line_nr, const std::string &separator="") override;
-	virtual std::string  fill_cstate_name(int line_nr) override;
+	std::string  fill_cstate_line(int line_nr, const std::string &separator="") override;
+	std::string  fill_cstate_name(int line_nr) override;
 
-	virtual std::string  fill_pstate_line(int line_nr) override;
-	virtual std::string  fill_pstate_name(int line_nr) override;
+	std::string  fill_pstate_line(int line_nr) override;
+	std::string  fill_pstate_name(int line_nr) override;
 
-	virtual int     can_collapse(void) override { return childcount == 1;};
+	int     can_collapse(void) override { return childcount == 1;};
 };
 
 /*
@@ -199,14 +199,14 @@ public:
 class cpu_package: public abstract_cpu
 {
 protected:
-	virtual void	freq_updated(uint64_t time) override;
+	void	freq_updated(uint64_t time) override;
 public:
-	virtual std::string  fill_cstate_line(int line_nr, const std::string &separator="") override;
-	virtual std::string  fill_cstate_name(int line_nr) override;
+	std::string  fill_cstate_line(int line_nr, const std::string &separator="") override;
+	std::string  fill_cstate_name(int line_nr) override;
 
-	virtual std::string  fill_pstate_line(int line_nr) override;
-	virtual std::string  fill_pstate_name(int line_nr) override;
-	virtual int     can_collapse(void) override { return childcount == 1;};
+	std::string  fill_pstate_line(int line_nr) override;
+	std::string  fill_pstate_name(int line_nr) override;
+	int     can_collapse(void) override { return childcount == 1;};
 };
 
 extern void enumerate_cpus(void);

@@ -81,11 +81,11 @@ public:
 	int		has_c6c_res = 0;		/* BSW */
 	int		has_c8c9c10_res = 0;
 	nhm_package(int family, int model);
-	virtual void	measurement_start(void) override;
-	virtual void	measurement_end(void) override;
-	virtual int     can_collapse(void) override { return 0;};
+	void	measurement_start(void) override;
+	void	measurement_end(void) override;
+	int     can_collapse(void) override { return 0;};
 
-	virtual std::string  fill_pstate_line(int line_nr) override;
+	std::string  fill_pstate_line(int line_nr) override;
 	void collect_json_fields(std::string &_js) override;
 };
 
@@ -105,11 +105,11 @@ public:
 	int		has_c7_res = 0;
 	int		has_c3_res = 0;
 	nhm_core(int family, int model);
-	virtual void	measurement_start(void) override;
-	virtual void	measurement_end(void) override;
-	virtual int     can_collapse(void) override { return 0;};
+	void	measurement_start(void) override;
+	void	measurement_end(void) override;
+	int     can_collapse(void) override { return 0;};
 
-	virtual std::string  fill_pstate_line(int line_nr) override;
+	std::string  fill_pstate_line(int line_nr) override;
 	void collect_json_fields(std::string &_js) override;
 };
 
@@ -125,30 +125,30 @@ protected:
 	uint64_t	last_stamp = 0;
 	uint64_t	total_stamp = 0;
 public:
-	virtual void	measurement_start(void) override;
-	virtual void	measurement_end(void) override;
-	virtual int     can_collapse(void) override { return 0;};
+	void	measurement_start(void) override;
+	void	measurement_end(void) override;
+	int     can_collapse(void) override { return 0;};
 
-	virtual std::string  fill_pstate_name(int line_nr) override;
-	virtual std::string  fill_pstate_line(int line_nr) override;
-	virtual int	has_pstate_level(int level) const override;
-	virtual double avg_freq_mhz(void) override;
+	std::string  fill_pstate_name(int line_nr) override;
+	std::string  fill_pstate_line(int line_nr) override;
+	int	has_pstate_level(int level) const override;
+	double avg_freq_mhz(void) override;
 	void collect_json_fields(std::string &_js) override;
 };
 
 class atom_package: public cpu_package
 {
 public:
-	virtual void	measurement_start(void) override;
-	virtual void	measurement_end(void) override;
+	void	measurement_start(void) override;
+	void	measurement_end(void) override;
 
 };
 
 class atom_core: public cpu_core
 {
 public:
-	virtual void	measurement_start(void) override;
-	virtual void	measurement_end(void) override;
+	void	measurement_start(void) override;
+	void	measurement_end(void) override;
 
 };
 
@@ -164,16 +164,16 @@ private:
 	struct timeval	after;
 
 public:
-	virtual void	measurement_start(void) override;
-	virtual void	measurement_end(void) override;
-	virtual int     can_collapse(void) override { return 0;};
+	void	measurement_start(void) override;
+	void	measurement_end(void) override;
+	int     can_collapse(void) override { return 0;};
 
-	virtual std::string  fill_pstate_line(int line_nr) override;
-	virtual std::string  fill_pstate_name(int line_nr) override;
-	virtual std::string  fill_cstate_line(int line_nr, const std::string &separator) override;
-	virtual int	has_pstate_level([[maybe_unused]] int level) const override { return 0; };
-	virtual int	has_pstates(void) const override { return 0; };
-	virtual void	wiggle(void) override { };
+	std::string  fill_pstate_line(int line_nr) override;
+	std::string  fill_pstate_name(int line_nr) override;
+	std::string  fill_cstate_line(int line_nr, const std::string &separator) override;
+	int	has_pstate_level([[maybe_unused]] int level) const override { return 0; };
+	int	has_pstates(void) const override { return 0; };
+	void	wiggle(void) override { };
 	void collect_json_fields(std::string &_js) override;
 
 };
@@ -205,18 +205,18 @@ public:
 
 	xe_core();
 
-	virtual void measurement_start(void) override;
-	virtual void measurement_end(void) override;
-	virtual int  can_collapse(void) override { return 0; }
+	void measurement_start(void) override;
+	void measurement_end(void) override;
+	int  can_collapse(void) override { return 0; }
 
 	virtual std::string fill_cstate_line(int line_nr,
 				const std::string &separator) override;
-	virtual std::string fill_pstate_line(int line_nr) override;
-	virtual std::string fill_pstate_name(int line_nr) override;
-	virtual int  has_pstate_level([[maybe_unused]] int level) const override
+	std::string fill_pstate_line(int line_nr) override;
+	std::string fill_pstate_name(int line_nr) override;
+	int  has_pstate_level([[maybe_unused]] int level) const override
 			{ return 0; }
-	virtual int  has_pstates(void) const override { return 0; }
-	virtual void wiggle(void) override { }
+	int  has_pstates(void) const override { return 0; }
+	void wiggle(void) override { }
 	void collect_json_fields(std::string &_js) override;
 };
 

@@ -45,12 +45,12 @@ public:
 	virtual void start_interrupt(uint64_t time);
 	virtual uint64_t end_interrupt(uint64_t time);
 
-	virtual std::string description(void) override;
+	std::string description(void) override;
 
-	virtual std::string name(void) const override { return "interrupt"; };
-	virtual std::string type(void) const override { return "Interrupt"; };
-	virtual double usage_summary(void) const override;
-	virtual std::string usage_units_summary(void) const override;
+	std::string name(void) const override { return "interrupt"; };
+	std::string type(void) const override { return "Interrupt"; };
+	double usage_summary(void) const override;
+	std::string usage_units_summary(void) const override;
 	void collect_json_fields(std::string &_js) const override;
 };
 

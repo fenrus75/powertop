@@ -49,23 +49,23 @@ public:
 	std::vector<std::unique_ptr<frequency>> dstates;
 
 	devfreq(const std::string &c);
-	~devfreq();
+	~devfreq() override;
 	std::string fill_freq_utilization(unsigned int idx) const;
 	std::string fill_freq_name(unsigned int idx) const;
 
-	virtual void start_measurement(void) override;
-	virtual void end_measurement(void) override;
+	void start_measurement(void) override;
+	void end_measurement(void) override;
 
-	virtual double	utilization(void) const override; /* percentage */
+	double	utilization(void) const override; /* percentage */
 
-	virtual std::string class_name(void) const override { return "devfreq";};
+	std::string class_name(void) const override { return "devfreq";};
 
-	virtual std::string device_name(void) const override { return dir_name; };
-	virtual std::string human_name(void) override { return "devfreq";};
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
-	virtual std::string util_units(void) const override { return " rpm"; };
-	virtual bool power_valid(void) const override { return false; /*utilization_power_valid(r_index);*/};
-	virtual int grouping_prio(void) const override { return 1; };
+	std::string device_name(void) const override { return dir_name; };
+	std::string human_name(void) override { return "devfreq";};
+	double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	std::string util_units(void) const override { return " rpm"; };
+	bool power_valid(void) const override { return false; /*utilization_power_valid(r_index);*/};
+	int grouping_prio(void) const override { return 1; };
 	void collect_json_fields(std::string &_js) override;
 };
 

@@ -42,13 +42,13 @@ class cpu_rapl_device: public cpudevice {
 
 public:
 	cpu_rapl_device(cpudevice *parent, const std::string &classname = "cpu_core", const std::string &device_name = "cpu_core", class abstract_cpu *_cpu = nullptr);
-	~cpu_rapl_device() = default;
-	virtual std::string device_name(void) const override {return _("CPU core");};
-	virtual std::string human_name(void) override {return _("CPU core");};
+	~cpu_rapl_device() override = default;
+	std::string device_name(void) const override {return _("CPU core");};
+	std::string human_name(void) override {return _("CPU core");};
 	bool device_present() const { return device_valid;}
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
-	virtual void start_measurement(void) override;
-	virtual void end_measurement(void) override;
+	double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	void start_measurement(void) override;
+	void end_measurement(void) override;
 	void collect_json_fields(std::string &_js) override;
 
 };

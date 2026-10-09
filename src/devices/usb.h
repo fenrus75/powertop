@@ -46,19 +46,19 @@ public:
 
 	usbdevice(const std::string &_name, const std::string &path, const std::string &devid);
 
-	virtual void start_measurement(void) override;
-	virtual void end_measurement(void) override;
+	void start_measurement(void) override;
+	void end_measurement(void) override;
 
-	virtual double	utilization(void) const override; /* percentage */
+	double	utilization(void) const override; /* percentage */
 
-	virtual std::string class_name(void) const override { return "usb";};
+	std::string class_name(void) const override { return "usb";};
 
-	virtual std::string device_name(void) const override { return devname; };
-	virtual std::string human_name(void) override { return humanname; };
-	virtual void register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle) override;
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
-	virtual bool power_valid(void) const override { return utilization_power_valid(r_index);};
-	virtual int grouping_prio(void) const override { return 4; };
+	std::string device_name(void) const override { return devname; };
+	std::string human_name(void) override { return humanname; };
+	void register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle) override;
+	double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	bool power_valid(void) const override { return utilization_power_valid(r_index);};
+	int grouping_prio(void) const override { return 4; };
 	void collect_json_fields(std::string &_js) override;
 };
 

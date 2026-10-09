@@ -65,19 +65,19 @@ public:
 
 	network(const std::string &_name, const std::string &path);
 
-	virtual void start_measurement(void) override;
-	virtual void end_measurement(void) override;
+	void start_measurement(void) override;
+	void end_measurement(void) override;
 
-	virtual double	utilization(void) const override;
-	virtual std::string util_units(void) const override { return " pkts/s"; };
+	double	utilization(void) const override;
+	std::string util_units(void) const override { return " pkts/s"; };
 
-	virtual std::string class_name(void) const override { return "ethernet";};
+	std::string class_name(void) const override { return "ethernet";};
 
-	virtual std::string device_name(void) const override { return name; };
-	virtual std::string human_name(void) override { return humanname; };
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
-	virtual bool power_valid(void) const override { return utilization_power_valid(rindex_up) || utilization_power_valid(rindex_link_100) || utilization_power_valid(rindex_link_1000) || utilization_power_valid(rindex_link_high);};
-	virtual int grouping_prio(void) const override { return 10; };
+	std::string device_name(void) const override { return name; };
+	std::string human_name(void) override { return humanname; };
+	double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	bool power_valid(void) const override { return utilization_power_valid(rindex_up) || utilization_power_valid(rindex_link_100) || utilization_power_valid(rindex_link_1000) || utilization_power_valid(rindex_link_high);};
+	int grouping_prio(void) const override { return 10; };
 	void collect_json_fields(std::string &_js) override;
 
 	/* Virtual hardware helpers — override in tests to inject fake data */

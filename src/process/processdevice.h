@@ -37,13 +37,13 @@ public:
 	class device *device = nullptr; /* non-owning pointer to device from all_devices */
 	device_consumer(class device *dev);
 
-	virtual std::string description(void) override;
-	virtual std::string name(void) const override { return _("device"); };
-	virtual std::string type(void) const override { return _("Device"); };
-	virtual double Witts(void) const override;
-	virtual double usage(void) const override { return device->utilization();};
-	virtual std::string usage_units(void) const override {return device->util_units();};
-	virtual int show_events(void) const override { return 0; };
+	std::string description(void) override;
+	std::string name(void) const override { return _("device"); };
+	std::string type(void) const override { return _("Device"); };
+	double Witts(void) const override;
+	double usage(void) const override { return device->utilization();};
+	std::string usage_units(void) const override {return device->util_units();};
+	int show_events(void) const override { return 0; };
 	void collect_json_fields(std::string &_js) const override;
 };
 

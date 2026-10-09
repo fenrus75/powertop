@@ -44,9 +44,9 @@ protected:
 public:
 	sysfs_tunable(const std::string &str, const std::string &sysfs_path, const std::string &target_content);
 
-	virtual int good_bad(void) override;
+	int good_bad(void) override;
 
-	virtual void toggle(void) override;
+	void toggle(void) override;
 
 	void collect_json_fields(std::string &_js) override;
 

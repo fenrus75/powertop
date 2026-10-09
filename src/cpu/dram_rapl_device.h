@@ -42,11 +42,11 @@ class dram_rapl_device: public cpudevice {
 
 public:
 	dram_rapl_device(cpudevice *parent, const std::string &classname = "dram_core", const std::string &device_name = "dram_core", class abstract_cpu *_cpu = nullptr);
-	~dram_rapl_device() = default;
-	virtual std::string device_name(void) const override {return "DRAM";};
-	virtual std::string human_name(void) override {return "DRAM";};
+	~dram_rapl_device() override = default;
+	std::string device_name(void) const override {return "DRAM";};
+	std::string human_name(void) override {return "DRAM";};
 	bool device_present() const { return device_valid;}
-	virtual double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
+	double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
 	void start_measurement(void) override;
 	void end_measurement(void) override;
 	void collect_json_fields(std::string &_js) override;

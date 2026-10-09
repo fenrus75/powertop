@@ -33,11 +33,11 @@ class acpi_power_meter: public power_meter {
 	void measure(void);
 public:
 	acpi_power_meter(const std::string &_battery_name);
-	virtual void start_measurement(void) override;
-	virtual void end_measurement(void) override;
+	void start_measurement(void) override;
+	void end_measurement(void) override;
 
-	virtual double power(void) const override;
-	virtual double dev_capacity(void) const override { return capacity; };
+	double power(void) const override;
+	double dev_capacity(void) const override { return capacity; };
 	void collect_json_fields(std::string &_js) const override;
 };
 

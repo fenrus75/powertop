@@ -28,8 +28,8 @@
 
 class gpu_tab_window : public tab_window {
 public:
-	virtual void expose(void) override;
-	virtual void repaint(void) override;
+	void expose(void) override;
+	void repaint(void) override;
 };
 
 extern void initialize_gpu_tab(void);

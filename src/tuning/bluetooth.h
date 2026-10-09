@@ -33,9 +33,9 @@ class bt_tunable : public tunable {
 public:
 	bt_tunable(int id, const std::string &name);
 
-	virtual int good_bad(void) override;
+	int good_bad(void) override;
 
-	virtual void toggle(void) override;
+	void toggle(void) override;
 
 	void collect_json_fields(std::string &_js) override;
 

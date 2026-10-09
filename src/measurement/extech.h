@@ -47,12 +47,12 @@ class extech_power_meter: public power_meter {
 	bool thread_started = false;
 public:
 	extech_power_meter(const std::string &_dev_name);
-	virtual void start_measurement(void) override;
-	virtual void end_measurement(void) override;
+	void start_measurement(void) override;
+	void end_measurement(void) override;
 	virtual void sample(void);
 
-	virtual double power(void) const override;
-	virtual double dev_capacity(void) const override { return 0.0; };
+	double power(void) const override;
+	double dev_capacity(void) const override { return 0.0; };
 	void collect_json_fields(std::string &_js) const override;
 };
 

@@ -39,12 +39,12 @@ public:
 	void fire(uint64_t time, uint64_t work_struct);
 	uint64_t done(uint64_t time, uint64_t work_struct);
 
-	virtual std::string description(void) override;
-	virtual std::string name(void) const override { return "work"; };
-	virtual std::string type(void) const override { return "kWork"; };
-	virtual double usage_summary(void) const override;
-	virtual std::string usage_units_summary(void) const override;
-	virtual void collect_json_fields(std::string &_js) const override;
+	std::string description(void) override;
+	std::string name(void) const override { return "work"; };
+	std::string type(void) const override { return "kWork"; };
+	double usage_summary(void) const override;
+	std::string usage_units_summary(void) const override;
+	void collect_json_fields(std::string &_js) const override;
 
 };
 

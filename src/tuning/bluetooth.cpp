@@ -67,9 +67,9 @@ bt_tunable::bt_tunable(int id, const std::string &name) : tunable("", 1.0, _("Go
 #define __u8 uint8_t
 #define __u32 uint32_t
 
-typedef struct {
+using bdaddr_t = struct __attribute__((packed)) {
         __u8 b[6];
-} __attribute__((packed)) bdaddr_t;
+};
 
 struct hci_dev_stats {
         __u32 err_rx;

@@ -118,7 +118,7 @@ void collect_open_devices(void)
 			if (link.find("/dev/tty") != std::string::npos)
 				continue;
 
-			if (link.compare(0, 4, "/dev") == 0) {
+			if (link.starts_with("/dev")) {
 				/* /proc/ also contains non-pid entries (e.g. "sys",
 				 * "net"); skip any directory name that isn't a
 				 * plain decimal pid instead of silently using 0. */

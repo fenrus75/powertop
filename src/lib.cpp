@@ -398,7 +398,7 @@ void end_pci_access(void)
 
 std::string pci_id_to_name([[maybe_unused]] uint16_t vendor, [[maybe_unused]] uint16_t device)
 {
-	return std::string();
+	return {};
 }
 
 void end_pci_access(void)

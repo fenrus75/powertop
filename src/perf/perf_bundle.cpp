@@ -220,7 +220,7 @@ void perf_bundle::process(void)
 	std::sort(records.begin(), records.end(), event_sort_function);
 
 	for (auto record : records) {
-		struct perf_sample *sample = static_cast<struct perf_sample *>(record);
+		auto *sample = static_cast<struct perf_sample *>(record);
 		if (!sample)
 			continue;
 

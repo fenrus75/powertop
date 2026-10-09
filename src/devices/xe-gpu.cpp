@@ -147,7 +147,7 @@ void xegpu::end_measurement(void)
 		}
 
 		/* energy*_input is in micro-joules */
-		const double energy =
+		const auto energy =
 			static_cast<double>(read_sysfs_uint64(tr.energy_path, nullptr));
 		ch.current_watts = (energy - tr.last_energy) / 1e6 / delta;
 		tr.last_energy   = energy;

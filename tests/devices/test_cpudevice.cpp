@@ -41,7 +41,7 @@ PT_ASSERT_TRUE(got.find("\"child_devices\":[]") != std::string::npos);
 static void test_add_child()
 {
 cpudevice parent("cpu", "cpu0", nullptr);
-cpudevice *child = new cpudevice("core", "core0", nullptr);
+auto *child = new cpudevice("core", "core0", nullptr);
 parent.add_child(child);
 
 std::string got = parent.serialize();

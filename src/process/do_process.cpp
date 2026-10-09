@@ -657,7 +657,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			consumer = nullptr;
 
 		if (consumer && consumer->name() == "process") {
-			class process *proc = static_cast<class process *>(consumer);
+			auto *proc = static_cast<class process *>(consumer);
 			if (comm_is_xorg(proc->comm) && proc->last_waker)
 				consumer = proc->last_waker;
 		}

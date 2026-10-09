@@ -145,5 +145,50 @@ Tier C: C1 (`59ca925`-adjacent commit, see row), C2 (`59ca925`), C3
 (`0de8b61`), C7 (`22bbfe7`), C8 (`e84e345`), C9a-i (`71f3c89`,
 `e10c0f8`, `7be846e`, `a62533a`, `588f7ea`, `f743b90`). Tier C is fully
 done. All backlog items (Tiers A, B, C) are now worked (done or
-justified-excluded); remaining work is Phase 3 final verification per
-the protocol.
+justified-excluded).
+
+## Phase 3: final verification
+
+Performed per `protocols/cpp-modernization.md` Phase 3 after Tier C
+completed:
+
+1. **Re-ran `run-clang-tidy -checks='-*,modernize-*'` across all of
+   `src/`.** Residual labeled-rule findings are down to **0** (was
+   268+45+18+31+2+5+4+5+14(underestimate; actual 29)+10+18+7+2+1+1+1+1
+   across C1-C9 at the start of Tier C). One previously-unflagged site
+   was found and fixed in this pass: `src/devices/xe-gpu.cpp`'s
+   `xe_fan_device::power_usage()` had a redundant `virtual` keyword
+   alongside `override` (`modernize-use-override` also flags this
+   redundancy, not just missing `override`) — fixed, commit `60a2904`.
+   The remaining 706 `modernize-*` hits are all in categories
+   explicitly excluded from the backlog in Phase 1 (see "Excluded from
+   backlog" above): `modernize-use-trailing-return-type` (324),
+   `modernize-redundant-void-arg` (319), `modernize-macro-to-enum`
+   (43), `modernize-avoid-c-arrays` (10), `modernize-deprecated-headers`
+   (9) — none map to a `corp-cpp.instructions.md` rule label.
+2. **Re-ran `cppcheck --enable=all --inconclusive --std=c++20 -I src
+   src/`.** `noExplicitConstructor` (C2) and `useStlAlgorithm` (C3) are
+   now **0** hits (were 18 and 35/45). `constVariable*`/
+   `constParameter*` (C4) dropped from the original 31-site count to 16
+   residual hits, all in files *not* touched by C4's original scan
+   scope: `src/perf/perf_event.h` (10, kernel-API-mirroring callback
+   typedefs — changing these pointer params to `const` would diverge
+   from the upstream kernel header signatures they mirror, so
+   intentionally left alone), `src/perf/perf.cpp` (2),
+   `src/measurement/measurement_manager.cpp` (2),
+   `src/cpu/cpu.cpp` (1, a parameter-name mismatch note, not a
+   const-qualifier finding). These are new residual findings for a
+   future session, not a regression — the original 31 C4 sites remain
+   fixed.
+3. **Full test suite**: `meson test -C build_tf --print-errorlogs` —
+   **61/61 passing** (including 5 valgrind tests), matching the Phase 0
+   baseline. Both `build_tf` (tests enabled) and `build` (release,
+   tests disabled) compile cleanly with no warnings from the
+   modernization changes.
+
+**Conclusion: all Tier A/B/C backlog items are done or
+justified-excluded; the labeled-rule `modernize-*` finding count across
+the whole codebase is 0; the test suite is as healthy as the Phase 0
+baseline. This modernization pass is complete.** Residual non-rule
+findings (listed above and in "Excluded from backlog") are left for a
+future, differently-scoped pass.

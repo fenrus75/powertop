@@ -55,7 +55,27 @@ reachability first, then smallest blast radius).
 | A5 | No C-Style Casts (`dangerousTypeCast`) | `src/perf/perf_bundle.cpp:151` | No | done | 920732f |
 | A6 | No C-Style Casts (`cstyleCast`, pointer casts) | `src/calibrate/calibrate.cpp:258`, `src/measurement/extech.cpp:349`, `src/perf/perf.cpp:131,132,249`, `src/perf/perf_bundle.cpp:63,185,186,223`, `src/tuning/bluetooth.cpp:134` | No | done | 920732f (reinterpret_cast used for genuine kernel-ABI pointer punning; see commit note) |
 | A7 | Integer Conversions (signed/unsigned comparison) | 15 files, 27 sites — see `clang_tidy_out.txt` grep `modernize-use-integer-sign-comparison`; heaviest in `src/parameters/parameters.cpp` (4), `src/cpu/cpu.cpp` (4), `src/cpu/intel_cpus.cpp` (3) | No | done | 8c353ed (two sentinel-value sites use `numeric_limits<T>::max()` instead of `std::cmp_equal()`; see commit message) |
-| A8 | Prefer Standard Containers (C-style arrays, `modernize-avoid-c-arrays`) | 9 files, 17 sites; heaviest `src/measurement/extech.cpp` (6), `src/tuning/bluetooth.cpp` (3) | No | pending | |
+| A8 | Prefer Standard Containers (C-style arrays, `modernize-avoid-c-arrays`) | 9 files, 17 sites; heaviest `src/measurement/extech.cpp` (6), `src/tuning/bluetooth.cpp` (3) | No | partial | 5495f84 (4 safe internal sites converted; 13 sites intentionally left as C arrays — see note below) |
+
+**A8 remaining sites — intentionally kept as C arrays:**
+- `src/perf/perf_bundle.cpp:141` — `unsigned char data[0];` is a C flexible-array-member
+  idiom for variable-length kernel trace records; `std::array` cannot represent this.
+- `src/tuning/bluetooth.cpp:71,90,97` — `bdaddr_t`/`struct hci_dev_info` mirror the
+  kernel/bluez binary layout used by `ioctl(HCIGETDEVINFO, ...)`; must stay exact-layout
+  C arrays to match the kernel ABI.
+- `src/main.cpp:95` — `struct option long_options[]` feeds `getopt_long()` directly via a
+  C-idiom all-zero sentinel terminator; `std::array`/CTAD doesn't cleanly express this
+  nested-aggregate shape, and there's no safety benefit to forcing it.
+- `src/cpu/intel_cpus.cpp:47` — `intel_cpu_models[]` is scanned with a `!= 0` sentinel
+  loop; converting to `std::array` would require removing that idiom and verifying no
+  legitimate `IFM()` value is ever `0` — judged not worth the risk for a mechanical pass.
+- `src/calibrate/calibrate.cpp:205,206` — `buffer[64*1024]` (raw `read()`/`write()`
+  syscall buffer) and `filename[]` (mutated in place by `mkstemp()`) — left as-is; the
+  `mkstemp()` mutable-buffer contract makes a container conversion more awkward than
+  beneficial here.
+- `src/measurement/extech.cpp:66,67` — `struct packet { char buf[256]; char op[32]; ...}`
+  used with raw `read()` and sub-buffer address-of-element access; left as C arrays since
+  the struct is used as a POD wire-format buffer for the serial protocol.
 
 ### Tier B — RAII / lifetime
 
@@ -113,6 +133,9 @@ backlog. Recorded here for Phase 3 residual-findings tracking:
 ## Phase 3 status (to be updated as the backlog is worked)
 
 Completed this session: A1, A2, A3 (commit `186a270`); A4, A5, A6
-(commit `920732f`); A7 (commit `8c353ed`). All other items remain
-`pending` and are tracked above for future sessions, per the protocol's
-multi-session design — this backlog is committed so progress persists.
+(commit `920732f`); A7 (commit `8c353ed`); A8 partial — 4 of 17 sites
+(commit `5495f84`), remaining 13 sites intentionally excluded (see
+rationale under the A8 row above). Tier A is now fully worked (done or
+justified-excluded). All Tier B/C items remain `pending` and are
+tracked above for future sessions, per the protocol's multi-session
+design — this backlog is committed so progress persists.

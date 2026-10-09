@@ -29,12 +29,12 @@ public:
 	int         _prio;
 	bool        _visible;
 
-	mock_device(const std::string &name,
+	mock_device(std::string name,
 	            const std::string &path,
 	            double power,
 	            int    prio,
 	            bool   visible = true)
-	    : _name(name), _power(power), _prio(prio), _visible(visible)
+	    : _name(std::move(name)), _power(power), _prio(prio), _visible(visible)
 	{
 		real_path = path;          /* device::real_path is public */
 	}

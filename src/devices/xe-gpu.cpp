@@ -171,8 +171,8 @@ class xe_fan_device : public device {
 	double      current_rpm = 0.0;
 
 public:
-	xe_fan_device(const std::string &path, const std::string &label)
-		: device(), fan_path(path), fan_label(label) {}
+	xe_fan_device(std::string path, std::string label)
+		: device(), fan_path(std::move(path)), fan_label(std::move(label)) {}
 
 	void start_measurement(void) override {}
 	void end_measurement(void) override

@@ -29,8 +29,7 @@
 #include "gpu_rapl_device.h"
 
 gpu_rapl_device::gpu_rapl_device(i915gpu *parent)
-	: i915gpu(),
-	  device_valid(false)
+	: i915gpu()
 {
 	last_time = pt_gettime();
 	if (rapl.pp1_domain_present()) {

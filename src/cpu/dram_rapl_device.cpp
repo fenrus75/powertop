@@ -30,8 +30,7 @@
 
 
 dram_rapl_device::dram_rapl_device(cpudevice *parent, const std::string &classname, const std::string &dev_name, class abstract_cpu *_cpu)
-	: cpudevice(classname, dev_name, _cpu),
-	  device_valid(false)
+	: cpudevice(classname, dev_name, _cpu)
 {
 	if (_cpu)
 		rapl = std::make_unique<c_rapl_interface>(dev_name, cpu->get_first_cpu());

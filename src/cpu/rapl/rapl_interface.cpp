@@ -71,16 +71,11 @@
 #define PP1_DOMAIN_PRESENT	0x08
 
 c_rapl_interface::c_rapl_interface(const std::string &dev_name, int cpu) :
-	powercap_sysfs_present(false),
 	powercap_core_path(),
 	powercap_uncore_path(),
 	powercap_dram_path(),
 	first_cpu(cpu),
-	measurement_interval(def_sampling_interval),
-	last_pkg_energy_status(0.0),
-	last_dram_energy_status(0.0),
-	last_pp0_energy_status(0.0),
-	last_pp1_energy_status(0.0)
+	measurement_interval(def_sampling_interval)
 {
 	uint64_t value;
 	int ret;

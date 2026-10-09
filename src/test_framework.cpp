@@ -30,7 +30,7 @@ static bool pttest_debug_env()
 }
 
 test_framework_manager::test_framework_manager()
-    : recording(false), replaying(false), debug_mode(pttest_debug_env()) {}
+    : debug_mode(pttest_debug_env()) {}
 
 test_framework_manager::~test_framework_manager() {
 	if (recording) {

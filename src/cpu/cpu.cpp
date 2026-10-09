@@ -26,6 +26,8 @@
 #include <limits>
 #include <utility>
 #include <vector>
+#include <algorithm>
+#include <numeric>
 #include <cmath>
 #include <cstring>
 #include <cstdlib>
@@ -419,8 +421,8 @@ static int get_cstates_num(void)
 			continue;
 
 		/* walk package cstates and get largest cstates number */
-		for (const auto &s : _package->cstates)
-			cstates_num = std::max(cstates_num, s->line_level);
+		cstates_num = std::accumulate(_package->cstates.begin(), _package->cstates.end(), cstates_num,
+				[](int acc, const auto &s) { return std::max(acc, s->line_level); });
 
 		/*
 		 * for each core in this package, walk core cstates and get
@@ -431,8 +433,8 @@ static int get_cstates_num(void)
 			if (_core == nullptr)
 				continue;
 
-			for (const auto &s : _core->cstates)
-				cstates_num = std::max(cstates_num, s->line_level);
+			cstates_num = std::accumulate(_core->cstates.begin(), _core->cstates.end(), cstates_num,
+					[](int acc, const auto &s) { return std::max(acc, s->line_level); });
 
 			/*
 			 * for each core, walk the logical cpus in case
@@ -443,8 +445,8 @@ static int get_cstates_num(void)
 				if (_cpu == nullptr)
 					continue;
 
-				for (const auto &s : _cpu->cstates)
-					cstates_num = std::max(cstates_num, s->line_level);
+				cstates_num = std::accumulate(_cpu->cstates.begin(), _cpu->cstates.end(), cstates_num,
+						[](int acc, const auto &s) { return std::max(acc, s->line_level); });
 			}
 		}
 	}
@@ -1017,10 +1019,8 @@ void w_display_cpu_pstates(void)
 			if (!core)
 				continue;
 
-			bool has_cpus = false;
-			for (const auto &child : core->children) {
-				if (child) { has_cpus = true; break; }
-			}
+			bool has_cpus = std::any_of(core->children.begin(), core->children.end(),
+					[](const auto &child) { return static_cast<bool>(child); });
 			if (!has_cpus)
 				continue;
 

@@ -24,6 +24,8 @@
  */
 #include <sstream>
 #include <utility>
+#include <algorithm>
+#include <numeric>
 #include <inttypes.h>
 #include <cstdio>
 #include <cstdlib>
@@ -36,14 +38,11 @@ abstract_cpu::~abstract_cpu() = default;
 void abstract_cpu::account_freq(uint64_t freq, uint64_t duration)
 {
 	class frequency *state = nullptr;
-	unsigned int i;
 
-	for (i = 0; i < pstates.size(); i++) {
-		if (freq == pstates[i]->freq) {
-			state = pstates[i].get();
-			break;
-		}
-	}
+	auto it = std::find_if(pstates.begin(), pstates.end(),
+			[freq](const auto &p) { return p->freq == freq; });
+	if (it != pstates.end())
+		state = it->get();
 
 
 	if (!state) {
@@ -221,15 +220,12 @@ void abstract_cpu::insert_cstate(const std::string &linux_name, const std::strin
 
 void abstract_cpu::finalize_cstate(const std::string &linux_name, uint64_t usage, uint64_t duration, int count)
 {
-	unsigned int i;
 	struct idle_state *state = nullptr;
 
-	for (i = 0; i < cstates.size(); i++) {
-		if (cstates[i]->linux_name == linux_name) {
-			state = cstates[i].get();
-			break;
-		}
-	}
+	auto it = std::find_if(cstates.begin(), cstates.end(),
+			[&linux_name](const auto &c) { return c->linux_name == linux_name; });
+	if (it != cstates.end())
+		state = it->get();
 
 	if (!state) {
 		fprintf(stderr, _("Invalid C state finalize %s\n"), linux_name.c_str());
@@ -243,15 +239,12 @@ void abstract_cpu::finalize_cstate(const std::string &linux_name, uint64_t usage
 
 void abstract_cpu::update_cstate(const std::string &linux_name, const std::string &human_name, uint64_t usage, uint64_t duration, int count, int level)
 {
-	unsigned int i;
 	struct idle_state *state = nullptr;
 
-	for (i = 0; i < cstates.size(); i++) {
-		if (cstates[i]->linux_name == linux_name) {
-			state = cstates[i].get();
-			break;
-		}
-	}
+	auto it = std::find_if(cstates.begin(), cstates.end(),
+			[&linux_name](const auto &c) { return c->linux_name == linux_name; });
+	if (it != cstates.end())
+		state = it->get();
 
 	if (!state) {
 		insert_cstate(linux_name, human_name, usage, duration, count, level);
@@ -268,9 +261,9 @@ int abstract_cpu::has_cstate_level(int level) const
 	if (level == LEVEL_HEADER)
 		return 1;
 
-	for (const auto &s : cstates)
-		if (s->line_level == level)
-			return 1;
+	if (std::any_of(cstates.begin(), cstates.end(),
+			[level](const auto &s) { return s->line_level == level; }))
+		return 1;
 
 	for (auto &child : children)
 		if (child)
@@ -311,15 +304,12 @@ void abstract_cpu::insert_pstate(uint64_t freq, const std::string &human_name, u
 
 void abstract_cpu::finalize_pstate(uint64_t freq, uint64_t duration, int count)
 {
-	unsigned int i;
 	class frequency *state = nullptr;
 
-	for (i = 0; i < pstates.size(); i++) {
-		if (freq == pstates[i]->freq) {
-			state = pstates[i].get();
-			break;
-		}
-	}
+	auto it = std::find_if(pstates.begin(), pstates.end(),
+			[freq](const auto &p) { return p->freq == freq; });
+	if (it != pstates.end())
+		state = it->get();
 
 	if (!state) {
 		fprintf(stderr, _("Invalid P state finalize %" PRIu64 "\n"), freq);
@@ -332,15 +322,12 @@ void abstract_cpu::finalize_pstate(uint64_t freq, uint64_t duration, int count)
 
 void abstract_cpu::update_pstate(uint64_t freq, const std::string &human_name, uint64_t duration, int count)
 {
-	unsigned int i;
 	class frequency *state = nullptr;
 
-	for (i = 0; i < pstates.size(); i++) {
-		if (freq == pstates[i]->freq) {
-			state = pstates[i].get();
-			break;
-		}
-	}
+	auto it = std::find_if(pstates.begin(), pstates.end(),
+			[freq](const auto &p) { return p->freq == freq; });
+	if (it != pstates.end())
+		state = it->get();
 
 	if (!state) {
 		insert_pstate(freq, human_name, duration, count);
@@ -424,12 +411,8 @@ void abstract_cpu::wiggle(void)
 }
 uint64_t abstract_cpu::total_pstate_time(void) const
 {
-	uint64_t stamp = 0;
-
-	for (const auto &s : pstates)
-		stamp += s->time_after;
-
-	return stamp;
+	return std::accumulate(pstates.begin(), pstates.end(), uint64_t{0},
+			[](uint64_t sum, const auto &s) { return sum + s->time_after; });
 }
 
 

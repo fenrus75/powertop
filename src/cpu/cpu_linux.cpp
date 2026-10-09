@@ -26,6 +26,7 @@
 #include <utility>
 #include <fstream>
 #include <sstream>
+#include <numeric>
 
 #include "cpu.h"
 #include "../lib.h"
@@ -222,8 +223,8 @@ std::string cpu_linux::fill_pstate_name(int line_nr)
 std::string cpu_linux::fill_pstate_line(int line_nr)
 {
 	if (total_stamp ==0) {
-		for (const auto &s : pstates)
-			total_stamp += s->time_after;
+		total_stamp = std::accumulate(pstates.begin(), pstates.end(), total_stamp,
+				[](uint64_t sum, const auto &s) { return sum + s->time_after; });
 		if (total_stamp == 0)
 			total_stamp = 1;
 	}

@@ -24,6 +24,7 @@
  */
 #include "intel_cpus.h"
 #include <utility>
+#include <numeric>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -365,11 +366,10 @@ void nhm_core::measurement_end(void)
 std::string nhm_core::fill_pstate_line(int line_nr)
 {
 	const int intel_pstate = is_intel_pstate_driver_loaded();
-	unsigned int i;
 
 	if (!intel_pstate && total_stamp ==0) {
-		for (i = 0; i < pstates.size(); i++)
-			total_stamp += pstates[i]->time_after;
+		total_stamp = std::accumulate(pstates.begin(), pstates.end(), total_stamp,
+				[](uint64_t sum, const auto &s) { return sum + s->time_after; });
 		if (total_stamp == 0)
 			total_stamp = 1;
 	}
@@ -515,11 +515,10 @@ nhm_package::nhm_package(int family, int model)
 std::string nhm_package::fill_pstate_line(int line_nr)
 {
 	const int intel_pstate = is_intel_pstate_driver_loaded();
-	unsigned int i;
 
 	if (!intel_pstate && total_stamp ==0) {
-		for (i = 0; i < pstates.size(); i++)
-			total_stamp += pstates[i]->time_after;
+		total_stamp = std::accumulate(pstates.begin(), pstates.end(), total_stamp,
+				[](uint64_t sum, const auto &s) { return sum + s->time_after; });
 		if (total_stamp == 0)
 			total_stamp = 1;
 	}
@@ -738,8 +737,8 @@ std::string nhm_cpu::fill_pstate_line(int line_nr)
 	const int intel_pstate = is_intel_pstate_driver_loaded();
 
 	if (!intel_pstate && total_stamp ==0) {
-		for (const auto &s : pstates)
-			total_stamp += s->time_after;
+		total_stamp = std::accumulate(pstates.begin(), pstates.end(), total_stamp,
+				[](uint64_t sum, const auto &s) { return sum + s->time_after; });
 		if (total_stamp == 0)
 			total_stamp = 1;
 	}

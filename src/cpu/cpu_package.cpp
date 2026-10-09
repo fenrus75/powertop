@@ -24,6 +24,7 @@
  */
 #include <cstdio>
 #include <utility>
+#include <numeric>
 #include "cpu.h"
 #include "../lib.h"
 #include "../parameters/parameters.h"
@@ -87,11 +88,9 @@ std::string cpu_package::fill_pstate_name(int line_nr)
 
 std::string cpu_package::fill_pstate_line(int line_nr)
 {
-	unsigned int i;
-
 	if (total_stamp ==0) {
-		for (i = 0; i < pstates.size(); i++)
-			total_stamp += pstates[i]->time_after;
+		total_stamp = std::accumulate(pstates.begin(), pstates.end(), total_stamp,
+				[](uint64_t sum, const auto &s) { return sum + s->time_after; });
 		if (total_stamp == 0)
 			total_stamp = 1;
 	}

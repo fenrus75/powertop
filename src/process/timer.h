@@ -35,7 +35,7 @@ public:
 	int		raw_count = 0;
 	bool		deferred = false;
 
-	timer(unsigned long timer_func);
+	explicit timer(unsigned long timer_func);
 
 	void fire(uint64_t time, uint64_t timer_struct);
 	uint64_t done(uint64_t time, uint64_t timer_struct);

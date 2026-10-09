@@ -48,7 +48,7 @@ public:
 
 	std::vector<std::unique_ptr<frequency>> dstates;
 
-	devfreq(const std::string &c);
+	explicit devfreq(const std::string &c);
 	~devfreq() override;
 	std::string fill_freq_utilization(unsigned int idx) const;
 	std::string fill_freq_name(unsigned int idx) const;

@@ -33,7 +33,7 @@
 class wifi_tunable : public tunable {
 	std::string iface;
 public:
-	wifi_tunable(const std::string &_iface);
+	explicit wifi_tunable(const std::string &_iface);
 
 	int good_bad(void) override;
 

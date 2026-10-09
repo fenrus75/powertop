@@ -21,7 +21,7 @@
 
 class test_exception : public std::runtime_error {
 public:
-	test_exception(const std::string& msg) : std::runtime_error(msg) {}
+	explicit test_exception(const std::string& msg) : std::runtime_error(msg) {}
 };
 
 class test_framework_manager {

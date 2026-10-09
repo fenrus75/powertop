@@ -35,7 +35,7 @@ public:
 	int prio = 0;
 	double power = 0.0;
 	class device *device = nullptr; /* non-owning pointer to device from all_devices */
-	device_consumer(class device *dev);
+	explicit device_consumer(class device *dev);
 
 	std::string description(void) override;
 	std::string name(void) const override { return _("device"); };

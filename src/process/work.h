@@ -34,7 +34,7 @@ public:
 	std::string	handler;
 	int		raw_count = 0;
 
-	work(unsigned long work_func);
+	explicit work(unsigned long work_func);
 
 	void fire(uint64_t time, uint64_t work_struct);
 	uint64_t done(uint64_t time, uint64_t work_struct);

@@ -46,7 +46,7 @@ class extech_power_meter: public power_meter {
 	/* only join the sampling thread if pthread_create() succeeded */
 	bool thread_started = false;
 public:
-	extech_power_meter(const std::string &_dev_name);
+	explicit extech_power_meter(const std::string &_dev_name);
 	void start_measurement(void) override;
 	void end_measurement(void) override;
 	virtual void sample(void);

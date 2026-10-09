@@ -106,7 +106,7 @@ class report_formatter;
 class report_maker
 {
 public:
-	report_maker(report_type t);
+	explicit report_maker(report_type t);
 	~report_maker();
 
 	report_type get_type();

@@ -41,7 +41,7 @@ class dram_rapl_device: public cpudevice {
 	bool		device_valid = false;
 
 public:
-	dram_rapl_device(cpudevice *parent, const std::string &classname = "dram_core", const std::string &device_name = "dram_core", class abstract_cpu *_cpu = nullptr);
+	explicit dram_rapl_device(cpudevice *parent, const std::string &classname = "dram_core", const std::string &device_name = "dram_core", class abstract_cpu *_cpu = nullptr);
 	~dram_rapl_device() override = default;
 	std::string device_name(void) const override {return "DRAM";};
 	std::string human_name(void) override {return "DRAM";};

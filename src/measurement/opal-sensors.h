@@ -29,7 +29,7 @@
 
 class opal_sensors_power_meter: public power_meter {
 public:
-	opal_sensors_power_meter(const std::string &power_supply_name);
+	explicit opal_sensors_power_meter(const std::string &power_supply_name);
 	void start_measurement(void) override {};
 	void end_measurement(void) override {};
 

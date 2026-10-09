@@ -32,7 +32,7 @@
 class ethernet_tunable : public tunable {
 public:
 	std::string interf;
-	ethernet_tunable(const std::string &iface);
+	explicit ethernet_tunable(const std::string &iface);
 
 	int good_bad(void) override;
 

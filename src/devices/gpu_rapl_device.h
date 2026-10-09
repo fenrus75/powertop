@@ -40,7 +40,7 @@ class gpu_rapl_device: public i915gpu {
 	bool		device_valid = false;
 
 public:
-	gpu_rapl_device(i915gpu *parent);
+	explicit gpu_rapl_device(i915gpu *parent);
 	std::string class_name(void) const override { return _("GPU core");};
 	std::string device_name(void) const override { return _("GPU core");};
 	std::string human_name(void) override { return _("GPU core");};

@@ -132,16 +132,13 @@ double alsa::utilization(void) const
 
 static void create_all_alsa_callback(const std::string &d_name)
 {
-	class alsa *bl;
-
 	if (!d_name.starts_with("hwC"))
 		return;
 
 	if (pt_access(std::format("/sys/class/sound/{}/power_on_acct", d_name), R_OK) != 0)
 		return;
 
-	bl = new alsa(d_name, std::format("/sys/class/sound/{}", d_name));
-	all_devices.push_back(std::unique_ptr<alsa>(bl));
+	all_devices.push_back(std::make_unique<alsa>(d_name, std::format("/sys/class/sound/{}", d_name)));
 	register_parameter("alsa-codec-power", 0.5);
 }
 

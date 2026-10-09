@@ -141,7 +141,6 @@ double usbdevice::power_usage(struct result_bundle *result, struct parameter_bun
 
 static void create_all_usb_devices_callback(const std::string &d_name)
 {
-	class usbdevice *usb;
 	std::string vendorid, devid;
 
 	if (pt_access(std::format("/sys/bus/usb/devices/{}/power/active_duration", d_name), R_OK) != 0)
@@ -155,8 +154,7 @@ static void create_all_usb_devices_callback(const std::string &d_name)
 	if (result_device_exists(device_name))
 		return;
 
-	usb = new usbdevice(device_name, std::format("/sys/bus/usb/devices/{}", d_name), devid_name);
-	all_devices.push_back(std::unique_ptr<usbdevice>(usb));
+	all_devices.push_back(std::make_unique<usbdevice>(device_name, std::format("/sys/bus/usb/devices/{}", d_name), devid_name));
 	register_parameter(devid_name, 0.1);
 }
 

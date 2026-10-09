@@ -72,7 +72,6 @@ double thinkpad_fan::utilization(void) const
 void create_thinkpad_fan(void)
 {
 	std::string filename;
-	class thinkpad_fan *fan;
 
 	filename = "/sys/devices/platform/thinkpad_hwmon/fan1_input";
 
@@ -83,8 +82,7 @@ void create_thinkpad_fan(void)
 	register_parameter("thinkpad-fan-sqr", 5);
 	register_parameter("thinkpad-fan-cub", 10);
 
-	fan = new thinkpad_fan();
-	all_devices.push_back(std::unique_ptr<thinkpad_fan>(fan));
+	all_devices.push_back(std::make_unique<thinkpad_fan>());
 }
 
 

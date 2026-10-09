@@ -73,7 +73,6 @@ double thinkpad_light::utilization(void) const
 void create_thinkpad_light(void)
 {
 	std::string filename;
-	class thinkpad_light *light;
 
 	filename = "/sys/devices/platform/thinkpad_acpi/leds/tpacpi::thinklight/brightness";
 
@@ -82,8 +81,7 @@ void create_thinkpad_light(void)
 
 	register_parameter("thinkpad-light", 10);
 
-	light = new thinkpad_light();
-	all_devices.push_back(std::unique_ptr<thinkpad_light>(light));
+	all_devices.push_back(std::make_unique<thinkpad_light>());
 }
 
 

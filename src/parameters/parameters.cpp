@@ -293,14 +293,9 @@ std::unique_ptr<struct result_bundle> clone_results(const struct result_bundle *
 }
 
 
-struct parameter_bundle * clone_parameters(const struct parameter_bundle *bundle)
+std::unique_ptr<struct parameter_bundle> clone_parameters(const struct parameter_bundle *bundle)
 {
-	struct parameter_bundle *b2;
-
-	b2 = new struct parameter_bundle;
-
-	if (!b2)
-		return nullptr;
+	auto b2 = std::make_unique<struct parameter_bundle>();
 
 	b2->score = 0;
 	b2->guessed_power = 0;

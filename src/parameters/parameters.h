@@ -101,7 +101,7 @@ void dump_parameter_bundle(const struct parameter_bundle *parameters = &all_para
 void dump_result_bundle(const struct result_bundle *res = &all_results);
 
 extern std::unique_ptr<struct result_bundle> clone_results(const struct result_bundle *bundle);
-extern struct parameter_bundle * clone_parameters(const struct parameter_bundle *bundle);
+extern std::unique_ptr<struct parameter_bundle> clone_parameters(const struct parameter_bundle *bundle);
 
 extern void store_results(double duration);
 extern void learn_parameters(int iterations, int do_base_power);

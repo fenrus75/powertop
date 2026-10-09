@@ -116,14 +116,12 @@ static void test_clone_parameters()
 	set_parameter_value("test-clone-param", 2.0, &src);
 	src.actual_power = 11.0;
 
-	struct parameter_bundle *dst = clone_parameters(&src);
+	std::unique_ptr<struct parameter_bundle> dst = clone_parameters(&src);
 	PT_ASSERT_TRUE(dst != nullptr);
 	PT_ASSERT_TRUE(dst->actual_power > 10.99);
 	PT_ASSERT_TRUE(dst->actual_power < 11.01);
 	PT_ASSERT_TRUE(dst->score == 0.0);
 	PT_ASSERT_TRUE(dst->guessed_power == 0.0);
-
-	delete dst;
 }
 
 static void test_average_power_empty()

@@ -204,11 +204,11 @@ static void test_find_create_timer_dedup()
 	test_framework_manager::get().set_replay(DATA_DIR + "/timer_empty_stats.ptrecord");
 	clear_timers();
 
-	class timer *t1 = find_create_timer(UNKNOWN_ADDR);
+	const class timer *t1 = find_create_timer(UNKNOWN_ADDR);
 	test_framework_manager::get().reset();
 
 	/* second call with same address — must NOT construct (no fixture read needed) */
-	class timer *t2 = find_create_timer(UNKNOWN_ADDR);
+	const class timer *t2 = find_create_timer(UNKNOWN_ADDR);
 
 	PT_ASSERT_TRUE(t1 == t2);
 }

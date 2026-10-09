@@ -158,7 +158,7 @@ class process * find_create_process(const std::string &comm, int pid)
 	return all_processes.back().get();
 }
 
-static void merge_process(process &one, process &two)
+static void merge_process(process &one, const process &two)
 {
 	one.accumulated_runtime += two.accumulated_runtime;
 	one.child_runtime += two.child_runtime;

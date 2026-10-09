@@ -124,7 +124,7 @@ static void test_find_create_process_idempotent()
 	class process *p1 = find_create_process("bash", 5678);
 	test_framework_manager::get().reset();
 
-	class process *p2 = find_create_process("bash", 5678);
+	const class process *p2 = find_create_process("bash", 5678);
 
 	PT_ASSERT_TRUE(p1 != nullptr);
 	PT_ASSERT_TRUE(p1 == p2);

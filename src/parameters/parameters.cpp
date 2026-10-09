@@ -211,7 +211,7 @@ double compute_bundle(struct parameter_bundle *parameters, struct result_bundle 
 static int precomputed_valid = 0;
 void precompute_valid(void)
 {
-	for (auto &d : all_devices)
+	for (const auto &d : all_devices)
 		d->cached_valid = d->power_valid();
 	precomputed_valid = 1;
 }

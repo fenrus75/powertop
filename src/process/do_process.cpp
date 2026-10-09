@@ -194,7 +194,7 @@ int dont_blame_me(const std::string &comm)
 	return 0;
 }
 
-static std::string get_tep_field_str(void *trace, struct tep_event *event, struct tep_format_field *field)
+static std::string get_tep_field_str(void *trace, struct tep_event *event, const struct tep_format_field *field)
 {
 	unsigned long long offset, len;
 	if (field->flags & TEP_FIELD_IS_DYNAMIC) {
@@ -212,7 +212,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 {
 	struct tep_event *event;
 	struct tep_record rec; /* holder */
-	struct tep_format_field *field;
+	const struct tep_format_field *field;
 	unsigned long long val;
 	int type;
 	int ret;
@@ -307,7 +307,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 	else if (event_name == "sched_wakeup") {
 		class power_consumer *from = nullptr;
 		class process *dest_proc = nullptr;
-		class process *from_proc = nullptr;
+		const class process *from_proc = nullptr;
 		std::string comm;
 		int flags;
 		int pid;

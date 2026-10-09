@@ -187,7 +187,7 @@ void write_sysfs(const std::string &filename, const std::string &value)
 	{
 		file << value;
 		file.close();
-	} catch (std::exception &exc) {
+	} catch (const std::exception &exc) {
 		return;
 	}
 }

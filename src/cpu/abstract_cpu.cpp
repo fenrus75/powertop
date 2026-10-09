@@ -124,7 +124,7 @@ void abstract_cpu::measurement_end(void)
 		if (child)
 			child->measurement_end();
 
-	for (auto &child : children)
+	for (const auto &child : children)
 		if (child) {
 			for (const auto &state : child->cstates) {
 
@@ -265,7 +265,7 @@ int abstract_cpu::has_cstate_level(int level) const
 			[level](const auto &s) { return s->line_level == level; }))
 		return 1;
 
-	for (auto &child : children)
+	for (const auto &child : children)
 		if (child)
 			if (child->has_cstate_level(level))
 				return 1;
@@ -280,7 +280,7 @@ int abstract_cpu::has_pstate_level(int level) const
 	if (level >= 0 && std::cmp_less(level, pstates.size()))
 		return 1;
 
-	for (auto &child : children)
+	for (const auto &child : children)
 		if (child)
 			if (child->has_pstate_level(level))
 				return 1;
@@ -345,7 +345,7 @@ void abstract_cpu::calculate_freq(uint64_t time)
 	bool is_idle = true;
 
 	/* calculate the maximum frequency of all children */
-	for (auto &child : children)
+	for (const auto &child : children)
 		if (child && child->has_pstates()) {
 			uint64_t f = 0;
 			if (!child->idle) {
@@ -425,11 +425,11 @@ void abstract_cpu::validate(void)
 
 void abstract_cpu::reset_pstate_data(void)
 {
-	for (auto &s : pstates) {
+	for (const auto &s : pstates) {
 		s->time_before = 0;
 		s->time_after = 0;
 	}
-	for (auto &s : cstates) {
+	for (const auto &s : cstates) {
 		s->duration_before = 0;
 		s->duration_after = 0;
 		s->before_count = 0;

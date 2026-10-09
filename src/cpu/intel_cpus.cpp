@@ -333,7 +333,7 @@ void nhm_core::measurement_end(void)
 	if (tsc_after != tsc_before)
 		ratio = 1.0 * time_delta / (tsc_after - tsc_before);
 
-	for (auto &state : cstates) {
+	for (const auto &state : cstates) {
 		if (state->after_count == 0)
 			continue;
 
@@ -638,7 +638,7 @@ void nhm_package::measurement_end(void)
 	if (tsc_after != tsc_before)
 		ratio = 1.0 * time_delta / (tsc_after - tsc_before);
 
-	for (auto &state : cstates) {
+	for (const auto &state : cstates) {
 		if (state->after_count == 0)
 			continue;
 
@@ -648,7 +648,7 @@ void nhm_package::measurement_end(void)
 		state->usage_delta =    ratio * (state->usage_after    - state->usage_before)    / state->after_count;
 		state->duration_delta = ratio * (state->duration_after - state->duration_before) / state->after_count;
 	}
-	for (auto &child : children)
+	for (const auto &child : children)
 		if (child) {
 			for (const auto &state : child->pstates) {
 
@@ -712,7 +712,7 @@ void nhm_cpu::measurement_end(void)
 		ratio = 1.0 * time_delta / (tsc_after - tsc_before);
 
 
-	for (auto &state : cstates) {
+	for (const auto &state : cstates) {
 		if (state->line_level != LEVEL_C0)
 			continue;
 

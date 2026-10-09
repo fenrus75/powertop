@@ -101,7 +101,7 @@ static void test_usage_units_summary_is_percent()
 static void test_find_create_interrupt_new()
 {
 	clear_interrupts();
-	interrupt *p = find_create_interrupt("nvme", 10, 0);
+	const interrupt *p = find_create_interrupt("nvme", 10, 0);
 	PT_ASSERT_TRUE(p != nullptr);
 	PT_ASSERT_EQ(p->number, 10);
 	PT_ASSERT_EQ(p->handler, std::string("nvme"));
@@ -111,8 +111,8 @@ static void test_find_create_interrupt_new()
 static void test_find_create_interrupt_existing()
 {
 	clear_interrupts();
-	interrupt *p1 = find_create_interrupt("sata", 20, 0);
-	interrupt *p2 = find_create_interrupt("sata", 20, 0);
+	const interrupt *p1 = find_create_interrupt("sata", 20, 0);
+	const interrupt *p2 = find_create_interrupt("sata", 20, 0);
 	PT_ASSERT_TRUE(p1 == p2);   /* same object returned */
 	clear_interrupts();
 }
@@ -121,7 +121,7 @@ static void test_find_create_interrupt_timer_rename()
 {
 	clear_interrupts();
 	/* "timer" gets renamed to "timer/<cpu>" */
-	interrupt *p = find_create_interrupt("timer", 0, 3);
+	const interrupt *p = find_create_interrupt("timer", 0, 3);
 	PT_ASSERT_TRUE(p->handler.find("timer/3") != std::string::npos);
 	clear_interrupts();
 }
@@ -132,7 +132,7 @@ static void test_clear_interrupts_empties_vector()
 	find_create_interrupt("irq-b", 2, 0);
 	clear_interrupts();
 	/* After clear, a fresh find creates a new object at a new address */
-	interrupt *p = find_create_interrupt("irq-a", 1, 0);
+	const interrupt *p = find_create_interrupt("irq-a", 1, 0);
 	PT_ASSERT_TRUE(p != nullptr);
 	clear_interrupts();
 }

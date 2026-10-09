@@ -142,7 +142,7 @@ static void show_fan_section(WINDOW *win)
 	if (fans.empty())
 		return;
 
-	for (auto *d : fans) {
+	for (const auto *d : fans) {
 		const double rpm = d->utilization();
 		if (rpm > max_rpm_seen)
 			max_rpm_seen = rpm;
@@ -196,9 +196,9 @@ static void show_idle_section(WINDOW *win)
 
 static void show_power_section(WINDOW *win)
 {
-	xegpu *gpu = nullptr;
-	for (auto &d : all_devices) {
-		gpu = dynamic_cast<xegpu *>(d.get());
+	const xegpu *gpu = nullptr;
+	for (const auto &d : all_devices) {
+		gpu = dynamic_cast<const xegpu *>(d.get());
 		if (gpu)
 			break;
 	}
@@ -267,9 +267,9 @@ void gpu_tab_window::expose(void)
 void report_gpu_stats(void)
 {
 	/* Check if any GPU is present before opening the report div. */
-	xegpu *gpu = nullptr;
-	for (auto &d : all_devices) {
-		gpu = dynamic_cast<xegpu *>(d.get());
+	const xegpu *gpu = nullptr;
+	for (const auto &d : all_devices) {
+		gpu = dynamic_cast<const xegpu *>(d.get());
 		if (gpu)
 			break;
 	}
@@ -451,10 +451,10 @@ void report_gpu_stats(void)
  * an active i915 driver. */
 void initialize_gpu_tab(void)
 {
-	xegpu *gpu = nullptr;
+	const xegpu *gpu = nullptr;
 
-	for (auto &d : all_devices) {
-		auto *x = dynamic_cast<xegpu *>(d.get());
+	for (const auto &d : all_devices) {
+		const auto *x = dynamic_cast<const xegpu *>(d.get());
 		if (x && !x->power_channels.empty()) {
 			gpu = x;
 			break;

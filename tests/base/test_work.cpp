@@ -135,8 +135,8 @@ static void test_find_create_work_idempotent()
 
 	static constexpr unsigned long ADDR = 0x1234abcd5678UL;
 
-	class work *w1 = find_create_work(ADDR);
-	class work *w2 = find_create_work(ADDR);
+	const class work *w1 = find_create_work(ADDR);
+	const class work *w2 = find_create_work(ADDR);
 
 	PT_ASSERT_TRUE(w1 != nullptr);
 	PT_ASSERT_TRUE(w1 == w2);

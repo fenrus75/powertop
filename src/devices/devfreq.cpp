@@ -283,7 +283,7 @@ void display_devfreq_devices(void)
 		return;
 	}
 
-	for (auto &df : all_devfreq) {
+	for (const auto &df : all_devfreq) {
 
 		wprintw(win, "\n%s\n", df->device_name().c_str());
 

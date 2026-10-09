@@ -197,7 +197,7 @@ int charge_device_to_openers(const std::string &devstring, double power, class d
 
 void clear_devpower(void)
 {
-	for (auto &dp : devpower) {
+	for (const auto &dp : devpower) {
 		dp->power = 0.0;
 		dp->dev->guilty.clear();
 	}

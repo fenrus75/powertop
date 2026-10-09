@@ -182,15 +182,15 @@ public:
 			read_sysfs_uint64(fan_path, nullptr));
 	}
 
-	double      utilization(void) const override { return current_rpm; }
-	std::string class_name(void) const override  { return "GPU"; }
-	std::string device_name(void) const override { return fan_label; }
+	[[nodiscard]] double      utilization(void) const override { return current_rpm; }
+	[[nodiscard]] std::string class_name(void) const override  { return "GPU"; }
+	[[nodiscard]] std::string device_name(void) const override { return fan_label; }
 	std::string human_name(void) override        { return fan_label; }
 	virtual double      power_usage([[maybe_unused]] struct result_bundle *r,
 				        [[maybe_unused]] struct parameter_bundle *b) override
 			{ return 0.0; }
-	bool        show_in_list(void) const override { return true; }
-	std::string util_units(void) const override   { return _(" RPM"); }
+	[[nodiscard]] bool        show_in_list(void) const override { return true; }
+	[[nodiscard]] std::string util_units(void) const override   { return _(" RPM"); }
 
 	void collect_json_fields(std::string &_js) override
 	{

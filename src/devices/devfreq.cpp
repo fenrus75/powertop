@@ -49,9 +49,7 @@ devfreq::devfreq(const std::string &dpath): device()
 	dir_name = dpath;
 }
 
-devfreq::~devfreq()
-{
-}
+devfreq::~devfreq() = default;
 
 uint64_t devfreq::parse_freq_time(const std::string &pchr_s) const
 {

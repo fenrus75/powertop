@@ -37,10 +37,7 @@
 
 
 /* ************************************************************************ */
-report_formatter_csv::report_formatter_csv()
-{
-	/* Do nothing special  */
-}
+report_formatter_csv::report_formatter_csv() = default;
 
 /* ************************************************************************ */
 void

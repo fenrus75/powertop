@@ -24,9 +24,7 @@
 #include "report-data-html.h"
 #include "lib.h"
 
-report_formatter_md::report_formatter_md()
-{
-}
+report_formatter_md::report_formatter_md() = default;
 
 void report_formatter_md::finish_report()
 {

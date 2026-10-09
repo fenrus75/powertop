@@ -24,6 +24,4 @@
  */
 #include "frequency.h"
 
-frequency::frequency()
-{
-}
+frequency::frequency() = default;

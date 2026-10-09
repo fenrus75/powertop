@@ -423,6 +423,6 @@ std::string test_framework_manager::base64_decode(const std::string& in) {
     return out;
 }
 #else
-test_framework_manager::test_framework_manager() {}
-test_framework_manager::~test_framework_manager() {}
+test_framework_manager::test_framework_manager() = default;
+test_framework_manager::~test_framework_manager() = default;
 #endif

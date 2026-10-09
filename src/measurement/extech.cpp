@@ -43,6 +43,7 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <cctype>
+#include <array>
 #include <getopt.h>
 #include <ctime>
 #include <signal.h>
@@ -146,14 +147,14 @@ static int decode_extech_value(unsigned char byt3, unsigned char byt4, char *a)
 	unsigned int input = ((unsigned int)byt4 << 8) + byt3;
 	unsigned int i;
 	unsigned int idx;
-	unsigned char revnum[] = { 0x0, 0x8, 0x4, 0xc,
+	static constexpr std::array<unsigned char, 16> revnum = { 0x0, 0x8, 0x4, 0xc,
 				   0x2, 0xa, 0x6, 0xe,
 				   0x1, 0x9, 0x5, 0xd,
 				   0x3, 0xb, 0x7, 0xf};
-	unsigned char revdec[] = { 0x0, 0x2, 0x1, 0x3};
+	static constexpr std::array<unsigned char, 4> revdec = { 0x0, 0x2, 0x1, 0x3};
 
-	unsigned int digit_map[] = {0x2, 0x3c, 0x3c0, 0x3c00};
-	unsigned int digit_shift[] = {1, 2, 6, 10};
+	static constexpr std::array<unsigned int, 4> digit_map = {0x2, 0x3c, 0x3c0, 0x3c00};
+	static constexpr std::array<unsigned int, 4> digit_shift = {1, 2, 6, 10};
 
 	unsigned int sign;
 	unsigned int decimal;

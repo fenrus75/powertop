@@ -413,7 +413,7 @@ int utf_ok = -1;
 /* pretty print numbers while limiting the precision */
 std::string fmt_prefix(double n)
 {
-	static const char prefixes[] = "yzafpnum kMGTPEZY";
+	static const std::string prefixes = "yzafpnum kMGTPEZY";
 	int omag, npfx;
 	char pfx;
 	std::string res;

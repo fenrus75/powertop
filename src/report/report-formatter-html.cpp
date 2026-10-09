@@ -51,7 +51,7 @@ static const char report_html_alternative_head[] =
 
 /* ************************************************************************ */
 
-static const char report_html_footer[] =
+static const std::string report_html_footer =
 	"</body>\n"
 	"</html>\n";
 

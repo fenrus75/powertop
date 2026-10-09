@@ -24,6 +24,7 @@
  */
 
 #include "device.h"
+#include <array>
 #include <climits>
 #include <cstdlib>
 #include <memory>
@@ -39,7 +40,7 @@ void device::register_sysfs_path(const std::string &path)
 {
 	std::string current_path = path;
 	int iter = 0;
-	char resolved_path[PATH_MAX + 1];
+	std::array<char, PATH_MAX + 1> resolved_path;
 
 	while (iter++ < 10) {
 		std::string test_path = current_path + "/device";
@@ -49,8 +50,8 @@ void device::register_sysfs_path(const std::string &path)
 			break;
 	}
 
-	if (realpath(current_path.c_str(), resolved_path))
-		real_path = resolved_path;
+	if (realpath(current_path.c_str(), resolved_path.data()))
+		real_path = resolved_path.data();
 	else
 		real_path.clear();
 }

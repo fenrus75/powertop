@@ -57,7 +57,7 @@ usbdevice::usbdevice(const std::string &_name, const std::string &path, const st
 	index = get_param_index(devname);
 	r_index = get_result_index(name);
 	rootport = 0;
-	cached_valid = 0;
+	cached_valid = false;
 
 
 	/* root ports and hubs should count as 0 power ... their activity is derived */

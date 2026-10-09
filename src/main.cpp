@@ -151,10 +151,10 @@ static bool set_refresh_timeout()
 	show_tab(0);
 	unsigned time = 0;
 	std::from_chars(buf.data(), buf.data() + buf.size(), time);
-	if (!time) return 0;
+	if (!time) return false;
 	if (time > 32) time = 32;
 	time_out = time;
-	return 1;
+	return true;
 }
 
 static void print_usage()
@@ -250,7 +250,7 @@ static void do_sleep(int seconds)
 		if (delta <= 0)
 			break;
 
-	} while (1);
+	} while (true);
 }
 
 extern "C" {
@@ -507,7 +507,7 @@ int main(int argc, char **argv)
 		textdomain (PACKAGE);
 #endif
 		ui_notify_user = ui_notify_user_ncurses;
-		while (1) { /* parse commandline options */
+		while (true) { /* parse commandline options */
 			c = getopt_long(argc, argv, "cC::M::r::i:qs:t:w:Vh", long_options, &option_index);
 			/* Detect the end of the options. */
 			if (c == -1)

@@ -30,8 +30,8 @@
 
 device::device(void)
 {
-	cached_valid = 0;
-	hide = 0;
+	cached_valid = false;
+	hide = false;
 }
 
 void device::register_sysfs_path(const std::string &path)

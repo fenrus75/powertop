@@ -185,7 +185,7 @@ public:
 	[[nodiscard]] std::string class_name(void) const override  { return "GPU"; }
 	[[nodiscard]] std::string device_name(void) const override { return fan_label; }
 	std::string human_name(void) override        { return fan_label; }
-	virtual double      power_usage([[maybe_unused]] struct result_bundle *r,
+	double      power_usage([[maybe_unused]] struct result_bundle *r,
 				        [[maybe_unused]] struct parameter_bundle *b) override
 			{ return 0.0; }
 	[[nodiscard]] bool        show_in_list(void) const override { return true; }

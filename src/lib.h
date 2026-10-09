@@ -77,6 +77,7 @@ extern std::string kernel_function(uint64_t address);
 
 
 #include <chrono>
+#include <cstdio>
 #include <ctime>
 #include <sys/time.h>
 
@@ -116,10 +117,14 @@ extern std::string fmt_prefix(double n);
 extern std::string pretty_print(const std::string &str);
 extern int equals(double a, double b);
 
+/* Copy a NUL-terminated string into a fixed-size C array at an OS API
+ * boundary (e.g. struct ifreq::ifr_name), truncating rather than
+ * overflowing if the source does not fit. snprintf() is used instead of
+ * strncpy() so the destination capacity (not the source length) is what
+ * bounds the copy, and the result is always NUL-terminated. */
 template<size_t N> void pt_strcpy(char (&d)[N], const char *s)
 {
-	strncpy(d, s, N);
-	d[N-1] = '\0';
+	snprintf(d, N, "%s", s);
 }
 
 /* ── JSON serialization helpers ────────────────────────────────────────── */

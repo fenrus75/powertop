@@ -68,7 +68,7 @@ int ethernet_tunable::get_wol(uint32_t &wolopts) const
 	if (sock < 0)
 		return -1;
 
-	strncpy(ifr.ifr_name, interf.c_str(), IFNAMSIZ - 1);
+	pt_strcpy(ifr.ifr_name, interf.c_str());
 
 	if (ioctl(sock, SIOCGIFFLAGS, &ifr) < 0) {
 		close(sock);
@@ -101,7 +101,7 @@ void ethernet_tunable::set_wol(uint32_t wolopts)
 	if (sock < 0)
 		return;
 
-	strncpy(ifr.ifr_name, interf.c_str(), IFNAMSIZ - 1);
+	pt_strcpy(ifr.ifr_name, interf.c_str());
 	wol.cmd = ETHTOOL_SWOL;
 	wol.wolopts = wolopts;
 	ifr.ifr_data = (caddr_t)&wol;

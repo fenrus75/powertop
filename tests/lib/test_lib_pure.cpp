@@ -3,11 +3,13 @@
  *   is_turbo, percentage, hz_to_human, equals, fmt_prefix,
  *   format_watts, pretty_print, pci_id_to_name (HAVE_NO_PCI stub),
  *   end_pci_access (HAVE_NO_PCI stub)
+ * Also covers the header-only pt_strcpy() helper in src/lib.h.
  *
  * No test-framework fixtures needed — all inputs are computed inline.
  * Live system data informs the frequency values used (cpu0 max = 4500000 kHz).
  */
 #include <cstdlib>
+#include <cstring>
 #include "lib.h"
 #include "test_framework.h"
 #include "../test_helper.h"
@@ -276,6 +278,45 @@ static void test_format_watts_aligned()
 	PT_ASSERT_TRUE(s.size() >= 20);
 }
 
+/* ── pt_strcpy ───────────────────────────────────────────────────────────
+ * pt_strcpy() is the designated helper for copying std::string data into
+ * fixed-size C arrays at OS API boundaries (e.g. struct ifreq::ifr_name,
+ * struct hci_dev_info::name) where std::string cannot be used directly.
+ * It must always null-terminate the destination, truncating rather than
+ * overflowing when the source is too long for the buffer. */
+
+static void test_pt_strcpy_short_string()
+{
+	char buf[8];
+	pt_strcpy(buf, "ab");
+	PT_ASSERT_EQ(std::string(buf), std::string("ab"));
+}
+
+static void test_pt_strcpy_exact_fit()
+{
+	/* source length == N-1 (leaves room for the terminator) */
+	char buf[4];
+	pt_strcpy(buf, "abc");
+	PT_ASSERT_EQ(std::string(buf), std::string("abc"));
+}
+
+static void test_pt_strcpy_truncates_and_terminates()
+{
+	/* source longer than the buffer must be truncated to N-1 chars
+	 * and the buffer must still be NUL-terminated. */
+	char buf[4];
+	pt_strcpy(buf, "abcdef");
+	PT_ASSERT_EQ(std::string(buf), std::string("abc"));
+	PT_ASSERT_EQ(buf[3], '\0');
+}
+
+static void test_pt_strcpy_empty_string()
+{
+	char buf[4] = { 'x', 'x', 'x', 'x' };
+	pt_strcpy(buf, "");
+	PT_ASSERT_EQ(buf[0], '\0');
+}
+
 /* ── main ───────────────────────────────────────────────────────────────── */
 
 int main()
@@ -338,6 +379,12 @@ int main()
 	PT_RUN_TEST(test_format_watts_normal);
 	PT_RUN_TEST(test_format_watts_tiny_zero);
 	PT_RUN_TEST(test_format_watts_aligned);
+
+	std::cout << "\n=== pt_strcpy tests ===\n";
+	PT_RUN_TEST(test_pt_strcpy_short_string);
+	PT_RUN_TEST(test_pt_strcpy_exact_fit);
+	PT_RUN_TEST(test_pt_strcpy_truncates_and_terminates);
+	PT_RUN_TEST(test_pt_strcpy_empty_string);
 
 	return pt_test_summary();
 }

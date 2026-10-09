@@ -50,8 +50,7 @@
 
 #include <sys/types.h>
 #include <sys/ioctl.h>
-
-#include <sys/stat.h>
+#include <filesystem>
 
 #include "measurement.h"
 #include "extech.h"
@@ -73,14 +72,10 @@ struct packet {
 
 static int open_device(const std::string &device_name)
 {
-	struct stat s;
 	int ret;
 
-	ret = stat(device_name.c_str(), &s);
-	if (ret < 0)
-		return -1;
-
-	if (!S_ISCHR(s.st_mode))
+	std::error_code ec;
+	if (!std::filesystem::is_character_file(device_name, ec) || ec)
 		return -1;
 
 	ret = pt_access(device_name, R_OK | W_OK);

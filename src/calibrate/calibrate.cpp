@@ -25,6 +25,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <filesystem>
 #include <format>
 
 #include "calibrate.h"
@@ -218,7 +219,7 @@ static void *burn_disk([[maybe_unused]] void *dummy)
 			fprintf(stderr, _("Error: %s\n"), strerror(errno));
 		fdatasync(fd);
 	}
-	unlink(filename);
+	std::filesystem::remove(filename);
 	return nullptr;
 }
 

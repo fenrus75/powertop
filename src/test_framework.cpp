@@ -51,12 +51,12 @@ void test_framework_manager::set_replay(const std::string& filename) {
 
 void test_framework_manager::record_read(const std::string& path, const std::string& content) {
 	if (!recording) return;
-	recorded_reads.push_back({path, content});
+	recorded_reads.emplace_back(path, content);
 }
 
 void test_framework_manager::record_read_fail(const std::string& path) {
 	if (!recording) return;
-	recorded_reads.push_back({path, "__POWERTOP_FILE_NOT_FOUND__"});
+	recorded_reads.emplace_back(path, "__POWERTOP_FILE_NOT_FOUND__");
 }
 
 std::string test_framework_manager::replay_read(const std::string& path) {
@@ -81,13 +81,13 @@ std::string test_framework_manager::replay_read(const std::string& path) {
 
 void test_framework_manager::record_write(const std::string& path, const std::string& content) {
 	if (!recording) return;
-	recorded_writes.push_back({path, content});
-	write_log.push_back({path, content});
+	recorded_writes.emplace_back(path, content);
+	write_log.emplace_back(path, content);
 }
 
 void test_framework_manager::replay_write(const std::string& path, const std::string& content) {
 	if (!replaying) return;
-	write_log.push_back({path, content});
+	write_log.emplace_back(path, content);
 	if (debug_mode)
 		std::cerr << "[pttest] write: " << path << " = \"" << content << "\"\n";
 	if (write_sequences.count(path) == 0) {
@@ -115,7 +115,7 @@ test_framework_manager::get_write_log() const {
 
 void test_framework_manager::record_msr(int cpu, uint64_t offset, uint64_t value) {
 	if (!recording) return;
-	recorded_msrs.push_back({cpu, offset, value});
+	recorded_msrs.emplace_back(cpu, offset, value);
 }
 
 int test_framework_manager::replay_msr(int cpu, uint64_t offset, uint64_t *value) {
@@ -133,7 +133,7 @@ int test_framework_manager::replay_msr(int cpu, uint64_t offset, uint64_t *value
 
 void test_framework_manager::record_readlink(const std::string& path, const std::string& target) {
 	if (!recording) return;
-	recorded_links.push_back({path, target});
+	recorded_links.emplace_back(path, target);
 }
 
 std::string test_framework_manager::replay_readlink(const std::string& path) {
@@ -155,12 +155,12 @@ void test_framework_manager::record_dir(const std::string& path, const std::vect
 		if (i > 0) joined += '\n';
 		joined += entries[i];
 	}
-	recorded_dirs.push_back({path, joined});
+	recorded_dirs.emplace_back(path, joined);
 }
 
 void test_framework_manager::record_dir_fail(const std::string& path) {
 	if (!recording) return;
-	recorded_dirs.push_back({path, ""});
+	recorded_dirs.emplace_back(path, "");
 }
 
 std::vector<std::string> test_framework_manager::replay_dir(const std::string& path) {
@@ -318,7 +318,7 @@ void test_framework_manager::load() {
 		std::string rest = line.substr(first_space + 1);
 
 		if (type == 'N') {
-			read_sequences[rest].push_back("__POWERTOP_FILE_NOT_FOUND__");
+			read_sequences[rest].emplace_back("__POWERTOP_FILE_NOT_FOUND__");
 			continue;
 		}
 

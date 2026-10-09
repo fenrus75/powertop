@@ -198,12 +198,12 @@ static std::string get_tep_field_str(void *trace, struct tep_event *event, struc
 	if (field->flags & TEP_FIELD_IS_DYNAMIC) {
 		offset = field->offset;
 		len = field->size;
-		offset = tep_read_number(event->tep, (char *)trace + offset, len);
+		offset = tep_read_number(event->tep, static_cast<char *>(trace) + offset, len);
 		offset &= 0xffff;
-		return (char *)trace + offset;
+		return static_cast<char *>(trace) + offset;
 	}
 	/** no __data_loc field type*/
-	return (char *)trace + field->offset;
+	return static_cast<char *>(trace) + field->offset;
 }
 
 void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time)
@@ -268,7 +268,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		}
 
 		if (consumer_depth(cpu) == 1)
-			old_proc = (class process *)current_consumer(cpu);
+			old_proc = static_cast<class process *>(current_consumer(cpu));
 
 		if (old_proc && old_proc->name() != "process")
 			old_proc = nullptr;
@@ -317,7 +317,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 
 		if ( (flags & TRACE_FLAG_HARDIRQ) || (flags & TRACE_FLAG_SOFTIRQ)) {
 			class timer *timer;
-			timer = (class timer *) current_consumer(cpu);
+			timer = static_cast<class timer *>(current_consumer(cpu));
 			if (timer && timer->name() == "timer") {
 				if (timer->handler != "delayed_work_timer_fn" &&
 				    timer->handler != "hrtimer_wakeup" &&
@@ -350,7 +350,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			from = nullptr;
 			from_proc = nullptr;
 		} else {
-			from_proc = (class process *) from;
+			from_proc = static_cast<class process *>(from);
 		}
 
 		if (from_proc && (dest_proc->running == 0) && (dest_proc->waker == nullptr) && (pid != 0) && !dont_blame_me(from_proc->comm))
@@ -396,7 +396,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		uint64_t t;
 
 		/* find interrupt (top of stack) */
-		irq = (class interrupt *)current_consumer(cpu);
+		irq = static_cast<class interrupt *>(current_consumer(cpu));
 		if (!irq || irq->name() != "interrupt")
 			return;
 		pop_consumer(cpu);
@@ -434,7 +434,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		class interrupt *irq = nullptr;
 		uint64_t t;
 
-		irq = (class interrupt *) current_consumer(cpu);
+		irq = static_cast<class interrupt *>(current_consumer(cpu));
 		if (!irq  || irq->name() != "interrupt")
 			return;
 		pop_consumer(cpu);
@@ -482,7 +482,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			return;
 		tmr = (uint64_t)val;
 
-		timer = (class timer *) current_consumer(cpu);
+		timer = static_cast<class timer *>(current_consumer(cpu));
 		if (!timer || timer->name() != "timer") {
 			return;
 		}
@@ -522,7 +522,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		uint64_t tmr;
 		uint64_t t;
 
-		timer = (class timer *) current_consumer(cpu);
+		timer = static_cast<class timer *>(current_consumer(cpu));
 		if (!timer || timer->name() != "timer") {
 			return;
 		}
@@ -575,7 +575,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			return;
 		wk = (uint64_t)val;
 
-		work = (class work *) current_consumer(cpu);
+		work = static_cast<class work *>(current_consumer(cpu));
 		if (!work || work->name() != "work") {
 			return;
 		}
@@ -624,7 +624,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 		/* if we are X, and someone just woke us, account the GPU op to the guy waking us */
 		if (consumer && consumer->name() == "process") {
 			class process *proc = nullptr;
-			proc = (class process *) consumer;
+			proc = static_cast<class process *>(consumer);
 			if (comm_is_xorg(proc->comm) && proc->last_waker) {
 				consumer = proc->last_waker;
 			}
@@ -655,7 +655,7 @@ void perf_process_bundle::handle_trace_point(void *trace, int cpu, uint64_t time
 			consumer = nullptr;
 
 		if (consumer && consumer->name() == "process") {
-			class process *proc = (class process *) consumer;
+			class process *proc = static_cast<class process *>(consumer);
 			if (comm_is_xorg(proc->comm) && proc->last_waker)
 				consumer = proc->last_waker;
 		}

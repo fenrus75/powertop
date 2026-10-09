@@ -346,7 +346,7 @@ extern "C"
 	void* thread_proc(void *arg)
 	{
 		class extech_power_meter *parent;
-		parent = (class extech_power_meter*)arg;
+		parent = static_cast<class extech_power_meter *>(arg);
 		parent->sample();
 		return 0;
 	}

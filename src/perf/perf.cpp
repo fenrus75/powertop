@@ -128,8 +128,8 @@ void perf_event::create_perf_event([[maybe_unused]] const std::string &eventname
 		fprintf(stderr, _("failed to enable perf\n"));
 	}
 
-	pc = (perf_event_mmap_page *)perf_mmap;
-	data_mmap = (unsigned char *)perf_mmap + getpagesize();
+	pc = static_cast<perf_event_mmap_page *>(perf_mmap);
+	data_mmap = static_cast<unsigned char *>(perf_mmap) + getpagesize();
 
 
 }
@@ -246,7 +246,7 @@ void perf_event::process(void *cookie)
 		while (pc->data_tail >= (unsigned int)bufsize * getpagesize())
 			pc->data_tail -= bufsize * getpagesize();
 
-		header = (struct perf_event_header *)( (unsigned char *)data_mmap + pc->data_tail);
+		header = reinterpret_cast<struct perf_event_header *>(static_cast<unsigned char *>(data_mmap) + pc->data_tail);
 
 		if (header->size == 0)
 			break;

@@ -131,7 +131,7 @@ int bt_tunable::hci_get_dev_info(unsigned int &flags,
 
 	memset(&devinfo, 0, sizeof(devinfo));
 	pt_strcpy(devinfo.name, bt_name.c_str());
-	const int ret = ioctl(fd, HCIGETDEVINFO, (void *) &devinfo);
+	const int ret = ioctl(fd, HCIGETDEVINFO, static_cast<void *>(&devinfo));
 	close(fd);
 	if (ret < 0)
 		return -1;

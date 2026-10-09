@@ -255,7 +255,7 @@ static void wakeup_calibration(const unsigned long interval)
 
 	stop_measurement = 0;
 
-	if (pthread_create(&thr, nullptr, burn_cpu_wakeups, (void *)(uintptr_t)interval) != 0) {
+	if (pthread_create(&thr, nullptr, burn_cpu_wakeups, reinterpret_cast<void *>(static_cast<uintptr_t>(interval))) != 0) {
 		fprintf(stderr, _("Failed to create wakeup calibration thread\n"));
 		return;
 	}

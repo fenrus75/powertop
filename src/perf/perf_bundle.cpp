@@ -60,13 +60,13 @@ void perf_bundle_event::handle_event(const struct perf_event_header *header, voi
 	unsigned char *buffer;
 	std::vector<void *> *vector;
 
-	buffer = (unsigned char *)malloc(header->size);
+	buffer = static_cast<unsigned char *>(malloc(header->size));
 	memcpy(buffer, header, header->size);
 
 #ifdef USE_DECLTYPE
-	vector = (decltype(vector))cookie;
+	vector = static_cast<decltype(vector)>(cookie);
 #else
-	vector = (typeof(vector))cookie;
+	vector = static_cast<decltype(vector)>(cookie);
 #endif
 	vector->push_back(buffer);
 }
@@ -148,7 +148,7 @@ static uint64_t timestamp(const perf_event_header *event)
 	if (event->type != PERF_RECORD_SAMPLE)
 		return 0;
 
-	sample = (struct perf_sample *)event;
+	sample = reinterpret_cast<struct perf_sample *>(const_cast<perf_event_header *>(event));
 
 #if 0
 	int i;
@@ -182,8 +182,8 @@ static bool event_sort_function (const void *i, const void *j)
 {
 	const struct perf_event_header *I, *J;
 
-	I = (const struct perf_event_header *) i;
-	J = (const struct perf_event_header *) j;
+	I = static_cast<const struct perf_event_header *>(i);
+	J = static_cast<const struct perf_event_header *>(j);
 	return (timestamp(I)<timestamp(J));
 }
 
@@ -220,7 +220,7 @@ void perf_bundle::process(void)
 	std::sort(records.begin(), records.end(), event_sort_function);
 
 	for (auto record : records) {
-		struct perf_sample *sample = (struct perf_sample *)record;
+		struct perf_sample *sample = static_cast<struct perf_sample *>(record);
 		if (!sample)
 			continue;
 

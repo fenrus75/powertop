@@ -344,7 +344,7 @@ extern "C"
 		class extech_power_meter *parent;
 		parent = static_cast<class extech_power_meter *>(arg);
 		parent->sample();
-		return 0;
+		return nullptr;
 	}
 }
 

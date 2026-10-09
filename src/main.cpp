@@ -262,7 +262,7 @@ extern "C" {
 			do_sleep(sleep_time);
 			global_sample_power();
 		}
-		return 0;
+		return nullptr;
 	}
 }
 

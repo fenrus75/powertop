@@ -48,9 +48,9 @@ reachability first, then smallest blast radius).
 
 | ID | Rule | Location | Externally visible? | Status | Commit |
 | :-- | :--- | :------- | :------------------- | :----- | :----- |
-| A1 | Banned C String Functions (`strncpy`) | `src/lib.h:118` `pt_strcpy()` helper (used by `src/devices/network.cpp:183,207,232`) | No (internal helper) | pending | |
-| A2 | Banned C String Functions (`strncpy`) | `src/tuning/ethernet.cpp:71,104` (direct `strncpy` into `ifr.ifr_name`) | No | pending | |
-| A3 | Banned C String Functions (`strncpy`) | `src/tuning/bluetooth.cpp:133` (direct `strncpy` into `devinfo.name`) | No | pending | |
+| A1 | Banned C String Functions (`strncpy`) | `src/lib.h:118` `pt_strcpy()` helper (used by `src/devices/network.cpp:183,207,232`) | No (internal helper) | done | 186a270 |
+| A2 | Banned C String Functions (`strncpy`) | `src/tuning/ethernet.cpp:71,104` (direct `strncpy` into `ifr.ifr_name`) | No | done | 186a270 |
+| A3 | Banned C String Functions (`strncpy`) | `src/tuning/bluetooth.cpp:133` (direct `strncpy` into `devinfo.name`) | No | done | 186a270 |
 | A4 | No C-Style Casts (`dangerousTypeCast`, possible invalid conversion) | `src/process/do_process.cpp:201,271,320,353,399,437,485,525,578,627,658` | No | pending | |
 | A5 | No C-Style Casts (`dangerousTypeCast`) | `src/perf/perf_bundle.cpp:151` | No | pending | |
 | A6 | No C-Style Casts (`cstyleCast`, pointer casts) | `src/calibrate/calibrate.cpp:258`, `src/measurement/extech.cpp:349`, `src/perf/perf.cpp:131,132,249`, `src/perf/perf_bundle.cpp:63,185,186,223`, `src/tuning/bluetooth.cpp:134` | No | pending | |
@@ -112,7 +112,7 @@ backlog. Recorded here for Phase 3 residual-findings tracking:
 
 ## Phase 3 status (to be updated as the backlog is worked)
 
-Backlog built this session; execution starts with A1-A3. All items remain
-`pending` until a Phase 2 pass closes them, tracked above for future
-sessions per the protocol's multi-session design — this backlog is
-committed so progress persists.
+Completed this session: A1, A2, A3 (commit `186a270`). All other items
+remain `pending` and are tracked above for future sessions, per the
+protocol's multi-session design — this backlog is committed so progress
+persists.

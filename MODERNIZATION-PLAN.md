@@ -87,7 +87,7 @@ reachability first, then smallest blast radius).
 | B4 | Scoped Locks (`modernize-use-scoped-lock`) | 3 sites — see `clang_tidy_out.txt` grep `modernize-use-scoped-lock` | No | done | 3fdfed5 |
 | B5 | Initialize Before Use (`modernize-use-default-member-init`) | 10 sites — see `clang_tidy_out.txt` grep `modernize-use-default-member-init` | No | done | 685a946 (all 10 were redundant ctor-init-list entries duplicating an existing in-class default; removed the duplicates) |
 | B6 | Rule of Zero/Five (`modernize-use-equals-default`) | 5 sites — see `clang_tidy_out.txt` grep `modernize-use-equals-default` | No | done | 622092d |
-| B7 | Initialize Before Use (`uninitMemberVar`/`uninitMemberVarNoCtor`, cppcheck) | 71 sites across many classes — see `cppcheck_out.txt`; needs per-class triage before fixing (may already be initialized via base class or `collect_json_fields` pattern) | No | pending | |
+| B7 | Initialize Before Use (`uninitMemberVar`/`uninitMemberVarNoCtor`, cppcheck) | 71 sites triaged: 23 in `src/perf/perf_event.h` (dead code under never-defined `CONFIG_PERF_EVENTS`, kernel ABI mirror — excluded), 38 in `src/perf/perf.cpp` (cppcheck false positive from a `perf_event` name collision between the real class in `perf.h` and the dead mirror struct in `perf_event.h` — excluded), 5 in `src/perf/perf_bundle.cpp` (packed kernel trace-ABI mirror structs — excluded), 5 in `src/gpu-tab.cpp` (`freq_row`, genuine local struct — fixed) | No | done | 260dca8 |
 
 ### Tier C — Idiomatic modernization
 

@@ -335,7 +335,7 @@ void extech_power_meter::sample(void)
 
 		double v = extech_read(fd);
 		if (v >= 0.0) {
-			std::lock_guard<std::mutex> lock(samples_mutex);
+			std::scoped_lock lock(samples_mutex);
 			sum += v;
 			samples++;
 		}
@@ -361,7 +361,7 @@ void extech_power_meter::end_measurement(void)
 		thread_started = false;
 	}
 	{
-		std::lock_guard<std::mutex> lock(samples_mutex);
+		std::scoped_lock lock(samples_mutex);
 		if (samples)
 			rate = sum / samples;
 		else
@@ -373,7 +373,7 @@ void extech_power_meter::start_measurement(void)
 {
 	end_thread = false;
 	{
-		std::lock_guard<std::mutex> lock(samples_mutex);
+		std::scoped_lock lock(samples_mutex);
 		sum = 0.0;
 		samples = 0;
 	}

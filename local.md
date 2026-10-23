@@ -257,7 +257,6 @@ Run: `sudo valgrind --leak-check=full --show-leak-kinds=all build/powertop --htm
 
 Known remaining "out of scope" library-internal leaks (do not fix):
 - 20 bytes: libtracefs internal `strdup` of tracing dir path (no public cleanup API)
-- 21 bytes: libpci `pci_lookup_name` internal buffer not freed by `pci_cleanup()` (libpci bug)
 
 Fixed leaks (commit 7791a45):
 - `end_pci_access()`: replaced `pci_free_name_list()` with `pci_cleanup()` + null pointer
@@ -676,3 +675,13 @@ Mode 4 against this repo for the first time. Key facts for future runs:
   kernel signatures and should NOT be made const; `src/perf/perf.cpp`,
   `src/measurement/measurement_manager.cpp`). These are documented as
   future-session findings in `MODERNIZATION-PLAN.md`, not a regression.
+- clang-tidy `clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling`
+  flags every `fprintf`/`printf` (e.g. `src/tuning/iw.c`) suggesting Annex K
+  `fprintf_s`, which glibc lacks. False positive for literal formats; suppress
+  the check rather than change code. `src/tuning/iw.c` has no unsafe string
+  functions; its only real issue is the unchecked `nl_recvmsgs()` loop (~l.255).
+
+## PCI name lookup (libpci removed)
+- libpci is no longer used; `src/lib.cpp` parses pci.ids itself (lazy, cached in maps, searched in /usr/share/hwdata, /usr/share/misc, /usr/share).
+- `-DHAVE_NO_PCI` is now only a test switch: it stops the host pci.ids from being loaded. Tests feed fixtures via `pci_ids_parse(std::istream&)`.
+- Decision recorded: user chose "own parser, remove libpci" over a meson option; the valgrind suppression and 21-byte leak exception were dropped.

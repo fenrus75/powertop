@@ -15,16 +15,3 @@
    fun:tracefs_tracing_dir
 }
 
-# libpci allocates an internal name buffer inside pci_lookup_name() that
-# pci_cleanup() does not free.  This is a libpci internal bug.
-{
-   libpci-lookup-name-internal
-   Memcheck:Leak
-   match-leak-kinds: definite
-   fun:malloc
-   obj:*/libpci.so*
-   obj:*/libpci.so*
-   obj:*/libpci.so*
-   obj:*/libpci.so*
-   fun:pci_lookup_name
-}

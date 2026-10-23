@@ -18,7 +18,6 @@ jobs:
           sudo apt-get update -q
           sudo apt-get install -y \
             meson ninja-build pkg-config \
-            libpci-dev \
             libnl-3-dev libnl-genl-3-dev \
             libncursesw5-dev \
             libtracefs-dev libtraceevent-dev \

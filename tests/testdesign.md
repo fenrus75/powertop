@@ -57,7 +57,7 @@ test_<area>_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',     # always on for test binaries
-    '-DHAVE_NO_PCI',               # avoid pci.h dependency unless needed
+    '-DHAVE_NO_PCI',               # never read the host's pci.ids
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],    # lib.cpp pulls in ncurses headers
@@ -69,8 +69,9 @@ test('<area>: <subject>', test_<area>_exe)
 Key points:
 - **Always define `-DENABLE_TEST_FRAMEWORK`** in test binaries — the recording
   and replay APIs are compiled out otherwise.
-- **`-DHAVE_NO_PCI`** avoids a `libpci` link dependency unless the test
-  subject genuinely needs PCI lookups.
+- **`-DHAVE_NO_PCI`** stops `pci_id_to_name()` from loading the host's
+  `pci.ids`, keeping tests hermetic; use `pci_ids_parse()` with a fixture
+  stream to test lookups.
 - **`-DTEST_DATA_DIR`** is set to the absolute source-tree path of the `data/`
   subdirectory at configure time, so the test binary can locate fixtures
   regardless of where the build directory is.

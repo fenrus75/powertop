@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <atomic>
 #include <cctype>
+#include <charconv>
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
@@ -41,6 +42,7 @@
 #include <mutex>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -54,12 +56,6 @@
 #include "display.h"
 #include "lib.h"
 #include "test_framework.h"
-
-#ifndef HAVE_NO_PCI
-extern "C" {
-#include <pci/pci.h>
-}
-#endif
 
 extern void set_notification(const std::string &msg) __attribute__((weak));
 
@@ -369,43 +365,122 @@ std::string format_watts(double W, unsigned int len)
 	return buffer;
 }
 
+/*
+ * Minimal pci.ids parser. Format (see pci.ids header):
+ *   - '#' comment lines and blank lines are ignored
+ *   - "vvvv  Vendor name"            starts a vendor (column 0, 4 hex digits)
+ *   - "<tab>dddd  Device name"       device of the current vendor
+ *   - "<tab><tab>..."                subsystem lines, ignored
+ *   - "C xx  Class name" and later   device-class section, ends the vendor list
+ * Vendor and device ids are keyed as (vendor << 16 | device); a device-less
+ * vendor entry uses device id 0 in the separate vendor map.
+ */
+static std::map<uint16_t, std::string> pci_vendor_names;
+static std::map<uint32_t, std::string> pci_device_names;
+static bool pci_ids_loaded;
+
+/* Parses exactly 4 hex digits at the start of s; returns false otherwise */
+static bool parse_pci_hex4(std::string_view s, uint16_t &out)
+{
+	if (s.size() < 4)
+		return false;
+	unsigned int v = 0;
+	auto [ptr, ec] = std::from_chars(s.data(), s.data() + 4, v, 16);
+	if (ec != std::errc() || ptr != s.data() + 4)
+		return false;
+	out = static_cast<uint16_t>(v);
+	return true;
+}
+
+/* Returns the name following the id: skips the separating whitespace */
+static std::string pci_name_after_id(std::string_view s)
+{
+	size_t pos = s.find_first_not_of(" \t", 4);
+	if (pos == std::string_view::npos)
+		return {};
+	return std::string(s.substr(pos));
+}
+
+void pci_ids_parse(std::istream &in)
+{
+	pci_vendor_names.clear();
+	pci_device_names.clear();
+	pci_ids_loaded = true;
+
+	std::string line;
+	bool have_vendor = false;
+	uint16_t vendor = 0;
+
+	while (std::getline(in, line)) {
+		if (!line.empty() && line.back() == '\r')
+			line.pop_back();
+		if (line.empty() || line[0] == '#')
+			continue;
+
+		if (line[0] == '\t') {
+			if (!have_vendor || line.size() < 2 || line[1] == '\t' || line[1] == '#')
+				continue;
+			uint16_t device;
+			std::string_view body(line);
+			body.remove_prefix(1);
+			if (parse_pci_hex4(body, device))
+				pci_device_names[(uint32_t(vendor) << 16) | device] = pci_name_after_id(body);
+			continue;
+		}
+
+		/* The class section follows the vendor section; nothing more to read */
+		if (line[0] == 'C' && line.size() > 1 && line[1] == ' ')
+			break;
+
+		have_vendor = parse_pci_hex4(line, vendor);
+		if (have_vendor)
+			pci_vendor_names[vendor] = pci_name_after_id(line);
+	}
+}
+
 #ifndef HAVE_NO_PCI
-static struct pci_access *pci_access;
+static void pci_ids_load_system(void)
+{
+	static const char *const paths[] = {
+		"/usr/share/hwdata/pci.ids",
+		"/usr/share/misc/pci.ids",
+		"/usr/share/pci.ids",
+	};
+
+	for (const char *path : paths) {
+		std::ifstream file(path);
+		if (file) {
+			pci_ids_parse(file);
+			return;
+		}
+	}
+	pci_ids_loaded = true; /* no database installed: names stay unknown */
+}
+#endif
 
 std::string pci_id_to_name(uint16_t vendor, uint16_t device)
 {
-	const int len = 4096;
-	std::vector<char> buf(len);
+#ifndef HAVE_NO_PCI
+	if (!pci_ids_loaded)
+		pci_ids_load_system();
+#endif
 
-	if (!pci_access) {
-		pci_access = pci_alloc();
-		pci_init(pci_access);
-	}
+	auto v = pci_vendor_names.find(vendor);
+	if (v == pci_vendor_names.end())
+		return {};
 
-	const char *ret = pci_lookup_name(pci_access, buf.data(), len, PCI_LOOKUP_VENDOR | PCI_LOOKUP_DEVICE, vendor, device);
-	return ret ? std::string(ret) : std::string();
+	auto d = pci_device_names.find((uint32_t(vendor) << 16) | device);
+	if (d == pci_device_names.end())
+		return v->second;
+	return v->second + " " + d->second;
 }
 
 void end_pci_access(void)
 {
-	if (pci_access) {
-		pci_cleanup(pci_access);
-		pci_access = nullptr;
-	}
+	pci_vendor_names.clear();
+	pci_device_names.clear();
+	pci_ids_loaded = false;
 }
-
-#else
-
-std::string pci_id_to_name([[maybe_unused]] uint16_t vendor, [[maybe_unused]] uint16_t device)
-{
-	return {};
-}
-
-void end_pci_access(void)
-{
-}
-
-#endif /* HAVE_NO_PCI */
 
 int utf_ok = -1;
 

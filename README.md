@@ -26,12 +26,12 @@ PowerTOP is written in C++ and targets Linux. It requires the
 * `libnl-3` (required)
 * `libtracefs` (required)
 * `libtraceevent` (required)
-* `libpci` (optional — only needed if the system has PCI devices)
+* `pci.ids` database (optional runtime data, e.g. the `hwdata` package — used to show PCI device names)
 * `gettext` (optional — for translated messages)
 
 Example packages to install on Ubuntu:
 
-    sudo apt install meson ninja-build libpci-dev libnl-3-dev libnl-genl-3-dev \
+    sudo apt install meson ninja-build libnl-3-dev libnl-genl-3-dev \
     libncursesw5-dev libtracefs-dev libtraceevent-dev gettext pkg-config
 
 

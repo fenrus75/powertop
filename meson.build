@@ -23,11 +23,6 @@ if not ncursesw_dep.found()
   endif
 endif
 
-pciutils_dep = dependency('libpci', required: false)
-if not pciutils_dep.found()
-  pciutils_dep = cc.find_library('pci', required: false)
-endif
-
 libtracefs_dep = dependency('libtracefs', required: true)
 
 libnl3_dep = dependency('libnl-3.0', version: '>= 3.0', required: false)
@@ -72,10 +67,6 @@ conf_data.set_quoted('LOCALEDIR', join_paths(get_option('prefix'), get_option('l
 
 if has_libnl20
   conf_data.set('HAVE_LIBNL20', 1)
-endif
-
-if not pciutils_dep.found()
-  conf_data.set('HAVE_NO_PCI', 1)
 endif
 
 check_headers = [
@@ -297,7 +288,6 @@ powertop_exe = executable('powertop',
   include_directories: [src_inc, include_directories('.')],
   dependencies: [
     ncursesw_dep,
-    pciutils_dep,
     libtracefs_dep,
     libnl_deps,
     pthread_dep,

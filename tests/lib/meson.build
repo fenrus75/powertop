@@ -92,17 +92,11 @@ test_lib_kallsyms_empty_exe = executable(
 )
 test('lib_ kallsyms empty content', test_lib_kallsyms_empty_exe)
 
-if pciutils_dep.found()
-  test_lib_pci_exe = executable(
-    'powertop-test-lib-pci',
-    _lib_sources + ['test_lib_pci.cpp'],
-    include_directories: _lib_incdirs,
-    cpp_args: [
-      '-DENABLE_TEST_FRAMEWORK',
-      # deliberately NO -DHAVE_NO_PCI so real pci_* functions are compiled
-      '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
-    ],
-    dependencies: [ncursesw_dep, pciutils_dep],
-  )
-  test('lib_ pci id lookup', test_lib_pci_exe)
-endif
+test_lib_pci_exe = executable(
+  'powertop-test-lib-pci',
+  _lib_sources + ['test_lib_pci.cpp'],
+  include_directories: _lib_incdirs,
+  cpp_args: _lib_cpp_args,
+  dependencies: [ncursesw_dep],
+)
+test('lib_ pci id lookup', test_lib_pci_exe)

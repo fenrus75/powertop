@@ -305,7 +305,9 @@ static void test_pt_strcpy_truncates_and_terminates()
 	/* source longer than the buffer must be truncated to N-1 chars
 	 * and the buffer must still be NUL-terminated. */
 	char buf[4];
-	pt_strcpy(buf, "abcdef");
+	/* volatile hides the literal's length so GCC can't constant-fold a truncation warning */
+	const char *volatile src = "abcdef";
+	pt_strcpy(buf, src);
 	PT_ASSERT_EQ(std::string(buf), std::string("abc"));
 	PT_ASSERT_EQ(buf[3], '\0');
 }

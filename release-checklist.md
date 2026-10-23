@@ -79,16 +79,15 @@ in that build; this is expected.
       ```
       sudo valgrind --leak-check=full --show-leak-kinds=all build/powertop --html --time=3
       ```
-      Only the two known library-internal leaks are acceptable (see `local.md`):
+      Only the known library-internal leak is acceptable (see `local.md`):
       - 20 bytes: libtracefs internal strdup
-      - 21 bytes: libpci `pci_lookup_name` buffer (libpci bug)
       Any new leaks must be fixed before release.
 
 - [ ] ASAN leak check (confirms the same with sanitizer instrumentation):
       ```
       ASAN_OPTIONS=detect_leaks=1 sudo -E build_acov/powertop --once --time=3 2>&1 | grep -i "leak\|SUMMARY"
       ```
-      Only the known 21-byte libpci leak is acceptable.
+      No leaks are expected from PowerTOP code.
 
 ## Test coverage
 

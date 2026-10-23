@@ -31,6 +31,7 @@
 #ifdef __cplusplus
 
 #include <format>
+#include <iosfwd>
 #include <string_view>
 #include <vector>
 
@@ -111,6 +112,8 @@ extern std::string format_watts(double W, unsigned int len);
 
 extern std::string pci_id_to_name(uint16_t vendor, uint16_t device);
 extern void end_pci_access(void);
+/* Replaces the vendor/device name tables with the contents of a pci.ids stream (exposed for tests) */
+extern void pci_ids_parse(std::istream &in);
 
 
 extern std::string fmt_prefix(double n);

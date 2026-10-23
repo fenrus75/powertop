@@ -109,3 +109,5 @@ Doxyfile.in.bak
 logs/
 local.md
 clang-native.ini
+.github/mcp*
+.github/instructions/

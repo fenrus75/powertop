@@ -52,31 +52,6 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "../lib.h"
 
 
-#ifndef HAVE_LIBNL20
-/* libnl 2.0 compatibility code */
-
-static inline struct nl_handle *nl_socket_alloc(void)
-{
-	return nl_handle_alloc();
-}
-
-static inline void nl_socket_free(struct nl_sock *h)
-{
-	nl_handle_destroy(h);
-}
-
-static inline int __genl_ctrl_alloc_cache(struct nl_sock *h, struct nl_cache **cache)
-{
-	struct nl_cache *tmp = genl_ctrl_alloc_cache(h);
-	if (!tmp)
-		return -ENOMEM;
-	*cache = tmp;
-	return 0;
-}
-#define genl_ctrl_alloc_cache __genl_ctrl_alloc_cache
-#endif /* HAVE_LIBNL20 */
-
-
 static int nl80211_init(struct nl80211_state *state)
 {
 	int err;

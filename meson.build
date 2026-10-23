@@ -12,48 +12,12 @@ cc = meson.get_compiler('c')
 cpp = meson.get_compiler('cpp')
 
 # Dependencies
-ncursesw_dep = dependency('ncursesw', required: false)
-if not ncursesw_dep.found()
-  ncursesw_dep = dependency('ncurses', required: false)
-endif
-if not ncursesw_dep.found()
-  ncursesw_dep = cc.find_library('ncursesw', required: false)
-  if not ncursesw_dep.found()
-    ncursesw_dep = cc.find_library('ncurses', required: true)
-  endif
-endif
-
+ncursesw_dep = dependency('ncursesw', required: true)
 libtracefs_dep = dependency('libtracefs', required: true)
-
-libnl3_dep = dependency('libnl-3.0', version: '>= 3.0', required: false)
-libnlgenl3_dep = dependency('libnl-genl-3.0', version: '>= 3.0', required: false)
-
-libnl_deps = []
-has_libnl20 = false
-
-if libnl3_dep.found()
-  libnl_deps += [libnl3_dep]
-  if libnlgenl3_dep.found()
-    libnl_deps += [libnlgenl3_dep]
-  else
-    libnlgenl3_dep = cc.find_library('nl-genl-3', required: true)
-    libnl_deps += [libnlgenl3_dep]
-  endif
-  has_libnl20 = true
-else
-  libnl20_dep = dependency('libnl-2.0', version: '>= 2.0', required: false)
-  if libnl20_dep.found()
-    libnl_deps = [libnl20_dep]
-    has_libnl20 = true
-  else
-    libnl1_dep = dependency('libnl-1', required: true)
-    libnl_deps = [libnl1_dep]
-  endif
-endif
-
+libnl3_dep = dependency('libnl-3.0', version: '>= 3.0', required: true)
+libnlgenl3_dep = dependency('libnl-genl-3.0', version: '>= 3.0', required: true)
 pthread_dep = dependency('threads')
 resolv_dep = cc.find_library('resolv', required: true)
-rt_dep = cc.find_library('rt', required: false)
 
 # Configuration
 conf_data = configuration_data()
@@ -64,10 +28,6 @@ conf_data.set_quoted('PACKAGE_STRING', meson.project_name() + ' ' + meson.projec
 conf_data.set_quoted('PACKAGE_BUGREPORT', 'https://github.com/fenrus75/powertop/issues')
 conf_data.set_quoted('PACKAGE_URL', 'https://github.com/fenrus75/powertop')
 conf_data.set_quoted('LOCALEDIR', join_paths(get_option('prefix'), get_option('localedir')))
-
-if has_libnl20
-  conf_data.set('HAVE_LIBNL20', 1)
-endif
 
 check_headers = [
   'fcntl.h',
@@ -289,10 +249,10 @@ powertop_exe = executable('powertop',
   dependencies: [
     ncursesw_dep,
     libtracefs_dep,
-    libnl_deps,
+    libnl3_dep,
+    libnlgenl3_dep,
     pthread_dep,
     resolv_dep,
-    rt_dep,
   ],
   cpp_args: [
     '-Wformat',

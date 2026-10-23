@@ -39,9 +39,8 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "config.h"
 #endif
 
-#ifndef HAVE_LIBNL20
-#define nl_sock nl_handle
-#endif
+
+
 
 struct nl80211_state {
 	struct nl_sock *nl_sock;
@@ -72,4 +71,3 @@ int set_wifi_power_saving(const char *iface, int state);
 #ifdef __cplusplus
 }
 #endif
-

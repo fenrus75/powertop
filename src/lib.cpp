@@ -390,6 +390,7 @@ struct ids_table {
 };
 
 static ids_table pci_ids;
+static ids_table usb_ids;
 
 /* Parses exactly 4 hex digits at the start of s; returns false otherwise */
 static bool parse_hex4(std::string_view s, uint16_t &out)
@@ -509,6 +510,35 @@ std::string pci_id_to_name(uint16_t vendor, uint16_t device)
 void end_pci_access(void)
 {
 	pci_ids.clear();
+}
+
+void usb_ids_parse(std::istream &in)
+{
+	ids_parse(usb_ids, in);
+}
+
+usb_id_names usb_id_to_names(const std::string &id_vendor, const std::string &id_product)
+{
+	uint16_t vendor, product;
+
+	if (id_vendor.size() != 4 || !parse_hex4(id_vendor, vendor) ||
+	    id_product.size() != 4 || !parse_hex4(id_product, product))
+		return {};
+
+#ifndef HAVE_NO_HOST_IDS
+	static const char *const paths[] = {
+		"/usr/share/hwdata/usb.ids",
+		"/usr/share/misc/usb.ids",
+		"/usr/share/usb.ids",
+		"/var/lib/usbutils/usb.ids",
+	};
+
+	if (!usb_ids.loaded)
+		ids_load_system(usb_ids, paths);
+#endif
+
+	auto [vendor_name, product_name] = ids_lookup(usb_ids, vendor, product);
+	return {vendor_name, product_name};
 }
 
 int utf_ok = -1;

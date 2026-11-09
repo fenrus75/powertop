@@ -100,3 +100,12 @@ test_lib_pci_exe = executable(
   dependencies: [ncursesw_dep],
 )
 test('lib_ pci id lookup', test_lib_pci_exe)
+
+test_lib_usb_ids_exe = executable(
+  'powertop-test-lib-usb-ids',
+  _lib_sources + ['test_lib_usb_ids.cpp'],
+  include_directories: _lib_incdirs,
+  cpp_args: _lib_cpp_args,
+  dependencies: [ncursesw_dep],
+)
+test('lib_ usb id lookup', test_lib_usb_ids_exe)

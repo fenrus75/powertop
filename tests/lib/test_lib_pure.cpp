@@ -1,8 +1,8 @@
 /*
  * Tests for pure (no-I/O) functions in src/lib.cpp:
  *   is_turbo, percentage, hz_to_human, equals, fmt_prefix,
- *   format_watts, pretty_print, pci_id_to_name (HAVE_NO_PCI stub),
- *   end_pci_access (HAVE_NO_PCI stub)
+ *   format_watts, pretty_print, pci_id_to_name (HAVE_NO_HOST_IDS stub),
+ *   end_pci_access (HAVE_NO_HOST_IDS stub)
  * Also covers the header-only pt_strcpy() helper in src/lib.h.
  *
  * No test-framework fixtures needed — all inputs are computed inline.
@@ -180,18 +180,18 @@ static void test_pretty_print_unknown_key_passthrough()
 	PT_ASSERT_EQ(pretty_print("some_unknown_device"), "some_unknown_device");
 }
 
-/* ── pci_id_to_name (HAVE_NO_PCI stub) ──────────────────────────────────── */
+/* ── pci_id_to_name (HAVE_NO_HOST_IDS stub) ─────────────────────────────── */
 
 static void test_pci_id_to_name_stub_returns_empty()
 {
 	PT_ASSERT_EQ(pci_id_to_name(0x8086, 0x1234), std::string(""));
 }
 
-/* ── end_pci_access (HAVE_NO_PCI stub) ──────────────────────────────────── */
+/* ── end_pci_access (HAVE_NO_HOST_IDS stub) ─────────────────────────────── */
 
 static void test_end_pci_access_stub()
 {
-	/* HAVE_NO_PCI stub is a no-op; just confirm it doesn't crash */
+	/* HAVE_NO_HOST_IDS stub is a no-op; just confirm it doesn't crash */
 	end_pci_access();
 }
 

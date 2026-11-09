@@ -18,7 +18,7 @@ test_wakeup_base_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
   ],
   dependencies: [ncursesw_dep],
 )
@@ -40,7 +40,7 @@ test_tunable_base_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
   ],
   dependencies: [ncursesw_dep],
 )
@@ -62,7 +62,7 @@ test_device_base_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
   ],
   dependencies: [ncursesw_dep],
 )
@@ -84,7 +84,7 @@ test_power_meter_base_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
   ],
   dependencies: [ncursesw_dep],
 )
@@ -107,7 +107,7 @@ test_power_consumer_base_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
   ],
   dependencies: [ncursesw_dep],
 )
@@ -130,7 +130,7 @@ test_abstract_cpu_base_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
   ],
   dependencies: [ncursesw_dep],
 )
@@ -154,7 +154,7 @@ test_process_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -178,7 +178,7 @@ test_usb_wakeup_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -202,7 +202,7 @@ test_sysfs_pm_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -227,7 +227,7 @@ test_interrupt_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -251,7 +251,7 @@ test_sysfs_tunable_methods_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -276,7 +276,7 @@ test_work_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -300,7 +300,7 @@ test_ethernet_wakeup_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -324,7 +324,7 @@ test_tuningusb_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -349,7 +349,7 @@ test_tuningi2c_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -375,7 +375,7 @@ test_cpu_core_package_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
   ],
   dependencies: [ncursesw_dep],
 )
@@ -399,7 +399,7 @@ test_cpu_linux_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -426,7 +426,7 @@ test_processdevice_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
   ],
   dependencies: [ncursesw_dep],
 )
@@ -450,7 +450,7 @@ test_timer_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -475,7 +475,7 @@ test_runtime_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -500,7 +500,7 @@ test_wifi_tunables_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -528,7 +528,7 @@ test_nhm_cpu_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
   ],
   dependencies: [ncursesw_dep],
 )
@@ -552,7 +552,7 @@ test_learn_parameters_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
   ],
   dependencies: [ncursesw_dep],
 )
@@ -575,7 +575,7 @@ test_parameters_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
   ],
   dependencies: [ncursesw_dep],
 )
@@ -598,7 +598,7 @@ test_bt_tunable_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
   ],
   dependencies: [ncursesw_dep],
 )
@@ -620,7 +620,7 @@ test_eth_tunable_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
   ],
   dependencies: [ncursesw_dep],
 )
@@ -644,7 +644,7 @@ test_network_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
   ],
   dependencies: [ncursesw_dep],
 )
@@ -667,7 +667,7 @@ test_numeric_sysfs_tunable_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],

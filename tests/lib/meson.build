@@ -14,7 +14,7 @@ test_lib_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -36,7 +36,7 @@ test_lib_misc_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -51,7 +51,7 @@ _lib_incdirs = [
 ]
 _lib_cpp_args = [
   '-DENABLE_TEST_FRAMEWORK',
-  '-DHAVE_NO_PCI',
+  '-DHAVE_NO_HOST_IDS',
   '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
 ]
 _lib_sources = ['../../src/lib.cpp', '../../src/test_framework.cpp']

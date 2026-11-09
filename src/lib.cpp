@@ -438,7 +438,7 @@ void pci_ids_parse(std::istream &in)
 	}
 }
 
-#ifndef HAVE_NO_PCI
+#ifndef HAVE_NO_HOST_IDS
 static void pci_ids_load_system(void)
 {
 	static const char *const paths[] = {
@@ -460,7 +460,7 @@ static void pci_ids_load_system(void)
 
 std::string pci_id_to_name(uint16_t vendor, uint16_t device)
 {
-#ifndef HAVE_NO_PCI
+#ifndef HAVE_NO_HOST_IDS
 	if (!pci_ids_loaded)
 		pci_ids_load_system();
 #endif

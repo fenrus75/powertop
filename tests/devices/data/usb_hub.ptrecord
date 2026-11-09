@@ -5,3 +5,5 @@ R /sys/bus/usb/devices/1-1/busnum MQo=
 R /sys/bus/usb/devices/1-1/devnum Mgo=
 A /sys/bus/usb/devices/1-1/device 4 0
 A /sys/bus/usb/devices/1-1/device/device 4 -1
+N /sys/bus/usb/devices/1-1/idVendor
+N /sys/bus/usb/devices/1-1/idProduct

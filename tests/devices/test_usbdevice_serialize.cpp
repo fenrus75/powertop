@@ -2,21 +2,28 @@
  * Snapshot tests for usbdevice::serialize()
  *
  * Constructor reads (in order):
- *   bDeviceClass, manufacturer, product, busnum, devnum
- *   (5 sysfs records per scenario; N records for missing files)
+ *   bDeviceClass, manufacturer, product, [idVendor, idProduct,] busnum, devnum
+ *   (idVendor and idProduct only when manufacturer and product are both
+ *   missing; N records for missing files)
  *
  * humanname assembly logic:
  *   bDeviceClass==9                    → rootport=1, default humanname unchanged
  *   vendor+product                     → "USB device: {product} ({vendor})"
  *   product only (no vendor)           → "USB device: {product}"
+ *   neither                            → names from usb.ids, as above
  *
- * Three scenarios:
+ * Five scenarios:
  *   hub          — class=9, no vendor/product: rootport=1
  *   named        — class=0, vendor="Intel Corp.", product="USB Keyboard"
  *   product_only — class=0, no vendor, product="USB Mouse"
+ *   anon         — class=0xe0, no vendor/product, ids 1234:abcd, named from
+ *                  a usb.ids fixture
+ *   measurement  — named device, start/end measurement
  */
 #include <cmath>
+#include <sstream>
 #include <string>
+#include "lib.h"
 #include "devices/usb.h"
 #include "test_framework.h"
 #include "../test_helper.h"
@@ -68,6 +75,25 @@ static void test_product_only()
 	PT_ASSERT_TRUE(got.find("\"devnum\":4") != std::string::npos);
 }
 
+static void test_anon_named_from_usb_ids()
+{
+	std::istringstream ids("1234  Example Vendor\n\tabcd  Example Bluetooth\n");
+	usb_ids_parse(ids);
+
+	test_framework_manager::get().reset();
+	test_framework_manager::get().set_replay(DATA_DIR + "/usb_anon.ptrecord");
+
+	usbdevice d("1-1", USB_PATH, "1-1");
+	std::string got = d.serialize();
+	test_framework_manager::get().reset();
+
+	std::istringstream empty("");
+	usb_ids_parse(empty);
+
+	PT_ASSERT_TRUE(got.find("USB device: Example Bluetooth (Example Vendor)") != std::string::npos);
+	PT_ASSERT_TRUE(got.find("\"devnum\":5") != std::string::npos);
+}
+
 static void test_measurement()
 {
 	test_framework_manager::get().reset();
@@ -95,6 +121,7 @@ int main()
 	PT_RUN_TEST(test_hub);
 	PT_RUN_TEST(test_named);
 	PT_RUN_TEST(test_product_only);
+	PT_RUN_TEST(test_anon_named_from_usb_ids);
 	PT_RUN_TEST(test_measurement);
 	return pt_test_summary();
 }

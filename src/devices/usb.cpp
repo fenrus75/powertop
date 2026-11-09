@@ -70,6 +70,14 @@ usbdevice::usbdevice(const std::string &_name, const std::string &path, const st
 
 	product = read_sysfs_string(std::format("{}/product", path));
 
+	/* Devices without string descriptors: name them from usb.ids like lsusb */
+	if (vendor.empty() && product.empty()) {
+		usb_id_names ids = usb_id_to_names(read_sysfs_string(std::format("{}/idVendor", path)),
+						   read_sysfs_string(std::format("{}/idProduct", path)));
+		vendor = ids.vendor;
+		product = ids.product;
+	}
+
 	if (!vendor.empty() && !product.empty())
 		humanname = pt_format(_("USB device: {} ({})"), product, vendor);
 	else if (!product.empty())

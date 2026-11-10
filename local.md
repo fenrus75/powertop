@@ -685,3 +685,8 @@ Mode 4 against this repo for the first time. Key facts for future runs:
 - libpci is no longer used; `src/lib.cpp` parses pci.ids itself (lazy, cached in maps, searched in /usr/share/hwdata, /usr/share/misc, /usr/share).
 - `-DHAVE_NO_HOST_IDS` is now only a test switch: it stops the host pci.ids from being loaded. Tests feed fixtures via `pci_ids_parse(std::istream&)`.
 - Decision recorded: user chose "own parser, remove libpci" over a meson option; the valgrind suppression and 21-byte leak exception were dropped.
+
+## cpufreq wiggle (issue #230)
+- `abstract_cpu::wiggle()` writes scaling_min/max_freq (max=min then max=orig) at measurement start/end to force a `power:cpu_frequency` event; it is called at package, core and cpu level (same first_cpu hit repeatedly).
+- Under intel_pstate the P-state tables are suppressed (`nhm_core/nhm_cpu::fill_pstate_line` return "" when `intel_pstate > 0`; C0 line uses APERF/MPERF) and `stats/time_in_state` does not exist, so wiggle output is unused there. Non-intel_pstate drivers (acpi-cpufreq, amd-pstate) still need an initial/final frequency record.
+- Ratchet hazard: wiggle trusts the current scaling_max_freq as "original"; if one restore write ever fails, later wiggles read the min as max and make it permanent.

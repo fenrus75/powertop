@@ -131,6 +131,7 @@ test_abstract_cpu_base_exe = executable(
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
     '-DHAVE_NO_HOST_IDS',
+    '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
 )

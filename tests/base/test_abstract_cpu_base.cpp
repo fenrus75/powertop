@@ -10,7 +10,10 @@
 #include <string>
 #include "cpu/cpu.h"
 #include "cpu/frequency.h"
+#include "test_framework.h"
 #include "../test_helper.h"
+
+static const std::string DATA_DIR = TEST_DATA_DIR;
 
 static void test_abstract_cpu_defaults()
 {
@@ -103,6 +106,35 @@ static void test_reset_pstate_data()
 	PT_ASSERT_EQ(cpu.pstates[0]->time_after,  0ULL);
 }
 
+/* ── wiggle() ────────────────────────────────────────────────────────────── */
+
+static void test_wiggle_skipped_for_intel_pstate()
+{
+	test_framework_manager::get().reset();
+	test_framework_manager::get().set_replay(DATA_DIR + "/wiggle_intel_pstate.ptrecord");
+
+	abstract_cpu cpu;
+	cpu.wiggle();
+
+	/* intel_pstate: no scaling_{min,max}_freq writes that could leave the CPU capped */
+	PT_ASSERT_EQ((int)test_framework_manager::get().get_write_log().size(), 0);
+	test_framework_manager::get().reset();
+}
+
+static void test_wiggle_other_driver()
+{
+	test_framework_manager::get().reset();
+	test_framework_manager::get().set_replay(DATA_DIR + "/wiggle_acpi_cpufreq.ptrecord");
+
+	abstract_cpu cpu;
+	cpu.wiggle();
+
+	auto &log = test_framework_manager::get().get_write_log();
+	PT_ASSERT_EQ((int)log.size(), 4);
+	PT_ASSERT_EQ(log[3].second, std::string("2000000"));
+	test_framework_manager::get().reset();
+}
+
 int main()
 {
 	std::cout << "=== abstract_cpu base class tests ===\n";
@@ -116,5 +148,7 @@ int main()
 	PT_RUN_TEST(test_has_pstate_level_hit);
 	PT_RUN_TEST(test_total_pstate_time);
 	PT_RUN_TEST(test_reset_pstate_data);
+	PT_RUN_TEST(test_wiggle_skipped_for_intel_pstate);
+	PT_RUN_TEST(test_wiggle_other_driver);
 	return pt_test_summary();
 }

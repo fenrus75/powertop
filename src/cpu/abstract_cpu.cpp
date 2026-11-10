@@ -391,7 +391,16 @@ void abstract_cpu::wiggle(void)
 	uint64_t minf, maxf;
 	uint64_t setspeed = 0;
 
-	/* wiggle a CPU so that we have a record of it at the start and end of the perf trace */
+	/*
+	 * Wiggle a CPU so that we have a record of it at the start and end of the perf trace.
+	 *
+	 * Not done with intel_pstate: it exposes no P-state tables for us to
+	 * fill (the frequency display uses APERF/MPERF there), and a failed
+	 * restore of scaling_max_freq would leave the CPU capped at its minimum
+	 * frequency (and be read back as the "original" maximum by the next wiggle).
+	 */
+	if (read_sysfs_string(std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_driver", first_cpu)) == "intel_pstate")
+		return;
 
 	maxf = read_sysfs(std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_max_freq", first_cpu));
 	minf = read_sysfs(std::format("/sys/devices/system/cpu/cpu{}/cpufreq/scaling_min_freq", first_cpu));

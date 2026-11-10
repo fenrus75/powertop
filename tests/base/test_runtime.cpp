@@ -61,7 +61,7 @@ static void test_runtime_usb_has_pm_desc()
 
 static void test_runtime_pci_with_vendor_device()
 {
-	/* HAVE_NO_PCI: pci_id_to_name returns ""; desc still references PCI */
+	/* HAVE_NO_HOST_IDS: pci_id_to_name returns ""; desc still references PCI */
 	test_framework_manager::get().reset();
 	test_framework_manager::get().set_replay(DATA_DIR + "/runtime_pci_with_id.ptrecord");
 

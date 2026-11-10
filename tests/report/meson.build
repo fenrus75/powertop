@@ -63,7 +63,7 @@ report_incdirs = [
 
 report_cpp_args = [
   '-DENABLE_TEST_FRAMEWORK',
-  '-DHAVE_NO_PCI',
+  '-DHAVE_NO_HOST_IDS',
 ]
 
 test_report_exe = executable(

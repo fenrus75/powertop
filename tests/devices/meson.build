@@ -16,7 +16,7 @@ test_alsa_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -40,7 +40,7 @@ test_sysfs_tunable_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -64,7 +64,7 @@ test_acpi_power_meter_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -90,7 +90,7 @@ test_rfkill_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -116,7 +116,7 @@ test_runtime_pm_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -142,7 +142,7 @@ test_usb_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -168,7 +168,7 @@ test_backlight_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -195,7 +195,7 @@ test_thinkpad_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -221,7 +221,7 @@ test_devfreq_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -245,7 +245,7 @@ test_opal_sensors_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -272,7 +272,7 @@ test_cpudevice_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -299,7 +299,7 @@ test_ahci_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -326,7 +326,7 @@ test_i915_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
   ],
   dependencies: [ncursesw_dep, libtracefs_dep],
 )
@@ -357,7 +357,7 @@ test_rapl_devices_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep, libtracefs_dep],
@@ -385,7 +385,7 @@ test_devlist_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -408,7 +408,7 @@ test_rapl_interface_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],
@@ -434,7 +434,7 @@ test_xe_gpu_device_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep, libtracefs_dep],
@@ -463,7 +463,7 @@ test_xe_core_exe = executable(
   ],
   cpp_args: [
     '-DENABLE_TEST_FRAMEWORK',
-    '-DHAVE_NO_PCI',
+    '-DHAVE_NO_HOST_IDS',
     '-DTEST_DATA_DIR="' + meson.current_source_dir() / 'data' + '"',
   ],
   dependencies: [ncursesw_dep],

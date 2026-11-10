@@ -1,0 +1,9 @@
+R /sys/bus/usb/devices/1-1/bDeviceClass MjI0Cg==
+N /sys/bus/usb/devices/1-1/manufacturer
+N /sys/bus/usb/devices/1-1/product
+R /sys/bus/usb/devices/1-1/idVendor MTIzNAo=
+R /sys/bus/usb/devices/1-1/idProduct YWJjZAo=
+R /sys/bus/usb/devices/1-1/busnum MQo=
+R /sys/bus/usb/devices/1-1/devnum NQo=
+A /sys/bus/usb/devices/1-1/device 4 0
+A /sys/bus/usb/devices/1-1/device/device 4 -1

@@ -683,5 +683,5 @@ Mode 4 against this repo for the first time. Key facts for future runs:
 
 ## PCI name lookup (libpci removed)
 - libpci is no longer used; `src/lib.cpp` parses pci.ids itself (lazy, cached in maps, searched in /usr/share/hwdata, /usr/share/misc, /usr/share).
-- `-DHAVE_NO_PCI` is now only a test switch: it stops the host pci.ids from being loaded. Tests feed fixtures via `pci_ids_parse(std::istream&)`.
+- `-DHAVE_NO_HOST_IDS` is now only a test switch: it stops the host pci.ids from being loaded. Tests feed fixtures via `pci_ids_parse(std::istream&)`.
 - Decision recorded: user chose "own parser, remove libpci" over a meson option; the valgrind suppression and 21-byte leak exception were dropped.

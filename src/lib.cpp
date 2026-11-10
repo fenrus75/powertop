@@ -40,6 +40,7 @@
 #include <limits>
 #include <map>
 #include <mutex>
+#include <span>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -366,21 +367,33 @@ std::string format_watts(double W, unsigned int len)
 }
 
 /*
- * Minimal pci.ids parser. Format (see pci.ids header):
+ * Minimal parser for the pci.ids and usb.ids databases, which share one format
+ * (see the file headers):
  *   - '#' comment lines and blank lines are ignored
  *   - "vvvv  Vendor name"            starts a vendor (column 0, 4 hex digits)
  *   - "<tab>dddd  Device name"       device of the current vendor
- *   - "<tab><tab>..."                subsystem lines, ignored
+ *   - "<tab><tab>..."                subsystem/interface lines, ignored
  *   - "C xx  Class name" and later   device-class section, ends the vendor list
- * Vendor and device ids are keyed as (vendor << 16 | device); a device-less
- * vendor entry uses device id 0 in the separate vendor map.
+ * Device ids are keyed as (vendor << 16 | device).
  */
-static std::map<uint16_t, std::string> pci_vendor_names;
-static std::map<uint32_t, std::string> pci_device_names;
-static bool pci_ids_loaded;
+struct ids_table {
+	std::map<uint16_t, std::string> vendors;
+	std::map<uint32_t, std::string> devices;
+	bool loaded = false;
+
+	void clear(void)
+	{
+		vendors.clear();
+		devices.clear();
+		loaded = false;
+	}
+};
+
+static ids_table pci_ids;
+static ids_table usb_ids;
 
 /* Parses exactly 4 hex digits at the start of s; returns false otherwise */
-static bool parse_pci_hex4(std::string_view s, uint16_t &out)
+static bool parse_hex4(std::string_view s, uint16_t &out)
 {
 	if (s.size() < 4)
 		return false;
@@ -393,7 +406,7 @@ static bool parse_pci_hex4(std::string_view s, uint16_t &out)
 }
 
 /* Returns the name following the id: skips the separating whitespace */
-static std::string pci_name_after_id(std::string_view s)
+static std::string ids_name_after_id(std::string_view s)
 {
 	size_t pos = s.find_first_not_of(" \t", 4);
 	if (pos == std::string_view::npos)
@@ -401,11 +414,10 @@ static std::string pci_name_after_id(std::string_view s)
 	return std::string(s.substr(pos));
 }
 
-void pci_ids_parse(std::istream &in)
+static void ids_parse(ids_table &table, std::istream &in)
 {
-	pci_vendor_names.clear();
-	pci_device_names.clear();
-	pci_ids_loaded = true;
+	table.clear();
+	table.loaded = true;
 
 	std::string line;
 	bool have_vendor = false;
@@ -423,8 +435,8 @@ void pci_ids_parse(std::istream &in)
 			uint16_t device;
 			std::string_view body(line);
 			body.remove_prefix(1);
-			if (parse_pci_hex4(body, device))
-				pci_device_names[(uint32_t(vendor) << 16) | device] = pci_name_after_id(body);
+			if (parse_hex4(body, device))
+				table.devices[(uint32_t(vendor) << 16) | device] = ids_name_after_id(body);
 			continue;
 		}
 
@@ -432,54 +444,101 @@ void pci_ids_parse(std::istream &in)
 		if (line[0] == 'C' && line.size() > 1 && line[1] == ' ')
 			break;
 
-		have_vendor = parse_pci_hex4(line, vendor);
+		have_vendor = parse_hex4(line, vendor);
 		if (have_vendor)
-			pci_vendor_names[vendor] = pci_name_after_id(line);
+			table.vendors[vendor] = ids_name_after_id(line);
 	}
 }
 
-#ifndef HAVE_NO_PCI
-static void pci_ids_load_system(void)
+#ifndef HAVE_NO_HOST_IDS
+/* Loads the first database found in paths; without one, names stay unknown */
+static void ids_load_system(ids_table &table, std::span<const char *const> paths)
 {
+	for (const char *path : paths) {
+		std::ifstream file(path);
+		if (file) {
+			ids_parse(table, file);
+			return;
+		}
+	}
+	table.loaded = true;
+}
+#endif
+
+/* Looks up vendor and device names; a missing entry yields an empty string */
+static std::pair<std::string, std::string> ids_lookup(const ids_table &table, uint16_t vendor, uint16_t device)
+{
+	std::pair<std::string, std::string> names;
+
+	auto v = table.vendors.find(vendor);
+	if (v != table.vendors.end())
+		names.first = v->second;
+
+	auto d = table.devices.find((uint32_t(vendor) << 16) | device);
+	if (d != table.devices.end())
+		names.second = d->second;
+
+	return names;
+}
+
+void pci_ids_parse(std::istream &in)
+{
+	ids_parse(pci_ids, in);
+}
+
+std::string pci_id_to_name(uint16_t vendor, uint16_t device)
+{
+#ifndef HAVE_NO_HOST_IDS
 	static const char *const paths[] = {
 		"/usr/share/hwdata/pci.ids",
 		"/usr/share/misc/pci.ids",
 		"/usr/share/pci.ids",
 	};
 
-	for (const char *path : paths) {
-		std::ifstream file(path);
-		if (file) {
-			pci_ids_parse(file);
-			return;
-		}
-	}
-	pci_ids_loaded = true; /* no database installed: names stay unknown */
-}
+	if (!pci_ids.loaded)
+		ids_load_system(pci_ids, paths);
 #endif
 
-std::string pci_id_to_name(uint16_t vendor, uint16_t device)
-{
-#ifndef HAVE_NO_PCI
-	if (!pci_ids_loaded)
-		pci_ids_load_system();
-#endif
-
-	auto v = pci_vendor_names.find(vendor);
-	if (v == pci_vendor_names.end())
+	auto [vendor_name, device_name] = ids_lookup(pci_ids, vendor, device);
+	if (vendor_name.empty())
 		return {};
-
-	auto d = pci_device_names.find((uint32_t(vendor) << 16) | device);
-	if (d == pci_device_names.end())
-		return v->second;
-	return v->second + " " + d->second;
+	if (device_name.empty())
+		return vendor_name;
+	return vendor_name + " " + device_name;
 }
 
 void end_pci_access(void)
 {
-	pci_vendor_names.clear();
-	pci_device_names.clear();
-	pci_ids_loaded = false;
+	pci_ids.clear();
+}
+
+void usb_ids_parse(std::istream &in)
+{
+	ids_parse(usb_ids, in);
+}
+
+usb_id_names usb_id_to_names(const std::string &id_vendor, const std::string &id_product)
+{
+	uint16_t vendor, product;
+
+	if (id_vendor.size() != 4 || !parse_hex4(id_vendor, vendor) ||
+	    id_product.size() != 4 || !parse_hex4(id_product, product))
+		return {};
+
+#ifndef HAVE_NO_HOST_IDS
+	static const char *const paths[] = {
+		"/usr/share/hwdata/usb.ids",
+		"/usr/share/misc/usb.ids",
+		"/usr/share/usb.ids",
+		"/var/lib/usbutils/usb.ids",
+	};
+
+	if (!usb_ids.loaded)
+		ids_load_system(usb_ids, paths);
+#endif
+
+	auto [vendor_name, product_name] = ids_lookup(usb_ids, vendor, product);
+	return {vendor_name, product_name};
 }
 
 int utf_ok = -1;

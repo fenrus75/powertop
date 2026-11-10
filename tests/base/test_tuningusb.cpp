@@ -10,11 +10,14 @@
  *
  * Fixtures:
  *   usbtunable_named_auto.ptrecord — 4 ctor + 1 good_bad: named device, auto (good)
- *   usbtunable_anon_on.ptrecord    — 4 ctor + 1 good_bad: anon device, on (bad)
+ *   usbtunable_anon_on.ptrecord    — 4 ctor + 1 good_bad: anon device, on (bad);
+ *                                    also named from a usb.ids fixture
  *   usbtunable_toggle_from_good.ptrecord — 1 R: power/control = "auto"
  *   usbtunable_toggle_from_bad.ptrecord  — 1 R: power/control = "on"
  */
+#include <sstream>
 #include <string>
+#include "lib.h"
 #include "tuning/tuningusb.h"
 #include "test_framework.h"
 #include "../test_helper.h"
@@ -54,6 +57,26 @@ PT_ASSERT_TRUE(got.find("1234") != std::string::npos);
 PT_ASSERT_TRUE(got.find("abcd") != std::string::npos);
 /* power/control == "on" → result = "Bad" */
 PT_ASSERT_TRUE(got.find("\"result\":\"Bad\"") != std::string::npos);
+}
+
+static void test_anon_device_named_from_usb_ids()
+{
+std::istringstream ids("1234  Example Vendor\n\tabcd  Example Bluetooth\n");
+usb_ids_parse(ids);
+
+test_framework_manager::get().reset();
+test_framework_manager::get().set_replay(DATA_DIR + "/usbtunable_anon_on.ptrecord");
+
+usb_tunable t(USB_BASE, "1-2");
+std::string got = t.serialize();
+test_framework_manager::get().reset();
+
+std::istringstream empty("");
+usb_ids_parse(empty);
+
+/* no manufacturer/product, but usb.ids knows 1234:abcd → "product [vendor]" */
+PT_ASSERT_TRUE(got.find("Autosuspend for USB device Example Bluetooth [Example Vendor]") != std::string::npos);
+PT_ASSERT_TRUE(got.find("unknown") == std::string::npos);
 }
 
 static void test_toggle_from_good()
@@ -100,6 +123,7 @@ int main()
 std::cout << "=== usb_tunable tests ===\n";
 PT_RUN_TEST(test_named_device_auto);
 PT_RUN_TEST(test_anon_device_on);
+PT_RUN_TEST(test_anon_device_named_from_usb_ids);
 PT_RUN_TEST(test_toggle_from_good);
 PT_RUN_TEST(test_toggle_from_bad);
 return pt_test_summary();

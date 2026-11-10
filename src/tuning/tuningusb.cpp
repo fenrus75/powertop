@@ -54,6 +54,13 @@ usb_tunable::usb_tunable(const std::string &path, const std::string &name) : tun
 
 	product = read_sysfs_string(std::format("{}/product", path));
 
+	/* Devices without string descriptors: name them from usb.ids like lsusb */
+	if (vendor.empty() && product.empty()) {
+		usb_id_names ids = usb_id_to_names(str1, str2);
+		vendor = ids.vendor;
+		product = ids.product;
+	}
+
 	if (!vendor.empty() && !product.empty()) {
 		desc = pt_format(_("Autosuspend for USB device {} [{}]"), product, vendor);
 	} else if (!product.empty()) {

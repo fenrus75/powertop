@@ -2,8 +2,8 @@
  * Tested source file: src/lib.cpp
  *
  * Tests for the built-in pci.ids parser: pci_ids_parse(), pci_id_to_name(),
- * end_pci_access(). Built with -DHAVE_NO_PCI so the host's pci.ids is never
- * read; all data comes from the fixtures below.
+ * end_pci_access(). Built with -DHAVE_NO_HOST_IDS so the host's pci.ids is
+ * never read; all data comes from the fixtures below.
  */
 #include <cstdint>
 #include <iostream>
@@ -81,7 +81,7 @@ static void test_empty_input_and_end_access()
 
 	load();
 	end_pci_access();
-	/* HAVE_NO_PCI: tables are not reloaded from the host after cleanup */
+	/* HAVE_NO_HOST_IDS: tables are not reloaded from the host after cleanup */
 	PT_ASSERT_EQ(pci_id_to_name(0x8086, 0x1237), std::string(""));
 }
 

@@ -115,6 +115,18 @@ extern void end_pci_access(void);
 /* Replaces the vendor/device name tables with the contents of a pci.ids stream (exposed for tests) */
 extern void pci_ids_parse(std::istream &in);
 
+struct usb_id_names {
+	std::string vendor;
+	std::string product;
+};
+/*
+ * Looks up the usb.ids names for the sysfs idVendor and idProduct strings
+ * (4 hex digits each); a name is empty when unknown
+ */
+extern usb_id_names usb_id_to_names(const std::string &id_vendor, const std::string &id_product);
+/* Replaces the USB vendor/product name tables with the contents of a usb.ids stream (exposed for tests) */
+extern void usb_ids_parse(std::istream &in);
+
 
 extern std::string fmt_prefix(double n);
 extern std::string pretty_print(const std::string &str);

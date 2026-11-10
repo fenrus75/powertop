@@ -24,6 +24,7 @@
  */
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include <cstdio>
 #include <sys/types.h>
@@ -52,6 +53,15 @@ alsa::alsa(const std::string &_name, const std::string &path): device()
 	humanname = std::format("alsa:{}", _name);
 	rindex = get_result_index(name);
 
+	if (_name.starts_with("hwC")) {
+		const size_t d = _name.find('D', 3);
+		if (d != std::string::npos && d > 3) {
+			try {
+				card = std::stoi(_name.substr(3, d - 3));
+			} catch (...) {}
+		}
+	}
+
 	model = read_sysfs_string(std::format("{}/modelname", path));
 	vendor = read_sysfs_string(std::format("{}/vendor_name", path));
 
@@ -63,9 +73,95 @@ alsa::alsa(const std::string &_name, const std::string &path): device()
 		humanname = pt_format(_("Audio codec {}: {}"), _name, vendor);
 }
 
+/*
+ * Each substream has /proc/asound/card<N>/pcm<D><p|c>/sub<K>/status whose first
+ * line is either "closed" or "state: <NAME>", followed by "owner_pid : <pid>".
+ * The file only exists with CONFIG_SND_VERBOSE_PROCFS; without it nothing is reported.
+ * Returns pcm name (with ".<K>" for K > 0) -> "STATE|owner" for open substreams.
+ */
+std::map<std::string, std::string> alsa::read_pcm_streams(void)
+{
+	std::map<std::string, std::string> streams;
+
+	if (card < 0)
+		return streams;
+
+	const std::string base = std::format("/proc/asound/card{}", card);
+
+	for (const auto &pcm : list_directory(base)) {
+		if (!pcm.starts_with("pcm"))
+			continue;
+
+		for (const auto &sub : list_directory(std::format("{}/{}", base, pcm))) {
+			if (!sub.starts_with("sub"))
+				continue;
+
+			const std::string status = read_file_content(std::format("{}/{}/{}/status", base, pcm, sub));
+			std::string state;
+			std::string owner;
+			bool open = false;
+
+			std::istringstream ss(status);
+			std::string line;
+			while (std::getline(ss, line)) {
+				if (line.starts_with("state:")) {
+					state = line.substr(6);
+					state.erase(0, state.find_first_not_of(" \t"));
+					open = !state.empty();
+				} else if (line.starts_with("owner_pid")) {
+					const size_t colon = line.find(':');
+					if (colon == std::string::npos)
+						continue;
+					try {
+						const int pid = std::stoi(line.substr(colon + 1));
+						if (pid > 0)
+							owner = read_sysfs_string(std::format("/proc/{}/comm", pid));
+					} catch (...) {}
+				}
+			}
+
+			if (!open)
+				continue;
+
+			std::string key = pcm;
+			if (sub != "sub0")
+				key += "." + sub.substr(3);
+			streams[key] = state + "|" + owner;
+		}
+	}
+
+	return streams;
+}
+
+/* e.g. "pcm0p RUNNING: pipewire, pcm0c PREPARED (idle): pipewire" */
+std::string alsa::format_streams(const std::map<std::string, std::string> &start,
+				 const std::map<std::string, std::string> &end)
+{
+	std::map<std::string, std::string> all = start;
+	for (const auto &[key, value] : end)
+		all[key] = value;
+
+	std::string result;
+	for (const auto &[key, value] : all) {
+		const size_t bar = value.find('|');
+		const std::string state = value.substr(0, bar);
+		const std::string owner = (bar == std::string::npos) ? "" : value.substr(bar + 1);
+		const bool idle = state == "OPEN" || state == "SETUP" || state == "PREPARED";
+
+		if (!result.empty())
+			result += ", ";
+		result += std::format("{} {}{}", key, state, idle ? " (idle)" : "");
+		if (!owner.empty())
+			result += ": " + owner;
+	}
+	return result;
+}
+
 void alsa::start_measurement(void)
 {
 	std::string content;
+
+	start_streams = read_pcm_streams();
 
 	content = read_sysfs_string(std::format("{}/power_off_acct", sysfs_path));
 	if (!content.empty()) {
@@ -86,6 +182,9 @@ void alsa::end_measurement(void)
 {
 	std::string content;
 	double p;
+
+	end_streams = read_pcm_streams();
+	stream_summary = format_streams(start_streams, end_streams);
 
 	content = read_sysfs_string(std::format("{}/power_off_acct", sysfs_path));
 	if (!content.empty()) {
@@ -177,10 +276,14 @@ void alsa::register_power_with_devlist(struct result_bundle *results, struct par
 
 std::string alsa::human_name(void)
 {
-	if (!guilty.empty())
-		return std::format("{} ({})", humanname, guilty);
+	std::string result = humanname;
 
-	return humanname;
+	if (!stream_summary.empty())
+		result += std::format(" [{}]", stream_summary);
+	if (!guilty.empty())
+		result += std::format(" ({})", guilty);
+
+	return result;
 }
 
 void alsa::collect_json_fields(std::string &_js)
@@ -194,4 +297,5 @@ void alsa::collect_json_fields(std::string &_js)
     JSON_FIELD(name);
     JSON_FIELD(humanname);
     JSON_FIELD(rindex);
+    JSON_FIELD(stream_summary);
 }

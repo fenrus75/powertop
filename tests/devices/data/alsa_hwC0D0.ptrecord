@@ -4,3 +4,5 @@ R /sys/class/sound/hwC0D0/power_off_acct MTAwMDAwMAo=
 R /sys/class/sound/hwC0D0/power_on_acct NTAwMDAwCg==
 R /sys/class/sound/hwC0D0/power_off_acct MTUwMDAwMAo=
 R /sys/class/sound/hwC0D0/power_on_acct NjAwMDAwCg==
+D /proc/asound/card0
+D /proc/asound/card0

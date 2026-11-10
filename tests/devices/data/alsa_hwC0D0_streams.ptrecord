@@ -1,0 +1,23 @@
+N /sys/class/sound/hwC0D0/modelname
+N /sys/class/sound/hwC0D0/vendor_name
+R /sys/class/sound/hwC0D0/power_off_acct MTAwMDAwMAo=
+R /sys/class/sound/hwC0D0/power_on_acct NTAwMDAwCg==
+R /sys/class/sound/hwC0D0/power_off_acct MTUwMDAwMAo=
+R /sys/class/sound/hwC0D0/power_on_acct NjAwMDAwCg==
+D /proc/asound/card0 aW5mbwpwY20wcApwY20wYwpwY20zcAo=
+D /proc/asound/card0 aW5mbwpwY20wcApwY20wYwpwY20zcAo=
+D /proc/asound/card0/pcm0p aW5mbwpzdWIwCg==
+D /proc/asound/card0/pcm0c aW5mbwpzdWIwCg==
+D /proc/asound/card0/pcm3p aW5mbwpzdWIwCg==
+D /proc/asound/card0/pcm0p aW5mbwpzdWIwCg==
+D /proc/asound/card0/pcm0c aW5mbwpzdWIwCg==
+D /proc/asound/card0/pcm3p aW5mbwpzdWIwCg==
+R /proc/asound/card0/pcm0p/sub0/status c3RhdGU6IFJVTk5JTkcKb3duZXJfcGlkICAgOiAxODczCnRyaWdnZXJfdGltZTogMS4wCg==
+R /proc/asound/card0/pcm0c/sub0/status Y2xvc2VkCg==
+R /proc/asound/card0/pcm3p/sub0/status Y2xvc2VkCg==
+R /proc/asound/card0/pcm0p/sub0/status c3RhdGU6IFBSRVBBUkVECm93bmVyX3BpZCAgIDogMTg3Mwo=
+R /proc/asound/card0/pcm0c/sub0/status c3RhdGU6IFBSRVBBUkVECm93bmVyX3BpZCAgIDogMTg3Mwo=
+R /proc/asound/card0/pcm3p/sub0/status Y2xvc2VkCg==
+R /proc/1873/comm cGlwZXdpcmUK
+R /proc/1873/comm cGlwZXdpcmUK
+R /proc/1873/comm cGlwZXdpcmUK

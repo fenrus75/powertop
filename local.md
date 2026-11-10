@@ -690,3 +690,8 @@ Mode 4 against this repo for the first time. Key facts for future runs:
 - `abstract_cpu::wiggle()` writes scaling_min/max_freq (max=min then max=orig) at measurement start/end to force a `power:cpu_frequency` event; it is called at package, core and cpu level (same first_cpu hit repeatedly).
 - Under intel_pstate the P-state tables are suppressed (`nhm_core/nhm_cpu::fill_pstate_line` return "" when `intel_pstate > 0`; C0 line uses APERF/MPERF) and `stats/time_in_state` does not exist, so wiggle output is unused there. Non-intel_pstate drivers (acpi-cpufreq, amd-pstate) still need an initial/final frequency record.
 - Ratchet hazard: wiggle trusts the current scaling_max_freq as "original"; if one restore write ever fails, later wiggles read the min as max and make it permanent.
+
+## ALSA PCM stream annotation (issue #231, proposal A)
+- `alsa` devices parse the card number from `hwC<N>D<M>` and sample `/proc/asound/card<N>/pcm*/sub*/status` at start/end; open streams are appended to `human_name()` and `show_in_list()` stays true while any is open (devlist otherwise hides the codec when a process holds a /dev/snd fd).
+- Replay fixtures need one `D` record per list_directory call and one `R` per status/comm read (queues are per path, consumed in order).
+- Follow-up candidates: proposal B (per-substream `alsa_pcm` rows + report table); devlist substring match `C0D1` vs `pcmC0D10p` is still imprecise.

@@ -58,6 +58,7 @@ static void init_tuning(void)
 {
 	/* Dynamic tunables (device-enumerated, added by their own helpers) */
 	add_bt_tunable();
+	add_cursor_blink_tunable();
 	add_i2c_tunables();
 	add_runtime_tunables("pci");
 	add_sata_tunables();
@@ -75,7 +76,6 @@ static void init_tuning(void)
 	add_sysfs_tunable(_("Intel Xe GPU power profile"), "/sys/class/drm/card*/device/tile*/gt*/freq0/power_profile", "power_saving");
 	add_sysfs_tunable(_("NMI watchdog should be turned off"), "/proc/sys/kernel/nmi_watchdog", "0");
 	add_sysfs_tunable(_("Power Aware CPU scheduler"), "/sys/devices/system/cpu/sched_mc_power_savings", "1");
-	add_sysfs_tunable(_("Tuning for cursor blink"), "/sys/devices/virtual/graphics/fbcon/cursor_blink", "0");
 	add_sysfs_tunable(_("Tuning for default qdisc"), "/proc/sys/net/core/default_qdisc", "fq");
 
 	/* Numeric sysfs tunables — alphabetical by description */

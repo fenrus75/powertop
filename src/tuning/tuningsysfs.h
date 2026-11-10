@@ -73,4 +73,5 @@ extern void add_sysfs_tunable(const std::string &str, const std::string &_sysfs_
 extern void add_numeric_sysfs_tunable(const std::string &str, const std::string &_sysfs_path,
                                       double target, bool higher_is_better = true);
 extern void add_sata_tunables(void);
+extern void add_cursor_blink_tunable(void);
 

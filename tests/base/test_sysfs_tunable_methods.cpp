@@ -18,6 +18,8 @@
  *  good_bad_currently_good      — TUNE_GOOD
  *  toggle_from_bad              — writes target "deep" to sysfs
  *  toggle_good_with_prior_bad   — good_bad sets bad_value, then toggle writes it back
+ *  cursor_blink_*               — add_cursor_blink_tunable() offers the tunable only
+ *                                 when the file reads 0 or 1 (not -1 or missing)
  */
 #include <string>
 #include "tuning/tuningsysfs.h"
@@ -98,6 +100,34 @@ static void test_toggle_good_with_prior_bad()
 	test_framework_manager::get().reset();
 }
 
+static size_t cursor_blink_tunable_count(const char *fixture)
+{
+	all_tunables.clear();
+	test_framework_manager::get().reset();
+	test_framework_manager::get().set_replay(DATA_DIR + "/" + fixture);
+	add_cursor_blink_tunable();
+	test_framework_manager::get().reset();
+	size_t n = all_tunables.size();
+	all_tunables.clear();
+	return n;
+}
+
+static void test_cursor_blink_offered()
+{
+	PT_ASSERT_EQ((int)cursor_blink_tunable_count("cursor_blink_1.ptrecord"), 1);
+}
+
+static void test_cursor_blink_unsupported()
+{
+	/* -1: no fbcon framebuffer, writes are ignored */
+	PT_ASSERT_EQ((int)cursor_blink_tunable_count("cursor_blink_unsupported.ptrecord"), 0);
+}
+
+static void test_cursor_blink_missing()
+{
+	PT_ASSERT_EQ((int)cursor_blink_tunable_count("cursor_blink_missing.ptrecord"), 0);
+}
+
 int main()
 {
 	std::cout << "=== sysfs_tunable method tests ===\n";
@@ -105,5 +135,8 @@ int main()
 	PT_RUN_TEST(test_good_bad_currently_good);
 	PT_RUN_TEST(test_toggle_from_bad);
 	PT_RUN_TEST(test_toggle_good_with_prior_bad);
+	PT_RUN_TEST(test_cursor_blink_offered);
+	PT_RUN_TEST(test_cursor_blink_unsupported);
+	PT_RUN_TEST(test_cursor_blink_missing);
 	return pt_test_summary();
 }

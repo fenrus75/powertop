@@ -1,0 +1,2 @@
+R /sys/devices/virtual/graphics/fbcon/cursor_blink MQo=
+A /sys/devices/virtual/graphics/fbcon/cursor_blink 4 0

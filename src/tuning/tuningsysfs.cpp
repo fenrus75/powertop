@@ -137,6 +137,22 @@ void add_sysfs_tunable(const std::string &str, const std::string &_sysfs_path, c
 	all_tunables.push_back(std::make_unique<sysfs_tunable>(str, _sysfs_path, _target_content));
 }
 
+/*
+ * Without an fbcon framebuffer (e.g. a DRM log client) cursor_blink reads -1
+ * and ignores writes, so the tunable could never become Good. Only offer it
+ * when the file reads 0 or 1.
+ */
+void add_cursor_blink_tunable(void)
+{
+	static const std::string path = "/sys/devices/virtual/graphics/fbcon/cursor_blink";
+	bool ok = false;
+	const int value = read_sysfs(path, &ok);
+
+	if (!ok || (value != 0 && value != 1))
+		return;
+	add_sysfs_tunable(_("Tuning for cursor blink"), path, "0");
+}
+
 numeric_sysfs_tunable::numeric_sysfs_tunable(const std::string &str, const std::string &path,
                                              double target, bool hib)
 	: sysfs_tunable(str, path, std::format("{}", target)),

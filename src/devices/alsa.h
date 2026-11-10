@@ -30,8 +30,10 @@
 
 #include <cstdint>
 #include <climits>
-#include <map>
+#include <vector>
 #include <string>
+
+class alsa_pcm;
 
 class alsa: public device {
 	uint64_t start_active = 0, end_active = 0;
@@ -42,10 +44,7 @@ class alsa: public device {
 	int rindex = 0;
 	/* ALSA card number parsed from the codec name (hwC<card>D<codec>); -1 if unknown */
 	int card = -1;
-	/* PCM substream -> "STATE|owner" as seen at the start / end of the measurement */
-	std::map<std::string, std::string> start_streams, end_streams;
-	/* open substreams, formatted for the codec row; empty when none are open */
-	std::string stream_summary;
+	std::vector<const alsa_pcm *> streams;
 public:
 
 	alsa(const std::string &_name, const std::string &path);
@@ -59,16 +58,16 @@ public:
 
 	std::string device_name(void) const override { return name; };
 	std::string human_name(void) override;
-	/* an open PCM substream keeps the codec powered, so keep the row visible even when
-	 * devlist attributed the codec's power to the process holding the stream open */
-	bool show_in_list(void) const override { return !hide || !stream_summary.empty(); };
-
-	/* snapshot of every open PCM substream of this card from /proc/asound (public for unit tests) */
-	std::map<std::string, std::string> read_pcm_streams(void);
-	static std::string format_streams(const std::map<std::string, std::string> &start,
-					  const std::map<std::string, std::string> &end);
 	double power_usage(struct result_bundle *result, struct parameter_bundle *bundle) override;
 	bool power_valid(void) const override { return utilization_power_valid(rindex);};
+
+	/* open PCM substreams (see alsa_pcm) keep the codec powered, so keep the row visible even
+	 * when devlist attributed the codec's power to the process holding the stream open */
+	bool show_in_list(void) const override;
+
+	int card_number(void) const { return card; }
+	void add_stream(const alsa_pcm *pcm) { streams.push_back(pcm); }
+	bool has_open_stream(void) const;
 
 	void register_power_with_devlist(struct result_bundle *results, struct parameter_bundle *bundle) override;
 	int grouping_prio(void) const override { return 0; };

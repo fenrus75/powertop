@@ -135,6 +135,8 @@ powertop_sources = [
   'src/devices/ahci.h',
   'src/devices/alsa.cpp',
   'src/devices/alsa.h',
+  'src/devices/alsa-pcm.cpp',
+  'src/devices/alsa-pcm.h',
   'src/devices/backlight.cpp',
   'src/devices/backlight.h',
   'src/devices/devfreq.cpp',

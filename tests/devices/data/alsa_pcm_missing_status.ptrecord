@@ -1,0 +1,5 @@
+N /sys/class/sound/hwC0D0/modelname
+N /sys/class/sound/hwC0D0/vendor_name
+N /proc/asound/card0/pcm0p/info
+N /proc/asound/card0/pcm0p/sub0/status
+N /proc/asound/card0/pcm0p/sub0/status

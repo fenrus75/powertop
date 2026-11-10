@@ -695,3 +695,9 @@ Mode 4 against this repo for the first time. Key facts for future runs:
 - `alsa` devices parse the card number from `hwC<N>D<M>` and sample `/proc/asound/card<N>/pcm*/sub*/status` at start/end; open streams are appended to `human_name()` and `show_in_list()` stays true while any is open (devlist otherwise hides the codec when a process holds a /dev/snd fd).
 - Replay fixtures need one `D` record per list_directory call and one `R` per status/comm read (queues are per path, consumed in order).
 - Follow-up candidates: proposal B (per-substream `alsa_pcm` rows + report table); devlist substring match `C0D1` vs `pcmC0D10p` is still imprecise.
+
+## ALSA PCM rows (issue #231, proposal B — replaces the bracket annotation of A)
+- `alsa_pcm` (src/devices/alsa-pcm.*): one device per `/proc/asound/cardN/pcm<D><p|c>/sub<K>`, created in `create_all_alsa()`, parented to the first codec (by name) of the card; shown only while open at start/end.
+- New `device` virtuals: `show_in_overview()` (false -> excluded from process/Overview consumers) and `parent_device()` (Device stats/report move children right after their parent after sorting, see `group_children_with_parents()` in device_manager.cpp).
+- `alsa::show_in_list()` stays true while any child stream is open. No power model for streams.
+- Known limits: HDMI streams are listed under the analog codec of the same card; cards/streams added after startup are not noticed. A larger redo of the Device stats rendering was deferred by the user for later discussion.

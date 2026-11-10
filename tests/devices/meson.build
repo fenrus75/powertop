@@ -6,6 +6,7 @@ test_alsa_exe = executable(
     '../../src/parameters/parameters.cpp',
     '../../src/devices/device.cpp',
     '../../src/devices/alsa.cpp',
+    '../../src/devices/alsa-pcm.cpp',
     'test_stubs.cpp',
     'test_alsa_serialize.cpp',
   ],

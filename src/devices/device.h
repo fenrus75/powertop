@@ -42,6 +42,7 @@ struct result_bundle;
  * | cpudevice          | src/cpu/cpudevice.h                   |
  * | ahci               | src/devices/ahci.h                    |
  * | alsa               | src/devices/alsa.h                    |
+ * | alsa_pcm           | src/devices/alsa-pcm.h                |
  * | backlight          | src/devices/backlight.h               |
  * | devfreq            | src/devices/devfreq.h                 |
  * | i915gpu            | src/devices/i915-gpu.h                |
@@ -82,6 +83,12 @@ public:
 	virtual double power_usage([[maybe_unused]] struct result_bundle *results, [[maybe_unused]] struct parameter_bundle *bundle) { return 0.0; };
 
 	virtual bool show_in_list(void) const {return !hide;};
+
+	/* whether the device is a consumer in the Overview / process lists (false for pure info rows) */
+	virtual bool show_in_overview(void) const { return true; };
+
+	/* if non-null, the device is listed directly below this device in the Device stats */
+	virtual const device *parent_device(void) const { return nullptr; };
 
 	virtual bool power_valid(void) const { return true;};
 

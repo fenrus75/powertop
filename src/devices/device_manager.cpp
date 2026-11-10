@@ -89,6 +89,34 @@ static bool power_device_sort(const std::unique_ptr<class device> &i, const std:
 	return pI > pJ;
 }
 
+/* after sorting by power, move each child device directly behind its parent */
+static void group_children_with_parents(void)
+{
+	std::vector<std::unique_ptr<class device>> children;
+
+	for (auto it = all_devices.begin(); it != all_devices.end();) {
+		if ((*it)->parent_device()) {
+			children.push_back(std::move(*it));
+			it = all_devices.erase(it);
+		} else {
+			++it;
+		}
+	}
+
+	for (auto &child : children) {
+		auto pos = std::ranges::find_if(all_devices,
+				[&child](const auto &d) { return d.get() == child->parent_device(); });
+		if (pos == all_devices.end()) {
+			all_devices.push_back(std::move(child));
+			continue;
+		}
+		/* keep siblings in their original order */
+		while (pos + 1 != all_devices.end() && (*(pos + 1))->parent_device() == child->parent_device())
+			++pos;
+		all_devices.insert(pos + 1, std::move(child));
+	}
+}
+
 void report_devices(void)
 {
 	WINDOW *win;
@@ -114,6 +142,7 @@ void report_devices(void)
 	wmove(win, 2, 0);
 
 	std::ranges::sort(all_devices, power_device_sort);
+	group_children_with_parents();
 
 	pw = global_power();
 	if (pw > 0.0001) {
@@ -183,6 +212,7 @@ void show_report_devices(void)
 
 	show_power = global_power_valid();
 	std::ranges::sort(all_devices, power_device_sort);
+	group_children_with_parents();
 
 	/* div attr css_class and css_id */
 	tag_attr div_attr;

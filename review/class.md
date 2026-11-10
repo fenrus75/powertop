@@ -27,8 +27,8 @@ Specialized for Intel integrated graphics devices.
 ### Derived class usbdevice
 Handles USB device power management and accounting.
 
-### Derived class ahci, alsa, backlight, devfreq, network, rfkill, runtime_pmdevice, thinkpad_fan, thinkpad_light
-These classes implement device-specific logic for storage, audio, displays, network interfaces, and other hardware components.
+### Derived class ahci, alsa, alsa_pcm, backlight, devfreq, network, rfkill, runtime_pmdevice, thinkpad_fan, thinkpad_light
+These classes implement device-specific logic for storage, audio (alsa codecs, alsa_pcm streams listed below their codec), displays, network interfaces, and other hardware components.
 
 
 ## class power_consumer

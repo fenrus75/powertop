@@ -1,0 +1,5 @@
+N /sys/class/sound/hwC0D0/modelname
+N /sys/class/sound/hwC0D0/vendor_name
+R /proc/asound/card0/pcm0p/info Y2FyZDogMApkZXZpY2U6IDAKc3ViZGV2aWNlOiAwCnN0cmVhbTogUExBWUJBQ0sKaWQ6IEFMQzI1NyBBbmFsb2cKbmFtZTogQUxDMjU3IEFuYWxvZwo=
+R /proc/asound/card0/pcm0p/sub0/status Y2xvc2VkCg==
+R /proc/asound/card0/pcm0p/sub0/status Y2xvc2VkCg==

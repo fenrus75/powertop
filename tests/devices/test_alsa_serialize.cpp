@@ -13,6 +13,7 @@
 #include <string>
 
 #include "devices/alsa.h"
+#include "devices/alsa-pcm.h"
 #include "test_framework.h"
 #include "../test_helper.h"
 
@@ -48,42 +49,70 @@ static void test_alsa_serialize()
 }
 
 /*
- * Fixture: data/alsa_hwC0D0_streams.ptrecord
- *   - start: pcm0p RUNNING (pid 1873), pcm0c and pcm3p closed
- *   - end:   pcm0p and pcm0c PREPARED (pid 1873 = pipewire), pcm3p closed
+ * alsa_pcm: state sampled at start/end of the measurement, shown only while open.
+ * Fixtures: data/alsa_pcm_{running_to_idle,closed,missing_status}.ptrecord
  */
-static void test_alsa_pcm_streams()
+static void test_alsa_pcm_open_stream()
 {
 	test_framework_manager::get().reset();
-	test_framework_manager::get().set_replay(DATA_DIR + "/alsa_hwC0D0_streams.ptrecord");
+	test_framework_manager::get().set_replay(DATA_DIR + "/alsa_pcm_running_to_idle.ptrecord");
 
-	alsa dev("hwC0D0", "/sys/class/sound/hwC0D0");
-	PT_ASSERT_TRUE(dev.show_in_list());
-	dev.start_measurement();
-	dev.end_measurement();
+	alsa codec_dev("hwC0D0", "/sys/class/sound/hwC0D0");
+	alsa_pcm pcm(&codec_dev, 0, 0, true, 0);
+	pcm.start_measurement();
+	pcm.end_measurement();
 	test_framework_manager::get().reset();
 
-	const std::string name = dev.human_name();
-	PT_ASSERT_TRUE(name.find("[pcm0c PREPARED (idle): pipewire, pcm0p PREPARED (idle): pipewire]") != std::string::npos);
-	PT_ASSERT_TRUE(name.find("pcm3p") == std::string::npos);
+	PT_ASSERT_TRUE(pcm.show_in_list());
+	PT_ASSERT_TRUE(!pcm.show_in_overview());
+	PT_ASSERT_TRUE(pcm.util_units().empty());
+	PT_ASSERT_TRUE(pcm.parent_device() == &codec_dev);
+	PT_ASSERT_TRUE(pcm.human_name() ==
+		"PCM hw:0,0 playback (ALC257 Analog): RUNNING -> PREPARED, pipewire [1873]");
 
-	/* a codec whose power devlist charged to the stream owner stays visible */
-	dev.hide = true;
-	PT_ASSERT_TRUE(dev.show_in_list());
+	/* an open stream keeps the codec row visible even if devlist hid it */
+	codec_dev.add_stream(&pcm);
+	codec_dev.hide = true;
+	PT_ASSERT_TRUE(codec_dev.show_in_list());
 }
 
-static void test_alsa_format_streams()
+static void test_alsa_pcm_closed_stream()
 {
-	std::map<std::string, std::string> none, running = {{"pcm0p", "RUNNING|mpv"}, {"pcm3p.1", "PAUSED|"}};
+	test_framework_manager::get().reset();
+	test_framework_manager::get().set_replay(DATA_DIR + "/alsa_pcm_closed.ptrecord");
 
-	PT_ASSERT_TRUE(alsa::format_streams(none, none).empty());
-	PT_ASSERT_TRUE(alsa::format_streams(none, running) == "pcm0p RUNNING: mpv, pcm3p.1 PAUSED");
+	alsa codec_dev("hwC0D0", "/sys/class/sound/hwC0D0");
+	alsa_pcm pcm(&codec_dev, 0, 0, true, 0);
+	codec_dev.add_stream(&pcm);
+	pcm.start_measurement();
+	pcm.end_measurement();
+	test_framework_manager::get().reset();
+
+	PT_ASSERT_TRUE(!pcm.show_in_list());
+	codec_dev.hide = true;
+	PT_ASSERT_TRUE(!codec_dev.show_in_list());
+}
+
+/* kernel without CONFIG_SND_VERBOSE_PROCFS: no status files, nothing is reported */
+static void test_alsa_pcm_no_procfs()
+{
+	test_framework_manager::get().reset();
+	test_framework_manager::get().set_replay(DATA_DIR + "/alsa_pcm_missing_status.ptrecord");
+
+	alsa codec_dev("hwC0D0", "/sys/class/sound/hwC0D0");
+	alsa_pcm pcm(&codec_dev, 0, 0, true, 0);
+	pcm.start_measurement();
+	pcm.end_measurement();
+	test_framework_manager::get().reset();
+
+	PT_ASSERT_TRUE(!pcm.show_in_list());
 }
 
 int main()
 {
-	PT_RUN_TEST(test_alsa_pcm_streams);
-	PT_RUN_TEST(test_alsa_format_streams);
+	PT_RUN_TEST(test_alsa_pcm_open_stream);
+	PT_RUN_TEST(test_alsa_pcm_closed_stream);
+	PT_RUN_TEST(test_alsa_pcm_no_procfs);
 	PT_RUN_TEST(test_alsa_serialize);
 	return pt_test_summary();
 }

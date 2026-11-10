@@ -1,0 +1,7 @@
+N /sys/class/sound/hwC0D0/modelname
+N /sys/class/sound/hwC0D0/vendor_name
+R /proc/asound/card0/pcm0p/info Y2FyZDogMApkZXZpY2U6IDAKc3ViZGV2aWNlOiAwCnN0cmVhbTogUExBWUJBQ0sKaWQ6IEFMQzI1NyBBbmFsb2cKbmFtZTogQUxDMjU3IEFuYWxvZwo=
+R /proc/asound/card0/pcm0p/sub0/status c3RhdGU6IFJVTk5JTkcKb3duZXJfcGlkICAgOiAxODczCnRyaWdnZXJfdGltZTogMS4wCg==
+R /proc/asound/card0/pcm0p/sub0/status c3RhdGU6IFBSRVBBUkVECm93bmVyX3BpZCAgIDogMTg3Mwo=
+R /proc/1873/comm cGlwZXdpcmUK
+R /proc/1873/comm cGlwZXdpcmUK

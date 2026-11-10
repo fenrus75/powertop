@@ -52,7 +52,7 @@ static void add_device(class device *dev)
 {
 	/* first check if we want to be shown at all */
 
-	if (dev->show_in_list() == 0)
+	if (dev->show_in_list() == 0 || !dev->show_in_overview())
 		return;
 
 	/* then check if a device with the same underlying object is already registered */
